@@ -9,7 +9,7 @@ class WhoHeadCircumferenceForAge extends Model
 {
     use HasFactory;
 
-    protected $table = 'who_head_circumference_for_age';
+    protected $table = 'rme_who_head_circumference_for_age';
     protected $primaryKey = 'id';
     public $timestamps = false;
 

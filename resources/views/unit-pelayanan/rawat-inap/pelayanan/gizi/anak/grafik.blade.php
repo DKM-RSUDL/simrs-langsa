@@ -204,13 +204,12 @@
 
             <div>
                 <div class="card-header">
-                    <h5>Detail Pengkajian Gizi Anak</h5>
+                    <h5>KURVA PERTUMBUHAN LANJUTAN PENGKAJIAN GIZI ANAK</h5>
                 </div>
                 <div class="card-body">
 
                     {{-- Asesmen Gizi --}}
                     @if ($dataPengkajianGizi->asesmenGizi)
-                        <h6>Asesmen Gizi</h6>
                         <table class="table table-bordered">
                             <tr>
                                 <td width="200px"><strong>Berat Badan</strong></td>
@@ -526,8 +525,9 @@
 @push('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script>
+
         document.addEventListener('DOMContentLoaded', function() {
-            // Data pasien
+            // Data pasien dari blade
             const patientData = {
                 sex: {{ $dataMedis->pasien->jenis_kelamin ?? 1 }},
                 ageMonths: {{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->diffInMonths(\Carbon\Carbon::now()) : 0 }},
@@ -536,31 +536,66 @@
                 bmi: {{ (float) ($dataPengkajianGizi->asesmenGizi->imt ?? 0) }}
             };
 
-            // Data WHO dari backend
+            // Data WHO dan rekomendasi dari backend (SUDAH DIHITUNG DI CONTROLLER)
             const whoData = @json($whoData ?? []);
-            
-            // Data rekomendasi dari backend
             const backendRecommendations = @json($recommendations ?? []);
 
-            const genderBorderColors = {
-                male: '#007bff',    // Biru untuk laki-laki  
-                female: '#e91e63'   // Pink untuk perempuan
-            };
-
-            const chartBorderColor = patientData.sex == 1 ? genderBorderColors.male : genderBorderColors.female;
-
-            function updateChartContainerStyle() {
-                const chartContainers = document.querySelectorAll('.chart-container');
-                chartContainers.forEach(container => {
-                    container.style.border = `1px solid ${chartBorderColor}`;
-                    container.style.borderRadius = '8px';
-                    container.style.padding = '20px';
-                });
+            // ========================================
+            // FUNGSI UTILITAS CHART (PERTAHANKAN)
+            // ========================================
+            
+            function parseValue(value) {
+                if (value === null || value === undefined) return 0;
+                if (typeof value === 'number') return value;
+                if (typeof value === 'string') {
+                    const parsed = parseFloat(value);
+                    return isNaN(parsed) ? 0 : parsed;
+                }
+                return 0;
             }
 
-            updateChartContainerStyle();
+            function calculatePercentiles(lmsData) {
+                if (!lmsData || lmsData.length === 0) return [];
+                const result = [];
+                
+                lmsData.forEach(function(item) {
+                    const L = parseValue(item.L);
+                    const M = parseValue(item.M);
+                    const S = parseValue(item.S);
+                    
+                    if (M === 0 || S === 0) return;
+                    
+                    const zScores = [-3, -2, 0, 2, 3];
+                    const percentiles = {};
+                    
+                    zScores.forEach(function(z) {
+                        let value;
+                        if (Math.abs(L) < 0.01) {
+                            value = M * Math.exp(S * z);
+                        } else {
+                            const power = 1 + L * S * z;
+                            if (power > 0) {
+                                value = M * Math.pow(power, 1 / L);
+                            } else {
+                                value = M * Math.exp(S * z);
+                            }
+                        }
+                        percentiles[z] = Math.max(0, value);
+                    });
+                    
+                    result.push({
+                        x: item.age || item.height,
+                        minus3: percentiles[-3],
+                        minus2: percentiles[-2],
+                        median: percentiles[0],
+                        plus2: percentiles[2],
+                        plus3: percentiles[3]
+                    });
+                });
+                
+                return result;
+            }
 
-            // Fungsi untuk menentukan kategori umur dan terminologi yang tepat
             function getAgeCategory(ageMonths) {
                 if (ageMonths < 24) {
                     return {
@@ -586,10 +621,75 @@
                 }
             }
 
-            // Dapatkan kategori umur untuk pasien ini
-            const ageCategory = getAgeCategory(patientData.ageMonths);
+            // ========================================
+            // REKOMENDASI MENGGUNAKAN DATA DARI CONTROLLER
+            // ========================================
+            
+            function updateRecommendationFromBackend(chartType, recommendation) {
+                const statusElement = document.getElementById(`${chartType}-status`);
+                const adviceElement = document.getElementById(`${chartType}-advice`);
+                const targetElement = document.getElementById(`${chartType}-target`);
 
-            // Update chart titles berdasarkan kategori umur
+                if (statusElement && recommendation.recommendation) {
+                    statusElement.innerHTML = recommendation.recommendation;
+                }
+
+                if (adviceElement && recommendation.z_score !== null) {
+                    const zScoreText = `Z-Score: ${recommendation.z_score}`;
+                    adviceElement.innerHTML = `<small class="text-muted">${zScoreText}</small>`;
+                }
+
+                if (targetElement && recommendation.target_value > 0) {
+                    let unit = '';
+                    let targetLabel = '';
+                    
+                    switch (chartType) {
+                        case 'weight-age':
+                        case 'weight-height':
+                            unit = 'kg';
+                            targetLabel = 'Rekomendasi berat badan ideal';
+                            break;
+                        case 'height-age':
+                            unit = 'cm';
+                            targetLabel = `Rekomendasi ${ageCategory.heightTerm.toLowerCase()} ideal`;
+                            break;
+                        case 'bmi-age':
+                            unit = 'kg/m²';
+                            targetLabel = 'Rekomendasi IMT ideal';
+                            break;
+                    }
+                    
+                    targetElement.innerHTML = `
+                        <strong>${targetLabel}:</strong> 
+                        ${recommendation.target_value} ${unit}
+                    `;
+                }
+            }
+
+            // ========================================
+            // CHART CONFIGURATION & RENDERING
+            // ========================================
+            
+            const ageCategory = getAgeCategory(patientData.ageMonths);
+            
+            // Warna border berdasarkan jenis kelamin (seperti kode asli)
+            const genderBorderColors = {
+                male: '#007bff',    // Biru untuk laki-laki  
+                female: '#e91e63'   // Pink untuk perempuan
+            };
+
+            const chartBorderColor = patientData.sex == 1 ? genderBorderColors.male : genderBorderColors.female;
+
+            // Update chart container style seperti kode asli
+            function updateChartContainerStyle() {
+                const chartContainers = document.querySelectorAll('.chart-container');
+                chartContainers.forEach(container => {
+                    container.style.border = `1px solid ${chartBorderColor}`;
+                    container.style.borderRadius = '8px';
+                    container.style.padding = '20px';
+                });
+            }
+
             function updateChartTitles() {
                 const heightAgeTitle = document.querySelector('#height-age .chart-title');
                 if (heightAgeTitle) {
@@ -603,396 +703,47 @@
 
                 const heightAgeTab = document.querySelector('#height-age-tab');
                 if (heightAgeTab) {
-                    if (ageCategory.heightTerm === 'Panjang Badan') {
-                        heightAgeTab.textContent = 'Panjang/Umur';
-                    } else {
-                        heightAgeTab.textContent = 'Tinggi/Umur';
-                    }
+                    heightAgeTab.textContent = ageCategory.heightTerm === 'Panjang Badan' ? 'Panjang/Umur' : 'Tinggi/Umur';
                 }
 
                 const weightHeightTab = document.querySelector('#weight-height-tab');
                 if (weightHeightTab) {
-                    if (ageCategory.heightTerm === 'Panjang Badan') {
-                        weightHeightTab.textContent = 'Berat/Panjang';
-                    } else {
-                        weightHeightTab.textContent = 'Berat/Tinggi';
-                    }
+                    weightHeightTab.textContent = ageCategory.heightTerm === 'Panjang Badan' ? 'Berat/Panjang' : 'Berat/Tinggi';
                 }
             }
 
-            // Fungsi parsing nilai
-            function parseValue(value) {
-                if (value === null || value === undefined) return 0;
-                if (typeof value === 'number') return value;
-                if (typeof value === 'string') {
-                    const parsed = parseFloat(value);
-                    return isNaN(parsed) ? 0 : parsed;
-                }
-                return 0;
-            }
-
-            // Fungsi untuk menghitung percentile berdasarkan LMS
-            function calculatePercentiles(lmsData) {
-                if (!lmsData || lmsData.length === 0) return [];
-
-                const result = [];
-
-                lmsData.forEach(function(item) {
-                    const L = parseValue(item.L);
-                    const M = parseValue(item.M);
-                    const S = parseValue(item.S);
-
-                    // Skip jika ada nilai yang 0 atau tidak valid
-                    if (M === 0 || S === 0) return;
-
-                    // Hitung percentile menggunakan rumus WHO
-                    const zScores = [-3, -2, 0, 2, 3];
-                    const percentiles = {};
-
-                    zScores.forEach(function(z) {
-                        let value;
-                        if (Math.abs(L) < 0.01) {
-                            value = M * Math.exp(S * z);
-                        } else {
-                            const power = 1 + L * S * z;
-                            if (power > 0) {
-                                value = M * Math.pow(power, 1 / L);
-                            } else {
-                                value = M * Math.exp(S * z);
-                            }
-                        }
-                        percentiles[z] = Math.max(0, value);
-                    });
-
-                    result.push({
-                        x: item.age || item.height,
-                        minus3: percentiles[-3],
-                        minus2: percentiles[-2],
-                        median: percentiles[0],
-                        plus2: percentiles[2],
-                        plus3: percentiles[3]
-                    });
-                });
-
-                return result;
-            }
-
-            // Fungsi untuk menghitung Z-Score
-            function calculateZScore(value, L, M, S) {
-                if (!value || !M || !S) return null;
-                
-                let zScore;
-                if (Math.abs(L) < 0.01) {
-                    zScore = Math.log(value / M) / S;
-                } else {
-                    zScore = (Math.pow(value / M, L) - 1) / (L * S);
-                }
-                return zScore;
-            }
-
-            // Fungsi untuk mendapatkan status berdasarkan Z-Score
-            function getStatusFromZScore(zScore, type) {
-                if (zScore === null || zScore === undefined) return { status: 'Tidak dapat dihitung', class: 'status-normal' };
-
-                let status, statusClass;
-                
-                if (type === 'weight-age' || type === 'weight-height') {
-                    if (zScore >= 3) {
-                        status = 'Obesitas';
-                        statusClass = 'status-severe';
-                    } else if (zScore >= 2) {
-                        status = 'Berat Badan Lebih';
-                        statusClass = 'status-overweight';
-                    } else if (zScore >= -2) {
-                        status = 'Normal';
-                        statusClass = 'status-normal';
-                    } else if (zScore >= -3) {
-                        status = 'Gizi Kurang';
-                        statusClass = 'status-underweight';
-                    } else {
-                        status = 'Gizi Buruk';
-                        statusClass = 'status-severe';
-                    }
-                } else if (type === 'height-age') {
-                    if (zScore >= 3) {
-                        status = 'Tinggi';
-                        statusClass = 'status-normal';
-                    } else if (zScore >= 2) {
-                        status = 'Normal Tinggi';
-                        statusClass = 'status-normal';
-                    } else if (zScore >= -2) {
-                        status = 'Normal';
-                        statusClass = 'status-normal';
-                    } else if (zScore >= -3) {
-                        status = 'Pendek';
-                        statusClass = 'status-underweight';
-                    } else {
-                        status = 'Sangat Pendek';
-                        statusClass = 'status-severe';
-                    }
-                } else if (type === 'bmi-age') {
-                    if (zScore >= 3) {
-                        status = 'Obesitas';
-                        statusClass = 'status-severe';
-                    } else if (zScore >= 2) {
-                        status = 'Gemuk';
-                        statusClass = 'status-overweight';
-                    } else if (zScore >= 1) {
-                        status = 'Risiko Gemuk';
-                        statusClass = 'status-overweight';
-                    } else if (zScore >= -2) {
-                        status = 'Normal';
-                        statusClass = 'status-normal';
-                    } else if (zScore >= -3) {
-                        status = 'Kurus';
-                        statusClass = 'status-underweight';
-                    } else {
-                        status = 'Sangat Kurus';
-                        statusClass = 'status-severe';
-                    }
-                }
-
-                return { status, class: statusClass };
-            }
-
-            // Fungsi untuk mendapatkan rekomendasi berdasarkan status
-            function getRecommendation(status, type) {
-                const recommendations = {
-                    'weight-age': {
-                        'Normal': 'Berat badan anak menurut umur <strong>Normal</strong>, tetap pertahankan dengan memberi makanan sehat dan bergizi.',
-                        'Gizi Kurang': 'Berat badan anak menurut umur <strong>Kurang</strong>. Perbanyak asupan makanan bergizi, konsultasi dengan ahli gizi.',
-                        'Gizi Buruk': 'Berat badan anak menurut umur <strong>Sangat Kurang</strong>. Segera konsultasi dengan dokter dan ahli gizi.',
-                        'Berat Badan Lebih': 'Berat badan anak menurut umur <strong>Berlebih</strong>. Atur pola makan dan tingkatkan aktivitas fisik.',
-                        'Obesitas': 'Berat badan anak menurut umur <strong>Obesitas</strong>. Segera konsultasi dengan dokter untuk program penurunan berat badan.'
-                    },
-                    'height-age': {
-                        'Normal': 'Tinggi badan anak menurut umur <strong>Normal</strong>, tetap berikan asupan gizi seimbang.',
-                        'Normal Tinggi': 'Tinggi badan anak menurut umur <strong>Normal Tinggi</strong>, pertahankan asupan gizi yang baik.',
-                        'Tinggi': 'Tinggi badan anak menurut umur <strong>Tinggi</strong>, pertahankan pola makan sehat.',
-                        'Pendek': 'Tinggi badan anak menurut umur <strong>Pendek</strong>. Perbanyak asupan protein, kalsium, dan vitamin D.',
-                        'Sangat Pendek': 'Tinggi badan anak menurut umur <strong>Sangat Pendek</strong>. Segera konsultasi dengan dokter untuk evaluasi lebih lanjut.'
-                    },
-                    'weight-height': {
-                        'Normal': 'Berat badan menurut tinggi badan <strong>Normal</strong>, tetap pertahankan pola makan sehat.',
-                        'Gizi Kurang': 'Berat badan menurut tinggi badan <strong>Kurang</strong>. Tingkatkan asupan kalori dan protein.',
-                        'Gizi Buruk': 'Berat badan menurut tinggi badan <strong>Sangat Kurang</strong>. Segera konsultasi dengan dokter.',
-                        'Berat Badan Lebih': 'Berat badan menurut tinggi badan <strong>Berlebih</strong>. Kurangi asupan kalori dan tingkatkan aktivitas.',
-                        'Obesitas': 'Berat badan menurut tinggi badan <strong>Obesitas</strong>. Segera konsultasi dengan dokter.'
-                    },
-                    'bmi-age': {
-                        'Normal': 'IMT anak menurut umur <strong>Normal</strong>, tetap pertahankan pola hidup sehat.',
-                        'Risiko Gemuk': 'IMT anak menurut umur <strong>Risiko Gemuk</strong>. Perhatikan pola makan dan tingkatkan aktivitas fisik.',
-                        'Gemuk': 'IMT anak menurut umur <strong>Gemuk</strong>. Atur pola makan dan rutin berolahraga.',
-                        'Obesitas': 'IMT anak menurut umur <strong>Obesitas</strong>. Segera konsultasi dengan dokter.',
-                        'Kurus': 'IMT anak menurut umur <strong>Kurus</strong>. Tingkatkan asupan makanan bergizi.',
-                        'Sangat Kurus': 'IMT anak menurut umur <strong>Sangat Kurus</strong>. Segera konsultasi dengan dokter dan ahli gizi.'
-                    }
-                };
-
-                return recommendations[type][status] || 'Konsultasi dengan tenaga kesehatan untuk evaluasi lebih lanjut.';
-            }
-
-            // Fungsi untuk mencari data terdekat berdasarkan umur atau tinggi
-            function findClosestData(data, targetValue, valueKey = 'age') {
-                if (!data || data.length === 0) return null;
-
-                let closest = data[0];
-                let minDiff = Math.abs(data[0][valueKey] - targetValue);
-
-                for (let i = 1; i < data.length; i++) {
-                    const diff = Math.abs(data[i][valueKey] - targetValue);
-                    if (diff < minDiff) {
-                        minDiff = diff;
-                        closest = data[i];
-                    }
-                }
-
-                return closest;
-            }
-
-            // Fungsi untuk menghasilkan rekomendasi WHO
-            function generateWHORecommendation(chartType, patientValue, targetKey, data) {
-                let targetData;
-                let zScore = null;
-
-                if (chartType === 'weight-height') {
-                    targetData = findClosestData(data, patientData.height, 'height');
-                } else {
-                    targetData = findClosestData(data, patientData.ageMonths, 'age');
-                }
-
-                if (targetData) {
-                    zScore = calculateZScore(patientValue, targetData.L, targetData.M, targetData.S);
-                }
-
-                const statusInfo = getStatusFromZScore(zScore, chartType);
-                const recommendation = getRecommendation(statusInfo.status, chartType);
-                
-                let targetValue = targetData ? targetData.median : 0;
-                let unit = '';
-                let targetLabel = '';
-
-                switch (chartType) {
-                    case 'weight-age':
-                        unit = 'kg';
-                        targetLabel = 'Rekomendasi berat badan ideal';
-                        break;
-                    case 'height-age':
-                        unit = 'cm';
-                        targetLabel = `Rekomendasi ${ageCategory.heightTerm.toLowerCase()} ideal`;
-                        break;
-                    case 'weight-height':
-                        unit = 'kg';
-                        targetLabel = 'Rekomendasi berat badan ideal';
-                        break;
-                    case 'bmi-age':
-                        unit = 'kg/m²';
-                        targetLabel = 'Rekomendasi IMT ideal';
-                        break;
-                }
-
+            function getChartConfig(xAxisTitle, yAxisTitle) {
                 return {
-                    status: statusInfo.status,
-                    statusClass: statusInfo.class,
-                    recommendation: recommendation,
-                    targetValue: targetValue,
-                    targetLabel: targetLabel,
-                    unit: unit,
-                    zScore: zScore
+                    type: 'line',
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { mode: 'index', intersect: false }
+                        },
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                position: 'bottom',
+                                grid: { color: '#e9ecef' },
+                                title: { display: true, text: xAxisTitle }
+                            },
+                            y: {
+                                type: 'linear',
+                                grid: { color: '#e9ecef' },
+                                title: { display: true, text: yAxisTitle }
+                            }
+                        },
+                        elements: {
+                            line: { borderWidth: 2, fill: false, tension: 0.1 },
+                            point: { radius: 0, hoverRadius: 3 }
+                        },
+                        interaction: { mode: 'nearest', axis: 'x', intersect: false }
+                    }
                 };
             }
 
-            // Fungsi untuk update rekomendasi di UI
-            function updateRecommendation(chartType, recommendation) {
-                const statusElement = document.getElementById(`${chartType}-status`);
-                const adviceElement = document.getElementById(`${chartType}-advice`);
-                const targetElement = document.getElementById(`${chartType}-target`);
-
-                if (statusElement) {
-                    statusElement.innerHTML = recommendation.recommendation;
-                }
-
-                if (adviceElement && recommendation.zScore !== null) {
-                    const zScoreText = `Z-Score: ${recommendation.zScore.toFixed(2)}`;
-                    adviceElement.innerHTML = `<small class="text-muted">${zScoreText}</small>`;
-                }
-
-                if (targetElement && recommendation.targetValue > 0) {
-                    targetElement.innerHTML = `
-                        <strong>${recommendation.targetLabel}:</strong> 
-                        ${recommendation.targetValue.toFixed(1)} ${recommendation.unit}
-                    `;
-                }
-            }
-
-            // Fungsi untuk update rekomendasi dari backend
-            function updateBackendRecommendation(chartType, backendData, unit, targetLabel) {
-                const statusElement = document.getElementById(`${chartType}-status`);
-                const adviceElement = document.getElementById(`${chartType}-advice`);
-                const targetElement = document.getElementById(`${chartType}-target`);
-
-                if (statusElement && backendData.recommendation) {
-                    statusElement.innerHTML = backendData.recommendation;
-                }
-
-                if (adviceElement && backendData.z_score !== null) {
-                    const zScoreText = `Z-Score: ${backendData.z_score}`;
-                    adviceElement.innerHTML = `<small class="text-muted">${zScoreText}</small>`;
-                }
-
-                if (targetElement && backendData.target_value > 0) {
-                    targetElement.innerHTML = `
-                        <strong>${targetLabel}:</strong> 
-                        ${backendData.target_value} ${unit}
-                    `;
-                }
-            }
-
-            // Generate data untuk setiap chart
-            let weightAgeData = [];
-            let heightAgeData = [];
-            let bmiAgeData = [];
-            let weightHeightData = [];
-
-            try {
-                if (whoData.weightForAge) {
-                    weightAgeData = calculatePercentiles(whoData.weightForAge);
-                }
-                if (whoData.heightForAge) {
-                    heightAgeData = calculatePercentiles(whoData.heightForAge);
-                }
-                if (whoData.bmiForAge) {
-                    bmiAgeData = calculatePercentiles(whoData.bmiForAge);
-                }
-                if (whoData.weightForHeight) {
-                    weightHeightData = calculatePercentiles(whoData.weightForHeight);
-                }
-            } catch (error) {
-                // Silent error handling
-            }
-
-            // Konfigurasi chart umum dengan background color gender
-            const getChartConfig = (xAxisTitle, yAxisTitle) => ({
-                type: 'line',
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                        }
-                    },
-                    scales: {
-                        x: {
-                            type: 'linear',
-                            position: 'bottom',
-                            grid: {
-                                color: '#e9ecef'
-                            },
-                            title: {
-                                display: true,
-                                text: xAxisTitle
-                            }
-                        },
-                        y: {
-                            type: 'linear',
-                            grid: {
-                                color: '#e9ecef'
-                            },
-                            title: {
-                                display: true,
-                                text: yAxisTitle
-                            }
-                        }
-                    },
-                    elements: {
-                        line: {
-                            borderWidth: 2,
-                            fill: false,
-                            tension: 0.1
-                        },
-                        point: {
-                            radius: 0,
-                            hoverRadius: 3
-                        }
-                    },
-                    interaction: {
-                        mode: 'nearest',
-                        axis: 'x',
-                        intersect: false
-                    },
-                    // Tambahkan background color berdasarkan gender
-                    onHover: function(event, activeElements, chart) {
-                        chart.canvas.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
-                    }
-                }
-            });
-
-            // Fungsi untuk membuat dataset chart dengan background gender
             function createChartDatasets(data, patientX, patientY, showPatient = true) {
                 const datasets = [
                     {
@@ -1050,140 +801,126 @@
                 return datasets;
             }
 
-            // Background function dinonaktifkan sementara
-            function applyGenderBackground(chart) {
-                // Tidak menerapkan background sementara
-                return;
-            }
-
-            // Update chart titles sebelum membuat charts
+            // ========================================
+            // GENERATE CHARTS & APPLY RECOMMENDATIONS
+            // ========================================
+            
             updateChartTitles();
+            updateChartContainerStyle(); // Apply gender border seperti kode asli
 
-            // Destroy existing charts jika ada
+            // Destroy existing charts
             ['weightAgeChart', 'heightAgeChart', 'weightHeightChart', 'bmiAgeChart'].forEach(chartId => {
                 const existingChart = Chart.getChart(chartId);
-                if (existingChart) {
-                    existingChart.destroy();
-                }
+                if (existingChart) existingChart.destroy();
             });
 
-            // Weight for Age Chart
+            // Generate chart data
+            let weightAgeData = whoData.weightForAge ? calculatePercentiles(whoData.weightForAge) : [];
+            let heightAgeData = whoData.heightForAge ? calculatePercentiles(whoData.heightForAge) : [];
+            let bmiAgeData = whoData.bmiForAge ? calculatePercentiles(whoData.bmiForAge) : [];
+            let weightHeightData = whoData.weightForHeight ? calculatePercentiles(whoData.weightForHeight) : [];
+
+            // Create Charts
             if (weightAgeData.length > 0) {
                 const ctx = document.getElementById('weightAgeChart');
                 if (ctx) {
-                    try {
-                        const config = getChartConfig('Umur (bulan)', 'Berat Badan (kg)');
-                        config.data = {
-                            datasets: createChartDatasets(weightAgeData, patientData.ageMonths, patientData.weight)
-                        };
-                        
-                        new Chart(ctx, config);
-
-                        // Gunakan rekomendasi dari backend jika tersedia
-                        if (backendRecommendations.weightAge) {
-                            updateBackendRecommendation('weight-age', backendRecommendations.weightAge, 'kg', 'Rekomendasi berat badan ideal');
-                        } else {
-                            // Fallback ke perhitungan frontend
-                            const recommendation = generateWHORecommendation('weight-age', patientData.weight, 'weight', whoData.weightForAge);
-                            updateRecommendation('weight-age', recommendation);
-                        }
-                    } catch (error) {
-                        // Silent error handling
+                    const config = getChartConfig('Umur (bulan)', 'Berat Badan (kg)');
+                    config.data = {
+                        datasets: createChartDatasets(weightAgeData, patientData.ageMonths, patientData.weight)
+                    };
+                    new Chart(ctx, config);
+                    
+                    // Apply recommendation from controller
+                    if (backendRecommendations.weightAge) {
+                        updateRecommendationFromBackend('weight-age', backendRecommendations.weightAge);
                     }
                 }
             }
 
-            // Height for Age Chart
             if (heightAgeData.length > 0) {
                 const ctx = document.getElementById('heightAgeChart');
                 if (ctx) {
-                    try {
-                        const config = getChartConfig('Umur (bulan)', ageCategory.heightUnit);
-                        config.data = {
-                            datasets: createChartDatasets(heightAgeData, patientData.ageMonths, patientData.height)
-                        };
-                        
-                        new Chart(ctx, config);
-
-                        // Gunakan rekomendasi dari backend jika tersedia
-                        if (backendRecommendations.heightAge) {
-                            updateBackendRecommendation('height-age', backendRecommendations.heightAge, 'cm', `Rekomendasi ${ageCategory.heightTerm.toLowerCase()} ideal`);
-                        } else {
-                            // Fallback ke perhitungan frontend
-                            const recommendation = generateWHORecommendation('height-age', patientData.height, 'height', whoData.heightForAge);
-                            updateRecommendation('height-age', recommendation);
-                        }
-                    } catch (error) {
-                        // Silent error handling
+                    const config = getChartConfig('Umur (bulan)', ageCategory.heightUnit);
+                    config.data = {
+                        datasets: createChartDatasets(heightAgeData, patientData.ageMonths, patientData.height)
+                    };
+                    new Chart(ctx, config);
+                    
+                    // Apply recommendation from controller
+                    if (backendRecommendations.heightAge) {
+                        updateRecommendationFromBackend('height-age', backendRecommendations.heightAge);
                     }
                 }
             }
 
-            // Weight for Height Chart
             if (weightHeightData.length > 0) {
                 const ctx = document.getElementById('weightHeightChart');
                 if (ctx) {
-                    try {
-                        const config = getChartConfig(ageCategory.heightUnit, 'Berat Badan (kg)');
-                        config.data = {
-                            datasets: createChartDatasets(weightHeightData, patientData.height, patientData.weight)
-                        };
+                    const config = getChartConfig(ageCategory.heightUnit, 'Berat Badan (kg)');
+                    config.data = {
+                        datasets: createChartDatasets(weightHeightData, patientData.height, patientData.weight)
+                    };
+                    new Chart(ctx, config);
                     
-                        new Chart(ctx, config);
-
-                        // Gunakan rekomendasi dari backend jika tersedia
-                        if (backendRecommendations.weightHeight) {
-                            updateBackendRecommendation('weight-height', backendRecommendations.weightHeight, 'kg', 'Rekomendasi berat badan ideal');
-                        } else {
-                            // Fallback ke perhitungan frontend
-                            const recommendation = generateWHORecommendation('weight-height', patientData.weight, 'weight', whoData.weightForHeight);
-                            updateRecommendation('weight-height', recommendation);
-                        }
-                    } catch (error) {
-                        // Silent error handling
+                    // Apply recommendation from controller
+                    if (backendRecommendations.weightHeight) {
+                        updateRecommendationFromBackend('weight-height', backendRecommendations.weightHeight);
                     }
                 }
             }
 
-            // BMI for Age Chart
             if (bmiAgeData.length > 0) {
                 const ctx = document.getElementById('bmiAgeChart');
                 if (ctx) {
-                    try {
-                        const config = getChartConfig('Umur (bulan)', 'IMT (kg/m²)');
-                        config.data = {
-                            datasets: createChartDatasets(bmiAgeData, patientData.ageMonths, patientData.bmi)
-                        };
-                        
-                        new Chart(ctx, config);
-
-                        // Gunakan rekomendasi dari backend jika tersedia
-                        if (backendRecommendations.bmiAge) {
-                            updateBackendRecommendation('bmi-age', backendRecommendations.bmiAge, 'kg/m²', 'Rekomendasi IMT ideal');
-                        } else {
-                            // Fallback ke perhitungan frontend
-                            const recommendation = generateWHORecommendation('bmi-age', patientData.bmi, 'bmi', whoData.bmiForAge);
-                            updateRecommendation('bmi-age', recommendation);
-                        }
-                    } catch (error) {
-                        // Silent error handling
+                    const config = getChartConfig('Umur (bulan)', 'IMT (kg/m²)');
+                    config.data = {
+                        datasets: createChartDatasets(bmiAgeData, patientData.ageMonths, patientData.bmi)
+                    };
+                    new Chart(ctx, config);
+                    
+                    // Apply recommendation from controller
+                    if (backendRecommendations.bmiAge) {
+                        updateRecommendationFromBackend('bmi-age', backendRecommendations.bmiAge);
                     }
                 }
             }
 
-            // Handle tab switching
+            // Handle tab switching for chart resize and gender styling
             const chartTabs = document.querySelectorAll('#chartTabs button[data-bs-toggle="tab"]');
+            const genderClass = patientData.sex == 1 ? 'male' : 'female';
+            
             chartTabs.forEach(tab => {
-                tab.addEventListener('shown.bs.tab', function(event) {
+                tab.addEventListener('shown.bs.tab', function() {
+                    // Update active tab styling
+                    chartTabs.forEach(t => {
+                        t.classList.remove('male', 'female');
+                        t.style.backgroundColor = '';
+                        t.style.borderColor = '';
+                        t.style.color = '';
+                    });
+                    
+                    this.classList.add('active', genderClass);
+                    this.style.backgroundColor = chartBorderColor;
+                    this.style.borderColor = chartBorderColor;
+                    this.style.color = 'white';
+                    
                     setTimeout(() => {
                         Chart.helpers.each(Chart.instances, function(chart) {
                             chart.resize();
                         });
                     }, 100);
                 });
+                
+                // Set initial active tab styling
+                if (tab.classList.contains('active')) {
+                    tab.classList.add(genderClass);
+                    tab.style.backgroundColor = chartBorderColor;
+                    tab.style.borderColor = chartBorderColor;
+                    tab.style.color = 'white';
+                }
             });
 
-            // Show error message jika tidak ada data
+            // Show error if no data
             if (weightAgeData.length === 0 && heightAgeData.length === 0 &&
                 bmiAgeData.length === 0 && weightHeightData.length === 0) {
                 const chartContainer = document.querySelector('.tab-content');
@@ -1196,21 +933,7 @@
                     `;
                 }
             }
-
-            // Tambahkan informasi kategori umur ke patient info
-            const patientInfo = document.querySelector('.patient-info .row');
-            if (patientInfo) {
-                const categoryInfo = document.createElement('div');
-                categoryInfo.className = 'col-md-12 mt-2';
-                categoryInfo.innerHTML = `
-                    <div class="alert alert-info mb-0 py-2">
-                        <small>
-                            <strong>Kategori Umur:</strong> ${ageCategory.category}
-                        </small>
-                    </div>
-                `;
-                patientInfo.appendChild(categoryInfo);
-            }
         });
+        
     </script>
 @endpush

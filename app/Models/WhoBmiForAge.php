@@ -9,7 +9,7 @@ class WhoBmiForAge extends Model
 {
     use HasFactory;
 
-    protected $table = 'who_bmi_for_age';
+    protected $table = 'rme_who_bmi_for_age';
     protected $primaryKey = 'id';
     public $timestamps = false;
 

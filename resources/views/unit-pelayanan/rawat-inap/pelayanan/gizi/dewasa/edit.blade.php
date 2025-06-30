@@ -19,7 +19,8 @@
                                 <div class="col-md-12">
                                     <h4 class="header-asesmen">Edit Pengkajian Gizi Dewasa</h4>
                                     <p>
-                                        Pastikan semua data yang diperlukan telah diisi dengan benar. Setelah selesai, klik tombol "Update" untuk menyimpan perubahan.
+                                        Pastikan semua data yang diperlukan telah diisi dengan benar. Setelah selesai, klik
+                                        tombol "Update" untuk menyimpan perubahan.
                                     </p>
                                 </div>
                             </div>
@@ -32,7 +33,7 @@
                                 'kd_pasien' => $kd_pasien,
                                 'tgl_masuk' => $tgl_masuk,
                                 'urut_masuk' => $urut_masuk,
-                                'id' => $dataGiziDewasa->id
+                                'id' => $dataGiziDewasa->id,
                             ]) }}"
                             enctype="multipart/form-data">
                             @csrf
@@ -46,24 +47,26 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
-                                                <input type="date" class="form-control" name="tanggal_masuk" id="tanggal_masuk" 
-                                                       value="{{ \Carbon\Carbon::parse($dataGiziDewasa->waktu_asesmen)->format('Y-m-d') }}">
-                                                <input type="time" class="form-control" name="jam_masuk" id="jam_masuk" 
-                                                       value="{{ \Carbon\Carbon::parse($dataGiziDewasa->waktu_asesmen)->format('H:i') }}">
+                                                <input type="date" class="form-control" name="tanggal_masuk"
+                                                    id="tanggal_masuk"
+                                                    value="{{ \Carbon\Carbon::parse($dataGiziDewasa->waktu_asesmen)->format('Y-m-d') }}">
+                                                <input type="time" class="form-control" name="jam_masuk" id="jam_masuk"
+                                                    value="{{ \Carbon\Carbon::parse($dataGiziDewasa->waktu_asesmen)->format('H:i') }}">
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Diagnosis Medis</label>
                                             <input type="text" class="form-control" name="diagnosis_medis"
-                                                placeholder="Masukkan diagnosis medis" 
-                                                value="{{ old('diagnosis_medis', $dataGiziDewasa->diagnosis_medis) }}" required>
+                                                placeholder="Masukkan diagnosis medis"
+                                                value="{{ old('diagnosis_medis', $dataGiziDewasa->diagnosis_medis) }}"
+                                                required>
                                         </div>
                                     </div>
 
                                     <div class="section-separator" id="riwayat-gizi">
                                         <h5 class="section-title">2. Riwayat Gizi</h5>
-                                    
+
                                         <!-- Kebiasaan Makan -->
                                         <div class="form-group">
                                             <label style="min-width: 230px;">Kebiasaan Makan</label>
@@ -73,14 +76,18 @@
                                                         <div class="border rounded p-3">
                                                             <h6 class="mb-2 text-primary">Pagi</h6>
                                                             <div class="form-check form-check-inline">
-                                                                <input class="form-check-input" type="radio" name="makan_pagi" id="makan_pagi_ya" value="ya"
-                                                                       {{ old('makan_pagi', $dataGiziDewasa->makan_pagi) == 'ya' ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="makan_pagi_ya">Ya</label>
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="makan_pagi" id="makan_pagi_ya" value="ya"
+                                                                    {{ old('makan_pagi', $dataGiziDewasa->makan_pagi) == 'ya' ? 'checked' : '' }}>
+                                                                <label class="form-check-label"
+                                                                    for="makan_pagi_ya">Ya</label>
                                                             </div>
                                                             <div class="form-check form-check-inline">
-                                                                <input class="form-check-input" type="radio" name="makan_pagi" id="makan_pagi_tidak" value="tidak"
-                                                                       {{ old('makan_pagi', $dataGiziDewasa->makan_pagi) == 'tidak' ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="makan_pagi_tidak">Tidak</label>
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="makan_pagi" id="makan_pagi_tidak" value="tidak"
+                                                                    {{ old('makan_pagi', $dataGiziDewasa->makan_pagi) == 'tidak' ? 'checked' : '' }}>
+                                                                <label class="form-check-label"
+                                                                    for="makan_pagi_tidak">Tidak</label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -88,14 +95,18 @@
                                                         <div class="border rounded p-3">
                                                             <h6 class="mb-2 text-primary">Siang</h6>
                                                             <div class="form-check form-check-inline">
-                                                                <input class="form-check-input" type="radio" name="makan_siang" id="makan_siang_ya" value="ya"
-                                                                       {{ old('makan_siang', $dataGiziDewasa->makan_siang) == 'ya' ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="makan_siang_ya">Ya</label>
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="makan_siang" id="makan_siang_ya" value="ya"
+                                                                    {{ old('makan_siang', $dataGiziDewasa->makan_siang) == 'ya' ? 'checked' : '' }}>
+                                                                <label class="form-check-label"
+                                                                    for="makan_siang_ya">Ya</label>
                                                             </div>
                                                             <div class="form-check form-check-inline">
-                                                                <input class="form-check-input" type="radio" name="makan_siang" id="makan_siang_tidak" value="tidak"
-                                                                       {{ old('makan_siang', $dataGiziDewasa->makan_siang) == 'tidak' ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="makan_siang_tidak">Tidak</label>
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="makan_siang" id="makan_siang_tidak" value="tidak"
+                                                                    {{ old('makan_siang', $dataGiziDewasa->makan_siang) == 'tidak' ? 'checked' : '' }}>
+                                                                <label class="form-check-label"
+                                                                    for="makan_siang_tidak">Tidak</label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -103,32 +114,37 @@
                                                         <div class="border rounded p-3">
                                                             <h6 class="mb-2 text-primary">Malam</h6>
                                                             <div class="form-check form-check-inline">
-                                                                <input class="form-check-input" type="radio" name="makan_malam" id="makan_malam_ya" value="ya"
-                                                                       {{ old('makan_malam', $dataGiziDewasa->makan_malam) == 'ya' ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="makan_malam_ya">Ya</label>
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="makan_malam" id="makan_malam_ya" value="ya"
+                                                                    {{ old('makan_malam', $dataGiziDewasa->makan_malam) == 'ya' ? 'checked' : '' }}>
+                                                                <label class="form-check-label"
+                                                                    for="makan_malam_ya">Ya</label>
                                                             </div>
                                                             <div class="form-check form-check-inline">
-                                                                <input class="form-check-input" type="radio" name="makan_malam" id="makan_malam_tidak" value="tidak"
-                                                                       {{ old('makan_malam', $dataGiziDewasa->makan_malam) == 'tidak' ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="makan_malam_tidak">Tidak</label>
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="makan_malam" id="makan_malam_tidak"
+                                                                    value="tidak"
+                                                                    {{ old('makan_malam', $dataGiziDewasa->makan_malam) == 'tidak' ? 'checked' : '' }}>
+                                                                <label class="form-check-label"
+                                                                    for="makan_malam_tidak">Tidak</label>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    
+
                                         <!-- Kebiasaan Makan Selingan/Ngemil -->
                                         <div class="form-group">
                                             <label style="min-width: 230px;">Kebiasaan Ngemil</label>
                                             <div class="d-flex align-items-center gap-2" style="width: 300px;">
-                                                <input type="number" class="form-control" name="frekuensi_ngemil" id="frekuensi_ngemil" 
-                                                       min="0" max="10" placeholder="0" 
-                                                       value="{{ old('frekuensi_ngemil', $dataGiziDewasa->frekuensi_ngemil ?? 0) }}">
+                                                <input type="number" class="form-control" name="frekuensi_ngemil"
+                                                    id="frekuensi_ngemil" min="0" max="10" placeholder="0"
+                                                    value="{{ old('frekuensi_ngemil', $dataGiziDewasa->frekuensi_ngemil ?? 0) }}">
                                                 <span class="text-muted">kali/hari</span>
                                             </div>
                                         </div>
-                                    
+
                                         <!-- Alergi Makanan -->
                                         <div class="form-group">
                                             <label style="min-width: 230px;">Alergi Makanan</label>
@@ -137,31 +153,37 @@
                                                     <div class="row">
                                                         <div class="col-md-3">
                                                             <div class="form-check form-check-inline mb-3">
-                                                                <input class="form-check-input" type="radio" name="alergi_makanan" id="alergi_makanan_tidak" 
-                                                                       value="tidak" {{ old('alergi_makanan', $dataGiziDewasa->alergi_makanan) == 'tidak' ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="alergi_makanan_tidak">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="alergi_makanan" id="alergi_makanan_tidak"
+                                                                    value="tidak"
+                                                                    {{ old('alergi_makanan', $dataGiziDewasa->alergi_makanan) == 'tidak' ? 'checked' : '' }}>
+                                                                <label class="form-check-label"
+                                                                    for="alergi_makanan_tidak">
                                                                     <strong>Tidak</strong>
                                                                 </label>
                                                             </div>
                                                             <div class="form-check form-check-inline mb-3">
-                                                                <input class="form-check-input" type="radio" name="alergi_makanan" id="alergi_makanan_ya" 
-                                                                       value="ya" {{ old('alergi_makanan', $dataGiziDewasa->alergi_makanan) == 'ya' ? 'checked' : '' }}>
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="alergi_makanan" id="alergi_makanan_ya"
+                                                                    value="ya"
+                                                                    {{ old('alergi_makanan', $dataGiziDewasa->alergi_makanan) == 'ya' ? 'checked' : '' }}>
                                                                 <label class="form-check-label" for="alergi_makanan_ya">
                                                                     <strong>Ya</strong>
                                                                 </label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-9">
-                                                            <label class="form-label text-muted">Jenis alergi makanan:</label>
-                                                            <textarea class="form-control" name="jenis_alergi" id="jenis_alergi" rows="3" 
-                                                                      placeholder="Contoh: Telur, susu, kacang tanah, seafood, dll"
-                                                                      {{ old('alergi_makanan', $dataGiziDewasa->alergi_makanan) != 'ya' ? 'readonly style=background-color:#f8f9fa;' : '' }}>{{ old('jenis_alergi', $dataGiziDewasa->jenis_alergi) }}</textarea>
+                                                            <label class="form-label text-muted">Jenis alergi
+                                                                makanan:</label>
+                                                            <textarea class="form-control" name="jenis_alergi" id="jenis_alergi" rows="3"
+                                                                placeholder="Contoh: Telur, susu, kacang tanah, seafood, dll"
+                                                                {{ old('alergi_makanan', $dataGiziDewasa->alergi_makanan) != 'ya' ? 'readonly style=background-color:#f8f9fa;' : '' }}>{{ old('jenis_alergi', $dataGiziDewasa->jenis_alergi) }}</textarea>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    
+
                                         <!-- Pantangan Makanan -->
                                         <div class="form-group">
                                             <label style="min-width: 230px;">Pantangan Makanan</label>
@@ -170,31 +192,38 @@
                                                     <div class="row">
                                                         <div class="col-md-3">
                                                             <div class="form-check form-check-inline mb-3">
-                                                                <input class="form-check-input" type="radio" name="pantangan_makanan" id="pantangan_makanan_tidak" 
-                                                                       value="tidak" {{ old('pantangan_makanan', $dataGiziDewasa->pantangan_makanan) == 'tidak' ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="pantangan_makanan_tidak">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="pantangan_makanan" id="pantangan_makanan_tidak"
+                                                                    value="tidak"
+                                                                    {{ old('pantangan_makanan', $dataGiziDewasa->pantangan_makanan) == 'tidak' ? 'checked' : '' }}>
+                                                                <label class="form-check-label"
+                                                                    for="pantangan_makanan_tidak">
                                                                     <strong>Tidak</strong>
                                                                 </label>
                                                             </div>
                                                             <div class="form-check form-check-inline mb-3">
-                                                                <input class="form-check-input" type="radio" name="pantangan_makanan" id="pantangan_makanan_ya" 
-                                                                       value="ya" {{ old('pantangan_makanan', $dataGiziDewasa->pantangan_makanan) == 'ya' ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="pantangan_makanan_ya">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="pantangan_makanan" id="pantangan_makanan_ya"
+                                                                    value="ya"
+                                                                    {{ old('pantangan_makanan', $dataGiziDewasa->pantangan_makanan) == 'ya' ? 'checked' : '' }}>
+                                                                <label class="form-check-label"
+                                                                    for="pantangan_makanan_ya">
                                                                     <strong>Ya</strong>
                                                                 </label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-9">
-                                                            <label class="form-label text-muted">Jenis pantangan makanan:</label>
-                                                            <textarea class="form-control" name="jenis_pantangan" id="jenis_pantangan" rows="3" 
-                                                                      placeholder="Contoh: Makanan pedas, makanan berlemak, makanan tinggi garam, dll"
-                                                                      {{ old('pantangan_makanan', $dataGiziDewasa->pantangan_makanan) != 'ya' ? 'readonly style=background-color:#f8f9fa;' : '' }}>{{ old('jenis_pantangan', $dataGiziDewasa->jenis_pantangan) }}</textarea>
+                                                            <label class="form-label text-muted">Jenis pantangan
+                                                                makanan:</label>
+                                                            <textarea class="form-control" name="jenis_pantangan" id="jenis_pantangan" rows="3"
+                                                                placeholder="Contoh: Makanan pedas, makanan berlemak, makanan tinggi garam, dll"
+                                                                {{ old('pantangan_makanan', $dataGiziDewasa->pantangan_makanan) != 'ya' ? 'readonly style=background-color:#f8f9fa;' : '' }}>{{ old('jenis_pantangan', $dataGiziDewasa->jenis_pantangan) }}</textarea>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    
+
                                         <!-- Gangguan Gastrointestinal -->
                                         <div class="form-group">
                                             <label style="min-width: 230px;">Gangguan Gastrointestinal</label>
@@ -202,7 +231,10 @@
                                                 <div class="border rounded p-3">
                                                     <div class="row g-3">
                                                         @php
-                                                            $gangguanGi = explode(',', old('gangguan_gi', $dataGiziDewasa->gangguan_gi ?? ''));
+                                                            $gangguanGi = explode(
+                                                                ',',
+                                                                old('gangguan_gi', $dataGiziDewasa->gangguan_gi ?? ''),
+                                                            );
                                                             $gangguanOptions = [
                                                                 'anoreksia' => 'Anoreksia',
                                                                 'mual' => 'Mual',
@@ -211,17 +243,19 @@
                                                                 'kesulitan_menelan' => 'Kesulitan Menelan',
                                                                 'muntah' => 'Muntah',
                                                                 'konstipasi' => 'Konstipasi',
-                                                                'gangguan_gigi_geligi' => 'Gangguan Gigi Geligi'
+                                                                'gangguan_gigi_geligi' => 'Gangguan Gigi Geligi',
                                                             ];
                                                         @endphp
 
-                                                        @foreach($gangguanOptions as $value => $label)
+                                                        @foreach ($gangguanOptions as $value => $label)
                                                             <div class="col-md-3">
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" name="gangguan_gi[]" 
-                                                                           value="{{ $value }}" id="gi_{{ $value }}"
-                                                                           {{ in_array($value, $gangguanGi) ? 'checked' : '' }}>
-                                                                    <label class="form-check-label" for="gi_{{ $value }}">
+                                                                    <input class="form-check-input" type="checkbox"
+                                                                        name="gangguan_gi[]" value="{{ $value }}"
+                                                                        id="gi_{{ $value }}"
+                                                                        {{ in_array($value, $gangguanGi) ? 'checked' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="gi_{{ $value }}">
                                                                         {{ $label }}
                                                                     </label>
                                                                 </div>
@@ -231,7 +265,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    
+
                                         <!-- Frekuensi Makan Sebelum Masuk RS -->
                                         <div class="form-group">
                                             <label style="min-width: 230px;">Frekuensi Makan Sebelum Masuk RS</label>
@@ -240,21 +274,27 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="radio" name="frekuensi_makan_rs" id="frekuensi_lebih" value="lebih_3x"
-                                                                       {{ old('frekuensi_makan_rs', $dataGiziDewasa->frekuensi_makan_rs) == 'lebih_3x' ? 'checked' : '' }}>
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="frekuensi_makan_rs" id="frekuensi_lebih"
+                                                                    value="lebih_3x"
+                                                                    {{ old('frekuensi_makan_rs', $dataGiziDewasa->frekuensi_makan_rs) == 'lebih_3x' ? 'checked' : '' }}>
                                                                 <label class="form-check-label" for="frekuensi_lebih">
                                                                     <strong>Makan > 3x/hari</strong>
-                                                                    <small class="text-muted d-block">Termasuk makan utama dan selingan</small>
+                                                                    <small class="text-muted d-block">Termasuk makan utama
+                                                                        dan selingan</small>
                                                                 </label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="radio" name="frekuensi_makan_rs" id="frekuensi_kurang" value="kurang_3x"
-                                                                       {{ old('frekuensi_makan_rs', $dataGiziDewasa->frekuensi_makan_rs) == 'kurang_3x' ? 'checked' : '' }}>
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="frekuensi_makan_rs" id="frekuensi_kurang"
+                                                                    value="kurang_3x"
+                                                                    {{ old('frekuensi_makan_rs', $dataGiziDewasa->frekuensi_makan_rs) == 'kurang_3x' ? 'checked' : '' }}>
                                                                 <label class="form-check-label" for="frekuensi_kurang">
                                                                     <strong>Makan < 3x/hari</strong>
-                                                                    <small class="text-muted d-block">Kurang dari frekuensi normal</small>
+                                                                            <small class="text-muted d-block">Kurang dari
+                                                                                frekuensi normal</small>
                                                                 </label>
                                                             </div>
                                                         </div>
@@ -262,143 +302,162 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    
+
                                     </div>
 
                                     <div class="section-separator" id="bahan-makanan">
                                         <h5 class="section-title">3. Bahan Makanan yang Bisa Dikonsumsi</h5>
-                                    
+
                                         <div class="row g-4">
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label fw-bold">Makanan Pokok</label>
-                                                    <textarea class="form-control" name="makanan_pokok" rows="4" 
-                                                              placeholder="Contoh: Nasi, roti, kentang, mie, bubur">{{ old('makanan_pokok', $dataGiziDewasa->makanan_pokok) }}</textarea>
+                                                    <textarea class="form-control" name="makanan_pokok" rows="4"
+                                                        placeholder="Contoh: Nasi, roti, kentang, mie, bubur">{{ old('makanan_pokok', $dataGiziDewasa->makanan_pokok) }}</textarea>
                                                 </div>
-                                    
+
                                                 <div class="form-group">
                                                     <label class="form-label fw-bold">Lauk Hewani</label>
-                                                    <textarea class="form-control" name="lauk_hewani" rows="4" 
-                                                              placeholder="Contoh: Ayam, ikan, daging, telur, susu, keju">{{ old('lauk_hewani', $dataGiziDewasa->lauk_hewani) }}</textarea>
+                                                    <textarea class="form-control" name="lauk_hewani" rows="4"
+                                                        placeholder="Contoh: Ayam, ikan, daging, telur, susu, keju">{{ old('lauk_hewani', $dataGiziDewasa->lauk_hewani) }}</textarea>
                                                 </div>
-                                    
+
                                                 <div class="form-group">
                                                     <label class="form-label fw-bold">Lauk Nabati</label>
-                                                    <textarea class="form-control" name="lauk_nabati" rows="4" 
-                                                              placeholder="Contoh: Tahu, tempe, kacang-kacangan">{{ old('lauk_nabati', $dataGiziDewasa->lauk_nabati) }}</textarea>
+                                                    <textarea class="form-control" name="lauk_nabati" rows="4" placeholder="Contoh: Tahu, tempe, kacang-kacangan">{{ old('lauk_nabati', $dataGiziDewasa->lauk_nabati) }}</textarea>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label fw-bold">Sayur-sayuran</label>
-                                                    <textarea class="form-control" name="sayuran" rows="4" 
-                                                              placeholder="Contoh: Bayam, kangkung, wortel, brokoli">{{ old('sayuran', $dataGiziDewasa->sayuran) }}</textarea>
+                                                    <textarea class="form-control" name="sayuran" rows="4" placeholder="Contoh: Bayam, kangkung, wortel, brokoli">{{ old('sayuran', $dataGiziDewasa->sayuran) }}</textarea>
                                                 </div>
-                                    
+
                                                 <div class="form-group">
                                                     <label class="form-label fw-bold">Buah-buahan</label>
-                                                    <textarea class="form-control" name="buah_buahan" rows="4" 
-                                                              placeholder="Contoh: Pisang, apel, jeruk, pepaya">{{ old('buah_buahan', $dataGiziDewasa->buah_buahan) }}</textarea>
+                                                    <textarea class="form-control" name="buah_buahan" rows="4" placeholder="Contoh: Pisang, apel, jeruk, pepaya">{{ old('buah_buahan', $dataGiziDewasa->buah_buahan) }}</textarea>
                                                 </div>
-                                    
+
                                                 <div class="form-group">
                                                     <label class="form-label fw-bold">Minuman</label>
-                                                    <textarea class="form-control" name="minuman" rows="4" 
-                                                              placeholder="Contoh: Air putih, susu, jus buah, teh">{{ old('minuman', $dataGiziDewasa->minuman) }}</textarea>
+                                                    <textarea class="form-control" name="minuman" rows="4" placeholder="Contoh: Air putih, susu, jus buah, teh">{{ old('minuman', $dataGiziDewasa->minuman) }}</textarea>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="section-separator" id="recall-24-jam">
                                         <h5 class="section-title">4. Recall Makanan 24 Jam</h5>
-                                        
+
                                         <div class="alert alert-info mb-4">
-                                            <strong>Petunjuk:</strong> Isikan makanan dan minuman yang dikonsumsi dalam 24 jam terakhir
+                                            <strong>Petunjuk:</strong> Isikan makanan dan minuman yang dikonsumsi dalam 24
+                                            jam terakhir
                                         </div>
-                                    
+
                                         <div class="row g-4">
                                             <div class="col-md-6">
                                                 <h6 class="text-primary mb-3">Pagi Hari</h6>
-                                                
+
                                                 <div class="form-group">
                                                     <label class="form-label">Makan Pagi</label>
-                                                    <textarea class="form-control" name="recall_makan_pagi" rows="4" 
-                                                              placeholder="Contoh: Nasi putih 1 centong, telur dadar 1 butir, sayur bayam 1 mangkok">{{ old('recall_makan_pagi', $dataGiziDewasa->recall_makan_pagi) }}</textarea>
+                                                    <textarea class="form-control" name="recall_makan_pagi" rows="4"
+                                                        placeholder="Contoh: Nasi putih 1 centong, telur dadar 1 butir, sayur bayam 1 mangkok">{{ old('recall_makan_pagi', $dataGiziDewasa->recall_makan_pagi) }}</textarea>
                                                 </div>
-                                    
+
                                                 <div class="form-group">
                                                     <label class="form-label">Snack Pagi</label>
-                                                    <textarea class="form-control" name="recall_snack_pagi" rows="4" 
-                                                              placeholder="Contoh: Biskuit 2 keping, susu kotak 200ml">{{ old('recall_snack_pagi', $dataGiziDewasa->recall_snack_pagi) }}</textarea>
+                                                    <textarea class="form-control" name="recall_snack_pagi" rows="4"
+                                                        placeholder="Contoh: Biskuit 2 keping, susu kotak 200ml">{{ old('recall_snack_pagi', $dataGiziDewasa->recall_snack_pagi) }}</textarea>
                                                 </div>
                                             </div>
-                                    
+
                                             <div class="col-md-6">
                                                 <h6 class="text-primary mb-3">Siang Hari</h6>
-                                                
+
                                                 <div class="form-group">
                                                     <label class="form-label">Makan Siang</label>
-                                                    <textarea class="form-control" name="recall_makan_siang" rows="4" 
-                                                              placeholder="Contoh: Nasi putih 1.5 centong, ayam goreng 1 potong, sayur sop 1 mangkok">{{ old('recall_makan_siang', $dataGiziDewasa->recall_makan_siang) }}</textarea>
+                                                    <textarea class="form-control" name="recall_makan_siang" rows="4"
+                                                        placeholder="Contoh: Nasi putih 1.5 centong, ayam goreng 1 potong, sayur sop 1 mangkok">{{ old('recall_makan_siang', $dataGiziDewasa->recall_makan_siang) }}</textarea>
                                                 </div>
-                                    
+
                                                 <div class="form-group">
                                                     <label class="form-label">Snack Sore</label>
-                                                    <textarea class="form-control" name="recall_snack_sore" rows="4" 
-                                                              placeholder="Contoh: Buah pisang 1 buah, air putih 1 gelas">{{ old('recall_snack_sore', $dataGiziDewasa->recall_snack_sore) }}</textarea>
+                                                    <textarea class="form-control" name="recall_snack_sore" rows="4"
+                                                        placeholder="Contoh: Buah pisang 1 buah, air putih 1 gelas">{{ old('recall_snack_sore', $dataGiziDewasa->recall_snack_sore) }}</textarea>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="col-md-12">
                                                 <h6 class="text-primary mb-3">Malam Hari</h6>
-                                                
+
                                                 <div class="row g-4">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label class="form-label">Makan Malam</label>
-                                                            <textarea class="form-control" name="recall_makan_malam" rows="4" 
-                                                                      placeholder="Contoh: Nasi putih 1 centong, ikan bakar 1 potong, sayur kangkung 1 mangkok">{{ old('recall_makan_malam', $dataGiziDewasa->recall_makan_malam) }}</textarea>
+                                                            <textarea class="form-control" name="recall_makan_malam" rows="4"
+                                                                placeholder="Contoh: Nasi putih 1 centong, ikan bakar 1 potong, sayur kangkung 1 mangkok">{{ old('recall_makan_malam', $dataGiziDewasa->recall_makan_malam) }}</textarea>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label class="form-label">Snack Malam</label>
-                                                            <textarea class="form-control" name="recall_snack_malam" rows="4" 
-                                                                      placeholder="Contoh: Susu hangat 1 gelas, roti tawar 1 potong">{{ old('recall_snack_malam', $dataGiziDewasa->recall_snack_malam) }}</textarea>
+                                                            <textarea class="form-control" name="recall_snack_malam" rows="4"
+                                                                placeholder="Contoh: Susu hangat 1 gelas, roti tawar 1 potong">{{ old('recall_snack_malam', $dataGiziDewasa->recall_snack_malam) }}</textarea>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="section-separator" id="asupan-sebelum-rs">
                                         <h5 class="section-title">5. Asupan Sebelum Masuk RS</h5>
-                                    
+
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Penilaian Asupan Makanan</label>
                                             <div style="width: 100%;">
                                                 <div class="row g-4">
                                                     @php
                                                         $asupanOptions = [
-                                                            'lebih' => ['label' => 'LEBIH', 'desc' => 'Asupan berlebihan', 'class' => 'text-success'],
-                                                            'baik' => ['label' => 'BAIK', 'desc' => 'Sesuai kebutuhan', 'class' => 'text-primary'],
-                                                            'kurang' => ['label' => 'KURANG', 'desc' => 'Kurang dari kebutuhan', 'class' => 'text-warning'],
-                                                            'buruk' => ['label' => 'BURUK', 'desc' => 'Sangat kurang', 'class' => 'text-danger']
+                                                            'lebih' => [
+                                                                'label' => 'LEBIH',
+                                                                'desc' => 'Asupan berlebihan',
+                                                                'class' => 'text-success',
+                                                            ],
+                                                            'baik' => [
+                                                                'label' => 'BAIK',
+                                                                'desc' => 'Sesuai kebutuhan',
+                                                                'class' => 'text-primary',
+                                                            ],
+                                                            'kurang' => [
+                                                                'label' => 'KURANG',
+                                                                'desc' => 'Kurang dari kebutuhan',
+                                                                'class' => 'text-warning',
+                                                            ],
+                                                            'buruk' => [
+                                                                'label' => 'BURUK',
+                                                                'desc' => 'Sangat kurang',
+                                                                'class' => 'text-danger',
+                                                            ],
                                                         ];
                                                     @endphp
 
-                                                    @foreach($asupanOptions as $value => $option)
+                                                    @foreach ($asupanOptions as $value => $option)
                                                         <div class="col-md-3">
                                                             <div class="border rounded p-4 text-center">
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="radio" name="asupan_sebelum_rs" id="asupan_{{ $value }}" value="{{ $value }}"
-                                                                           {{ old('asupan_sebelum_rs', $dataGiziDewasa->asupan_sebelum_rs) == $value ? 'checked' : '' }}>
-                                                                    <label class="form-check-label w-100" for="asupan_{{ $value }}">
-                                                                        <h6 class="{{ $option['class'] }} mb-2">{{ $option['label'] }}</h6>
-                                                                        <p class="text-muted small mb-0">{{ $option['desc'] }}</p>
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="asupan_sebelum_rs"
+                                                                        id="asupan_{{ $value }}"
+                                                                        value="{{ $value }}"
+                                                                        {{ old('asupan_sebelum_rs', $dataGiziDewasa->asupan_sebelum_rs) == $value ? 'checked' : '' }}>
+                                                                    <label class="form-check-label w-100"
+                                                                        for="asupan_{{ $value }}">
+                                                                        <h6 class="{{ $option['class'] }} mb-2">
+                                                                            {{ $option['label'] }}</h6>
+                                                                        <p class="text-muted small mb-0">
+                                                                            {{ $option['desc'] }}</p>
                                                                     </label>
                                                                 </div>
                                                             </div>
@@ -411,53 +470,50 @@
 
                                     <div class="section-separator" id="asesmen-gizi">
                                         <h5 class="section-title">6. Asesmen Gizi</h5>
-                                    
+
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Berat Badan (kg)</label>
-                                            <input type="number" class="form-control" name="berat_badan" id="berat_badan" step="0.1" 
-                                                   placeholder="Contoh: 50.5" 
-                                                   value="{{ old('berat_badan', $dataGiziDewasa->asesmenGizi ? number_format((float)$dataGiziDewasa->asesmenGizi->berat_badan, 1, '.', '') : '') }}">
+                                            <input type="number" class="form-control" name="berat_badan"
+                                                id="berat_badan" step="0.1" placeholder="Contoh: 50.5"
+                                                value="{{ old('berat_badan', $dataGiziDewasa->asesmenGizi ? number_format((float) $dataGiziDewasa->asesmenGizi->berat_badan, 1, '.', '') : '') }}">
                                         </div>
-                                    
+
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Tinggi Badan (cm)</label>
-                                            <input type="number" class="form-control" name="tinggi_badan" id="tinggi_badan" step="0.1" 
-                                                   placeholder="Contoh: 165"
-                                                   value="{{ old('tinggi_badan', $dataGiziDewasa->asesmenGizi ? number_format((float)$dataGiziDewasa->asesmenGizi->tinggi_badan, 1, '.', '') : '') }}">
+                                            <input type="number" class="form-control" name="tinggi_badan"
+                                                id="tinggi_badan" step="0.1" placeholder="Contoh: 165"
+                                                value="{{ old('tinggi_badan', $dataGiziDewasa->asesmenGizi ? number_format((float) $dataGiziDewasa->asesmenGizi->tinggi_badan, 1, '.', '') : '') }}">
                                         </div>
-                                    
+
                                         <div class="form-group">
                                             <label style="min-width: 220px;">IMT (kg/m²)</label>
-                                            <input type="number" class="form-control" name="imt" id="imt" step="0.01" 
-                                                   placeholder="Akan dihitung otomatis" readonly
-                                                   value="{{ old('imt', $dataGiziDewasa->asesmenGizi ? number_format((float)$dataGiziDewasa->asesmenGizi->imt, 2, '.', '') : '') }}">
+                                            <input type="number" class="form-control" name="imt" id="imt"
+                                                step="0.01" placeholder="Akan dihitung otomatis" readonly
+                                                value="{{ old('imt', $dataGiziDewasa->asesmenGizi ? number_format((float) $dataGiziDewasa->asesmenGizi->imt, 2, '.', '') : '') }}">
                                         </div>
-                                    
+
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Berat Badan Ideal/BBI (kg)</label>
-                                            <input type="number" class="form-control" name="bbi" id="bbi" step="0.1" 
-                                                   placeholder="Akan dihitung otomatis" readonly
-                                                   value="{{ old('bbi', $dataGiziDewasa->asesmenGizi ? number_format((float)$dataGiziDewasa->asesmenGizi->bbi, 1, '.', '') : '') }}">
+                                            <input type="number" class="form-control" name="bbi" id="bbi"
+                                                step="0.1" placeholder="Akan dihitung otomatis" readonly
+                                                value="{{ old('bbi', $dataGiziDewasa->asesmenGizi ? number_format((float) $dataGiziDewasa->asesmenGizi->bbi, 1, '.', '') : '') }}">
                                         </div>
-                                    
+
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Biokimia</label>
-                                            <textarea class="form-control" name="biokimia" rows="4"
-                                                placeholder="Sebutkan biokimia...">{{ old('biokimia', $dataGiziDewasa->asesmenGizi->biokimia ?? '') }}</textarea>
+                                            <textarea class="form-control" name="biokimia" rows="4" placeholder="Sebutkan biokimia...">{{ old('biokimia', $dataGiziDewasa->asesmenGizi->biokimia ?? '') }}</textarea>
                                         </div>
-                                    
+
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Kimia/Fisik</label>
-                                            <textarea class="form-control" name="kimia_fisik" rows="4"
-                                                placeholder="Sebutkan kimia/fisik...">{{ old('kimia_fisik', $dataGiziDewasa->asesmenGizi->kimia_fisik ?? '') }}</textarea>
+                                            <textarea class="form-control" name="kimia_fisik" rows="4" placeholder="Sebutkan kimia/fisik...">{{ old('kimia_fisik', $dataGiziDewasa->asesmenGizi->kimia_fisik ?? '') }}</textarea>
                                         </div>
-                                    
+
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Riwayat Gizi dll</label>
-                                            <textarea class="form-control" name="riwayat_gizi" rows="4"
-                                                placeholder="Sebutkan riwayat gizi...">{{ old('riwayat_gizi', $dataGiziDewasa->asesmenGizi->riwayat_gizi ?? '') }}</textarea>
+                                            <textarea class="form-control" name="riwayat_gizi" rows="4" placeholder="Sebutkan riwayat gizi...">{{ old('riwayat_gizi', $dataGiziDewasa->asesmenGizi->riwayat_gizi ?? '') }}</textarea>
                                         </div>
-                                    
+
                                     </div>
 
                                     <div class="section-separator" id="alergi">
@@ -480,15 +536,16 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @if($alergiPasien && $alergiPasien->count() > 0)
-                                                        @foreach($alergiPasien as $alergi)
+                                                    @if ($alergiPasien && $alergiPasien->count() > 0)
+                                                        @foreach ($alergiPasien as $alergi)
                                                             <tr>
                                                                 <td>{{ $alergi->jenis_alergi }}</td>
                                                                 <td>{{ $alergi->nama_alergi }}</td>
                                                                 <td>{{ $alergi->reaksi }}</td>
                                                                 <td>{{ $alergi->tingkat_keparahan }}</td>
                                                                 <td>
-                                                                    <button type="button" class="btn btn-danger btn-sm remove-alergi">
+                                                                    <button type="button"
+                                                                        class="btn btn-danger btn-sm remove-alergi">
                                                                         <i class="ti-trash"></i>
                                                                     </button>
                                                                 </td>
@@ -496,7 +553,8 @@
                                                         @endforeach
                                                     @else
                                                         <tr id="no-alergi-row">
-                                                            <td colspan="5" class="text-center text-muted">Tidak ada data alergi</td>
+                                                            <td colspan="5" class="text-center text-muted">Tidak ada
+                                                                data alergi</td>
                                                         </tr>
                                                     @endif
                                                 </tbody>
@@ -509,18 +567,18 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Diagnosa Gizi</label>
-                                            <textarea class="form-control" name="diagnosa_gizi" rows="4"
-                                                placeholder="Sebutkan diagnosa gizi...">{{ old('diagnosa_gizi', $dataGiziDewasa->diagnosa_gizi) }}</textarea>
+                                            <textarea class="form-control" name="diagnosa_gizi" rows="4" placeholder="Sebutkan diagnosa gizi...">{{ old('diagnosa_gizi', $dataGiziDewasa->diagnosa_gizi) }}</textarea>
                                         </div>
                                     </div>
 
                                     <div class="section-separator" id="intervensi-gizi">
                                         <h5 class="section-title">9. Intervensi Gizi</h5>
-                                        
+
                                         <div class="alert alert-info mb-4">
-                                            <strong>Informasi:</strong> Perhitungan kebutuhan gizi berdasarkan data antropometri dan kondisi klinis pasien
+                                            <strong>Informasi:</strong> Perhitungan kebutuhan gizi berdasarkan data
+                                            antropometri dan kondisi klinis pasien
                                         </div>
-                                    
+
                                         <div class="row g-4">
                                             <!-- Data Input Dasar -->
                                             <div class="col-md-12">
@@ -529,50 +587,77 @@
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label class="form-label">Jenis Kelamin</label>
-                                                            <input type="text" class="form-control" 
-                                                                   value="{{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Tidak Diketahui') }}" 
-                                                                   readonly style="background-color: #f8f9fa;">
-                                                            <input type="hidden" name="jenis_kelamin" value="{{ $dataMedis->pasien->jenis_kelamin }}">
+                                                            <input type="text" class="form-control"
+                                                                value="{{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Tidak Diketahui') }}"
+                                                                readonly style="background-color: #f8f9fa;">
+                                                            <input type="hidden" name="jenis_kelamin"
+                                                                value="{{ $dataMedis->pasien->jenis_kelamin }}">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label class="form-label">Umur (tahun)</label>
-                                                            <input type="number" class="form-control" name="umur" id="umur" 
-                                                                   value="{{ old('umur', $dataGiziDewasa->intervensiGizi->umur ?? $dataMedis->pasien->umur) }}" step="0.1" readonly 
-                                                                   style="background-color: #f8f9fa;">
+                                                            <input type="number" class="form-control" name="umur"
+                                                                id="umur"
+                                                                value="{{ old('umur', $dataGiziDewasa->intervensiGizi->umur ?? $dataMedis->pasien->umur) }}"
+                                                                step="0.1" readonly
+                                                                style="background-color: #f8f9fa;">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label class="form-label">Faktor Aktivitas</label>
-                                                            <select class="form-control" name="faktor_aktivitas" id="faktor_aktivitas">
+                                                            <select class="form-control" name="faktor_aktivitas"
+                                                                id="faktor_aktivitas">
                                                                 <option value="">Pilih Faktor Aktivitas</option>
-                                                                <option value="1.2" {{ old('faktor_aktivitas', $dataGiziDewasa->intervensiGizi->faktor_aktivitas ?? '') == '1.2' ? 'selected' : '' }}>1.2 - Bed rest</option>
-                                                                <option value="1.3" {{ old('faktor_aktivitas', $dataGiziDewasa->intervensiGizi->faktor_aktivitas ?? '') == '1.3' ? 'selected' : '' }}>1.3 - Mobilitas terbatas</option>
-                                                                <option value="1.5" {{ old('faktor_aktivitas', $dataGiziDewasa->intervensiGizi->faktor_aktivitas ?? '') == '1.5' ? 'selected' : '' }}>1.5 - Aktivitas ringan</option>
-                                                                <option value="1.7" {{ old('faktor_aktivitas', $dataGiziDewasa->intervensiGizi->faktor_aktivitas ?? '') == '1.7' ? 'selected' : '' }}>1.7 - Aktivitas sedang</option>
-                                                                <option value="1.9" {{ old('faktor_aktivitas', $dataGiziDewasa->intervensiGizi->faktor_aktivitas ?? '') == '1.9' ? 'selected' : '' }}>1.9 - Aktivitas berat</option>
+                                                                <option value="1.2"
+                                                                    {{ old('faktor_aktivitas', $dataGiziDewasa->intervensiGizi->faktor_aktivitas ?? '') == '1.2' ? 'selected' : '' }}>
+                                                                    1.2 - Bed rest</option>
+                                                                <option value="1.3"
+                                                                    {{ old('faktor_aktivitas', $dataGiziDewasa->intervensiGizi->faktor_aktivitas ?? '') == '1.3' ? 'selected' : '' }}>
+                                                                    1.3 - Mobilitas terbatas</option>
+                                                                <option value="1.5"
+                                                                    {{ old('faktor_aktivitas', $dataGiziDewasa->intervensiGizi->faktor_aktivitas ?? '') == '1.5' ? 'selected' : '' }}>
+                                                                    1.5 - Aktivitas ringan</option>
+                                                                <option value="1.7"
+                                                                    {{ old('faktor_aktivitas', $dataGiziDewasa->intervensiGizi->faktor_aktivitas ?? '') == '1.7' ? 'selected' : '' }}>
+                                                                    1.7 - Aktivitas sedang</option>
+                                                                <option value="1.9"
+                                                                    {{ old('faktor_aktivitas', $dataGiziDewasa->intervensiGizi->faktor_aktivitas ?? '') == '1.9' ? 'selected' : '' }}>
+                                                                    1.9 - Aktivitas berat</option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label class="form-label">Faktor Stress</label>
-                                                            <select class="form-control" name="faktor_stress" id="faktor_stress">
+                                                            <select class="form-control" name="faktor_stress"
+                                                                id="faktor_stress">
                                                                 <option value="">Pilih Faktor Stress</option>
-                                                                <option value="1.0" {{ old('faktor_stress', $dataGiziDewasa->intervensiGizi->faktor_stress ?? '') == '1.0' ? 'selected' : '' }}>1.0 - Normal</option>
-                                                                <option value="1.2" {{ old('faktor_stress', $dataGiziDewasa->intervensiGizi->faktor_stress ?? '') == '1.2' ? 'selected' : '' }}>1.2 - Demam ringan</option>
-                                                                <option value="1.3" {{ old('faktor_stress', $dataGiziDewasa->intervensiGizi->faktor_stress ?? '') == '1.3' ? 'selected' : '' }}>1.3 - Infeksi ringan</option>
-                                                                <option value="1.5" {{ old('faktor_stress', $dataGiziDewasa->intervensiGizi->faktor_stress ?? '') == '1.5' ? 'selected' : '' }}>1.5 - Operasi besar</option>
-                                                                <option value="1.8" {{ old('faktor_stress', $dataGiziDewasa->intervensiGizi->faktor_stress ?? '') == '1.8' ? 'selected' : '' }}>1.8 - Trauma berat</option>
-                                                                <option value="2.0" {{ old('faktor_stress', $dataGiziDewasa->intervensiGizi->faktor_stress ?? '') == '2.0' ? 'selected' : '' }}>2.0 - Luka bakar luas</option>
+                                                                <option value="1.0"
+                                                                    {{ old('faktor_stress', $dataGiziDewasa->intervensiGizi->faktor_stress ?? '') == '1.0' ? 'selected' : '' }}>
+                                                                    1.0 - Normal</option>
+                                                                <option value="1.2"
+                                                                    {{ old('faktor_stress', $dataGiziDewasa->intervensiGizi->faktor_stress ?? '') == '1.2' ? 'selected' : '' }}>
+                                                                    1.2 - Demam ringan</option>
+                                                                <option value="1.3"
+                                                                    {{ old('faktor_stress', $dataGiziDewasa->intervensiGizi->faktor_stress ?? '') == '1.3' ? 'selected' : '' }}>
+                                                                    1.3 - Infeksi ringan</option>
+                                                                <option value="1.5"
+                                                                    {{ old('faktor_stress', $dataGiziDewasa->intervensiGizi->faktor_stress ?? '') == '1.5' ? 'selected' : '' }}>
+                                                                    1.5 - Operasi besar</option>
+                                                                <option value="1.8"
+                                                                    {{ old('faktor_stress', $dataGiziDewasa->intervensiGizi->faktor_stress ?? '') == '1.8' ? 'selected' : '' }}>
+                                                                    1.8 - Trauma berat</option>
+                                                                <option value="2.0"
+                                                                    {{ old('faktor_stress', $dataGiziDewasa->intervensiGizi->faktor_stress ?? '') == '2.0' ? 'selected' : '' }}>
+                                                                    2.0 - Luka bakar luas</option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                    
+
                                             <!-- Perhitungan BEE -->
                                             <div class="col-md-12">
                                                 <h6 class="mb-3 text-primary">PERHITUNGAN KEBUTUHAN ENERGI</h6>
@@ -580,24 +665,34 @@
                                                     <div class="row g-3">
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label class="form-label fw-bold">BEE (Basal Energy Expenditure)</label>
+                                                                <label class="form-label fw-bold">BEE (Basal Energy
+                                                                    Expenditure)</label>
                                                                 <div class="input-group">
-                                                                    <input type="number" class="form-control" name="bee" id="bee" 
-                                                                           placeholder="Akan dihitung otomatis" value="{{ old('bee', $dataGiziDewasa->intervensiGizi->bee ?? '') }}" readonly>
+                                                                    <input type="number" class="form-control"
+                                                                        name="bee" id="bee"
+                                                                        placeholder="Akan dihitung otomatis"
+                                                                        value="{{ old('bee', $dataGiziDewasa->intervensiGizi->bee ?? '') }}"
+                                                                        readonly>
                                                                     <span class="input-group-text">Kkal</span>
                                                                 </div>
                                                                 <small class="text-muted mt-1 d-block">
-                                                                    <strong>Pria:</strong> 66 + (13,7 × BB kg) + (5 × TB cm) - (6,8 × Umur thn)<br>
-                                                                    <strong>Wanita:</strong> 655 + (9,6 × BB kg) + (1,7 × TB cm) - (4,7 × Umur thn)
+                                                                    <strong>Pria:</strong> 66 + (13,7 × BB kg) + (5 × TB cm)
+                                                                    - (6,8 × Umur thn)<br>
+                                                                    <strong>Wanita:</strong> 655 + (9,6 × BB kg) + (1,7 × TB
+                                                                    cm) - (4,7 × Umur thn)
                                                                 </small>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label class="form-label fw-bold">BMR (Basal Metabolic Rate)</label>
+                                                                <label class="form-label fw-bold">BMR (Basal Metabolic
+                                                                    Rate)</label>
                                                                 <div class="input-group">
-                                                                    <input type="number" class="form-control" name="bmr" id="bmr" 
-                                                                           placeholder="Sama dengan BEE" value="{{ old('bmr', $dataGiziDewasa->intervensiGizi->bmr ?? '') }}" readonly>
+                                                                    <input type="number" class="form-control"
+                                                                        name="bmr" id="bmr"
+                                                                        placeholder="Sama dengan BEE"
+                                                                        value="{{ old('bmr', $dataGiziDewasa->intervensiGizi->bmr ?? '') }}"
+                                                                        readonly>
                                                                     <span class="input-group-text">Kkal</span>
                                                                 </div>
                                                                 <small class="text-muted">BMR = BEE</small>
@@ -606,37 +701,46 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                    
+
                                             <!-- Perhitungan TEE -->
                                             <div class="col-md-12">
                                                 <div class="border rounded p-4 bg-light">
                                                     <div class="row g-3">
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label class="form-label fw-bold">TEE (Total Energy Expenditure)</label>
+                                                                <label class="form-label fw-bold">TEE (Total Energy
+                                                                    Expenditure)</label>
                                                                 <div class="input-group">
-                                                                    <input type="number" class="form-control" name="tee" id="tee" 
-                                                                           placeholder="Akan dihitung otomatis" value="{{ old('tee', $dataGiziDewasa->intervensiGizi->tee ?? '') }}" readonly>
+                                                                    <input type="number" class="form-control"
+                                                                        name="tee" id="tee"
+                                                                        placeholder="Akan dihitung otomatis"
+                                                                        value="{{ old('tee', $dataGiziDewasa->intervensiGizi->tee ?? '') }}"
+                                                                        readonly>
                                                                     <span class="input-group-text">Kkal</span>
                                                                 </div>
-                                                                <small class="text-muted">TEE = BEE × Faktor Aktivitas × Faktor Stress</small>
+                                                                <small class="text-muted">TEE = BEE × Faktor Aktivitas ×
+                                                                    Faktor Stress</small>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label class="form-label fw-bold">Kebutuhan Kalori (DIET)</label>
+                                                                <label class="form-label fw-bold">Kebutuhan Kalori
+                                                                    (DIET)</label>
                                                                 <div class="input-group">
-                                                                    <input type="number" class="form-control" name="kebutuhan_kalori" id="kebutuhan_kalori" 
-                                                                           placeholder="Sesuaikan dengan kondisi klinis" value="{{ old('kebutuhan_kalori', $dataGiziDewasa->intervensiGizi->kebutuhan_kalori ?? '') }}">
+                                                                    <input type="number" class="form-control"
+                                                                        name="kebutuhan_kalori" id="kebutuhan_kalori"
+                                                                        placeholder="Sesuaikan dengan kondisi klinis"
+                                                                        value="{{ old('kebutuhan_kalori', $dataGiziDewasa->intervensiGizi->kebutuhan_kalori ?? '') }}">
                                                                     <span class="input-group-text">Kkal</span>
                                                                 </div>
-                                                                <small class="text-muted">Dapat disesuaikan berdasarkan kondisi klinis</small>
+                                                                <small class="text-muted">Dapat disesuaikan berdasarkan
+                                                                    kondisi klinis</small>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                    
+
                                             <!-- Bentuk Makanan dan Pemberian -->
                                             <div class="col-md-12">
                                                 <h6 class="mb-3 text-primary">BENTUK MAKANAN DAN CARA PEMBERIAN</h6>
@@ -648,23 +752,32 @@
                                                                 <div class="row g-2">
                                                                     <div class="col-md-4">
                                                                         <div class="form-check">
-                                                                            <input class="form-check-input" type="radio" name="bentuk_makanan" 
-                                                                                   value="biasa" id="bentuk_biasa" {{ old('bentuk_makanan', $dataGiziDewasa->intervensiGizi->bentuk_makanan ?? '') == 'biasa' ? 'checked' : '' }}>
-                                                                            <label class="form-check-label" for="bentuk_biasa">Biasa</label>
+                                                                            <input class="form-check-input" type="radio"
+                                                                                name="bentuk_makanan" value="biasa"
+                                                                                id="bentuk_biasa"
+                                                                                {{ old('bentuk_makanan', $dataGiziDewasa->intervensiGizi->bentuk_makanan ?? '') == 'biasa' ? 'checked' : '' }}>
+                                                                            <label class="form-check-label"
+                                                                                for="bentuk_biasa">Biasa</label>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-4">
                                                                         <div class="form-check">
-                                                                            <input class="form-check-input" type="radio" name="bentuk_makanan" 
-                                                                                   value="lunak" id="bentuk_lunak" {{ old('bentuk_makanan', $dataGiziDewasa->intervensiGizi->bentuk_makanan ?? '') == 'lunak' ? 'checked' : '' }}>
-                                                                            <label class="form-check-label" for="bentuk_lunak">Lunak</label>
+                                                                            <input class="form-check-input" type="radio"
+                                                                                name="bentuk_makanan" value="lunak"
+                                                                                id="bentuk_lunak"
+                                                                                {{ old('bentuk_makanan', $dataGiziDewasa->intervensiGizi->bentuk_makanan ?? '') == 'lunak' ? 'checked' : '' }}>
+                                                                            <label class="form-check-label"
+                                                                                for="bentuk_lunak">Lunak</label>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-4">
                                                                         <div class="form-check">
-                                                                            <input class="form-check-input" type="radio" name="bentuk_makanan" 
-                                                                                   value="cair" id="bentuk_cair" {{ old('bentuk_makanan', $dataGiziDewasa->intervensiGizi->bentuk_makanan ?? '') == 'cair' ? 'checked' : '' }}>
-                                                                            <label class="form-check-label" for="bentuk_cair">Cair</label>
+                                                                            <input class="form-check-input" type="radio"
+                                                                                name="bentuk_makanan" value="cair"
+                                                                                id="bentuk_cair"
+                                                                                {{ old('bentuk_makanan', $dataGiziDewasa->intervensiGizi->bentuk_makanan ?? '') == 'cair' ? 'checked' : '' }}>
+                                                                            <label class="form-check-label"
+                                                                                for="bentuk_cair">Cair</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -678,16 +791,22 @@
                                                                 <div class="row g-2">
                                                                     <div class="col-md-6">
                                                                         <div class="form-check">
-                                                                            <input class="form-check-input" type="radio" name="cara_pemberian" 
-                                                                                   value="oral" id="pemberian_oral" {{ old('cara_pemberian', $dataGiziDewasa->intervensiGizi->cara_pemberian ?? '') == 'oral' ? 'checked' : '' }}>
-                                                                            <label class="form-check-label" for="pemberian_oral">Oral</label>
+                                                                            <input class="form-check-input" type="radio"
+                                                                                name="cara_pemberian" value="oral"
+                                                                                id="pemberian_oral"
+                                                                                {{ old('cara_pemberian', $dataGiziDewasa->intervensiGizi->cara_pemberian ?? '') == 'oral' ? 'checked' : '' }}>
+                                                                            <label class="form-check-label"
+                                                                                for="pemberian_oral">Oral</label>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-check">
-                                                                            <input class="form-check-input" type="radio" name="cara_pemberian" 
-                                                                                   value="ngt" id="pemberian_ngt" {{ old('cara_pemberian', $dataGiziDewasa->intervensiGizi->cara_pemberian ?? '') == 'ngt' ? 'checked' : '' }}>
-                                                                            <label class="form-check-label" for="pemberian_ngt">NGT</label>
+                                                                            <input class="form-check-input" type="radio"
+                                                                                name="cara_pemberian" value="ngt"
+                                                                                id="pemberian_ngt"
+                                                                                {{ old('cara_pemberian', $dataGiziDewasa->intervensiGizi->cara_pemberian ?? '') == 'ngt' ? 'checked' : '' }}>
+                                                                            <label class="form-check-label"
+                                                                                for="pemberian_ngt">NGT</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -696,7 +815,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                    
+
                                             <!-- Perhitungan Makronutrien -->
                                             <div class="col-md-12">
                                                 <h6 class="mb-3 text-primary">KEBUTUHAN MAKRONUTRIEN</h6>
@@ -708,20 +827,26 @@
                                                                 <div class="row g-2">
                                                                     <div class="col-6">
                                                                         <div class="input-group input-group-sm">
-                                                                            <input type="number" class="form-control" name="protein_persen" 
-                                                                                   id="protein_persen" placeholder="%" step="0.1" value="{{ old('protein_persen', $dataGiziDewasa->intervensiGizi->protein_persen ?? '') }}">
+                                                                            <input type="number" class="form-control"
+                                                                                name="protein_persen" id="protein_persen"
+                                                                                placeholder="%" step="0.1"
+                                                                                value="{{ old('protein_persen', $dataGiziDewasa->intervensiGizi->protein_persen ?? '') }}">
                                                                             <span class="input-group-text">%</span>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-6">
                                                                         <div class="input-group input-group-sm">
-                                                                            <input type="number" class="form-control" name="protein_gram" 
-                                                                                   id="protein_gram" placeholder="gram" value="{{ old('protein_gram', $dataGiziDewasa->intervensiGizi->protein_gram ?? '') }}" readonly>
+                                                                            <input type="number" class="form-control"
+                                                                                name="protein_gram" id="protein_gram"
+                                                                                placeholder="gram"
+                                                                                value="{{ old('protein_gram', $dataGiziDewasa->intervensiGizi->protein_gram ?? '') }}"
+                                                                                readonly>
                                                                             <span class="input-group-text">gr</span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <small class="text-muted">= (% × BB) atau (% × Kalori ÷ 4)</small>
+                                                                <small class="text-muted">= (% × BB) atau (% × Kalori ÷
+                                                                    4)</small>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -730,20 +855,26 @@
                                                                 <div class="row g-2">
                                                                     <div class="col-6">
                                                                         <div class="input-group input-group-sm">
-                                                                            <input type="number" class="form-control" name="lemak_persen" 
-                                                                                   id="lemak_persen" placeholder="%" step="0.1" value="{{ old('lemak_persen', $dataGiziDewasa->intervensiGizi->lemak_persen ?? '') }}">
+                                                                            <input type="number" class="form-control"
+                                                                                name="lemak_persen" id="lemak_persen"
+                                                                                placeholder="%" step="0.1"
+                                                                                value="{{ old('lemak_persen', $dataGiziDewasa->intervensiGizi->lemak_persen ?? '') }}">
                                                                             <span class="input-group-text">%</span>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-6">
                                                                         <div class="input-group input-group-sm">
-                                                                            <input type="number" class="form-control" name="lemak_gram" 
-                                                                                   id="lemak_gram" placeholder="gram" value="{{ old('lemak_gram', $dataGiziDewasa->intervensiGizi->lemak_gram ?? '') }}" readonly>
+                                                                            <input type="number" class="form-control"
+                                                                                name="lemak_gram" id="lemak_gram"
+                                                                                placeholder="gram"
+                                                                                value="{{ old('lemak_gram', $dataGiziDewasa->intervensiGizi->lemak_gram ?? '') }}"
+                                                                                readonly>
                                                                             <span class="input-group-text">gr</span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <small class="text-muted">= (% × BB) atau (% × Kalori ÷ 9)</small>
+                                                                <small class="text-muted">= (% × BB) atau (% × Kalori ÷
+                                                                    9)</small>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -752,26 +883,32 @@
                                                                 <div class="row g-2">
                                                                     <div class="col-6">
                                                                         <div class="input-group input-group-sm">
-                                                                            <input type="number" class="form-control" name="kh_persen" 
-                                                                                   id="kh_persen" placeholder="%" step="0.1" value="{{ old('kh_persen', $dataGiziDewasa->intervensiGizi->kh_persen ?? '') }}">
+                                                                            <input type="number" class="form-control"
+                                                                                name="kh_persen" id="kh_persen"
+                                                                                placeholder="%" step="0.1"
+                                                                                value="{{ old('kh_persen', $dataGiziDewasa->intervensiGizi->kh_persen ?? '') }}">
                                                                             <span class="input-group-text">%</span>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-6">
                                                                         <div class="input-group input-group-sm">
-                                                                            <input type="number" class="form-control" name="kh_gram" 
-                                                                                   id="kh_gram" placeholder="gram" value="{{ old('kh_gram', $dataGiziDewasa->intervensiGizi->kh_gram ?? '') }}" readonly>
+                                                                            <input type="number" class="form-control"
+                                                                                name="kh_gram" id="kh_gram"
+                                                                                placeholder="gram"
+                                                                                value="{{ old('kh_gram', $dataGiziDewasa->intervensiGizi->kh_gram ?? '') }}"
+                                                                                readonly>
                                                                             <span class="input-group-text">gr</span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <small class="text-muted">= (% × BB) atau (% × Kalori ÷ 4)</small>
+                                                                <small class="text-muted">= (% × BB) atau (% × Kalori ÷
+                                                                    4)</small>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                    
+
                                             <!-- Rencana Diet -->
                                             <div class="col-md-12">
                                                 <h6 class="mb-3 text-primary">RENCANA DIET DAN MONITORING</h6>
@@ -779,34 +916,34 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label class="form-label fw-bold">Jenis Diet</label>
-                                                            <textarea class="form-control" name="jenis_diet" rows="3" 
-                                                                      placeholder="Contoh: Diet DM 1500 Kkal, Diet Jantung II, Diet Rendah Garam, dll">{{ old('jenis_diet', $dataGiziDewasa->intervensiGizi->jenis_diet ?? '') }}</textarea>
+                                                            <textarea class="form-control" name="jenis_diet" rows="3"
+                                                                placeholder="Contoh: Diet DM 1500 Kkal, Diet Jantung II, Diet Rendah Garam, dll">{{ old('jenis_diet', $dataGiziDewasa->intervensiGizi->jenis_diet ?? '') }}</textarea>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label class="form-label fw-bold">Rencana Monitoring</label>
-                                                            <textarea class="form-control" name="rencana_monitoring" rows="3" 
-                                                                      placeholder="Contoh: Monitoring BB setiap hari, evaluasi asupan makan, pemeriksaan lab rutin">{{ old('rencana_monitoring', $dataGiziDewasa->intervensiGizi->rencana_monitoring ?? '') }}</textarea>
+                                                            <textarea class="form-control" name="rencana_monitoring" rows="3"
+                                                                placeholder="Contoh: Monitoring BB setiap hari, evaluasi asupan makan, pemeriksaan lab rutin">{{ old('rencana_monitoring', $dataGiziDewasa->intervensiGizi->rencana_monitoring ?? '') }}</textarea>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                    
+
                                             <!-- Catatan Khusus -->
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label class="form-label fw-bold">Catatan Intervensi Gizi</label>
-                                                    <textarea class="form-control" name="catatan_intervensi" rows="4" 
-                                                              placeholder="Catatan khusus, anjuran, atau hal-hal penting lainnya terkait intervensi gizi">{{ old('catatan_intervensi', $dataGiziDewasa->intervensiGizi->catatan_intervensi ?? '') }}</textarea>
+                                                    <textarea class="form-control" name="catatan_intervensi" rows="4"
+                                                        placeholder="Catatan khusus, anjuran, atau hal-hal penting lainnya terkait intervensi gizi">{{ old('catatan_intervensi', $dataGiziDewasa->intervensiGizi->catatan_intervensi ?? '') }}</textarea>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="text-end mt-4">
-                                        <a href="{{ url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/gizi/dewasa") }}" 
-                                           class="btn btn-secondary me-2">
+                                        <a href="{{ url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/gizi/dewasa") }}"
+                                            class="btn btn-secondary me-2">
                                             <i class="ti-arrow-left"></i> Batal
                                         </a>
                                         <button type="submit" class="btn btn-primary">
@@ -1076,126 +1213,44 @@
             });
 
             //==================================================================================================//
-            // Fungsi IMT dan BBI untuk Dewasa
+            // Fungsi IMT dan BBI
             //==================================================================================================//
-            // Fungsi untuk menghitung IMT dan BBI untuk dewasa
+            // Fungsi untuk menghitung IMT dan BBI
             function hitungIMTdanBBI() {
                 const beratBadan = parseFloat(document.getElementById('berat_badan').value);
                 const tinggiBadan = parseFloat(document.getElementById('tinggi_badan').value);
-                
-                if (beratBadan && tinggiBadan) {
+                const jenisKelaminEl = document.querySelector('input[name="jenis_kelamin"]');
+
+                if (beratBadan && tinggiBadan && jenisKelaminEl) {
                     // Hitung IMT (kg/m²)
                     const tinggiMeter = tinggiBadan / 100;
                     const imt = beratBadan / (tinggiMeter * tinggiMeter);
                     document.getElementById('imt').value = imt.toFixed(2);
-                    
+
                     // Hitung BBI untuk dewasa menggunakan rumus Broca yang disesuaikan
+                    const jenisKelamin = jenisKelaminEl.value;
                     let bbi;
-                    if (tinggiBadan <= 100) {
-                        bbi = tinggiBadan - 100;
-                    } else if (tinggiBadan <= 110) {
-                        bbi = (tinggiBadan - 100) * 0.9;
-                    } else {
-                        bbi = (tinggiBadan - 100) * 0.9 - ((tinggiBadan - 110) * 0.1);
+
+                    if (jenisKelamin == '1') { // Laki-laki
+                        if (tinggiBadan <= 160) {
+                            bbi = tinggiBadan - 100;
+                        } else {
+                            bbi = (tinggiBadan - 100) - ((tinggiBadan - 100) * 0.1);
+                        }
+                    } else { // Perempuan (jenisKelamin == '0')
+                        if (tinggiBadan <= 150) {
+                            bbi = tinggiBadan - 100;
+                        } else {
+                            bbi = (tinggiBadan - 100) - ((tinggiBadan - 100) * 0.15);
+                        }
                     }
-                    
-                    // Untuk dewasa, BBI minimal 3 kg
-                    if (bbi < 3) bbi = 3;
-                    
+
+                    // Pastikan BBI tidak kurang dari batas minimum yang wajar untuk dewasa
+                    if (bbi < 40) bbi = 40;
+
                     document.getElementById('bbi').value = bbi.toFixed(1);
                 }
             }
-
-            //==================================================================================================//
-            // Fungsi Perhitungan Kebutuhan Energi
-            //==================================================================================================//
-            function hitungKebutuhanEnergi() {
-                const beratBadan = parseFloat(document.getElementById('berat_badan').value);
-                const tinggiBadan = parseFloat(document.getElementById('tinggi_badan').value);
-                const umur = parseFloat(document.getElementById('umur').value);
-                const faktorAktivitas = parseFloat(document.getElementById('faktor_aktivitas').value);
-                const faktorStress = parseFloat(document.getElementById('faktor_stress').value);
-                const jenisKelamin = parseInt(document.querySelector('input[name="jenis_kelamin"]').value);
-
-                if (beratBadan && tinggiBadan && umur) {
-                    let bee;
-                    
-                    // Hitung BEE berdasarkan jenis kelamin
-                    if (jenisKelamin === 1) { // Laki-laki
-                        bee = 66 + (13.7 * beratBadan) + (5 * tinggiBadan) - (6.8 * umur);
-                    } else { // Perempuan
-                        bee = 655 + (9.6 * beratBadan) + (1.7 * tinggiBadan) - (4.7 * umur);
-                    }
-
-                    document.getElementById('bee').value = Math.round(bee);
-                    document.getElementById('bmr').value = Math.round(bee); // BMR = BEE
-
-                    // Hitung TEE jika ada faktor aktivitas dan stress
-                    if (faktorAktivitas && faktorStress) {
-                        const tee = bee * faktorAktivitas * faktorStress;
-                        document.getElementById('tee').value = Math.round(tee);
-                        
-                        // Set default kebutuhan kalori sama dengan TEE
-                        if (!document.getElementById('kebutuhan_kalori').value) {
-                            document.getElementById('kebutuhan_kalori').value = Math.round(tee);
-                        }
-                    }
-                }
-            }
-
-            //==================================================================================================//
-            // Fungsi Perhitungan Makronutrien
-            //==================================================================================================//
-            function hitungMakronutrien() {
-                const kebutuhanKalori = parseFloat(document.getElementById('kebutuhan_kalori').value);
-                const proteinPersen = parseFloat(document.getElementById('protein_persen').value);
-                const lemakPersen = parseFloat(document.getElementById('lemak_persen').value);
-                const khPersen = parseFloat(document.getElementById('kh_persen').value);
-
-                if (kebutuhanKalori) {
-                    // Hitung protein (1g protein = 4 kalori)
-                    if (proteinPersen) {
-                        const proteinKalori = (proteinPersen / 100) * kebutuhanKalori;
-                        const proteinGram = proteinKalori / 4;
-                        document.getElementById('protein_gram').value = Math.round(proteinGram);
-                    }
-
-                    // Hitung lemak (1g lemak = 9 kalori)
-                    if (lemakPersen) {
-                        const lemakKalori = (lemakPersen / 100) * kebutuhanKalori;
-                        const lemakGram = lemakKalori / 9;
-                        document.getElementById('lemak_gram').value = Math.round(lemakGram);
-                    }
-
-                    // Hitung karbohidrat (1g karbohidrat = 4 kalori)
-                    if (khPersen) {
-                        const khKalori = (khPersen / 100) * kebutuhanKalori;
-                        const khGram = khKalori / 4;
-                        document.getElementById('kh_gram').value = Math.round(khGram);
-                    }
-                }
-            }
-
-            // Event listener untuk input berat badan dan tinggi badan
-            document.getElementById('berat_badan')?.addEventListener('input', function() {
-                hitungIMTdanBBI();
-                hitungKebutuhanEnergi();
-            });
-            
-            document.getElementById('tinggi_badan')?.addEventListener('input', function() {
-                hitungIMTdanBBI();
-                hitungKebutuhanEnergi();
-            });
-
-            // Event listener untuk faktor aktivitas dan stress
-            document.getElementById('faktor_aktivitas')?.addEventListener('change', hitungKebutuhanEnergi);
-            document.getElementById('faktor_stress')?.addEventListener('change', hitungKebutuhanEnergi);
-
-            // Event listener untuk perhitungan makronutrien
-            document.getElementById('kebutuhan_kalori')?.addEventListener('input', hitungMakronutrien);
-            document.getElementById('protein_persen')?.addEventListener('input', hitungMakronutrien);
-            document.getElementById('lemak_persen')?.addEventListener('input', hitungMakronutrien);
-            document.getElementById('kh_persen')?.addEventListener('input', hitungMakronutrien);
 
             //==================================================================================================//
             // Fungsi section riwayat gizi
@@ -1259,7 +1314,9 @@
             }
 
             // Terapkan ke semua input dan textarea dalam form
-            const formElements = document.querySelectorAll('input[type="text"], input[type="number"], input[type="date"], input[type="time"], select, textarea');
+            const formElements = document.querySelectorAll(
+                'input[type="text"], input[type="number"], input[type="date"], input[type="time"], select, textarea'
+                );
             formElements.forEach(function(element) {
                 element.addEventListener('keypress', preventEnterSubmit);
             });
@@ -1270,7 +1327,7 @@
                 form.addEventListener('keypress', function(event) {
                     if (event.keyCode === 13 || event.which === 13) {
                         // Kecuali jika target adalah textarea atau tombol submit
-                        if (event.target.tagName.toLowerCase() !== 'textarea' && 
+                        if (event.target.tagName.toLowerCase() !== 'textarea' &&
                             event.target.type !== 'submit') {
                             event.preventDefault();
                             return false;
@@ -1279,10 +1336,386 @@
                 });
             }
 
-            // Hitung nilai awal saat halaman load (untuk edit)
-            hitungIMTdanBBI();
-            hitungKebutuhanEnergi();
-            hitungMakronutrien();
+            //==================================================================================//
+            // Fungsi Perhitungan Nutrisi - DIPERBAIKI UNTUK EDIT
+            //==================================================================================//
+
+            // Fungsi debug untuk memeriksa semua nilai (opsional untuk debugging)
+            function debugValues() {
+                // Function untuk debugging - bisa dihapus di production
+                const elements = {
+                    berat_badan: document.getElementById('berat_badan'),
+                    tinggi_badan: document.getElementById('tinggi_badan'),
+                    umur: document.getElementById('umur'),
+                    jenis_kelamin: document.querySelector('input[name="jenis_kelamin"]'),
+                    faktor_aktivitas: document.getElementById('faktor_aktivitas'),
+                    faktor_stress: document.getElementById('faktor_stress'),
+                    bee: document.getElementById('bee'),
+                    tee: document.getElementById('tee'),
+                    kebutuhan_kalori: document.getElementById('kebutuhan_kalori')
+                };
+
+                // Log hanya jika diperlukan untuk debugging
+                return elements;
+            }
+
+            // Fungsi untuk menghitung BEE
+            function hitungBEE() {
+                try {
+                    // Ambil element
+                    const beratBadanEl = document.getElementById('berat_badan');
+                    const tinggiBadanEl = document.getElementById('tinggi_badan');
+                    const umurEl = document.getElementById('umur');
+                    const jenisKelaminEl = document.querySelector('input[name="jenis_kelamin"]');
+
+                    // Validasi element
+                    if (!beratBadanEl || !tinggiBadanEl || !umurEl || !jenisKelaminEl) {
+                        return;
+                    }
+
+                    // Ambil nilai
+                    const beratBadan = parseFloat(beratBadanEl.value);
+                    const tinggiBadan = parseFloat(tinggiBadanEl.value);
+                    const umur = parseFloat(umurEl.value);
+                    const jenisKelamin = jenisKelaminEl.value;
+
+                    // Validasi input
+                    if (isNaN(beratBadan) || beratBadan <= 0 ||
+                        isNaN(tinggiBadan) || tinggiBadan <= 0 ||
+                        isNaN(umur) || umur < 0) {
+                        return;
+                    }
+
+                    // Hitung BEE
+                    let bee;
+                    if (jenisKelamin == '1') { // Laki-laki
+                        bee = 66 + (13.7 * beratBadan) + (5 * tinggiBadan) - (6.8 * umur);
+                    } else { // Perempuan
+                        bee = 655 + (9.6 * beratBadan) + (1.7 * tinggiBadan) - (4.7 * umur);
+                    }
+
+                    // Set nilai BEE dan BMR
+                    const beeEl = document.getElementById('bee');
+                    const bmrEl = document.getElementById('bmr');
+
+                    if (beeEl) {
+                        beeEl.value = Math.round(bee);
+                    }
+
+                    if (bmrEl) {
+                        bmrEl.value = Math.round(bee);
+                    }
+
+                    // Trigger perhitungan TEE dengan delay
+                    setTimeout(hitungTEE, 50);
+
+                } catch (error) {
+                    // Silent error handling
+                }
+            }
+
+            // Fungsi untuk menghitung TEE
+            function hitungTEE() {
+                try {
+                    const beeEl = document.getElementById('bee');
+                    const faktorAktivitasEl = document.getElementById('faktor_aktivitas');
+                    const faktorStressEl = document.getElementById('faktor_stress');
+
+                    if (!beeEl || !faktorAktivitasEl || !faktorStressEl) {
+                        return;
+                    }
+
+                    const bee = parseFloat(beeEl.value);
+                    const faktorAktivitas = parseFloat(faktorAktivitasEl.value);
+                    const faktorStress = parseFloat(faktorStressEl.value);
+
+                    if (!bee || bee <= 0 || !faktorAktivitas || faktorAktivitas <= 0 ||
+                        !faktorStress || faktorStress <= 0) {
+                        return;
+                    }
+
+                    const tee = bee * faktorAktivitas * faktorStress;
+
+                    const teeEl = document.getElementById('tee');
+                    if (teeEl) {
+                        teeEl.value = Math.round(tee);
+                    }
+
+                    // Set kebutuhan kalori default sama dengan TEE jika kosong
+                    const kebutuhanKaloriEl = document.getElementById('kebutuhan_kalori');
+                    if (kebutuhanKaloriEl) {
+                        if (!kebutuhanKaloriEl.value || parseFloat(kebutuhanKaloriEl.value) === 0) {
+                            kebutuhanKaloriEl.value = Math.round(tee);
+                        }
+                    }
+
+                    // Trigger makronutrien dengan delay
+                    setTimeout(hitungMakronutrien, 50);
+
+                } catch (error) {
+                    // Silent error handling
+                }
+            }
+
+            // Fungsi untuk menghitung makronutrien
+            function hitungMakronutrien() {
+                try {
+                    const kebutuhanKaloriEl = document.getElementById('kebutuhan_kalori');
+
+                    if (!kebutuhanKaloriEl) {
+                        return;
+                    }
+
+                    const kebutuhanKalori = parseFloat(kebutuhanKaloriEl.value);
+
+                    if (!kebutuhanKalori || kebutuhanKalori <= 0) {
+                        return;
+                    }
+
+                    // === PERHITUNGAN PROTEIN ===
+                    const proteinPersenEl = document.getElementById('protein_persen');
+                    const proteinGramEl = document.getElementById('protein_gram');
+
+                    if (proteinPersenEl && proteinGramEl) {
+                        let proteinPersen = parseFloat(proteinPersenEl.value);
+
+                        // Set default jika kosong
+                        if (!proteinPersen || proteinPersen <= 0) {
+                            proteinPersen = 15; // 15% default untuk dewasa
+                            proteinPersenEl.value = proteinPersen;
+                        }
+
+                        // Perhitungan protein berdasarkan kalori = (% kalori) / 4 Kkal/gram
+                        const proteinGramDariKalori = (proteinPersen / 100 * kebutuhanKalori) / 4;
+                        proteinGramEl.value = Math.round(proteinGramDariKalori * 10) / 10;
+                    }
+
+                    // === PERHITUNGAN LEMAK ===
+                    const lemakPersenEl = document.getElementById('lemak_persen');
+                    const lemakGramEl = document.getElementById('lemak_gram');
+
+                    if (lemakPersenEl && lemakGramEl) {
+                        let lemakPersen = parseFloat(lemakPersenEl.value);
+
+                        // Set default jika kosong
+                        if (!lemakPersen || lemakPersen <= 0) {
+                            lemakPersen = 25; // 25% default untuk dewasa
+                            lemakPersenEl.value = lemakPersen;
+                        }
+
+                        // Perhitungan lemak berdasarkan kalori = (% kalori) / 9 Kkal/gram
+                        const lemakGram = (lemakPersen / 100 * kebutuhanKalori) / 9;
+                        lemakGramEl.value = Math.round(lemakGram * 10) / 10;
+                    }
+
+                    // === PERHITUNGAN KARBOHIDRAT ===
+                    const khPersenEl = document.getElementById('kh_persen');
+                    const khGramEl = document.getElementById('kh_gram');
+
+                    if (khPersenEl && khGramEl) {
+                        let khPersen = parseFloat(khPersenEl.value);
+
+                        // Set default jika kosong
+                        if (!khPersen || khPersen <= 0) {
+                            khPersen = 60; // 60% default untuk dewasa
+                            khPersenEl.value = khPersen;
+                        }
+
+                        // Perhitungan karbohidrat berdasarkan kalori = (% kalori) / 4 Kkal/gram
+                        const khGram = (khPersen / 100 * kebutuhanKalori) / 4;
+                        khGramEl.value = Math.round(khGram * 10) / 10;
+                    }
+
+                    // === VALIDASI TOTAL PERSENTASE ===
+                    const totalPersen = (parseFloat(proteinPersenEl?.value) || 0) +
+                        (parseFloat(lemakPersenEl?.value) || 0) +
+                        (parseFloat(khPersenEl?.value) || 0);
+
+                    // Auto-adjust karbohidrat agar total = 100% jika diperlukan
+                    if (Math.abs(totalPersen - 100) > 0.1) {
+                        if (khPersenEl && proteinPersenEl && lemakPersenEl) {
+                            const proteinPersen = parseFloat(proteinPersenEl.value) || 15;
+                            const lemakPersen = parseFloat(lemakPersenEl.value) || 25;
+                            const sisaKH = 100 - proteinPersen - lemakPersen;
+
+                            if (sisaKH > 0) {
+                                khPersenEl.value = sisaKH;
+                                const khGramBaru = (sisaKH / 100 * kebutuhanKalori) / 4;
+                                if (khGramEl) {
+                                    khGramEl.value = Math.round(khGramBaru * 10) / 10;
+                                }
+                            }
+                        }
+                    }
+
+                } catch (error) {
+                    // Silent error handling
+                }
+            }
+
+            // Fungsi alternatif perhitungan protein berdasarkan berat badan
+            function hitungProteinBerdasarkanBB() {
+                const beratBadanEl = document.getElementById('berat_badan');
+                const proteinGramEl = document.getElementById('protein_gram');
+
+                if (beratBadanEl && proteinGramEl) {
+                    const beratBadan = parseFloat(beratBadanEl.value);
+
+                    if (beratBadan) {
+                        // Rekomendasi protein untuk dewasa: 0.8-1.2 g/kg BB
+                        // Untuk pasien rumah sakit: 1.0-1.5 g/kg BB
+                        // Untuk kondisi stress/sakit: 1.2-2.0 g/kg BB
+
+                        const proteinPerKgBB = 1.2; // default 1.2 g/kg BB
+                        const proteinGram = beratBadan * proteinPerKgBB;
+
+                        proteinGramEl.value = Math.round(proteinGram * 10) / 10;
+
+                        // Hitung balik ke persentase kalori
+                        const kebutuhanKaloriEl = document.getElementById('kebutuhan_kalori');
+                        const proteinPersenEl = document.getElementById('protein_persen');
+
+                        if (kebutuhanKaloriEl && proteinPersenEl) {
+                            const kebutuhanKalori = parseFloat(kebutuhanKaloriEl.value);
+                            if (kebutuhanKalori) {
+                                const proteinKalori = proteinGram * 4; // protein = 4 Kkal/gram
+                                const proteinPersen = (proteinKalori / kebutuhanKalori) * 100;
+                                proteinPersenEl.value = Math.round(proteinPersen * 10) / 10;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Fungsi untuk set nilai default makronutrien
+            function setDefaultMakronutrien() {
+                const proteinPersenEl = document.getElementById('protein_persen');
+                const lemakPersenEl = document.getElementById('lemak_persen');
+                const khPersenEl = document.getElementById('kh_persen');
+
+                // Set default jika kosong
+                if (proteinPersenEl && !proteinPersenEl.value) proteinPersenEl.value = 15;
+                if (lemakPersenEl && !lemakPersenEl.value) lemakPersenEl.value = 25;
+                if (khPersenEl && !khPersenEl.value) khPersenEl.value = 60;
+
+                // Trigger perhitungan
+                hitungMakronutrien();
+            }
+
+            // Event listeners yang diperbaiki untuk makronutrien
+            function setupMakronutrienListeners() {
+                // Event listener untuk persentase makronutrien
+                ['protein_persen', 'lemak_persen', 'kh_persen'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.addEventListener('input', function() {
+                            hitungMakronutrien();
+                        });
+
+                        // Validasi input (0-100%)
+                        el.addEventListener('blur', function() {
+                            let value = parseFloat(this.value);
+                            if (value < 0) this.value = 0;
+                            if (value > 100) this.value = 100;
+                        });
+                    }
+                });
+
+                // Event listener untuk kebutuhan kalori
+                const kebutuhanKaloriEl = document.getElementById('kebutuhan_kalori');
+                if (kebutuhanKaloriEl) {
+                    kebutuhanKaloriEl.addEventListener('input', function() {
+                        setTimeout(hitungMakronutrien, 50);
+                    });
+                }
+            }
+
+            // Event listeners yang lebih robust untuk input utama
+            function setupEventListeners() {
+                // Event listener untuk berat badan
+                const beratBadanEl = document.getElementById('berat_badan');
+                if (beratBadanEl) {
+                    beratBadanEl.addEventListener('input', function() {
+                        hitungIMTdanBBI(); // fungsi yang sudah ada
+                        setTimeout(hitungBEE, 100); // delay untuk memastikan nilai ter-update
+                    });
+                }
+
+                // Event listener untuk tinggi badan
+                const tinggiBadanEl = document.getElementById('tinggi_badan');
+                if (tinggiBadanEl) {
+                    tinggiBadanEl.addEventListener('input', function() {
+                        hitungIMTdanBBI(); // fungsi yang sudah ada
+                        setTimeout(hitungBEE, 100);
+                    });
+                }
+
+                // Event listener untuk umur
+                const umurEl = document.getElementById('umur');
+                if (umurEl) {
+                    umurEl.addEventListener('input', function() {
+                        setTimeout(hitungBEE, 100);
+                    });
+                }
+
+                // Event listener untuk faktor aktivitas
+                const faktorAktivitasEl = document.getElementById('faktor_aktivitas');
+                if (faktorAktivitasEl) {
+                    faktorAktivitasEl.addEventListener('change', function() {
+                        setTimeout(hitungTEE, 50);
+                    });
+                }
+
+                // Event listener untuk faktor stress
+                const faktorStressEl = document.getElementById('faktor_stress');
+                if (faktorStressEl) {
+                    faktorStressEl.addEventListener('change', function() {
+                        setTimeout(hitungTEE, 50);
+                    });
+                }
+            }
+
+            // Fungsi untuk memaksa recalculate semua
+            function forceRecalculateAll() {
+                setTimeout(() => {
+                    hitungIMTdanBBI();
+                    setTimeout(() => {
+                        hitungBEE();
+                        setTimeout(() => {
+                            hitungTEE();
+                            setTimeout(() => {
+                                hitungMakronutrien();
+                            }, 100);
+                        }, 100);
+                    }, 100);
+                }, 100);
+            }
+
+            // Inisialisasi untuk halaman edit
+            setTimeout(() => {
+                debugValues();
+                setupEventListeners();
+                setupMakronutrienListeners();
+
+                // Untuk halaman edit, tidak perlu set default karena sudah ada nilai
+                // Trigger perhitungan untuk update nilai yang mungkin kosong
+                setTimeout(() => {
+                    forceRecalculateAll();
+                }, 500);
+
+            }, 1000); // Delay 1 detik untuk memastikan semua element sudah loaded
+
+            // Expose fungsi ke global scope untuk debugging manual (opsional)
+            window.debugNutrition = {
+                debugValues: debugValues,
+                hitungBEE: hitungBEE,
+                hitungTEE: hitungTEE,
+                hitungMakronutrien: hitungMakronutrien,
+                hitungIMTdanBBI: hitungIMTdanBBI,
+                forceRecalculateAll: forceRecalculateAll,
+                setDefaultMakronutrien: setDefaultMakronutrien
+            };
+
         });
     </script>
 
@@ -1308,7 +1741,6 @@
                     id: item.id || null
                 }));
             } catch (e) {
-                console.log('Data alergi tidak tersedia');
                 alergiDataArray = [];
             }
 
@@ -1326,7 +1758,8 @@
                     const jenisAlergi = document.getElementById('modal_jenis_alergi')?.value?.trim();
                     const alergen = document.getElementById('modal_alergen')?.value?.trim();
                     const reaksi = document.getElementById('modal_reaksi')?.value?.trim();
-                    const tingkatKeparahan = document.getElementById('modal_tingkat_keparahan')?.value?.trim();
+                    const tingkatKeparahan = document.getElementById('modal_tingkat_keparahan')?.value
+                        ?.trim();
 
                     if (!jenisAlergi || !alergen || !reaksi || !tingkatKeparahan) {
                         return;
@@ -1494,5 +1927,3 @@
         });
     </script>
 @endpush
-
-       

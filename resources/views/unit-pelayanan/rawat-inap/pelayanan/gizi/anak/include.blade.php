@@ -165,6 +165,8 @@
             border-radius: 8px;
             overflow: hidden;
         }
+
+        
     </style>
 @endpush
 

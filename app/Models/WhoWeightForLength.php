@@ -9,7 +9,7 @@ class WhoWeightForLength extends Model
 {
     use HasFactory;
 
-    protected $table = 'who_weight_for_length';
+    protected $table = 'rme_who_weight_for_length';
     protected $primaryKey = 'id';
     public $timestamps = false;
 
