@@ -44,6 +44,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenHemodialisaKeperawatanController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenMedisController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\DataUmumController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\HDEdukasiController;
 use App\Http\Controllers\UnitPelayanan\HemodialisaController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
 use App\Http\Controllers\UnitPelayanan\Operasi\CeklistAnasthesiController;
@@ -452,7 +453,6 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
-
                         });
                     });
                 });
@@ -1378,7 +1378,7 @@ Route::middleware('ssoToken')->group(function () {
                                                 Route::get('/pdf/{id}', 'pdf')->name('.pdf');
                                             });
                                         });
-                                    });    
+                                    });
 
                                     Route::prefix('dewasa')->group(function () {
                                         Route::name('.dewasa')->group(function () {
@@ -1405,11 +1405,8 @@ Route::middleware('ssoToken')->group(function () {
                                             });
                                         });
                                     });
-
                                 });
                             });
-
-
                         });
                     });
                 });
@@ -2014,6 +2011,22 @@ Route::middleware('ssoToken')->group(function () {
                                 Route::controller(DataUmumController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::get('/create', 'create')->name('.create');
+                                });
+                            });
+                        });
+
+                        // edukasi
+                        Route::prefix('edukasi')->group(function () {
+                            Route::name('.edukasi')->group(function () {
+                                Route::controller(HDEdukasiController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
                                 });
                             });
                         });
