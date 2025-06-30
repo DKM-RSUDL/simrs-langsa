@@ -125,13 +125,13 @@
                                                                         <i class="ti-pencil"></i> Edit
                                                                     </a>
 
-                                                                    <form
+                                                                    <form id="deleteForm_{{ $item->id }}"
                                                                         action="{{ route('hemodialisa.pelayanan.edukasi.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                                        method="POST" class="delete-form d-inline">
+                                                                        method="POST" class="d-inline">
                                                                         @csrf
                                                                         @method('DELETE')
-                                                                        <button type="submit" class="btn btn-danger btn-sm"
-                                                                            title="Hapus">
+                                                                        <button type="button" class="btn btn-danger btn-sm delete-btn"
+                                                                            data-id="{{ $item->id }}" title="Hapus">
                                                                             <i class="ti-trash"></i>
                                                                         </button>
                                                                     </form>
@@ -185,23 +185,38 @@
             window.location.href = url.toString();
         });
 
-        // Fungsi untuk konfirmasi hapus dengan SweetAlert
+        // SweetAlert untuk konfirmasi hapus
         document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', function () {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
                 const id = this.getAttribute('data-id');
                 const form = document.getElementById(`deleteForm_${id}`);
 
                 Swal.fire({
-                    title: 'Apakah Anda yakin?',
-                    text: "Data yang dihapus tidak dapat dikembalikan!",
+                    title: 'Konfirmasi Hapus',
+                    text: "Apakah Anda yakin ingin menghapus formulir edukasi ini?",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Ya, hapus!',
-                    cancelButtonText: 'Batal'
+                    confirmButtonText: 'Ya, Hapus!',
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        // Tampilkan loading
+                        Swal.fire({
+                            title: 'Menghapus...',
+                            text: 'Sedang memproses penghapusan data',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        
+                        // Submit form
                         form.submit();
                     }
                 });

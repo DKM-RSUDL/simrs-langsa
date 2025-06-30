@@ -572,4 +572,34 @@ class HDEdukasiController extends Controller
             'topikEdukasiList'
         ));
     }
+
+    public function destroy($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        DB::beginTransaction();
+
+        try {
+
+            // Find existing record
+            $hdFormulirEdukasiPasien = RmeHdFormulirEdukasiPasien::findOrFail($id);
+
+            // Hapus data edukasi detail terlebih dahulu (foreign key constraint)
+            RmeHdFormulirEdukasiPasienDetail::where('formulir_edukasi_id', $hdFormulirEdukasiPasien->id)->delete();
+
+            // Hapus data formulir utama
+            $hdFormulirEdukasiPasien->delete();
+
+            DB::commit();
+
+            return redirect()
+                ->route('hemodialisa.pelayanan.edukasi.index', [$kd_pasien, $tgl_masuk, $urut_masuk])
+                ->with('success', 'Formulir edukasi berhasil dihapus!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()
+                ->route('hemodialisa.pelayanan.edukasi.index', [$kd_pasien, $tgl_masuk, $urut_masuk])
+                ->with('error', 'Gagal menghapus data: ' . $e->getMessage());
+        }
+    }
 }
