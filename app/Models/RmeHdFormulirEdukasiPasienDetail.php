@@ -42,4 +42,9 @@ class RmeHdFormulirEdukasiPasienDetail extends Model
     {
         return $this->belongsTo(HrdKaryawan::class, 'edukator_kd', 'kd_karyawan');
     }
+
+    public function setTopikEdukasiAttribute($value)
+    {
+        $this->attributes['topik_edukasi'] = trim($value);
+    }
 }

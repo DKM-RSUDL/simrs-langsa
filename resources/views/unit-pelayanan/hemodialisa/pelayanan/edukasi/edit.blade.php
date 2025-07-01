@@ -191,7 +191,7 @@
     </div>
 
     <div class="col-md-9">
-        <a href="{{ url()->previous() }}" class="btn">
+        <a href="{{ route('hemodialisa.pelayanan.edukasi.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn">
             <i class="ti-arrow-left"></i> Kembali
         </a>
         <form
@@ -604,139 +604,187 @@
                             </div>
 
                             {{-- SECTION 3: RENCANA EDUKASI --}}
-                        <div class="section-separator">
-                            <h5 class="section-title">3. Edukasi Pasien</h5>
+                            <div class="section-separator">
+                                <h5 class="section-title">3. Edukasi Pasien</h5>
 
-                            @php
-                                $hasilVerifikasiOptions = [
-                                    'Sudah mengerti',
-                                    'Re-demonstrasi',
-                                    'Re-edukasi',
-                                ];
-                                
-                                // Function untuk mencari data berdasarkan topik atau ID
-                                function findDataForTopic($topik, $edukasiData, $emptyTopicData) {
-                                    // Cek di data dengan topik yang benar
-                                    if (isset($edukasiData[$topik])) {
-                                        return $edukasiData[$topik];
-                                    }
-                                    
-                                    // Jika tidak ada, cek di empty topic data (untuk backward compatibility)
-                                    // Ini untuk handle data existing yang topiknya masih NULL
-                                    if (!empty($emptyTopicData)) {
-                                        // Ambil data pertama yang available (bisa disesuaikan logic nya)
-                                        foreach ($emptyTopicData as $key => $data) {
-                                            return $data; // Return data pertama yang ditemukan
-                                            break;
-                                        }
-                                    }
-                                    
-                                    return null;
-                                }
-                            @endphp
-
-                            {{-- FORM EDUKASI NORMAL (19 TOPIK) --}}
-                            <div class="row row-cols-1 row-cols-md-2 g-4">
-                                @foreach($topikEdukasiList as $index => $topik)
                                 @php
-                                    // Cari data untuk topik ini
-                                    $topicData = findDataForTopic($topik, $edukasiData ?? [], $emptyTopicData ?? []);
-                                    $hasData = !is_null($topicData);
+                                    $hasilVerifikasiOptions = [
+                                        'Sudah mengerti',
+                                        'Re-demonstrasi',
+                                        'Re-edukasi',
+                                    ];
                                 @endphp
-                                <div class="col">
-                                    <div class="card h-100">
-                                        <div class="card-header {{ $hasData ? 'bg-success text-white' : 'bg-light' }}">
-                                            {{ $topik }}
-                                            @if($hasData)
-                                                <i class="fas fa-check-circle float-end"></i>
-                                            @endif
-                                        </div>
-                                        <div class="card-body">
-                                            {{-- Hidden field untuk ID jika data sudah ada --}}
-                                            @if($hasData && isset($topicData['id']))
-                                                <input type="hidden" name="edukasi[{{ $topik }}][id]" value="{{ $topicData['id'] }}">
-                                            @endif
-                                            
-                                            <div class="mb-3">
-                                                <label for="tgl_jam_{{ $index + 1 }}" class="form-label">Tgl/Jam Edukasi</label>
-                                                <input type="datetime-local" class="form-control form-control-sm"
-                                                    name="edukasi[{{ $topik }}][tgl_jam]"
-                                                    id="tgl_jam_{{ $index + 1 }}"
-                                                    value="{{ $hasData && isset($topicData['tgl_jam']) ? $topicData['tgl_jam'] : '' }}">
-                                            </div>
-                                            
-                                            <div class="mb-3">
-                                                <label class="form-label">Hasil Verifikasi</label>
-                                                <div class="checkbox-group">
-                                                    @foreach($hasilVerifikasiOptions as $hasil)
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio"
-                                                            name="edukasi[{{ $topik }}][hasil_verifikasi]"
-                                                            value="{{ $hasil }}"
-                                                            id="verifikasi_{{ $index + 1 }}_{{ str_replace([' ', '-'], '_', strtolower($hasil)) }}"
-                                                            {{ ($hasData && isset($topicData['hasil_verifikasi']) && $topicData['hasil_verifikasi'] == $hasil) ? 'checked' : '' }}>
-                                                        <label class="form-check-label"
-                                                            for="verifikasi_{{ $index + 1 }}_{{ str_replace([' ', '-'], '_', strtolower($hasil)) }}">{{ $hasil }}</label>
-                                                    </div>
-                                                    @endforeach
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="mb-3">
-                                                <label for="tgl_reedukasi_{{ $index + 1 }}" class="form-label">Tgl Rencana Reedukasi/Redemonstrasi</label>
-                                                <input type="date" class="form-control form-control-sm"
-                                                    name="edukasi[{{ $topik }}][tgl_reedukasi]"
-                                                    id="tgl_reedukasi_{{ $index + 1 }}"
-                                                    value="{{ $hasData && isset($topicData['tgl_reedukasi']) ? $topicData['tgl_reedukasi'] : '' }}">
-                                            </div>
-                                            
-                                            <div class="mb-3">
-                                                <label for="edukator_{{ $index + 1 }}" class="form-label">Edukator</label>
-                                                <select class="form-control select2" style="width: 100%"
-                                                    name="edukasi[{{ $topik }}][edukator_kd]"
-                                                    id="edukator_{{ $index + 1 }}">
-                                                    <option value="">Pilih Edukator</option>
-                                                    @foreach($perawat as $staff)
-                                                    <option value="{{ $staff->kd_karyawan }}"
-                                                        {{ ($hasData && isset($topicData['edukator_kd']) && $topicData['edukator_kd'] == $staff->kd_karyawan) ? 'selected' : '' }}>
-                                                        {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
-                                                        ({{ $staff->profesi ?? 'Perawat' }})
-                                                    </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            
-                                            <div class="mb-3">
-                                                <label for="pasien_nama_{{ $index + 1 }}" class="form-label">Pasien/Keluarga 
-                                                    <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
-                                                        title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i>
-                                                </label>
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="edukasi[{{ $topik }}][pasien_nama]"
-                                                    id="pasien_nama_{{ $index + 1 }}" 
-                                                    placeholder="Nama Keluarga"
-                                                    value="{{ $hasData && isset($topicData['pasien_nama']) ? $topicData['pasien_nama'] : '' }}">
-                                            </div>
 
-                                            {{-- Show filled status --}}
-                                            {{-- @if($hasData)
-                                                <div class="alert alert-success alert-sm p-2 mt-2">
-                                                    <small>
-                                                        <i class="fas fa-info-circle"></i> 
-                                                        Data telah diisi pada: {{ isset($topicData['tgl_jam']) ? \Carbon\Carbon::parse($topicData['tgl_jam'])->format('d/m/Y H:i') : '-' }}
-                                                        @if(isset($topicData['edukator_nama']) && $topicData['edukator_nama'])
-                                                            <br>Edukator: {{ $topicData['edukator_nama'] }}
-                                                        @endif
-                                                        <br>ID: {{ $topicData['id'] ?? '-' }}
-                                                    </small>
+                                {{-- FORM EDUKASI NORMAL (19 TOPIK) --}}
+                                <div class="row row-cols-1 row-cols-md-2 g-4">
+                                    @php
+                                        $topikArr = [];
+                                    @endphp
+
+                                    @foreach($hdFormulirEdukasiPasien->edukasiDetails as $dtl)
+                                        @php
+                                            $topikArr[] = $dtl->topik_edukasi;
+                                        @endphp
+
+                                        <div class="col">
+                                            <div class="card h-100">
+                                                <div class="card-header {{ !empty($topikEdukasiList[$dtl->topik_edukasi]) ? 'bg-success text-white' : 'bg-light' }}">
+                                                    {{ $topikEdukasiList[$dtl->topik_edukasi] }}
+                                                    @if(!empty($topikEdukasiList[$dtl->topik_edukasi]))
+                                                        <i class="fas fa-check-circle float-end"></i>
+                                                    @endif
                                                 </div>
-                                            @endif --}}
+                                                <div class="card-body">
+                                                    {{-- Hidden field untuk ID jika data sudah ada --}}
+                                                    @if(!empty($topikEdukasiList[$dtl->topik_edukasi]))
+                                                        <input type="hidden" name="edukasi[{{ $dtl->topik_edukasi }}][id]" value="{{ $dtl->id }}">
+                                                    @endif
+
+                                                    <div class="mb-3">
+                                                        <label for="tgl_jam_{{ $loop->iteration }}" class="form-label">Tgl/Jam Edukasi</label>
+                                                        <input type="datetime-local" class="form-control form-control-sm"
+                                                            name="edukasi[{{ $dtl->topik_edukasi }}][tgl_jam]"
+                                                            id="tgl_jam_{{ $loop->iteration }}"
+                                                            value="{{ !empty($topikEdukasiList[$dtl->topik_edukasi]) && isset($dtl->tgl_jam) ? $dtl->tgl_jam : '' }}">
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Hasil Verifikasi</label>
+                                                        <div class="checkbox-group">
+                                                            @foreach($hasilVerifikasiOptions as $hasil)
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="edukasi[{{ $dtl->topik_edukasi }}][hasil_verifikasi]"
+                                                                    value="{{ $hasil }}"
+                                                                    id="verifikasi_{{ $loop->parent->iteration }}_{{ str_replace([' ', '-'], '_', strtolower($hasil)) }}"
+                                                                    @checked($dtl->hasil_verifikasi == $hasil)>
+                                                                <label class="form-check-label"
+                                                                    for="verifikasi_{{ $loop->parent->iteration }}_{{ str_replace([' ', '-'], '_', strtolower($hasil)) }}">{{ $hasil }}</label>
+                                                            </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label for="tgl_reedukasi_{{ $loop->iteration }}" class="form-label">Tgl Rencana Reedukasi/Redemonstrasi</label>
+                                                        <input type="date" class="form-control form-control-sm"
+                                                            name="edukasi[{{ $dtl->topik_edukasi }}][tgl_reedukasi]"
+                                                            id="tgl_reedukasi_{{ $loop->iteration }}"
+                                                            value="{{ !empty($topikEdukasiList[$dtl->topik_edukasi]) && isset($dtl->tgl_reedukasi) ? $dtl->tgl_reedukasi : '' }}">
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label for="edukator_{{ $loop->iteration }}" class="form-label">Edukator</label>
+                                                        <select class="form-control select2" style="width: 100%"
+                                                            name="edukasi[{{ $dtl->topik_edukasi }}][edukator_kd]"
+                                                            id="edukator_{{ $loop->iteration }}">
+                                                            <option value="">Pilih Edukator</option>
+                                                            @foreach($perawat as $staff)
+                                                            <option value="{{ $staff->kd_karyawan }}"
+                                                                @selected($dtl->edukator_kd == $staff->kd_karyawan)>
+                                                                {{ trim(($staff->gelar_depan ?? '') . ' ' . str()->title($staff->nama) . ' ' . ($staff->gelar_belakang ?? '')) }}
+                                                                ({{ $staff->profesi ?? 'Perawat' }})
+                                                            </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label for="pasien_nama_{{ $loop->iteration }}" class="form-label">Pasien/Keluarga
+                                                            <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                                title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i>
+                                                        </label>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            name="edukasi[{{ $dtl->topik_edukasi }}][pasien_nama]"
+                                                            id="pasien_nama_{{ $loop->iteration }}"
+                                                            placeholder="Nama Keluarga"
+                                                            value="{{ !empty($topikEdukasiList[$dtl->topik_edukasi]) && isset($dtl->pasien_nama) ? $dtl->pasien_nama : '' }}">
+                                                    </div>
+
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endforeach
+
+                                    @foreach ($topikEdukasiList as $key => $item)
+                                        @if (!in_array($key, $topikArr))
+                                            <div class="col">
+                                                <div class="card h-100">
+                                                    <div class="card-header bg-light">
+                                                        {{ $item }}
+                                                    </div>
+                                                    <div class="card-body">
+                                                        {{-- Hidden field untuk ID jika data sudah ada --}}
+                                                        @if(!empty($key))
+                                                            <input type="hidden" name="edukasi[{{ $key }}][id]" value="">
+                                                        @endif
+
+                                                        <div class="mb-3">
+                                                            <label for="tgl_jam_{{ $loop->iteration }}" class="form-label">Tgl/Jam Edukasi</label>
+                                                            <input type="datetime-local" class="form-control form-control-sm"
+                                                                name="edukasi[{{ $key }}][tgl_jam]"
+                                                                id="tgl_jam_{{ $loop->iteration }}"
+                                                                value="">
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Hasil Verifikasi</label>
+                                                            <div class="checkbox-group">
+                                                                @foreach($hasilVerifikasiOptions as $hasil)
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="edukasi[{{ $key }}][hasil_verifikasi]"
+                                                                        value="{{ $hasil }}"
+                                                                        id="verifikasi_{{ $loop->parent->iteration }}_{{ str_replace([' ', '-'], '_', strtolower($hasil)) }}">
+                                                                    <label class="form-check-label"
+                                                                        for="verifikasi_{{ $loop->parent->iteration }}_{{ str_replace([' ', '-'], '_', strtolower($hasil)) }}">{{ $hasil }}</label>
+                                                                </div>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="tgl_reedukasi_{{ $loop->iteration }}" class="form-label">Tgl Rencana Reedukasi/Redemonstrasi</label>
+                                                            <input type="date" class="form-control form-control-sm"
+                                                                name="edukasi[{{ $key }}][tgl_reedukasi]"
+                                                                id="tgl_reedukasi_{{ $loop->iteration }}"
+                                                                value="">
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="edukator_{{ $loop->iteration }}" class="form-label">Edukator</label>
+                                                            <select class="form-control select2" style="width: 100%"
+                                                                name="edukasi[{{ $key }}][edukator_kd]"
+                                                                id="edukator_{{ $loop->iteration }}">
+                                                                <option value="">Pilih Edukator</option>
+                                                                @foreach($perawat as $staff)
+                                                                <option value="{{ $staff->kd_karyawan }}">
+                                                                    {{ trim(($staff->gelar_depan ?? '') . ' ' . str()->title($staff->nama) . ' ' . ($staff->gelar_belakang ?? '')) }}
+                                                                    ({{ $staff->profesi ?? 'Perawat' }})
+                                                                </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="pasien_nama_{{ $loop->iteration }}" class="form-label">Pasien/Keluarga
+                                                                <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                                    title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i>
+                                                            </label>
+                                                            <input type="text" class="form-control form-control-sm"
+                                                                name="edukasi[{{ $key }}][pasien_nama]"
+                                                                id="pasien_nama_{{ $loop->iteration }}"
+                                                                placeholder="Nama Keluarga"
+                                                                value="">
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
                                 </div>
-                                @endforeach
                             </div>
-                        </div>
 
                         </div>
                         <div class="text-end mt-5">
@@ -820,6 +868,6 @@
                     }
                 });
             });
-        });        
+        });
 </script>
 @endpush

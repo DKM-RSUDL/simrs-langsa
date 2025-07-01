@@ -533,7 +533,7 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_1" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[Hak dan Kewajiban pasien dan Keluarga][tgl_jam]"
+                                                        name="edukasi[hak_kewajiban_pasien][tgl_jam]"
                                                         id="tgl_jam_1">
                                                 </div>
                                                 <div class="mb-3">
@@ -542,7 +542,7 @@
                                                         @foreach($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="edukasi[Hak dan Kewajiban pasien dan Keluarga][hasil_verifikasi]"
+                                                                    name="edukasi[hak_kewajiban_pasien][hasil_verifikasi]"
                                                                     value="{{ $hasil }}"
                                                                     id="verifikasi_1_{{ str_replace('-', '_', strtolower($hasil)) }}">
                                                                 <label class="form-check-label"
@@ -555,13 +555,13 @@
                                                     <label for="tgl_reedukasi_1" class="form-label">Tgl Rencana
                                                         Reedukasi/Redemonstrasi</label>
                                                     <input type="date" class="form-control form-control-sm"
-                                                        name="edukasi[Hak dan Kewajiban pasien dan Keluarga][tgl_reedukasi]"
+                                                        name="edukasi[hak_kewajiban_pasien][tgl_reedukasi]"
                                                         id="tgl_reedukasi_1">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="edukator_1" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[Hak dan Kewajiban pasien dan Keluarga][edukator_kd]"
+                                                        name="edukasi[hak_kewajiban_pasien][edukator_kd]"
                                                         id="edukator_1">
                                                         <option value="" selected disabled>Pilih Edukator</option>
                                                         @foreach($perawat as $staff)
@@ -577,7 +577,7 @@
                                                             class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[Hak dan Kewajiban pasien dan Keluarga][pasien_nama]"
+                                                        name="edukasi[hak_kewajiban_pasien][pasien_nama]"
                                                         id="pasien_nama_1" placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
@@ -591,7 +591,7 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_2" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[Identitas pasien (gelang warna hijau, merah muda, kuning, merah, ungu)][tgl_jam]"
+                                                        name="edukasi[identitas_pasien_gelang][tgl_jam]"
                                                         id="tgl_jam_2">
                                                 </div>
                                                 <div class="mb-3">
@@ -600,7 +600,7 @@
                                                         @foreach($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="edukasi[Identitas pasien (gelang warna hijau, merah muda, kuning, merah, ungu)][hasil_verifikasi]"
+                                                                    name="edukasi[identitas_pasien_gelang][hasil_verifikasi]"
                                                                     value="{{ $hasil }}"
                                                                     id="verifikasi_2_{{ str_replace('-', '_', strtolower($hasil)) }}">
                                                                 <label class="form-check-label"
@@ -613,13 +613,13 @@
                                                     <label for="tgl_reedukasi_2" class="form-label">Tgl Rencana
                                                         Reedukasi/Redemonstrasi</label>
                                                     <input type="date" class="form-control form-control-sm"
-                                                        name="edukasi[Identitas pasien (gelang warna hijau, merah muda, kuning, merah, ungu)][tgl_reedukasi]"
+                                                        name="edukasi[identitas_pasien_gelang][tgl_reedukasi]"
                                                         id="tgl_reedukasi_2">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="edukator_2" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[Identitas pasien (gelang warna hijau, merah muda, kuning, merah, ungu)][edukator_kd]"
+                                                        name="edukasi[identitas_pasien_gelang][edukator_kd]"
                                                         id="edukator_2">
                                                         <option value="" selected disabled>Pilih Edukator</option>
                                                         @foreach($perawat as $staff)
@@ -635,7 +635,7 @@
                                                             class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[Identitas pasien (gelang warna hijau, merah muda, kuning, merah, ungu)][pasien_nama]"
+                                                        name="edukasi[identitas_pasien_gelang][pasien_nama]"
                                                         id="pasien_nama_2" placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
@@ -648,7 +648,7 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_3" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[Penyebab gagal ginjal][tgl_jam]" id="tgl_jam_3">
+                                                        name="edukasi[penyebab_gagal_ginjal][tgl_jam]" id="tgl_jam_3">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
@@ -656,7 +656,7 @@
                                                         @foreach($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="edukasi[Penyebab gagal ginjal][hasil_verifikasi]"
+                                                                    name="edukasi[penyebab_gagal_ginjal][hasil_verifikasi]"
                                                                     value="{{ $hasil }}"
                                                                     id="verifikasi_3_{{ str_replace('-', '_', strtolower($hasil)) }}">
                                                                 <label class="form-check-label"
@@ -669,13 +669,13 @@
                                                     <label for="tgl_reedukasi_3" class="form-label">Tgl Rencana
                                                         Reedukasi/Redemonstrasi</label>
                                                     <input type="date" class="form-control form-control-sm"
-                                                        name="edukasi[Penyebab gagal ginjal][tgl_reedukasi]"
+                                                        name="edukasi[penyebab_gagal_ginjal][tgl_reedukasi]"
                                                         id="tgl_reedukasi_3">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="edukator_3" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[Penyebab gagal ginjal][edukator_kd]"
+                                                        name="edukasi[penyebab_gagal_ginjal][edukator_kd]"
                                                         id="edukator_3">
                                                         <option value="" selected disabled>Pilih Edukator</option>
                                                         @foreach($perawat as $staff)
@@ -691,7 +691,7 @@
                                                             class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[Penyebab gagal ginjal][pasien_nama]"
+                                                        name="edukasi[penyebab_gagal_ginjal][pasien_nama]"
                                                         id="pasien_nama_3" placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
@@ -704,7 +704,7 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_4" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[Arti dan Kegunaan Hemodialisis][tgl_jam]"
+                                                        name="edukasi[arti_kegunaan_hemodialisis][tgl_jam]"
                                                         id="tgl_jam_4">
                                                 </div>
                                                 <div class="mb-3">
@@ -713,7 +713,7 @@
                                                         @foreach($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="edukasi[Arti dan Kegunaan Hemodialisis][hasil_verifikasi]"
+                                                                    name="edukasi[arti_kegunaan_hemodialisis][hasil_verifikasi]"
                                                                     value="{{ $hasil }}"
                                                                     id="verifikasi_4_{{ str_replace('-', '_', strtolower($hasil)) }}">
                                                                 <label class="form-check-label"
@@ -726,13 +726,13 @@
                                                     <label for="tgl_reedukasi_4" class="form-label">Tgl Rencana
                                                         Reedukasi/Redemonstrasi</label>
                                                     <input type="date" class="form-control form-control-sm"
-                                                        name="edukasi[Arti dan Kegunaan Hemodialisis][tgl_reedukasi]"
+                                                        name="edukasi[arti_kegunaan_hemodialisis][tgl_reedukasi]"
                                                         id="tgl_reedukasi_4">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="edukator_4" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[Arti dan Kegunaan Hemodialisis][edukator_kd]"
+                                                        name="edukasi[arti_kegunaan_hemodialisis][edukator_kd]"
                                                         id="edukator_4">
                                                         <option value="" selected disabled>Pilih Edukator</option>
                                                         @foreach($perawat as $staff)
@@ -748,7 +748,7 @@
                                                             class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[Arti dan Kegunaan Hemodialisis][pasien_nama]"
+                                                        name="edukasi[arti_kegunaan_hemodialisis][pasien_nama]"
                                                         id="pasien_nama_4" placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
@@ -761,7 +761,7 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_5" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[Jumlah/jam hemodialisis dan frekuensi hemodialisi][tgl_jam]"
+                                                        name="edukasi[jumlah_jam_hemodialisis][tgl_jam]"
                                                         id="tgl_jam_5">
                                                 </div>
                                                 <div class="mb-3">
@@ -770,7 +770,7 @@
                                                         @foreach($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="edukasi[Jumlah/jam hemodialisis dan frekuensi hemodialisi][hasil_verifikasi]"
+                                                                    name="edukasi[jumlah_jam_hemodialisis][hasil_verifikasi]"
                                                                     value="{{ $hasil }}"
                                                                     id="verifikasi_5_{{ str_replace('-', '_', strtolower($hasil)) }}">
                                                                 <label class="form-check-label"
@@ -783,13 +783,13 @@
                                                     <label for="tgl_reedukasi_5" class="form-label">Tgl Rencana
                                                         Reedukasi/Redemonstrasi</label>
                                                     <input type="date" class="form-control form-control-sm"
-                                                        name="edukasi[Jumlah/jam hemodialisis dan frekuensi hemodialisi][tgl_reedukasi]"
+                                                        name="edukasi[jumlah_jam_hemodialisis][tgl_reedukasi]"
                                                         id="tgl_reedukasi_5">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="edukator_5" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[Jumlah/jam hemodialisis dan frekuensi hemodialisi][edukator_kd]"
+                                                        name="edukasi[jumlah_jam_hemodialisis][edukator_kd]"
                                                         id="edukator_5">
                                                         <option value="" selected disabled>Pilih Edukator</option>
                                                         @foreach($perawat as $staff)
@@ -805,7 +805,7 @@
                                                             class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[Jumlah/jam hemodialisis dan frekuensi hemodialisi][pasien_nama]"
+                                                        name="edukasi[jumlah_jam_hemodialisis][pasien_nama]"
                                                         id="pasien_nama_5" placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
@@ -818,7 +818,7 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_6" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[Meningkatkan Kepatuhan intake cairan pasien][tgl_jam]"
+                                                        name="edukasi[kepatuhan_intake_cairan][tgl_jam]"
                                                         id="tgl_jam_6">
                                                 </div>
                                                 <div class="mb-3">
@@ -827,7 +827,7 @@
                                                         @foreach($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="edukasi[Meningkatkan Kepatuhan intake cairan pasien][hasil_verifikasi]"
+                                                                    name="edukasi[kepatuhan_intake_cairan][hasil_verifikasi]"
                                                                     value="{{ $hasil }}"
                                                                     id="verifikasi_6_{{ str_replace('-', '_', strtolower($hasil)) }}">
                                                                 <label class="form-check-label"
@@ -840,13 +840,13 @@
                                                     <label for="tgl_reedukasi_6" class="form-label">Tgl Rencana
                                                         Reedukasi/Redemonstrasi</label>
                                                     <input type="date" class="form-control form-control-sm"
-                                                        name="edukasi[Meningkatkan Kepatuhan intake cairan pasien][tgl_reedukasi]"
+                                                        name="edukasi[kepatuhan_intake_cairan][tgl_reedukasi]"
                                                         id="tgl_reedukasi_6">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="edukator_6" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[Meningkatkan Kepatuhan intake cairan pasien][edukator_kd]"
+                                                        name="edukasi[kepatuhan_intake_cairan][edukator_kd]"
                                                         id="edukator_6">
                                                         <option value="" selected disabled>Pilih Edukator</option>
                                                         @foreach($perawat as $staff)
@@ -862,7 +862,7 @@
                                                             class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[Meningkatkan Kepatuhan intake cairan pasien][pasien_nama]"
+                                                        name="edukasi[kepatuhan_intake_cairan][pasien_nama]"
                                                         id="pasien_nama_6" placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
@@ -875,7 +875,7 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_7" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[Makanan yang tidak boleh dimakan][tgl_jam]"
+                                                        name="edukasi[makanan_tidak_boleh][tgl_jam]"
                                                         id="tgl_jam_7">
                                                 </div>
                                                 <div class="mb-3">
@@ -884,7 +884,7 @@
                                                         @foreach($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="edukasi[Makanan yang tidak boleh dimakan][hasil_verifikasi]"
+                                                                    name="edukasi[makanan_tidak_boleh][hasil_verifikasi]"
                                                                     value="{{ $hasil }}"
                                                                     id="verifikasi_7_{{ str_replace('-', '_', strtolower($hasil)) }}">
                                                                 <label class="form-check-label"
@@ -897,13 +897,13 @@
                                                     <label for="tgl_reedukasi_7" class="form-label">Tgl Rencana
                                                         Reedukasi/Redemonstrasi</label>
                                                     <input type="date" class="form-control form-control-sm"
-                                                        name="edukasi[Makanan yang tidak boleh dimakan][tgl_reedukasi]"
+                                                        name="edukasi[makanan_tidak_boleh][tgl_reedukasi]"
                                                         id="tgl_reedukasi_7">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="edukator_7" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[Makanan yang tidak boleh dimakan][edukator_kd]"
+                                                        name="edukasi[makanan_tidak_boleh][edukator_kd]"
                                                         id="edukator_7">
                                                         <option value="" selected disabled>Pilih Edukator</option>
                                                         @foreach($perawat as $staff)
@@ -919,7 +919,7 @@
                                                             class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[Makanan yang tidak boleh dimakan][pasien_nama]"
+                                                        name="edukasi[makanan_tidak_boleh][pasien_nama]"
                                                         id="pasien_nama_7" placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
@@ -932,7 +932,7 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_8" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[Cara mengkonsumsi buah-buahan dan sayur-sayuran][tgl_jam]"
+                                                        name="edukasi[cara_konsumsi_buah][tgl_jam]"
                                                         id="tgl_jam_8">
                                                 </div>
                                                 <div class="mb-3">
@@ -941,7 +941,7 @@
                                                         @foreach($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="edukasi[Cara mengkonsumsi buah-buahan dan sayur-sayuran][hasil_verifikasi]"
+                                                                    name="edukasi[cara_konsumsi_buah][hasil_verifikasi]"
                                                                     value="{{ $hasil }}"
                                                                     id="verifikasi_8_{{ str_replace('-', '_', strtolower($hasil)) }}">
                                                                 <label class="form-check-label"
@@ -954,13 +954,13 @@
                                                     <label for="tgl_reedukasi_8" class="form-label">Tgl Rencana
                                                         Reedukasi/Redemonstrasi</label>
                                                     <input type="date" class="form-control form-control-sm"
-                                                        name="edukasi[Cara mengkonsumsi buah-buahan dan sayur-sayuran][tgl_reedukasi]"
+                                                        name="edukasi[cara_konsumsi_buah][tgl_reedukasi]"
                                                         id="tgl_reedukasi_8">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="edukator_8" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[Cara mengkonsumsi buah-buahan dan sayur-sayuran][edukator_kd]"
+                                                        name="edukasi[cara_konsumsi_buah][edukator_kd]"
                                                         id="edukator_8">
                                                         <option value="" selected disabled>Pilih Edukator</option>
                                                         @foreach($perawat as $staff)
@@ -976,7 +976,7 @@
                                                             class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[Cara mengkonsumsi buah-buahan dan sayur-sayuran][pasien_nama]"
+                                                        name="edukasi[cara_konsumsi_buah][pasien_nama]"
                                                         id="pasien_nama_8" placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
@@ -989,7 +989,7 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_9" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[Komplikasi hemodialisis][tgl_jam]" id="tgl_jam_9">
+                                                        name="edukasi[komplikasi_hemodialisis][tgl_jam]" id="tgl_jam_9">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
@@ -997,7 +997,7 @@
                                                         @foreach($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="edukasi[Komplikasi hemodialisis][hasil_verifikasi]"
+                                                                    name="edukasi[komplikasi_hemodialisis][hasil_verifikasi]"
                                                                     value="{{ $hasil }}"
                                                                     id="verifikasi_9_{{ str_replace('-', '_', strtolower($hasil)) }}">
                                                                 <label class="form-check-label"
@@ -1010,13 +1010,13 @@
                                                     <label for="tgl_reedukasi_9" class="form-label">Tgl Rencana
                                                         Reedukasi/Redemonstrasi</label>
                                                     <input type="date" class="form-control form-control-sm"
-                                                        name="edukasi[Komplikasi hemodialisis][tgl_reedukasi]"
+                                                        name="edukasi[komplikasi_hemodialisis][tgl_reedukasi]"
                                                         id="tgl_reedukasi_9">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="edukator_9" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[Komplikasi hemodialisis][edukator_kd]"
+                                                        name="edukasi[komplikasi_hemodialisis][edukator_kd]"
                                                         id="edukator_9">
                                                         <option value="" selected disabled>Pilih Edukator</option>
                                                         @foreach($perawat as $staff)
@@ -1032,7 +1032,7 @@
                                                             class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[Komplikasi hemodialisis][pasien_nama]"
+                                                        name="edukasi[komplikasi_hemodialisis][pasien_nama]"
                                                         id="pasien_nama_9" placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
@@ -1045,7 +1045,7 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_10" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[Penyebab anemis pada pasien gagal ginjal][tgl_jam]"
+                                                        name="edukasi[penyebab_anemis][tgl_jam]"
                                                         id="tgl_jam_10">
                                                 </div>
                                                 <div class="mb-3">
@@ -1054,7 +1054,7 @@
                                                         @foreach($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="edukasi[Penyebab anemis pada pasien gagal ginjal][hasil_verifikasi]"
+                                                                    name="edukasi[penyebab_anemis][hasil_verifikasi]"
                                                                     value="{{ $hasil }}"
                                                                     id="verifikasi_10_{{ str_replace('-', '_', strtolower($hasil)) }}">
                                                                 <label class="form-check-label"
@@ -1067,13 +1067,13 @@
                                                     <label for="tgl_reedukasi_10" class="form-label">Tgl Rencana
                                                         Reedukasi/Redemonstrasi</label>
                                                     <input type="date" class="form-control form-control-sm"
-                                                        name="edukasi[Penyebab anemis pada pasien gagal ginjal][tgl_reedukasi]"
+                                                        name="edukasi[penyebab_anemis][tgl_reedukasi]"
                                                         id="tgl_reedukasi_10">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="edukator_10" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[Penyebab anemis pada pasien gagal ginjal][edukator_kd]"
+                                                        name="edukasi[penyebab_anemis][edukator_kd]"
                                                         id="edukator_10">
                                                         <option value="" selected disabled>Pilih Edukator</option>
                                                         @foreach($perawat as $staff)
@@ -1089,7 +1089,7 @@
                                                             class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[Penyebab anemis pada pasien gagal ginjal][pasien_nama]"
+                                                        name="edukasi[penyebab_anemis][pasien_nama]"
                                                         id="pasien_nama_10" placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
@@ -1102,7 +1102,7 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_11" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[Monitor tekanan darah][tgl_jam]" id="tgl_jam_11">
+                                                        name="edukasi[monitor_tekanan_darah][tgl_jam]" id="tgl_jam_11">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
@@ -1110,7 +1110,7 @@
                                                         @foreach($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="edukasi[Monitor tekanan darah][hasil_verifikasi]"
+                                                                    name="edukasi[monitor_tekanan_darah][hasil_verifikasi]"
                                                                     value="{{ $hasil }}"
                                                                     id="verifikasi_11_{{ str_replace('-', '_', strtolower($hasil)) }}">
                                                                 <label class="form-check-label"
@@ -1123,13 +1123,13 @@
                                                     <label for="tgl_reedukasi_11" class="form-label">Tgl Rencana
                                                         Reedukasi/Redemonstrasi</label>
                                                     <input type="date" class="form-control form-control-sm"
-                                                        name="edukasi[Monitor tekanan darah][tgl_reedukasi]"
+                                                        name="edukasi[monitor_tekanan_darah][tgl_reedukasi]"
                                                         id="tgl_reedukasi_11">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="edukator_11" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[Monitor tekanan darah][edukator_kd]"
+                                                        name="edukasi[monitor_tekanan_darah][edukator_kd]"
                                                         id="edukator_11">
                                                         <option value="" selected disabled>Pilih Edukator</option>
                                                         @foreach($perawat as $staff)
@@ -1145,7 +1145,7 @@
                                                             class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[Monitor tekanan darah][pasien_nama]"
+                                                        name="edukasi[monitor_tekanan_darah][pasien_nama]"
                                                         id="pasien_nama_11" placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
@@ -1159,7 +1159,7 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_12" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[Kepatuhan pasien dalam menjalani proses hemodialisis][tgl_jam]"
+                                                        name="edukasi[kepatuhan_proses_hd][tgl_jam]"
                                                         id="tgl_jam_12">
                                                 </div>
                                                 <div class="mb-3">
@@ -1168,7 +1168,7 @@
                                                         @foreach($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="edukasi[Kepatuhan pasien dalam menjalani proses hemodialisis][hasil_verifikasi]"
+                                                                    name="edukasi[kepatuhan_proses_hd][hasil_verifikasi]"
                                                                     value="{{ $hasil }}"
                                                                     id="verifikasi_12_{{ str_replace('-', '_', strtolower($hasil)) }}">
                                                                 <label class="form-check-label"
@@ -1181,13 +1181,13 @@
                                                     <label for="tgl_reedukasi_12" class="form-label">Tgl Rencana
                                                         Reedukasi/Redemonstrasi</label>
                                                     <input type="date" class="form-control form-control-sm"
-                                                        name="edukasi[Kepatuhan pasien dalam menjalani proses hemodialisis][tgl_reedukasi]"
+                                                        name="edukasi[kepatuhan_proses_hd][tgl_reedukasi]"
                                                         id="tgl_reedukasi_12">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="edukator_12" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[Kepatuhan pasien dalam menjalani proses hemodialisis][edukator_kd]"
+                                                        name="edukasi[kepatuhan_proses_hd][edukator_kd]"
                                                         id="edukator_12">
                                                         <option value="" selected disabled>Pilih Edukator</option>
                                                         @foreach($perawat as $staff)
@@ -1203,7 +1203,7 @@
                                                             class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[Kepatuhan pasien dalam menjalani proses hemodialisis][pasien_nama]"
+                                                        name="edukasi[kepatuhan_proses_hd][pasien_nama]"
                                                         id="pasien_nama_12" placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
@@ -1216,7 +1216,7 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_13" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[Kenaikan BB pasien][tgl_jam]" id="tgl_jam_13">
+                                                        name="edukasi[kenaikan_bb_pasien][tgl_jam]" id="tgl_jam_13">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
@@ -1224,7 +1224,7 @@
                                                         @foreach($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="edukasi[Kenaikan BB pasien][hasil_verifikasi]"
+                                                                    name="edukasi[kenaikan_bb_pasien][hasil_verifikasi]"
                                                                     value="{{ $hasil }}"
                                                                     id="verifikasi_13_{{ str_replace('-', '_', strtolower($hasil)) }}">
                                                                 <label class="form-check-label"
@@ -1237,13 +1237,13 @@
                                                     <label for="tgl_reedukasi_13" class="form-label">Tgl Rencana
                                                         Reedukasi/Redemonstrasi</label>
                                                     <input type="date" class="form-control form-control-sm"
-                                                        name="edukasi[Kenaikan BB pasien][tgl_reedukasi]"
+                                                        name="edukasi[kenaikan_bb_pasien][tgl_reedukasi]"
                                                         id="tgl_reedukasi_13">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="edukator_13" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[Kenaikan BB pasien][edukator_kd]" id="edukator_13">
+                                                        name="edukasi[kenaikan_bb_pasien][edukator_kd]" id="edukator_13">
                                                         <option value="" selected disabled>Pilih Edukator</option>
                                                         @foreach($perawat as $staff)
                                                             <option value="{{ $staff->kd_karyawan }}">
@@ -1258,7 +1258,7 @@
                                                             class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[Kenaikan BB pasien][pasien_nama]" id="pasien_nama_13"
+                                                        name="edukasi[kenaikan_bb_pasien][pasien_nama]" id="pasien_nama_13"
                                                         placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
@@ -1271,7 +1271,7 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_14" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[Kualitas hidup pasien][tgl_jam]" id="tgl_jam_14">
+                                                        name="edukasi[kualitas_hidup_pasien][tgl_jam]" id="tgl_jam_14">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
@@ -1279,7 +1279,7 @@
                                                         @foreach($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="edukasi[Kualitas hidup pasien][hasil_verifikasi]"
+                                                                    name="edukasi[kualitas_hidup_pasien][hasil_verifikasi]"
                                                                     value="{{ $hasil }}"
                                                                     id="verifikasi_14_{{ str_replace('-', '_', strtolower($hasil)) }}">
                                                                 <label class="form-check-label"
@@ -1292,13 +1292,13 @@
                                                     <label for="tgl_reedukasi_14" class="form-label">Tgl Rencana
                                                         Reedukasi/Redemonstrasi</label>
                                                     <input type="date" class="form-control form-control-sm"
-                                                        name="edukasi[Kualitas hidup pasien][tgl_reedukasi]"
+                                                        name="edukasi[kualitas_hidup_pasien][tgl_reedukasi]"
                                                         id="tgl_reedukasi_14">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="edukator_14" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[Kualitas hidup pasien][edukator_kd]"
+                                                        name="edukasi[kualitas_hidup_pasien][edukator_kd]"
                                                         id="edukator_14">
                                                         <option value="" selected disabled>Pilih Edukator</option>
                                                         @foreach($perawat as $staff)
@@ -1314,7 +1314,7 @@
                                                             class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[Kualitas hidup pasien][pasien_nama]"
+                                                        name="edukasi[kualitas_hidup_pasien][pasien_nama]"
                                                         id="pasien_nama_14" placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
@@ -1327,7 +1327,7 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_15" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[Kegunaan cimino, femoral, double lumen catheter][tgl_jam]"
+                                                        name="edukasi[kegunaan_cimino_femoral][tgl_jam]"
                                                         id="tgl_jam_15">
                                                 </div>
                                                 <div class="mb-3">
@@ -1336,7 +1336,7 @@
                                                         @foreach($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="edukasi[Kegunaan cimino, femoral, double lumen catheter][hasil_verifikasi]"
+                                                                    name="edukasi[kegunaan_cimino_femoral][hasil_verifikasi]"
                                                                     value="{{ $hasil }}"
                                                                     id="verifikasi_15_{{ str_replace('-', '_', strtolower($hasil)) }}">
                                                                 <label class="form-check-label"
@@ -1349,13 +1349,13 @@
                                                     <label for="tgl_reedukasi_15" class="form-label">Tgl Rencana
                                                         Reedukasi/Redemonstrasi</label>
                                                     <input type="date" class="form-control form-control-sm"
-                                                        name="edukasi[Kegunaan cimino, femoral, double lumen catheter][tgl_reedukasi]"
+                                                        name="edukasi[kegunaan_cimino_femoral][tgl_reedukasi]"
                                                         id="tgl_reedukasi_15">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="edukator_15" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[Kegunaan cimino, femoral, double lumen catheter][edukator_kd]"
+                                                        name="edukasi[kegunaan_cimino_femoral][edukator_kd]"
                                                         id="edukator_15">
                                                         <option value="" selected disabled>Pilih Edukator</option>
                                                         @foreach($perawat as $staff)
@@ -1371,7 +1371,7 @@
                                                             class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[Kegunaan cimino, femoral, double lumen catheter][pasien_nama]"
+                                                        name="edukasi[kegunaan_cimino_femoral][pasien_nama]"
                                                         id="pasien_nama_15" placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
@@ -1384,7 +1384,7 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_16" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[Cara perawatan cimino dan kateter double lumen][tgl_jam]"
+                                                        name="edukasi[cara_perawatan_cimino][tgl_jam]"
                                                         id="tgl_jam_16">
                                                 </div>
                                                 <div class="mb-3">
@@ -1393,7 +1393,7 @@
                                                         @foreach($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="edukasi[Cara perawatan cimino dan kateter double lumen][hasil_verifikasi]"
+                                                                    name="edukasi[cara_perawatan_cimino][hasil_verifikasi]"
                                                                     value="{{ $hasil }}"
                                                                     id="verifikasi_16_{{ str_replace('-', '_', strtolower($hasil)) }}">
                                                                 <label class="form-check-label"
@@ -1406,13 +1406,13 @@
                                                     <label for="tgl_reedukasi_16" class="form-label">Tgl Rencana
                                                         Reedukasi/Redemonstrasi</label>
                                                     <input type="date" class="form-control form-control-sm"
-                                                        name="edukasi[Cara perawatan cimino dan kateter double lumen][tgl_reedukasi]"
+                                                        name="edukasi[cara_perawatan_cimino][tgl_reedukasi]"
                                                         id="tgl_reedukasi_16">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="edukator_16" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[Cara perawatan cimino dan kateter double lumen][edukator_kd]"
+                                                        name="edukasi[cara_perawatan_cimino][edukator_kd]"
                                                         id="edukator_16">
                                                         <option value="" selected disabled>Pilih Edukator</option>
                                                         @foreach($perawat as $staff)
@@ -1428,7 +1428,7 @@
                                                             class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[Cara perawatan cimino dan kateter double lumen][pasien_nama]"
+                                                        name="edukasi[cara_perawatan_cimino][pasien_nama]"
                                                         id="pasien_nama_16" placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
@@ -1441,7 +1441,7 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_17" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[Kepatuhan minum obat][tgl_jam]" id="tgl_jam_17">
+                                                        name="edukasi[kepatuhan_minum_obat][tgl_jam]" id="tgl_jam_17">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
@@ -1449,7 +1449,7 @@
                                                         @foreach($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="edukasi[Kepatuhan minum obat][hasil_verifikasi]"
+                                                                    name="edukasi[kepatuhan_minum_obat][hasil_verifikasi]"
                                                                     value="{{ $hasil }}"
                                                                     id="verifikasi_17_{{ str_replace('-', '_', strtolower($hasil)) }}">
                                                                 <label class="form-check-label"
@@ -1462,13 +1462,13 @@
                                                     <label for="tgl_reedukasi_17" class="form-label">Tgl Rencana
                                                         Reedukasi/Redemonstrasi</label>
                                                     <input type="date" class="form-control form-control-sm"
-                                                        name="edukasi[Kepatuhan minum obat][tgl_reedukasi]"
+                                                        name="edukasi[kepatuhan_minum_obat][tgl_reedukasi]"
                                                         id="tgl_reedukasi_17">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="edukator_17" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[Kepatuhan minum obat][edukator_kd]"
+                                                        name="edukasi[kepatuhan_minum_obat][edukator_kd]"
                                                         id="edukator_17">
                                                         <option value="" selected disabled>Pilih Edukator</option>
                                                         @foreach($perawat as $staff)
@@ -1484,7 +1484,7 @@
                                                             class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[Kepatuhan minum obat][pasien_nama]"
+                                                        name="edukasi[kepatuhan_minum_obat][pasien_nama]"
                                                         id="pasien_nama_17" placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
@@ -1497,7 +1497,7 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_18" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[Cara cuci tangan yang benar][tgl_jam]"
+                                                        name="edukasi[cara_cuci_tangan][tgl_jam]"
                                                         id="tgl_jam_18">
                                                 </div>
                                                 <div class="mb-3">
@@ -1506,7 +1506,7 @@
                                                         @foreach($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="edukasi[Cara cuci tangan yang benar][hasil_verifikasi]"
+                                                                    name="edukasi[cara_cuci_tangan][hasil_verifikasi]"
                                                                     value="{{ $hasil }}"
                                                                     id="verifikasi_18_{{ str_replace('-', '_', strtolower($hasil)) }}">
                                                                 <label class="form-check-label"
@@ -1519,13 +1519,13 @@
                                                     <label for="tgl_reedukasi_18" class="form-label">Tgl Rencana
                                                         Reedukasi/Redemonstrasi</label>
                                                     <input type="date" class="form-control form-control-sm"
-                                                        name="edukasi[Cara cuci tangan yang benar][tgl_reedukasi]"
+                                                        name="edukasi[cara_cuci_tangan][tgl_reedukasi]"
                                                         id="tgl_reedukasi_18">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="edukator_18" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[Cara cuci tangan yang benar][edukator_kd]"
+                                                        name="edukasi[cara_cuci_tangan][edukator_kd]"
                                                         id="edukator_18">
                                                         <option value="" selected disabled>Pilih Edukator</option>
                                                         @foreach($perawat as $staff)
@@ -1541,7 +1541,7 @@
                                                             class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[Cara cuci tangan yang benar][pasien_nama]"
+                                                        name="edukasi[cara_cuci_tangan][pasien_nama]"
                                                         id="pasien_nama_18" placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
@@ -1554,7 +1554,7 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_19" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[Kepatuhan dalam membawa rujukan][tgl_jam]"
+                                                        name="edukasi[kepatuhan_membawa_rujukan][tgl_jam]"
                                                         id="tgl_jam_19">
                                                 </div>
                                                 <div class="mb-3">
@@ -1563,7 +1563,7 @@
                                                         @foreach($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="edukasi[Kepatuhan dalam membawa rujukan][hasil_verifikasi]"
+                                                                    name="edukasi[kepatuhan_membawa_rujukan][hasil_verifikasi]"
                                                                     value="{{ $hasil }}"
                                                                     id="verifikasi_19_{{ str_replace('-', '_', strtolower($hasil)) }}">
                                                                 <label class="form-check-label"
@@ -1576,13 +1576,13 @@
                                                     <label for="tgl_reedukasi_19" class="form-label">Tgl Rencana
                                                         Reedukasi/Redemonstrasi</label>
                                                     <input type="date" class="form-control form-control-sm"
-                                                        name="edukasi[Kepatuhan dalam membawa rujukan][tgl_reedukasi]"
+                                                        name="edukasi[kepatuhan_membawa_rujukan][tgl_reedukasi]"
                                                         id="tgl_reedukasi_19">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="edukator_19" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[Kepatuhan dalam membawa rujukan][edukator_kd]"
+                                                        name="edukasi[kepatuhan_membawa_rujukan][edukator_kd]"
                                                         id="edukator_19">
                                                         <option value="" selected disabled>Pilih Edukator</option>
                                                         @foreach($perawat as $staff)
@@ -1598,7 +1598,7 @@
                                                             class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[Kepatuhan dalam membawa rujukan][pasien_nama]"
+                                                        name="edukasi[kepatuhan_membawa_rujukan][pasien_nama]"
                                                         id="pasien_nama_19" placeholder="Nama Keluarga">
                                                 </div>
                                             </div>

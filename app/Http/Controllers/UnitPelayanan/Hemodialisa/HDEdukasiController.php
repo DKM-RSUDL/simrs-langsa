@@ -156,16 +156,14 @@ class HDEdukasiController extends Controller
             $HdFormulirEdukasiPasien->ketersediaan_edukasi = (int)($request->ketersediaan_edukasi ?? 0);
 
             $HdFormulirEdukasiPasien->save();
-            
+
             // === SIMPAN DATA EDUKASI DETAIL MENGGUNAKAN MODEL ===
             if ($request->edukasi) {
-                foreach ($request->edukasi as $topik => $data) {
-                    // Skip jika tidak ada tgl_jam (wajib)
+                foreach ($request->edukasi as $topikKey => $data) {
                     if (!isset($data['tgl_jam']) || empty($data['tgl_jam'])) {
                         continue;
                     }
 
-                    // PERBAIKAN: Auto-generate edukator_nama jika tidak ada
                     $edukatorNama = $data['edukator_nama'] ?? null;
                     if (empty($edukatorNama) && !empty($data['edukator_kd'])) {
                         $edukator = HrdKaryawan::where('kd_karyawan', $data['edukator_kd'])->first();
@@ -176,12 +174,12 @@ class HDEdukasiController extends Controller
 
                     RmeHdFormulirEdukasiPasienDetail::create([
                         'formulir_edukasi_id' => $HdFormulirEdukasiPasien->id,
-                        'topik_edukasi' => $data['topik_edukasi'] ?? $topik,
+                        'topik_edukasi' => $topikKey,
                         'tgl_jam' => $data['tgl_jam'] ? Carbon::parse($data['tgl_jam']) : null,
                         'hasil_verifikasi' => $data['hasil_verifikasi'] ?? null,
                         'tgl_reedukasi' => $data['tgl_reedukasi'] ? Carbon::parse($data['tgl_reedukasi'])->format('Y-m-d') : null,
                         'edukator_kd' => $data['edukator_kd'] ?? null,
-                        'edukator_nama' => $edukatorNama ?? null,                        
+                        'edukator_nama' => $edukatorNama ?? null,
                         'pasien_nama' => $data['pasien_nama'] ?? null,
                     ]);
                 }
@@ -267,59 +265,63 @@ class HDEdukasiController extends Controller
         $formData['kemampuan_bahasa'] = $selectedBahasa;
 
         // === LOAD DATA EDUKASI DETAIL DARI TABEL TERPISAH (Section 3) ===
-        $edukasiDetails = RmeHdFormulirEdukasiPasienDetail::where('formulir_edukasi_id', $id)->get();
+        // $edukasiDetails = RmeHdFormulirEdukasiPasienDetail::where('formulir_edukasi_id', $id)->get();
 
-        // Daftar lengkap topik edukasi yang tersedia (sesuai dengan yang di blade)
+        // // Daftar lengkap topik edukasi yang tersedia (sesuai dengan yang di blade)
         $topikEdukasiList = [
-            'Hak dan Kewajiban pasien dan Keluarga',
-            'Identitas pasien (gelang warna hijau, merah muda, kuning, merah, ungu)',
-            'Penyebab gagal ginjal',
-            'Arti dan Kegunaan Hemodialisis',
-            'Jumlah/jam hemodialisis dan frekuensi hemodialisi',
-            'Meningkatkan Kepatuhan intake cairan pasien',
-            'Makanan yang tidak boleh dimakan',
-            'Cara mengkonsumsi buah-buahan dan sayur-sayuran',
-            'Komplikasi hemodialisis',
-            'Penyebab anemis pada pasien gagal ginjal',
-            'Monitor tekanan darah',
-            'Kepatuhan pasien dalam menjalani proses hemodialisis',
-            'Kenaikan BB pasien',
-            'Kualitas hidup pasien',
-            'Kegunaan cimino, femoral, double lumen catheter',
-            'Cara perawatan cimino dan kateter double lumen',
-            'Kepatuhan minum obat',
-            'Cara cuci tangan yang benar',
-            'Kepatuhan dalam membawa rujukan'
+            'hak_kewajiban_pasien' => 'Hak dan Kewajiban pasien dan Keluarga',
+            'identitas_pasien_gelang' => 'Identitas pasien (gelang warna hijau, merah muda, kuning, merah, ungu)',
+            'penyebab_gagal_ginjal' => 'Penyebab gagal ginjal',
+            'arti_kegunaan_hemodialisis' => 'Arti dan Kegunaan Hemodialisis',
+            'jumlah_jam_hemodialisis' => 'Jumlah/jam hemodialisis dan frekuensi hemodialisi',
+            'kepatuhan_intake_cairan' => 'Meningkatkan Kepatuhan intake cairan pasien',
+            'makanan_tidak_boleh' => 'Makanan yang tidak boleh dimakan',
+            'cara_konsumsi_buah' => 'Cara mengkonsumsi buah-buahan dan sayur-sayuran',
+            'komplikasi_hemodialisis' => 'Komplikasi hemodialisis',
+            'penyebab_anemis' => 'Penyebab anemis pada pasien gagal ginjal',
+            'monitor_tekanan_darah' => 'Monitor tekanan darah',
+            'kepatuhan_proses_hd' => 'Kepatuhan pasien dalam menjalani proses hemodialisis',
+            'kenaikan_bb_pasien' => 'Kenaikan BB pasien',
+            'kualitas_hidup_pasien' => 'Kualitas hidup pasien',
+            'kegunaan_cimino_femoral' => 'Kegunaan cimino, femoral, double lumen catheter',
+            'cara_perawatan_cimino' => 'Cara perawatan cimino dan kateter double lumen',
+            'kepatuhan_minum_obat' => 'Kepatuhan minum obat',
+            'cara_cuci_tangan' => 'Cara cuci tangan yang benar',
+            'kepatuhan_membawa_rujukan' => 'Kepatuhan dalam membawa rujukan'
         ];
 
-        // Convert ke format yang mudah digunakan di blade
-        $edukasiData = [];
+        // // Convert ke format yang mudah digunakan di blade
+        // $edukasiData = [];
 
-        foreach ($edukasiDetails as $detail) {
-            $data = [
-                'id' => $detail->id,
-                'tgl_jam' => $detail->tgl_jam ? \Carbon\Carbon::parse($detail->tgl_jam)->format('Y-m-d\TH:i') : '',
-                'hasil_verifikasi' => $detail->hasil_verifikasi,
-                'tgl_reedukasi' => $detail->tgl_reedukasi ? \Carbon\Carbon::parse($detail->tgl_reedukasi)->format('Y-m-d') : '',
-                'edukator_kd' => $detail->edukator_kd,
-                'edukator_nama' => $detail->edukator_nama,
-                'pasien_nama' => $detail->pasien_nama,
-                'topik_edukasi' => $detail->topik_edukasi
-            ];
+        // foreach ($edukasiDetails as $detail) {
+        //     $data = [
+        //         'id' => $detail->id,
+        //         'tgl_jam' => $detail->tgl_jam ? \Carbon\Carbon::parse($detail->tgl_jam)->format('Y-m-d\TH:i') : '',
+        //         'hasil_verifikasi' => $detail->hasil_verifikasi,
+        //         'tgl_reedukasi' => $detail->tgl_reedukasi ? \Carbon\Carbon::parse($detail->tgl_reedukasi)->format('Y-m-d') : '',
+        //         'edukator_kd' => $detail->edukator_kd,
+        //         'edukator_nama' => $detail->edukator_nama,
+        //         'pasien_nama' => $detail->pasien_nama,
+        //         'topik_edukasi' => $detail->topik_edukasi
+        //     ];
 
-            if (!empty($detail->topik_edukasi) && in_array($detail->topik_edukasi, $topikEdukasiList)) {
-                // Data dengan topik yang valid - mapping langsung
-                $edukasiData[$detail->topik_edukasi] = $data;
-            } else {
-                // Data dengan topik kosong - assign ke topik pertama yang belum terisi
-                foreach ($topikEdukasiList as $availableTopic) {
-                    if (!isset($edukasiData[$availableTopic])) {
-                        $edukasiData[$availableTopic] = $data;
-                        break;
-                    }
-                }
-            }
-        }
+        //     if (array_key_exists($detail->topik_edukasi, $topikEdukasiList)) {
+        //         $edukasiData[$detail->topik_edukasi] = $data;
+        //     } else {
+        //         $foundKey = array_search($detail->topik_edukasi, $topikEdukasiList);
+        //         if ($foundKey !== false) {
+        //             $edukasiData[$foundKey] = $data;
+        //         } else {
+        //             foreach ($topikEdukasiList as $key => $value) {
+        //                 if (!isset($edukasiData[$key])) {
+        //                     $edukasiData[$key] = $data;
+        //                     break;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
 
         return view('unit-pelayanan.hemodialisa.pelayanan.edukasi.edit', compact(
             'dataMedis',
@@ -327,7 +329,7 @@ class HDEdukasiController extends Controller
             'hdFormulirEdukasiPasien',
             'formData',
             'bahasaDetails',
-            'edukasiData',            
+            // 'edukasiData',
             'topikEdukasiList'
         ));
     }
@@ -356,7 +358,7 @@ class HDEdukasiController extends Controller
 
             // Find existing record
             $HdFormulirEdukasiPasien = RmeHdFormulirEdukasiPasien::findOrFail($id);
-            
+
             $HdFormulirEdukasiPasien->user_edit = Auth::id();
 
             // Handle kemampuan bahasa dengan detail (sama seperti store)
@@ -429,9 +431,8 @@ class HDEdukasiController extends Controller
             DB::commit();
             return to_route('hemodialisa.pelayanan.edukasi.index', [$kd_pasien, $tgl_masuk, $urut_masuk])
                 ->with('success', 'Formulir edukasi berhasil diperbarui!');
-                
         } catch (Exception $e) {
-            DB::rollBack();            
+            DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
@@ -511,25 +512,25 @@ class HDEdukasiController extends Controller
 
         // Daftar lengkap topik edukasi yang tersedia (sesuai dengan yang di blade)
         $topikEdukasiList = [
-            'Hak dan Kewajiban pasien dan Keluarga',
-            'Identitas pasien (gelang warna hijau, merah muda, kuning, merah, ungu)',
-            'Penyebab gagal ginjal',
-            'Arti dan Kegunaan Hemodialisis',
-            'Jumlah/jam hemodialisis dan frekuensi hemodialisi',
-            'Meningkatkan Kepatuhan intake cairan pasien',
-            'Makanan yang tidak boleh dimakan',
-            'Cara mengkonsumsi buah-buahan dan sayur-sayuran',
-            'Komplikasi hemodialisis',
-            'Penyebab anemis pada pasien gagal ginjal',
-            'Monitor tekanan darah',
-            'Kepatuhan pasien dalam menjalani proses hemodialisis',
-            'Kenaikan BB pasien',
-            'Kualitas hidup pasien',
-            'Kegunaan cimino, femoral, double lumen catheter',
-            'Cara perawatan cimino dan kateter double lumen',
-            'Kepatuhan minum obat',
-            'Cara cuci tangan yang benar',
-            'Kepatuhan dalam membawa rujukan'
+            'hak_kewajiban_pasien' => 'Hak dan Kewajiban pasien dan Keluarga',
+            'identitas_pasien_gelang' => 'Identitas pasien (gelang warna hijau, merah muda, kuning, merah, ungu)',
+            'penyebab_gagal_ginjal' => 'Penyebab gagal ginjal',
+            'arti_kegunaan_hemodialisis' => 'Arti dan Kegunaan Hemodialisis',
+            'jumlah_jam_hemodialisis' => 'Jumlah/jam hemodialisis dan frekuensi hemodialisi',
+            'kepatuhan_intake_cairan' => 'Meningkatkan Kepatuhan intake cairan pasien',
+            'makanan_tidak_boleh' => 'Makanan yang tidak boleh dimakan',
+            'cara_konsumsi_buah' => 'Cara mengkonsumsi buah-buahan dan sayur-sayuran',
+            'komplikasi_hemodialisis' => 'Komplikasi hemodialisis',
+            'penyebab_anemis' => 'Penyebab anemis pada pasien gagal ginjal',
+            'monitor_tekanan_darah' => 'Monitor tekanan darah',
+            'kepatuhan_proses_hd' => 'Kepatuhan pasien dalam menjalani proses hemodialisis',
+            'kenaikan_bb_pasien' => 'Kenaikan BB pasien',
+            'kualitas_hidup_pasien' => 'Kualitas hidup pasien',
+            'kegunaan_cimino_femoral' => 'Kegunaan cimino, femoral, double lumen catheter',
+            'cara_perawatan_cimino' => 'Cara perawatan cimino dan kateter double lumen',
+            'kepatuhan_minum_obat' => 'Kepatuhan minum obat',
+            'cara_cuci_tangan' => 'Cara cuci tangan yang benar',
+            'kepatuhan_membawa_rujukan' => 'Kepatuhan dalam membawa rujukan'
         ];
 
         $edukasiData = [];
@@ -558,7 +559,7 @@ class HDEdukasiController extends Controller
                 }
             }
         }
-        
+
         $emptyTopicData = [];
 
         return view('unit-pelayanan.hemodialisa.pelayanan.edukasi.show', compact(
@@ -593,7 +594,6 @@ class HDEdukasiController extends Controller
             return redirect()
                 ->route('hemodialisa.pelayanan.edukasi.index', [$kd_pasien, $tgl_masuk, $urut_masuk])
                 ->with('success', 'Formulir edukasi berhasil dihapus!');
-
         } catch (\Exception $e) {
             DB::rollBack();
 
