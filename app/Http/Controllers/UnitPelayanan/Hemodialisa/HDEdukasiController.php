@@ -12,6 +12,7 @@ use App\Models\RmeHdFormulirEdukasiPasienDetail;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class HDEdukasiController extends Controller
 {
@@ -601,5 +602,140 @@ class HDEdukasiController extends Controller
                 ->route('hemodialisa.pelayanan.edukasi.index', [$kd_pasien, $tgl_masuk, $urut_masuk])
                 ->with('error', 'Gagal menghapus data: ' . $e->getMessage());
         }
+    }
+
+    public function generatePDF($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->first();
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        // Load data formulir edukasi
+        $hdFormulirEdukasiPasien = RmeHdFormulirEdukasiPasien::findOrFail($id);
+
+        // Parse JSON data untuk form (Section 1 & 2)
+        $formData = [
+            'tinggal_bersama' => json_decode($hdFormulirEdukasiPasien->tinggal_bersama, true) ?? [],
+            'kemampuan_bahasa' => json_decode($hdFormulirEdukasiPasien->kemampuan_bahasa, true) ?? [],
+            'cara_edukasi' => json_decode($hdFormulirEdukasiPasien->cara_edukasi, true) ?? [],
+            'hambatan' => json_decode($hdFormulirEdukasiPasien->hambatan, true) ?? [],
+            'kebutuhan_edukasi' => json_decode($hdFormulirEdukasiPasien->kebutuhan_edukasi, true) ?? [],
+            'perlu_penerjemah' => $hdFormulirEdukasiPasien->perlu_penerjemah,
+            'baca_tulis' => $hdFormulirEdukasiPasien->baca_tulis,
+            'hambatan_status' => $hdFormulirEdukasiPasien->hambatan_status,
+            'ketersediaan_edukasi' => $hdFormulirEdukasiPasien->ketersediaan_edukasi,
+        ];
+
+        // Extract detail bahasa
+        $bahasaDetails = [
+            'bahasa_daerah_detail' => '',
+            'bahasa_asing_detail' => ''
+        ];
+
+        foreach ($formData['kemampuan_bahasa'] as $item) {
+            if (is_array($item) && isset($item['bahasa'], $item['detail'])) {
+                if ($item['bahasa'] === 'Daerah') {
+                    $bahasaDetails['bahasa_daerah_detail'] = $item['detail'];
+                } elseif ($item['bahasa'] === 'Asing') {
+                    $bahasaDetails['bahasa_asing_detail'] = $item['detail'];
+                }
+            }
+        }
+
+        // Flatten kemampuan bahasa untuk checkbox
+        $selectedBahasa = [];
+        foreach ($formData['kemampuan_bahasa'] as $item) {
+            if (is_array($item) && isset($item['bahasa'])) {
+                $selectedBahasa[] = $item['bahasa'];
+            } else if (is_string($item)) {
+                $selectedBahasa[] = $item;
+            }
+        }
+        $formData['kemampuan_bahasa'] = $selectedBahasa;
+
+        // === LOAD DATA EDUKASI DETAIL DARI TABEL TERPISAH (Section 3) ===
+        $edukasiDetails = RmeHdFormulirEdukasiPasienDetail::where('formulir_edukasi_id', $id)->get();
+
+        // Daftar lengkap topik edukasi yang tersedia (sesuai dengan yang di blade)
+        $topikEdukasiList = [
+            'hak_kewajiban_pasien' => 'Hak dan Kewajiban pasien dan Keluarga',
+            'identitas_pasien_gelang' => 'Identitas pasien (gelang warna hijau, merah muda, kuning, merah, ungu)',
+            'penyebab_gagal_ginjal' => 'Penyebab gagal ginjal',
+            'arti_kegunaan_hemodialisis' => 'Arti dan Kegunaan Hemodialisis',
+            'jumlah_jam_hemodialisis' => 'Jumlah/jam hemodialisis dan frekuensi hemodialisi',
+            'kepatuhan_intake_cairan' => 'Meningkatkan Kepatuhan intake cairan pasien',
+            'makanan_tidak_boleh' => 'Makanan yang tidak boleh dimakan',
+            'cara_konsumsi_buah' => 'Cara mengkonsumsi buah-buahan dan sayur-sayuran',
+            'komplikasi_hemodialisis' => 'Komplikasi hemodialisis',
+            'penyebab_anemis' => 'Penyebab anemis pada pasien gagal ginjal',
+            'monitor_tekanan_darah' => 'Monitor tekanan darah',
+            'kepatuhan_proses_hd' => 'Kepatuhan pasien dalam menjalani proses hemodialisis',
+            'kenaikan_bb_pasien' => 'Kenaikan BB pasien',
+            'kualitas_hidup_pasien' => 'Kualitas hidup pasien',
+            'kegunaan_cimino_femoral' => 'Kegunaan cimino, femoral, double lumen catheter',
+            'cara_perawatan_cimino' => 'Cara perawatan cimino dan kateter double lumen',
+            'kepatuhan_minum_obat' => 'Kepatuhan minum obat',
+            'cara_cuci_tangan' => 'Cara cuci tangan yang benar',
+            'kepatuhan_membawa_rujukan' => 'Kepatuhan dalam membawa rujukan'
+        ];
+
+        // Convert ke format yang mudah digunakan di blade
+        $edukasiData = [];
+
+        foreach ($edukasiDetails as $detail) {
+            $data = [
+                'id' => $detail->id,
+                'tgl_jam' => $detail->tgl_jam ? \Carbon\Carbon::parse($detail->tgl_jam)->format('d/m/Y H:i') : '',
+                'hasil_verifikasi' => $detail->hasil_verifikasi,
+                'tgl_reedukasi' => $detail->tgl_reedukasi ? \Carbon\Carbon::parse($detail->tgl_reedukasi)->format('d/m/Y') : '',
+                'edukator_kd' => $detail->edukator_kd,
+                'edukator_nama' => $detail->edukator_nama,
+                'pasien_nama' => $detail->pasien_nama,
+                'topik_edukasi' => $detail->topik_edukasi
+            ];
+
+            // Mapping berdasarkan key yang ada di database
+            if (array_key_exists($detail->topik_edukasi, $topikEdukasiList)) {
+                $edukasiData[$detail->topik_edukasi] = $data;
+            } else {
+                // Fallback untuk data lama
+                $foundKey = array_search($detail->topik_edukasi, $topikEdukasiList);
+                if ($foundKey !== false) {
+                    $edukasiData[$foundKey] = $data;
+                }
+            }
+        }
+
+        $pdf = PDF::loadView('unit-pelayanan.hemodialisa.pelayanan.edukasi.print', compact(
+            'dataMedis',
+            'hdFormulirEdukasiPasien',
+            'formData',
+            'bahasaDetails',
+            'edukasiData',
+            'topikEdukasiList'
+        ));
+
+        $pdf->setPaper('a4', 'portrait');
+
+        return $pdf->stream("formulir-edukasi-{$dataMedis->pasien->kd_pasien}-{$id}.pdf");
     }
 }

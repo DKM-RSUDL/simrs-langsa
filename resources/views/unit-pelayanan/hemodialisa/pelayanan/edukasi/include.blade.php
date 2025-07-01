@@ -74,15 +74,27 @@
             color: white;
         }
 
-        .btn-edit {
-            background-color: #6b7280;
+        .btn-print {
+            background-color: #80806b;
             border-color: #6b7280;
             color: white;
         }
 
-        .btn-edit:hover {
+        .btn-print:hover {
             background-color: #4b5563;
             border-color: #4b5563;
+            color: white;
+        }
+
+        .btn-edit {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background-color: #ffc107b4;
+            border-color: #ffc107b4;
             color: white;
         }
 

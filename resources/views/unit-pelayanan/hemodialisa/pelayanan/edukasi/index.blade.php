@@ -115,6 +115,11 @@
                                                             <!-- Action Buttons -->
                                                             <div class="col-auto">
                                                                 <div class="action-buttons">
+                                                                    <a target="_blank" href="{{ route('hemodialisa.pelayanan.edukasi.print-pdf', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                        class="btn btn-print btn-sm" title="Lihat">
+                                                                        <i class="bi bi-printer"></i> Print
+                                                                    </a>
+
                                                                     <a href="{{ route('hemodialisa.pelayanan.edukasi.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                         class="btn btn-view btn-sm" title="Lihat">
                                                                         <i class="ti-eye"></i> Lihat
