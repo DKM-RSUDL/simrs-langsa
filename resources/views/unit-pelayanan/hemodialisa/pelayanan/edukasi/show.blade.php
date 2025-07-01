@@ -194,11 +194,7 @@
         <a href="{{ url()->previous() }}" class="btn">
             <i class="ti-arrow-left"></i> Kembali
         </a>
-        <form
-            action="{{ route('hemodialisa.pelayanan.edukasi.update', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $hdFormulirEdukasiPasien->id]) }}"
-            method="post">
-            @csrf
-            @method('put')
+        <form action="" method="">
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
@@ -635,7 +631,7 @@
                                                         value="{{ $edukasiData[$topik]['tgl_jam'] ?? '' }}"
                                                         disabled readonly>
                                                 </div>
-                                                
+
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
                                                     <div class="checkbox-group">
@@ -653,7 +649,7 @@
                                                         @endforeach
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="mb-3">
                                                     <label for="tgl_reedukasi_{{ $index + 1 }}" class="form-label">Tgl Rencana Reedukasi/Redemonstrasi</label>
                                                     <input type="date" class="form-control form-control-sm"
@@ -662,7 +658,7 @@
                                                         value="{{ $edukasiData[$topik]['tgl_reedukasi'] ?? '' }}"
                                                         disabled readonly>
                                                 </div>
-                                                
+
                                                 <div class="mb-3">
                                                     <label for="edukator_{{ $index + 1 }}" class="form-label">Edukator</label>
                                                     <select class="form-control select2" style="width: 100%"
@@ -679,15 +675,15 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                                
+
                                                 <div class="mb-3">
-                                                    <label for="pasien_nama_{{ $index + 1 }}" class="form-label">Pasien/Keluarga 
+                                                    <label for="pasien_nama_{{ $index + 1 }}" class="form-label">Pasien/Keluarga
                                                         <i class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i>
                                                     </label>
                                                     <input type="text" class="form-control form-control-sm"
                                                         name="edukasi[{{ $topik }}][pasien_nama]"
-                                                        id="pasien_nama_{{ $index + 1 }}" 
+                                                        id="pasien_nama_{{ $index + 1 }}"
                                                         placeholder="Nama Keluarga"
                                                         value="{{ $edukasiData[$topik]['pasien_nama'] ?? '' }}"
                                                         disabled readonly>
@@ -700,9 +696,6 @@
                                 </div>
                             </div>
 
-                        </div>
-                        <div class="text-end mt-5">
-                            <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
                     </div>
                 </div>
@@ -782,6 +775,6 @@
                     }
                 });
             });
-        });        
+        });
 </script>
 @endpush
