@@ -635,7 +635,7 @@
             handleCheckboxWithDetails('kia_lainnya', 'lainnya-kia-details');
         });
 
-        // Bagian : 
+        // Bagian : 4. Riwayat Terapi Antiretroviral
         document.addEventListener('DOMContentLoaded', function () {
             console.log('Riwayat Terapi Antiretroviral script initialized');
 
