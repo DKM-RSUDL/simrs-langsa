@@ -40,10 +40,10 @@
                                 <div>
 
                                     <div class="section-separator" id="data-masuk">
-                                        <h5 class="section-title">1. Data masuk</h5>
+                                        <h5 class="section-title">1. Tanggal Pengisian</h5>
 
                                         <div class="form-group">
-                                            <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
+                                            <label style="min-width: 200px;">Tanggal Dan Jam pengisian</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <input type="date" class="form-control" name="tanggal_masuk" id="tanggal_masuk" value="{{ date('Y-m-d') }}">
                                                 <input type="time" class="form-control" name="jam_masuk" id="jam_masuk" value="{{ date('H:i') }}">
@@ -677,16 +677,12 @@
                                                     <table class="table table-bordered table-striped">
                                                         <thead class="table-dark">
                                                             <tr class="text-center">
-                                                                <th rowspan="2">GOL UMUR (thn)</th>
-                                                                <th colspan="2">PRIA</th>
-                                                                <th rowspan="2">GOL UMUR (thn)</th>
-                                                                <th colspan="2">WANITA</th>
-                                                            </tr>
-                                                            <tr class="text-center">
-                                                                <th>(Kkal/kg BB)</th>
-                                                                <th>(Kkal/kg BB)</th>
-                                                                <th>(Kkal/kg BB)</th>
-                                                                <th>(Kkal/kg BB)</th>
+                                                                <th>GOL UMUR (thn)</th>
+                                                                <th>PRIA (Kkal/kg BB)</th>
+                                                                <th>WANITA (Kkal/kg BB)</th>
+                                                                <th>GOL UMUR (thn)</th>
+                                                                <th>PRIA (Kkal/kg BB)</th>
+                                                                <th>WANITA (Kkal/kg BB)</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>

@@ -42,10 +42,10 @@
                                 <div>
 
                                     <div class="section-separator" id="data-masuk">
-                                        <h5 class="section-title">1. Data masuk</h5>
+                                        <h5 class="section-title">1. Data Pengisian</h5>
 
                                         <div class="form-group">
-                                            <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
+                                            <label style="min-width: 200px;">Tanggal Dan Jam Pengisian</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <input type="date" class="form-control" name="tanggal_masuk"
                                                     id="tanggal_masuk"
@@ -500,6 +500,28 @@
                                         </div>
 
                                         <div class="form-group">
+                                            <label style="min-width: 220px;">Status Gizi</label>
+                                            <select class="form-control" name="status_gizi" id="status_gizi">
+                                                <option value="">Pilih Status Gizi</option>
+                                                <option value="Gizi Buruk"
+                                                    {{ old('status_gizi', $dataGiziDewasa->asesmenGizi->status_gizi ?? '') == 'Gizi Buruk' ? 'selected' : '' }}>
+                                                    Gizi Buruk</option>
+                                                <option value="Gizi Kurang"
+                                                    {{ old('status_gizi', $dataGiziDewasa->asesmenGizi->status_gizi ?? '') == 'Gizi Kurang' ? 'selected' : '' }}>
+                                                    Gizi Kurang</option>
+                                                <option value="Gizi Baik/Normal"
+                                                    {{ old('status_gizi', $dataGiziDewasa->asesmenGizi->status_gizi ?? '') == 'Gizi Baik/Normal' ? 'selected' : '' }}>
+                                                    Gizi Baik/Normal</option>
+                                                <option value="Gizi Lebih"
+                                                    {{ old('status_gizi', $dataGiziDewasa->asesmenGizi->status_gizi ?? '') == 'Gizi Lebih' ? 'selected' : '' }}>
+                                                    Gizi Lebih</option>
+                                                <option value="Obesitas"
+                                                    {{ old('status_gizi', $dataGiziDewasa->asesmenGizi->status_gizi ?? '') == 'Obesitas' ? 'selected' : '' }}>
+                                                    Obesitas</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
                                             <label style="min-width: 220px;">Biokimia</label>
                                             <textarea class="form-control" name="biokimia" rows="4" placeholder="Sebutkan biokimia...">{{ old('biokimia', $dataGiziDewasa->asesmenGizi->biokimia ?? '') }}</textarea>
                                         </div>
@@ -909,27 +931,6 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Rencana Diet -->
-                                            <div class="col-md-12">
-                                                <h6 class="mb-3 text-primary">RENCANA DIET DAN MONITORING</h6>
-                                                <div class="row g-3">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label class="form-label fw-bold">Jenis Diet</label>
-                                                            <textarea class="form-control" name="jenis_diet" rows="3"
-                                                                placeholder="Contoh: Diet DM 1500 Kkal, Diet Jantung II, Diet Rendah Garam, dll">{{ old('jenis_diet', $dataGiziDewasa->intervensiGizi->jenis_diet ?? '') }}</textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label class="form-label fw-bold">Rencana Monitoring</label>
-                                                            <textarea class="form-control" name="rencana_monitoring" rows="3"
-                                                                placeholder="Contoh: Monitoring BB setiap hari, evaluasi asupan makan, pemeriksaan lab rutin">{{ old('rencana_monitoring', $dataGiziDewasa->intervensiGizi->rencana_monitoring ?? '') }}</textarea>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
                                             <!-- Catatan Khusus -->
                                             <div class="col-md-12">
                                                 <div class="form-group">
@@ -1213,6 +1214,47 @@
             });
 
             //==================================================================================================//
+            // Fungsi untuk auto select status gizi berdasarkan IMT
+            //==================================================================================================//
+            function autoSelectStatusGizi() {
+                const imtEl = document.getElementById('imt');
+                const statusGiziEl = document.getElementById('status_gizi');
+                
+                if (!imtEl || !statusGiziEl) {
+                    return;
+                }
+                
+                const imt = parseFloat(imtEl.value);
+                
+                if (isNaN(imt) || imt <= 0) {
+                    return;
+                }
+                
+                let statusGizi = '';
+                
+                // Klasifikasi berdasarkan standar WHO untuk dewasa
+                if (imt < 16.0) {
+                    statusGizi = 'Gizi Buruk';
+                } else if (imt >= 12.0 && imt < 18.4) {
+                    statusGizi = 'Gizi Kurang';
+                } else if (imt >= 18.5 && imt < 24.9) {
+                    statusGizi = 'Gizi Baik/Normal';
+                } else if (imt >= 25.0 && imt < 29.9) {
+                    statusGizi = 'Gizi Lebih';
+                } else if (imt >= 30.0) {
+                    statusGizi = 'Obesitas';
+                }
+                
+                // Set nilai pada select jika ada option yang sesuai
+                if (statusGizi) {
+                    const optionExists = Array.from(statusGiziEl.options).some(option => option.value === statusGizi);
+                    if (optionExists) {
+                        statusGiziEl.value = statusGizi;
+                    }
+                }
+            }
+
+            //==================================================================================================//
             // Fungsi IMT dan BBI
             //==================================================================================================//
             // Fungsi untuk menghitung IMT dan BBI
@@ -1220,35 +1262,27 @@
                 const beratBadan = parseFloat(document.getElementById('berat_badan').value);
                 const tinggiBadan = parseFloat(document.getElementById('tinggi_badan').value);
                 const jenisKelaminEl = document.querySelector('input[name="jenis_kelamin"]');
-
+                
                 if (beratBadan && tinggiBadan && jenisKelaminEl) {
                     // Hitung IMT (kg/m²)
                     const tinggiMeter = tinggiBadan / 100;
                     const imt = beratBadan / (tinggiMeter * tinggiMeter);
                     document.getElementById('imt').value = imt.toFixed(2);
-
-                    // Hitung BBI untuk dewasa menggunakan rumus Broca yang disesuaikan
+                    
+                    // Hitung BBI menggunakan rumus Broca yang BENAR
                     const jenisKelamin = jenisKelaminEl.value;
                     let bbi;
-
-                    if (jenisKelamin == '1') { // Laki-laki
-                        if (tinggiBadan <= 160) {
-                            bbi = tinggiBadan - 100;
-                        } else {
-                            bbi = (tinggiBadan - 100) - ((tinggiBadan - 100) * 0.1);
-                        }
-                    } else { // Perempuan (jenisKelamin == '0')
-                        if (tinggiBadan <= 150) {
-                            bbi = tinggiBadan - 100;
-                        } else {
-                            bbi = (tinggiBadan - 100) - ((tinggiBadan - 100) * 0.15);
-                        }
+                    
+                    if (jenisKelamin == '1') { 
+                        // Laki-laki: BBI = (TB - 100) × 0.9
+                        bbi = (tinggiBadan - 100) * 0.9;
+                    } else { 
+                        // Perempuan: BBI = (TB - 100) × 0.85
+                        bbi = (tinggiBadan - 100) * 0.85;
                     }
-
-                    // Pastikan BBI tidak kurang dari batas minimum yang wajar untuk dewasa
-                    if (bbi < 40) bbi = 40;
-
+                    
                     document.getElementById('bbi').value = bbi.toFixed(1);
+                    setTimeout(autoSelectStatusGizi, 100);
                 }
             }
 

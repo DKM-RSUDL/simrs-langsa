@@ -5,6 +5,8 @@ namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
 use App\Models\RmeMonitoringGizi;
+use App\Models\RmePengkajianGiziDewasa;
+use App\Models\RmePengkajianIntervensiGiziDewasa;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -61,6 +63,62 @@ class GiziMonitoringController extends Controller
         }
     }
 
+    public function create(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        try {
+            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+                ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+                ->where('kunjungan.kd_unit', $kd_unit)
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
+                ->first();
+
+            if (!$dataMedis) {
+                abort(404, 'Data medis tidak ditemukan');
+            }
+
+            // Set umur pasien
+            if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+                $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+            } else {
+                $dataMedis->pasien->umur = 'Tidak Diketahui';
+            }
+
+            // Ambil data TEE dari pengkajian gizi dewasa
+            $dataGiziDewasa = RmePengkajianGiziDewasa::where('kd_unit', $kd_unit)
+                ->where('kd_pasien', $kd_pasien)
+                ->where('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->orderBy('waktu_asesmen', 'desc')
+                ->first();
+
+            $teeValue = null;
+            if ($dataGiziDewasa) {
+                $intervensiGizi = RmePengkajianIntervensiGiziDewasa::where('id_gizi', $dataGiziDewasa->id)->first();
+                $teeValue = $intervensiGizi ? $intervensiGizi->tee : null;
+            }
+
+            return view('unit-pelayanan.rawat-inap.pelayanan.gizi.monitoring.create', compact(
+                'dataMedis',
+                'kd_unit',
+                'kd_pasien',
+                'tgl_masuk',
+                'urut_masuk',
+                'teeValue'
+            ));
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $request->validate([
@@ -69,8 +127,6 @@ class GiziMonitoringController extends Controller
             'karbohidrat' => 'required|numeric|min:0',
             'lemak' => 'required|numeric|min:0'
         ]);
-
-        // dd($request->all());
 
         try {
             $tanggal_monitoring = Carbon::createFromFormat('Y-m-d H:i', $request->tanggal . ' ' . $request->jam);
@@ -91,9 +147,14 @@ class GiziMonitoringController extends Controller
                 'user_create' => Auth::id(),
             ]);
 
-            return redirect()->back()->with('success', 'Data monitoring gizi berhasil disimpan.');
+            return redirect()->route('rawat-inap.gizi.monitoring.index', [
+                $kd_unit,
+                $kd_pasien,
+                $tgl_masuk,
+                $urut_masuk
+            ])->with('success', 'Data monitoring gizi berhasil disimpan.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
