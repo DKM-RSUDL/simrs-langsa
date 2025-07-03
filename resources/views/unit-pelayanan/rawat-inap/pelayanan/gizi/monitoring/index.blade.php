@@ -56,15 +56,6 @@
             margin-top: 3px;
         }
 
-        .modal-header {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .modal-header .btn-close {
-            filter: brightness(0) invert(1);
-        }
-
         .form-group {
             margin-bottom: 1rem;
         }
@@ -128,13 +119,13 @@
                                     <div class="d-flex justify-content-between m-3">
                                         <div class="row w-100">
                                             <div class="col-md-8">
-                                                <h6 class="mb-0">Data Gizi Dewasa</h6>
+                                                <h6 class="mb-0">Data Monitoring Gizi</h6>
                                                 <small class="text-muted">Pengisian dapat dilakukan secara bertahap</small>
                                             </div>
                                             <div class="col-md-4 text-end">
-                                                <button type="button" class="btn btn-primary btn" data-bs-toggle="modal" data-bs-target="#modalTambahMonitoring">
+                                                <a href="{{ route('rawat-inap.gizi.monitoring.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-primary">
                                                     <i class="ti-plus"></i> Tambah
-                                                </button>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -221,66 +212,34 @@
             </div>
         </div>
     </div>
-    @include('unit-pelayanan.rawat-inap.pelayanan.gizi.monitoring.modal')
+
+    {{-- Modal Detail Monitoring --}}
+    <div class="modal fade" id="modalDetailMonitoring" tabindex="-1" aria-labelledby="modalDetailMonitoringLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalDetailMonitoringLabel">
+                        <i class="ti-eye me-2"></i>Detail Data Monitoring Gizi
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="detailContent">
+                        <!-- Detail content akan dimuat di sini -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="ti-close me-2"></i>Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('js')
 <script>
-    $(document).ready(function() {
-        // Form validation
-        $('#formTambahMonitoring').on('submit', function(e) {
-            let isValid = true;
-            let errorMessage = '';
-
-            // Validasi field required
-            $(this).find('input[required], textarea[required]').each(function() {
-                if ($(this).val().trim() === '') {
-                    isValid = false;
-                    $(this).addClass('is-invalid');
-                    errorMessage += 'Field ' + $(this).prev('label').text().replace('*', '') + ' harus diisi\n';
-                } else {
-                    $(this).removeClass('is-invalid');
-                }
-            });
-
-            // Validasi nilai numerik
-            const numericalFields = ['energi', 'protein', 'karbohidrat', 'lemak'];
-            numericalFields.forEach(function(field) {
-                const value = parseFloat($('#' + field).val());
-                if (isNaN(value) || value < 0) {
-                    isValid = false;
-                    $('#' + field).addClass('is-invalid');
-                    errorMessage += 'Field ' + $('#' + field).prev('label').text().replace('*', '') + ' harus berisi angka yang valid\n';
-                }
-            });
-
-            if (!isValid) {
-                e.preventDefault();
-                alert('Terjadi kesalahan:\n' + errorMessage);
-                return false;
-            }
-
-            // Show loading state
-            $(this).find('button[type="submit"]').prop('disabled', true).html('<i class="ti-reload me-2"></i>Menyimpan...');
-        });
-
-        // Reset form when modal is closed
-        $('#modalTambahMonitoring').on('hidden.bs.modal', function() {
-            $('#formTambahMonitoring')[0].reset();
-            $('#formTambahMonitoring').find('.is-invalid').removeClass('is-invalid');
-            $('#formTambahMonitoring').find('button[type="submit"]').prop('disabled', false).html('<i class="ti-save me-2"></i>Simpan Data');
-            
-            // Reset to current date and time
-            $('#tanggal').val(new Date().toISOString().split('T')[0]);
-            $('#jam').val(new Date().toTimeString().slice(0, 5));
-        });
-
-        // Remove invalid class on input change
-        $('.form-control').on('input change', function() {
-            $(this).removeClass('is-invalid');
-        });
-    });
-
     // Function untuk lihat detail
     function lihatDetail(id) {
         $('#detailContent').html('<div class="text-center"><i class="ti-reload fa-spin"></i> Memuat data...</div>');
