@@ -175,6 +175,15 @@
                                 <div class="p-3">
                                     <div class="row mb-3">
                                         <div class="col-md-3">
+                                            <label class="form-label">No Reg Nas</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" name="no_reg_nas"
+                                                placeholder="No registrasi Nasional">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
                                             <label class="form-label">NIK</label>
                                         </div>
                                         <div class="col-md-9">
@@ -575,6 +584,23 @@
                                         <div class="col-md-9">
                                             <textarea class="form-control" name="lama_penggunaannya" rows="3"
                                                 placeholder="Sebutkan alasan putus terapi (jika ada)"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Data Pemeriksaan Klinis dan Laboratorium -->
+                            <div class="card mb-4 shadow-sm">
+                                <div class="section-header">
+                                    5. Data Pemeriksaan Klinis dan Laboratorium
+                                </div>
+                                <div class="p-3">
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+
+                                        </div>
+                                        <div class="col-md-9">
+
                                         </div>
                                     </div>
                                 </div>

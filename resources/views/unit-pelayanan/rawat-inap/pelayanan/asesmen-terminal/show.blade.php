@@ -132,7 +132,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="subsection-title section-separator fw-bold">1.2. Kegawatan Tikus otot:</div>
+                                    <div class="subsection-title section-separator fw-bold">1.2. Kegawatan Tinus otot:</div>
                                     <div class="checkbox-group">
                                         <div class="row">
                                             <div class="col-md-4">
@@ -346,7 +346,7 @@
                                 <div class="form-section section-separator">
                                     <h5 class="section-title">
                                         <span class="section-number">5</span>
-                                        urusan dan kebutuhan spiritual psien dan keluarga seperti putus asa, penderitaan, rasa bersalah atau pengampunan:
+                                        urusan dan kebutuhan spiritual pasien dan keluarga seperti putus asa, penderitaan, rasa bersalah atau pengampunan:
                                     </h5>
 
                                     <div class="subsection-title">Perlu didoakan :</div>
@@ -480,7 +480,7 @@
                                                     <input type="radio" name="mampu_merawat_rumah" id="mampu_merawat_tidak" value="0" {{ !$asesmen->rmeAsesmenTerminalUsk->mampu_merawat_rumah ? 'checked' : '' }} disabled>
                                                     <label for="mampu_merawat_tidak">Tidak</label>
                                                 </div>
-                                            </div>                                            
+                                            </div>
                                         </div>
 
                                         <div class="text-input-group mt-3">
@@ -584,7 +584,7 @@
                                             <div class="checkbox-group mt-4">
                                                 <div class="checkbox-item {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_leth_lelah ? 'selected' : '' }}">
                                                     <input type="checkbox" name="keluarga_leth_lelah" id="keluarga_leth_lelah" value="1" {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_leth_lelah ? 'checked' : '' }} disabled>
-                                                    <label for="keluarga_leth_lelah">Leth/lelah</label>
+                                                    <label for="keluarga_leth_lelah">Letih/lelah</label>
                                                 </div>
                                                 <div class="checkbox-item {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_rasa_bersalah ? 'selected' : '' }}">
                                                     <input type="checkbox" name="keluarga_rasa_bersalah" id="keluarga_rasa_bersalah" value="1" {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_rasa_bersalah ? 'checked' : '' }} disabled>
@@ -727,7 +727,7 @@
                                             <div class="checkbox-group mt-4">
                                                 <div class="checkbox-item {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_leth_lelah ? 'selected' : '' }}">
                                                     <input type="checkbox" name="faktor_resiko_leth_lelah" id="faktor_resiko_leth_lelah" value="1" {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_leth_lelah ? 'checked' : '' }} disabled>
-                                                    <label for="faktor_resiko_leth_lelah">Leth/lelah</label>
+                                                    <label for="faktor_resiko_leth_lelah">Letih/lelah</label>
                                                 </div>
                                                 <div class="checkbox-item {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_gangguan_tidur ? 'selected' : '' }}">
                                                     <input type="checkbox" name="faktor_resiko_gangguan_tidur" id="faktor_resiko_gangguan_tidur" value="1" {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_gangguan_tidur ? 'checked' : '' }} disabled>

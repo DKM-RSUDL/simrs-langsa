@@ -119,7 +119,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="subsection-title">1.2. Kegawatan Tikus otot:</div>
+                                    <div class="subsection-title">1.2. Kegawatan Tinus otot:</div>
                                     <div class="checkbox-group">
                                         <div class="row">
                                             <div class="col-md-4">
@@ -154,7 +154,7 @@
                                                     <label for="tak2">T.A.K</label>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            {{-- <div class="col-md-4">
                                                 <div class="checkbox-item">
                                                     <input type="checkbox" name="sulit_berbicara" id="sulit_berbicara"
                                                         value="1">
@@ -165,7 +165,7 @@
                                                         id="inkontinensia_urine" value="1">
                                                     <label for="inkontinensia_urine">Inkontinensia Urine</label>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </div>
 
@@ -219,10 +219,10 @@
                                                     <input type="text" class="form-control" name="nadi_lambat"
                                                         placeholder="Masukkan nilai...">
                                                 </div> --}}
-                                                <div class="checkbox-item">
+                                                {{-- <div class="checkbox-item">
                                                     <input type="checkbox" name="tak3" id="tak3" value="1">
                                                     <label for="tak3">T.A.K</label>
-                                                </div>
+                                                </div> --}}
                                             </div>
                                         </div>
                                     </div>
@@ -251,11 +251,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="text-input-group">
+                                        {{-- <div class="text-input-group">
                                             <label class="form-label">Lainnya:</label>
                                             <textarea class="form-control" name="faktor_lainnya" rows="2"
                                                 placeholder="Sebutkan faktor lainnya..."></textarea>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
 
@@ -365,10 +365,10 @@
                                 <div class="form-section">
                                     <h5 class="section-title">
                                         <span class="section-number">5</span>
-                                        urusan dan kebutuhan spiritual psien dan keluarga seperti putus asa, penderitaan, rasa bersalah atau pengampunan:
+                                        urusan dan kebutuhan spiritual pasien dan keluarga seperti putus asa, penderitaan, rasa bersalah atau pengampunan:
                                     </h5>
 
-                                    <div class="subsection-title">Perlu bimbingan rohani :</div>
+                                    <div class="subsection-title">Perlu didoakan :</div>
                                     <div class="radio-group">
                                         <div class="radio-item">
                                             <input type="radio" name="perlu_didoakan" id="didoakan_tidak" value="0">
@@ -604,7 +604,7 @@
                                                 <div class="checkbox-group mt-4">
                                                     <div class="checkbox-item">
                                                         <input type="checkbox" name="keluarga_leth_lelah" id="keluarga_leth_lelah" value="1">
-                                                        <label for="keluarga_leth_lelah">Leth/lelah</label>
+                                                        <label for="keluarga_leth_lelah">Letih/lelah</label>
                                                     </div>
                                                     <div class="checkbox-item">
                                                         <input type="checkbox" name="keluarga_rasa_bersalah" id="keluarga_rasa_bersalah" value="1">
@@ -742,7 +742,7 @@
                                                 </div>
                                                 <div class="checkbox-item">
                                                     <input type="checkbox" name="faktor_resiko_tidak_mampu_memenuhi" id="faktor_resiko_tidak_mampu_memenuhi" value="1">
-                                                    <label for="faktor_resiko_tidak_mampu_memenuhi">Tidak mampu memenuhi peran yang diharapkan</label>
+                                                    <label for="faktor_resiko_tidak_mampu_memenuhi">Ketidak mampuan memenuhi peran yang diharapkan</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -750,7 +750,7 @@
                                             <div class="checkbox-group mt-4">
                                                 <div class="checkbox-item">
                                                     <input type="checkbox" name="faktor_resiko_leth_lelah" id="faktor_resiko_leth_lelah" value="1">
-                                                    <label for="faktor_resiko_leth_lelah">Leth/lelah</label>
+                                                    <label for="faktor_resiko_leth_lelah">Letih/lelah</label>
                                                 </div>
                                                 <div class="checkbox-item">
                                                     <input type="checkbox" name="faktor_resiko_gangguan_tidur" id="faktor_resiko_gangguan_tidur" value="1">

@@ -116,7 +116,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="subsection-title">1.2. Kegawatan Tikus otot:</div>
+                                    <div class="subsection-title">1.2. Kegawatan Tinus otot:</div>
                                     <div class="checkbox-group">
                                         <div class="row">
                                             <div class="col-md-4">
@@ -326,7 +326,7 @@
                                 <div class="form-section">
                                     <h5 class="section-title">
                                         <span class="section-number">5</span>
-                                        urusan dan kebutuhan spiritual psien dan keluarga seperti putus asa, penderitaan, rasa bersalah atau pengampunan:
+                                        urusan dan kebutuhan spiritual pasien dan keluarga seperti putus asa, penderitaan, rasa bersalah atau pengampunan:
                                     </h5>
 
                                     <div class="subsection-title">Perlu didoakan :</div>
@@ -560,7 +560,7 @@
                                             <div class="checkbox-group mt-4">
                                                 <div class="checkbox-item">
                                                     <input type="checkbox" name="keluarga_leth_lelah" id="keluarga_leth_lelah" value="1" {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_leth_lelah ? 'checked' : '' }}>
-                                                    <label for="keluarga_leth_lelah">Leth/lelah</label>
+                                                    <label for="keluarga_leth_lelah">Letih/lelah</label>
                                                 </div>
                                                 <div class="checkbox-item">
                                                     <input type="checkbox" name="keluarga_rasa_bersalah" id="keluarga_rasa_bersalah" value="1" {{ $asesmen->rmeAsesmenTerminalUsk->keluarga_rasa_bersalah ? 'checked' : '' }}>
@@ -702,7 +702,7 @@
                                             <div class="checkbox-group mt-4">
                                                 <div class="checkbox-item">
                                                     <input type="checkbox" name="faktor_resiko_leth_lelah" id="faktor_resiko_leth_lelah" value="1" {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_leth_lelah ? 'checked' : '' }}>
-                                                    <label for="faktor_resiko_leth_lelah">Leth/lelah</label>
+                                                    <label for="faktor_resiko_leth_lelah">Letih/lelah</label>
                                                 </div>
                                                 <div class="checkbox-item">
                                                     <input type="checkbox" name="faktor_resiko_gangguan_tidur" id="faktor_resiko_gangguan_tidur" value="1" {{ $asesmen->rmeAsesmenTerminalAf->faktor_resiko_gangguan_tidur ? 'checked' : '' }}>

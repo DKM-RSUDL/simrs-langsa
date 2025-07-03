@@ -1145,7 +1145,7 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Gigi Palus</label>
+                                                <label class="form-label fw-bold">Gigi Palsu</label>
                                                 <input type="text" class="form-control" name="gigi_palus"
                                                     placeholder="Masukkan gigi palus">
                                             </div>
@@ -1376,7 +1376,7 @@
                                         <label class="form-label fw-bold">Rekomendasi tindakan anestesi yang dipilih</label>
                                         <div class="mt-2">
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Anestesi umum Intravena" id="anestesi_umum_intravena"
                                                     {{ in_array('Anestesi umum Intravena', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="anestesi_umum_intravena">
@@ -1385,7 +1385,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Sungkup muka" id="sungkup_muka"
                                                     {{ in_array('Sungkup muka', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="sungkup_muka">
@@ -1394,7 +1394,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Laringeal mask airway" id="laringeal_mask_airway"
                                                     {{ in_array('Laringeal mask airway', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="laringeal_mask_airway">
@@ -1403,7 +1403,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Pipa endotrakeal tube" id="pipa_endotrakeal_tube"
                                                     {{ in_array('Pipa endotrakeal tube', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="pipa_endotrakeal_tube">
@@ -1412,7 +1412,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Regional anestesi: Spinal Anastesi Blok" id="regional_spinal"
                                                     {{ in_array('Regional anestesi: Spinal Anastesi Blok', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="regional_spinal">
@@ -1421,7 +1421,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Epidural" id="epidural"
                                                     {{ in_array('Epidural', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="epidural">
@@ -1430,7 +1430,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Kombinasi Spinal Epidural" id="kombinasi_spinal_epidural"
                                                     {{ in_array('Kombinasi Spinal Epidural', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="kombinasi_spinal_epidural">
@@ -1439,7 +1439,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Peripheral Nerve Block" id="peripheral_nerve_block"
                                                     {{ in_array('Peripheral Nerve Block', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="peripheral_nerve_block">
@@ -1448,7 +1448,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Anestesi umum + Regional Anestesi" id="anestesi_kombinasi"
                                                     {{ in_array('Anestesi umum + Regional Anestesi', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="anestesi_kombinasi">

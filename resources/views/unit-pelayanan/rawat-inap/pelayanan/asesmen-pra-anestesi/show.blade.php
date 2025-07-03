@@ -1730,7 +1730,7 @@
                                                 <label class="form-label fw-bold">Faring</label>
                                                 <input type="text"
                                                     class="form-control @error('faring') is-invalid @enderror" name="faring"
-                                                    
+
                                                     value="{{ old('faring', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->faring ?? '') }}" disabled>
                                                 @error('faring')
                                                     <div class="invalid-feedback">
@@ -2145,7 +2145,7 @@
                                             @php
                                                 // Ambil data yang sudah ada (untuk mode edit)
                                                 $selectedOptions = [];
-                                                
+
                                                 // Perbaikan: Menggunakan relasi yang benar berdasarkan controller
                                                 if (isset($asesmenPraAnestesi->rmeAsesmenPraAnestesiDiagnosisPmRtRo->rekomendasi_tindakan_anestesi)) {
                                                     $jsonData = $asesmenPraAnestesi->rmeAsesmenPraAnestesiDiagnosisPmRtRo->rekomendasi_tindakan_anestesi;
@@ -2153,7 +2153,7 @@
                                                         $selectedOptions = json_decode($jsonData, true) ?? [];
                                                     }
                                                 }
-                                                
+
                                                 // Jika ada old input (setelah validation error) - prioritas lebih tinggi
                                                 if (old('rekomendasi_tindakan_anestesi')) {
                                                     $selectedOptions = old('rekomendasi_tindakan_anestesi');
@@ -2161,7 +2161,7 @@
                                             @endphp
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Anestesi umum Intravena" id="anestesi_umum_intravena"
                                                     {{ in_array('Anestesi umum Intravena', $selectedOptions) ? 'checked' : '' }} disabled>
                                                 <label class="form-check-label" for="anestesi_umum_intravena">
@@ -2170,7 +2170,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Sungkup muka" id="sungkup_muka"
                                                     {{ in_array('Sungkup muka', $selectedOptions) ? 'checked' : '' }} disabled>
                                                 <label class="form-check-label" for="sungkup_muka">
@@ -2179,7 +2179,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Laringeal mask airway" id="laringeal_mask_airway"
                                                     {{ in_array('Laringeal mask airway', $selectedOptions) ? 'checked' : '' }} disabled>
                                                 <label class="form-check-label" for="laringeal_mask_airway">
@@ -2188,7 +2188,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Pipa endotrakeal tube" id="pipa_endotrakeal_tube"
                                                     {{ in_array('Pipa endotrakeal tube', $selectedOptions) ? 'checked' : '' }} disabled>
                                                 <label class="form-check-label" for="pipa_endotrakeal_tube">
@@ -2197,7 +2197,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Regional anestesi: Spinal Anastesi Blok" id="regional_spinal"
                                                     {{ in_array('Regional anestesi: Spinal Anastesi Blok', $selectedOptions) ? 'checked' : '' }} disabled>
                                                 <label class="form-check-label" for="regional_spinal">
@@ -2206,7 +2206,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Epidural" id="epidural"
                                                     {{ in_array('Epidural', $selectedOptions) ? 'checked' : '' }} disabled>
                                                 <label class="form-check-label" for="epidural">
@@ -2215,7 +2215,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Kombinasi Spinal Epidural" id="kombinasi_spinal_epidural"
                                                     {{ in_array('Kombinasi Spinal Epidural', $selectedOptions) ? 'checked' : '' }} disabled>
                                                 <label class="form-check-label" for="kombinasi_spinal_epidural">
@@ -2224,7 +2224,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Peripheral Nerve Block" id="peripheral_nerve_block"
                                                     {{ in_array('Peripheral Nerve Block', $selectedOptions) ? 'checked' : '' }} disabled>
                                                 <label class="form-check-label" for="peripheral_nerve_block">
@@ -2233,7 +2233,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Anestesi umum + Regional Anestesi" id="anestesi_kombinasi"
                                                     {{ in_array('Anestesi umum + Regional Anestesi', $selectedOptions) ? 'checked' : '' }} disabled>
                                                 <label class="form-check-label" for="anestesi_kombinasi">
