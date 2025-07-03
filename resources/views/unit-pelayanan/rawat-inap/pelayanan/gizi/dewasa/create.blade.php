@@ -40,10 +40,10 @@
                                 <div>
 
                                     <div class="section-separator" id="data-masuk">
-                                        <h5 class="section-title">1. Data masuk</h5>
+                                        <h5 class="section-title">1. Tanggal Pengisian</h5>
 
                                         <div class="form-group">
-                                            <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
+                                            <label style="min-width: 200px;">Tanggal Dan Jam pengisian</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <input type="date" class="form-control" name="tanggal_masuk" id="tanggal_masuk" value="{{ date('Y-m-d') }}">
                                                 <input type="time" class="form-control" name="jam_masuk" id="jam_masuk" value="{{ date('H:i') }}">
@@ -489,7 +489,6 @@
                                             <label style="min-width: 220px;">Status Gizi</label>
                                             <select class="form-control" name="status_gizi" id="status_gizi">
                                                 <option value="">Pilih Status Gizi</option>
-                                                <option value="Gizi Buruk">Gizi Buruk</option>
                                                 <option value="Gizi Kurang">Gizi Kurang</option>
                                                 <option value="Gizi Baik/Normal">Gizi Baik/Normal</option>
                                                 <option value="Gizi Lebih">Gizi Lebih</option>
@@ -741,6 +740,9 @@
                                             <!-- Perhitungan Makronutrien -->
                                             <div class="col-md-12">
                                                 <h6 class="mb-3 text-primary">KEBUTUHAN MAKRONUTRIEN</h6>
+                                                <div class="alert alert-info mb-2">
+                                                    <strong>Informasi:</strong> Sesuaikan % kebutuhan makronutrien berdasarkan kondisi klinis pasien
+                                                </div>
                                                 <div class="border rounded p-4 bg-light">
                                                     <div class="row g-3">
                                                         <div class="col-md-4">
@@ -808,27 +810,6 @@
                                                                 </div>
                                                                 <small class="text-muted">= (% × BB) atau (% × Kalori ÷ 4)</small>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                    
-                                            <!-- Rencana Diet -->
-                                            <div class="col-md-12">
-                                                <h6 class="mb-3 text-primary">RENCANA DIET DAN MONITORING</h6>
-                                                <div class="row g-3">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label class="form-label fw-bold">Jenis Diet</label>
-                                                            <textarea class="form-control" name="jenis_diet" rows="3" 
-                                                                      placeholder="Contoh: Diet DM 1500 Kkal, Diet Jantung II, Diet Rendah Garam, dll"></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label class="form-label fw-bold">Rencana Monitoring</label>
-                                                            <textarea class="form-control" name="rencana_monitoring" rows="3" 
-                                                                      placeholder="Contoh: Monitoring BB setiap hari, evaluasi asupan makan, pemeriksaan lab rutin"></textarea>
                                                         </div>
                                                     </div>
                                                 </div>

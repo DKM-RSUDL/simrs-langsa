@@ -165,11 +165,14 @@
             border-radius: 8px;
             overflow: hidden;
         }
+
+        
     </style>
 @endpush
 
 @push('js')
     <script>
+        // PERBAIKAN UNTUK MASALAH LMS DATA PARSING
 
         document.addEventListener('DOMContentLoaded', function() {
 
@@ -246,41 +249,6 @@
             });
 
             //==================================================================================================//
-            // Fungsi IMT dan BBI
-            //==================================================================================================//
-            // Fungsi untuk menghitung IMT dan BBI
-            function hitungIMTdanBBI() {
-                const beratBadan = parseFloat(document.getElementById('berat_badan').value);
-                const tinggiBadan = parseFloat(document.getElementById('tinggi_badan').value);
-                
-                if (beratBadan && tinggiBadan) {
-                    // Hitung IMT (kg/m²)
-                    const tinggiMeter = tinggiBadan / 100;
-                    const imt = beratBadan / (tinggiMeter * tinggiMeter);
-                    document.getElementById('imt').value = imt.toFixed(2);
-                    
-                    // Hitung BBI untuk anak menggunakan rumus Broca yang disesuaikan
-                    let bbi;
-                    if (tinggiBadan <= 100) {
-                        bbi = tinggiBadan - 100;
-                    } else if (tinggiBadan <= 110) {
-                        bbi = (tinggiBadan - 100) * 0.9;
-                    } else {
-                        bbi = (tinggiBadan - 100) * 0.9 - ((tinggiBadan - 110) * 0.1);
-                    }
-                    
-                    // Untuk anak, BBI minimal 3 kg
-                    if (bbi < 3) bbi = 3;
-                    
-                    document.getElementById('bbi').value = bbi.toFixed(1);
-                }
-            }
-
-            // Event listener untuk input berat badan dan tinggi badan
-            document.getElementById('berat_badan')?.addEventListener('input', hitungIMTdanBBI);
-            document.getElementById('tinggi_badan')?.addEventListener('input', hitungIMTdanBBI);
-
-            //==================================================================================================//
             // Fungsi section riwayat gizi
             //==================================================================================================//
             document.getElementById('alergi_makanan_tidak')?.addEventListener('change', function() {
@@ -342,7 +310,9 @@
             }
 
             // Terapkan ke semua input dan textarea dalam form
-            const formElements = document.querySelectorAll('input[type="text"], input[type="number"], input[type="date"], input[type="time"], select, textarea');
+            const formElements = document.querySelectorAll(
+                'input[type="text"], input[type="number"], input[type="date"], input[type="time"], select, textarea'
+                );
             formElements.forEach(function(element) {
                 element.addEventListener('keypress', preventEnterSubmit);
             });
@@ -353,7 +323,7 @@
                 form.addEventListener('keypress', function(event) {
                     if (event.keyCode === 13 || event.which === 13) {
                         // Kecuali jika target adalah textarea atau tombol submit
-                        if (event.target.tagName.toLowerCase() !== 'textarea' && 
+                        if (event.target.tagName.toLowerCase() !== 'textarea' &&
                             event.target.type !== 'submit') {
                             event.preventDefault();
                             return false;
@@ -362,8 +332,393 @@
                 });
             }
 
+            //==================================================================================================//
+            // Z-Score Calculator untuk Anak berdasarkan standar WHO - Production Version
+            //==================================================================================================//
+
+            // Data WHO dari database
+            let whoDataFromDB = {
+                weightForAge: @json($WhoWeightForAge ?? []),
+                heightForAge: @json($WhoHeightForAge ?? []),
+                bmiForAge: @json($WhoBmiForAge ?? []),
+                weightForHeight: @json($WhoWeightForHeight ?? []),
+                weightForLength: @json($WhoWeightForLength ?? []),
+                headCircumferenceForAge: @json($WhoHeadCircumferenceForAge ?? [])
+            };
+
+            // Function untuk parsing data decimal dari SQL Server
+            function safeParseDecimal(value) {
+                // Handle berbagai format data dari database
+                if (typeof value === 'number' && !isNaN(value)) {
+                    return value;
+                }
+
+                if (typeof value === 'string') {
+                    // Remove quotes dan whitespace
+                    const cleaned = value.replace(/['"]/g, '').trim();
+                    const parsed = parseFloat(cleaned);
+                    return isNaN(parsed) ? null : parsed;
+                }
+
+                // Handle object dengan properties numerik
+                if (typeof value === 'object' && value !== null) {
+                    // Jika value adalah object, coba ambil property yang sesuai
+                    if (value.hasOwnProperty('value')) return safeParseDecimal(value.value);
+                    if (value.hasOwnProperty('val')) return safeParseDecimal(value.val);
+                    // Jika object kosong atau tidak ada property yang sesuai
+                    return null;
+                }
+
+                return null;
+            }
+
+            // Function untuk extract LMS values dengan multiple fallbacks
+            function extractLMSValues(dataItem) {
+                // Coba berbagai kemungkinan field names dan formats
+                let L = null,
+                    M = null,
+                    S = null;
+
+                // Kemungkinan field names untuk L
+                if (dataItem.L !== undefined) L = safeParseDecimal(dataItem.L);
+                else if (dataItem.l !== undefined) L = safeParseDecimal(dataItem.l);
+                else if (dataItem.lambda !== undefined) L = safeParseDecimal(dataItem.lambda);
+
+                // Kemungkinan field names untuk M
+                if (dataItem.M !== undefined) M = safeParseDecimal(dataItem.M);
+                else if (dataItem.m !== undefined) M = safeParseDecimal(dataItem.m);
+                else if (dataItem.mu !== undefined) M = safeParseDecimal(dataItem.mu);
+                else if (dataItem.median !== undefined) M = safeParseDecimal(dataItem.median);
+
+                // Kemungkinan field names untuk S
+                if (dataItem.S !== undefined) S = safeParseDecimal(dataItem.S);
+                else if (dataItem.s !== undefined) S = safeParseDecimal(dataItem.s);
+                else if (dataItem.sigma !== undefined) S = safeParseDecimal(dataItem.sigma);
+
+                // Validasi bahwa semua nilai valid
+                if (L === null || M === null || S === null || M === 0 || S === 0) {
+                    return null;
+                }
+
+                return {
+                    L,
+                    M,
+                    S
+                };
+            }
+
+            // Fungsi BBI yang diperbaiki untuk anak
+            function hitungBBIAnak(umurBulan, tinggiBadan, jenisKelamin) {
+                let bbi;
+
+                if (umurBulan <= 12) {
+                    // Untuk bayi 0-12 bulan: BBI = (umur bulan + 9) / 2
+                    bbi = (umurBulan + 9) / 2;
+                } else if (umurBulan <= 60) {
+                    // Untuk anak 1-5 tahun: BBI = umur tahun × 2 + 8
+                    const umurTahun = umurBulan / 12;
+                    bbi = (umurTahun * 2) + 8;
+                } else {
+                    // Untuk anak > 5 tahun, gunakan rumus berdasarkan tinggi
+                    if (tinggiBadan <= 100) {
+                        bbi = tinggiBadan - 100;
+                    } else if (tinggiBadan <= 150) {
+                        bbi = (tinggiBadan - 100) * 0.9;
+                    } else {
+                        bbi = (tinggiBadan - 100) * 0.9 - ((tinggiBadan - 150) * 0.1);
+                    }
+                }
+
+                // Minimum BBI untuk anak adalah 3 kg
+                return Math.max(bbi, 3);
+            }
+
+            // Function untuk mencari data LMS berdasarkan sex dan age/height
+            function findLMSData(dataArray, sex, ageOrHeight, isHeight = false) {
+                if (!dataArray || dataArray.length === 0) {
+                    return null;
+                }
+
+                // Tentukan field key berdasarkan struktur data
+                const sample = dataArray[0];
+                let key;
+
+                if (isHeight) {
+                    if ('height_cm' in sample) key = 'height_cm';
+                    else if ('length_cm' in sample) key = 'length_cm';
+                    else return null;
+                } else {
+                    if ('age_months' in sample) key = 'age_months';
+                    else return null;
+                }
+
+                // Filter berdasarkan jenis kelamin
+                const filteredData = dataArray.filter(item => {
+                    const itemSex = parseInt(item.sex);
+                    return itemSex === sex;
+                });
+
+                if (filteredData.length === 0) {
+                    return null;
+                }
+
+                // Sort data
+                filteredData.sort((a, b) => {
+                    const aVal = safeParseDecimal(a[key]);
+                    const bVal = safeParseDecimal(b[key]);
+                    return (aVal || 0) - (bVal || 0);
+                });
+
+                // Validasi data
+                const validValues = filteredData.map(item => safeParseDecimal(item[key])).filter(val => val !==
+                    null);
+                if (validValues.length === 0) {
+                    return null;
+                }
+
+                const minVal = Math.min(...validValues);
+                const maxVal = Math.max(...validValues);
+
+                // Cari exact match (dengan toleransi 0.1)
+                const exactMatch = filteredData.find(item => {
+                    const itemValue = safeParseDecimal(item[key]);
+                    return itemValue !== null && Math.abs(itemValue - ageOrHeight) < 0.1;
+                });
+
+                if (exactMatch) {
+                    return extractLMSValues(exactMatch);
+                }
+
+                // Jika di luar range, gunakan nilai terdekat
+                if (ageOrHeight < minVal) {
+                    return extractLMSValues(filteredData[0]);
+                }
+
+                if (ageOrHeight > maxVal) {
+                    return extractLMSValues(filteredData[filteredData.length - 1]);
+                }
+
+                // Interpolasi linear
+                for (let i = 0; i < filteredData.length - 1; i++) {
+                    const current = filteredData[i];
+                    const next = filteredData[i + 1];
+                    const currentVal = safeParseDecimal(current[key]);
+                    const nextVal = safeParseDecimal(next[key]);
+
+                    if (currentVal !== null && nextVal !== null && ageOrHeight >= currentVal && ageOrHeight <=
+                        nextVal) {
+                        const ratio = (ageOrHeight - currentVal) / (nextVal - currentVal);
+
+                        const currentLMS = extractLMSValues(current);
+                        const nextLMS = extractLMSValues(next);
+
+                        if (!currentLMS || !nextLMS) {
+                            return null;
+                        }
+
+                        const interpolated = {
+                            L: currentLMS.L + ratio * (nextLMS.L - currentLMS.L),
+                            M: currentLMS.M + ratio * (nextLMS.M - currentLMS.M),
+                            S: currentLMS.S + ratio * (nextLMS.S - currentLMS.S)
+                        };
+
+                        return interpolated;
+                    }
+                }
+
+                return null;
+            }
+
+            // Function untuk menghitung Z-Score menggunakan LMS method (WHO standard)
+            function calculateZScore(value, L, M, S) {
+                if (!value || value <= 0 || !M || M <= 0 || !S || S <= 0) {
+                    return null;
+                }
+
+                let zScore;
+
+                if (Math.abs(L) < 0.01) {
+                    // L ≈ 0, gunakan log-normal distribution
+                    zScore = Math.log(value / M) / S;
+                } else {
+                    // Gunakan Box-Cox transformation
+                    zScore = (Math.pow(value / M, L) - 1) / (L * S);
+                }
+
+                // Validasi hasil (Z-Score normal biasanya antara -6 dan +6)
+                if (Math.abs(zScore) > 6) {
+                    return null;
+                }
+
+                return zScore;
+            }
+
+            // Function untuk menentukan status gizi berdasarkan Z-Score WHO
+            function determineNutritionalStatus(wfaZScore, wfhZScore, hfaZScore, bmiZScore) {
+                // Prioritas indikator: WFH > BMI-for-Age
+                const primaryIndicator = wfhZScore !== null ? wfhZScore : bmiZScore;
+
+                if (primaryIndicator !== null) {
+                    // Severe acute malnutrition (SAM)
+                    if (primaryIndicator < -3) return "Gizi Buruk";
+
+                    // Moderate acute malnutrition (MAM)
+                    if (primaryIndicator < -2) return "Gizi Kurang";
+
+                    // Obesity
+                    if (primaryIndicator > 3) return "Obesitas";
+
+                    // Overweight
+                    if (primaryIndicator > 2) return "Gizi Lebih";
+                }
+
+                // Check for underweight (weight-for-age)
+                if (wfaZScore !== null && wfaZScore < -2) {
+                    return "Gizi Kurang";
+                }
+
+                return "Gizi Baik/Normal";
+            }
+
+            // Fungsi IMT dan BBI
+            function hitungIMTdanBBI() {
+                const beratBadan = parseFloat(document.getElementById('berat_badan').value);
+                const tinggiBadan = parseFloat(document.getElementById('tinggi_badan').value);
+                const umurBulan = parseFloat(document.querySelector('input[name="umur_bulan"]')?.value);
+                const jenisKelamin = parseInt(document.getElementById('jenis_kelamin_who')?.value);
+
+                if (beratBadan && tinggiBadan) {
+                    // Hitung IMT (kg/m²)
+                    const tinggiMeter = tinggiBadan / 100;
+                    const imt = beratBadan / (tinggiMeter * tinggiMeter);
+                    document.getElementById('imt').value = imt.toFixed(2);
+
+                    // Hitung BBI menggunakan fungsi yang diperbaiki
+                    if (umurBulan && jenisKelamin) {
+                        const bbi = hitungBBIAnak(umurBulan, tinggiBadan, jenisKelamin);
+                        document.getElementById('bbi').value = bbi.toFixed(1);
+                    }
+                }
+            }
+
+            // Main calculation function
+            function calculateAllZScoresFromDB() {
+                const beratBadan = parseFloat(document.getElementById('berat_badan')?.value);
+                const tinggiBadan = parseFloat(document.getElementById('tinggi_badan')?.value);
+                const umurBulan = parseFloat(document.querySelector('input[name="umur_bulan"]')?.value);
+                const jenisKelamin = parseInt(document.getElementById('jenis_kelamin_who')?.value);
+
+                if (!beratBadan || !tinggiBadan || umurBulan === null || jenisKelamin === null) {
+                    return;
+                }
+
+                // Validasi input
+                if (beratBadan <= 0 || beratBadan > 100 || tinggiBadan <= 0 || tinggiBadan > 200 || umurBulan < 0 ||
+                    umurBulan > 240) {
+                    return;
+                }
+
+                // Hitung IMT
+                const tinggiMeter = tinggiBadan / 100;
+                const imt = beratBadan / (tinggiMeter * tinggiMeter);
+                document.getElementById('imt').value = imt.toFixed(2);
+
+                // Hitung BBI
+                const bbi = hitungBBIAnak(umurBulan, tinggiBadan, jenisKelamin);
+                document.getElementById('bbi').value = bbi.toFixed(1);
+
+                let wfaZScore = null,
+                    hfaZScore = null,
+                    wfhZScore = null,
+                    bmiZScore = null;
+
+                try {
+                    // 1. Weight-for-Age Z-Score
+                    if (whoDataFromDB.weightForAge && whoDataFromDB.weightForAge.length > 0) {
+                        const wfaLMS = findLMSData(whoDataFromDB.weightForAge, jenisKelamin, umurBulan);
+                        if (wfaLMS) {
+                            wfaZScore = calculateZScore(beratBadan, wfaLMS.L, wfaLMS.M, wfaLMS.S);
+                            if (wfaZScore !== null) {
+                                document.querySelector('input[name="bb_usia"]').value = wfaZScore.toFixed(2);
+                            }
+                        }
+                    }
+
+                    // 2. Height-for-Age Z-Score
+                    if (whoDataFromDB.heightForAge && whoDataFromDB.heightForAge.length > 0) {
+                        const hfaLMS = findLMSData(whoDataFromDB.heightForAge, jenisKelamin, umurBulan);
+                        if (hfaLMS) {
+                            hfaZScore = calculateZScore(tinggiBadan, hfaLMS.L, hfaLMS.M, hfaLMS.S);
+                            if (hfaZScore !== null) {
+                                document.querySelector('input[name="pb_tb_usia"]').value = hfaZScore.toFixed(2);
+                            }
+                        }
+                    }
+
+                    // 3. Weight-for-Height Z-Score
+                    let wfhData = null;
+                    if (umurBulan < 24 && whoDataFromDB.weightForLength && whoDataFromDB.weightForLength.length >
+                        0) {
+                        wfhData = whoDataFromDB.weightForLength;
+                    } else if (whoDataFromDB.weightForHeight && whoDataFromDB.weightForHeight.length > 0) {
+                        wfhData = whoDataFromDB.weightForHeight;
+                    }
+
+                    if (wfhData) {
+                        const wfhLMS = findLMSData(wfhData, jenisKelamin, tinggiBadan, true);
+                        if (wfhLMS) {
+                            wfhZScore = calculateZScore(beratBadan, wfhLMS.L, wfhLMS.M, wfhLMS.S);
+                            if (wfhZScore !== null) {
+                                document.querySelector('input[name="bb_tb"]').value = wfhZScore.toFixed(2);
+                            }
+                        }
+                    }
+
+                    // 4. BMI-for-Age Z-Score
+                    if (whoDataFromDB.bmiForAge && whoDataFromDB.bmiForAge.length > 0) {
+                        const bmiLMS = findLMSData(whoDataFromDB.bmiForAge, jenisKelamin, umurBulan);
+                        if (bmiLMS) {
+                            bmiZScore = calculateZScore(imt, bmiLMS.L, bmiLMS.M, bmiLMS.S);
+                            if (bmiZScore !== null) {
+                                document.querySelector('input[name="imt_usia"]').value = bmiZScore.toFixed(2);
+                            }
+                        }
+                    }
+
+                    // 5. Tentukan Status Gizi
+                    const statusGizi = determineNutritionalStatus(wfaZScore, wfhZScore, hfaZScore, bmiZScore);
+                    document.getElementById('status_gizi').value = statusGizi;
+
+                } catch (error) {
+                    // Silent error handling - tidak menampilkan error ke user
+                    // Error akan ditangani secara internal tanpa mengganggu UX
+                }
+            }
+
+            // Event listeners untuk input berat badan dan tinggi badan
+            document.getElementById('berat_badan')?.addEventListener('input', function() {
+                hitungIMTdanBBI();
+                calculateAllZScoresFromDB();
+            });
+
+            document.getElementById('tinggi_badan')?.addEventListener('input', function() {
+                hitungIMTdanBBI();
+                calculateAllZScoresFromDB();
+            });
+
+            // Initialize calculation jika data sudah ada saat load page
+            setTimeout(() => {
+                const beratField = document.getElementById('berat_badan');
+                const tinggiField = document.getElementById('tinggi_badan');
+
+                if (beratField?.value && tinggiField?.value) {
+                    hitungIMTdanBBI();
+                    calculateAllZScoresFromDB();
+                }
+            }, 500);
+
             //==================================================================================//
-            // Fungsi
+            // End of Functions
             //==================================================================================//
 
         });

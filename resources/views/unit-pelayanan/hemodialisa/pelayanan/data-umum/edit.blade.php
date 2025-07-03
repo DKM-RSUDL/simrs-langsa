@@ -106,14 +106,15 @@
                 <i class="ti-arrow-left"></i> Kembali
             </a>
             <form id="hemodialisisForm" method="POST"
-                action="{{ route('hemodialisa.pelayanan.data-umum.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                action="{{ route('hemodialisa.pelayanan.data-umum.update', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($dataUmum->id)]) }}">
                 @csrf
+                @method('put')
 
                 <div class="d-flex justify-content-center">
                     <div class="card w-100 h-100 shadow-sm">
                         <div class="card-body">
                             <div class="px-3">
-                                <h4 class="header-asesmen">Form Tambah Data Umum Pasien Hemodialisis</h4>
+                                <h4 class="header-asesmen">Form Edit Data Umum Pasien Hemodialisis</h4>
                             </div>
 
                             <!-- DATA PASIEN -->
@@ -163,11 +164,12 @@
                                     <div class="form-row">
                                         <label for="pasien_no_telpon"><strong>No Telpon/ HP</strong></label>
                                         <input type="text" name="pasien_no_telpon" id="pasien_no_telpon"
-                                            class="form-control">
+                                            value="{{ $dataUmum->pasien_no_telpon }}" class="form-control">
                                     </div>
                                 </div>
                             </div>
 
+                            <!-- DATA ALERGI -->
                             <div class="px-3">
                                 <div class="section-separator">
                                     <div class="section-header">RIWAYAT ALERGI</div>
@@ -205,23 +207,26 @@
 
                                     <div class="form-row">
                                         <label for="pj_nama">Nama</label>
-                                        <input type="text" name="pj_nama" id="pj_nama" class="form-control">
+                                        <input type="text" name="pj_nama" id="pj_nama"
+                                            value="{{ $dataUmum->pj_nama }}" class="form-control">
                                     </div>
 
                                     <div class="form-row">
                                         <label for="pj_hubungan_keluarga">Hubungan keluarga</label>
                                         <input type="text" name="pj_hubungan_keluarga" id="pj_hubungan_keluarga"
-                                            class="form-control">
+                                            value="{{ $dataUmum->pj_hubungan_keluarga }}" class="form-control">
                                     </div>
 
                                     <div class="form-row">
                                         <label for="pj_alamat">Alamat</label>
-                                        <input type="text" name="pj_alamat" id="pj_alamat" class="form-control">
+                                        <input type="text" name="pj_alamat" id="pj_alamat"
+                                            value="{{ $dataUmum->pj_alamat }}" class="form-control">
                                     </div>
 
                                     <div class="form-row">
                                         <label for="pj_pekerjaan">Pekerjaan</label>
-                                        <input type="text" name="pj_pekerjaan" id="pj_pekerjaan" class="form-control">
+                                        <input type="text" name="pj_pekerjaan" id="pj_pekerjaan"
+                                            value="{{ $dataUmum->pj_pekerjaan }}" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -234,25 +239,25 @@
                                     <div class="form-row">
                                         <label for="hd_pertama_kali">HD pertama kali tanggal</label>
                                         <input type="text" name="hd_pertama_kali" id="hd_pertama_kali"
-                                            class="form-control date" readonly>
+                                            value="{{ $dataUmum->hd_pertama_kali }}" class="form-control date" readonly>
                                     </div>
 
                                     <div class="form-row">
                                         <label for="mulai_hd_rutin">Mulai HD rutin tanggal</label>
                                         <input type="text" name="mulai_hd_rutin" id="mulai_hd_rutin"
-                                            class="form-control date" readonly>
+                                            value="{{ $dataUmum->mulai_hd_rutin }}" class="form-control date" readonly>
                                     </div>
 
                                     <div class="form-row">
                                         <label for="frekuensi_hd">Frekuensi HD</label>
                                         <input type="text" name="frekuensi_hd" id="frekuensi_hd"
-                                            class="form-control">
+                                            value="{{ $dataUmum->frekuensi_hd }}" class="form-control">
                                     </div>
 
                                     <div class="form-row">
                                         <label for="status_pembayaran">Status pembayaran</label>
                                         <input type="text" name="status_pembayaran" id="status_pembayaran"
-                                            class="form-control">
+                                            value="{{ $dataUmum->status_pembayaran }}" class="form-control">
                                     </div>
 
                                     <div class="form-row">
@@ -261,7 +266,8 @@
                                             <option value="">--Pilih Dokter--</option>
 
                                             @foreach ($dokter as $item)
-                                                <option value="{{ $item->kd_dokter }}">{{ $item->nama_lengkap }}</option>
+                                                <option value="{{ $item->kd_dokter }}" @selected($dataUmum->dokter_pengirim == $item->kd_dokter)>
+                                                    {{ $item->nama_lengkap }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -269,22 +275,25 @@
                                     <div class="form-row">
                                         <label for="asal_rujukan">Asal rujukan</label>
                                         <input type="text" name="asal_rujukan" id="asal_rujukan"
-                                            class="form-control">
+                                            value="{{ $dataUmum->asal_rujukan }}" class="form-control">
                                     </div>
 
                                     <div class="form-row">
                                         <label for="diagnosis">Diagnosis</label>
-                                        <input type="text" name="diagnosis" id="diagnosis" class="form-control">
+                                        <input type="text" name="diagnosis" id="diagnosis"
+                                            value="{{ $dataUmum->diagnosis }}" class="form-control">
                                     </div>
 
                                     <div class="form-row">
                                         <label for="etiologi">Etiologi</label>
-                                        <input type="text" name="etiologi" id="etiologi" class="form-control">
+                                        <input type="text" name="etiologi" id="etiologi"
+                                            value="{{ $dataUmum->etiologi }}" class="form-control">
                                     </div>
 
                                     <div class="form-row">
                                         <label for="penyakit_penyerta">Penyakit penyerta</label>
-                                        <input type="text" name="penyakit_penyerta" id="penyakit_penyerta"
+                                        <input type="text" name="penyakit_penyerta"
+                                            value="{{ $dataUmum->penyakit_penyerta }}" id="penyakit_penyerta"
                                             class="form-control">
                                     </div>
                                 </div>

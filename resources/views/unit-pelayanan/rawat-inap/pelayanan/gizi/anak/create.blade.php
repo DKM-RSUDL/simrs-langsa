@@ -40,10 +40,10 @@
                                 <div>
 
                                     <div class="section-separator" id="data-masuk">
-                                        <h5 class="section-title">1. Data masuk</h5>
+                                        <h5 class="section-title">1. Tanggal Pengisian</h5>
 
                                         <div class="form-group">
-                                            <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
+                                            <label style="min-width: 200px;">Tanggal Dan Jam pengisian</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <input type="date" class="form-control" name="tanggal_masuk" id="tanggal_masuk" value="{{ date('Y-m-d') }}">
                                                 <input type="time" class="form-control" name="jam_masuk" id="jam_masuk" value="{{ date('H:i') }}">
@@ -458,74 +458,150 @@
                                         </div>
                                     </div>
 
-                                    <div class="section-separator" id="asesmen-gizi">
-                                        <h5 class="section-title">6. Asesmen Gizi</h5>
-                                    
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Berat Badan (kg)</label>
-                                            <input type="number" class="form-control" name="berat_badan" id="berat_badan" step="0.1" 
-                                                   placeholder="Contoh: 8.5">
+                                    <div class="section-separator" id="antropometri">
+                                        <h5 class="section-title">6. Antropometri</h5>
+
+                                        <div class="alert alert-info mb-4">
+                                            <strong>Informasi:</strong> Z-Score akan dihitung otomatis berdasarkan standar WHO Child Growth Standards 2006
                                         </div>
-                                    
+                                
                                         <div class="form-group">
-                                            <label style="min-width: 220px;">Tinggi Badan (cm)</label>
-                                            <input type="number" class="form-control" name="tinggi_badan" id="tinggi_badan" step="0.1" 
-                                                   placeholder="Contoh: 75.5">
+                                            <label style="min-width: 200px;">Jenis Kelamin</label>
+                                            <input type="text" class="form-control bg-light" name="jenis_kelamin_display" 
+                                                value="{{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Tidak Diketahui') }}" 
+                                                readonly style="background-color: #f8f9fa;">
+                                            
+                                            <!-- Hidden inputs untuk WHO database -->
+                                            <input type="hidden" name="jenis_kelamin" value="{{ $dataMedis->pasien->jenis_kelamin }}">
+                                            <input type="hidden" name="jenis_kelamin_who" id="jenis_kelamin_who" 
+                                                   value="{{ $dataMedis->pasien->jenis_kelamin == 1 ? 1 : ($dataMedis->pasien->jenis_kelamin == 0 ? 2 : null) }}">
                                         </div>
-                                    
+
                                         <div class="form-group">
-                                            <label style="min-width: 220px;">IMT (kg/m²)</label>
-                                            <input type="number" class="form-control" name="imt" id="imt" step="0.01" 
-                                                   placeholder="Akan dihitung otomatis" readonly>
+                                            <label style="min-width: 200px;">Umur dan Tanggal Lahir</label>
+                                            <div class="d-flex gap-3" style="width: 100%;">
+                                                <input type="text" class="form-control bg-light" name="umur_display" 
+                                                    value="{{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->diffInMonths(\Carbon\Carbon::now()) : 'Tidak Diketahui' }} Bulan" 
+                                                    readonly style="background-color: #f8f9fa;">
+                                                <input type="text" class="form-control bg-light" name="tgl_lahir_display" 
+                                                    value="{{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') : 'Tidak Diketahui' }}" 
+                                                    readonly style="background-color: #f8f9fa;">
+                                            </div>
+                                            <!-- Hidden inputs untuk perhitungan -->
+                                            <input type="hidden" name="umur_tahun" value="{{ $dataMedis->pasien->umur }}">
+                                            <input type="hidden" name="tgl_lahir" value="{{ $dataMedis->pasien->tgl_lahir }}">
+                                            <input type="hidden" name="umur_bulan" id="umur_bulan" 
+                                                value="{{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->diffInMonths(\Carbon\Carbon::now()) : 0 }}">
                                         </div>
-                                    
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Berat Badan Ideal/BBI (kg)</label>
-                                            <input type="number" class="form-control" name="bbi" id="bbi" step="0.1" 
-                                                   placeholder="Akan dihitung otomatis" readonly>
+
+
+                                        <div class="row g-3 mt-3">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label style="min-width: 220px;">Berat Badan (kg) <span class="text-danger">*</span></label>
+                                                    <input type="number" class="form-control" name="berat_badan" id="berat_badan" step="0.1" 
+                                                           placeholder="Contoh: 8.5" required>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label style="min-width: 220px;">Tinggi Badan (cm) <span class="text-danger">*</span></label>
+                                                    <input type="number" class="form-control" name="tinggi_badan" id="tinggi_badan" step="0.1" 
+                                                           placeholder="Contoh: 75.5" required>
+                                                </div>
+                                            </div>
                                         </div>
-                                    
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Status Gizi</label>
-                                            <select class="form-control" name="status_gizi" id="status_gizi">
-                                                <option value="">Pilih Status Gizi</option>
-                                                <option value="Gizi Buruk">Gizi Buruk</option>
-                                                <option value="Gizi Kurang">Gizi Kurang</option>
-                                                <option value="Gizi Baik/Normal">Gizi Baik/Normal</option>
-                                                <option value="Gizi Lebih">Gizi Lebih</option>
-                                                <option value="Obesitas">Obesitas</option>
-                                            </select>
-                                        </div>
-                                    
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">BB/Usia (Z-Score)</label>
-                                            <input type="number" class="form-control" name="bb_usia" step="0.01" 
-                                                   placeholder="Contoh: -1.5">
-                                        </div>
-                                    
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">BB/TB (Z-Score)</label>
-                                            <input type="number" class="form-control" name="bb_tb" step="0.01" 
-                                                   placeholder="Contoh: -2.0">
-                                        </div>
-                                    
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">PB(TB)/Usia (Z-Score)</label>
-                                            <input type="number" class="form-control" name="pb_tb_usia" step="0.01" 
-                                                   placeholder="Contoh: -1.8">
-                                        </div>
-                                    
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">IMT/Usia (Z-Score)</label>
-                                            <input type="number" class="form-control" name="imt_usia" step="0.01" 
-                                                   placeholder="Contoh: -1.2">
-                                        </div>
-                                    
-                                        <div class="form-group">
+
+                                        <!-- Lingkar Kepala -->
+                                        <div class="form-group mt-0">
                                             <label style="min-width: 220px;">Lingkar Kepala (cm)</label>
                                             <input type="number" class="form-control" name="lingkar_kepala" step="0.1" 
-                                                   placeholder="Contoh: 45.5">
+                                                placeholder="Contoh: 45.5">
                                         </div>
+                                    
+                                        <div class="row g-3 mt-3">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label style="min-width: 220px;">IMT (kg/m²)</label>
+                                                    <input type="number" class="form-control bg-light" name="imt" id="imt" step="0.01" 
+                                                           placeholder="Akan dihitung otomatis" readonly style="background-color: #f8f9fa;">
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label style="min-width: 220px;">Berat Badan Ideal/BBI (kg)</label>
+                                                    <input type="number" class="form-control bg-light" name="bbi" id="bbi" step="0.1" 
+                                                           placeholder="Akan dihitung otomatis" readonly style="background-color: #f8f9fa;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                        <!-- Status Gizi -->
+                                        <div class="form-group mt-3">
+                                            <label style="min-width: 220px;">Status Gizi</label>
+                                            <div class="input-group">
+                                                <select class="form-control bg-light" name="status_gizi" id="status_gizi">
+                                                    <option value="">Status</option>
+                                                    <option value="Gizi Buruk">Gizi Buruk</option>
+                                                    <option value="Gizi Kurang">Gizi Kurang</option>
+                                                    <option value="Gizi Baik/Normal">Gizi Baik/Normal</option>
+                                                    <option value="Gizi Lebih">Gizi Lebih</option>
+                                                    <option value="Obesitas">Obesitas</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <!-- Z-Score Results -->
+                                        <div class="mt-4">
+                                            <h6 class="text-primary mb-3">
+                                                <i class="fas fa-chart-line"></i> Hasil Z-Score (WHO Child Growth Standards)
+                                            </h6>
+                                            
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label style="min-width: 220px;">BB/Usia (Z-Score)</label>
+                                                        <div class="input-group">
+                                                            <input type="number" class="form-control bg-light" name="bb_usia" id="bb_usia" step="0.01" 
+                                                                placeholder="Auto calculate">
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <label style="min-width: 220px;">PB(TB)/Usia (Z-Score)</label>
+                                                        <div class="input-group">
+                                                            <input type="number" class="form-control bg-light" name="pb_tb_usia" id="pb_tb_usia" step="0.01" 
+                                                                placeholder="Auto calculate">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label style="min-width: 220px;">BB/TB (Z-Score)</label>
+                                                        <div class="input-group">
+                                                            <input type="number" class="form-control bg-light" name="bb_tb" id="bb_tb" step="0.01" 
+                                                                placeholder="Auto calculate">
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <label style="min-width: 220px;">IMT/Usia (Z-Score)</label>
+                                                        <div class="input-group">
+                                                            <input type="number" class="form-control bg-light" name="imt_usia" id="imt_usia" step="0.01" 
+                                                                placeholder="Auto calculate">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                    </div>
+
+                                    <div class="section-separator" id="asesmen-gizi">
+                                        <h5 class="section-title">Asesmen Gizi</h5>
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Biokimia</label>
@@ -601,16 +677,12 @@
                                                     <table class="table table-bordered table-striped">
                                                         <thead class="table-dark">
                                                             <tr class="text-center">
-                                                                <th rowspan="2">GOL UMUR (thn)</th>
-                                                                <th colspan="2">PRIA</th>
-                                                                <th rowspan="2">GOL UMUR (thn)</th>
-                                                                <th colspan="2">WANITA</th>
-                                                            </tr>
-                                                            <tr class="text-center">
-                                                                <th>(Kkal/kg BB)</th>
-                                                                <th>(Kkal/kg BB)</th>
-                                                                <th>(Kkal/kg BB)</th>
-                                                                <th>(Kkal/kg BB)</th>
+                                                                <th>GOL UMUR (thn)</th>
+                                                                <th>PRIA (Kkal/kg BB)</th>
+                                                                <th>WANITA (Kkal/kg BB)</th>
+                                                                <th>GOL UMUR (thn)</th>
+                                                                <th>PRIA (Kkal/kg BB)</th>
+                                                                <th>WANITA (Kkal/kg BB)</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>

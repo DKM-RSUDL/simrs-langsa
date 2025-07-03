@@ -100,6 +100,24 @@
             ]),
         ],
         [
+            'icon' => 'positive_dynamic.png',
+            'label' => 'BBK',
+            'link' => route('hemodialisa.pelayanan.berat-badan-kering.index', [
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
+        [
+            'icon' => 'tools.png',
+            'label' => 'Malnutrisi Inflamasi',
+            'link' => route('hemodialisa.pelayanan.malnutrition-inflammation-score.index', [
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
+        [
             'icon' => 'info.png',
             'label' => 'Edukasi',
             'link' => route('hemodialisa.pelayanan.edukasi.index', [
@@ -108,11 +126,6 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
-        // [
-        //     'icon' => 'tools.png',
-        //     'label' => 'Tindakan',
-        //     'link' => '#',
-        // ],
         // [
         //     'icon' => 'agree.png',
         //     'label' => 'Konsultasi',

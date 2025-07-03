@@ -149,6 +149,16 @@
             ]),
         ],
         [
+            'icon' => 'cv.png',
+            'label' => 'Konseling HIV',
+            'link' => route('rawat-jalan.konseling-hiv.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
+        [
             'icon' => 'info.png',
             'label' => 'HIV ART',
             'link' => route('rawat-jalan.hiv_art.index', [

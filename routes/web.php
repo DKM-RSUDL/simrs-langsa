@@ -43,7 +43,9 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatD
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenHemodialisaKeperawatanController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenMedisController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\BeratBadanKeringController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\DataUmumController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\MalnutritionInflammationScoreController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\HDEdukasiController;
 use App\Http\Controllers\UnitPelayanan\HemodialisaController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
@@ -125,6 +127,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController as
 use App\Http\Controllers\UnitPelayanan\RawatJalan\PenundaanPelayananController as RawatJalanPenundaanPelayananController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\PersetujuanAnestesiController as RawatJalanPersetujuanAnestesiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RadiologiController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalKonselingHIVController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalPermintaanDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalPermintaanSecondOpinionController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RawatJalanEdukasiController;
@@ -466,6 +469,22 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::post('/', 'store')->name('.store');
                                         Route::put('/{data}', 'update')->name('.update');
                                         Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
+                            //konseling hiv
+                            Route::prefix('konseling-hiv')->group(function () {
+                                Route::name('.konseling-hiv')->group(function () {
+                                    Route::controller(RajalKonselingHIVController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                                     });
                                 });
                             });
@@ -1390,6 +1409,7 @@ Route::middleware('ssoToken')->group(function () {
                                                 Route::get('/{id}/edit', 'edit')->name('.edit');
                                                 Route::put('/{id}', 'update')->name('.update');
                                                 Route::get('/show/{id}', 'show')->name('.show');
+                                                Route::get('/grafik{id}', 'grafik')->name('.grafik');
                                                 Route::delete('/{id}', 'destroy')->name('.destroy');
                                                 Route::get('/pdf/{id}', 'pdf')->name('.pdf');
                                             });
@@ -1415,6 +1435,7 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::name('.monitoring')->group(function () {
                                             Route::controller(GiziMonitoringController::class)->group(function () {
                                                 Route::get('/', 'index')->name('.index');
+                                                Route::get('/create', 'create')->name('.create');
                                                 Route::post('/', 'store')->name('.store');
                                                 Route::put('/{id}', 'update')->name('.update');
                                                 Route::delete('/', 'destroy')->name('.destroy');
@@ -2027,9 +2048,46 @@ Route::middleware('ssoToken')->group(function () {
                                 Route::controller(DataUmumController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::delete('/', 'delete')->name('.delete');
                                 });
                             });
                         });
+
+                        //Berat Badan Kering (BBK)
+                        Route::prefix('berat-badan-kering')->group(function () {
+                            Route::name('.berat-badan-kering')->group(function () {
+                                Route::controller(BeratBadanKeringController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/{id}/edit', 'edit')->name('.edit');
+                                    Route::put('/{id}', 'update')->name('.update');
+                                    Route::get('/{id}', 'show')->name('.show');
+                                    Route::delete('/{id}', 'destroy')->name('.destroy');
+                                });
+                            });
+                        });
+
+                        //Malnutrition Inflammation Score (MIS)
+                        Route::prefix('malnutrition-inflammation-score')->group(function () {
+                            Route::name('.malnutrition-inflammation-score')->group(function () {
+                                Route::controller(MalnutritionInflammationScoreController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/{id}/edit', 'edit')->name('.edit');
+                                    Route::put('/{id}', 'update')->name('.update');
+                                    Route::get('/{id}', 'show')->name('.show');
+                                    Route::get('/{id}/print', 'print')->name('.print');
+                                    Route::delete('/{id}', 'destroy')->name('.destroy');
+                                });
+                            });
+                        });
+
 
                         // edukasi
                         Route::prefix('edukasi')->group(function () {

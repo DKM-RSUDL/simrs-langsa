@@ -124,13 +124,20 @@
                                                         </td>
                                                         <td>
                                                             <div class="btn-group" role="group">
+                                                                <a href="{{ route('rawat-inap.gizi.anak.grafik', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $data->id]) }}" 
+                                                                   class="btn btn-primary btn-sm me-2" 
+                                                                   title="Grafik">
+                                                                    <i class="fas fa-chart-line"></i>
+                                                                </a>
                                                                 <a href="{{ route('rawat-inap.gizi.anak.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $data->id]) }}" 
-                                                                   class="btn btn-info btn-sm" 
+                                                                   class="btn btn-info btn-sm me-2" 
                                                                    title="Lihat">
                                                                     <i class="fas fa-eye"></i>
                                                                 </a>
+                                                            </div>
+                                                            <div class="btn-group mt-2" role="group">
                                                                 <a href="{{ route('rawat-inap.gizi.anak.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $data->id]) }}" 
-                                                                   class="btn btn-warning btn-sm" 
+                                                                   class="btn btn-warning btn-sm me-2" 
                                                                    title="Edit">
                                                                     <i class="fas fa-edit"></i>
                                                                 </a>
