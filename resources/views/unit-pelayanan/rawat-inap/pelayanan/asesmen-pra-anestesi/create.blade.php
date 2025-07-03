@@ -984,17 +984,19 @@
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
                                             </div>
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Menstruasi Tidak Normal</label>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="menstruasi_tidak_normal" value="Ya">
-                                                    <label class="form-check-label">Ya</label>
+                                            @if ($dataMedis->pasien->jenis_kelamin == 0)
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label fw-bold">Menstruasi Tidak Normal</label>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="menstruasi_tidak_normal" value="Ya">
+                                                        <label class="form-check-label">Ya</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="menstruasi_tidak_normal" value="Tidak">
+                                                        <label class="form-check-label">Tidak</label>
+                                                    </div>
                                                 </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="menstruasi_tidak_normal" value="Tidak">
-                                                    <label class="form-check-label">Tidak</label>
-                                                </div>
-                                            </div>
+                                            @endif
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Pingsan</label>
                                                 <div class="form-check">
@@ -1063,17 +1065,19 @@
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
                                             </div>
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Sedang Hamil</label>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="sedang_hamil" value="Ya">
-                                                    <label class="form-check-label">Ya</label>
+                                            @if ($dataMedis->pasien->jenis_kelamin == 0)
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label fw-bold">Sedang Hamil</label>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="sedang_hamil" value="Ya">
+                                                        <label class="form-check-label">Ya</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="sedang_hamil" value="Tidak">
+                                                        <label class="form-check-label">Tidak</label>
+                                                    </div>
                                                 </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="sedang_hamil" value="Tidak">
-                                                    <label class="form-check-label">Tidak</label>
-                                                </div>
-                                            </div>
+                                            @endif
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Stroke</label>
                                                 <div class="form-check">
@@ -1171,39 +1175,46 @@
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">BB</label>
-                                                <input type="text" class="form-control" name="bb"
+                                                <input type="number" class="form-control" name="bb"
                                                     placeholder="Berat Badan (kg)">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">TD</label>
-                                                <input type="text" class="form-control" name="td"
+                                                <label class="form-label fw-bold">Distole</label>
+                                                <input type="number" class="form-control" name="distole"
+                                                    placeholder="Tekanan Darah (mmHg)">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group mb-3">
+                                                <label class="form-label fw-bold">Sistole</label>
+                                                <input type="number" class="form-control" name="sistole"
                                                     placeholder="Tekanan Darah (mmHg)">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Nadi</label>
-                                                <input type="text" class="form-control" name="nadi"
+                                                <input type="number" class="form-control" name="nadi"
                                                     placeholder="Nadi (x/menit)">
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Suhu</label>
-                                                <input type="text" class="form-control" name="suhu" placeholder="Suhu (°C)">
+                                                <input type="number" class="form-control" name="suhu" placeholder="Suhu (°C)">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Paru-Paru</label>
-                                                <input type="text" class="form-control" name="paru"
+                                                <input type="number" class="form-control" name="paru"
                                                     placeholder="Pernapasan (x/menit)">
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Jantung</label>
@@ -1211,8 +1222,6 @@
                                                     placeholder="Kondisi jantung">
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Abdomen</label>
@@ -1227,6 +1236,8 @@
                                                     placeholder="Kondisi ekstremitas">
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Neurologi (jika ada ditemukan)</label>

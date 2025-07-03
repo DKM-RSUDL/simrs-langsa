@@ -234,7 +234,8 @@ class AsesmenPraAnestesiController extends Controller
             $asesmenPraAnestesiKuPfLaboratorium->keadaan_umum_keterangan = $request->keadaan_umum_keterangan ?? null;
             // Pemeriksaan Fisik
             $asesmenPraAnestesiKuPfLaboratorium->bb = $request->bb ?? null;
-            $asesmenPraAnestesiKuPfLaboratorium->td = $request->td ?? null;
+            $asesmenPraAnestesiKuPfLaboratorium->distole = $request->distole ?? null;
+            $asesmenPraAnestesiKuPfLaboratorium->sistole = $request->sistole ?? null;
             $asesmenPraAnestesiKuPfLaboratorium->nadi = $request->nadi ?? null;
             $asesmenPraAnestesiKuPfLaboratorium->suhu = $request->suhu ?? null;
             $asesmenPraAnestesiKuPfLaboratorium->paru = $request->paru ?? null;
@@ -446,7 +447,8 @@ class AsesmenPraAnestesiController extends Controller
             $asesmenPraAnestesiKuPfLaboratorium->keadaan_umum_keterangan = $request->keadaan_umum_keterangan ?? null;
             // Pemeriksaan Fisik
             $asesmenPraAnestesiKuPfLaboratorium->bb = $request->bb ?? null;
-            $asesmenPraAnestesiKuPfLaboratorium->td = $request->td ?? null;
+            $asesmenPraAnestesiKuPfLaboratorium->distole = $request->distole ?? null;
+            $asesmenPraAnestesiKuPfLaboratorium->sistole = $request->sistole ?? null;
             $asesmenPraAnestesiKuPfLaboratorium->nadi = $request->nadi ?? null;
             $asesmenPraAnestesiKuPfLaboratorium->suhu = $request->suhu ?? null;
             $asesmenPraAnestesiKuPfLaboratorium->paru = $request->paru ?? null;

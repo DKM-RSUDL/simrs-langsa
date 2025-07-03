@@ -1483,6 +1483,7 @@
                                                     </div>
                                                 @enderror
                                             </div>
+                                            @if ($dataMedis->pasien->jenis_kelamin == 0)
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Menstruasi Tidak Normal</label>
                                                 <div class="form-check">
@@ -1497,12 +1498,8 @@
                                                         type="radio" name="menstruasi_tidak_normal" value="Tidak" {{ old('menstruasi_tidak_normal', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKppKs->menstruasi_tidak_normal ?? '') == 'Tidak' ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
-                                                @error('menstruasi_tidak_normal')
-                                                    <div class="invalid-feedback d-block">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
                                             </div>
+                                            @endif
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Pingsan</label>
                                                 <div class="form-check">
@@ -1619,6 +1616,7 @@
                                                     </div>
                                                 @enderror
                                             </div>
+                                            @if ($dataMedis->pasien->jenis_kelamin == 0)
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Sedang Hamil</label>
                                                 <div class="form-check">
@@ -1633,12 +1631,8 @@
                                                         type="radio" name="sedang_hamil" value="Tidak" {{ old('sedang_hamil', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKppKs->sedang_hamil ?? '') == 'Tidak' ? 'checked' : '' }}>
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
-                                                @error('sedang_hamil')
-                                                    <div class="invalid-feedback d-block">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
                                             </div>
+                                            @endif
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Stroke</label>
                                                 <div class="form-check">
@@ -1796,11 +1790,24 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">TD</label>
-                                                <input type="text" class="form-control @error('td') is-invalid @enderror"
-                                                    name="td"
-                                                    value="{{ old('td', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->td ?? '') }}" disabled>
-                                                @error('td')
+                                                <label class="form-label fw-bold">Distole</label>
+                                                <input type="number" class="form-control @error('distole') is-invalid @enderror"
+                                                    name="distole"
+                                                    value="{{ old('distole', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->distole ?? '') }}" disabled>
+                                                @error('distole')
+                                                    <div class="invalid-feedback">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group mb-3">
+                                                <label class="form-label fw-bold">Sistole</label>
+                                                <input type="number" class="form-control @error('sistole') is-invalid @enderror"
+                                                    name="sistole"
+                                                    value="{{ old('sistole', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->sistole ?? '') }}" disabled>
+                                                @error('sistole')
                                                     <div class="invalid-feedback">
                                                         {{ $message }}
                                                     </div>

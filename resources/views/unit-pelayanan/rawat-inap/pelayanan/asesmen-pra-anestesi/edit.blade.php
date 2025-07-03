@@ -1481,26 +1481,23 @@
                                                     </div>
                                                 @enderror
                                             </div>
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Menstruasi Tidak Normal</label>
-                                                <div class="form-check">
-                                                    <input
-                                                        class="form-check-input @error('menstruasi_tidak_normal') is-invalid @enderror"
-                                                        type="radio" name="menstruasi_tidak_normal" value="Ya" {{ old('menstruasi_tidak_normal', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKppKs->menstruasi_tidak_normal ?? '') == 'Ya' ? 'checked' : '' }}>
-                                                    <label class="form-check-label">Ya</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input
-                                                        class="form-check-input @error('menstruasi_tidak_normal') is-invalid @enderror"
-                                                        type="radio" name="menstruasi_tidak_normal" value="Tidak" {{ old('menstruasi_tidak_normal', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKppKs->menstruasi_tidak_normal ?? '') == 'Tidak' ? 'checked' : '' }}>
-                                                    <label class="form-check-label">Tidak</label>
-                                                </div>
-                                                @error('menstruasi_tidak_normal')
-                                                    <div class="invalid-feedback d-block">
-                                                        {{ $message }}
+                                            @if ($dataMedis->pasien->jenis_kelamin == 0)
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label fw-bold">Menstruasi Tidak Normal</label>
+                                                    <div class="form-check">
+                                                        <input
+                                                            class="form-check-input @error('menstruasi_tidak_normal') is-invalid @enderror"
+                                                            type="radio" name="menstruasi_tidak_normal" value="Ya" {{ old('menstruasi_tidak_normal', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKppKs->menstruasi_tidak_normal ?? '') == 'Ya' ? 'checked' : '' }}>
+                                                        <label class="form-check-label">Ya</label>
                                                     </div>
-                                                @enderror
-                                            </div>
+                                                    <div class="form-check">
+                                                        <input
+                                                            class="form-check-input @error('menstruasi_tidak_normal') is-invalid @enderror"
+                                                            type="radio" name="menstruasi_tidak_normal" value="Tidak" {{ old('menstruasi_tidak_normal', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKppKs->menstruasi_tidak_normal ?? '') == 'Tidak' ? 'checked' : '' }}>
+                                                        <label class="form-check-label">Tidak</label>
+                                                    </div>
+                                                </div>
+                                            @endif
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Pingsan</label>
                                                 <div class="form-check">
@@ -1617,26 +1614,23 @@
                                                     </div>
                                                 @enderror
                                             </div>
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Sedang Hamil</label>
-                                                <div class="form-check">
-                                                    <input
-                                                        class="form-check-input @error('sedang_hamil') is-invalid @enderror"
-                                                        type="radio" name="sedang_hamil" value="Ya" {{ old('sedang_hamil', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKppKs->sedang_hamil ?? '') == 'Ya' ? 'checked' : '' }}>
-                                                    <label class="form-check-label">Ya</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input
-                                                        class="form-check-input @error('sedang_hamil') is-invalid @enderror"
-                                                        type="radio" name="sedang_hamil" value="Tidak" {{ old('sedang_hamil', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKppKs->sedang_hamil ?? '') == 'Tidak' ? 'checked' : '' }}>
-                                                    <label class="form-check-label">Tidak</label>
-                                                </div>
-                                                @error('sedang_hamil')
-                                                    <div class="invalid-feedback d-block">
-                                                        {{ $message }}
+                                            @if ($dataMedis->pasien->jenis_kelamin == 0)
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label fw-bold">Sedang Hamil</label>
+                                                    <div class="form-check">
+                                                        <input
+                                                            class="form-check-input @error('sedang_hamil') is-invalid @enderror"
+                                                            type="radio" name="sedang_hamil" value="Ya" {{ old('sedang_hamil', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKppKs->sedang_hamil ?? '') == 'Ya' ? 'checked' : '' }}>
+                                                        <label class="form-check-label">Ya</label>
                                                     </div>
-                                                @enderror
-                                            </div>
+                                                    <div class="form-check">
+                                                        <input
+                                                            class="form-check-input @error('sedang_hamil') is-invalid @enderror"
+                                                            type="radio" name="sedang_hamil" value="Tidak" {{ old('sedang_hamil', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKppKs->sedang_hamil ?? '') == 'Tidak' ? 'checked' : '' }}>
+                                                        <label class="form-check-label">Tidak</label>
+                                                    </div>
+                                                </div>
+                                            @endif
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Stroke</label>
                                                 <div class="form-check">
@@ -1794,11 +1788,24 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">TD</label>
-                                                <input type="text" class="form-control @error('td') is-invalid @enderror"
-                                                    name="td" placeholder="Tekanan Darah (contoh: 120/80)"
-                                                    value="{{ old('td', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->td ?? '') }}">
-                                                @error('td')
+                                                <label class="form-label fw-bold">Distole</label>
+                                                <input type="number" class="form-control @error('distole') is-invalid @enderror"
+                                                    name="distole" placeholder="Tekanan Darah (contoh: 120/80)"
+                                                    value="{{ old('distole', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->distole ?? '') }}">
+                                                @error('distole')
+                                                    <div class="invalid-feedback">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group mb-3">
+                                                <label class="form-label fw-bold">Sistole</label>
+                                                <input type="number" class="form-control @error('sistole') is-invalid @enderror"
+                                                    name="sistole" placeholder="Tekanan Darah (contoh: 120/80)"
+                                                    value="{{ old('sistole', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->sistole ?? '') }}">
+                                                @error('sistole')
                                                     <div class="invalid-feedback">
                                                         {{ $message }}
                                                     </div>
@@ -1818,8 +1825,6 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Suhu</label>
@@ -1846,6 +1851,8 @@
                                                 @enderror
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Jantung</label>
@@ -1860,8 +1867,6 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Abdomen</label>
@@ -1890,6 +1895,8 @@
                                                 @enderror
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Neurologi (jika ada ditemukan)</label>
