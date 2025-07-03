@@ -1007,7 +1007,6 @@
             // Inisialisasi - sembunyikan semua bagian saat halaman dimuat
             hideAllSections();
 
-            console.log('Form perawatan logic loaded successfully');
         });
     </script>
 @endpush

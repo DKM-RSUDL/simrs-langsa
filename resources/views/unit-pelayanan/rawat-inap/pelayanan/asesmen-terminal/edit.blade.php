@@ -1002,7 +1002,6 @@
             // Inisialisasi - tampilkan bagian yang sesuai berdasarkan nilai yang sudah ada
             showSectionsBasedOnCurrentState();
 
-            console.log('Form perawatan logic loaded successfully');
         });
     </script>
 @endpush
