@@ -160,12 +160,15 @@
                                     <td>{{ $prmrj->diagnosis }}</td>
                                     <td>
                                         <a href="{{ route('rawat-jalan.prmrj.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $prmrj->id]) }}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
-                                        <a href="{{ route('rawat-jalan.prmrj.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $prmrj->id]) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                                        <form action="{{ route('rawat-jalan.prmrj.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $prmrj->id]) }}" method="POST" style="display:inline;" id="deleteForm_{{ $prmrj->id }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $prmrj->id }}"><i class="fas fa-trash"></i></button>
-                                        </form>
+
+                                        @if ($prmrj->kd_unit == $dataMedis->kd_unit)
+                                            <a href="{{ route('rawat-jalan.prmrj.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $prmrj->id]) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                                            <form action="{{ route('rawat-jalan.prmrj.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $prmrj->id]) }}" method="POST" style="display:inline;" id="deleteForm_{{ $prmrj->id }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $prmrj->id }}"><i class="fas fa-trash"></i></button>
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty
