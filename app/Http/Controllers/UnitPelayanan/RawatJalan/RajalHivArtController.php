@@ -42,15 +42,42 @@ class RajalHivArtController extends Controller
             abort(404, 'Data not found');
         }
 
+        // start fungsi Tabs
+        $activeTab = $request->query('tab', 'ikhtisar');
+
+        $allowedTabs = ['ikhtisar', 'followUp'];
+        if (!in_array($activeTab, $allowedTabs)) {
+            $activeTab = 'ikhtisar';
+        }
+
+        if ($activeTab == 'ikhtisar') {
+            return $this->ikhtisarTab($dataMedis, $activeTab);
+        } else {
+            return $this->followUpTab($dataMedis, $activeTab);
+        }
+        // end code
+
         // $prmrjs = RmePrmrj::where('kd_pasien', $kd_pasien)
         // ->where('kd_unit', $kd_unit)
         // ->where('tgl_masuk', $tgl_masuk)
         // ->where('urut_masuk', $urut_masuk)
         // ->orderBy('tanggal', 'desc')
         // ->paginate(10);
+    }
 
+    private function ikhtisarTab($dataMedis, $activeTab)
+    {
         return view('unit-pelayanan.rawat-jalan.pelayanan.hiv_art.index', compact(
-            'dataMedis',
+        'dataMedis',
+            'activeTab'
+        ));
+    }
+
+    private function followUpTab($dataMedis, $activeTab)
+    {
+        return view('unit-pelayanan.rawat-jalan.pelayanan.hiv_art.index', compact(
+        'dataMedis',
+            'activeTab'
         ));
     }
 

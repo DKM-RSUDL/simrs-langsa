@@ -1,78 +1,5 @@
 @extends('layouts.administrator.master')
-
-@push('css')
-    <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
-    <style>
-        .form-section {
-            border: 1px solid #dee2e6;
-            margin-bottom: 20px;
-        }
-
-        .section-header {
-            background-color: #f8f9fa;
-            padding: 10px 15px;
-            border-bottom: 1px solid #dee2e6;
-            font-weight: bold;
-        }
-
-        .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .patient-id-boxes {
-            display: flex;
-            gap: 5px;
-        }
-
-        .id-box {
-            width: 30px;
-            height: 30px;
-            text-align: center;
-            border: 1px solid #ccc;
-        }
-
-        .vital-signs-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-        }
-
-        .vital-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Animation styles */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .was-validated .form-control:invalid {
-            border-color: #dc3545;
-        }
-
-        .was-validated .form-control:valid {
-            border-color: #198754;
-        }
-    </style>
-@endpush
+@include('unit-pelayanan.rawat-jalan.pelayanan.hiv_art.include')
 
 @section('content')
     <div class="container-fluid py-4">
@@ -178,7 +105,7 @@
                                             <label class="form-label">No Reg Nas</label>
                                         </div>
                                         <div class="col-md-9">
-                                            <input type="text" class="form-control" name="no_reg_nas"
+                                            <input type="number" class="form-control" name="no_reg_nas"
                                                 placeholder="No registrasi Nasional">
                                         </div>
                                     </div>
@@ -187,7 +114,7 @@
                                             <label class="form-label">NIK</label>
                                         </div>
                                         <div class="col-md-9">
-                                            <input type="text" class="form-control" name="nik"
+                                            <input type="number" class="form-control" name="nik"
                                                 placeholder="Nomor Indok Kependudukan">
                                         </div>
                                     </div>
@@ -267,8 +194,8 @@
                                         <div class="col-md-9">
                                             <!-- 1. KIA -->
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" value="kia" id="kia"
-                                                    name="entry_point[]">
+                                                <input class="form-check-input" type="radio" value="kia" id="kia"
+                                                    name="kia_details[]">
                                                 <label class="form-check-label" for="kia">
                                                     1. KIA
                                                 </label>
@@ -276,7 +203,7 @@
 
                                             <!-- 2-Rujukan Jalan dengan input tambahan -->
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" value="rujukan_jalan_tb"
+                                                <input class="form-check-input" type="radio" value="rujukan_jalan_tb"
                                                     id="kia_rujukan_jalan_tb" name="kia_details[]">
                                                 <label class="form-check-label" for="kia_rujukan_jalan_tb">
                                                     2. Rujukan Jalan (TB, Anak, Penyakit Dalam, MIS, Lainnya...)
@@ -289,7 +216,7 @@
 
                                             <!-- 3-Rawat Inap -->
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" value="rujukan_rawat_inap"
+                                                <input class="form-check-input" type="radio" value="rujukan_rawat_inap"
                                                     id="kia_rawat_inap" name="kia_details[]">
                                                 <label class="form-check-label" for="kia_rawat_inap">
                                                     3. Rawat Inap
@@ -298,7 +225,7 @@
 
                                             <!-- 4-Praktek Swasta -->
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" value="praktek_swasta"
+                                                <input class="form-check-input" type="radio" value="praktek_swasta"
                                                     id="kia_praktek_swasta" name="kia_details[]">
                                                 <label class="form-check-label" for="kia_praktek_swasta">
                                                     4. Praktek Swasta
@@ -307,7 +234,7 @@
 
                                             <!-- 5-Jangkauan dengan input tambahan -->
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" value="jangkauan"
+                                                <input class="form-check-input" type="radio" value="jangkauan"
                                                     id="kia_jangkauan" name="kia_details[]">
                                                 <label class="form-check-label" for="kia_jangkauan">
                                                     5. Jangkauan (Penasun, WPS, LSL, ...)
@@ -320,7 +247,7 @@
 
                                             <!-- 6-LSM -->
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" value="lsm" id="kia_lsm"
+                                                <input class="form-check-input" type="radio" value="lsm" id="kia_lsm"
                                                     name="kia_details[]">
                                                 <label class="form-check-label" for="kia_lsm">
                                                     6. LSM
@@ -329,7 +256,7 @@
 
                                             <!-- 7-Datang sendiri -->
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" value="datang_sendiri"
+                                                <input class="form-check-input" type="radio" value="datang_sendiri"
                                                     id="kia_datang_sendiri" name="kia_details[]">
                                                 <label class="form-check-label" for="kia_datang_sendiri">
                                                     7. Datang sendiri
@@ -338,7 +265,7 @@
 
                                             <!-- 8-Lainnya dengan input tambahan -->
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" value="lainnya_uraikan"
+                                                <input class="form-check-input" type="radio" value="lainnya_uraikan"
                                                     id="kia_lainnya" name="kia_details[]">
                                                 <label class="form-check-label" for="kia_lainnya">
                                                     8. Lainnya, uraikan...
@@ -367,9 +294,11 @@
                                         <div class="col-md-9">
                                             <select class="form-select" name="pendidikan">
                                                 <option value="">--pilih--</option>
-                                                <option value="sma">SMA</option>
-                                                <option value="smp">SMP</option>
-                                                <option value="sd">SD</option>
+                                                <option value="0">Tidak Sekolah</option>
+                                                <option value="1">SD</option>
+                                                <option value="2">SMP</option>
+                                                <option value="3">SMU</option>
+                                                <option value="4">Akademi/PT</option>
                                             </select>
                                         </div>
                                     </div>
@@ -381,9 +310,9 @@
                                         <div class="col-md-9">
                                             <select class="form-select" name="pekerjaan">
                                                 <option value="">--pilih--</option>
-                                                <option value="tni">TNI</option>
-                                                <option value="IT">IT</option>
-                                                <option value="dokter">Dokter</option>
+                                                <option value="0">Tidak Bekerja</option>
+                                                <option value="1">Bekerja</option>
+                                                <option value="2">lainnya</option>
                                             </select>
                                         </div>
                                     </div>
@@ -393,15 +322,63 @@
                                             <label class="form-label">Faktor Risiko</label>
                                         </div>
                                         <div class="col-md-9">
-                                            <select class="form-select" name="faktor_risiko">
-                                                <option value="">--pilih--</option>
-                                                <option value="Seks Vaginal Berisiko">Seks Vaginal Berisiko</option>
-                                                <option value="Seks Anal Berisiko">Seks Anal Berisiko</option>
-                                                <option value="Perinatal">Perinatal</option>
-                                                <option value="Transfusi Darah">Transfusi Darah</option>
-                                                <option value="NAPZA Suntik">NAPZA Suntik</option>
-                                                <option value="Lain-lainnya">lain-lainnya</option>
-                                            </select>
+                                            <!-- Seks Vaginal Berisiko -->
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" value="Seks Vaginal Berisiko"
+                                                    id="seks_vaginal" name="faktor_risiko[]">
+                                                <label class="form-check-label" for="seks_vaginal">
+                                                    Seks Vaginal Berisiko
+                                                </label>
+                                            </div>
+
+                                            <!-- Seks Anal Berisiko -->
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" value="Seks Anal Berisiko"
+                                                    id="seks_anal" name="faktor_risiko[]">
+                                                <label class="form-check-label" for="seks_anal">
+                                                    Seks Anal Berisiko
+                                                </label>
+                                            </div>
+
+                                            <!-- Perinatal -->
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" value="Perinatal"
+                                                    id="perinatal" name="faktor_risiko[]">
+                                                <label class="form-check-label" for="perinatal">
+                                                    Perinatal
+                                                </label>
+                                            </div>
+
+                                            <!-- Transfusi Darah -->
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" value="Transfusi Darah"
+                                                    id="transfusi_darah" name="faktor_risiko[]">
+                                                <label class="form-check-label" for="transfusi_darah">
+                                                    Transfusi Darah
+                                                </label>
+                                            </div>
+
+                                            <!-- NAPZA Suntik -->
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" value="NAPZA Suntik"
+                                                    id="napza_suntik" name="faktor_risiko[]">
+                                                <label class="form-check-label" for="napza_suntik">
+                                                    NAPZA Suntik
+                                                </label>
+                                            </div>
+
+                                            <!-- Lain-lainnya dengan input tambahan -->
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" value="Lain-lainnya"
+                                                    id="lain_lainnya" name="faktor_risiko[]">
+                                                <label class="form-check-label" for="lain_lainnya">
+                                                    Lain-lain, Uraikan...
+                                                </label>
+                                            </div>
+                                            <div id="lain-lainnya-details" class="d-none bg-light p-3 mb-3 rounded">
+                                                <textarea class="form-control" name="lain_lainnya_keterangan" rows="2"
+                                                        placeholder="Sebutkan faktor risiko lainnya..."></textarea>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -455,16 +432,15 @@
                                                             <th width="20%">Nama</th>
                                                             <th width="10%">Hub</th>
                                                             <th width="10%">Umur</th>
-                                                            <th width="15%">HIV</th>
-                                                            <th width="15%">ART</th>
+                                                            <th width="15%">HIV +/-</th>
+                                                            <th width="15%">ART Y/T</th>
                                                             <th width="20%">NoRegNas</th>
                                                             <th width="10%">Aksi</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         <tr id="no-data-row">
-                                                            <td colspan="7" class="text-center text-muted">Tidak ada data
-                                                            </td>
+                                                            <td colspan="7" class="text-center text-muted">Tidak ada data</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -483,128 +459,919 @@
                                     <!-- Pernah Menerima ART -->
                                     <div class="row mb-3">
                                         <div class="col-md-3">
-                                            <label class="form-label">Pernah Menerima ART</label>
+                                            <label class="form-label fw-bold">Pernah menerima ART?</label>
                                         </div>
                                         <div class="col-md-9">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" id="menerima_art1" value="Ya"
+                                                <input class="form-check-input" type="radio" id="menerima_art_ya" value="Ya"
                                                     name="menerima_art">
-                                                <label class="form-check-label" for="menerima_art1">Ya</label>
+                                                <label class="form-check-label" for="menerima_art_ya">1. Ya</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" id="menerima_art2"
+                                                <input class="form-check-input" type="radio" id="menerima_art_tidak"
                                                     value="Tidak" name="menerima_art">
-                                                <label class="form-check-label" for="menerima_art2">Tidak</label>
+                                                <label class="form-check-label" for="menerima_art_tidak">2. Tidak</label>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <!-- Jika ya -->
-                                    <div class="row mb-3" id="art_details" style="display: none;">
-                                        <div class="col-md-3">
-                                            <label class="form-label">Jika ya</label>
+                                    <!-- Detail ART (hidden by default) -->
+                                    <div id="art_details" class="art-details" style="display: none;">
+                                        <!-- Jika ya, pilih jenis -->
+                                        <div class="row mb-3">
+                                            <div class="col-md-3">
+                                                <label class="form-label fw-bold">Jika ya</label>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" id="ppia" value="PPIA"
+                                                        name="jenis_art">
+                                                    <label class="form-check-label" for="ppia">1. PPIA</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" id="art" value="ART"
+                                                        name="jenis_art">
+                                                    <label class="form-check-label" for="art">2. ART</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" id="ppp" value="PPP"
+                                                        name="jenis_art">
+                                                    <label class="form-check-label" for="ppp">3. PPP</label>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-md-9">
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="ppia" value="1-Pinjam"
-                                                    name="jenis_art[]">
-                                                <label class="form-check-label" for="ppia">1.PPIA</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="art" value="2-ART"
-                                                    name="jenis_art[]">
-                                                <label class="form-check-label" for="art">2.ART</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="ppp" value="3-PMTCT"
-                                                    name="jenis_art[]">
-                                                <label class="form-check-label" for="ppp">3.PPP</label>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <div class="row mb-3" id="jenis_tempat_row" style="display: none;">
-                                        <div class="col-md-3">
-                                            <label class="form-label">Tempat ART Dulu</label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" id="rs_pemerintah"
-                                                    value="RS Pemerintah" name="jenis_tempat">
-                                                <label class="form-check-label" for="rs_pemerintah">1.Rs Pemerintah</label>
+                                        <!-- Tempat ART Dulu -->
+                                        <div class="row mb-3">
+                                            <div class="col-md-3">
+                                                <label class="form-label fw-bold">Tempat ART dulu</label>
                                             </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" id="rs_swasta"
-                                                    value="RS Swasta" name="jenis_tempat">
-                                                <label class="form-check-label" for="rs_swasta">2.Rs Swasta </label>
+                                            <div class="col-md-9">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" id="rs_pemerintah"
+                                                        value="RS Pemerintah" name="tempat_art">
+                                                    <label class="form-check-label" for="rs_pemerintah">1. RS Pem</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" id="rs_swasta"
+                                                        value="RS Swasta" name="tempat_art">
+                                                    <label class="form-check-label" for="rs_swasta">2. RS Swasta</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" id="pkm" value="PKM"
+                                                        name="tempat_art">
+                                                    <label class="form-check-label" for="pkm">3. PKM</label>
+                                                </div>
                                             </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" id="pkm" value="pkm"
-                                                    name="jenis_tempat">
-                                                <label class="form-check-label" for="pkm">3.PKM</label>
+                                        </div>
+
+                                        <!-- Nama, dosis ARV & lama penggunaannya (Free text) -->
+                                        <div class="row mb-3">
+                                            <div class="col-md-3">
+                                                <label class="form-label fw-bold">Nama, dosis ARV & lama penggunaannya</label>
                                             </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Jenis ART -->
-                                    <div class="row mb-3" id="obat_art_row" style="display: none;">
-                                        <div class="col-md-3">
-                                            <label class="form-label">Jenis ART</label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <select class="form-select" name="obat_art">
-                                                <option value="">Pilih Jenis ART</option>
-                                                <option value="TDF+3TC+EFV">TDF+3TC+EFV</option>
-                                                <option value="AZT+3TC+NVP">AZT+3TC+NVP</option>
-                                                <option value="AZT+3TC+EFV">AZT+3TC+EFV</option>
-                                                <option value="TDF+3TC+NVP">TDF+3TC+NVP</option>
-                                                <option value="ABC+3TC+EFV">ABC+3TC+EFV</option>
-                                                <option value="TDF+FTC+EFV">TDF+FTC+EFV</option>
-                                                <option value="Lainnya">Lainnya</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <!-- Jenis ART Lainnya -->
-                                    <div class="row mb-3" id="obat_art_lainnya_row" style="display: none;">
-                                        <div class="col-md-3">
-                                            <label class="form-label">Sebutkan Jenis ART Lainnya</label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <input type="text" class="form-control" name="obat_art_lainnya"
-                                                placeholder="Sebutkan jenis ART lainnya">
-                                        </div>
-                                    </div>
-
-                                    <!-- Lama Penggunaannya -->
-                                    <div class="row mb-3" id="lama_penggunaannya_row" style="display: none;">
-                                        <div class="col-md-3">
-                                            <label class="form-label">Lama Penggunaannya</label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <textarea class="form-control" name="lama_penggunaannya" rows="3"
-                                                placeholder="Sebutkan alasan putus terapi (jika ada)"></textarea>
+                                            <div class="col-md-9">
+                                                <textarea class="form-control" name="nama_dosis_arv" rows="4"
+                                                    placeholder="Sebutkan nama obat ARV, dosis, dan lama penggunaan secara detail..."></textarea>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Data Pemeriksaan Klinis dan Laboratorium -->
-                            <div class="card mb-4 shadow-sm">
+                            <div class="card shadow-sm">
                                 <div class="section-header">
-                                    5. Data Pemeriksaan Klinis dan Laboratorium
+                                    <h5 class="mb-0">
+                                        5. Data Pemeriksaan Klinis dan Laboratorium
+                                    </h5>
                                 </div>
-                                <div class="p-3">
-                                    <div class="row mb-3">
-                                        <div class="col-md-3">
-
+                                <div class="card-body">
+                                    <!-- Info Panel -->
+                                    <div class="alert alert-info border-0 mb-4">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            <div>
+                                                <strong>Petunjuk Pengisian:</strong><br>
+                                                <small>Isi data pemeriksaan pada setiap tahap kunjungan pasien. Tidak semua kolom wajib diisi.</small>
+                                            </div>
                                         </div>
-                                        <div class="col-md-9">
+                                    </div>
 
+                                    <!-- Form Grid -->
+                                    <div class="row g-4">
+                                        <!-- Kunjungan Pertama -->
+                                        <div class="col-12">
+                                            <div class="card border-start border-success border-4">
+                                                <div class="card-header bg-light">
+                                                    <h6 class="mb-0 text-success">
+                                                        <i class="fas fa-calendar-plus me-2"></i>
+                                                        Kunjungan Pertama
+                                                    </h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row g-3">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Tanggal Kunjungan</label>
+                                                            <input type="date" name="kunjungan_pertama_tanggal" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Stad. Klinis</label>
+                                                            <input type="text" name="kunjungan_pertama_klinis" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">BB</label>
+                                                            <div class="input-group">
+                                                                <input type="number" name="kunjungan_pertama_bb" class="form-control" placeholder="0">
+                                                            </div>
+                                                        </div>    
+                                                    </div>
+                                                    <div class="row g-3">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Status Fungsional
+                                                                <br>
+                                                                <small class="text-muted">1 = kerja / 2 = ambulatori / 3 = baring</small>
+                                                            </label>
+                                                            <input type="text" name="kunjungan_pertama_status_fungsional" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">JumlahCD4 
+                                                                <br><small class="text-muted">(CD4 % pd anak)</small></label>
+                                                            <input type="number" name="kunjungan_pertama_cd4" class="form-control" placeholder="0">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Lain-lain</label>
+                                                            <textarea name="kunjungan_pertama_lain" class="form-control" rows="2" placeholder="Isi Lainnya..."></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Memenuhi syarat medis utk ART -->
+                                        <div class="col-12">
+                                            <div class="card border-start border-warning border-4">
+                                                <div class="card-header bg-light">
+                                                    <h6 class="mb-0 text-warning">
+                                                        <i class="fas fa-check-circle me-2"></i>
+                                                        Memenuhi syarat medis utk ART
+                                                    </h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row g-3">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Tanggal</label>
+                                                            <input type="date" name="memenuhi_syarat_tanggal" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Stad. Klinis</label>
+                                                            <input type="text" name="memenuhi_syarat_klinis" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">BB</label>
+                                                            <div class="input-group">
+                                                                <input type="number" name="memenuhi_syarat_bb" class="form-control" placeholder="0">
+                                                            </div>
+                                                        </div>    
+                                                    </div>
+                                                    <div class="row g-3">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Status Fungsional
+                                                                <br>
+                                                                <small class="text-muted">1 = kerja / 2 = ambulatori / 3 = baring</small>
+                                                            </label>
+                                                            <input type="text" name="memenuhi_syarat_status_fungsional" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">JumlahCD4 
+                                                                <br><small class="text-muted">(CD4 % pd anak)</small></label>
+                                                            <input type="number" name="memenuhi_syarat_cd4" class="form-control" placeholder="0">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Lain-lain</label>
+                                                            <textarea name="memenuhi_syarat_lain" class="form-control" rows="2" placeholder="Isi Lainnya..."></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Saat mulai ART -->
+                                        <div class="col-12">
+                                            <div class="card border-start border-primary border-4">
+                                                <div class="card-header bg-light">
+                                                    <h6 class="mb-0 text-primary">
+                                                        <i class="fas fa-play-circle me-2"></i>
+                                                        Saat mulai ART
+                                                    </h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row g-3">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Tanggal</label>
+                                                            <input type="date" name="saat_mulai_art_tanggal" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Stad. Klinis</label>
+                                                            <input type="text" name="saat_mulai_art_klinis" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">BB</label>
+                                                            <div class="input-group">
+                                                                <input type="number" name="saat_mulai_art_bb" class="form-control" placeholder="0">
+                                                            </div>
+                                                        </div>    
+                                                    </div>
+                                                    <div class="row g-3">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Status Fungsional
+                                                                <br>
+                                                                <small class="text-muted">1 = kerja / 2 = ambulatori / 3 = baring</small>
+                                                            </label>
+                                                            <input type="text" name="saat_mulai_art_status_fungsional" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">JumlahCD4 
+                                                                <br><small class="text-muted">(CD4 % pd anak)</small></label>
+                                                            <input type="number" name="saat_mulai_art_cd4" class="form-control" placeholder="0">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Lain-lain</label>
+                                                            <textarea name="saat_mulai_art_lain" class="form-control" rows="2" placeholder="Isi Lainnya..."></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Setelah 6 bulan ART -->
+                                        <div class="col-12">
+                                            <div class="card border-start border-info border-4">
+                                                <div class="card-header bg-light">
+                                                    <h6 class="mb-0 text-info">
+                                                        <i class="fas fa-calendar-check me-2"></i>
+                                                        Setelah 6 bulan ART
+                                                    </h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row g-3">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Tanggal</label>
+                                                            <input type="date" name="setelah_6_bulan_tanggal" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Stad. Klinis</label>
+                                                            <input type="text" name="setelah_6_bulan_klinis" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">BB</label>
+                                                            <div class="input-group">
+                                                                <input type="number" name="setelah_6_bulan_bb" class="form-control" placeholder="0">
+                                                            </div>
+                                                        </div>    
+                                                    </div>
+                                                    <div class="row g-3">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Status Fungsional
+                                                                <br>
+                                                                <small class="text-muted">1 = kerja / 2 = ambulatori / 3 = baring</small>
+                                                            </label>
+                                                            <input type="text" name="setelah_6_bulan_status_fungsional" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">JumlahCD4 
+                                                                <br><small class="text-muted">(CD4 % pd anak)</small></label>
+                                                            <input type="number" name="setelah_6_bulan_cd4" class="form-control" placeholder="0">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Lain-lain</label>
+                                                            <textarea name="setelah_6_bulan_lain" class="form-control" rows="2" placeholder="Isi Lainnya..."></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Setelah 12 bulan ART -->
+                                        <div class="col-12">
+                                            <div class="card border-start border-secondary border-4">
+                                                <div class="card-header bg-light">
+                                                    <h6 class="mb-0 text-secondary">
+                                                        <i class="fas fa-calendar-alt me-2"></i>
+                                                        Setelah 12 bulan ART
+                                                    </h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row g-3">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Tanggal</label>
+                                                            <input type="date" name="setelah_12_bulan_tanggal" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Stad. Klinis</label>
+                                                            <input type="text" name="setelah_12_bulan_klinis" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">BB</label>
+                                                            <div class="input-group">
+                                                                <input type="number" name="setelah_12_bulan_bb" class="form-control" placeholder="0">
+                                                            </div>
+                                                        </div>    
+                                                    </div>
+                                                    <div class="row g-3">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Status Fungsional
+                                                                <br>
+                                                                <small class="text-muted">1 = kerja / 2 = ambulatori / 3 = baring</small>
+                                                            </label>
+                                                            <input type="text" name="setelah_12_bulan_status_fungsional" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">JumlahCD4 
+                                                                <br><small class="text-muted">(CD4 % pd anak)</small></label>
+                                                            <input type="number" name="setelah_12_bulan_cd4" class="form-control" placeholder="0">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Lain-lain</label>
+                                                            <textarea name="setelah_12_bulan_lain" class="form-control" rows="2" placeholder="Isi Lainnya..."></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Setelah 24 bulan ART -->
+                                        <div class="col-12">
+                                            <div class="card border-start border-dark border-4">
+                                                <div class="card-header bg-light">
+                                                    <h6 class="mb-0 text-dark">
+                                                        <i class="fas fa-calendar me-2"></i>
+                                                        Setelah 24 bulan ART
+                                                    </h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row g-3">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Tanggal</label>
+                                                            <input type="date" name="setelah_24_bulan_tanggal" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Stad. Klinis</label>
+                                                            <input type="text" name="setelah_24_bulan_klinis" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">BB</label>
+                                                            <div class="input-group">
+                                                                <input type="number" name="setelah_24_bulan_bb" class="form-control" placeholder="0">
+                                                            </div>
+                                                        </div>    
+                                                    </div>
+                                                    <div class="row g-3">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Status Fungsional
+                                                                <br>
+                                                                <small class="text-muted">1 = kerja / 2 = ambulatori / 3 = baring</small>
+                                                            </label>
+                                                            <input type="text" name="setelah_24_bulan_status_fungsional" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">JumlahCD4 
+                                                                <br><small class="text-muted">(CD4 % pd anak)</small></label>
+                                                            <input type="number" name="setelah_24_bulan_cd4" class="form-control" placeholder="0">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label fw-bold">Lain-lain</label>
+                                                            <textarea name="setelah_24_bulan_lain" class="form-control" rows="2" placeholder="Isi Lainnya..."></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Data api Antiretroviral (ART) -->
+                            <div class="card shadow-sm">
+                            <div class="section-header">
+                                <h5 class="mb-0">
+                                    6. Terapi Antiretroviral (ART)
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <!-- Info Panel -->
+                                <div class="alert alert-info border-0 mb-4">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        <div>
+                                            <strong>Petunjuk Pengisian:</strong><br>
+                                            <small>Pilih nama paduan ART dan isi data substitusi/switch jika diperlukan. Gunakan tombol "Tambah ART Baru" untuk menambah riwayat terapi.</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Dynamic ART Sections -->
+                                <div id="artSections">
+                                    <!-- Initial ART Section -->
+                                    <div class="art-section mb-4" data-section="1">
+                                        <div class="card border-start border-primary border-4">
+                                            <div class="card-header bg-body-secondary d-flex justify-content-between align-items-center">
+                                                <h6 class="mb-0 text-primary">
+                                                    <i class="fas fa-pills me-2"></i>
+                                                    Terapi ART #1
+                                                </h6>
+                                                <button type="button" class="btn btn-outline-danger btn-sm d-none remove-art-btn" onclick="removeArtSection(1)">
+                                                    <i class="fas fa-trash me-1"></i>
+                                                    Hapus
+                                                </button>
+                                            </div>
+                                            <div class="card-body">
+                                                <!-- Nama Paduan ART -->
+                                                <div class="row mb-3">
+                                                    <div class="col-md-4">
+                                                        <label class="form-label fw-bold text-dark">Nama Paduan ART Original</label>
+                                                        <div class="bg-light-subtle">
+                                                            <div class="card-body p-3">
+                                                                <div class="form-check mb-2">
+                                                                    <input class="form-check-input" type="radio" name="nama_paduan_art_1" value="TDF+3TC+EFV" id="art1_1">
+                                                                    <label class="form-check-label" for="art1_1">
+                                                                        1. TDF+3TC+EFV
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check mb-2">
+                                                                    <input class="form-check-input" type="radio" name="nama_paduan_art_1" value="TDF+FTC+EFV" id="art2_1">
+                                                                    <label class="form-check-label" for="art2_1">
+                                                                        2. TDF+FTC+EFV
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check mb-2">
+                                                                    <input class="form-check-input" type="radio" name="nama_paduan_art_1" value="TDF+3TC+NVP" id="art3_1">
+                                                                    <label class="form-check-label" for="art3_1">
+                                                                        3. TDF+3TC+NVP
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check mb-2">
+                                                                    <input class="form-check-input" type="radio" name="nama_paduan_art_1" value="TDF+FTC+NVP" id="art4_1">
+                                                                    <label class="form-check-label" for="art4_1">
+                                                                        4. TDF+FTC+NVP
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check mb-2">
+                                                                    <input class="form-check-input" type="radio" name="nama_paduan_art_1" value="AZT+3TC+EFV" id="art5_1">
+                                                                    <label class="form-check-label" for="art5_1">
+                                                                        5. AZT+3TC+EFV
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check mb-2">
+                                                                    <input class="form-check-input" type="radio" name="nama_paduan_art_1" value="AZT+3TC+NVP" id="art6_1">
+                                                                    <label class="form-check-label" for="art6_1">
+                                                                        6. AZT+3TC+NVP
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check mb-3">
+                                                                    <input class="form-check-input" type="radio" name="nama_paduan_art_1" value="lainnya" id="art7_1">
+                                                                    <label class="form-check-label" for="art7_1">
+                                                                        7. Lainnya
+                                                                    </label>
+                                                                </div>
+                                                                <div id="lainnya-art-details-1" class="d-none">
+                                                                    <input type="text" name="art_lainnya_1" class="form-control form-control-sm" placeholder="Sebutkan nama paduan ART lainnya">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label class="form-label fw-bold text-dark">SUBSTITUSI dalam lini-1, SWITCH ke lini-2, STOP</label>
+                                                        <div class="row g-3">
+                                                            <div class="col-md-4">
+                                                                <label class="form-label fw-bold">Tanggal</label>
+                                                                <input type="date" name="substitusi_tanggal_1" class="form-control">
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label fw-bold">Substitusi</label>
+                                                                <input type="text" name="substitusi_1" class="form-control">
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label fw-bold">Switch</label>
+                                                                <input type="text" name="switch_1" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row g-3">
+                                                            <div class="col-md-4">
+                                                                <label class="form-label fw-bold">Stop</label>
+                                                                <input type="text" name="stop_1" class="form-control">
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label fw-bold">Restart</label>
+                                                                <input type="text" name="restart_1" class="form-control">
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label fw-bold">Alasan</label>
+                                                                <select name="alasan_1" class="form-select">
+                                                                    <option value="">Pilih alasan</option>
+                                                                    <option value="1">1. Toksisitas/efek samping</option>
+                                                                    <option value="2">2. Hamil</option>
+                                                                    <option value="3">3. Risiko hamil</option>
+                                                                    <option value="4">4. TB baru</option>
+                                                                    <option value="5">5. Ada obat baru</option>
+                                                                    <option value="6">6. Stok obat habis</option>
+                                                                    <option value="7">7. Alasan lain</option>
+                                                                    <option value="8">8. Gagal pengobatan klinis</option>
+                                                                    <option value="9">9. Gagal imunologis</option>
+                                                                    <option value="10">10. Gagal virologis</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row g-3">
+                                                            <div class="col-md-6">
+                                                                <label class="form-label fw-bold">Nama Paduan Baru</label>
+                                                                <input type="text" name="nama_paduan_baru_1" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Add New ART Button -->
+                                <div class="text-center mb-4">
+                                    <button type="button" class="btn btn-success btn-sm" onclick="addArtSection()">
+                                        <i class="fas fa-plus-circle me-2"></i>
+                                        Tambah ART Baru
+                                    </button>
+                                </div>
+
+                                <!-- Keterangan Alasan -->
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="bg-info-subtle border-0">
+                                            <div class="card-header">
+                                                <h6 class="mb-0 text-primary">
+                                                    <i class="fas fa-info-circle me-2"></i>
+                                                    Keterangan Alasan
+                                                </h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <h6 class="text-warning">Alasan Substitusi/Switch:</h6>
+                                                        <ul class="list-unstyled small">
+                                                            <li><strong>1.</strong> Toksisitas/efek samping</li>
+                                                            <li><strong>2.</strong> Hamil</li>
+                                                            <li><strong>3.</strong> Risiko hamil</li>
+                                                            <li><strong>4.</strong> TB baru</li>
+                                                            <li><strong>5.</strong> Ada obat baru</li>
+                                                            <li><strong>6.</strong> Stok obat habis</li>
+                                                            <li><strong>7.</strong> Alasan lain (uraikan)</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <h6 class="text-info">Alasan hanya untuk SWITCH:</h6>
+                                                        <ul class="list-unstyled small">
+                                                            <li><strong>8.</strong> Gagal pengobatan klinis</li>
+                                                            <li><strong>9.</strong> Gagal imunologis</li>
+                                                            <li><strong>10.</strong> Gagal virologis</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <h6 class="text-danger">Alasan STOP:</h6>
+                                                        <ul class="list-unstyled small">
+                                                            <li><strong>1.</strong> Toksisitas/efek samping</li>
+                                                            <li><strong>2.</strong> Hamil</li>
+                                                            <li><strong>3.</strong> Gagal pengobatan</li>
+                                                            <li><strong>4.</strong> Adherens buruk</li>
+                                                            <li><strong>5.</strong> Sakit/MRS</li>
+                                                            <li><strong>6.</strong> Kekurangan biaya</li>
+                                                            <li><strong>7.</strong> Alasan lain</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Data Pengobatan TB selama perawatan HIV -->
+                            <div class="card shadow-sm">
+                                <div class="section-header">
+                                    <h5 class="mb-0">
+                                        7. Pengobatan TB selama perawatan HIV
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Tanggal Terapi -->
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-3">
+                                                <label class="form-label fw-bold">Tgl. Mulai terapi TB</label>
+                                                <input type="date" class="form-control" name="tgl_mulai_terapi_tb" 
+                                                    placeholder="Pilih tanggal mulai terapi">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-3">
+                                                <label class="form-label fw-bold">Tgl. Selesai terapi TB</label>
+                                                <input type="date" class="form-control" name="tgl_selesai_terapi_tb" 
+                                                    placeholder="Pilih tanggal selesai terapi">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Form Grid -->
+                                    <div class="row g-4">
+                                        <!-- Klasifikasi TB -->
+                                        <div class="col-md-6">
+                                            <div class="border-start">
+                                                <div class="card-header bg-light">
+                                                    <h6 class="mb-0 text-warning">
+                                                        <i class="fas fa-lungs me-2"></i>
+                                                        Klasifikasi TB (pilih)
+                                                    </h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="form-check mb-3">
+                                                        <input class="form-check-input" type="radio" name="klasifikasi_tb" value="tb_paru" id="tb_paru">
+                                                        <label class="form-check-label fw-bold" for="tb_paru">
+                                                            <i class="fas fa-lungs text-danger me-2"></i>
+                                                            1. TB Paru
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check mb-3">
+                                                        <input class="form-check-input" type="radio" name="klasifikasi_tb" value="tb_ekstra_paru" id="tb_ekstra_paru">
+                                                        <label class="form-check-label fw-bold" for="tb_ekstra_paru">
+                                                            <i class="fas fa-user-injured text-warning me-2"></i>
+                                                            2. TB Ekstra Paru
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check mb-3">
+                                                        <input class="form-check-input" type="radio" name="klasifikasi_tb" value="tidak_ada" id="tidak_ada">
+                                                        <label class="form-check-label fw-bold" for="tidak_ada">
+                                                            <i class="fas fa-times-circle text-success me-2"></i>
+                                                            Tidak Ada
+                                                        </label>
+                                                    </div>
+                                                    <div id="lokasi_tb_ekstra" class="d-none mt-3">
+                                                        <label class="form-label fw-bold text-warning">Lokasi TB Ekstra Paru:</label>
+                                                        <input type="text" name="lokasi_tb_ekstra" class="form-control" placeholder="Sebutkan lokasi TB ekstra paru">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Paduan TB -->
+                                        <div class="col-md-6">
+                                            <div class="border-start">
+                                                <div class="card-header bg-light">
+                                                    <h6 class="mb-0 text-success">
+                                                        <i class="fas fa-pills me-2"></i>
+                                                        Paduan TB
+                                                    </h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="form-check mb-3">
+                                                        <input class="form-check-input" type="radio" name="paduan_tb" value="kategori_1" id="kategori_1">
+                                                        <label class="form-check-label fw-bold" for="kategori_1">
+                                                            <span class="badge bg-success me-2">1</span>
+                                                            Kategori I
+                                                            <i class="fas fa-info-circle text-muted ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Untuk TB baru (belum pernah diobati)"></i>
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check mb-3">
+                                                        <input class="form-check-input" type="radio" name="paduan_tb" value="kategori_2" id="kategori_2">
+                                                        <label class="form-check-label fw-bold" for="kategori_2">
+                                                            <span class="badge bg-warning me-2">2</span>
+                                                            Kategori II
+                                                            <i class="fas fa-info-circle text-muted ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Untuk TB kambuh/putus berobat"></i>
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check mb-3">
+                                                        <input class="form-check-input" type="radio" name="paduan_tb" value="kategori_anak" id="kategori_anak">
+                                                        <label class="form-check-label fw-bold" for="kategori_anak">
+                                                            <span class="badge bg-info me-2">3</span>
+                                                            Kategori Anak
+                                                            <i class="fas fa-info-circle text-muted ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Untuk pasien anak - Dosis disesuaikan dengan berat badan"></i>
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check mb-3">
+                                                        <input class="form-check-input" type="radio" name="paduan_tb" value="oat_lini_2" id="oat_lini_2">
+                                                        <label class="form-check-label fw-bold" for="oat_lini_2">
+                                                            <span class="badge bg-danger me-2">4</span>
+                                                            OAT Lini 2 (MDR)
+                                                            <i class="fas fa-info-circle text-muted ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Untuk TB resistan obat - Pengobatan khusus dengan obat lini kedua"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Tipe TB -->
+                                        <div class="col-md-6">
+                                            <div class="border-start">
+                                                <div class="card-header bg-light">
+                                                    <h6 class="mb-0 text-primary">
+                                                        <i class="fas fa-stethoscope me-2"></i>
+                                                        Tipe TB
+                                                    </h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="form-check mb-3">
+                                                        <input class="form-check-input" type="radio" name="tipe_tb" value="baru" id="tb_baru">
+                                                        <label class="form-check-label fw-bold" for="tb_baru">
+                                                            <i class="fas fa-plus-circle text-success me-2"></i>
+                                                            1. Baru
+                                                            <i class="fas fa-info-circle text-muted ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Belum pernah diobati sebelumnya atau sudah diobati kurang dari 1 bulan"></i>
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check mb-3">
+                                                        <input class="form-check-input" type="radio" name="tipe_tb" value="kambuh" id="tb_kambuh">
+                                                        <label class="form-check-label fw-bold" for="tb_kambuh">
+                                                            <i class="fas fa-redo text-warning me-2"></i>
+                                                            2. Kambuh
+                                                            <i class="fas fa-info-circle text-muted ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Sudah sembuh dari TB sebelumnya, kemudian sakit TB lagi"></i>
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check mb-3">
+                                                        <input class="form-check-input" type="radio" name="tipe_tb" value="default" id="tb_default">
+                                                        <label class="form-check-label fw-bold" for="tb_default">
+                                                            <i class="fas fa-exclamation-triangle text-danger me-2"></i>
+                                                            3. Default
+                                                            <i class="fas fa-info-circle text-muted ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Putus berobat lebih dari 2 bulan berturut-turut"></i>
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check mb-3">
+                                                        <input class="form-check-input" type="radio" name="tipe_tb" value="gagal" id="tb_gagal">
+                                                        <label class="form-check-label fw-bold" for="tb_gagal">
+                                                            <i class="fas fa-times-circle text-danger me-2"></i>
+                                                            4. Gagal
+                                                            <i class="fas fa-info-circle text-muted ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Tidak sembuh setelah menjalani pengobatan lengkap sesuai kategori"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Tempat Pengobatan -->
+                                        <div class="col-md-6">
+                                            <div class="border-start">
+                                                <div class="card-header bg-light">
+                                                    <h6 class="mb-0 text-info">
+                                                        <i class="fas fa-hospital me-2"></i>
+                                                        Tempat Pengobatan TB
+                                                    </h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row g-3">
+                                                        <div class="col-12">
+                                                            <label class="form-label fw-bold">Kabupaten:</label>
+                                                            <input type="text" name="kabupaten_tb" class="form-control" placeholder="Nama kabupaten tempat pengobatan">
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <label class="form-label fw-bold">Nama Sarana Kesehatan:</label>
+                                                            <input type="text" name="nama_sarana_kesehatan" class="form-control" placeholder="Nama Puskesmas/RS tempat pengobatan">
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <label class="form-label fw-bold">No Reg TB Kabupaten/Kota:</label>
+                                                            <input type="text" name="no_reg_tb" class="form-control" placeholder="Nomor registrasi TB">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- Data Indiksi Inisiasi ART -->
+                            <div class="card shadow-sm">
+                                <div class="section-header">
+                                    <h5 class="mb-0">
+                                        8. Indikasi Inisiasi ART
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Info Panel -->
+                                    <div class="alert alert-info border-0 mb-4">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            <div>
+                                                <strong>Petunjuk Pengisian:</strong><br>
+                                                <small>Pilih salah satu indikasi yang sesuai dengan kondisi pasien untuk memulai terapi ART.</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Radio Button Options -->
+                                    <div class="row">
+                                        <!-- Baris 1 -->
+                                        <div class="col-md-4 mb-3">
+                                            <div class="form-check p-3 border rounded">
+                                                <input class="form-check-input" type="radio" name="indikasi_inisiasi_art" 
+                                                    value="penasun" id="penasun">
+                                                <label class="form-check-label fw-bold" for="penasun">
+                                                    <i class="fas fa-syringe text-danger me-2"></i>
+                                                    Penasun
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 mb-3">
+                                            <div class="form-check p-3 border rounded">
+                                                <input class="form-check-input" type="radio" name="indikasi_inisiasi_art" 
+                                                    value="lsl" id="lsl">
+                                                <label class="form-check-label fw-bold" for="lsl">
+                                                    <i class="fas fa-male text-info me-2"></i>
+                                                    LSL
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 mb-3">
+                                            <div class="form-check p-3 border rounded">
+                                                <input class="form-check-input" type="radio" name="indikasi_inisiasi_art" 
+                                                    value="pasien_ko_infeksi_tb_hiv" id="pasien_ko_infeksi_tb_hiv">
+                                                <label class="form-check-label fw-bold" for="pasien_ko_infeksi_tb_hiv">
+                                                    <i class="fas fa-lungs text-danger me-2"></i>
+                                                    Pasien Ko-Infeksi TB-HIV
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <!-- Baris 2 -->
+                                        <div class="col-md-4 mb-3">
+                                            <div class="form-check p-3 border rounded">
+                                                <input class="form-check-input" type="radio" name="indikasi_inisiasi_art" 
+                                                    value="wps" id="wps">
+                                                <label class="form-check-label fw-bold" for="wps">
+                                                    <i class="fas fa-female text-warning me-2"></i>
+                                                    WPS
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 mb-3">
+                                            <div class="form-check p-3 border rounded">
+                                                <input class="form-check-input" type="radio" name="indikasi_inisiasi_art" 
+                                                    value="waria" id="waria">
+                                                <label class="form-check-label fw-bold" for="waria">
+                                                    <i class="fas fa-transgender text-info me-2"></i>
+                                                    Waria
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 mb-3">
+                                            <div class="form-check p-3 border rounded">
+                                                <input class="form-check-input" type="radio" name="indikasi_inisiasi_art" 
+                                                    value="pasien_ko_infeksi_hepatitis_b_hiv" id="pasien_ko_infeksi_hepatitis_b_hiv">
+                                                <label class="form-check-label fw-bold" for="pasien_ko_infeksi_hepatitis_b_hiv">
+                                                    <i class="fas fa-virus text-warning me-2"></i>
+                                                    Pasien Ko-Infeksi Hepatitis B-HIV
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <!-- Baris 3 -->
+                                        <div class="col-md-4 mb-3">
+                                            <div class="form-check p-3 border rounded">
+                                                <input class="form-check-input" type="radio" name="indikasi_inisiasi_art" 
+                                                    value="odha_dengan_pasangan_negatif" id="odha_dengan_pasangan_negatif">
+                                                <label class="form-check-label fw-bold" for="odha_dengan_pasangan_negatif">
+                                                    <i class="fas fa-heart text-danger me-2"></i>
+                                                    ODHA dengan Pasangan Negatif
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 mb-3">
+                                            <div class="form-check p-3 border rounded">
+                                                <input class="form-check-input" type="radio" name="indikasi_inisiasi_art" 
+                                                    value="ibu_hamil" id="ibu_hamil">
+                                                <label class="form-check-label fw-bold" for="ibu_hamil">
+                                                    <i class="fas fa-baby text-success me-2"></i>
+                                                    Ibu Hamil
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 mb-3">
+                                            <div class="form-check p-3 border rounded">
+                                                <input class="form-check-input" type="radio" name="indikasi_inisiasi_art" 
+                                                    value="lainnya" id="lainnya_indikasi">
+                                                <label class="form-check-label fw-bold" for="lainnya_indikasi">
+                                                    <i class="fas fa-plus-circle text-secondary me-2"></i>
+                                                    Lainnya (Stadium Klinis 3 atau 4 / CD4&lt;350)
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
 
                             <!-- Form Buttons -->
                             <div class="d-flex justify-content-end mt-4">
@@ -622,129 +1389,3 @@
     @include('unit-pelayanan.rawat-jalan.pelayanan.hiv_art.modal-create-alergi')
     @include('unit-pelayanan.rawat-jalan.pelayanan.hiv_art.modal-datakeluarga-mitra')
 @endsection
-
-@push('js')
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            console.log('DOM loaded, initializing scripts...');
-
-            // ===== BAGIAN 1: Entry Point Handlers =====
-            function handleCheckboxWithDetails(checkboxId, detailsId) {
-                const checkbox = document.getElementById(checkboxId);
-                const details = document.getElementById(detailsId);
-
-                console.log('Setting up handler for:', checkboxId, detailsId);
-                console.log('Checkbox found:', checkbox);
-                console.log('Details found:', details);
-
-                if (checkbox && details) {
-                    checkbox.addEventListener('change', function () {
-                        console.log('Checkbox changed:', checkboxId, this.checked);
-                        if (this.checked) {
-                            details.classList.remove('d-none');
-                        } else {
-                            details.classList.add('d-none');
-                            const textarea = details.querySelector('textarea');
-                            if (textarea) {
-                                textarea.value = '';
-                            }
-                        }
-                    });
-                } else {
-                    console.warn('Element not found:', checkboxId, detailsId);
-                }
-            }
-
-            // Initialize entry point handlers
-            handleCheckboxWithDetails('kia_rujukan_jalan_tb', 'rujukan-details');
-            handleCheckboxWithDetails('kia_jangkauan', 'jangkauan-details');
-            handleCheckboxWithDetails('kia_lainnya', 'lainnya-kia-details');
-        });
-
-        // Bagian : 4. Riwayat Terapi Antiretroviral
-        document.addEventListener('DOMContentLoaded', function () {
-            console.log('Riwayat Terapi Antiretroviral script initialized');
-
-            // Handle radio button change for "Pernah Menerima ART"
-            const artRadios = document.querySelectorAll('input[name="menerima_art"]');
-            const artDetails = document.getElementById('art_details');
-            const jenisTempatRow = document.getElementById('jenis_tempat_row');
-            const obatArtRow = document.getElementById('obat_art_row');
-            const obatArtLainnyaRow = document.getElementById('obat_art_lainnya_row');
-            const alasanPutusRow = document.getElementById('lama_penggunaannya_row');
-
-            // Function to show/hide ART details
-            function toggleArtDetails(show) {
-                const rows = [artDetails, jenisTempatRow, obatArtRow, alasanPutusRow];
-
-                rows.forEach(row => {
-                    if (row) { // Check if element exists
-                        if (show) {
-                            row.style.display = 'flex';
-                        } else {
-                            row.style.display = 'none';
-                            // Clear form values when hiding
-                            const inputs = row.querySelectorAll('input, select, textarea');
-                            inputs.forEach(input => {
-                                if (input.type === 'checkbox' || input.type === 'radio') {
-                                    input.checked = false;
-                                } else {
-                                    input.value = '';
-                                }
-                            });
-                        }
-                    }
-                });
-
-                // Always hide "Lainnya" row initially when toggling
-                if (obatArtLainnyaRow && !show) {
-                    obatArtLainnyaRow.style.display = 'none';
-                }
-            }
-
-            // Add event listeners to ART radio buttons
-            artRadios.forEach(radio => {
-                radio.addEventListener('change', function () {
-                    console.log('ART radio changed:', this.value);
-                    if (this.value === 'Ya') {
-                        toggleArtDetails(true);
-                    } else {
-                        toggleArtDetails(false);
-                    }
-                });
-            });
-
-            // Handle "Jenis ART" dropdown change
-            const obatArtSelect = document.querySelector('select[name="obat_art"]');
-            if (obatArtSelect) {
-                obatArtSelect.addEventListener('change', function () {
-                    console.log('Jenis ART changed:', this.value);
-                    if (this.value === 'Lainnya') {
-                        if (obatArtLainnyaRow) {
-                            obatArtLainnyaRow.style.display = 'flex';
-                        }
-                    } else {
-                        if (obatArtLainnyaRow) {
-                            obatArtLainnyaRow.style.display = 'none';
-                            const lainnyaInput = document.querySelector('input[name="obat_art_lainnya"]');
-                            if (lainnyaInput) {
-                                lainnyaInput.value = '';
-                            }
-                        }
-                    }
-                });
-            }
-
-            // Debug: Log all required elements
-            console.log('Elements found:');
-            console.log('- artDetails:', artDetails);
-            console.log('- jenisTempatRow:', jenisTempatRow);
-            console.log('- obatArtRow:', obatArtRow);
-            console.log('- obatArtLainnyaRow:', obatArtLainnyaRow);
-            console.log('- alasanPutusRow:', alasanPutusRow);
-            console.log('- obatArtSelect:', obatArtSelect);
-
-            console.log('Riwayat Terapi Antiretroviral script initialized successfully');
-        });
-    </script>
-@endpush
