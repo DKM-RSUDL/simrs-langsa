@@ -1,4 +1,5 @@
 @extends('layouts.administrator.master')
+@include('unit-pelayanan.hemodialisa.pelayanan.tindakan-khusus.include')
 
 @section('content')
     <div class="row">
