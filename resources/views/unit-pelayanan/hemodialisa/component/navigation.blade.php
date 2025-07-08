@@ -126,11 +126,15 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
-        // [
-        //     'icon' => 'agree.png',
-        //     'label' => 'Konsultasi',
-        //     'link' => '#',
-        // ],
+        [
+            'icon' => 'agree.png',
+            'label' => 'Tindakan Khusus',
+            'link' => route('hemodialisa.pelayanan.tindakan-khusus.index', [
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
         // [
         //     'icon' => 'test_tube.png',
         //     'label' => 'Labor',
