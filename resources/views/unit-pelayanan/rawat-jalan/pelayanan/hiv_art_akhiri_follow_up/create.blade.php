@@ -73,46 +73,78 @@
                                     <!-- Legend -->
                                     <div class="legend-section">
                                         <h5 class="legend-title">
-                                            <i class="fas fa-book"></i>Panduan Kode & Kategori
+                                            <i class="fas fa-book"></i>Petunjuk & Kode
                                         </h5>
                                         <div class="legend-grid">
                                             <div class="legend-item">
-                                                <h6><i class="fas fa-user-md me-2"></i>Status Fungsional</h6>
-                                                <p>1 = Dapat bekerja normal</p>
-                                                <p>2 = Ambulatori (dapat berjalan sendiri)</p>
-                                                <p>3 = Baring di tempat tidur</p>
+                                                <h6><i class="fas fa-calendar-check me-2"></i>Tanggal Kunjungan [Kolom 1]</h6>
+                                                <p>Tulis tanggal kunjungan yang sebenarnya sejak kunjungan pertama perawatan HIV</p>
                                             </div>
+
                                             <div class="legend-item">
-                                                <h6><i class="fas fa-baby me-2"></i>Status Kehamilan</h6>
-                                                <p>1 = Kehamilan yang baru diketahui</p>
-                                                <p>2 = Kehamilan yang sudah diketahui sebelumnya</p>
-                                                <p>3 = Tidak hamil atau tidak berlaku</p>
+                                                <h6><i class="fas fa-baby me-2"></i>Status Kehamilan [Kolom 7]</h6>
+                                                <p>1 = Kehamilan baru</p>
+                                                <p>2 = Kehamilan lama</p>
+                                                <p>3 = Tidak hamil</p>
                                             </div>
+
                                             <div class="legend-item">
-                                                <h6><i class="fas fa-lungs me-2"></i>Status TB</h6>
-                                                <p>1 = Tidak ada tanda-tanda TB</p>
-                                                <p>2 = Dicurigai TB (rujuk ke DOTS)</p>
-                                                <p>3 = Sedang dalam pengobatan TB</p>
-                                                <p>4 = Tidak dilakukan pemeriksaan</p>
+                                                <h6><i class="fas fa-virus me-2"></i>Infeksi Oportunistik [Kolom 8]</h6>
+                                                <p>K = Kandidiasis | D = Diare cryptosporidia</p>
+                                                <p>Cr = Meningitis cryptocococal | PCP = Pneumonia Pneumocystis</p>
+                                                <p>CMV = Cytomegalovirus | P = Peniciliosis</p>
+                                                <p>Z = Herpes zoster | S = Herpessimpleks</p>
+                                                <p>T = Toxoplasmosis | H = Hepatitis</p>
+                                                <p>Lain² = uraikan</p>
                                             </div>
+
                                             <div class="legend-item">
-                                                <h6><i class="fas fa-virus me-2"></i>Infeksi Opportunistik</h6>
-                                                <p>P = Pneumocystis | K = Kandidiasis</p>
-                                                <p>D = Diare | Cr = Cryptosporidium</p>
-                                                <p>Z = Herpes Zoster | S = Herpes Simplex</p>
+                                                <h6><i class="fas fa-lungs me-2"></i>Status TB [Kolom 10]</h6>
+                                                <p>1 = Tdk ada gejala/tanda TB</p>
+                                                <p>2 = Suspek TB (rujuk ke klinik DOTS atau pemeriksaan sputum)</p>
+                                                <p>3 = Dalam terapi TB</p>
+                                                <p>4 = Tidak dilakukan skrining</p>
                                             </div>
+
                                             <div class="legend-item">
-                                                <h6><i class="fas fa-pills me-2"></i>Adherence Obat</h6>
-                                                <p>1 = Sangat baik (>95%)</p>
-                                                <p>2 = Baik (85-95%)</p>
-                                                <p>3 = Kurang (<85%)< /p>
+                                                <h6><i class="fas fa-shield-alt me-2"></i>PPK [Kolom 11]</h6>
+                                                <p>Pengobatan Pencegahan dengan Kotrimoksazol</p>
                                             </div>
+
                                             <div class="legend-item">
-                                                <h6><i class="fas fa-chart-line me-2"></i>Akhir Follow-Up</h6>
-                                                <p>M = Meninggal dunia</p>
-                                                <p>LFU = Lost Follow Up (tidak datang >3 bulan)</p>
-                                                <p>RK = Rujuk keluar ke fasilitas lain</p>
-                                                <p>Aktif = Masih dalam perawatan</p>
+                                                <h6><i class="fas fa-pills me-2"></i>PP INH [Kolom 11]</h6>
+                                                <p>Pengobatan Pencegahan dengan INH (Isoniazid)</p>
+                                                <p><strong>Hasil Akhir PP INH:</strong></p>
+                                                <p>1 = Serobat | 2 = Gagal sedalam PP INH</p>
+                                                <p>3 = Pindah | 4 = Meninggal | 5 = Efek samping Berat</p>
+                                            </div>
+
+                                            <div class="legend-item">
+                                                <h6><i class="fas fa-prescription-bottle-alt me-2"></i>Adherence ART [Kolom 14]</h6>
+                                                <p>Perkiraan adherence dgn menanyakan apakah pasien melupakan dosis obat.</p>
+                                                <p><strong>Tingkat adherence:</strong></p>
+                                                <p>1 = (>95%) artinya < 3 dosis lupa diminum dalam 30 hari</p>
+                                                <p>2 = (80-95%) artinya 3-12 dosis lupa diminum dalam 30 hari</p>
+                                                <p>3 = (<80%) artinya >12 dosis lupa diminum dalam 30 hari</p>
+                                                <p>Jika paduan ART yang diberikan terdiri dari berbagai dosis, maka pilihlah adherence obat yang terjelek</p>
+                                            </div>
+
+                                            <div class="legend-item">
+                                                <h6><i class="fas fa-exclamation-triangle me-2"></i>Efek Samping [Kolom 15]</h6>
+                                                <p>R = Ruam kulit | Mua = Mual | Mun = Muntah</p>
+                                                <p>D = Diare | N = Neuropati | Ikt = Ikterus</p>
+                                                <p>An = Anemi</p>
+                                                <p>Li = Lelah | SK = Sakit kepala | Dem = Demam</p>
+                                                <p>Hip = Hipersensitifitas | Dep = Depresi</p>
+                                                <p>P = Pankreatitis | Lip = Lipodistrof</p>
+                                                <p>Ngan = Mengantuk | Ln = Lain² - uraikan</p>
+                                            </div>
+
+                                            <div class="legend-item">
+                                                <h6><i class="fas fa-flag-checkered me-2"></i>Akhir Follow Up [Kolom 20]</h6>
+                                                <p><strong>M</strong> = jika pasien meninggal → tulis tanggal meninggal</p>
+                                                <p><strong>LFU</strong> = jika pasien >3 bulan tidak datang ke layanan → tulis tanggal terakhir</p>
+                                                <p><strong>RK</strong> = jika pasien dirujuk keluar → tulis tanggal rujuk keluar dan nama klinik barunya</p>
                                             </div>
                                         </div>
                                     </div>
