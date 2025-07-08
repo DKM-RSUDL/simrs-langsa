@@ -10,7 +10,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class RajalHivArtController extends Controller
+class RajalHivArtAkhirFollowUpController extends Controller
 {
     public function __construct()
     {
@@ -106,7 +106,7 @@ class RajalHivArtController extends Controller
             abort(404, 'Data not found');
         }
 
-        return view('unit-pelayanan.rawat-jalan.pelayanan.hiv_art.create', compact(
+        return view('unit-pelayanan.rawat-jalan.pelayanan.hiv_art_akhiri_follow_up.create', compact(
             'dataMedis',
         ));
     }

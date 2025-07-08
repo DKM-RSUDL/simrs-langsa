@@ -78,7 +78,7 @@
                         <!-- Add Button -->
                         <div class="col-md-2">
                             <div class="d-grid gap-2">
-                                <a href="{{ route('rawat-jalan.hiv_art.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-primary">
+                                <a href="{{ route('rawat-jalan.hiv_art_akhir_follow_up.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-primary">
                                     <i class="ti-plus"></i> Tambah
                                 </a>
                             </div>
