@@ -9,6 +9,7 @@ use App\Models\RmeAsesmenGiziAnak;
 use App\Models\RmeMonitoringGizi;
 use App\Models\RmePengkajianGiziAnak;
 use App\Models\RmePengkajianGiziAnakDtl;
+use App\Models\RmePengkajianIntervensiGiziAnak;
 use App\Models\WhoBmiForAge;
 use App\Models\WhoHeadCircumferenceForAge;
 use App\Models\WhoHeightForAge;
@@ -159,6 +160,8 @@ class GiziAnakController extends Controller
 
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
+
+
         DB::beginTransaction();
 
         try {
@@ -222,11 +225,33 @@ class GiziAnakController extends Controller
             $asesmenGiziAnak->bb_tb = $request->bb_tb;
             $asesmenGiziAnak->pb_tb_usia = $request->pb_tb_usia;
             $asesmenGiziAnak->imt_usia = $request->imt_usia;
+            $asesmenGiziAnak->status_stunting = $request->status_stunting;
             $asesmenGiziAnak->lingkar_kepala = $request->lingkar_kepala;
             $asesmenGiziAnak->biokimia = $request->biokimia;
             $asesmenGiziAnak->kimia_fisik = $request->kimia_fisik;
             $asesmenGiziAnak->riwayat_gizi = $request->riwayat_gizi;
             $asesmenGiziAnak->save();
+
+            $intervensiGizi = new RmePengkajianIntervensiGiziAnak();
+            $intervensiGizi->id_gizi = $dataGiziAnak->id;
+            $intervensiGizi->mode_perhitungan = $request->mode_perhitungan;
+            $intervensiGizi->golongan_umur = $request->golongan_umur; 
+            $intervensiGizi->rentang_kalori = $request->rentang_kalori; 
+            $intervensiGizi->kebutuhan_kalori_per_kg = $request->kebutuhan_kalori_per_kg; 
+            $intervensiGizi->total_kebutuhan_kalori = $request->total_kebutuhan_kalori; 
+            $intervensiGizi->protein_persen = $request->protein_persen; 
+            $intervensiGizi->lemak_persen = $request->lemak_persen; 
+            $intervensiGizi->kh_persen = $request->kh_persen; 
+            $intervensiGizi->protein_gram_per_kg = $request->protein_gram_per_kg; 
+            $intervensiGizi->lemak_gram_per_kg = $request->lemak_gram_per_kg; 
+            $intervensiGizi->kh_gram_per_kg = $request->kh_gram_per_kg; 
+            $intervensiGizi->protein_gram_total = $request->protein_gram_total; 
+            $intervensiGizi->lemak_gram_total = $request->lemak_gram_total; 
+            $intervensiGizi->kh_gram_total = $request->kh_gram_total; 
+            $intervensiGizi->protein_gram = $request->protein_gram; 
+            $intervensiGizi->lemak_gram = $request->lemak_gram; 
+            $intervensiGizi->kh_gram = $request->kh_gram; 
+            $intervensiGizi->save();
 
             // Validasi data alergi
             $alergiData = json_decode($request->alergis, true);
@@ -272,6 +297,12 @@ class GiziAnakController extends Controller
 
         $user = auth()->user();
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
+        $WhoWeightForAge = WhoWeightForAge::all();
+        $WhoHeightForAge = WhoHeightForAge::all();
+        $WhoBmiForAge = WhoBmiForAge::all();
+        $WhoWeightForHeight = WhoWeightForHeight::all();
+        $WhoWeightForLength = WhoWeightForLength::all();
+        $WhoHeadCircumferenceForAge = WhoHeadCircumferenceForAge::all();
 
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -302,6 +333,12 @@ class GiziAnakController extends Controller
             'dataMedis',
             'dataPengkajianGizi',
             'alergiPasien',
+            'WhoBmiForAge',
+            'WhoHeightForAge',
+            'WhoWeightForAge',
+            'WhoWeightForHeight',
+            'WhoWeightForLength',
+            'WhoHeadCircumferenceForAge',
             'user'
         ));
     }
@@ -369,11 +406,35 @@ class GiziAnakController extends Controller
                 $asesmenGiziAnak->bb_tb = $request->bb_tb;
                 $asesmenGiziAnak->pb_tb_usia = $request->pb_tb_usia;
                 $asesmenGiziAnak->imt_usia = $request->imt_usia;
+                $asesmenGiziAnak->status_stunting = $request->status_stunting;
                 $asesmenGiziAnak->lingkar_kepala = $request->lingkar_kepala;
                 $asesmenGiziAnak->biokimia = $request->biokimia;
                 $asesmenGiziAnak->kimia_fisik = $request->kimia_fisik;
                 $asesmenGiziAnak->riwayat_gizi = $request->riwayat_gizi;
                 $asesmenGiziAnak->save();
+            }
+
+            // Update data intervensi gizi
+            $intervensiGizi = RmePengkajianIntervensiGiziAnak::where('id_gizi', $id)->first();
+            if ($intervensiGizi) {
+                $intervensiGizi->mode_perhitungan = $request->mode_perhitungan;
+                $intervensiGizi->golongan_umur = $request->golongan_umur;
+                $intervensiGizi->rentang_kalori = $request->rentang_kalori;
+                $intervensiGizi->kebutuhan_kalori_per_kg = $request->kebutuhan_kalori_per_kg;
+                $intervensiGizi->total_kebutuhan_kalori = $request->total_kebutuhan_kalori;
+                $intervensiGizi->protein_persen = $request->protein_persen;
+                $intervensiGizi->lemak_persen = $request->lemak_persen;
+                $intervensiGizi->kh_persen = $request->kh_persen;
+                $intervensiGizi->protein_gram_per_kg = $request->protein_gram_per_kg;
+                $intervensiGizi->lemak_gram_per_kg = $request->lemak_gram_per_kg;
+                $intervensiGizi->kh_gram_per_kg = $request->kh_gram_per_kg;
+                $intervensiGizi->protein_gram_total = $request->protein_gram_total;
+                $intervensiGizi->lemak_gram_total = $request->lemak_gram_total;
+                $intervensiGizi->kh_gram_total = $request->kh_gram_total;
+                $intervensiGizi->protein_gram = $request->protein_gram;
+                $intervensiGizi->lemak_gram = $request->lemak_gram;
+                $intervensiGizi->kh_gram = $request->kh_gram;
+                $intervensiGizi->save();
             }
 
             // Update data alergi
@@ -420,6 +481,12 @@ class GiziAnakController extends Controller
             // Hapus data asesmen gizi terkait
             RmePengkajianGiziAnakDtl::where('id_gizi', $id)->delete();
 
+            // Hapus data intervensi gizi terkait
+            RmePengkajianIntervensiGiziAnak::where('id_gizi', $id)->delete();
+
+            // Hapus data alergi pasien
+            RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
+
             // Hapus data pengkajian gizi
             $dataPengkajianGizi->delete();
 
@@ -435,7 +502,13 @@ class GiziAnakController extends Controller
 
     public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-        $dataPengkajianGizi = RmePengkajianGiziAnak::with(['asesmenGizi', 'userCreate'])
+        // Ambil data pengkajian gizi anak dengan semua relasi
+        $dataPengkajianGizi = RmePengkajianGiziAnak::with([
+            'asesmenGizi',
+            'intervensiGizi', 
+            'userCreate',
+            'userUpdate'        
+        ])
             ->where('id', $id)
             ->where('kd_pasien', $kd_pasien)
             ->where('kd_unit', $kd_unit)
@@ -443,6 +516,7 @@ class GiziAnakController extends Controller
             ->where('urut_masuk', $urut_masuk)
             ->firstOrFail();
 
+        // Ambil data medis pasien
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
@@ -458,23 +532,37 @@ class GiziAnakController extends Controller
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->firstOrFail();
 
+        // Hitung umur pasien
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
         } else {
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
+        // Ambil data alergi pasien
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)
+            ->orderBy('jenis_alergi')
+            ->get();
+
         // Ambil data monitoring gizi
         $monitoringGizi = RmeMonitoringGizi::where('kd_unit', $kd_unit)
             ->where('kd_pasien', $kd_pasien)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
-            ->orderBy('tanggal_monitoring', 'desc') 
+            ->orderBy('tanggal_monitoring', 'desc')
             ->get();
+
+        // Convert gangguan_gi string back to array for display
+        if ($dataPengkajianGizi->gangguan_gi) {
+            $dataPengkajianGizi->gangguan_gi_array = explode(',', $dataPengkajianGizi->gangguan_gi);
+        } else {
+            $dataPengkajianGizi->gangguan_gi_array = [];
+        }
 
         return view('unit-pelayanan.rawat-inap.pelayanan.gizi.anak.show', compact(
             'dataPengkajianGizi',
             'dataMedis',
+            'alergiPasien',
             'monitoringGizi'
         ));
     }

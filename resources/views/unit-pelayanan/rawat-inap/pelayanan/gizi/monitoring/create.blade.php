@@ -104,26 +104,34 @@
                                     <div class="card-body">
                                         <h4 class="header-asesmen">Monitoring dan Evaluasi Gizi</h4>
                                         {{-- Info TEE --}}
-                                        @if ($teeValue)
+                                        @if ($energyValue)
                                             <div class="alert alert-info">
                                                 <i class="ti-info-alt me-2"></i>
-                                                <strong>TEE (Total Energy Expenditure):</strong>
-                                                {{ number_format($teeValue, 0) }} Kkal
-                                                <br><small>Perhitungan nilai gizi akan berdasarkan persentase dari
-                                                    TEE ini.</small>
+                                                <strong>{{ $energySource }}:</strong>
+                                                {{ number_format($energyValue, 0) }} Kkal
+                                                @if($isAnak)
+                                                    <br><small>Perhitungan nilai gizi akan berdasarkan persentase dari total kebutuhan kalori anak ini.</small>
+                                                @else
+                                                    <br><small>Perhitungan nilai gizi akan berdasarkan persentase dari TEE ini.</small>
+                                                @endif
                                             </div>
                                         @else
                                             <div class="alert alert-warning">
                                                 <i class="ti-alert-triangle me-2"></i>
-                                                <strong>Peringatan:</strong> Data TEE belum tersedia. Silakan isi
-                                                pengkajian gizi dewasa terlebih dahulu.
+                                                <strong>Peringatan:</strong> 
+                                                @if($isAnak)
+                                                    Data kebutuhan kalori anak belum tersedia. Silakan isi pengkajian gizi anak terlebih dahulu.
+                                                @else
+                                                    Data TEE belum tersedia. Silakan isi pengkajian gizi dewasa terlebih dahulu.
+                                                @endif
                                             </div>
                                         @endif
 
                                         <form id="formTambahMonitoring" method="POST"
                                             action="{{ route('rawat-inap.gizi.monitoring.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
                                             @csrf
-                                            <input type="hidden" id="teeValue" value="{{ $teeValue ?? 0 }}">
+                                            <input type="hidden" id="energyValue" value="{{ $energyValue ?? 0 }}">
+                                            <input type="hidden" id="isAnak" value="{{ $isAnak ? 1 : 0 }}">
                                             
                                             {{-- Hidden inputs untuk hasil kalori yang akan dikirim ke database --}}
                                             <input type="hidden" name="energi" id="energi_calculated">
@@ -198,7 +206,7 @@
                                                                 placeholder="Masukkan persentase energi" step="0.1"
                                                                 min="0" max="100"
                                                                 value="{{ old('energi_persen') }}" required
-                                                                {{ !$teeValue ? 'disabled' : '' }}>
+                                                                {{ !$energyValue ? 'disabled' : '' }}>
                                                             <span class="input-group-text">%</span>
                                                         </div>
                                                         <small class="text-muted">Hasil: <span id="energi_hasil">0</span>
@@ -219,7 +227,7 @@
                                                                 placeholder="Masukkan persentase protein" step="0.1"
                                                                 min="0" max="100"
                                                                 value="{{ old('protein_persen') }}" required
-                                                                {{ !$teeValue ? 'disabled' : '' }}>
+                                                                {{ !$energyValue ? 'disabled' : '' }}>
                                                             <span class="input-group-text">%</span>
                                                         </div>
                                                         <small class="text-muted">Hasil: <span id="protein_hasil">0</span>
@@ -244,7 +252,7 @@
                                                                 placeholder="Masukkan persentase karbohidrat"
                                                                 step="0.1" min="0" max="100"
                                                                 value="{{ old('karbohidrat_persen') }}" required
-                                                                {{ !$teeValue ? 'disabled' : '' }}>
+                                                                {{ !$energyValue ? 'disabled' : '' }}>
                                                             <span class="input-group-text">%</span>
                                                         </div>
                                                         <small class="text-muted">Hasil: <span
@@ -265,7 +273,7 @@
                                                                 placeholder="Masukkan persentase lemak" step="0.1"
                                                                 min="0" max="100"
                                                                 value="{{ old('lemak_persen') }}" required
-                                                                {{ !$teeValue ? 'disabled' : '' }}>
+                                                                {{ !$energyValue ? 'disabled' : '' }}>
                                                             <span class="input-group-text">%</span>
                                                         </div>
                                                         <small class="text-muted">Hasil: <span id="lemak_hasil">0</span>
@@ -301,7 +309,7 @@
                                                         <i class="ti-arrow-left me-2"></i>Kembali
                                                     </a>
                                                     <button type="submit" class="btn btn-primary"
-                                                        {{ !$teeValue ? 'disabled' : '' }}>
+                                                        {{ !$energyValue ? 'disabled' : '' }}>
                                                         <i class="ti-save me-2"></i>Simpan Data
                                                     </button>
                                                 </div>
@@ -321,7 +329,8 @@
 @push('js')
     <script>
         $(document).ready(function() {
-            const teeValue = parseFloat($('#teeValue').val()) || 0;
+            const energyValue = parseFloat($('#energyValue').val()) || 0;
+            const isAnak = parseInt($('#isAnak').val()) || 0;
 
             // Fungsi untuk menghitung nilai berdasarkan persentase
             function calculateValues() {
@@ -330,9 +339,9 @@
                 const karbohidratPersen = parseFloat($('#karbohidrat_persen').val()) || 0;
                 const lemakPersen = parseFloat($('#lemak_persen').val()) || 0;
 
-                if (teeValue > 0) {
-                    // Hitung energi berdasarkan persentase TEE
-                    const energiValue = (energiPersen / 100) * teeValue;
+                if (energyValue > 0) {
+                    // Hitung energi berdasarkan persentase dari energy value (TEE untuk dewasa, total_kebutuhan_kalori untuk anak)
+                    const energiValue = (energiPersen / 100) * energyValue;
 
                     // Hitung protein, karbohidrat, lemak berdasarkan persentase dari energi
                     const proteinValue = (proteinPersen / 100) * energiValue;
@@ -365,12 +374,13 @@
             $('#formTambahMonitoring').on('submit', function(e) {
                 let isValid = true;
                 let errorMessage = '';
+                const sourceType = isAnak ? 'kebutuhan kalori anak' : 'TEE';
+                const assessmentType = isAnak ? 'pengkajian gizi anak' : 'pengkajian gizi dewasa';
 
-                // Validasi TEE tersedia
-                if (teeValue <= 0) {
+                // Validasi energy value tersedia
+                if (energyValue <= 0) {
                     isValid = false;
-                    errorMessage +=
-                        'Data TEE tidak tersedia. Silakan isi pengkajian gizi dewasa terlebih dahulu.\n';
+                    errorMessage += `Data ${sourceType} tidak tersedia. Silakan isi ${assessmentType} terlebih dahulu.\n`;
                 }
 
                 // Validasi field required
@@ -386,16 +396,14 @@
                 });
 
                 // Validasi persentase
-                const persentaseFields = ['energi_persen', 'protein_persen', 'karbohidrat_persen',
-                    'lemak_persen'
-                ];
+                const persentaseFields = ['energi_persen', 'protein_persen', 'karbohidrat_persen', 'lemak_persen'];
                 persentaseFields.forEach(function(field) {
                     const value = parseFloat($('#' + field).val());
                     if (isNaN(value) || value < 0 || value > 100) {
                         isValid = false;
                         $('#' + field).addClass('is-invalid');
-                        errorMessage += 'Field ' + $('#' + field).prev('label').text().replace('*',
-                            '') + ' harus berisi angka antara 0-100\n';
+                        errorMessage += 'Field ' + $('#' + field).prev('label').text().replace('*', '') + 
+                            ' harus berisi angka antara 0-100\n';
                     }
                 });
 
