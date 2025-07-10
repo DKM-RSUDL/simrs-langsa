@@ -12,4 +12,9 @@ class RmeAsesmenKulitKelamin extends Model
     protected $table = 'RME_ASESMEN_KULIT_KELAMIN';
     public $timestamps = false;
     protected $guarded = ['id'];
+
+    public function prognosisValue()
+    {
+        return $this->belongsTo(SatsetPrognosis::class, 'prognosis', 'prognosis_id');
+    }
 }

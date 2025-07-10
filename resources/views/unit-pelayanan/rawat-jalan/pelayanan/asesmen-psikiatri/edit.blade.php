@@ -7,7 +7,7 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ route('rawat-inap.asesmen.medis.psikiatri.show', [
+            <a href="{{ route('rawat-jalan.asesmen.medis.psikiatri.show', [
                 'kd_unit' => $kd_unit,
                 'kd_pasien' => $kd_pasien,
                 'tgl_masuk' => $tgl_masuk,
@@ -33,7 +33,7 @@
 
                         {{-- FORM EDIT ASESMEN PSIKIATRI --}}
                         <form method="POST"
-                            action="{{ route('rawat-inap.asesmen.medis.psikiatri.update', [
+                            action="{{ route('rawat-jalan.asesmen.medis.psikiatri.update', [
                                 'kd_unit' => $kd_unit,
                                 'kd_pasien' => $kd_pasien,
                                 'tgl_masuk' => $tgl_masuk,

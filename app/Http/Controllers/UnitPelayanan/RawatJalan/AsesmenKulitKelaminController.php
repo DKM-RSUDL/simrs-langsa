@@ -21,6 +21,7 @@ use App\Models\RmeMasterImplementasi;
 use App\Models\RmeMenjalar;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
+use App\Models\SatsetPrognosis;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,6 +47,7 @@ class AsesmenKulitKelaminController extends Controller
         $jenisnyeri = RmeJenisNyeri::all();
         $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
         $rmeMasterImplementasi = RmeMasterImplementasi::all();
+        $satsetPrognosis = SatsetPrognosis::all();
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
         // Mengambil data kunjungan dan tanggal triase terkait
@@ -92,6 +94,7 @@ class AsesmenKulitKelaminController extends Controller
             'rmeMasterDiagnosis',
             'rmeMasterImplementasi',
             'alergiPasien',
+            'satsetPrognosis',
             'user'
         ));
     }
@@ -160,7 +163,6 @@ class AsesmenKulitKelaminController extends Controller
 
             // Simpan Implementasi ke Master
             $implementasiData = [
-                'prognosis' => json_decode($request->prognosis ?? '[]', true),
                 'observasi' => json_decode($request->observasi ?? '[]', true),
                 'terapeutik' => json_decode($request->terapeutik ?? '[]', true),
                 'edukasi' => json_decode($request->edukasi ?? '[]', true),
@@ -271,8 +273,12 @@ class AsesmenKulitKelaminController extends Controller
 
             DB::commit();
 
-            return redirect()->to(url("unit-pelayanan/rawat-jalan/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen"))
-                ->with('success', 'Data asesmen anak berhasil disimpan');
+            return redirect()->route('rawat-jalan.asesmen.index', [
+                'kd_unit' => $kd_unit,
+                'kd_pasien' => $kd_pasien,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk
+            ])->with('success', 'Data berhasil disimpan');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Gagal menyimpan data asesmen' . $e->getMessage());
@@ -411,7 +417,6 @@ class AsesmenKulitKelaminController extends Controller
         // Decode JSON data
         $diagnosisBanding = json_decode($asesmenKulitKelamin->diagnosis_banding ?? '[]', true);
         $diagnosisKerja = json_decode($asesmenKulitKelamin->diagnosis_kerja ?? '[]', true);
-        $prognosis = json_decode($asesmenKulitKelamin->prognosis ?? '[]', true);
         $observasi = json_decode($asesmenKulitKelamin->observasi ?? '[]', true);
         $terapeutik = json_decode($asesmenKulitKelamin->terapeutik ?? '[]', true);
         $edukasi = json_decode($asesmenKulitKelamin->edukasi ?? '[]', true);
@@ -433,7 +438,6 @@ class AsesmenKulitKelaminController extends Controller
             'itemFisik',
             'diagnosisBanding',
             'diagnosisKerja',
-            'prognosis',
             'observasi',
             'terapeutik',
             'edukasi',
@@ -458,6 +462,7 @@ class AsesmenKulitKelaminController extends Controller
         $jenisnyeri = RmeJenisNyeri::all();
         $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
         $rmeMasterImplementasi = RmeMasterImplementasi::all();
+        $satsetPrognosis = SatsetPrognosis::all();
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
         // Mengambil data kunjungan
@@ -538,6 +543,7 @@ class AsesmenKulitKelaminController extends Controller
             'rmeMasterDiagnosis',
             'rmeMasterImplementasi',
             'alergiPasien',
+            'satsetPrognosis',
             'user'
         ));
     }
@@ -619,7 +625,6 @@ class AsesmenKulitKelaminController extends Controller
 
             // Update Implementasi ke Master
             $implementasiData = [
-                'prognosis' => json_decode($request->prognosis ?? '[]', true),
                 'observasi' => json_decode($request->observasi ?? '[]', true),
                 'terapeutik' => json_decode($request->terapeutik ?? '[]', true),
                 'edukasi' => json_decode($request->edukasi ?? '[]', true),
@@ -736,16 +741,16 @@ class AsesmenKulitKelaminController extends Controller
 
             DB::commit();
 
-            return redirect()->route('rawat-jalan.asesmen.medis.kulit-kelamin.show', [
+            return redirect()->route('rawat-jalan.asesmen.index', [
                 'kd_unit' => $kd_unit,
                 'kd_pasien' => $kd_pasien,
                 'tgl_masuk' => $tgl_masuk,
-                'urut_masuk' => $urut_masuk,
-                'id' => $id
-            ])->with('success', 'Data asesmen kulit kelamin berhasil diperbarui');
+                'urut_masuk' => $urut_masuk
+            ])->with('success', 'Data berhasil di update!');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Gagal memperbarui data asesmen: ' . $e->getMessage());
         }
     }
+
 }

@@ -7,7 +7,7 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum") }}"
+            <a href="{{ url("unit-pelayanan/rawat-jalan/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen") }}"
                 class="btn">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
@@ -27,7 +27,7 @@
 
                         {{-- FORM ASESMEN KEPERAWATAN PSIKATRI --}}
                         <form method="POST"
-                            action="{{ route('rawat-inap.asesmen.medis.psikiatri.index', [
+                            action="{{ route('rawat-jalan.asesmen.medis.psikiatri.index', [
                                 'kd_unit' => $kd_unit,
                                 'kd_pasien' => $kd_pasien,
                                 'tgl_masuk' => $tgl_masuk,
@@ -399,6 +399,6 @@
         </div>
     </div>
 @endsection
-@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-psikiatri.modal-create-alergi')
-@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-psikiatri.modal-riwayatkeluarga')
-@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-psikiatri.include')
+@include('unit-pelayanan.rawat-jalan.pelayanan.asesmen-psikiatri.modal-create-alergi')
+@include('unit-pelayanan.rawat-jalan.pelayanan.asesmen-psikiatri.modal-riwayatkeluarga')
+@include('unit-pelayanan.rawat-jalan.pelayanan.asesmen-psikiatri.include')

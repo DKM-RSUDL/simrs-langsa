@@ -12,5 +12,7 @@ class RmeAsesmenPsikiatri extends Model
     protected $table = 'RME_ASESMEN_PSIKIATRI';
     public $timestamps = false;
     protected $guarded = ['id'];
+
+    
     
 }

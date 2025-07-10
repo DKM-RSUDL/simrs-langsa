@@ -7,7 +7,7 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ url("unit-pelayanan/rawat-jalan/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum") }}"
+            <a href="{{ url("unit-pelayanan/rawat-jalan/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen") }}"
                 class="btn">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
@@ -372,17 +372,11 @@
                                 <h5 class="section-title">9. Implementasi</h5>
 
                                 <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold">Prognosis</label>
-                                        @if (!empty($prognosis) && count($prognosis) > 0)
-                                            <ol class="ps-3">
-                                                @foreach ($prognosis as $item)
-                                                    <li>{{ $item }}</li>
-                                                @endforeach
-                                            </ol>
-                                        @else
-                                            <p class="text-muted">Tidak ada data prognosis</p>
-                                        @endif
+                                    <div class="mb-4">
+                                        <label class="text-primary fw-semibold">Prognosis</label>
+                                        <div class="form-control bg-light" style="min-height: 38px; display: flex; align-items: center;">
+                                                <span class="text-dark">{{ $asesmenKulitKelamin->prognosisValue->value ?? "Belum ada Prognosis" }}</span>
+                                        </div>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Observasi</label>

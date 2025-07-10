@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan\RawatInap;
+namespace App\Http\Controllers\UnitPelayanan\RawatJalan;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
@@ -77,7 +77,7 @@ class AsesmenPsikiatriController extends Controller
 
         $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-psikiatri.create', compact(
+        return view('unit-pelayanan.rawat-jalan.pelayanan.asesmen-psikiatri.create', compact(
             'kd_unit',
             'kd_pasien',
             'tgl_masuk',
@@ -252,8 +252,12 @@ class AsesmenPsikiatriController extends Controller
 
             DB::commit();
 
-            return redirect()->to(url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum"))
-                ->with('success', 'Data asesmen Psikiatri berhasil disimpan');
+            return redirect()->route('rawat-jalan.asesmen.index', [
+                'kd_unit' => $kd_unit,
+                'kd_pasien' => $kd_pasien,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk
+            ])->with('success', 'Data berhasil di simpan!');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Gagal menyimpan data asesmen' . $e->getMessage());
@@ -385,7 +389,7 @@ class AsesmenPsikiatriController extends Controller
 
         $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-psikiatri.edit', compact(
+        return view('unit-pelayanan.rawat-jalan.pelayanan.asesmen-psikiatri.edit', compact(
             'kd_unit',
             'kd_pasien',
             'tgl_masuk',
@@ -575,8 +579,12 @@ class AsesmenPsikiatriController extends Controller
 
             DB::commit();
 
-            return redirect()->to(url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum"))
-                ->with('success', 'Data asesmen Psikiatri berhasil diupdate');
+            return redirect()->route('rawat-jalan.asesmen.index', [
+                'kd_unit' => $kd_unit,
+                'kd_pasien' => $kd_pasien,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk
+            ])->with('success', 'Data berhasil di update!');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Gagal mengupdate data asesmen: ' . $e->getMessage())->withInput();
@@ -634,7 +642,7 @@ class AsesmenPsikiatriController extends Controller
 
         $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-psikiatri.show', compact(
+        return view('unit-pelayanan.rawat-jalan.pelayanan.asesmen-psikiatri.show', compact(
             'kd_unit',
             'kd_pasien',
             'tgl_masuk',
@@ -647,5 +655,4 @@ class AsesmenPsikiatriController extends Controller
             'alergiPasien'
         ));
     }
-
 }

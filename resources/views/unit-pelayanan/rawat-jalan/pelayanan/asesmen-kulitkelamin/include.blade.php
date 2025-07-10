@@ -873,7 +873,6 @@
             //==================================================================================================//
             // 7. Inisialisasi Implemntasi
             //==================================================================================================//
-            initImplementationSection('rencana', 'rencana_penatalaksanaan', 'prognosis');
             initImplementationSection('observasi', 'observasi', 'observasi');
             initImplementationSection('terapeutik', 'terapeutik', 'terapeutik');
             initImplementationSection('edukasi', 'edukasi', 'edukasi');

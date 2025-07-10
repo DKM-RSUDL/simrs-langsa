@@ -7,7 +7,7 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum") }}"
+            <a href="{{ url("unit-pelayanan/rawat-jalan/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen") }}"
                 class="btn">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
@@ -24,7 +24,7 @@
                                         </p>
                                     </div>
                                     <div>
-                                        <a href="{{ route('rawat-inap.asesmen.medis.psikiatri.edit', [
+                                        <a href="{{ route('rawat-jalan.asesmen.medis.psikiatri.edit', [
                                             'kd_unit' => $kd_unit,
                                             'kd_pasien' => $kd_pasien,
                                             'tgl_masuk' => $tgl_masuk,
