@@ -3,7 +3,7 @@
 @section('content')
 
 
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.create-include')
+    @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen-paru.create-include')
 
     <div class="row">
         <div class="col-md-3">
@@ -91,7 +91,7 @@
                                     </table>
                                 </div>
                             </div>
-                            
+
 
                             <!-- 3. Riwayat Penyakit Terdahulu Dan Riwayat Pengobatan -->
                             <div class="section-separator" id="riwayat-pengobatan">
@@ -324,7 +324,7 @@
                                                                     <option value="irreguler">Irreguler</option>
                                                                 </select>
                                                             </div>
-                                                        </div>                                                        
+                                                        </div>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -339,7 +339,7 @@
                                                                     name="temperatur" step="0.1">
                                                                 <span>°C</span>
                                                             </div>
-                                                        </div>                                                        
+                                                        </div>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -363,7 +363,7 @@
                                                 <td>
                                                     <div class="row">
                                                         <div class="col-lg-6">
-                                                            <div class="form-check-group">                                                                
+                                                            <div class="form-check-group">
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="cyanose" value="tidak" id="cyanose_tidak">
@@ -386,7 +386,7 @@
                                                 <td>
                                                     <div class="row">
                                                         <div class="col-lg-6">
-                                                            <div class="form-check-group">                                                                
+                                                            <div class="form-check-group">
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="dyspnoe" value="tidak" id="dyspnoe_tidak">
@@ -403,13 +403,13 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                            </tr>                                            
+                                            </tr>
                                             <tr>
                                                 <td class="label-col">Oedema</td>
                                                 <td>
                                                     <div class="row">
                                                         <div class="col-lg-6">
-                                                            <div class="form-check-group">                                                                
+                                                            <div class="form-check-group">
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="oedema" value="tidak" id="oedema_tidak">
@@ -432,7 +432,7 @@
                                                 <td>
                                                     <div class="row">
                                                         <div class="col-lg-6">
-                                                            <div class="form-check-group">                                                                
+                                                            <div class="form-check-group">
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="icterus" value="tidak" id="icterus_tidak">
@@ -455,7 +455,7 @@
                                                 <td>
                                                     <div class="row">
                                                         <div class="col-lg-6">
-                                                            <div class="form-check-group">                                                                
+                                                            <div class="form-check-group">
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="anemia" value="tidak" id="anemia_tidak">
@@ -482,7 +482,7 @@
                             <div class="section-separator" id="pemeriksaan-fisik">
                                 <h5 class="section-title">6. Pemeriksaan Fisik</h5>
                                 {{-- baru --}}
-                                <div class="" id="pemeriksaan-fisik-paru">                                
+                                <div class="" id="pemeriksaan-fisik-paru">
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-asesmen">
                                             <tbody>
@@ -503,7 +503,7 @@
                                                                         <input class="form-check-input" type="radio" name="paru_kepala" value="0" id="paru_kepala_tidak_normal">
                                                                         <label class="form-check-label" for="paru_kepala_tidak_normal">Tidak Normal</label>
                                                                     </div>
-                                                                    <input type="text" class="form-control" name="paru_kepala_keterangan" id="paru_kepala_keterangan" 
+                                                                    <input type="text" class="form-control" name="paru_kepala_keterangan" id="paru_kepala_keterangan"
                                                                         placeholder="Keterangan jika tidak normal..." disabled>
                                                                 </div>
                                                             </div>
@@ -528,7 +528,7 @@
                                                                         <input class="form-check-input" type="radio" name="paru_mata" value="0" id="paru_mata_tidak_normal">
                                                                         <label class="form-check-label" for="paru_mata_tidak_normal">Tidak Normal</label>
                                                                     </div>
-                                                                    <input type="text" class="form-control" name="paru_mata_keterangan" id="paru_mata_keterangan" 
+                                                                    <input type="text" class="form-control" name="paru_mata_keterangan" id="paru_mata_keterangan"
                                                                         placeholder="Keterangan jika tidak normal..." disabled>
                                                                 </div>
                                                             </div>
@@ -553,7 +553,7 @@
                                                                         <input class="form-check-input" type="radio" name="paru_tht" value="0" id="paru_tht_tidak_normal">
                                                                         <label class="form-check-label" for="paru_tht_tidak_normal">Tidak Normal</label>
                                                                     </div>
-                                                                    <input type="text" class="form-control" name="paru_tht_keterangan" id="paru_tht_keterangan" 
+                                                                    <input type="text" class="form-control" name="paru_tht_keterangan" id="paru_tht_keterangan"
                                                                         placeholder="Keterangan jika tidak normal..." disabled>
                                                                 </div>
                                                             </div>
@@ -578,7 +578,7 @@
                                                                         <input class="form-check-input" type="radio" name="paru_leher" value="0" id="paru_leher_tidak_normal">
                                                                         <label class="form-check-label" for="paru_leher_tidak_normal">Tidak Normal</label>
                                                                     </div>
-                                                                    <input type="text" class="form-control" name="paru_leher_keterangan" id="paru_leher_keterangan" 
+                                                                    <input type="text" class="form-control" name="paru_leher_keterangan" id="paru_leher_keterangan"
                                                                         placeholder="Keterangan jika tidak normal..." disabled>
                                                                 </div>
                                                             </div>
@@ -610,7 +610,7 @@
                                                                                     <input class="form-check-input" type="radio" name="paru_jantung" value="0" id="paru_jantung_tidak_normal">
                                                                                     <label class="form-check-label" for="paru_jantung_tidak_normal">Tidak Normal</label>
                                                                                 </div>
-                                                                                <input type="text" class="form-control" name="paru_jantung_keterangan" id="paru_jantung_keterangan" 
+                                                                                <input type="text" class="form-control" name="paru_jantung_keterangan" id="paru_jantung_keterangan"
                                                                                     placeholder="Keterangan jika tidak normal..." disabled>
                                                                             </div>
                                                                         </div>
@@ -768,12 +768,12 @@
                                 <div class="row">
                                     <div class="col-md-8">
                                         <div class="site-marking-container position-relative">
-                                            <img src="{{ asset('assets/images/sitemarking/paru.jpg') }}" 
-                                                 id="paruAnatomyImage" 
-                                                 class="img-fluid" 
+                                            <img src="{{ asset('assets/images/sitemarking/paru.jpg') }}"
+                                                 id="paruAnatomyImage"
+                                                 class="img-fluid"
                                                  style="max-width: 100%;">
-                                            <canvas id="paruMarkingCanvas" 
-                                                    class="position-absolute top-0 start-0" 
+                                            <canvas id="paruMarkingCanvas"
+                                                    class="position-absolute top-0 start-0"
                                                     style="cursor: crosshair; z-index: 10;">
                                             </canvas>
                                         </div>
@@ -786,7 +786,7 @@
                                     <div class="col-md-4">
                                         <div class="marking-controls">
                                             <h6>Kontrol Penandaan Paru</h6>
-                                            
+
                                             <!-- Pilihan Warna -->
                                             <div class="mb-3">
                                                 <label class="form-label">Pilih Warna:</label>
@@ -799,20 +799,20 @@
                                                     <button type="button" class="paru-color-btn" data-color="#000000" style="background: #000000; width: 35px; height: 35px; border: 2px solid #dee2e6; border-radius: 6px; cursor: pointer;"></button>
                                                 </div>
                                             </div>
-                                            
+
                                             <!-- Ketebalan Brush -->
                                             <div class="mb-3">
                                                 <label class="form-label">Ketebalan Brush:</label>
                                                 <input type="range" id="paruBrushSize" class="form-range" min="1" max="5" value="2" step="0.5">
                                                 <small class="text-muted">Ukuran: <span id="paruBrushSizeValue">2</span>px</small>
                                             </div>
-                                            
+
                                             <!-- Keterangan -->
                                             <div class="mb-3">
                                                 <label class="form-label">Keterangan (opsional):</label>
                                                 <input type="text" id="paruMarkingNote" class="form-control" placeholder="Contoh: Ronkhi basah, Wheezing">
                                             </div>
-                                            
+
                                             <!-- Tombol Kontrol -->
                                             <div class="d-grid gap-2">
                                                 <button type="button" class="btn btn-outline-primary" id="paruSaveMarking">
@@ -825,7 +825,7 @@
                                                     <i class="ti-trash"></i> Hapus Semua
                                                 </button>
                                             </div>
-                                            
+
                                             <!-- Daftar Penandaan -->
                                             <div class="paru-marking-list mt-3">
                                                 <h6>Daftar Penandaan (<span id="paruMarkingCount">0</span>):</h6>
@@ -1127,10 +1127,10 @@
 
                                 <div class="mb-4">
                                     <label class="text-primary fw-semibold">Prognosis</label>
-                                    
+
                                     <select class="form-select" name="paru_prognosis">
                                         <option value="" selected disabled>--Pilih Prognosis--</option>
-                                        @forelse ($satsetPrognosis as $item)                                            
+                                        @forelse ($satsetPrognosis as $item)
                                             <option value="{{ $item->prognosis_id }}">
                                                 {{ $item->value ?? 'Field tidak ditemukan' }}
                                             </option>
@@ -1210,7 +1210,7 @@
         </div>
     </div>
 @endsection
-@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-kulitkelamin.modal-create-alergi')
+@include('unit-pelayanan.rawat-jalan.pelayanan.asesmen-kulitkelamin.modal-create-alergi')
 
 
 @push('js')
@@ -1382,7 +1382,7 @@
         function updateCheckboxJSON(checkboxClass, hiddenInputId) {
             const checkboxes = document.querySelectorAll('.' + checkboxClass);
             const hiddenInput = document.getElementById(hiddenInputId);
-            
+
             function updateJSON() {
                 const selectedValues = [];
                 checkboxes.forEach(checkbox => {
@@ -1390,19 +1390,19 @@
                         selectedValues.push(checkbox.value);
                     }
                 });
-                
+
                 // Update hidden input dengan format JSON yang diinginkan: ["vesikuler","wheezing"]
                 hiddenInput.value = selectedValues.length > 0 ? JSON.stringify(selectedValues) : '';
-                
+
                 // Debug log untuk melihat hasil
                 console.log(`${hiddenInputId}:`, hiddenInput.value);
             }
-            
+
             // Add event listeners to all checkboxes
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', updateJSON);
             });
-            
+
             // Initialize on page load
             updateJSON();
         }
@@ -1416,13 +1416,13 @@
             // Update JSON values one more time before submit
             const paruSuaraPernafasanCheckboxes = document.querySelectorAll('.paru-suara-pernafasan:checked');
             const paruSuaraTambahanCheckboxes = document.querySelectorAll('.paru-suara-tambahan:checked');
-            
+
             const suaraPernafasanValues = Array.from(paruSuaraPernafasanCheckboxes).map(cb => cb.value);
             const suaraTambahanValues = Array.from(paruSuaraTambahanCheckboxes).map(cb => cb.value);
-            
+
             document.getElementById('paru_suara_pernafasan_json').value = suaraPernafasanValues.length > 0 ? JSON.stringify(suaraPernafasanValues) : '';
             document.getElementById('paru_suara_tambahan_json').value = suaraTambahanValues.length > 0 ? JSON.stringify(suaraTambahanValues) : '';
-            
+
             console.log('Final Suara Pernafasan:', document.getElementById('paru_suara_pernafasan_json').value);
             console.log('Final Suara Tambahan:', document.getElementById('paru_suara_tambahan_json').value);
         });
@@ -1436,13 +1436,13 @@
     function initParuSiteMarking() {
         const image = document.getElementById('paruAnatomyImage');
         const canvas = document.getElementById('paruMarkingCanvas');
-        
+
         // Check if elements exist
         if (!image || !canvas) {
             console.error('Paru site marking elements not found');
             return;
         }
-        
+
         const ctx = canvas.getContext('2d');
         const markingsList = document.getElementById('paruMarkingsList');
         const siteMarkingData = document.getElementById('siteMarkingParuData');
@@ -1454,7 +1454,7 @@
         const emptyState = document.getElementById('paruEmptyState');
         const brushSizeSlider = document.getElementById('paruBrushSize');
         const brushSizeValue = document.getElementById('paruBrushSizeValue');
-        
+
         let savedMarkings = []; // Array untuk menyimpan penandaan yang sudah disimpan
         let currentStroke = []; // Array untuk stroke yang sedang digambar
         let allStrokes = []; // Array untuk semua stroke (termasuk yang belum disimpan)
@@ -1464,12 +1464,12 @@
         let isDrawing = false;
         let lastX = 0;
         let lastY = 0;
-        
+
         // Initialize
         initParuColorSelection();
         setupParuCanvas();
         loadParuExistingData();
-        
+
         function setupParuCanvas() {
             function updateCanvasSize() {
                 const rect = image.getBoundingClientRect();
@@ -1477,23 +1477,23 @@
                 canvas.height = image.offsetHeight;
                 canvas.style.width = image.offsetWidth + 'px';
                 canvas.style.height = image.offsetHeight + 'px';
-                
+
                 // Redraw all strokes
                 redrawParuCanvas();
             }
-            
+
             // Update canvas size when image loads
             image.onload = updateCanvasSize;
-            
+
             // Update canvas size when window resizes
             window.addEventListener('resize', updateCanvasSize);
-            
+
             // Initial setup
             if (image.complete) {
                 updateCanvasSize();
             }
         }
-        
+
         function initParuColorSelection() {
             document.querySelectorAll('.paru-color-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -1502,31 +1502,31 @@
                 });
             });
         }
-        
+
         function updateParuColorSelection() {
             document.querySelectorAll('.paru-color-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            
+
             const selectedBtn = document.querySelector(`.paru-color-btn[data-color="${currentColor}"]`);
             if (selectedBtn) {
                 selectedBtn.classList.add('active');
             }
         }
-        
+
         // Brush size slider
         brushSizeSlider.addEventListener('input', function() {
             currentBrushSize = parseFloat(this.value);
             brushSizeValue.textContent = currentBrushSize;
         });
-        
+
         // Mouse events for drawing
         canvas.addEventListener('mousedown', function(e) {
             isDrawing = true;
             const rect = canvas.getBoundingClientRect();
             lastX = e.clientX - rect.left;
             lastY = e.clientY - rect.top;
-            
+
             // Start new stroke
             currentStroke = [{
                 x: (lastX / canvas.width) * 100,
@@ -1535,17 +1535,17 @@
                 size: currentBrushSize
             }];
         });
-        
+
         canvas.addEventListener('mousemove', function(e) {
             if (!isDrawing) return;
-            
+
             const rect = canvas.getBoundingClientRect();
             const currentX = e.clientX - rect.left;
             const currentY = e.clientY - rect.top;
-            
+
             // Add point to current stroke dengan interpolasi untuk smooth line
             const distance = Math.sqrt(Math.pow(currentX - lastX, 2) + Math.pow(currentY - lastY, 2));
-            
+
             // Hanya tambah point jika jarak cukup untuk menghindari point yang terlalu rapat
             if (distance > 1) {
                 currentStroke.push({
@@ -1554,7 +1554,7 @@
                     color: currentColor,
                     size: currentBrushSize
                 });
-                
+
                 // Draw smooth line dengan quadratic curve
                 ctx.globalCompositeOperation = 'source-over';
                 ctx.strokeStyle = currentColor;
@@ -1562,86 +1562,86 @@
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
                 ctx.globalAlpha = 0.8; // Sedikit transparansi untuk efek natural
-                
+
                 // Menggunakan quadratic curve untuk smooth line
                 const midX = (lastX + currentX) / 2;
                 const midY = (lastY + currentY) / 2;
-                
+
                 ctx.beginPath();
                 ctx.moveTo(lastX, lastY);
                 ctx.quadraticCurveTo(lastX, lastY, midX, midY);
                 ctx.stroke();
-                
+
                 lastX = currentX;
                 lastY = currentY;
             }
         });
-        
+
         canvas.addEventListener('mouseup', function(e) {
             if (!isDrawing) return;
             isDrawing = false;
-            
+
             // Add current stroke to all strokes if it has points
             if (currentStroke.length > 1) {
                 allStrokes.push([...currentStroke]);
             }
         });
-        
+
         // Save current drawing as a marking
         saveBtn.addEventListener('click', function() {
             if (allStrokes.length === 0) {
                 alert('Tidak ada penandaan untuk disimpan. Silakan gambar terlebih dahulu.');
                 return;
             }
-            
+
             const note = markingNote.value.trim() || `Penandaan Paru ${markingCounter}`;
-            
+
             const marking = {
                 id: `paru_mark_${Date.now()}`,
                 strokes: JSON.parse(JSON.stringify(allStrokes)), // Deep copy
                 note: note,
                 timestamp: new Date().toISOString()
             };
-            
+
             savedMarkings.push(marking);
-            
+
             // Add to list
             addToParuMarkingsList(marking);
-            
+
             // Update hidden input and counter
             updateParuHiddenInput();
             updateParuMarkingCount();
-            
+
             // Clear note input and current drawing
             markingNote.value = '';
             allStrokes = [];
             currentStroke = [];
             markingCounter++;
-            
+
             // Clear canvas and redraw only saved markings
             redrawParuCanvas();
-            
+
             alert('Penandaan berhasil disimpan!');
         });
-        
+
         // Undo last stroke
         undoBtn.addEventListener('click', function() {
             if (allStrokes.length === 0) {
                 alert('Tidak ada stroke untuk di-undo.');
                 return;
             }
-            
+
             allStrokes.pop();
             redrawParuCanvas();
         });
-        
+
         // Clear all markings
         clearAllBtn.addEventListener('click', function() {
             if (savedMarkings.length === 0 && allStrokes.length === 0) {
                 alert('Tidak ada penandaan untuk dihapus.');
                 return;
             }
-            
+
             if (confirm('Hapus semua penandaan? Tindakan ini tidak dapat dibatalkan.')) {
                 savedMarkings = [];
                 allStrokes = [];
@@ -1653,53 +1653,53 @@
                 markingCounter = 1;
             }
         });
-        
+
         function redrawParuCanvas() {
             // Clear canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
+
             // Draw all saved markings
             savedMarkings.forEach(marking => {
                 drawStrokesOnCanvas(marking.strokes);
             });
-            
+
             // Draw current unsaved strokes
             drawStrokesOnCanvas(allStrokes);
         }
-        
+
         function drawStrokesOnCanvas(strokesArray) {
             strokesArray.forEach(stroke => {
                 if (stroke.length < 2) return;
-                
+
                 ctx.strokeStyle = stroke[0].color;
                 ctx.lineWidth = stroke[0].size;
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
                 ctx.globalAlpha = 0.8; // Transparansi untuk efek natural
-                
+
                 ctx.beginPath();
                 const firstPoint = stroke[0];
                 ctx.moveTo(
                     (firstPoint.x / 100) * canvas.width,
                     (firstPoint.y / 100) * canvas.height
                 );
-                
+
                 // Menggunakan smooth curve untuk redraw
                 for (let i = 1; i < stroke.length - 1; i++) {
                     const currentPoint = stroke[i];
                     const nextPoint = stroke[i + 1];
-                    
+
                     const currentX = (currentPoint.x / 100) * canvas.width;
                     const currentY = (currentPoint.y / 100) * canvas.height;
                     const nextX = (nextPoint.x / 100) * canvas.width;
                     const nextY = (nextPoint.y / 100) * canvas.height;
-                    
+
                     const midX = (currentX + nextX) / 2;
                     const midY = (currentY + nextY) / 2;
-                    
+
                     ctx.quadraticCurveTo(currentX, currentY, midX, midY);
                 }
-                
+
                 // Terakhir, gambar ke point terakhir
                 if (stroke.length > 1) {
                     const lastPoint = stroke[stroke.length - 1];
@@ -1708,23 +1708,23 @@
                         (lastPoint.y / 100) * canvas.height
                     );
                 }
-                
+
                 ctx.stroke();
                 ctx.globalAlpha = 1; // Reset alpha
             });
         }
-        
+
         function addToParuMarkingsList(marking) {
             // Hide empty state
             const emptyStateEl = document.getElementById('paruEmptyState');
             if (emptyStateEl) {
                 emptyStateEl.style.display = 'none';
             }
-            
+
             const listItem = document.createElement('div');
             listItem.className = 'paru-marking-list-item';
             listItem.setAttribute('data-marking-id', marking.id);
-            
+
             listItem.innerHTML = `
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
@@ -1739,13 +1739,13 @@
                     </button>
                 </div>
             `;
-            
+
             markingsList.appendChild(listItem);
         }
-        
+
         function updateParuMarkingCount() {
             markingCount.textContent = savedMarkings.length;
-            
+
             // Show/hide empty state
             const emptyStateEl = document.getElementById('paruEmptyState');
             if (emptyStateEl) {
@@ -1756,26 +1756,26 @@
                 }
             }
         }
-        
+
         function updateParuHiddenInput() {
             siteMarkingData.value = JSON.stringify(savedMarkings);
         }
-        
+
         function loadParuExistingData() {
             try {
                 const existingData = JSON.parse(siteMarkingData.value || '[]');
                 if (existingData.length > 0) {
                     savedMarkings = existingData;
                     markingCounter = savedMarkings.length + 1;
-                    
+
                     // Rebuild list
                     markingsList.innerHTML = '<div class="text-muted text-center py-3" id="paruEmptyState"><i class="ti-info-alt"></i> Belum ada penandaan</div>';
                     savedMarkings.forEach(marking => {
                         addToParuMarkingsList(marking);
                     });
-                    
+
                     updateParuMarkingCount();
-                    
+
                     // Redraw canvas after a short delay
                     setTimeout(() => {
                         redrawParuCanvas();
@@ -1785,19 +1785,19 @@
                 console.error('Error loading existing paru marking data:', e);
             }
         }
-        
+
         // Global function for delete
         window.deleteParuMarking = function(markingId) {
             if (confirm('Hapus penandaan ini?')) {
                 // Remove from array
                 savedMarkings = savedMarkings.filter(m => m.id !== markingId);
-                
+
                 // Remove from list
                 const listElement = markingsList.querySelector(`[data-marking-id="${markingId}"]`);
                 if (listElement) {
                     markingsList.removeChild(listElement);
                 }
-                
+
                 updateParuHiddenInput();
                 updateParuMarkingCount();
                 redrawParuCanvas();

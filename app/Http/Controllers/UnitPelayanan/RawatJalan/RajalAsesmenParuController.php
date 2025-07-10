@@ -320,7 +320,7 @@ class RajalAsesmenParuController extends Controller
 
             DB::commit();
 
-            return redirect()->route('rawat-jalan.asesmen.medis.umum.index', [
+            return redirect()->route('rawat-jalan.asesmen.index', [
                 'kd_unit' => $kd_unit,
                 'kd_pasien' => $kd_pasien,
                 'tgl_masuk' => $tgl_masuk,
@@ -697,7 +697,7 @@ class RajalAsesmenParuController extends Controller
 
             DB::commit();
 
-            return redirect()->route('rawat-jalan.asesmen.medis.umum.index', [
+            return redirect()->route('rawat-jalan.asesmen.index', [
                 'kd_unit' => $kd_unit,
                 'kd_pasien' => $kd_pasien,
                 'tgl_masuk' => $tgl_masuk,
