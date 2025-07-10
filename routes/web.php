@@ -120,6 +120,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\TindakanController as RawatInap
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenController as RawatJalanAsesmenController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenKeperawatanRajalController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenKulitKelaminController as RawatJalanAsesmenKulitKelaminController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\FarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\KonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController as RawatJalanLabPatologiKlinikController;
@@ -394,7 +395,7 @@ Route::middleware('ssoToken')->group(function () {
                                             //Kulit dan kelamin
                                             Route::prefix('kulit-kelamin')->group(function () {
                                                 Route::name('.kulit-kelamin')->group(function () {
-                                                    Route::controller(AsesmenKulitKelaminController::class)->group(function () {
+                                                    Route::controller(RawatJalanAsesmenKulitKelaminController::class)->group(function () {
                                                         Route::get('/', 'index')->name('.index');
                                                         Route::post('/', 'store')->name('.store');
                                                         Route::get('/{id}', 'show')->name('.show');
