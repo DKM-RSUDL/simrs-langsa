@@ -3,8 +3,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
         /* .header-background {
-                            background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                        } */
+                                background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
+                            } */
     </style>
 @endpush
 
@@ -15,7 +15,7 @@
         </div>
 
         <div class="col-md-9">
-            @include('components.navigation')
+            @include('components.navigation-rajal')
 
             <div class="row">
                 <div class="d-flex justify-content-between m-3">
@@ -41,21 +41,48 @@
                             <form method="GET" action="#">
 
                                 <div class="input-group">
-                                    <input type="text" name="search" class="form-control"
-                                        placeholder="Cari nama dokter" aria-label="Cari" value="{{ request('search') }}"
-                                        aria-describedby="basic-addon1">
+                                    <input type="text" name="search" class="form-control" placeholder="Cari nama dokter"
+                                        aria-label="Cari" value="{{ request('search') }}" aria-describedby="basic-addon1">
                                     <button type="submit" class="btn btn-primary">Cari</button>
                                 </div>
                             </form>
                         </div>
 
                         <div class="col-md-2">
-                            <a href="{{ route('rawat-jalan.edukasi.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
-                                class="btn btn-primary">
-                                <i class="ti-plus"></i> Tambah
-                            </a>
-                        </div>
+                            <div class="dropdown">
+                                <button class="btn btn-primary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="ti-plus"></i> Tambah
+                                </button>
+                                <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('rawat-jalan.edukasi.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}?role=dokter">
+                                            Dokter
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('rawat-jalan.edukasi.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}?role=farmasi">
+                                            Farmasi
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('rawat-jalan.edukasi.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}?role=gizi">
+                                            Gizi
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('rawat-jalan.edukasi.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}?role=perawat">
+                                            Perawat
+                                        </a>
+                                    </li>
 
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('rawat-jalan.edukasi.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}?role=adc">
+                                            adc
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -99,8 +126,17 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if (isset($item->edukasiPasien) && isset($item->edukasiPasien->tipe_pembelajaran_array))
-                                            {{ implode(', ', $item->edukasiPasien->tipe_pembelajaran_array) }}
+                                        @if (isset($item->edukasiPasien) && !empty($item->edukasiPasien->tipe_pembelajaran))
+                                            @php
+                                                $tipePembelajaran = is_string($item->edukasiPasien->tipe_pembelajaran)
+                                                    ? json_decode($item->edukasiPasien->tipe_pembelajaran, true)
+                                                    : $item->edukasiPasien->tipe_pembelajaran;
+                                            @endphp
+                                            @if (!empty($tipePembelajaran) && is_array($tipePembelajaran))
+                                                {{ implode(', ', array_map('ucfirst', $tipePembelajaran)) }}
+                                            @else
+                                                -
+                                            @endif
                                         @else
                                             -
                                         @endif
@@ -111,10 +147,12 @@
                                                 class="btn btn-info btn-sm" title="Detail">
                                                 <i class="ti-eye"></i>
                                             </a>
-                                            <a href="{{ route('rawat-jalan.edukasi.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-warning btn-sm ms-2" title="Edit">
+                                            <a href="{{ route('rawat-jalan.edukasi.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                class="btn btn-warning btn-sm ms-2" title="Edit">
                                                 <i class="ti-pencil"></i>
                                             </a>
-                                            <form action="{{ route('rawat-jalan.edukasi.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                            <form
+                                                action="{{ route('rawat-jalan.edukasi.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                 method="POST" class="delete-form" style="display: inline;">
                                                 @csrf
                                                 @method('DELETE')
@@ -139,7 +177,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection
@@ -147,10 +184,10 @@
 
 @push('js')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Attach SweetAlert to all delete forms
             document.querySelectorAll('.delete-form').forEach(form => {
-                form.addEventListener('submit', function (e) {
+                form.addEventListener('submit', function(e) {
                     e.preventDefault();
                     Swal.fire({
                         title: 'Apakah Anda yakin?',
