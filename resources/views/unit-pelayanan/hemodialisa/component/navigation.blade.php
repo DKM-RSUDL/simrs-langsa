@@ -117,6 +117,15 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
+        [
+            'icon' => 'info.png',
+            'label' => 'Edukasi',
+            'link' => route('hemodialisa.pelayanan.edukasi.index', [
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
         // [
         //     'icon' => 'agree.png',
         //     'label' => 'Konsultasi',
