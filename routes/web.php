@@ -141,6 +141,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalPRMRJController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalHivArtController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalHivArtAkhirFollowUpController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalAsesmenParuController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalPernyataandpjpController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
@@ -361,6 +362,20 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::post('/', 'store')->name('.store');
                                         Route::put('/{data}', 'update')->name('.update');
                                         Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
+                            // pernyataan bpjp
+                            Route::prefix('pernyataan-dpjp')->group(function () {
+                                Route::name('.pernyataan-dpjp')->group(function () {
+                                    Route::controller(RajalPernyataandpjpController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                                     });
                                 });
                             });
