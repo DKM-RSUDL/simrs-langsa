@@ -17,8 +17,6 @@
         <form id="edukasiForm" method="POST" action="{{ route('edukasi.update', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $edukasi->id]) }}">
             @csrf
             @method('PUT')
-            <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
-            <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100 shadow-sm">
@@ -187,7 +185,7 @@
                                             <h6 class="card-title">1. Kondisi medis, diagnosis, rencana perawatan dan terapi yang diberikan</h6>
                                             <div class="form-group">
                                                 <label style="min-width: 200px;">Keterangan</label>
-                                                <input type="text" class="form-control" name="ket_kondisi_medis_1"
+                                                <input type="text" class="form-control" name="ket_Kondisi_medis_1"
                                                     value="{{ isset($edukasi->kebutuhanEdukasi) ? $edukasi->kebutuhanEdukasi->ket_kondisi_medis_1 : '' }}"
                                                     >
                                             </div>
