@@ -13,6 +13,10 @@ class Edukasi extends Model
     public $timestamps = false;
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'tipe_pembelajaran' => 'array',
+    ];
+
     public function edukasiPasien()
     {
         return $this->hasOne(EdukasiPasien::class, 'id_edukasi', 'id');

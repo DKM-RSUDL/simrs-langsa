@@ -126,8 +126,17 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if (isset($item->edukasiPasien) && isset($item->edukasiPasien->tipe_pembelajaran_array))
-                                            {{ implode(', ', $item->edukasiPasien->tipe_pembelajaran_array) }}
+                                        @if (isset($item->edukasiPasien) && !empty($item->edukasiPasien->tipe_pembelajaran))
+                                            @php
+                                                $tipePembelajaran = is_string($item->edukasiPasien->tipe_pembelajaran)
+                                                    ? json_decode($item->edukasiPasien->tipe_pembelajaran, true)
+                                                    : $item->edukasiPasien->tipe_pembelajaran;
+                                            @endphp
+                                            @if (!empty($tipePembelajaran) && is_array($tipePembelajaran))
+                                                {{ implode(', ', array_map('ucfirst', $tipePembelajaran)) }}
+                                            @else
+                                                -
+                                            @endif
                                         @else
                                             -
                                         @endif
