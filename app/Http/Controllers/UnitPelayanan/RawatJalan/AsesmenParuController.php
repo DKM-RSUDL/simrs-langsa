@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Storage;
 
-class RajalAsesmenParuController extends Controller
+class AsesmenParuController extends Controller
 {
     public function __construct()
     {

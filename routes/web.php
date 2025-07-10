@@ -140,8 +140,9 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\TindakanController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalPRMRJController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalHivArtController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalHivArtAkhirFollowUpController;
-use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalAsesmenParuController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalPernyataandpjpController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenParuController as RajalAsesmenParuController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenGinekologikController as RajalAsesmenGinekologikController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
@@ -429,8 +430,22 @@ Route::middleware('ssoToken')->group(function () {
 
                                             // paru
                                             Route::prefix('paru')->group(function () {
-                                                Route::name('.paru')->group(function () {
+                                                Route::name('.paru')->group(callback: function () {
                                                     Route::controller(RajalAsesmenParuController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
+                                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                        Route::put('/{id}', 'update')->name('.update');
+                                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                                    });
+                                                });
+                                            });
+
+                                            //Ginekologik
+                                            Route::prefix('ginekologik')->group(function () {
+                                                Route::name('.ginekologik')->group(function () {
+                                                    Route::controller(RajalAsesmenGinekologikController::class)->group(function () {
                                                         Route::get('/', 'index')->name('.index');
                                                         Route::post('/', 'store')->name('.store');
                                                         Route::get('/{id}', 'show')->name('.show');
