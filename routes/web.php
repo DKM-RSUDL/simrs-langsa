@@ -30,6 +30,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\FarmasiController as GawatDa
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\GeneralConsentController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\KonsultasiController as GawatDaruratKonsultasiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\LaborController as GawatDaruratLaborController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\PapsController as GawatDaruratPapsController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\PenolakanResusitasiController as GawatDaruratPenolakanResusitasiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\PenundaanPelayananController as GawatDaruratPenundaanPelayananController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\PermintaanDarahController;
@@ -1739,6 +1740,22 @@ Route::middleware('ssoToken')->group(function () {
                                     Route::put('/{data}', 'update')->name('.update');
                                     Route::delete('/{data}', 'destroy')->name('.destroy');
                                     Route::get('/print/{data}', 'print')->name('.print');
+                                });
+                            });
+                        });
+
+                        //paps
+                        Route::prefix('{urut_masuk}/paps')->group(function () {
+                            Route::name('paps')->group(function () {
+                                Route::controller(GawatDaruratPapsController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/show/{data}', 'show')->name('.show');
+                                    Route::delete('/', 'delete')->name('.delete');
+                                    Route::get('/pdf/{data}', 'pdf')->name('.pdf');
                                 });
                             });
                         });
