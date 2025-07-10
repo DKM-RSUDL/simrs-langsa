@@ -46,9 +46,6 @@ class RajalPRMRJController extends Controller
         }
 
         $prmrjs = RmePrmrj::where('kd_pasien', $kd_pasien)
-        ->where('kd_unit', $kd_unit)
-        ->where('tgl_masuk', $tgl_masuk)
-        ->where('urut_masuk', $urut_masuk)
         ->orderBy('tanggal', 'desc')
         ->paginate(10);
 

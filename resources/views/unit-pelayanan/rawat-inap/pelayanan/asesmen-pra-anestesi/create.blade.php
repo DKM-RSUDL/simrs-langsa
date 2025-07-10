@@ -984,17 +984,19 @@
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
                                             </div>
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Menstruasi Tidak Normal</label>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="menstruasi_tidak_normal" value="Ya">
-                                                    <label class="form-check-label">Ya</label>
+                                            @if ($dataMedis->pasien->jenis_kelamin == 0)
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label fw-bold">Menstruasi Tidak Normal</label>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="menstruasi_tidak_normal" value="Ya">
+                                                        <label class="form-check-label">Ya</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="menstruasi_tidak_normal" value="Tidak">
+                                                        <label class="form-check-label">Tidak</label>
+                                                    </div>
                                                 </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="menstruasi_tidak_normal" value="Tidak">
-                                                    <label class="form-check-label">Tidak</label>
-                                                </div>
-                                            </div>
+                                            @endif
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Pingsan</label>
                                                 <div class="form-check">
@@ -1063,17 +1065,19 @@
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
                                             </div>
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Sedang Hamil</label>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="sedang_hamil" value="Ya">
-                                                    <label class="form-check-label">Ya</label>
+                                            @if ($dataMedis->pasien->jenis_kelamin == 0)
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label fw-bold">Sedang Hamil</label>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="sedang_hamil" value="Ya">
+                                                        <label class="form-check-label">Ya</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="sedang_hamil" value="Tidak">
+                                                        <label class="form-check-label">Tidak</label>
+                                                    </div>
                                                 </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="sedang_hamil" value="Tidak">
-                                                    <label class="form-check-label">Tidak</label>
-                                                </div>
-                                            </div>
+                                            @endif
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Stroke</label>
                                                 <div class="form-check">
@@ -1145,7 +1149,7 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Gigi Palus</label>
+                                                <label class="form-label fw-bold">Gigi Palsu</label>
                                                 <input type="text" class="form-control" name="gigi_palus"
                                                     placeholder="Masukkan gigi palus">
                                             </div>
@@ -1171,39 +1175,46 @@
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">BB</label>
-                                                <input type="text" class="form-control" name="bb"
+                                                <input type="number" class="form-control" name="bb"
                                                     placeholder="Berat Badan (kg)">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">TD</label>
-                                                <input type="text" class="form-control" name="td"
+                                                <label class="form-label fw-bold">Distole</label>
+                                                <input type="number" class="form-control" name="distole"
+                                                    placeholder="Tekanan Darah (mmHg)">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group mb-3">
+                                                <label class="form-label fw-bold">Sistole</label>
+                                                <input type="number" class="form-control" name="sistole"
                                                     placeholder="Tekanan Darah (mmHg)">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Nadi</label>
-                                                <input type="text" class="form-control" name="nadi"
+                                                <input type="number" class="form-control" name="nadi"
                                                     placeholder="Nadi (x/menit)">
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Suhu</label>
-                                                <input type="text" class="form-control" name="suhu" placeholder="Suhu (°C)">
+                                                <input type="number" class="form-control" name="suhu" placeholder="Suhu (°C)">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Paru-Paru</label>
-                                                <input type="text" class="form-control" name="paru"
+                                                <input type="number" class="form-control" name="paru"
                                                     placeholder="Pernapasan (x/menit)">
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Jantung</label>
@@ -1211,8 +1222,6 @@
                                                     placeholder="Kondisi jantung">
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Abdomen</label>
@@ -1227,6 +1236,8 @@
                                                     placeholder="Kondisi ekstremitas">
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Neurologi (jika ada ditemukan)</label>
@@ -1376,7 +1387,7 @@
                                         <label class="form-label fw-bold">Rekomendasi tindakan anestesi yang dipilih</label>
                                         <div class="mt-2">
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Anestesi umum Intravena" id="anestesi_umum_intravena"
                                                     {{ in_array('Anestesi umum Intravena', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="anestesi_umum_intravena">
@@ -1385,7 +1396,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Sungkup muka" id="sungkup_muka"
                                                     {{ in_array('Sungkup muka', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="sungkup_muka">
@@ -1394,7 +1405,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Laringeal mask airway" id="laringeal_mask_airway"
                                                     {{ in_array('Laringeal mask airway', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="laringeal_mask_airway">
@@ -1403,7 +1414,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Pipa endotrakeal tube" id="pipa_endotrakeal_tube"
                                                     {{ in_array('Pipa endotrakeal tube', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="pipa_endotrakeal_tube">
@@ -1412,7 +1423,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Regional anestesi: Spinal Anastesi Blok" id="regional_spinal"
                                                     {{ in_array('Regional anestesi: Spinal Anastesi Blok', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="regional_spinal">
@@ -1421,7 +1432,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Epidural" id="epidural"
                                                     {{ in_array('Epidural', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="epidural">
@@ -1430,7 +1441,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Kombinasi Spinal Epidural" id="kombinasi_spinal_epidural"
                                                     {{ in_array('Kombinasi Spinal Epidural', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="kombinasi_spinal_epidural">
@@ -1439,7 +1450,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Peripheral Nerve Block" id="peripheral_nerve_block"
                                                     {{ in_array('Peripheral Nerve Block', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="peripheral_nerve_block">
@@ -1448,7 +1459,7 @@
                                             </div>
 
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]"
                                                     value="Anestesi umum + Regional Anestesi" id="anestesi_kombinasi"
                                                     {{ in_array('Anestesi umum + Regional Anestesi', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="anestesi_kombinasi">

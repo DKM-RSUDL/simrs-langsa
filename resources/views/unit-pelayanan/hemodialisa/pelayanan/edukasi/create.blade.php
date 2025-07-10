@@ -399,10 +399,11 @@
                             </div>
 
                             <div class="section-separator">
-                                <h5 class="section-title">2. Kebutuhan Edukasi</h5>
-                                <div class="form-group">
-                                    <div class="checkbox-group">
-                                        <div class="form-check">
+                            <h5 class="section-title">2. Kebutuhan Edukasi</h5>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-12">
+                                        <div class="form-check mb-3">
                                             <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
                                                 value="kebutuhan_hak_berpartisipasi_pada_proses_pelayanan"
                                                 id="kebutuhan_hak_berpartisipasi_pada_proses_pelayanan">
@@ -410,7 +411,7 @@
                                                 for="kebutuhan_hak_berpartisipasi_pada_proses_pelayanan">Hak berpartisipasi
                                                 pada proses pelayanan</label>
                                         </div>
-                                        <div class="form-check">
+                                        <div class="form-check mb-3">
                                             <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
                                                 value="kebutuhan_prosedur_pemeriksaan_penunjang"
                                                 id="kebutuhan_prosedur_pemeriksaan_penunjang">
@@ -418,37 +419,37 @@
                                                 for="kebutuhan_prosedur_pemeriksaan_penunjang">Prosedur pemeriksaan
                                                 penunjang</label>
                                         </div>
-                                        <div class="form-check">
+                                        <div class="form-check mb-3">
                                             <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
                                                 value="kebutuhan_kondisi_kesehatan_daignosis_dan_penatalaksanaannya"
                                                 id="kebutuhan_kondisi_kesehatan_daignosis_dan_penatalaksanaannya">
                                             <label class="form-check-label"
                                                 for="kebutuhan_kondisi_kesehatan_daignosis_dan_penatalaksanaannya">Kondisi
-                                                kesehatan, daignosis, dan penatalaksanaannya</label>
+                                                kesehatan, diagnosis, dan penatalaksanaannya</label>
                                         </div>
-                                        <div class="form-check">
+                                        <div class="form-check mb-3">
                                             <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
                                                 value="kebutuhan_proses_pemberian_informed_concent"
                                                 id="kebutuhan_proses_pemberian_informed_concent">
                                             <label class="form-check-label"
                                                 for="kebutuhan_proses_pemberian_informed_concent">Proses pemberian informed
-                                                concent</label>
+                                                consent</label>
                                         </div>
-                                        <div class="form-check">
+                                        <div class="form-check mb-3">
                                             <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
                                                 value="kebutuhan_diet_dan_nutrisi" id="kebutuhan_diet_dan_nutrisi">
                                             <label class="form-check-label" for="kebutuhan_diet_dan_nutrisi">Diet dan
                                                 nutrisi</label>
                                         </div>
-                                        <div class="form-check">
+                                        <div class="form-check mb-3">
                                             <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
                                                 value="kebutuhan_pengguanaan_obat_secara_efektif_dan_aman_serta_efek_samping_serta_interaksinya"
                                                 id="kebutuhan_pengguanaan_obat_secara_efektif_dan_aman_serta_efek_samping_serta_interaksinya">
                                             <label class="form-check-label"
-                                                for="kebutuhan_pengguanaan_obat_secara_efektif_dan_aman_serta_efek_samping_serta_interaksinya">Pengguanaan
-                                                obat secara efektif dan aman serta efek samping serta interaksinya.</label>
+                                                for="kebutuhan_pengguanaan_obat_secara_efektif_dan_aman_serta_efek_samping_serta_interaksinya">Penggunaan
+                                                obat secara efektif dan aman serta efek samping serta interaksinya</label>
                                         </div>
-                                        <div class="form-check">
+                                        <div class="form-check mb-3">
                                             <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
                                                 value="kebutuhan_penggunaan_alat_medis_yang_aman"
                                                 id="kebutuhan_penggunaan_alat_medis_yang_aman">
@@ -456,65 +457,69 @@
                                                 for="kebutuhan_penggunaan_alat_medis_yang_aman">Penggunaan alat medis yang
                                                 aman</label>
                                         </div>
-                                        <div class="form-check">
+                                        <div class="form-check mb-3">
                                             <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
                                                 value="kebutuhan_manajemen_nyeri" id="kebutuhan_manajemen_nyeri">
                                             <label class="form-check-label" for="kebutuhan_manajemen_nyeri">Manajemen
                                                 nyeri</label>
                                         </div>
-                                        <div class="form-check">
+                                    </div>
+                                    
+                                    <div class="col-lg-6 col-md-12">
+                                        <div class="form-check mb-3">
                                             <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
                                                 value="kebutuhan_teknik_rehabilitasi" id="kebutuhan_teknik_rehabilitasi">
                                             <label class="form-check-label" for="kebutuhan_teknik_rehabilitasi">Teknik
                                                 rehabilitasi</label>
                                         </div>
-                                        <div class="form-check">
+                                        <div class="form-check mb-3">
                                             <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
                                                 value="kebutuhan_cuci_tangan_yang_benar" id="kebutuhan_cuci_tangan_yang_benar">
                                             <label class="form-check-label" for="kebutuhan_cuci_tangan_yang_benar">Cuci
                                                 tangan yang benar</label>
                                         </div>
-                                        <div class="form-check">
+                                        <div class="form-check mb-3">
                                             <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
                                                 value="kebutuhan_bahaya_merokok" id="kebutuhan_bahaya_merokok">
                                             <label class="form-check-label" for="kebutuhan_bahaya_merokok">Bahaya
                                                 merokok</label>
                                         </div>
-                                        <div class="form-check">
+                                        <div class="form-check mb-3">
                                             <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
                                                 value="kebutuhan_rujukan_edukasi" id="kebutuhan_rujukan_edukasi">
                                             <label class="form-check-label" for="kebutuhan_rujukan_edukasi">Rujukan
                                                 edukasi</label>
                                         </div>
-                                        <div class="form-check">
+                                        <div class="form-check mb-3">
                                             <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
                                                 value="kebutuhan_perawatan_av_shunt" id="kebutuhan_perawatan_av_shunt">
                                             <label class="form-check-label" for="kebutuhan_perawatan_av_shunt">Perawatan
                                                 AV-Shunt</label>
                                         </div>
-                                        <div class="form-check">
+                                        <div class="form-check mb-3">
                                             <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
                                                 value="kebutuhan_perawatan_cdl" id="kebutuhan_perawatan_cdl">
                                             <label class="form-check-label" for="kebutuhan_perawatan_cdl">Perawatan
                                                 CDL</label>
                                         </div>
-                                        <div class="form-check">
+                                        <div class="form-check mb-3">
                                             <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
                                                 value="kebutuhan_kepatuhan_minum_obat" id="kebutuhan_kepatuhan_minum_obat">
                                             <label class="form-check-label" for="kebutuhan_kepatuhan_minum_obat">Kepatuhan
                                                 minum obat</label>
                                         </div>
-                                        <div class="form-check">
+                                        <div class="form-check mb-3">
                                             <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
                                                 value="kebutuhan_perawatan_luka_akses_femoralis"
                                                 id="kebutuhan_perawatan_luka_akses_femoralis">
                                             <label class="form-check-label"
                                                 for="kebutuhan_perawatan_luka_akses_femoralis">Perawatan luka akses
-                                                femoralis.</label>
+                                                femoralis</label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
                             <div class="section-separator">
                                 <h5 class="section-title">3. Edukasi Pasien</h5>

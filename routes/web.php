@@ -47,6 +47,8 @@ use App\Http\Controllers\UnitPelayanan\Hemodialisa\BeratBadanKeringController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\DataUmumController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\MalnutritionInflammationScoreController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\HDEdukasiController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\HDTindakanKhususController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\HDHasilEKGController;
 use App\Http\Controllers\UnitPelayanan\HemodialisaController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
 use App\Http\Controllers\UnitPelayanan\Operasi\CeklistAnasthesiController;
@@ -136,6 +138,9 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\RawatJalanResumeController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RujukJalanController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\TindakanController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalPRMRJController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalHivArtController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalHivArtAkhirFollowUpController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalAsesmenParuController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
@@ -407,6 +412,20 @@ Route::middleware('ssoToken')->group(function () {
                                                 });
                                             });
 
+                                            // paru
+                                            Route::prefix('paru')->group(function () {
+                                                Route::name('.paru')->group(function () {
+                                                    Route::controller(RajalAsesmenParuController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
+                                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                        Route::put('/{id}', 'update')->name('.update');
+                                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                                    });
+                                                });
+                                            });
+
                                         });
                                     });
 
@@ -424,7 +443,7 @@ Route::middleware('ssoToken')->group(function () {
                                             //         });
                                             //     });
                                             // });
-                                            
+
                                         });
                                     });
                                 });
@@ -490,6 +509,36 @@ Route::middleware('ssoToken')->group(function () {
                             Route::prefix('prmrj')->group(function () {
                                 Route::name('.prmrj')->group(function () {
                                     Route::controller(RajalPRMRJController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
+                            // Hiv Art
+                            Route::prefix('hiv_art')->group(function () {
+                                Route::name('.hiv_art')->group(function () {
+                                    Route::controller(RajalHivArtController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
+                            // Hiv Art akhir follow-up
+                            Route::prefix('hiv_art_akhir_follow_up')->group(function () {
+                                Route::name('.hiv_art_akhir_follow_up')->group(function () {
+                                    Route::controller(RajalHivArtAkhirFollowUpController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::get('/create', 'create')->name('.create');
                                         Route::get('/{data}', 'show')->name('.show');
@@ -2116,11 +2165,42 @@ Route::middleware('ssoToken')->group(function () {
                             });
                         });
 
-
                         // edukasi
                         Route::prefix('edukasi')->group(function () {
                             Route::name('.edukasi')->group(function () {
                                 Route::controller(HDEdukasiController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
+                                });
+                            });
+                        });
+
+                        // tindakan khusus
+                        Route::prefix('tindakan-khusus')->group(function () {
+                            Route::name('.tindakan-khusus')->group(function () {
+                                Route::controller(HDTindakanKhususController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
+                                });
+                            });
+                        });
+
+                        // Hasil EKG
+                        Route::prefix('hasil-ekg')->group(function () {
+                            Route::name('.hasil-ekg')->group(function () {
+                                Route::controller(HDHasilEKGController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::post('/', 'store')->name('.store');
                                     Route::get('/create', 'create')->name('.create');
