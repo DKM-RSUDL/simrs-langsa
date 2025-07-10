@@ -74,7 +74,7 @@
                                                     <th width="5%">No</th>
                                                     <th width="15%">Waktu Asesmen</th>
                                                     <th width="25%">Diagnosis Medis</th>
-                                                    <th width="15%">Status Gizi</th>
+                                                    <th width="15%">Status</th>
                                                     <th width="15%">BB/TB</th>
                                                     <th width="15%">Petugas</th>
                                                     <th width="10%">Aksi</th>
@@ -96,12 +96,12 @@
                                                             {{ $data->diagnosis_medis ?: '-' }}
                                                         </td>
                                                         <td>
-                                                            @if($data->asesmenGizi && $data->asesmenGizi->status_gizi)
-                                                                <span class="badge bg-info">
-                                                                    {{ $data->asesmenGizi->status_gizi }}
+                                                            @if($data->asesmenGizi && $data->asesmenGizi->status_stunting)
+                                                                <span class="badge bg-warning">
+                                                                    {{ $data->asesmenGizi->status_stunting }}
                                                                 </span>
                                                             @else
-                                                                <span class="text-muted">-</span>
+                                                                <span class="text-muted">Normal</span>
                                                             @endif
                                                         </td>
                                                         <td>

@@ -290,6 +290,34 @@
                                     
                                     </div>
 
+                                    <div class="section-separator" id="alergi">
+                                        <h5 class="section-title">Riwayat Alergi</h5>
+
+                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
+                                            id="openAlergiModal" data-bs-toggle="modal" data-bs-target="#alergiModal">
+                                            <i class="ti-plus"></i> Tambah Alergi
+                                        </button>
+                                        <input type="hidden" name="alergis" id="alergisInput" value="[]">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" id="createAlergiTable">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th width="20%">Jenis Alergi</th>
+                                                        <th width="25%">Alergen</th>
+                                                        <th width="25%">Reaksi</th>
+                                                        <th width="20%">Tingkat Keparahan</th>
+                                                        <th width="10%">Aksi</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr id="no-alergi-row">
+                                                        <td colspan="5" class="text-center text-muted">Tidak ada data alergi</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
                                     <div class="section-separator" id="bahan-makanan">
                                         <h5 class="section-title">3. Bahan Makanan yang Bisa Dikonsumsi</h5>
                                     
@@ -512,20 +540,13 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <!-- Lingkar Kepala -->
-                                        <div class="form-group mt-0">
-                                            <label style="min-width: 220px;">Lingkar Kepala (cm)</label>
-                                            <input type="number" class="form-control" name="lingkar_kepala" step="0.1" 
-                                                placeholder="Contoh: 45.5">
-                                        </div>
                                     
-                                        <div class="row g-3 mt-3">
+                                        <div class="row g-3">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label style="min-width: 220px;">IMT (kg/m²)</label>
-                                                    <input type="number" class="form-control bg-light" name="imt" id="imt" step="0.01" 
-                                                           placeholder="Akan dihitung otomatis" readonly style="background-color: #f8f9fa;">
+                                                    <label style="min-width: 220px;">Lingkar Kepala (cm)</label>
+                                                    <input type="number" class="form-control" name="lingkar_kepala" step="0.1" 
+                                                        placeholder="Contoh: 45.5">
                                                 </div>
                                             </div>
                                             
@@ -537,21 +558,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    
-                                        <!-- Status Gizi -->
-                                        <div class="form-group mt-3">
-                                            <label style="min-width: 220px;">Status Gizi</label>
-                                            <div class="input-group">
-                                                <select class="form-control bg-light" name="status_gizi" id="status_gizi">
-                                                    <option value="">Status</option>
-                                                    <option value="Gizi Buruk">Gizi Buruk</option>
-                                                    <option value="Gizi Kurang">Gizi Kurang</option>
-                                                    <option value="Gizi Baik/Normal">Gizi Baik/Normal</option>
-                                                    <option value="Gizi Lebih">Gizi Lebih</option>
-                                                    <option value="Obesitas">Obesitas</option>
-                                                </select>
-                                            </div>
-                                        </div>
 
                                         <!-- Z-Score Results -->
                                         <div class="mt-4">
@@ -560,13 +566,20 @@
                                             </h6>
                                             
                                             <div class="row g-3">
-                                                <div class="col-md-6">
+                                                <div class="col-md-6 mt-2">
                                                     <div class="form-group">
                                                         <label style="min-width: 220px;">BB/Usia (Z-Score)</label>
                                                         <div class="input-group">
                                                             <input type="number" class="form-control bg-light" name="bb_usia" id="bb_usia" step="0.01" 
                                                                 placeholder="Auto calculate">
                                                         </div>
+                                                        <select class="form-select bg-light mt-2" name="bb_usia_status" id="bb_usia_status">
+                                                            <option value="">Pilih Status</option>
+                                                            <option value="severely_underweight">Severely Underweight (< -3 SD)</option>
+                                                            <option value="underweight">Underweight (-3 SD s/d < -2 SD)</option>
+                                                            <option value="normal">Normal (-2 SD s/d +1 SD)</option>
+                                                            <option value="overweight">Overweight (> +1 SD)</option>
+                                                        </select>
                                                     </div>
                                                     
                                                     <div class="form-group">
@@ -575,16 +588,31 @@
                                                             <input type="number" class="form-control bg-light" name="pb_tb_usia" id="pb_tb_usia" step="0.01" 
                                                                 placeholder="Auto calculate">
                                                         </div>
+                                                        <select class="form-select bg-light mt-2" name="pb_tb_usia_status" id="pb_tb_usia_status">
+                                                            <option value="">Pilih Status</option>
+                                                            <option value="severely_stunted">Severely Stunted (< -3 SD)</option>
+                                                            <option value="stunted">Stunted (-3 SD s/d < -2 SD)</option>
+                                                            <option value="normal">Normal (-2 SD s/d +3 SD)</option>
+                                                            <option value="tall">Tall (> +3 SD)</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 
-                                                <div class="col-md-6">
+                                                <div class="col-md-6 mt-2">
                                                     <div class="form-group">
-                                                        <label style="min-width: 220px;">BB/TB (Z-Score)</label>
+                                                        <label style="min-width: 220px;">BB/TB(PB) (Z-Score)</label>
                                                         <div class="input-group">
                                                             <input type="number" class="form-control bg-light" name="bb_tb" id="bb_tb" step="0.01" 
                                                                 placeholder="Auto calculate">
                                                         </div>
+                                                        <select class="form-select bg-light mt-2" name="bb_tb_status" id="bb_tb_status">
+                                                            <option value="">Pilih Status</option>
+                                                            <option value="severely_wasted">Severely Wasted (< -3 SD)</option>
+                                                            <option value="wasted">Wasted (-3 SD s/d < -2 SD)</option>
+                                                            <option value="normal">Normal (-2 SD s/d +1 SD)</option>
+                                                            <option value="overweight">Overweight (+1 SD s/d +2 SD)</option>
+                                                            <option value="obese">Obese (> +2 SD)</option>
+                                                        </select>
                                                     </div>
                                                     
                                                     <div class="form-group">
@@ -593,6 +621,39 @@
                                                             <input type="number" class="form-control bg-light" name="imt_usia" id="imt_usia" step="0.01" 
                                                                 placeholder="Auto calculate">
                                                         </div>
+                                                        <select class="form-select bg-light mt-2" name="imt_usia_status" id="imt_usia_status">
+                                                            <option value="">Pilih Status</option>
+                                                            <option value="severely_underweight">Severely Underweight (< -3 SD)</option>
+                                                            <option value="underweight">Underweight (-3 SD s/d < -2 SD)</option>
+                                                            <option value="normal">Normal (-2 SD s/d +1 SD)</option>
+                                                            <option value="overweight">Overweight (+1 SD s/d +2 SD)</option>
+                                                            <option value="obese">Obese (> +2 SD)</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-4" id="stunting_section" style="display: none;">
+                                            <h6 class="text-warning mb-3">
+                                                <i class="fas fa-exclamation-triangle"></i> Status Gizi Khusus
+                                            </h6>
+                                            
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label style="min-width: 220px;">Status Stunting</label>
+                                                        <input type="text" class="form-control bg-light" name="status_stunting" 
+                                                               id="status_stunting" readonly 
+                                                               style="background-color: #f8f9fa; font-weight: 600;">
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-md-6">
+                                                    <div class="alert alert-info mb-0" style="font-size: 0.875rem;">
+                                                        <strong>Keterangan:</strong><br>
+                                                        BB/Usia &lt; PB(TB)/Usia = Stunting<br>
+                                                        BB/Usia ≥ PB(TB)/Usia = Tidak Stunting
                                                     </div>
                                                 </div>
                                             </div>
@@ -600,78 +661,21 @@
                                     
                                     </div>
 
-                                    <div class="section-separator" id="asesmen-gizi">
-                                        <h5 class="section-title">Asesmen Gizi</h5>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Biokimia</label>
-                                            <textarea class="form-control" name="biokimia" rows="4"
-                                                placeholder="Sebutkan biokimia..."></textarea>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Kimia/Fisik</label>
-                                            <textarea class="form-control" name="kimia_fisik" rows="4"
-                                                placeholder="Sebutkan kimia/fisik..."></textarea>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Riwayat Gizi dll</label>
-                                            <textarea class="form-control" name="riwayat_gizi" rows="4"
-                                                placeholder="Sebutkan riwayat gizi..."></textarea>
-                                        </div>
-                                    
-                                    </div>
-
-                                    <div class="section-separator" id="alergi">
-                                        <h5 class="section-title">7.Riwayat Alergi</h5>
-
-                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                            id="openAlergiModal" data-bs-toggle="modal" data-bs-target="#alergiModal">
-                                            <i class="ti-plus"></i> Tambah Alergi
-                                        </button>
-                                        <input type="hidden" name="alergis" id="alergisInput" value="[]">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered" id="createAlergiTable">
-                                                <thead class="table-light">
-                                                    <tr>
-                                                        <th width="20%">Jenis Alergi</th>
-                                                        <th width="25%">Alergen</th>
-                                                        <th width="25%">Reaksi</th>
-                                                        <th width="20%">Tingkat Keparahan</th>
-                                                        <th width="10%">Aksi</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr id="no-alergi-row">
-                                                        <td colspan="5" class="text-center text-muted">Tidak ada data alergi</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-
-                                    <div class="section-separator" id="diagnosa_gizi">
-                                        <h5 class="section-title">8. Diagnosa Gizi</h5>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Diagnosa Gizi</label>
-                                            <textarea class="form-control" name="diagnosa_gizi" rows="4"
-                                                placeholder="Sebutkan diagnosa gizi..."></textarea>
-                                        </div>
-                                    </div>
-
                                     <div class="section-separator" id="intervensi-gizi">
-                                        <h5 class="section-title">9. Intervensi Gizi</h5>
+                                        <h5 class="section-title">Intervensi Gizi</h5>
                                         
-                                        <div class="alert alert-info mb-4">
+                                        <div class="alert alert-info mb-4" id="info_normal">
                                             <strong>Informasi:</strong> Berikut adalah panduan kebutuhan gizi berdasarkan kelompok umur dan jenis kelamin
+                                        </div>
+                                        
+                                        <div class="alert alert-warning mb-4" id="info_gizi_buruk" style="display: none;">
+                                            <strong>Peringatan:</strong> Terdeteksi status gizi buruk (Severely Wasted). Menggunakan protokol rehabilitasi gizi buruk dengan fase bertahap.
                                         </div>
                                     
                                         <div class="row g-4">
-                                            <!-- Tabel Kebutuhan Gizi -->
-                                            <div class="col-md-12">
-                                                <h6 class="mb-3 text-primary">KEBUTUHAN GIZI</h6>
+                                            <!-- Tabel Kebutuhan Gizi Normal -->
+                                            <div class="col-md-12" id="table_normal">
+                                                <h6 class="mb-3 text-primary">KEBUTUHAN GIZI NORMAL</h6>
                                                 
                                                 <div class="table-responsive">
                                                     <table class="table table-bordered table-striped">
@@ -714,35 +718,321 @@
                                                     </table>
                                                 </div>
                                             </div>
+                                            
+                                            <!-- Tabel Kebutuhan Gizi Buruk -->
+                                            <div class="col-md-12" id="table_gizi_buruk" style="display: none;">
+                                                <h6 class="mb-3 text-danger">PROTOKOL REHABILITASI GIZI BURUK</h6>
+                                                
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered table-striped">
+                                                        <thead class="table-danger">
+                                                            <tr class="text-center">
+                                                                <th width="20%">FASE REHABILITASI</th>
+                                                                <th width="25%">KEBUTUHAN KALORI (Kkal/kg BB)</th>
+                                                                <th width="25%">PROTEIN (gr/kg BB)</th>
+                                                                <th width="30%">LEMAK (gr/kg BB)</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr class="text-center">
+                                                                <td><strong>Stabilisasi</strong></td>
+                                                                <td class="text-primary"><strong>80-100</strong></td>
+                                                                <td class="text-success"><strong>1-1.5</strong></td>
+                                                                <td class="text-warning"><strong>0.5-1</strong></td>
+                                                            </tr>
+                                                            <tr class="text-center">
+                                                                <td><strong>Transisi</strong></td>
+                                                                <td class="text-primary"><strong>100-150</strong></td>
+                                                                <td class="text-success"><strong>2-3</strong></td>
+                                                                <td class="text-warning"><strong>1-1.5</strong></td>
+                                                            </tr>
+                                                            <tr class="text-center">
+                                                                <td><strong>Rehabilitasi</strong></td>
+                                                                <td class="text-primary"><strong>150-220</strong></td>
+                                                                <td class="text-success"><strong>4-6</strong></td>
+                                                                <td class="text-warning"><strong>2</strong></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <small class="text-muted">
+                                                        <strong>Catatan:</strong> Karbohidrat dihitung otomatis sebagai sisa dari total kebutuhan kalori setelah dikurangi kalori protein dan lemak.
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
                                     
-                                            <!-- Informasi Tambahan -->
-                                            <div class="col-md-12 mt-4">
-                                                <div class="row g-4">
-                                                    <div class="col-md-6">
-                                                        <div class="border rounded p-4 bg-light">
-                                                            <h6 class="text-success mb-3">Catatan Penting</h6>
-                                                            <ul class="list-unstyled mb-0">
-                                                                <li class="mb-2">• Kebutuhan kalori disesuaikan dengan kondisi klinis anak</li>
-                                                                <li class="mb-2">• Monitoring dilakukan secara berkala</li>
-                                                                <li class="mb-2">• Evaluasi berdasarkan respons klinis dan antropometri</li>
-                                                                <li class="mb-0">• Konsultasi dengan ahli gizi untuk penyesuaian diet</li>
-                                                            </ul>
+                                        <!-- Perhitungan Kebutuhan Kalori -->
+                                        <div class="row g-4 mt-2">
+                                            <div class="col-md-12">
+                                                <h6 class="mb-3 text-primary">PERHITUNGAN KEBUTUHAN KALORI</h6>
+                                                
+                                                <div class="row g-3">
+                                                    <!-- Pilihan Normal: Golongan Umur -->
+                                                    <div class="col-md-4" id="pilihan_normal">
+                                                        <div class="form-group">
+                                                            <label style="min-width: 200px;">Golongan Umur</label>
+                                                            <select class="form-select" name="golongan_umur" id="golongan_umur">
+                                                                <option value="">Pilih Golongan Umur</option>
+                                                                <option value="1">0-1 Tahun</option>
+                                                                <option value="2">1-3 Tahun</option>
+                                                                <option value="3">4-6 Tahun</option>
+                                                                <option value="4">6-9 Tahun</option>
+                                                                <option value="5">10-13 Tahun</option>
+                                                                <option value="6">14-18 Tahun</option>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="col-md-6">
-                                                        <div class="border rounded p-4 bg-light">
-                                                            <h6 class="text-warning mb-3">Panduan Umum</h6>
-                                                            <ul class="list-unstyled mb-0">
-                                                                <li class="mb-2">• Berikan makanan sesuai kelompok umur</li>
-                                                                <li class="mb-2">• Perhatikan tekstur makanan untuk anak</li>
-                                                                <li class="mb-2">• Hindari makanan yang dapat menyebabkan alergi</li>
-                                                                <li class="mb-0">• Pastikan kebersihan makanan dan alat makan</li>
-                                                            </ul>
+                                                    <!-- Pilihan Gizi Buruk: Fase -->
+                                                    <div class="col-md-4" id="pilihan_gizi_buruk" style="display: none;">
+                                                        <div class="form-group">
+                                                            <label style="min-width: 200px;">Fase</label>
+                                                            <select class="form-select" name="golongan_umur" id="fase_rehabilitasi">
+                                                                <option value="">Pilih Fase</option>
+                                                                <option value="7">Stabilisasi</option>
+                                                                <option value="8">Transisi</option>
+                                                                <option value="9">Rehabilitasi</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label style="min-width: 200px;">Jenis Kelamin</label>
+                                                            <input type="text" class="form-control bg-light" name="jenis_kelamin_kalori" 
+                                                                   id="jenis_kelamin_kalori" readonly 
+                                                                   value="{{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Pria' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Wanita' : 'Tidak Diketahui') }}" 
+                                                                   style="background-color: #f8f9fa;">
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label style="min-width: 200px;">Rentang Kalori (Kkal/kg BB)</label>
+                                                            <input type="text" class="form-control bg-light" name="rentang_kalori" 
+                                                                   id="rentang_kalori" readonly 
+                                                                   placeholder="Pilih golongan umur/fase terlebih dahulu" 
+                                                                   style="background-color: #f8f9fa;">
                                                         </div>
                                                     </div>
                                                 </div>
+                                                
+                                                <!-- Input Kalori yang Dipilih -->
+                                                <div class="row g-3 mt-2">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label style="min-width: 200px;">Kebutuhan Kalori (Kkal/kg BB) <span class="text-danger">*</span></label>
+                                                            <input type="number" class="form-control" name="kebutuhan_kalori_per_kg" 
+                                                                   id="kebutuhan_kalori_per_kg" step="1" 
+                                                                   placeholder="Sesuaikan dalam rentang yang tersedia" 
+                                                                   disabled>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label style="min-width: 200px;">Total Kebutuhan Kalori (Kkal)</label>
+                                                            <input type="number" class="form-control bg-light" name="total_kebutuhan_kalori" 
+                                                                   id="total_kebutuhan_kalori" step="0.1" readonly 
+                                                                   placeholder="Akan dihitung otomatis" style="background-color: #f8f9fa;">
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Hidden input untuk menyimpan mode perhitungan -->
+                                                    <input type="hidden" name="mode_perhitungan" id="mode_perhitungan" value="normal">
+                                                </div>
+                                                
+                                                <!-- Update Section Distribusi Makronutrien -->
+                                                <div class="row g-3 mt-3">
+                                                    <div class="col-md-12">
+                                                        <h6 class="mb-3 text-primary">DISTRIBUSI MAKRONUTRIEN</h6>
+                                                        
+                                                        <!-- Mode Normal: Persentase -->
+                                                        <div class="border rounded p-4 bg-light" id="makronutrien_normal">
+                                                            <div class="row g-3">
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <label class="form-label fw-bold">Protein</label>
+                                                                        <div class="row g-2">
+                                                                            <div class="col-6">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <input type="number" class="form-control" name="protein_persen" 
+                                                                                        id="protein_persen" placeholder="12.5" step="0.1" value="12.5">
+                                                                                    <span class="input-group-text">%</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-6">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <input type="number" class="form-control bg-light" name="protein_gram" 
+                                                                                        id="protein_gram" placeholder="gram" readonly style="background-color: #f8f9fa;">
+                                                                                    <span class="input-group-text">gr</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <small class="text-muted">= (% × Kalori ÷ 4)</small>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <label class="form-label fw-bold">Lemak</label>
+                                                                        <div class="row g-2">
+                                                                            <div class="col-6">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <input type="number" class="form-control" name="lemak_persen" 
+                                                                                        id="lemak_persen" placeholder="30" step="0.1" value="30">
+                                                                                    <span class="input-group-text">%</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-6">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <input type="number" class="form-control bg-light" name="lemak_gram" 
+                                                                                        id="lemak_gram" placeholder="gram" readonly style="background-color: #f8f9fa;">
+                                                                                    <span class="input-group-text">gr</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <small class="text-muted">= (% × Kalori ÷ 9)</small>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <label class="form-label fw-bold">Karbohidrat</label>
+                                                                        <div class="row g-2">
+                                                                            <div class="col-6">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <input type="number" class="form-control" name="kh_persen" 
+                                                                                        id="kh_persen" placeholder="57.5" step="0.1" value="57.5">
+                                                                                    <span class="input-group-text">%</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-6">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <input type="number" class="form-control bg-light" name="kh_gram" 
+                                                                                        id="kh_gram" placeholder="gram" readonly style="background-color: #f8f9fa;">
+                                                                                    <span class="input-group-text">gr</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <small class="text-muted">= (% × Kalori ÷ 4)</small>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <!-- Mode Gizi Buruk: Gram per kg BB -->
+                                                        <div class="border rounded p-4" id="makronutrien_gizi_buruk" style="display: none; background-color: #fff3cd;">
+                                                            <div class="alert alert-warning mb-3" style="margin-bottom: 1rem;">
+                                                                <strong>Mode Rehabilitasi Gizi Buruk:</strong> Input dalam gram per kg berat badan. Karbohidrat otomatis dihitung sebagai sisa kalori.
+                                                            </div>
+                                                            
+                                                            <div class="row g-3">
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <label class="form-label fw-bold text-success">Protein</label>
+                                                                        <div class="row g-2">
+                                                                            <div class="col-8">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <input type="number" class="form-control" name="protein_gram_per_kg" 
+                                                                                        id="protein_gram_per_kg" placeholder="0" step="0.1" min="0" max="10">
+                                                                                    <span class="input-group-text">gr/kg BB</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-4">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <input type="number" class="form-control bg-light" name="protein_gram_total" 
+                                                                                        id="protein_gram_total" placeholder="total" readonly style="background-color: #f8f9fa;">
+                                                                                    <span class="input-group-text">gr</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <small class="text-muted" id="protein_range_info">Rentang: -</small>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <label class="form-label fw-bold text-warning">Lemak</label>
+                                                                        <div class="row g-2">
+                                                                            <div class="col-8">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <input type="number" class="form-control" name="lemak_gram_per_kg" 
+                                                                                        id="lemak_gram_per_kg" placeholder="0" step="0.1" min="0" max="5">
+                                                                                    <span class="input-group-text">gr/kg BB</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-4">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <input type="number" class="form-control bg-light" name="lemak_gram_total" 
+                                                                                        id="lemak_gram_total" placeholder="total" readonly style="background-color: #f8f9fa;">
+                                                                                    <span class="input-group-text">gr</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <small class="text-muted" id="lemak_range_info">Rentang: -</small>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <label class="form-label fw-bold text-primary">Karbohidrat</label>
+                                                                        <div class="row g-2">
+                                                                            <div class="col-8">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <input type="number" class="form-control bg-light" name="kh_gram_per_kg" 
+                                                                                        id="kh_gram_per_kg" placeholder="auto" readonly style="background-color: #f8f9fa;">
+                                                                                    <span class="input-group-text">gr/kg BB</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-4">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <input type="number" class="form-control bg-light" name="kh_gram_total" 
+                                                                                        id="kh_gram_total" placeholder="total" readonly style="background-color: #f8f9fa;">
+                                                                                    <span class="input-group-text">gr</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <small class="text-muted">= Sisa kalori ÷ 4</small>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                             </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="section-separator" id="asesmen-gizi">
+                                        <h5 class="section-title">Asesmen Gizi</h5>
+
+                                        <div class="form-group">
+                                            <label style="min-width: 220px;">Biokimia</label>
+                                            <textarea class="form-control" name="biokimia" rows="4"
+                                                placeholder="Sebutkan biokimia..."></textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label style="min-width: 220px;">Kimia/Fisik</label>
+                                            <textarea class="form-control" name="kimia_fisik" rows="4"
+                                                placeholder="Sebutkan kimia/fisik..."></textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label style="min-width: 220px;">Riwayat Gizi dll</label>
+                                            <textarea class="form-control" name="riwayat_gizi" rows="4"
+                                                placeholder="Sebutkan riwayat gizi..."></textarea>
+                                        </div>
+                                    
+                                    </div>
+
+                                    <div class="section-separator" id="diagnosa_gizi">
+                                        <h5 class="section-title">8. Diagnosa Gizi</h5>
+
+                                        <div class="form-group">
+                                            <label style="min-width: 220px;">Diagnosa Gizi</label>
+                                            <textarea class="form-control" name="diagnosa_gizi" rows="4"
+                                                placeholder="Sebutkan diagnosa gizi..."></textarea>
                                         </div>
                                     </div>
 

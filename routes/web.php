@@ -123,6 +123,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\TindakanController as RawatInap
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenController as RawatJalanAsesmenController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenKeperawatanRajalController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenKulitKelaminController as RawatJalanAsesmenKulitKelaminController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\FarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\KonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController as RawatJalanLabPatologiKlinikController;
@@ -387,6 +388,49 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::post('/', 'store')->name('.store');
                                         Route::put('/{id}', 'update')->name('.update');
+                                    });
+                                });
+                            });
+
+                            Route::prefix('asesmen')->group(function () {
+                                Route::name('.asesmen')->group(function () {
+
+                                    Route::prefix('medis')->group(function () {
+                                        Route::name('.medis')->group(function () {
+
+                                            //Kulit dan kelamin
+                                            Route::prefix('kulit-kelamin')->group(function () {
+                                                Route::name('.kulit-kelamin')->group(function () {
+                                                    Route::controller(RawatJalanAsesmenKulitKelaminController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
+                                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                        Route::put('/{id}', 'update')->name('.update');
+                                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                                    });
+                                                });
+                                            });
+
+                                        });
+                                    });
+
+                                    Route::prefix('keperawatan')->group(function () {
+                                        Route::name('.keperawatan')->group(function () {
+
+                                            // Route::prefix('anak')->group(function () {
+                                            //     Route::name('.anak')->group(function () {
+                                            //         Route::controller(AsesmenKepAnakController::class)->group(function () {
+                                            //             Route::get('/', 'index')->name('.index');
+                                            //             Route::post('/', 'store')->name('.store');
+                                            //             Route::get('/{id}', 'show')->name('.show');
+                                            //             Route::get('/{id}/edit', 'edit')->name('.edit');
+                                            //             Route::put('/{id}', 'update')->name('.update');
+                                            //         });
+                                            //     });
+                                            // });
+                                            
+                                        });
                                     });
                                 });
                             });
