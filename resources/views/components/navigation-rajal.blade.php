@@ -179,6 +179,16 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
+        [
+            'icon' => 'agree.png',
+            'label' => 'Catatan Poloklinik',
+            'link' => route('rawat-jalan.catatan-poliklinik.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
     ];
 
 @endphp

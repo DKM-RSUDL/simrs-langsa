@@ -149,6 +149,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenGinekologikController a
 use App\Http\Controllers\UnitPelayanan\RawatJalan\EWSPasienAnakController as RajalEWSPasienAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\EWSPasienDewasaController as RajalEWSPasienDewasaController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\EWSPasienObstetrikController as RajalEWSPasienObstetrikController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\CatatanPoliKlinikController as RajalCatatanPoliKlinikController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
@@ -316,8 +317,6 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
-
-
 
                             Route::prefix('radiologi')->group(function () {
                                 Route::name('.radiologi')->group(function () {
@@ -645,6 +644,22 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::put('/{data}', 'update')->name('.update');
                                         Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                                         Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
+                            // Catatan Poliklinik
+                            Route::prefix('catatan-poliklinik')->group(function () {
+                                Route::name('.catatan-poliklinik')->group(function () {
+                                    Route::controller(RajalCatatanPoliKlinikController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                                     });
                                 });
                             });
