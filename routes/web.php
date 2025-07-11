@@ -30,7 +30,10 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\FarmasiController as GawatDa
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\GeneralConsentController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\KonsultasiController as GawatDaruratKonsultasiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\LaborController as GawatDaruratLaborController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\MppAController as GawatDaruratMppAController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\MppBController as GawatDaruratMppBController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\PapsController as GawatDaruratPapsController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\PengawasanDarahController as GawatDaruratPengawasanDarahController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\PenolakanResusitasiController as GawatDaruratPenolakanResusitasiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\PenundaanPelayananController as GawatDaruratPenundaanPelayananController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\PermintaanDarahController;
@@ -123,6 +126,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\SuratKematianController as Rawa
 use App\Http\Controllers\UnitPelayanan\RawatInap\TindakanController as RawatInapTindakanController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenController as RawatJalanAsesmenController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenGeriatriController as RawatJalanAsesmenGeriatriController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenKeperawatanRajalController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenKulitKelaminController as RawatJalanAsesmenKulitKelaminController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenPsikiatriController as RawatJalanAsesmenPsikiatriController;
@@ -145,6 +149,9 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalHivArtAkhirFollowUpContro
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalPernyataandpjpController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenParuController as RajalAsesmenParuController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenGinekologikController as RajalAsesmenGinekologikController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\MppAController as RawatJalanMppAController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\MppBController as RawatJalanMppBController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\PengawasanDarahController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
@@ -472,6 +479,21 @@ Route::middleware('ssoToken')->group(function () {
                                                 });
                                             });
 
+                                            //Geriatri
+                                            Route::prefix('geriatri')->group(function () {
+                                                Route::name('.geriatri')->group(function () {
+                                                    Route::controller(RawatJalanAsesmenGeriatriController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
+                                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                        Route::put('/{id}', 'update')->name('.update');
+                                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                                    });
+                                                });
+                                            });
+
+
                                         });
                                     });
 
@@ -611,6 +633,74 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
+
+                            Route::prefix('mpp')->group(function () {
+                                Route::name('.mpp')->group(function () {
+                                    //FORM A
+                                    Route::prefix('form-a')->group(function () {
+                                        Route::name('.form-a')->group(function () {
+                                            Route::controller(RawatJalanMppAController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                Route::put('/{id}', 'update')->name('.update');
+                                                Route::get('/show/{id}', 'show')->name('.show');
+                                                Route::delete('/{id}', 'destroy')->name('.destroy');
+                                                Route::get('/print/{id}', 'print')->name('.print');
+                                            });
+                                        });
+                                    });
+
+                                    //FORM B
+                                    Route::prefix('form-b')->group(function () {
+                                        Route::name('.form-b')->group(function () {
+                                            Route::controller(RawatJalanMppBController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                Route::put('/{id}', 'update')->name('.update');
+                                                Route::get('/show/{id}', 'show')->name('.show');
+                                                Route::delete('/{id}', 'destroy')->name('.destroy');
+                                                Route::get('/print/{id}', 'print')->name('.print');
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+
+                            //pengawasan darah
+                            Route::prefix('pengawasan-darah')->group(function () {
+                                Route::name('.pengawasan-darah')->group(function () {
+                                    Route::controller(PengawasanDarahController::class)->group(function () {
+                                        // Route utama index
+                                        Route::get('/', 'index')->name('.index');
+
+                                        // Routes untuk MONITORING
+                                        Route::prefix('monitoring')->group(function () {
+                                            Route::get('/create', 'createMonitoring')->name('.monitoring.create');
+                                            Route::post('/', 'storeMonitoring')->name('.monitoring.store');
+                                            Route::get('/{id}', 'showMonitoring')->name('.monitoring.show');
+                                            Route::get('/{id}/edit', 'editMonitoring')->name('.monitoring.edit');
+                                            Route::put('/{id}', 'updateMonitoring')->name('.monitoring.update');
+                                            Route::delete('/{id}', 'destroyMonitoring')->name('.monitoring.destroy');
+                                        });
+
+                                        // Routes untuk PENGELOLAAN
+                                        Route::prefix('pengelolaan')->group(function () {
+                                            Route::get('/create', 'createPengelolaan')->name('.pengelolaan.create');
+                                            Route::post('/', 'storePengelolaan')->name('.pengelolaan.store');
+                                            Route::get('/{id}', 'showPengelolaan')->name('.pengelolaan.show');
+                                            Route::get('/{id}/edit', 'editPengelolaan')->name('.pengelolaan.edit');
+                                            Route::put('/{id}', 'updatePengelolaan')->name('.pengelolaan.update');
+                                            Route::delete('/{id}', 'destroyPengelolaan')->name('.pengelolaan.destroy');
+                                        });
+                                        Route::get('/print', 'printPengawasanDarah')->name('.print');
+                                    });
+                                });
+                            });
+
                         });
                     });
                 });
@@ -1850,6 +1940,74 @@ Route::middleware('ssoToken')->group(function () {
                                     Route::put('/{data}', 'update')->name('.update');
                                     Route::delete('/{data}', 'destroy')->name('.destroy');
                                     Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                });
+                            });
+                        });
+
+                        //MPP
+                        Route::prefix('{urut_masuk}/mpp')->group(function () {
+                            Route::name('mpp')->group(function () {
+                                //FORM A
+                                Route::prefix('form-a')->group(function () {
+                                    Route::name('.form-a')->group(function () {
+                                        Route::controller(GawatDaruratMppAController::class)->group(function () {
+                                            Route::get('/', 'index')->name('.index');
+                                            Route::get('/create', 'create')->name('.create');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::get('/{id}/edit', 'edit')->name('.edit');
+                                            Route::put('/{id}', 'update')->name('.update');
+                                            Route::get('/show/{id}', 'show')->name('.show');
+                                            Route::delete('/{id}', 'destroy')->name('.destroy');
+                                            Route::get('/print/{id}', 'print')->name('.print');
+                                        });
+                                    });
+                                });
+
+                                //FORM B
+                                Route::prefix('form-b')->group(function () {
+                                    Route::name('.form-b')->group(function () {
+                                        Route::controller(GawatDaruratMppBController::class)->group(function () {
+                                            Route::get('/', 'index')->name('.index');
+                                            Route::get('/create', 'create')->name('.create');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::get('/{id}/edit', 'edit')->name('.edit');
+                                            Route::put('/{id}', 'update')->name('.update');
+                                            Route::get('/show/{id}', 'show')->name('.show');
+                                            Route::delete('/{id}', 'destroy')->name('.destroy');
+                                            Route::get('/print/{id}', 'print')->name('.print');
+                                        });
+                                    });
+                                });
+                            });
+                        });
+
+                        //pengawasan darah
+                        Route::prefix('{urut_masuk}/pengawasan-darah')->group(function () {
+                            Route::name('pengawasan-darah')->group(function () {
+                                Route::controller(GawatDaruratPengawasanDarahController::class)->group(function () {
+                                    // Route utama index
+                                    Route::get('/', 'index')->name('.index');
+
+                                    // Routes untuk MONITORING
+                                    Route::prefix('monitoring')->group(function () {
+                                        Route::get('/create', 'createMonitoring')->name('.monitoring.create');
+                                        Route::post('/', 'storeMonitoring')->name('.monitoring.store');
+                                        Route::get('/{id}', 'showMonitoring')->name('.monitoring.show');
+                                        Route::get('/{id}/edit', 'editMonitoring')->name('.monitoring.edit');
+                                        Route::put('/{id}', 'updateMonitoring')->name('.monitoring.update');
+                                        Route::delete('/{id}', 'destroyMonitoring')->name('.monitoring.destroy');
+                                    });
+
+                                    // Routes untuk PENGELOLAAN
+                                    Route::prefix('pengelolaan')->group(function () {
+                                        Route::get('/create', 'createPengelolaan')->name('.pengelolaan.create');
+                                        Route::post('/', 'storePengelolaan')->name('.pengelolaan.store');
+                                        Route::get('/{id}', 'showPengelolaan')->name('.pengelolaan.show');
+                                        Route::get('/{id}/edit', 'editPengelolaan')->name('.pengelolaan.edit');
+                                        Route::put('/{id}', 'updatePengelolaan')->name('.pengelolaan.update');
+                                        Route::delete('/{id}', 'destroyPengelolaan')->name('.pengelolaan.destroy');
+                                    });
+                                    Route::get('/print', 'printPengawasanDarah')->name('.print');
                                 });
                             });
                         });

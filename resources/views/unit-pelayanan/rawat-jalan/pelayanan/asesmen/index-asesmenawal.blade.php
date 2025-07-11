@@ -230,7 +230,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="">
+                        <a class="dropdown-item" href="{{ route('rawat-jalan.asesmen.medis.geriatri.index', ['kd_unit' => request()->route('kd_unit'),'kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), 'urut_masuk' => request()->route('urut_masuk')]) }}">
                             <i class="fas fa-walking me-2"></i>Geriatri
                         </a>
                     </li>
@@ -382,6 +382,19 @@
                         <i class="fas fa-edit"></i> Edit
                     </a>
                 @endif
+
+                @if ($item->kategori == 1 && $item->sub_kategori == 12)
+                    <a href="{{ route('rawat-jalan.asesmen.medis.geriatri.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-sm btn-info">
+                        <i class="fas fa-eye me-1"></i> Lihat
+                    </a>
+
+                    <a href="{{ route('rawat-jalan.asesmen.medis.geriatri.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-sm btn-secondary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                @endif
+
             </div>
         </li>
     @endforeach

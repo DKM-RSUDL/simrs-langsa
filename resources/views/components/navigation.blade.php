@@ -82,6 +82,11 @@
             'label' => 'Edukasi',
             'link' => route('edukasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
+        [
+            'icon' => 'info.png',
+            'label' => 'MPP',
+            'link' => route('mpp.form-a.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+        ],
         // [
         //     'icon' => 'goal.png',
         //     'label' => 'Care Plan',
