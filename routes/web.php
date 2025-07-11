@@ -41,6 +41,9 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\RujukController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\SuratKematianController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\EWSPasienAnakController as GawatDaruratEWSPasienAnakController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\EWSPasienDewasaController as GawatDaruratEWSPasienDewasaController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\EWSPasienObstetrikController as GawatDaruratEWSPasienObstetrikController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenHemodialisaKeperawatanController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenMedisController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\BeratBadanKeringController;
@@ -143,6 +146,9 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalHivArtAkhirFollowUpContro
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalPernyataandpjpController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenParuController as RajalAsesmenParuController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenGinekologikController as RajalAsesmenGinekologikController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\EWSPasienAnakController as RajalEWSPasienAnakController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\EWSPasienDewasaController as RajalEWSPasienDewasaController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\EWSPasienObstetrikController as RajalEWSPasienObstetrikController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
@@ -455,7 +461,6 @@ Route::middleware('ssoToken')->group(function () {
                                                     });
                                                 });
                                             });
-
                                         });
                                     });
 
@@ -595,6 +600,54 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
+
+                            // EWS Pasien Dewasa
+                            Route::prefix('ews-pasien-dewasa')->group(function () {
+                                Route::name('.ews-pasien-dewasa')->group(function () {
+                                    Route::controller(RajalEWSPasienDewasaController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
+                            // EWS Pasien Anak
+                            Route::prefix('ews-pasien-anak')->group(function () {
+                                Route::name('.ews-pasien-anak')->group(function () {
+                                    Route::controller(RajalEWSPasienAnakController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
+                            // EWS Pasien Obstetrik
+                            Route::prefix('ews-pasien-obstetrik')->group(function () {
+                                Route::name('.ews-pasien-obstetrik')->group(function () {
+                                    Route::controller(RajalEWSPasienObstetrikController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
                         });
                     });
                 });
@@ -693,10 +746,10 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
-                            // pra-anestesi
-                            Route::prefix('asesmen-pra-anestesi')->group(function () {
-                                Route::name('.asesmen-pra-anestesi')->group(function () {
-                                    Route::controller(AsesmenPraAnestesiController::class)->group(function () {
+                            // EWS Pasien Obstetrik
+                            Route::prefix('ews-pasien-obstetrik')->group(function () {
+                                Route::name('.ews-pasien-obstetrik')->group(function () {
+                                    Route::controller(EWSPasienObstetrikController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/create', 'create')->name('.create');
@@ -709,10 +762,10 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
-                            // EWS Pasien Obstetrik
-                            Route::prefix('ews-pasien-obstetrik')->group(function () {
-                                Route::name('.ews-pasien-obstetrik')->group(function () {
-                                    Route::controller(EWSPasienObstetrikController::class)->group(function () {
+                            // pra-anestesi
+                            Route::prefix('asesmen-pra-anestesi')->group(function () {
+                                Route::name('.asesmen-pra-anestesi')->group(function () {
+                                    Route::controller(AsesmenPraAnestesiController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/create', 'create')->name('.create');
@@ -1810,6 +1863,55 @@ Route::middleware('ssoToken')->group(function () {
                         Route::prefix('{urut_masuk}/permintaan-second-opinion')->group(function () {
                             Route::name('permintaan-second-opinion')->group(function () {
                                 Route::controller(GawatDaruratPermintaanSecondOpinionController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                });
+                            });
+                        });
+
+                        // EWS Pasien Dewasa
+                        Route::prefix('{urut_masuk}/ews-pasien-dewasa')->group(function () {
+                            Route::name('ews-pasien-dewasa')->group(function () {
+                                Route::controller(GawatDaruratEWSPasienDewasaController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                });
+                            });
+                        });
+
+
+                        // EWS Pasien Anak
+                        Route::prefix('{urut_masuk}/ews-pasien-anak')->group(function () {
+                            Route::name('ews-pasien-anak')->group(function () {
+                                Route::controller(GawatDaruratEWSPasienAnakController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                });
+                            });
+                        });
+
+                        // EWS Pasien Obstetrik
+                        Route::prefix('{urut_masuk}/ews-pasien-obstetrik')->group(function () {
+                            Route::name('ews-pasien-obstetrik')->group(function () {
+                                Route::controller(GawatDaruratEWSPasienObstetrikController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::post('/', 'store')->name('.store');
                                     Route::get('/create', 'create')->name('.create');

@@ -169,6 +169,16 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
+        [
+            'icon' => 'observasi.png',
+            'label' => 'EWS',
+            'link' => route('rawat-jalan.ews-pasien-dewasa.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
     ];
 
 @endphp

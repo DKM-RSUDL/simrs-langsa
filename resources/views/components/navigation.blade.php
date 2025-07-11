@@ -88,6 +88,11 @@
         //     'link' => route('careplan.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
         // ],
         [
+            'icon' => 'observasi.png',
+            'label' => 'EWS',
+            'link' => route('ews-pasien-dewasa.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+        ],
+        [
             'icon' => 'cv.png',
             'label' => 'Resume',
             'link' => route('resume.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
