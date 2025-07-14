@@ -13,10 +13,8 @@
                 <i class="ti-arrow-left"></i> Kembali
             </a>
             <form id="edukasiForm" method="POST"
-                action="{{ route('edukasi.store', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}">
+                action="{{ route('edukasi.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
                 @csrf
-                <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
-                <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
 
                 <div class="d-flex justify-content-center">
                     <div class="card w-100 h-100 shadow-sm">
@@ -28,6 +26,7 @@
 
                             <div class="px-3">
 
+                                <input type="hidden" name="role" value="{{ $role }}">
                                 <!-- 1. Kebutuhan Penerjemah -->
                                 <div class="section-separator" id="kebutuhan-penerjemah">
                                     <h5 class="section-title">1. Kebutuhan Penerjemah</h5>
@@ -141,116 +140,120 @@
 
                                 <!-- Bagian Kebutuhan Edukasi (Menggunakan Kartu Vertikal) -->
                                 <div class="section-separator" id="kebutuhan-edukasi-table">
-                                    <h5 class="section-title">Kebutuhan Edukasi</h5>
+                                    <h5 class="section-title">Kebutuhan Edukasi ({{ str()->title($role) }})</h5>
                                     <div class="edukasi-cards">
-                                        <!-- 1. Kondisi medis, diagnosis, rencana perawatan dan terapi yang diberikan -->
-                                        <div class="card edukasi-card mb-4">
-                                            <div class="card-body">
-                                                <h6 class="card-title">1. Kondisi medis, diagnosis, rencana perawatan dan
-                                                    terapi yang diberikan</h6>
-                                                <div class="form-group">
-                                                    <label>keterangan</label>
-                                                    <input type="text" class="form-control" name="ket_Kondisi_medis_1"
-                                                        placeholder="Masukkan keterangan">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Tanggal</label>
-                                                    <input type="date" class="form-control" name="tanggal_1">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Sasaran</label>
-                                                    <input type="text" class="form-control" name="sasaran_nama_1"
-                                                        placeholder="Nama dan hubungan dengan pasien">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Edukator</label>
-                                                    <input type="text" class="form-control" name="edukator_nama_1"
-                                                        placeholder="Nama & profesi edukator">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Tingkat Pemahaman Awal</label>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input"
-                                                            id="pemahaman_awal_1_hal_baru" name="pemahaman_awal_1[]"
-                                                            value="hal_baru">
-                                                        <label class="form-check-label" for="pemahaman_awal_1_hal_baru">Hal
-                                                            Baru</label>
+
+                                        @if (in_array(1, $sectionAccess))
+                                            <!-- 1. Kondisi medis, diagnosis, rencana perawatan dan terapi yang diberikan -->
+                                            <div class="card edukasi-card mb-4">
+                                                <div class="card-body">
+                                                    <h6 class="card-title">1. Kondisi medis, diagnosis, rencana perawatan dan
+                                                        terapi yang diberikan</h6>
+                                                    <div class="form-group">
+                                                        <label>keterangan</label>
+                                                        <input type="text" class="form-control" name="ket_Kondisi_medis_1"
+                                                            placeholder="Masukkan keterangan">
                                                     </div>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input"
-                                                            id="pemahaman_awal_1_edukasi_ulang" name="pemahaman_awal_1[]"
-                                                            value="edukasi_ulang">
-                                                        <label class="form-check-label"
-                                                            for="pemahaman_awal_1_edukasi_ulang">Edukasi Ulang</label>
+                                                    <div class="form-group">
+                                                        <label>Tanggal</label>
+                                                        <input type="date" class="form-control" name="tanggal_1">
                                                     </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Metode</label>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="metode_1_lisan"
-                                                            name="metode_1[]" value="lisan">
-                                                        <label class="form-check-label" for="metode_1_lisan">Lisan</label>
+                                                    <div class="form-group">
+                                                        <label>Sasaran</label>
+                                                        <input type="text" class="form-control" name="sasaran_nama_1"
+                                                            placeholder="Nama dan hubungan dengan pasien">
                                                     </div>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input"
-                                                            id="metode_1_demonstrasi" name="metode_1[]" value="demonstrasi">
-                                                        <label class="form-check-label"
-                                                            for="metode_1_demonstrasi">Demonstrasi</label>
+                                                    <div class="form-group">
+                                                        <label>Edukator</label>
+                                                        <input type="text" class="form-control" name="edukator_nama_1"
+                                                            placeholder="Nama & profesi edukator">
                                                     </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Media</label>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="media_1_leaflet"
-                                                            name="media_1[]" value="leaflet">
-                                                        <label class="form-check-label"
-                                                            for="media_1_leaflet">Leaflet</label>
+                                                    <div class="form-group">
+                                                        <label>Tingkat Pemahaman Awal</label>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="pemahaman_awal_1_hal_baru" name="pemahaman_awal_1[]"
+                                                                value="hal_baru">
+                                                            <label class="form-check-label" for="pemahaman_awal_1_hal_baru">Hal
+                                                                Baru</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="pemahaman_awal_1_edukasi_ulang" name="pemahaman_awal_1[]"
+                                                                value="edukasi_ulang">
+                                                            <label class="form-check-label"
+                                                                for="pemahaman_awal_1_edukasi_ulang">Edukasi Ulang</label>
+                                                        </div>
                                                     </div>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="media_1_booklet"
-                                                            name="media_1[]" value="booklet">
-                                                        <label class="form-check-label"
-                                                            for="media_1_booklet">Booklet</label>
+                                                    <div class="form-group">
+                                                        <label>Metode</label>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input" id="metode_1_lisan"
+                                                                name="metode_1[]" value="lisan">
+                                                            <label class="form-check-label" for="metode_1_lisan">Lisan</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="metode_1_demonstrasi" name="metode_1[]" value="demonstrasi">
+                                                            <label class="form-check-label"
+                                                                for="metode_1_demonstrasi">Demonstrasi</label>
+                                                        </div>
                                                     </div>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input"
-                                                            id="media_1_audiovisual" name="media_1[]" value="audiovisual">
-                                                        <label class="form-check-label"
-                                                            for="media_1_audiovisual">Audiovisual</label>
+                                                    <div class="form-group">
+                                                        <label>Media</label>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input" id="media_1_leaflet"
+                                                                name="media_1[]" value="leaflet">
+                                                            <label class="form-check-label"
+                                                                for="media_1_leaflet">Leaflet</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input" id="media_1_booklet"
+                                                                name="media_1[]" value="booklet">
+                                                            <label class="form-check-label"
+                                                                for="media_1_booklet">Booklet</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="media_1_audiovisual" name="media_1[]" value="audiovisual">
+                                                            <label class="form-check-label"
+                                                                for="media_1_audiovisual">Audiovisual</label>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Evaluasi/Edukasi Ulang</label>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input"
-                                                            id="evaluasi_1_sudah_paham" name="evaluasi_1[]"
-                                                            value="sudah_paham">
-                                                        <label class="form-check-label" for="evaluasi_1_sudah_paham">Sudah
-                                                            Paham</label>
+                                                    <div class="form-group">
+                                                        <label>Evaluasi/Edukasi Ulang</label>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="evaluasi_1_sudah_paham" name="evaluasi_1[]"
+                                                                value="sudah_paham">
+                                                            <label class="form-check-label" for="evaluasi_1_sudah_paham">Sudah
+                                                                Paham</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="evaluasi_1_re_demonstrasi" name="evaluasi_1[]"
+                                                                value="re_demonstrasi">
+                                                            <label class="form-check-label"
+                                                                for="evaluasi_1_re_demonstrasi">Re-demonstrasi</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="evaluasi_1_re_edukasi" name="evaluasi_1[]"
+                                                                value="re_edukasi">
+                                                            <label class="form-check-label"
+                                                                for="evaluasi_1_re_edukasi">Re-edukasi</label>
+                                                        </div>
                                                     </div>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input"
-                                                            id="evaluasi_1_re_demonstrasi" name="evaluasi_1[]"
-                                                            value="re_demonstrasi">
-                                                        <label class="form-check-label"
-                                                            for="evaluasi_1_re_demonstrasi">Re-demonstrasi</label>
+                                                    <div class="form-group">
+                                                        <label>Lama Edukasi</label>
+                                                        <input type="text" class="form-control" name="lama_edukasi_1"
+                                                            placeholder="Masukkan lama edukasi">
                                                     </div>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input"
-                                                            id="evaluasi_1_re_edukasi" name="evaluasi_1[]"
-                                                            value="re_edukasi">
-                                                        <label class="form-check-label"
-                                                            for="evaluasi_1_re_edukasi">Re-edukasi</label>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Lama Edukasi</label>
-                                                    <input type="text" class="form-control" name="lama_edukasi_1"
-                                                        placeholder="Masukkan lama edukasi">
                                                 </div>
                                             </div>
-                                        </div>
-
+                                        @endif
+                                        
+                                        @if (in_array(2, $sectionAccess))
                                         <!-- 2. Kemungkinan hasil yang tidak dapat diantisipasi dari terapi dan perawatan -->
                                         <div class="card edukasi-card mb-4">
                                             <div class="card-body">
@@ -353,7 +356,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif                                        
 
+                                        @if (in_array(3, $sectionAccess))
                                         <!-- 3. Manfaat obat-obatan, efek samping, serta interaksi obat dan makanan yang diberikan -->
                                         <div class="card edukasi-card mb-4">
                                             <div class="card-body">
@@ -456,7 +461,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
 
+                                        @if (in_array(4, $sectionAccess))
                                         <!-- 4. Program diet dan nutrisi sebutkan... -->
                                         <div class="card edukasi-card mb-4">
                                             <div class="card-body">
@@ -563,7 +570,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
 
+                                        @if (in_array(5, $sectionAccess))                                        
                                         <!-- 5. Manajemen Nyeri kemungkinan timbulnya nyeri setelah menerima terapi/prosedur/perawatan medis/Pilihan tatalaksana Nyeri -->
                                         <div class="card edukasi-card mb-4">
                                             <div class="card-body">
@@ -667,7 +676,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
 
+                                        @if (in_array(6, $sectionAccess))
                                         <!-- 6. Cuci tangan (Hand Hygiene) -->
                                         <div class="card edukasi-card mb-4">
                                             <div class="card-body">
@@ -769,7 +780,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
 
+                                        @if (in_array(7, $sectionAccess))
                                         <!-- 7. Waktu kontrol dan penggunaan obat-obatan di rumah -->
                                         <div class="card edukasi-card mb-4">
                                             <div class="card-body">
@@ -872,7 +885,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
 
+                                        {{-- @if (in_array(8, $sectionAccess))
                                         <!-- 8. Waktu kontrol dan penggunaan obat-obatan di rumah -->
                                         <div class="card edukasi-card mb-4">
                                             <div class="card-body">
@@ -975,7 +990,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif --}}
 
+                                        @if (in_array(9, $sectionAccess))
                                         <!-- 9. Teknik Rehabilitasi -->
                                         <div class="card edukasi-card mb-4">
                                             <div class="card-body">
@@ -1087,7 +1104,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
 
+                                        @if (in_array(10, $sectionAccess))
                                         <!-- 10. Penggunaan peralatan medis secara efektif dan aman -->
                                         <div class="card edukasi-card mb-4">
                                             <div class="card-body">
@@ -1191,7 +1210,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
 
+                                        @if (in_array(11, $sectionAccess))
                                         <!-- 11. Jenis Pelayanan -->
                                         <div class="card edukasi-card mb-4">
                                             <div class="card-body">
@@ -1294,7 +1315,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
 
+                                        @if (in_array(12, $sectionAccess))
                                         <!-- 12. Perkiraan Biaya -->
                                         <div class="card edukasi-card mb-4">
                                             <div class="card-body">
@@ -1397,7 +1420,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
 
+                                        @if (in_array(13, $sectionAccess))
                                         <!-- 13. Hasil Pelayanan yang Diharapkan -->
                                         <div class="card edukasi-card mb-4">
                                             <div class="card-body">
@@ -1500,7 +1525,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
 
+                                        @if (in_array(14, $sectionAccess))
                                         <!-- 14. Hambatan Pemberian Edukasi -->
                                         <div class="card edukasi-card mb-4">
                                             <div class="card-body">
@@ -1609,7 +1636,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
 
+                                        @if (in_array(15, $sectionAccess))
                                         <!-- 15. Pertanyaan Pasien -->
                                         <div class="card edukasi-card mb-4">
                                             <div class="card-body">
@@ -1717,7 +1746,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
 
+                                        @if (in_array(16, $sectionAccess))
                                         <!-- 16. Preferensi Pasien -->
                                         <div class="card edukasi-card mb-4">
                                             <div class="card-body">
@@ -1826,6 +1857,8 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
+
                                     </div>
                                 </div>
                             </div>

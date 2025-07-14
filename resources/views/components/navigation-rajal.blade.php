@@ -169,10 +169,28 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
-        [
-            'icon' => 'info.png',
+        'icon' => 'info.png',
             'label' => 'Gizi',
             'link' => route('rawat-jalan.gizi.anak.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        [
+            'icon' => 'observasi.png',
+            'label' => 'EWS',
+            'link' => route('rawat-jalan.ews-pasien-dewasa.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
+        [
+            'icon' => 'agree.png',
+            'label' => 'Catatan Poloklinik',
+            'link' => route('rawat-jalan.catatan-poliklinik.index', [
                 $dataMedis->kd_unit,
                 $dataMedis->kd_pasien,
                 $tglMasukData,
@@ -188,7 +206,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
-        ],
+        ]
     ];
 
 @endphp
