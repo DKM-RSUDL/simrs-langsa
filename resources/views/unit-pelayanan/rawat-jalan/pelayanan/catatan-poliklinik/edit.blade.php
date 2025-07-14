@@ -250,14 +250,6 @@
                 <i class="fas fa-arrow-left me-2"></i> Kembali
             </a>
 
-            <!-- Edit Notice -->
-            <div class="edit-notice">
-                <i class="fas fa-edit me-2"></i>
-                <strong>Mode Edit:</strong> Anda sedang mengedit catatan klinik yang dibuat pada
-                {{ \Carbon\Carbon::parse($catatanPoliklinik->tanggal)->format('d F Y') }} pukul
-                {{ \Carbon\Carbon::parse($catatanPoliklinik->jam)->format('H:i') }} WIB
-            </div>
-
             <form id="editCatatanKlinikForm" method="POST"
                 action="{{ route('rawat-jalan.catatan-poliklinik.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $catatanPoliklinik->id]) }}">
                 @csrf
