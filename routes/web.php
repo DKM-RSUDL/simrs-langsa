@@ -123,6 +123,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikContr
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapResumeController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SuratKematianController as RawatInapSuratKematianController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\TindakanController as RawatInapTindakanController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuhController as RawatInapResikoJatuhController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenController as RawatJalanAsesmenController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenKeperawatanRajalController;
@@ -1619,6 +1620,23 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
+
+                             // Resiko Jatuh
+                            Route::prefix('resiko-jatuh')->group(function () {
+                                Route::name('.resiko-jatuh')->group(function () {
+                                    Route::controller(RawatInapResikoJatuhController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
                         });
                     });
                 });
