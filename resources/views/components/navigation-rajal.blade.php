@@ -170,6 +170,16 @@
             ]),
         ],
         [
+            'icon' => 'info.png',
+            'label' => 'Gizi',
+            'link' => route('rawat-jalan.gizi.anak.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
+        [
             'icon' => 'verified_badge.png',
             'label' => 'MPP',
             'link' => route('rawat-jalan.mpp.form-a.index', [

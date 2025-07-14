@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan\RawatInap;
+namespace App\Http\Controllers\UnitPelayanan\RawatJalan;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
@@ -54,7 +54,7 @@ class GiziMonitoringController extends Controller
                 ->orderBy('tanggal_monitoring', 'desc')
                 ->get();
 
-            return view('unit-pelayanan.rawat-inap.pelayanan.gizi.monitoring.index', compact(
+            return view('unit-pelayanan.rawat-jalan.pelayanan.gizi.monitoring.index', compact(
                 'dataMedis',
                 'monitoringGizi'
             ));
@@ -128,7 +128,7 @@ class GiziMonitoringController extends Controller
                 }
             }
 
-            return view('unit-pelayanan.rawat-inap.pelayanan.gizi.monitoring.create', compact(
+            return view('unit-pelayanan.rawat-jalan.pelayanan.gizi.monitoring.create', compact(
                 'dataMedis',
                 'kd_unit',
                 'kd_pasien',
@@ -173,7 +173,7 @@ class GiziMonitoringController extends Controller
                 ]);
             });
 
-            return redirect()->route('rawat-inap.gizi.monitoring.index', [
+            return redirect()->route('rawat-jalan.gizi.monitoring.index', [
                 $kd_unit,
                 $kd_pasien,
                 $tgl_masuk,

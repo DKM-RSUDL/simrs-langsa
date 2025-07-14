@@ -149,6 +149,9 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalHivArtAkhirFollowUpContro
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalPernyataandpjpController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenParuController as RajalAsesmenParuController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenGinekologikController as RajalAsesmenGinekologikController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\GiziAnakController as RawatJalanGiziAnakController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\GiziDewasaController as RawatJalanGiziDewasaController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\GiziMonitoringController as RawatJalanGiziMonitoringController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\MppAController as RawatJalanMppAController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\MppBController as RawatJalanMppBController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\PengawasanDarahController;
@@ -697,6 +700,56 @@ Route::middleware('ssoToken')->group(function () {
                                             Route::delete('/{id}', 'destroyPengelolaan')->name('.pengelolaan.destroy');
                                         });
                                         Route::get('/print', 'printPengawasanDarah')->name('.print');
+                                    });
+                                });
+                            });
+
+
+                            //Gizi
+                            Route::prefix('gizi')->group(function () {
+                                Route::name('.gizi')->group(function () {
+
+                                    Route::prefix('anak')->group(function () {
+                                        Route::name('.anak')->group(function () {
+                                            Route::controller(RawatJalanGiziAnakController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                Route::put('/{id}', 'update')->name('.update');
+                                                Route::get('/show/{id}', 'show')->name('.show');
+                                                Route::get('/grafik{id}', 'grafik')->name('.grafik');
+                                                Route::delete('/{id}', 'destroy')->name('.destroy');
+                                                Route::get('/pdf/{id}', 'pdf')->name('.pdf');
+                                            });
+                                        });
+                                    });
+
+                                    Route::prefix('dewasa')->group(function () {
+                                        Route::name('.dewasa')->group(function () {
+                                            Route::controller(RawatJalanGiziDewasaController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                Route::put('/{id}', 'update')->name('.update');
+                                                Route::get('/show/{id}', 'show')->name('.show');
+                                                Route::delete('/{id}', 'destroy')->name('.destroy');
+                                                Route::get('/pdf/{id}', 'pdf')->name('.pdf');
+                                            });
+                                        });
+                                    });
+
+                                    Route::prefix('monitoring')->group(function () {
+                                        Route::name('.monitoring')->group(function () {
+                                            Route::controller(RawatJalanGiziMonitoringController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::put('/{id}', 'update')->name('.update');
+                                                Route::delete('/', 'destroy')->name('.destroy');
+                                            });
+                                        });
                                     });
                                 });
                             });
