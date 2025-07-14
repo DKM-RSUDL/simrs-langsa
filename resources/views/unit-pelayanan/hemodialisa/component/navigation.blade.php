@@ -144,6 +144,15 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
+        [
+            'icon' => 'agree.png',
+            'label' => 'Traveling Dialysis',
+            'link' => route('hemodialisa.pelayanan.traveling-dialysis.index', [
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
         // [
         //     'icon' => 'test_tube.png',
         //     'label' => 'Labor',

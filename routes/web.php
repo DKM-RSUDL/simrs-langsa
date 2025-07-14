@@ -53,6 +53,7 @@ use App\Http\Controllers\UnitPelayanan\Hemodialisa\MalnutritionInflammationScore
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\HDEdukasiController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\HDTindakanKhususController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\HDHasilEKGController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\TravelingDialysisController;
 use App\Http\Controllers\UnitPelayanan\HemodialisaController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
 use App\Http\Controllers\UnitPelayanan\Operasi\CeklistAnasthesiController;
@@ -2485,6 +2486,23 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
                         });
+
+                        //Traveling Dialysis
+                        Route::prefix('traveling-dialysis')->group(function () {
+                            Route::name('.traveling-dialysis')->group(function () {
+                                Route::controller(TravelingDialysisController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/{id}/edit', 'edit')->name('.edit');
+                                    Route::put('/{id}', 'update')->name('.update');
+                                    Route::get('/{id}', 'show')->name('.show');
+                                    Route::delete('/{id}', 'destroy')->name('.destroy');
+                                    Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                });
+                            });
+                        });
+
                     });
                 });
             });
