@@ -282,6 +282,56 @@
     .resiko_jatuh__keterangan-list li {
         margin-bottom: 8px;
     }
+
+    /* Style khusus untuk section intervensi */
+    .resiko_jatuh__intervensi-rr {
+        border-left: 4px solid #28a745;
+    }
+
+    .resiko_jatuh__intervensi-rr h5 {
+        color: #28a745;
+    }
+
+    .resiko_jatuh__intervensi-rs {
+        border-left: 4px solid #ffc107;
+    }
+
+    .resiko_jatuh__intervensi-rs h5 {
+        color: #856404;
+    }
+
+    .resiko_jatuh__intervensi-rt {
+        border-left: 4px solid #dc3545;
+    }
+
+    .resiko_jatuh__intervensi-rt h5 {
+        color: #dc3545;
+    }
+
+    .resiko_jatuh__table-intervensi {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    .resiko_jatuh__table-intervensi th,
+    .resiko_jatuh__table-intervensi td {
+        border: 1px solid #dee2e6;
+        padding: 8px;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 12px;
+    }
+
+    .resiko_jatuh__table-intervensi th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+    }
+
+    .resiko_jatuh__table-intervensi .shift-header {
+        background-color: #e9ecef;
+        font-weight: 600;
+    }
 </style>
 
 <div class="row">
@@ -336,51 +386,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Waktu Pengkajian -->
-                <!--<div class="resiko_jatuh__section-separator">
-                    <h5><i class="ti-time mr-2"></i>Pilih Waktu Pengkajian</h5>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-check resiko_jatuh__form-check" data-group="waktu_pengkajian">
-                                    <input class="form-check-input resiko_jatuh__form-check-input" type="radio" name="waktu_pengkajian" id="resikoJatuh_ia" value="IA" required>
-                                    <label class="form-check-label resiko_jatuh__form-check-label" for="resikoJatuh_ia">
-                                        <strong>Initial Assessment (IA)</strong><br>
-                                        <small class="text-muted">Saat pasien masuk RS</small>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-check resiko_jatuh__form-check" data-group="waktu_pengkajian">
-                                    <input class="form-check-input resiko_jatuh__form-check-input" type="radio" name="waktu_pengkajian" id="resikoJatuh_cc" value="CC">
-                                    <label class="form-check-label resiko_jatuh__form-check-label" for="resikoJatuh_cc">
-                                        <strong>Change Of Condition (CC)</strong><br>
-                                        <small class="text-muted">Saat kondisi pasien berubah</small>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-check resiko_jatuh__form-check" data-group="waktu_pengkajian">
-                                    <input class="form-check-input resiko_jatuh__form-check-input" type="radio" name="waktu_pengkajian" id="resikoJatuh_wt" value="WT">
-                                    <label class="form-check-label resiko_jatuh__form-check-label" for="resikoJatuh_wt">
-                                        <strong>Ward Transfer (WT)</strong><br>
-                                        <small class="text-muted">Saat dipindahkan ke unit lain</small>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-check resiko_jatuh__form-check" data-group="waktu_pengkajian">
-                                    <input class="form-check-input resiko_jatuh__form-check-input" type="radio" name="waktu_pengkajian" id="resikoJatuh_pf" value="PF">
-                                    <label class="form-check-label resiko_jatuh__form-check-label" for="resikoJatuh_pf">
-                                        <strong>Post Fall (PF)</strong><br>
-                                        <small class="text-muted">Setelah kejadian jatuh</small>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
 
                 <!-- Penilaian Resiko Jatuh -->
                 <div class="resiko_jatuh__section-separator">
@@ -517,7 +522,7 @@
 
                 <!-- Hasil Skor -->
                 <div class="resiko_jatuh__section-separator">
-                    <h5><i class="ti-stats-up mr-2"></i> Hasil Penilaian</h5>
+                    <h5><i class="ti-stats-up mr-2"></i>Hasil Penilaian</h5>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="card resiko_jatuh__card resiko_jatuh__result-card bg-light">
@@ -538,6 +543,196 @@
                     </div>
                 </div>
 
+                <!-- INTERVENSI RESIKO RENDAH (RR) -->
+                <div class="resiko_jatuh__section-separator resiko_jatuh__intervensi-rr" id="resikoJatuh_intervensiRR" style="display: none;">
+                    <h5><i class="ti-shield mr-2"></i> INTERVENSI PENCEGAHAN JATUH - RESIKO RENDAH/STANDAR (RR)</h5>
+
+                    <div class="alert alert-success">
+                        <strong><i class="ti-info-alt mr-2"></i>INFORMASI:</strong>
+                        Beri tanda cek (√) pada tindakan yang dilakukan <br>
+                        1. RT: intervensi setiap shift dan dinilai ulang setiap 2 hari) <br>
+                        2. RS: intervensi setiap pagi dan dinilai ulang tiap 3 hari) <br>
+                        3. RR: intervensi setiap pagi dan dinilai ulang tiap 3 hari )
+                    </div>
+
+                    <div class="resiko_jatuh__criteria-section">
+                        <label class="resiko_jatuh__font-weight-bold text-success">
+                            <i class="ti-list mr-2"></i>Pilih Intervensi yang Akan Dilakukan:
+                        </label>
+
+                        <div class="form-check resiko_jatuh__criteria-form-check">
+                            <input class="form-check-input" type="checkbox" name="intervensi_rr[]" id="rr_intervensi_1" value="lingkungan_observasi">
+                            <label class="form-check-label" for="rr_intervensi_1">
+                                <strong>1. Tingkatkan observasi bantuan yang sesuai saat ambulasi</strong>
+                            </label>
+                        </div>
+
+                        <div class="form-check resiko_jatuh__criteria-form-check">
+                            <input class="form-check-input" type="checkbox" name="intervensi_rr[]" id="rr_intervensi_2" value="orientasi_lingkungan">
+                            <label class="form-check-label" for="rr_intervensi_2">
+                                <strong>2. Orientasikan pasien terhadap lingkungan dan rutinitas RS:</strong>
+                                <ul class="mt-2 ml-3" style="font-size: 13px;">
+                                    <li>a. Tunjukkan lokasi kamar mandi</li>
+                                    <li>b. Jika pasien linglung, orientasi dilaksanakan bertahap</li>
+                                    <li>c. Tempatkan bel ditempat yang mudah dicapai</li>
+                                    <li>d. Instruksikan meminta bantuan perawat sebelum turun dari tempat tidur</li>
+                                </ul>
+                            </label>
+                        </div>
+
+                        <div class="form-check resiko_jatuh__criteria-form-check">
+                            <input class="form-check-input" type="checkbox" name="intervensi_rr[]" id="rr_intervensi_3" value="pagar_pengaman">
+                            <label class="form-check-label" for="rr_intervensi_3">
+                                <strong>3. Pagar pengaman tempat tidur dinaikkan</strong>
+                            </label>
+                        </div>
+
+                        <div class="form-check resiko_jatuh__criteria-form-check">
+                            <input class="form-check-input" type="checkbox" name="intervensi_rr[]" id="rr_intervensi_4" value="tempat_tidur_rendah">
+                            <label class="form-check-label" for="rr_intervensi_4">
+                                <strong>4. Tempat tidur dalam posisi rendah terkunci</strong>
+                            </label>
+                        </div>
+
+                        <div class="form-check resiko_jatuh__criteria-form-check">
+                            <input class="form-check-input" type="checkbox" name="intervensi_rr[]" id="rr_intervensi_5" value="tunjuk_perilaku_aman">
+                            <label class="form-check-label" for="rr_intervensi_5">
+                                <strong>5. Edukasi perilaku yang lebih aman saat jatuh atau transfer</strong>
+                            </label>
+                        </div>
+
+                        <div class="form-check resiko_jatuh__criteria-form-check">
+                            <input class="form-check-input" type="checkbox" name="intervensi_rr[]" id="rr_intervensi_6" value="monitor_berkala">
+                            <label class="form-check-label" for="rr_intervensi_6">
+                                <strong>6. Monitor kebutuhan pasien secara berkala (minimalnya tiap 2 jam)</strong>
+                            </label>
+                        </div>
+
+                        <div class="form-check resiko_jatuh__criteria-form-check">
+                            <input class="form-check-input" type="checkbox" name="intervensi_rr[]" id="rr_intervensi_7" value="anjurkan_tidak_menggunakan">
+                            <label class="form-check-label" for="rr_intervensi_7">
+                                <strong>7. Anjurkan pasien tidak menggunakan kaus kaki atau sepatu yang licin</strong>
+                            </label>
+                        </div>
+
+                        <div class="form-check resiko_jatuh__criteria-form-check">
+                            <input class="form-check-input" type="checkbox" name="intervensi_rr[]" id="rr_intervensi_8" value="lantai_kamar_mandi">
+                            <label class="form-check-label" for="rr_intervensi_8">
+                                <strong>8. Lantai kamar mandi dengan karpet antislip, tidak licin</strong>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INTERVENSI RESIKO SEDANG (RS) -->
+                <div class="resiko_jatuh__section-separator resiko_jatuh__intervensi-rs" id="resikoJatuh_intervensiRS" style="display: none;">
+                    <h5><i class="ti-alert mr-2"></i>INTERVENSI PENCEGAHAN JATUH - RESIKO SEDANG (RS)</h5>
+
+                    <div class="alert alert-warning">
+                        <strong><i class="ti-info-alt mr-2"></i>PERHATIAN:</strong>
+                        Beri tanda cek (√) pada tindakan yang dilakukan <br>
+                        1. RT: intervensi setiap shift dan dinilai ulang setiap 2 hari) <br>
+                        2. RS: intervensi setiap pagi dan dinilai ulang tiap 3 hari) <br>
+                        3. RR: intervensi setiap pagi dan dinilai ulang tiap 3 hari )
+                    </div>
+
+                    <div class="resiko_jatuh__criteria-section">
+                        <label class="resiko_jatuh__font-weight-bold text-warning">
+                            <i class="ti-list mr-2"></i>Pilih Intervensi yang Akan Dilakukan:
+                        </label>
+
+                        <div class="form-check resiko_jatuh__criteria-form-check">
+                            <input class="form-check-input" type="checkbox" name="intervensi_rs[]" id="rs_intervensi_1" value="lakukan_semua_intervensi_rendah">
+                            <label class="form-check-label" for="rs_intervensi_1">
+                                <strong>1. Lakukan <span class="text-bold">SEMUA</span> intervensi jatuh resiko rendah / standar</strong>
+                            </label>
+                        </div>
+
+                        <div class="form-check resiko_jatuh__criteria-form-check">
+                            <input class="form-check-input" type="checkbox" name="intervensi_rs[]" id="rs_intervensi_2" value="pakai_gelang_risiko">
+                            <label class="form-check-label" for="rs_intervensi_2">
+                                <strong>2. Pakailah gelang risiko jatuh berwarna kuning</strong>
+                            </label>
+                        </div>
+
+                        <div class="form-check resiko_jatuh__criteria-form-check">
+                            <input class="form-check-input" type="checkbox" name="intervensi_rs[]" id="rs_intervensi_3" value="pasang_gambar_risiko">
+                            <label class="form-check-label" for="rs_intervensi_3">
+                                <strong>3. Pasang gambar risiko jatuh diatas tempat tidur pasien dan pada pintu kamar pasien</strong>
+                            </label>
+                        </div>
+
+                        <div class="form-check resiko_jatuh__criteria-form-check">
+                            <input class="form-check-input" type="checkbox" name="intervensi_rs[]" id="rs_intervensi_4" value="tempatkan_risiko_jatuh">
+                            <label class="form-check-label" for="rs_intervensi_4">
+                                <strong>4. Tempatkan tanda resiko pasien jatuh pada daftar nama pasein (warna kuning)</strong>
+                            </label>
+                        </div>
+
+                        <div class="form-check resiko_jatuh__criteria-form-check">
+                            <input class="form-check-input" type="checkbox" name="intervensi_rs[]" id="rs_intervensi_5" value="pertimbangkan_riwayat_obat">
+                            <label class="form-check-label" for="rs_intervensi_5">
+                                <strong>5. Pertimbangkan riwayat obat-obatan dan suplemen untuk mengevaluasi pengobatan</strong>
+                            </label>
+                        </div>
+
+                        <div class="form-check resiko_jatuh__criteria-form-check">
+                            <input class="form-check-input" type="checkbox" name="intervensi_rs[]" id="rs_intervensi_6" value="gunakan_alat_bantu">
+                            <label class="form-check-label" for="rs_intervensi_6">
+                                <strong>6. Gunakan alat bantu jalan (walker, handrail)</strong>
+                            </label>
+                        </div>
+
+                        <div class="form-check resiko_jatuh__criteria-form-check">
+                            <input class="form-check-input" type="checkbox" name="intervensi_rs[]" id="rs_intervensi_7" value="dorong_partisipasi_keluarga">
+                            <label class="form-check-label" for="rs_intervensi_7">
+                                <strong>7. Dorong partisipasi keluarga dalam keselamatan pasien</strong>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INTERVENSI RESIKO TINGGI (RT) -->
+                <div class="resiko_jatuh__section-separator resiko_jatuh__intervensi-rt" id="resikoJatuh_intervensiRT" style="display: none;">
+                    <h5><i class="ti-alert mr-2"></i>INTERVENSI PENCEGAHAN JATUH - RESIKO TINGGI (RT)</h5>
+
+                    <div class="alert alert-danger">
+                        <strong><i class="ti-info-alt mr-2"></i>PERHATIAN:</strong>
+                        Beri tanda cek (√) pada tindakan yang dilakukan <br>
+                        1. RT: intervensi setiap shift dan dinilai ulang setiap 2 hari) <br>
+                        2. RS: intervensi setiap pagi dan dinilai ulang tiap 3 hari) <br>
+                        3. RR: intervensi setiap pagi dan dinilai ulang tiap 3 hari )
+                    </div>
+
+                    <div class="resiko_jatuh__criteria-section">
+                        <label class="resiko_jatuh__font-weight-bold text-danger">
+                            <i class="ti-shield mr-2"></i>Pilih Intervensi yang Akan Dilakukan:
+                        </label>
+
+                        <div class="form-check resiko_jatuh__criteria-form-check">
+                            <input class="form-check-input" type="checkbox" name="intervensi_rt[]" id="rt_intervensi_1" value="lakukan_semua_intervensi">
+                            <label class="form-check-label" for="rt_intervensi_1">
+                                <strong>1. Lakukan <span class="text-bold">SEMUA</span> intervensi jatuh resiko rendah / standar dan resiko sedang</strong>
+                            </label>
+                        </div>
+
+                        <div class="form-check resiko_jatuh__criteria-form-check">
+                            <input class="form-check-input" type="checkbox" name="intervensi_rt[]" id="rt_intervensi_2" value="jangan_tinggalkan_pasien">
+                            <label class="form-check-label" for="rt_intervensi_2">
+                                <strong>2. Jangan tinggalkan pasien saat di ruangan diagnostic atau tindakan</strong>
+                            </label>
+                        </div>
+
+                        <div class="form-check resiko_jatuh__criteria-form-check">
+                            <input class="form-check-input" type="checkbox" name="intervensi_rt[]" id="rt_intervensi_3" value="penempatan_dekat_nurse_station">
+                            <label class="form-check-label" for="rt_intervensi_3">
+                                <strong>3. Penempatan pasien dekat nurse station untuk memudahkan observasi (24-48 jam)</strong>
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+
                 <div class="text-end mt-4">
                     <button type="submit" class="btn btn-primary resiko_jatuh__btn-primary" id="resikoJatuh_simpan">
                         <i class="ti-save mr-2"></i> Simpan
@@ -555,15 +750,15 @@
                         <h6 class="resiko_jatuh__keterangan-title"><strong>Keterangan :</strong></h6>
                         <ul class="resiko_jatuh__keterangan-list">
                             <li>
-                                <span class="badge resiko_jatuh__badge resiko_jatuh__badge-success mr-2">a.</span>
+                                <span class="badge resiko_jatuh__badge resiko_jatuh__badge-success mr-2">RR</span>
                                 <strong>Resiko Rendah (0 - 24)</strong>
                             </li>
                             <li>
-                                <span class="badge resiko_jatuh__badge resiko_jatuh__badge-warning mr-2">b.</span>
+                                <span class="badge resiko_jatuh__badge resiko_jatuh__badge-warning mr-2">RS</span>
                                 <strong>Resiko Sedang (25 - 44)</strong>
                             </li>
                             <li>
-                                <span class="badge resiko_jatuh__badge resiko_jatuh__badge-danger mr-2">c.</span>
+                                <span class="badge resiko_jatuh__badge resiko_jatuh__badge-danger mr-2">RT</span>
                                 <strong>Resiko Tinggi (45 dan lebih)</strong>
                             </li>
                         </ul>
@@ -616,22 +811,35 @@ $(document).ready(function() {
         // Update tampilan skor dengan animasi
         $('#resikoJatuh_skorTotal').text(total);
 
+        // Sembunyikan semua section intervensi terlebih dahulu
+        $('#resikoJatuh_intervensiRR, #resikoJatuh_intervensiRS, #resikoJatuh_intervensiRT').hide();
+
         // Tentukan kategori resiko dan warna
         let kategori = '';
         let cardClass = '';
+        let kodeResiko = '';
 
         if (total >= 0 && total <= 24) {
             kategori = 'RESIKO RENDAH';
+            kodeResiko = 'RR';
             cardClass = 'bg-success text-white';
+            // Tampilkan intervensi RR dengan animasi
+            $('#resikoJatuh_intervensiRR').show().addClass('resiko_jatuh__fade-in');
         } else if (total >= 25 && total <= 44) {
             kategori = 'RESIKO SEDANG';
+            kodeResiko = 'RS';
             cardClass = 'bg-warning text-dark';
+            // Tampilkan intervensi RS dengan animasi
+            $('#resikoJatuh_intervensiRS').show().addClass('resiko_jatuh__fade-in');
         } else if (total >= 45) {
             kategori = 'RESIKO TINGGI';
+            kodeResiko = 'RT';
             cardClass = 'bg-danger text-white';
+            // Tampilkan intervensi RT dengan animasi
+            $('#resikoJatuh_intervensiRT').show().addClass('resiko_jatuh__fade-in');
         }
 
-        $('#resikoJatuh_kategoriResiko').text(kategori);
+        $('#resikoJatuh_kategoriResiko').text(`${kategori} (${kodeResiko})`);
         $('#resikoJatuh_hasilResiko').removeClass('bg-success bg-warning bg-danger text-white text-dark').addClass(cardClass);
     }
 
@@ -649,11 +857,27 @@ $(document).ready(function() {
         hitungSkorTotal();
     });
 
+    // Event listener untuk checkbox intervensi
+    $('input[name^="intervensi_"]').on('change', function() {
+        const checkbox = $(this);
+        const formCheck = checkbox.closest('.resiko_jatuh__criteria-form-check');
+
+        if (checkbox.is(':checked')) {
+            formCheck.addClass('selected');
+        } else {
+            formCheck.removeClass('selected');
+        }
+    });
+
     // Tambahkan efek hover dan klik pada form-check
     $('.resiko_jatuh__form-check, .resiko_jatuh__criteria-form-check').on('click', function() {
         const radio = $(this).find('input[type="radio"]');
-        if (!radio.prop('checked')) {
+        const checkbox = $(this).find('input[type="checkbox"]');
+
+        if (radio.length && !radio.prop('checked')) {
             radio.prop('checked', true).trigger('change');
+        } else if (checkbox.length) {
+            checkbox.prop('checked', !checkbox.prop('checked')).trigger('change');
         }
     });
 
@@ -662,7 +886,7 @@ $(document).ready(function() {
 
     // Validasi form dengan notifikasi yang lebih baik
     $('#resikoJatuh_form').on('submit', function(e) {
-        const requiredFields = ['waktu_pengkajian', 'riwayat_jatuh', 'diagnosa_sekunder', 'bantuan_ambulasi', 'terpasang_infus', 'gaya_berjalan', 'status_mental'];
+        const requiredFields = ['riwayat_jatuh', 'diagnosa_sekunder', 'bantuan_ambulasi', 'terpasang_infus', 'gaya_berjalan', 'status_mental'];
         let allAnswered = true;
         let missingFields = [];
 
@@ -672,6 +896,91 @@ $(document).ready(function() {
                 missingFields.push(field);
             }
         });
+
+        // Validasi khusus berdasarkan kategori resiko yang muncul
+        if ($('#resikoJatuh_intervensiRR').is(':visible')) {
+            // Validasi untuk RR
+            if (!$('input[name="intervensi_rr[]"]:checked').length) {
+                allAnswered = false;
+                alert('Untuk pasien dengan resiko rendah, wajib memilih minimal 1 intervensi pencegahan!');
+                $('#resikoJatuh_intervensiRR').css({
+                    'border': '2px solid #dc3545',
+                    'background': '#f8d7da'
+                });
+
+                setTimeout(function() {
+                    $('#resikoJatuh_intervensiRR').css({
+                        'border': '1px solid #e9ecef',
+                        'background': ''
+                    });
+                }, 3000);
+
+                return false;
+            }
+
+            if (!$('input[name="nama_perawat_rr"]').val().trim()) {
+                allAnswered = false;
+                alert('Nama perawat harus diisi untuk intervensi resiko rendah!');
+                $('input[name="nama_perawat_rr"]').focus().css('border-color', '#dc3545');
+                return false;
+            }
+        }
+
+        if ($('#resikoJatuh_intervensiRS').is(':visible')) {
+            // Validasi untuk RS
+            if (!$('input[name="intervensi_rs[]"]:checked').length) {
+                allAnswered = false;
+                alert('Untuk pasien dengan resiko sedang, wajib memilih minimal 1 intervensi pencegahan!');
+                $('#resikoJatuh_intervensiRS').css({
+                    'border': '2px solid #dc3545',
+                    'background': '#f8d7da'
+                });
+
+                setTimeout(function() {
+                    $('#resikoJatuh_intervensiRS').css({
+                        'border': '1px solid #e9ecef',
+                        'background': ''
+                    });
+                }, 3000);
+
+                return false;
+            }
+
+            if (!$('input[name="nama_perawat_rs"]').val().trim()) {
+                allAnswered = false;
+                alert('Nama perawat harus diisi untuk intervensi resiko sedang!');
+                $('input[name="nama_perawat_rs"]').focus().css('border-color', '#dc3545');
+                return false;
+            }
+        }
+
+        if ($('#resikoJatuh_intervensiRT').is(':visible')) {
+            // Validasi untuk RT
+            if (!$('input[name="intervensi_rt[]"]:checked').length) {
+                allAnswered = false;
+                alert('Untuk pasien dengan resiko tinggi, wajib memilih minimal 1 intervensi pencegahan!');
+                $('#resikoJatuh_intervensiRT').css({
+                    'border': '2px solid #dc3545',
+                    'background': '#f8d7da'
+                });
+
+                setTimeout(function() {
+                    $('#resikoJatuh_intervensiRT').css({
+                        'border': '1px solid #e9ecef',
+                        'background': ''
+                    });
+                }, 3000);
+
+                return false;
+            }
+
+            if (!$('input[name="nama_perawat_rt"]').val().trim()) {
+                allAnswered = false;
+                alert('Nama perawat harus diisi untuk intervensi resiko tinggi!');
+                $('input[name="nama_perawat_rt"]').focus().css('border-color', '#dc3545');
+                return false;
+            }
+        }
 
         if (!allAnswered) {
             e.preventDefault();

@@ -83,7 +83,7 @@
                                             </div>
 
                                             <div class="col-md-2">
-                                                <a href="{{ route('rawat-inap.resiko-jatuh.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                                <a href="{{ route('rawat-inap.resiko-jatuh.morse.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                                     class="btn btn-primary">
                                                     <i class="ti-plus"></i> Tambah
                                                 </a>
