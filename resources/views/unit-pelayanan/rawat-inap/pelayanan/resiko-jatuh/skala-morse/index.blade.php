@@ -21,10 +21,9 @@
                         {{-- Tabs --}}
                         <ul class="nav nav-tabs" id="skalaMorseTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <a href="{{ request()->fullUrlWithQuery(['tab' => 'skalaMorse']) }}"
-                                    class="nav-link {{ ($activeTab ?? 'skalaMorse') == 'skalaMorse' ? 'active' : '' }}"
-                                    aria-selected="{{ ($activeTab ?? 'skalaMorse') == 'skalaMorse' ? 'true' : 'false' }}">
-                                    <i class="bi bi-heart-pulse-fill me-2"></i>
+                                <a href="{{ route('rawat-inap.resiko-jatuh.morse.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                                    class="nav-link @if (request()->routeIs('rawat-inap.resiko-jatuh.morse.index')) active @endif">
+                                    <i class="bi bi-person-heart me-2"></i>
                                     Skala Morse
                                 </a>
                             </li>
@@ -36,11 +35,10 @@
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a href="{{ request()->fullUrlWithQuery(['tab' => 'skalaMorse2']) }}"
-                                    class="nav-link {{ ($activeTab ?? 'skalaMorse') == 'skalaMorse2' ? 'active' : '' }}"
-                                    aria-selected="{{ ($activeTab ?? 'skalaMorse') == 'skalaMorse2' ? 'true' : 'false' }}">
-                                    <i class="bi bi-person-check me-2"></i>
-                                    Skala Morse 2
+                                <a href="#"
+                                    class="nav-link #">
+                                    <i class="bi bi-person-heart me-2"></i>
+                                    Skala 3
                                 </a>
                             </li>
                         </ul>
@@ -50,44 +48,35 @@
                             <div class="tab-pane fade show active">
                                 {{-- TAB 1. buatlah list disini --}}
                                 <div class="row">
-                                    <div class="d-flex justify-content-between m-3">
-                                        <div class="row">
-                                            <!-- Start Date -->
-                                            <div class="col-md-2">
-                                                <input type="date" name="start_date" id="start_date" class="form-control"
-                                                    placeholder="Dari Tanggal">
+                                    <div class="row m-3">
+                                        <div class="col-md-3">
+                                            <div class="input-group">
+                                                <span class="input-group-text">
+                                                    <i class="ti-search"></i>
+                                                </span>
+                                                <input type="text" class="form-control" placeholder="Cari data...">
                                             </div>
-
-                                            <!-- End Date -->
-                                            <div class="col-md-2">
-                                                <input type="date" name="end_date" id="end_date" class="form-control"
-                                                    placeholder="S.d Tanggal">
-                                            </div>
-                                            <div class="col-md-2">
-                                                <a href="#" class="btn btn-secondary rounded-3" id="filterButton"><i
-                                                        class="bi bi-funnel-fill"></i></a>
-                                            </div>
-
-                                            <!-- Search Bar -->
-                                            <div class="col-md-4">
-                                                <form method="GET" action="#">
-
-                                                    <div class="input-group">
-                                                        <input type="text" name="search" class="form-control"
-                                                            placeholder="Cari nama dokter" aria-label="Cari"
-                                                            value="{{ request('search') }}" aria-describedby="basic-addon1">
-                                                        <button type="submit" class="btn btn-primary">Cari</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-
-                                            <div class="col-md-2">
-                                                <a href="{{ route('rawat-inap.resiko-jatuh.morse.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
-                                                    class="btn btn-primary">
-                                                    <i class="ti-plus"></i> Tambah
-                                                </a>
-                                            </div>
-
+                                        </div>
+                                        
+                                        <div class="col-md-2">
+                                            <input type="date" class="form-control" placeholder="Dari Tanggal">
+                                        </div>
+                                        
+                                        <div class="col-md-2">
+                                            <input type="date" class="form-control" placeholder="Sampai Tanggal">
+                                        </div>
+                                        
+                                        <div class="col-md-2">
+                                            <button class="btn btn-outline-secondary" type="button">
+                                                <i class="ti-filter"></i> Filter
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="col-md-3 text-end">
+                                            <a href="{{ route('rawat-inap.resiko-jatuh.morse.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                                class="btn btn-primary">
+                                                <i class="ti-plus"></i> Tambah
+                                            </a>
                                         </div>
                                     </div>
 
@@ -102,55 +91,9 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {{-- @forelse($ewsPasienDewasa as $index => $item)
-                                                    <tr>
-                                                        <td>{{ $loop->iteration }}</td>
-                                                        <td>{{ date('d-m-Y', strtotime($item->tanggal)) }}</td>
-                                                        <td>{{ str()->title($item->userCreate->name) }}</td>
-                                                        <td>
-                                                            <div class="btn-group" role="group">
-                                                                <a href="{{ route('rawat-inap.ews-pasien-dewasa.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $item->id]) }}"
-                                                                    class="btn btn-secondary btn-sm ms-2" target="_blank">
-                                                                    <i class="bi bi-printer"></i>
-                                                                </a>
-
-                                                                <a href="{{ route('rawat-inap.ews-pasien-dewasa.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                                    class="btn btn-info btn-sm ms-2" title="Detail">
-                                                                    <i class="ti-eye"></i>
-                                                                </a>
-                                                                @if ($item->status == 0)
-                                                                    <a href="{{ route('rawat-inap.ews-pasien-dewasa.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                                        class="btn btn-warning btn-sm ms-2" title="Edit">
-                                                                        <i class="ti-pencil"></i>
-                                                                    </a>
-                                                                @endif
-
-                                                                <form
-                                                                    action="{{ route('rawat-inap.ews-pasien-dewasa.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                                    method="POST" class="delete-form ms-2"
-                                                                    style="display: inline;">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="submit" class="btn btn-danger btn-sm"
-                                                                        title="Hapus">
-                                                                        <i class="ti-trash"></i>
-                                                                    </button>
-                                                                </form>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @empty
-                                                    <tr>
-                                                        <td colspan="8" class="text-center">Tidak ada data EWS Dewasa</td>
-                                                    </tr>
-                                                @endforelse --}}
+                                               
                                             </tbody>
                                         </table>
-
-                                        <!-- Pagination -->
-                                        <div class="d-flex justify-content-end">
-                                            {{-- {{ $ewsPasienDewasa->links() }} --}}
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -166,27 +109,6 @@
 
 @push('js')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Attach SweetAlert to all delete forms
-            document.querySelectorAll('.delete-form').forEach(form => {
-                form.addEventListener('submit', function (e) {
-                    e.preventDefault();
-                    Swal.fire({
-                        title: 'Apakah Anda yakin?',
-                        text: 'Data EWS Pasien Dewasa ini akan dihapus secara permanen!',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Ya, hapus!',
-                        cancelButtonText: 'Batal'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            form.submit();
-                        }
-                    });
-                });
-            });
-        });
     </script>
 @endpush
+
