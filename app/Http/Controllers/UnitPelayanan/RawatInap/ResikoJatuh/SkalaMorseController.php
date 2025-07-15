@@ -4,6 +4,7 @@ namespace App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
+use App\Models\RmeSkalaMorse;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Carbon;
@@ -52,46 +53,35 @@ class SkalaMorseController extends Controller
     {
         $dataMedis = $this->getDataMedis($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
 
-        // start fungsi Tabs
-        $activeTab = $request->query('tab', 'skalaMorse');
+        // Query untuk mendapatkan data resiko jatuh
+        $query = RmeSkalaMorse::with(['userCreate'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk);
 
-        $allowedTabs = ['skalaMorse', 'skalaMorse1', 'skalaMorse2'];
-        if (!in_array($activeTab, $allowedTabs)) {
-            $activeTab = 'skalaMorse';
+        // Filter berdasarkan tanggal jika ada
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereDate('tanggal', '>=', $request->start_date)
+                ->whereDate('tanggal', '<=', $request->end_date);
         }
 
-        if ($activeTab == 'skalaMorse') {
-            return $this->skalaMorseTab($dataMedis, $activeTab);
-        } elseif ($activeTab == 'skalaMorse') {
-            return $this->skalaMorse1Tab($dataMedis, $activeTab);
-        } else {
-            return $this->skalaMorse2Tab($dataMedis, $activeTab);
+        // Filter berdasarkan search nama petugas
+        if ($request->filled('search')) {
+            $query->whereHas('userCreate', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%');
+            });
         }
-        // end code Tabs
-    }
 
-    private function skalaMorseTab($dataMedis, $activeTab)
-    {
+        // Urutkan berdasarkan tanggal terbaru
+        $skalaMorseData = $query->orderBy('tanggal', 'desc')
+            ->orderBy('jam', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
         return view('unit-pelayanan.rawat-inap.pelayanan.resiko-jatuh.skala-morse.index', compact(
             'dataMedis',
-            'activeTab'
-        ));
-    }
-
-    private function skalaMorse1Tab($dataMedis, $activeTab)
-    {
-        return view('unit-pelayanan.rawat-inap.pelayanan.resiko-jatuh.index', compact(
-            'dataMedis',
-            'activeTab',
-        ));
-    }
-
-    private function skalaMorse2Tab($dataMedis, $activeTab)
-    {
-
-        return view('unit-pelayanan.rawat-inap.pelayanan.resiko-jatuh.index', compact(
-            'dataMedis',
-            'activeTab',
+            'skalaMorseData'
         ));
     }
 
@@ -106,22 +96,262 @@ class SkalaMorseController extends Controller
 
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
+        // Validasi input
+        $request->validate([
+            'tanggal' => 'required|date',
+            'hari_ke' => 'required|integer|min:1',
+            'shift' => 'required|in:PG,SI,ML',
+            'riwayat_jatuh' => 'required|in:0,25',
+            'diagnosa_sekunder' => 'required|in:0,15',
+            'bantuan_ambulasi' => 'required|in:0,15,30',
+            'terpasang_infus' => 'required|in:0,20',
+            'gaya_berjalan' => 'required|in:0,10,20',
+            'status_mental' => 'required|in:0,15',
+            'skor_total' => 'required|integer|min:0',
+            'kategori_resiko' => 'required|in:RR,RS,RT',
+        ]);
 
         DB::beginTransaction();
         try {
-    
+            // Validasi duplikasi tanggal dan shift
+            $existingData = RmeSkalaMorse::where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kd_unit)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->whereDate('tanggal', $request->tanggal)
+                ->where('shift', $request->shift)
+                ->exists();
+
+            if ($existingData) {
+                DB::rollBack();
+
+                // Format nama shift untuk error message
+                $shiftName = match ($request->shift) {
+                    'PG' => 'Pagi',
+                    'SI' => 'Siang',
+                    'ML' => 'Malam',
+                    default => $request->shift
+                };
+
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Data pengkajian untuk tanggal ' . date('d-m-Y', strtotime($request->tanggal)) . ' shift ' . $shiftName . ' sudah ada. Silakan pilih tanggal atau shift yang berbeda.');
+            }
+
+            // Siapkan data untuk disimpan
+            $data = [
+                'kd_pasien' => $kd_pasien,
+                'kd_unit' => $kd_unit,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk,
+                'user_create' => Auth::id(),
+                'tanggal' => $request->tanggal,
+                'jam' => now()->format('H:i:s'),
+                'hari_ke' => $request->hari_ke,
+                'shift' => $request->shift,
+                'riwayat_jatuh' => $request->riwayat_jatuh,
+                'diagnosa_sekunder' => $request->diagnosa_sekunder,
+                'bantuan_ambulasi' => $request->bantuan_ambulasi,
+                'terpasang_infus' => $request->terpasang_infus,
+                'gaya_berjalan' => $request->gaya_berjalan,
+                'status_mental' => $request->status_mental,
+                'skor_total' => $request->skor_total,
+                'kategori_resiko' => $request->kategori_resiko,
+            ];
+
+            // Tambahkan intervensi berdasarkan kategori resiko
+            // JANGAN gunakan json_encode karena model sudah ada cast 'array'
+            if ($request->kategori_resiko == 'RR' && $request->has('intervensi_rr')) {
+                $data['intervensi_rr'] = $request->intervensi_rr; // Langsung assign array
+            }
+
+            if ($request->kategori_resiko == 'RS' && $request->has('intervensi_rs')) {
+                $data['intervensi_rs'] = $request->intervensi_rs; // Langsung assign array
+            }
+
+            if ($request->kategori_resiko == 'RT' && $request->has('intervensi_rt')) {
+                $data['intervensi_rt'] = $request->intervensi_rt; // Langsung assign array
+            }
+
+            // Simpan data
+            RmeSkalaMorse::create($data);
+
             DB::commit();
 
-            return to_route('rawat-inap.ews-pasien-dewasa.index', [
+            return to_route('rawat-inap.resiko-jatuh.morse.index', [
                 $kd_unit,
                 $kd_pasien,
                 $tgl_masuk,
                 $urut_masuk,
             ])
-                ->with('success', 'Data EWS Pasien Dewasa berhasil disimpan');
+                ->with('success', 'Data Pengkajian Resiko Jatuh Skala Morse berhasil disimpan');
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function show(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        $dataMedis = $this->getDataMedis($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
+
+        $skalaMorse = RmeSkalaMorse::with(['userCreate'])
+            ->where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->findOrFail($id);
+
+        return view('unit-pelayanan.rawat-inap.pelayanan.resiko-jatuh.skala-morse.show', compact(
+            'dataMedis',
+            'skalaMorse'
+        ));
+    }
+
+    public function edit(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        $dataMedis = $this->getDataMedis($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
+
+        $skalaMorse = RmeSkalaMorse::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->findOrFail($id);
+
+        return view('unit-pelayanan.rawat-inap.pelayanan.resiko-jatuh.skala-morse.edit', compact(
+            'dataMedis',
+            'skalaMorse'
+        ));
+    }
+
+    public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        // Validasi input
+        $request->validate([
+            'tanggal' => 'required|date',
+            'hari_ke' => 'required|integer|min:1',
+            'shift' => 'required|in:PG,SI,ML',
+            'riwayat_jatuh' => 'required|in:0,25',
+            'diagnosa_sekunder' => 'required|in:0,15',
+            'bantuan_ambulasi' => 'required|in:0,15,30',
+            'terpasang_infus' => 'required|in:0,20',
+            'gaya_berjalan' => 'required|in:0,10,20',
+            'status_mental' => 'required|in:0,15',
+            'skor_total' => 'required|integer|min:0',
+            'kategori_resiko' => 'required|in:RR,RS,RT',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $skalaMorse = RmeSkalaMorse::where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kd_unit)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->findOrFail($id);
+
+            // Validasi duplikasi tanggal dan shift (kecuali data yang sedang diupdate)
+            $existingData = RmeSkalaMorse::where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kd_unit)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->whereDate('tanggal', $request->tanggal)
+                ->where('shift', $request->shift)
+                ->where('id', '!=', $id) // Exclude current record
+                ->exists();
+
+            if ($existingData) {
+                DB::rollBack();
+
+                // Format nama shift untuk error message
+                $shiftName = match ($request->shift) {
+                    'PG' => 'Pagi',
+                    'SI' => 'Siang',
+                    'ML' => 'Malam',
+                    default => $request->shift
+                };
+
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Data pengkajian untuk tanggal ' . date('d-m-Y', strtotime($request->tanggal)) . ' shift ' . $shiftName . ' sudah ada. Silakan pilih tanggal atau shift yang berbeda.');
+            }
+
+            // Siapkan data untuk diupdate
+            $data = [
+                'user_edit' => Auth::id(),
+                'tanggal' => $request->tanggal,
+                'hari_ke' => $request->hari_ke,
+                'shift' => $request->shift,
+                'riwayat_jatuh' => $request->riwayat_jatuh,
+                'diagnosa_sekunder' => $request->diagnosa_sekunder,
+                'bantuan_ambulasi' => $request->bantuan_ambulasi,
+                'terpasang_infus' => $request->terpasang_infus,
+                'gaya_berjalan' => $request->gaya_berjalan,
+                'status_mental' => $request->status_mental,
+                'skor_total' => $request->skor_total,
+                'kategori_resiko' => $request->kategori_resiko,
+            ];
+
+            // Reset semua intervensi
+            $data['intervensi_rr'] = null;
+            $data['intervensi_rs'] = null;
+            $data['intervensi_rt'] = null;
+
+            // Tambahkan intervensi berdasarkan kategori resiko
+            // JANGAN gunakan json_encode karena model sudah ada cast 'array'
+            if ($request->kategori_resiko == 'RR' && $request->has('intervensi_rr')) {
+                $data['intervensi_rr'] = $request->intervensi_rr; // Langsung assign array
+            }
+
+            if ($request->kategori_resiko == 'RS' && $request->has('intervensi_rs')) {
+                $data['intervensi_rs'] = $request->intervensi_rs; // Langsung assign array
+            }
+
+            if ($request->kategori_resiko == 'RT' && $request->has('intervensi_rt')) {
+                $data['intervensi_rt'] = $request->intervensi_rt; // Langsung assign array
+            }
+
+            // Update data
+            $skalaMorse->update($data);
+
+            DB::commit();
+
+            return to_route('rawat-inap.resiko-jatuh.morse.index', [
+                $kd_unit,
+                $kd_pasien,
+                $tgl_masuk,
+                $urut_masuk,
+            ])
+                ->with('success', 'Data Pengkajian Resiko Jatuh Skala Morse berhasil diperbarui');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function destroy(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $skalaMorse = RmeSkalaMorse::where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kd_unit)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->findOrFail($id);
+
+            $skalaMorse->delete();
+
+            DB::commit();
+
+            return to_route('rawat-inap.resiko-jatuh.morse.index', [
+                $kd_unit,
+                $kd_pasien,
+                $tgl_masuk,
+                $urut_masuk,
+            ])
+                ->with('success', 'Data Pengkajian Resiko Jatuh Skala Morse berhasil dihapus');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 }

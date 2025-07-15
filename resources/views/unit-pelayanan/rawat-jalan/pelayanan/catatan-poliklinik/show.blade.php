@@ -232,7 +232,7 @@
                     <div class="soap-item">
                         <div class="soap-label">
                             <span class="soap-badge">S</span>
-                            <span>Subjective (Anamnesis)</span>
+                            <span>Subjective</span>
                         </div>
                         <div class="soap-content">{{ $catatanPoliklinik->subjective ?: 'Tidak ada data' }}</div>
                     </div>
@@ -241,7 +241,7 @@
                     <div class="soap-item">
                         <div class="soap-label">
                             <span class="soap-badge">O</span>
-                            <span>Objective (Pemeriksaan)</span>
+                            <span>Objective</span>
                         </div>
                         <div class="soap-content">{{ $catatanPoliklinik->objective ?: 'Tidak ada data' }}</div>
                     </div>
@@ -250,7 +250,7 @@
                     <div class="soap-item">
                         <div class="soap-label">
                             <span class="soap-badge">A</span>
-                            <span>Assessment (Diagnosis)</span>
+                            <span>Assessment</span>
                         </div>
                         <div class="soap-content">{{ $catatanPoliklinik->assessment ?: 'Tidak ada data' }}</div>
                     </div>
@@ -259,7 +259,7 @@
                     <div class="soap-item">
                         <div class="soap-label">
                             <span class="soap-badge">P</span>
-                            <span>Plan (Rencana Penatalaksanaan)</span>
+                            <span>Plan</span>
                         </div>
                         <div class="soap-content">{{ $catatanPoliklinik->plan ?: 'Tidak ada data' }}</div>
                     </div>

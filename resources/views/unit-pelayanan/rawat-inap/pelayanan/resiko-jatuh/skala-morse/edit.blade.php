@@ -1,8 +1,8 @@
 @extends('layouts.administrator.master')
+@include('unit-pelayanan.rawat-inap.pelayanan.resiko-jatuh.skala-morse.include')
+@include('unit-pelayanan.rawat-inap.pelayanan.resiko-jatuh.skala-morse.include-edit')
 
 @section('content')
-    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.edukasi.include')
-    @include('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-dewasa.include')
 
     <div class="row">
         <div class="col-md-3">
@@ -10,420 +10,592 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ url()->previous() }}" class="btn btn-outline-primary mb-3">
+            <a href="{{ route('rawat-inap.resiko-jatuh.morse.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                class="btn btn-outline-primary resiko_jatuh__btn-outline-primary mb-3">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
 
-            <form id="edukasiForm" method="POST"
-                action="{{ route('rawat-inap.ews-pasien-dewasa.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $ewsPasienDewasa->id]) }}">
+            <form id="resikoJatuh_form" method="POST"
+                action="{{ route('rawat-inap.resiko-jatuh.morse.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $skalaMorse->id]) }}">
                 @csrf
                 @method('PUT')
 
-                <div class="d-flex justify-content-center">
-                    <div class="card w-100 h-100 shadow-sm">
-                        <div class="card-body">
-                            <div class="px-3">
-                                <h4 class="header-asesmen text-center font-weight-bold mb-4">Edit Early Warning System (EWS)
-                                    Pasien Dewasa
-                                </h4>
+                <div class="resiko_jatuh__fade-in">
+                    <div class="resiko_jatuh__header-asesmen text-center">
+                        <h4 class="mb-2">
+                            <i class="ti-pencil mr-2"></i>
+                            EDIT PENGKAJIAN RESIKO JATUH - SKALA MORSE
+                        </h4>
+                        <small>DEWASA (19 - 59 Tahun)</small>
+                    </div>
+
+                    <!-- Data Dasar -->
+                    <div class="resiko_jatuh__section-separator">
+                        <h5><i class="ti-calendar mr-2"></i> Data Pengkajian</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group resiko_jatuh__form-group">
+                                    <label>Tanggal</label>
+                                    <input type="date" class="form-control resiko_jatuh__form-control" name="tanggal"
+                                        value="{{ old('tanggal', date('Y-m-d', strtotime($skalaMorse->tanggal))) }}" required>
+                                </div>
                             </div>
-
-                            @if(session('error'))
-                            <div class="alert alert-danger">
-                                {{ session('error') }}
+                            <div class="col-md-4">
+                                <div class="form-group resiko_jatuh__form-group">
+                                    <label>Hari ke</label>
+                                    <input type="number" class="form-control resiko_jatuh__form-control" name="hari_ke"
+                                        min="1" placeholder="Masukkan hari ke..." value="{{ old('hari_ke', $skalaMorse->hari_ke) }}" required>
+                                </div>
                             </div>
-                            @endif
-
-                            <div class="section-separator" id="data-masuk">
-                                <div class="form-group">
-                                    <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
-                                    <div class="d-flex gap-3" style="width: 100%;">
-                                        <input type="date" class="form-control" name="tanggal"
-                                            value="{{ $ewsPasienDewasa->tanggal ? \Carbon\Carbon::parse($ewsPasienDewasa->tanggal)->format('Y-m-d') : date('Y-m-d') }}">
-                                        <input type="time" class="form-control" name="jam_masuk"
-                                            value="{{ $ewsPasienDewasa->jam_masuk ? \Carbon\Carbon::parse($ewsPasienDewasa->jam_masuk)->format('H:i') : now()->setTimezone('Asia/Jakarta')->format('H:i') }}">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label style="min-width: 200px;">Kesadaran (AVPU)</label>
-                                    <select class="form-select" name="avpu" id="avpu">
-                                        <option value="" disabled>--Pilih--</option>
-                                        <option value="A" data-skor="0" {{ $ewsPasienDewasa->avpu == 'A' ? 'selected' : '' }}>A - Alert (Sadar Baik)</option>
-                                        <option value="V" data-skor="3" {{ $ewsPasienDewasa->avpu == 'V' ? 'selected' : '' }}>V - Voice (Berespon dengan kata-kata)</option>
-                                        <option value="P" data-skor="3" {{ $ewsPasienDewasa->avpu == 'P' ? 'selected' : '' }}>P - Pain (Hanya berespon jika dirangsang nyeri)</option>
-                                        <option value="U" data-skor="3" {{ $ewsPasienDewasa->avpu == 'U' ? 'selected' : '' }}>U - Unresponsive (Pasien tidak sadar)</option>
+                            <div class="col-md-4">
+                                <div class="form-group resiko_jatuh__form-group">
+                                    <label>Shift</label>
+                                    <select class="form-control resiko_jatuh__form-control" name="shift" required>
+                                        <option value="">Pilih Shift</option>
+                                        <option value="PG" {{ old('shift', $skalaMorse->shift) == 'PG' ? 'selected' : '' }}>🌅 Pagi (PG)</option>
+                                        <option value="SI" {{ old('shift', $skalaMorse->shift) == 'SI' ? 'selected' : '' }}>☀️ Siang (SI)</option>
+                                        <option value="ML" {{ old('shift', $skalaMorse->shift) == 'ML' ? 'selected' : '' }}>🌙 Malam (ML)</option>
                                     </select>
                                 </div>
-
-                                <div class="form-group">
-                                    <label style="min-width: 200px;">Saturasi O2 (%)</label>
-                                    <select class="form-select" name="saturasi_o2" id="saturasi_o2">
-                                        <option value="" disabled>--Pilih--</option>
-                                        @php
-                                            $saturasiMatches = [
-                                                '≥ 95' => ['≥ 95', '>= 95', '= 95', '>=95'],
-                                                '94-95' => ['94-95'],
-                                                '92-93' => ['92-93'],
-                                                '≤ 91' => ['≤ 91', '<= 91', '= 91', '<=91'],
-                                            ];
-                                        @endphp
-
-                                        <option value="≥ 95" data-skor="0" {{ in_array($ewsPasienDewasa->saturasi_o2, $saturasiMatches['≥ 95']) ? 'selected' : '' }}>≥ 95</option>
-                                        <option value="94-95" data-skor="1" {{ in_array($ewsPasienDewasa->saturasi_o2, $saturasiMatches['94-95']) ? 'selected' : '' }}>94-95</option>
-                                        <option value="92-93" data-skor="2" {{ in_array($ewsPasienDewasa->saturasi_o2, $saturasiMatches['92-93']) ? 'selected' : '' }}>92-93</option>
-                                        <option value="≤ 91" data-skor="3" {{ in_array($ewsPasienDewasa->saturasi_o2, $saturasiMatches['≤ 91']) ? 'selected' : '' }}>≤ 91</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label style="min-width: 200px;">Dengan Bantuan O2</label>
-                                    <select class="form-select" name="dengan_bantuan" id="dengan_bantuan">
-                                        <option value="" disabled>--Pilih--</option>
-                                        <option value="Tidak" data-skor="0" {{ $ewsPasienDewasa->dengan_bantuan == 'Tidak' ? 'selected' : '' }}>Tidak</option>
-                                        <option value="Ya" data-skor="2" {{ $ewsPasienDewasa->dengan_bantuan == 'Ya' ? 'selected' : '' }}>Ya</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label style="min-width: 200px;">Tekanan Darah Sistolik (mmHg)</label>
-                                    <select class="form-select" name="tekanan_darah" id="tekanan_darah">
-                                        <option value="" disabled>--Pilih--</option>
-                                        @php
-                                            $tekananMatches = [
-                                                '≥ 220' => ['≥ 220', '>= 220', '= 220', '>=220'],
-                                                '111-219' => ['111-219'],
-                                                '101-110' => ['101-110'],
-                                                '91-100' => ['91-100'],
-                                                '≤ 90' => ['≤ 90', '<= 90', '= 90', '<=90'],
-                                            ];
-                                        @endphp
-
-                                        <option value="≥ 220" data-skor="3" {{ in_array($ewsPasienDewasa->tekanan_darah, $tekananMatches['≥ 220']) ? 'selected' : '' }}>≥ 220</option>
-                                        <option value="111-219" data-skor="0" {{ in_array($ewsPasienDewasa->tekanan_darah, $tekananMatches['111-219']) ? 'selected' : '' }}>111-219</option>
-                                        <option value="101-110" data-skor="1" {{ in_array($ewsPasienDewasa->tekanan_darah, $tekananMatches['101-110']) ? 'selected' : '' }}>101-110</option>
-                                        <option value="91-100" data-skor="2" {{ in_array($ewsPasienDewasa->tekanan_darah, $tekananMatches['91-100']) ? 'selected' : '' }}>91-100</option>
-                                        <option value="≤ 90" data-skor="3" {{ in_array($ewsPasienDewasa->tekanan_darah, $tekananMatches['≤ 90']) ? 'selected' : '' }}>≤ 90</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label style="min-width: 200px;">Nadi (per menit)</label>
-                                    <select class="form-select" name="nadi" id="nadi">
-                                        <option value="" disabled>--Pilih--</option>
-                                        @php
-                                            $nadiMatches = [
-                                                '≥ 131' => ['≥ 131', '>= 131', '= 131', '>=131'],
-                                                '111-130' => ['111-130'],
-                                                '91-110' => ['91-110'],
-                                                '51-90' => ['51-90'],
-                                                '41-50' => ['41-50'],
-                                                '≤ 40' => ['≤ 40', '<= 40', '= 40', '<=40'],
-                                            ];
-                                        @endphp
-
-                                        <option value="≥ 131" data-skor="3" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['≥ 131']) ? 'selected' : '' }}>≥ 131</option>
-                                        <option value="111-130" data-skor="2" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['111-130']) ? 'selected' : '' }}>111-130</option>
-                                        <option value="91-110" data-skor="1" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['91-110']) ? 'selected' : '' }}>91-110</option>
-                                        <option value="51-90" data-skor="0" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['51-90']) ? 'selected' : '' }}>51-90</option>
-                                        <option value="41-50" data-skor="1" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['41-50']) ? 'selected' : '' }}>41-50</option>
-                                        <option value="≤ 40" data-skor="3" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['≤ 40']) ? 'selected' : '' }}>≤ 40</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label style="min-width: 200px;">Nafas (per menit)</label>
-                                    <select class="form-select" name="nafas" id="nafas">
-                                        <option value="" disabled>--Pilih--</option>
-                                        @php
-                                            $nafasMatches = [
-                                                '≥ 25' => ['≥ 25', '>= 25', '= 25', '>=25'],
-                                                '21-24' => ['21-24'],
-                                                '12-20' => ['12-20'],
-                                                '9-11' => ['9-11'],
-                                                '≤ 8' => ['≤ 8', '<= 8', '= 8', '<=8'],
-                                            ];
-                                        @endphp
-
-                                        <option value="≥ 25" data-skor="3" {{ in_array($ewsPasienDewasa->nafas, $nafasMatches['≥ 25']) ? 'selected' : '' }}>≥ 25</option>
-                                        <option value="21-24" data-skor="2" {{ in_array($ewsPasienDewasa->nafas, $nafasMatches['21-24']) ? 'selected' : '' }}>21-24</option>
-                                        <option value="12-20" data-skor="0" {{ in_array($ewsPasienDewasa->nafas, $nafasMatches['12-20']) ? 'selected' : '' }}>12-20</option>
-                                        <option value="9-11" data-skor="1" {{ in_array($ewsPasienDewasa->nafas, $nafasMatches['9-11']) ? 'selected' : '' }}>9-11</option>
-                                        <option value="≤ 8" data-skor="3" {{ in_array($ewsPasienDewasa->nafas, $nafasMatches['≤ 8']) ? 'selected' : '' }}>≤ 8</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label style="min-width: 200px;">Temperatur (°C)</label>
-                                    <select class="form-select" name="temperatur" id="temperatur">
-                                        <option value="" disabled>--Pilih--</option>
-                                        @php
-                                            $temperaturMatches = [
-                                                '≥ 39.1' => ['≥ 39.1', '>= 39.1', '= 39.1', '>=39.1'],
-                                                '38.1-39.0' => ['38.1-39.0'],
-                                                '36.1-38.0' => ['36.1-38.0'],
-                                                '35.1-36.0' => ['35.1-36.0'],
-                                                '≤ 35' => ['≤ 35', '<= 35', '= 35', '<=35'],
-                                            ];
-                                        @endphp
-
-                                        <option value="≥ 39.1" data-skor="2" {{ in_array($ewsPasienDewasa->temperatur, $temperaturMatches['≥ 39.1']) ? 'selected' : '' }}>≥ 39.1</option>
-                                        <option value="38.1-39.0" data-skor="1" {{ in_array($ewsPasienDewasa->temperatur, $temperaturMatches['38.1-39.0']) ? 'selected' : '' }}>38.1-39.0</option>
-                                        <option value="36.1-38.0" data-skor="0" {{ in_array($ewsPasienDewasa->temperatur, $temperaturMatches['36.1-38.0']) ? 'selected' : '' }}>36.1-38.0</option>
-                                        <option value="35.1-36.0" data-skor="1" {{ in_array($ewsPasienDewasa->temperatur, $temperaturMatches['35.1-36.0']) ? 'selected' : '' }}>35.1-36.0</option>
-                                        <option value="≤ 35" data-skor="3" {{ in_array($ewsPasienDewasa->temperatur, $temperaturMatches['≤ 35']) ? 'selected' : '' }}>≤ 35</option>
-                                    </select>
-                                </div>
-
-                                <!-- Total Score Section -->
-                                <div class="total-score-section">
-                                    <h5 class="mb-3">TOTAL SKOR</h5>
-                                    <div class="total-score-value" id="total-skor">{{ $ewsPasienDewasa->total_skor }}</div>
-                                    <p class="mb-0 text-muted">Skor Early Warning System</p>
-                                </div>
-
-                                <!-- Kesimpulan Section -->
-                                <div class="kesimpulan-section">
-                                    <h5 class="mb-3">KESIMPULAN HASIL EWS</h5>
-
-                                    <!-- Skor 0-4: Risiko Rendah -->
-                                    <div id="kesimpulan-hijau"
-                                        class="kesimpulan-card kesimpulan-hijau {{ $ewsPasienDewasa->hasil_ews != 'RISIKO RENDAH' ? 'd-none' : '' }}">
-                                        <strong>Total Skor 0-4:</strong> RISIKO RENDAH
-                                    </div>
-
-                                    <!-- Skor 5-6: Risiko Sedang -->
-                                    <div id="kesimpulan-kuning"
-                                        class="kesimpulan-card kesimpulan-kuning {{ $ewsPasienDewasa->hasil_ews != 'RISIKO SEDANG' ? 'd-none' : '' }}">
-                                        <strong>Skor 3 dalam satu parameter atau Total Skor 5-6:</strong> RISIKO SEDANG
-                                    </div>
-
-                                    <!-- Skor ≥7: Risiko Tinggi -->
-                                    <div id="kesimpulan-merah"
-                                        class="kesimpulan-card kesimpulan-merah {{ $ewsPasienDewasa->hasil_ews != 'RISIKO TINGGI' ? 'd-none' : '' }}">
-                                        <strong>Total Skor ≥ 7:</strong> RISIKO TINGGI
-                                    </div>
-                                </div>
-
-                                <!-- Hidden inputs untuk backend -->
-                                <input type="hidden" id="ews-total-score" name="total_skor"
-                                    value="{{ $ewsPasienDewasa->total_skor }}">
-                                <input type="hidden" id="ews-hasil" name="hasil_ews"
-                                    value="{{ $ewsPasienDewasa->hasil_ews }}">
-                            </div>
-
-                            <div class="d-flex justify-content-end mt-4">
-                                <button type="submit" class="btn btn-primary" id="simpan">
-                                    <i class="ti-save"></i> Update
-                                </button>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Penilaian Resiko Jatuh -->
+                    <div class="resiko_jatuh__section-separator">
+                        <h5><i class="ti-list-ol mr-2"></i>PENILAIAN RESIKO JATUH (SKALA MORSE)</h5>
+
+                        <!-- Riwayat Jatuh -->
+                        <div class="resiko_jatuh__criteria-section">
+                            <label class="resiko_jatuh__font-weight-bold">1. Riwayat Jatuh:</label>
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ old('riwayat_jatuh', $skalaMorse->riwayat_jatuh) == '0' ? 'selected' : '' }}" data-group="riwayat_jatuh">
+                                <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
+                                    name="riwayat_jatuh" id="resikoJatuh_riwayat_tidak" value="0" 
+                                    {{ old('riwayat_jatuh', $skalaMorse->riwayat_jatuh) == '0' ? 'checked' : '' }} required>
+                                <label class="form-check-label resiko_jatuh__criteria-form-check-label"
+                                    for="resikoJatuh_riwayat_tidak">
+                                    a. Tidak
+                                    <span
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        0</span>
+                                </label>
+                            </div>
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ old('riwayat_jatuh', $skalaMorse->riwayat_jatuh) == '25' ? 'selected' : '' }}" data-group="riwayat_jatuh">
+                                <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
+                                    name="riwayat_jatuh" id="resikoJatuh_riwayat_ya" value="25"
+                                    {{ old('riwayat_jatuh', $skalaMorse->riwayat_jatuh) == '25' ? 'checked' : '' }}>
+                                <label class="form-check-label resiko_jatuh__criteria-form-check-label"
+                                    for="resikoJatuh_riwayat_ya">
+                                    b. Ya
+                                    <span
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        25</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Diagnosa Sekunder -->
+                        <div class="resiko_jatuh__criteria-section">
+                            <label class="resiko_jatuh__font-weight-bold">2. Diagnosa Sekunder:</label>
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ old('diagnosa_sekunder', $skalaMorse->diagnosa_sekunder) == '0' ? 'selected' : '' }}" data-group="diagnosa_sekunder">
+                                <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
+                                    name="diagnosa_sekunder" id="resikoJatuh_diagnosa_tidak" value="0" 
+                                    {{ old('diagnosa_sekunder', $skalaMorse->diagnosa_sekunder) == '0' ? 'checked' : '' }} required>
+                                <label class="form-check-label resiko_jatuh__criteria-form-check-label"
+                                    for="resikoJatuh_diagnosa_tidak">
+                                    a. Tidak
+                                    <span
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        0</span>
+                                </label>
+                            </div>
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ old('diagnosa_sekunder', $skalaMorse->diagnosa_sekunder) == '15' ? 'selected' : '' }}" data-group="diagnosa_sekunder">
+                                <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
+                                    name="diagnosa_sekunder" id="resikoJatuh_diagnosa_ya" value="15"
+                                    {{ old('diagnosa_sekunder', $skalaMorse->diagnosa_sekunder) == '15' ? 'checked' : '' }}>
+                                <label class="form-check-label resiko_jatuh__criteria-form-check-label"
+                                    for="resikoJatuh_diagnosa_ya">
+                                    b. Ya
+                                    <span
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        15</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Bantuan Ambulasi -->
+                        <div class="resiko_jatuh__criteria-section">
+                            <label class="resiko_jatuh__font-weight-bold">3. Bantuan Ambulasi:</label>
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ old('bantuan_ambulasi', $skalaMorse->bantuan_ambulasi) == '0' ? 'selected' : '' }}" data-group="bantuan_ambulasi">
+                                <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
+                                    name="bantuan_ambulasi" id="resikoJatuh_ambulasi_tidak" value="0" 
+                                    {{ old('bantuan_ambulasi', $skalaMorse->bantuan_ambulasi) == '0' ? 'checked' : '' }} required>
+                                <label class="form-check-label resiko_jatuh__criteria-form-check-label"
+                                    for="resikoJatuh_ambulasi_tidak">
+                                    a. Tidak ada / bed rest / bantuan perawat
+                                    <span
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        0</span>
+                                </label>
+                            </div>
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ old('bantuan_ambulasi', $skalaMorse->bantuan_ambulasi) == '15' ? 'selected' : '' }}" data-group="bantuan_ambulasi">
+                                <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
+                                    name="bantuan_ambulasi" id="resikoJatuh_ambulasi_kruk" value="15"
+                                    {{ old('bantuan_ambulasi', $skalaMorse->bantuan_ambulasi) == '15' ? 'checked' : '' }}>
+                                <label class="form-check-label resiko_jatuh__criteria-form-check-label"
+                                    for="resikoJatuh_ambulasi_kruk">
+                                    b. Kruk / tongkat / alat bantu berjalan
+                                    <span
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        15</span>
+                                </label>
+                            </div>
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ old('bantuan_ambulasi', $skalaMorse->bantuan_ambulasi) == '30' ? 'selected' : '' }}" data-group="bantuan_ambulasi">
+                                <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
+                                    name="bantuan_ambulasi" id="resikoJatuh_ambulasi_meja" value="30"
+                                    {{ old('bantuan_ambulasi', $skalaMorse->bantuan_ambulasi) == '30' ? 'checked' : '' }}>
+                                <label class="form-check-label resiko_jatuh__criteria-form-check-label"
+                                    for="resikoJatuh_ambulasi_meja">
+                                    c. Meja / kursi
+                                    <span
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        30</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Terpasang Infus -->
+                        <div class="resiko_jatuh__criteria-section">
+                            <label class="resiko_jatuh__font-weight-bold">4. Terpasang Infus:</label>
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ old('terpasang_infus', $skalaMorse->terpasang_infus) == '0' ? 'selected' : '' }}" data-group="terpasang_infus">
+                                <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
+                                    name="terpasang_infus" id="resikoJatuh_infus_tidak" value="0" 
+                                    {{ old('terpasang_infus', $skalaMorse->terpasang_infus) == '0' ? 'checked' : '' }} required>
+                                <label class="form-check-label resiko_jatuh__criteria-form-check-label"
+                                    for="resikoJatuh_infus_tidak">
+                                    a. Tidak
+                                    <span
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        0</span>
+                                </label>
+                            </div>
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ old('terpasang_infus', $skalaMorse->terpasang_infus) == '20' ? 'selected' : '' }}" data-group="terpasang_infus">
+                                <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
+                                    name="terpasang_infus" id="resikoJatuh_infus_ya" value="20"
+                                    {{ old('terpasang_infus', $skalaMorse->terpasang_infus) == '20' ? 'checked' : '' }}>
+                                <label class="form-check-label resiko_jatuh__criteria-form-check-label"
+                                    for="resikoJatuh_infus_ya">
+                                    b. Ya
+                                    <span
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        20</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Cara/Gaya Berjalan -->
+                        <div class="resiko_jatuh__criteria-section">
+                            <label class="resiko_jatuh__font-weight-bold">5. Cara / gaya berjalan:</label>
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ old('gaya_berjalan', $skalaMorse->gaya_berjalan) == '0' ? 'selected' : '' }}" data-group="gaya_berjalan">
+                                <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
+                                    name="gaya_berjalan" id="resikoJatuh_berjalan_normal" value="0" 
+                                    {{ old('gaya_berjalan', $skalaMorse->gaya_berjalan) == '0' ? 'checked' : '' }} required>
+                                <label class="form-check-label resiko_jatuh__criteria-form-check-label"
+                                    for="resikoJatuh_berjalan_normal">
+                                    a. Normal / bed rest / kursi roda
+                                    <span
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        0</span>
+                                </label>
+                            </div>
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ old('gaya_berjalan', $skalaMorse->gaya_berjalan) == '10' ? 'selected' : '' }}" data-group="gaya_berjalan">
+                                <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
+                                    name="gaya_berjalan" id="resikoJatuh_berjalan_lemah" value="10"
+                                    {{ old('gaya_berjalan', $skalaMorse->gaya_berjalan) == '10' ? 'checked' : '' }}>
+                                <label class="form-check-label resiko_jatuh__criteria-form-check-label"
+                                    for="resikoJatuh_berjalan_lemah">
+                                    b. Lemah
+                                    <span
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        10</span>
+                                </label>
+                            </div>
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ old('gaya_berjalan', $skalaMorse->gaya_berjalan) == '20' ? 'selected' : '' }}" data-group="gaya_berjalan">
+                                <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
+                                    name="gaya_berjalan" id="resikoJatuh_berjalan_terganggu" value="20"
+                                    {{ old('gaya_berjalan', $skalaMorse->gaya_berjalan) == '20' ? 'checked' : '' }}>
+                                <label class="form-check-label resiko_jatuh__criteria-form-check-label"
+                                    for="resikoJatuh_berjalan_terganggu">
+                                    c. Terganggu
+                                    <span
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        20</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Status Mental -->
+                        <div class="resiko_jatuh__criteria-section">
+                            <label class="resiko_jatuh__font-weight-bold">6. Status Mental:</label>
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ old('status_mental', $skalaMorse->status_mental) == '0' ? 'selected' : '' }}" data-group="status_mental">
+                                <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
+                                    name="status_mental" id="resikoJatuh_mental_orientasi" value="0" 
+                                    {{ old('status_mental', $skalaMorse->status_mental) == '0' ? 'checked' : '' }} required>
+                                <label class="form-check-label resiko_jatuh__criteria-form-check-label"
+                                    for="resikoJatuh_mental_orientasi">
+                                    a. Berorientasi pada kemampuannya
+                                    <span
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        0</span>
+                                </label>
+                            </div>
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ old('status_mental', $skalaMorse->status_mental) == '15' ? 'selected' : '' }}" data-group="status_mental">
+                                <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
+                                    name="status_mental" id="resikoJatuh_mental_lupa" value="15"
+                                    {{ old('status_mental', $skalaMorse->status_mental) == '15' ? 'checked' : '' }}>
+                                <label class="form-check-label resiko_jatuh__criteria-form-check-label"
+                                    for="resikoJatuh_mental_lupa">
+                                    b. Lupa akan keterbatasannya
+                                    <span
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        15</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hasil Skor -->
+                    <div class="resiko_jatuh__section-separator">
+                        <h5><i class="ti-stats-up mr-2"></i>Hasil Penilaian</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card resiko_jatuh__card resiko_jatuh__result-card bg-light">
+                                    <div class="card-body">
+                                        <h5>SKOR TOTAL</h5>
+                                        <div id="resikoJatuh_skorTotal" class="resiko_jatuh__score-total">{{ old('skor_total', $skalaMorse->skor_total) }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card resiko_jatuh__card resiko_jatuh__result-card 
+                                    @switch(old('kategori_resiko', $skalaMorse->kategori_resiko))
+                                        @case('RR') bg-success text-white @break
+                                        @case('RS') bg-warning text-dark @break
+                                        @case('RT') bg-danger text-white @break
+                                    @endswitch" id="resikoJatuh_hasilResiko">
+                                    <div class="card-body">
+                                        <h5>Kategori Resiko</h5>
+                                        <h4 id="resikoJatuh_kategoriResiko">
+                                            @switch(old('kategori_resiko', $skalaMorse->kategori_resiko))
+                                                @case('RR') RESIKO RENDAH (RR) @break
+                                                @case('RS') RESIKO SEDANG (RS) @break
+                                                @case('RT') RESIKO TINGGI (RT) @break
+                                                @default Belum Dinilai
+                                            @endswitch
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="skor_total" id="resikoJatuh_skorTotalInput" value="{{ old('skor_total', $skalaMorse->skor_total) }}">
+                        <input type="hidden" name="kategori_resiko" id="resikoJatuh_kategoriResikoInput" value="{{ old('kategori_resiko', $skalaMorse->kategori_resiko) }}">
+                    </div>
+
+                    @php 
+                        // Mendapatkan data intervensi yang sudah tersimpan
+                        $intervensiRR = $skalaMorse->intervensi_rr ?? [];
+                        $intervensiRS = $skalaMorse->intervensi_rs ?? [];
+                        $intervensiRT = $skalaMorse->intervensi_rt ?? [];
+                        
+                        // Pastikan dalam format array
+                        if (is_string($intervensiRR)) {
+                            $intervensiRR = json_decode($intervensiRR, true) ?? [];
+                        }
+                        if (is_string($intervensiRS)) {
+                            $intervensiRS = json_decode($intervensiRS, true) ?? [];
+                        }
+                        if (is_string($intervensiRT)) {
+                            $intervensiRT = json_decode($intervensiRT, true) ?? [];
+                        }
+                        
+                        $currentKategori = old('kategori_resiko', $skalaMorse->kategori_resiko);
+                    @endphp
+
+                    <!-- INTERVENSI RESIKO RENDAH (RR) -->
+                    <div class="resiko_jatuh__section-separator resiko_jatuh__intervensi-rr" id="resikoJatuh_intervensiRR" 
+                         style="display: {{ $currentKategori == 'RR' ? 'block' : 'none' }};">
+                        <h5><i class="ti-shield mr-2"></i> INTERVENSI PENCEGAHAN JATUH - RESIKO RENDAH/STANDAR (RR)</h5>
+
+                        <div class="alert alert-success">
+                            <strong><i class="ti-info-alt mr-2"></i>INFORMASI:</strong>
+                            Beri tanda cek (√) pada tindakan yang dilakukan <br>
+                            1. RT: intervensi setiap shift dan dinilai ulang setiap 2 hari) <br>
+                            2. RS: intervensi setiap pagi dan dinilai ulang tiap 3 hari) <br>
+                            3. RR: intervensi setiap pagi dan dinilai ulang tiap 3 hari )
+                        </div>
+
+                        <div class="resiko_jatuh__criteria-section">
+                            <label class="resiko_jatuh__font-weight-bold text-success">
+                                <i class="ti-list mr-2"></i>Pilih Intervensi yang Akan Dilakukan:
+                            </label>
+
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ in_array('tingkatkan_observasi', old('intervensi_rr', $intervensiRR)) ? 'selected' : '' }}">
+                                <input class="form-check-input" type="checkbox" name="intervensi_rr[]" id="rr_intervensi_1"
+                                    value="tingkatkan_observasi" {{ in_array('tingkatkan_observasi', old('intervensi_rr', $intervensiRR)) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="rr_intervensi_1">
+                                    <strong>1. Tingkatkan observasi bantuan yang sesuai saat ambulasi</strong>
+                                </label>
+                            </div>
+
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ in_array('orientasi_pasien', old('intervensi_rr', $intervensiRR)) ? 'selected' : '' }}">
+                                <input class="form-check-input" type="checkbox" name="intervensi_rr[]" id="rr_intervensi_2"
+                                    value="orientasi_pasien" {{ in_array('orientasi_pasien', old('intervensi_rr', $intervensiRR)) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="rr_intervensi_2">
+                                    <strong>2. Orientasikan pasien terhadap lingkungan dan rutinitas RS:</strong>
+                                    <ul class="mt-2 ml-3" style="font-size: 13px;">
+                                        <li>a. Tunjukkan lokasi kamar mandi</li>
+                                        <li>b. Jika pasien linglung, orientasi dilaksanakan bertahap</li>
+                                        <li>c. Tempatkan bel ditempat yang mudah dicapai</li>
+                                        <li>d. Instruksikan meminta bantuan perawat sebelum turun dari tempat tidur</li>
+                                    </ul>
+                                </label>
+                            </div>
+
+                            <!-- Continue dengan checkbox lainnya yang sudah ada sebelumnya -->
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ in_array('pagar_pengaman', old('intervensi_rr', $intervensiRR)) ? 'selected' : '' }}">
+                                <input class="form-check-input" type="checkbox" name="intervensi_rr[]" id="rr_intervensi_3"
+                                    value="pagar_pengaman" {{ in_array('pagar_pengaman', old('intervensi_rr', $intervensiRR)) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="rr_intervensi_3">
+                                    <strong>3. Pagar pengaman tempat tidur dinaikkan</strong>
+                                </label>
+                            </div>
+
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ in_array('tempat_tidur_rendah', old('intervensi_rr', $intervensiRR)) ? 'selected' : '' }}">
+                                <input class="form-check-input" type="checkbox" name="intervensi_rr[]" id="rr_intervensi_4"
+                                    value="tempat_tidur_rendah" {{ in_array('tempat_tidur_rendah', old('intervensi_rr', $intervensiRR)) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="rr_intervensi_4">
+                                    <strong>4. Tempat tidur dalam posisi rendah terkunci</strong>
+                                </label>
+                            </div>
+
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ in_array('edukasi_perilaku', old('intervensi_rr', $intervensiRR)) ? 'selected' : '' }}">
+                                <input class="form-check-input" type="checkbox" name="intervensi_rr[]" id="rr_intervensi_5"
+                                    value="edukasi_perilaku" {{ in_array('edukasi_perilaku', old('intervensi_rr', $intervensiRR)) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="rr_intervensi_5">
+                                    <strong>5. Edukasi perilaku yang lebih aman saat jatuh atau transfer</strong>
+                                </label>
+                            </div>
+
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ in_array('monitor_kebutuhan_pasien', old('intervensi_rr', $intervensiRR)) ? 'selected' : '' }}">
+                                <input class="form-check-input" type="checkbox" name="intervensi_rr[]" id="rr_intervensi_6"
+                                    value="monitor_kebutuhan_pasien" {{ in_array('monitor_kebutuhan_pasien', old('intervensi_rr', $intervensiRR)) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="rr_intervensi_6">
+                                    <strong>6. Monitor kebutuhan pasien secara berkala (minimalnya tiap 2 jam)</strong>
+                                </label>
+                            </div>
+
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ in_array('anjurkan_tidak_menggunakan_kaus', old('intervensi_rr', $intervensiRR)) ? 'selected' : '' }}">
+                                <input class="form-check-input" type="checkbox" name="intervensi_rr[]" id="rr_intervensi_7"
+                                    value="anjurkan_tidak_menggunakan_kaus" {{ in_array('anjurkan_tidak_menggunakan_kaus', old('intervensi_rr', $intervensiRR)) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="rr_intervensi_7">
+                                    <strong>7. Anjurkan pasien tidak menggunakan kaus kaki atau sepatu yang licin</strong>
+                                </label>
+                            </div>
+
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ in_array('lantai_kamar_mandi', old('intervensi_rr', $intervensiRR)) ? 'selected' : '' }}">
+                                <input class="form-check-input" type="checkbox" name="intervensi_rr[]" id="rr_intervensi_8"
+                                    value="lantai_kamar_mandi" {{ in_array('lantai_kamar_mandi', old('intervensi_rr', $intervensiRR)) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="rr_intervensi_8">
+                                    <strong>8. Lantai kamar mandi dengan karpet antislip, tidak licin</strong>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- INTERVENSI RESIKO SEDANG (RS) -->
+                    <div class="resiko_jatuh__section-separator resiko_jatuh__intervensi-rs" id="resikoJatuh_intervensiRS"
+                         style="display: {{ $currentKategori == 'RS' ? 'block' : 'none' }};">
+                        <h5><i class="ti-alert mr-2"></i>INTERVENSI PENCEGAHAN JATUH - RESIKO SEDANG (RS)</h5>
+
+                        <div class="alert alert-warning">
+                            <strong><i class="ti-info-alt mr-2"></i>PERHATIAN:</strong>
+                            Beri tanda cek (√) pada tindakan yang dilakukan <br>
+                            1. RT: intervensi setiap shift dan dinilai ulang setiap 2 hari) <br>
+                            2. RS: intervensi setiap pagi dan dinilai ulang tiap 3 hari) <br>
+                            3. RR: intervensi setiap pagi dan dinilai ulang tiap 3 hari )
+                        </div>
+
+                        <div class="resiko_jatuh__criteria-section">
+                            <label class="resiko_jatuh__font-weight-bold text-warning">
+                                <i class="ti-list mr-2"></i>Pilih Intervensi yang Akan Dilakukan:
+                            </label>
+
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ in_array('lakukan_semua_intervensi_rendah', old('intervensi_rs', $intervensiRS)) ? 'selected' : '' }}">
+                                <input class="form-check-input" type="checkbox" name="intervensi_rs[]" id="rs_intervensi_1"
+                                    value="lakukan_semua_intervensi_rendah" {{ in_array('lakukan_semua_intervensi_rendah', old('intervensi_rs', $intervensiRS)) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="rs_intervensi_1">
+                                    <strong>1. Lakukan <span class="text-bold">SEMUA</span> intervensi jatuh resiko rendah /
+                                        standar</strong>
+                                </label>
+                            </div>
+
+                            <!-- Continue dengan checkbox RS lainnya... -->
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ in_array('pakai_gelang_risiko', old('intervensi_rs', $intervensiRS)) ? 'selected' : '' }}">
+                                <input class="form-check-input" type="checkbox" name="intervensi_rs[]" id="rs_intervensi_2"
+                                    value="pakai_gelang_risiko" {{ in_array('pakai_gelang_risiko', old('intervensi_rs', $intervensiRS)) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="rs_intervensi_2">
+                                    <strong>2. Pakailah gelang risiko jatuh berwarna kuning</strong>
+                                </label>
+                            </div>
+
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ in_array('pasang_gambar_risiko', old('intervensi_rs', $intervensiRS)) ? 'selected' : '' }}">
+                                <input class="form-check-input" type="checkbox" name="intervensi_rs[]" id="rs_intervensi_3"
+                                    value="pasang_gambar_risiko" {{ in_array('pasang_gambar_risiko', old('intervensi_rs', $intervensiRS)) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="rs_intervensi_3">
+                                    <strong>3. Pasang gambar risiko jatuh diatas tempat tidur pasien dan pada pintu kamar
+                                        pasien</strong>
+                                </label>
+                            </div>
+
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ in_array('tempatkan_risiko_jatuh', old('intervensi_rs', $intervensiRS)) ? 'selected' : '' }}">
+                                <input class="form-check-input" type="checkbox" name="intervensi_rs[]" id="rs_intervensi_4"
+                                    value="tempatkan_risiko_jatuh" {{ in_array('tempatkan_risiko_jatuh', old('intervensi_rs', $intervensiRS)) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="rs_intervensi_4">
+                                    <strong>4. Tempatkan tanda resiko pasien jatuh pada daftar nama pasien (warna
+                                        kuning)</strong>
+                                </label>
+                            </div>
+
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ in_array('pertimbangkan_riwayat_obat', old('intervensi_rs', $intervensiRS)) ? 'selected' : '' }}">
+                                <input class="form-check-input" type="checkbox" name="intervensi_rs[]" id="rs_intervensi_5"
+                                    value="pertimbangkan_riwayat_obat" {{ in_array('pertimbangkan_riwayat_obat', old('intervensi_rs', $intervensiRS)) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="rs_intervensi_5">
+                                    <strong>5. Pertimbangkan riwayat obat-obatan dan suplemen untuk mengevaluasi
+                                        pengobatan</strong>
+                                </label>
+                            </div>
+
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ in_array('gunakan_alat_bantu', old('intervensi_rs', $intervensiRS)) ? 'selected' : '' }}">
+                                <input class="form-check-input" type="checkbox" name="intervensi_rs[]" id="rs_intervensi_6"
+                                    value="gunakan_alat_bantu" {{ in_array('gunakan_alat_bantu', old('intervensi_rs', $intervensiRS)) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="rs_intervensi_6">
+                                    <strong>6. Gunakan alat bantu jalan (walker, handrail)</strong>
+                                </label>
+                            </div>
+
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ in_array('dorong_partisipasi_keluarga', old('intervensi_rs', $intervensiRS)) ? 'selected' : '' }}">
+                                <input class="form-check-input" type="checkbox" name="intervensi_rs[]" id="rs_intervensi_7"
+                                    value="dorong_partisipasi_keluarga" {{ in_array('dorong_partisipasi_keluarga', old('intervensi_rs', $intervensiRS)) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="rs_intervensi_7">
+                                    <strong>7. Dorong partisipasi keluarga dalam keselamatan pasien</strong>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- INTERVENSI RESIKO TINGGI (RT) -->
+                    <div class="resiko_jatuh__section-separator resiko_jatuh__intervensi-rt" id="resikoJatuh_intervensiRT"
+                         style="display: {{ $currentKategori == 'RT' ? 'block' : 'none' }};">
+                        <h5><i class="ti-alert mr-2"></i>INTERVENSI PENCEGAHAN JATUH - RESIKO TINGGI (RT)</h5>
+
+                        <div class="alert alert-danger">
+                            <strong><i class="ti-info-alt mr-2"></i>PERHATIAN:</strong>
+                            Beri tanda cek (√) pada tindakan yang dilakukan <br>
+                            1. RT: intervensi setiap shift dan dinilai ulang setiap 2 hari) <br>
+                            2. RS: intervensi setiap pagi dan dinilai ulang tiap 3 hari) <br>
+                            3. RR: intervensi setiap pagi dan dinilai ulang tiap 3 hari )
+                        </div>
+
+                        <div class="resiko_jatuh__criteria-section">
+                            <label class="resiko_jatuh__font-weight-bold text-danger">
+                                <i class="ti-shield mr-2"></i>Pilih Intervensi yang Akan Dilakukan:
+                            </label>
+
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ in_array('lakukan_semua_intervensi', old('intervensi_rt', $intervensiRT)) ? 'selected' : '' }}">
+                                <input class="form-check-input" type="checkbox" name="intervensi_rt[]" id="rt_intervensi_1"
+                                    value="lakukan_semua_intervensi" {{ in_array('lakukan_semua_intervensi', old('intervensi_rt', $intervensiRT)) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="rt_intervensi_1">
+                                    <strong>1. Lakukan <span class="text-bold">SEMUA</span> intervensi jatuh resiko rendah /
+                                        standar dan resiko sedang</strong>
+                                </label>
+                            </div>
+
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ in_array('jangan_tinggalkan_pasien', old('intervensi_rt', $intervensiRT)) ? 'selected' : '' }}">
+                                <input class="form-check-input" type="checkbox" name="intervensi_rt[]" id="rt_intervensi_2"
+                                    value="jangan_tinggalkan_pasien" {{ in_array('jangan_tinggalkan_pasien', old('intervensi_rt', $intervensiRT)) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="rt_intervensi_2">
+                                    <strong>2. Jangan tinggalkan pasien saat di ruangan diagnostic atau tindakan</strong>
+                                </label>
+                            </div>
+
+                            <div class="form-check resiko_jatuh__criteria-form-check {{ in_array('penempatan_dekat_nurse_station', old('intervensi_rt', $intervensiRT)) ? 'selected' : '' }}">
+                                <input class="form-check-input" type="checkbox" name="intervensi_rt[]" id="rt_intervensi_3"
+                                    value="penempatan_dekat_nurse_station" {{ in_array('penempatan_dekat_nurse_station', old('intervensi_rt', $intervensiRT)) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="rt_intervensi_3">
+                                    <strong>3. Penempatan pasien dekat nurse station untuk memudahkan observasi (24-48
+                                        jam)</strong>
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="text-end mt-4">
+                        <button type="submit" class="btn btn-success resiko_jatuh__btn-primary" id="resikoJatuh_simpan">
+                            <i class="ti-save mr-2"></i> Update Data
+                        </button>
                     </div>
                 </div>
             </form>
 
-            <p class="fw-bold text-center">INTERVENSI PENIALAIAN EARLY WARNING SYSTEM</p>
-            <div class="mt-2">
-                <!-- Risk Assessment Table -->
-                <div class="mb-4">
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <tbody>
-                                <tr class="bg-success text-white">
-                                    <td class="text-start fw-bold">Total Skor 0-4</td>
-                                    <td class="text-start fw-bold">RISIKO RENDAH</td>
-                                </tr>
-                                <tr class="bg-warning text-dark">
-                                    <td class="text-start fw-bold">Skor 3 dalam satu parameter atau Total Skor : 5 - 6</td>
-                                    <td class="text-start fw-bold">RISIKO SEDANG</td>
-                                </tr>
-                                <tr class="bg-danger text-white">
-                                    <td class="text-start fw-bold">Total Skor ≥ 7</td>
-                                    <td class="text-start fw-bold">RISIKO TINGGI</td>
-                                </tr>
-                            </tbody>
-                        </table>
+            <!-- Keterangan -->
+            <div class="resiko_jatuh__section-separator mt-3">
+                <h5><i class="ti-info mr-2"></i> Keterangan</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="resiko_jatuh__keterangan-box">
+                            <h6 class="resiko_jatuh__keterangan-title"><strong>Keterangan :</strong></h6>
+                            <ul class="resiko_jatuh__keterangan-list">
+                                <li>
+                                    <span class="badge resiko_jatuh__badge resiko_jatuh__badge-success mr-2">RR</span>
+                                    <strong>Resiko Rendah (0 - 24)</strong>
+                                </li>
+                                <li>
+                                    <span class="badge resiko_jatuh__badge resiko_jatuh__badge-warning mr-2">RS</span>
+                                    <strong>Resiko Sedang (25 - 44)</strong>
+                                </li>
+                                <li>
+                                    <span class="badge resiko_jatuh__badge resiko_jatuh__badge-danger mr-2">RT</span>
+                                    <strong>Resiko Tinggi (45 dan lebih)</strong>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-
-                    <!-- Warning Levels Description -->
-                    <div class="mt-3">
-                        <p class="mb-1 fw-bold">Keterangan Tingkat kesadaran AVPU :</p>
-                        <p class="mb-1"><span class="fw-bold">A : ALERT</span> &nbsp;&nbsp;&nbsp; Pasien sadar penuh</p>
-                        <p class="mb-1"><span class="fw-bold">V : VOICE</span> &nbsp;&nbsp;&nbsp; Pasien membuat beberapa
-                            jenis respon saat dipanggil berbicara, terdiri dari 3 komponen yang mempengaruhi yaitu mata,
-                            suara atau motorik</p>
-                        <p class="mb-1"><span class="fw-bold">P : PAIN</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Pasien akan
-                            berespon jika dirangsang sakit</p>
-                        <p class="mb-1"><span class="fw-bold">U : UNRESPONSIVE</span> &nbsp;&nbsp;&nbsp; Tidak berespon,
-                            jika pasien tidak memberikan respon terhadap suara, nyeri dsb</p>
-                    </div>
-                </div>
-
-                <!-- Intervention Table -->
-                <div class="mt-0">
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead class="table-light">
-                                <tr>
-                                    <th class="text-center fw-bold" style="width: 5%;">NO</th>
-                                    <th class="text-center fw-bold" style="width: 15%;">NILAI EWS</th>
-                                    <th class="text-center fw-bold" style="width: 20%;">FREKUENSI MONITORING</th>
-                                    <th class="text-center fw-bold" style="width: 60%;">ASUHAN YANG DIBERIKAN</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="text-center">1</td>
-                                    <td class="text-center">0</td>
-                                    <td class="text-center">Minimal setiap 12 jam sekali</td>
-                                    <td>Lanjutkan observasi/ monitoring secara rutin/per shift</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center">2</td>
-                                    <td class="text-center">TOTAL SCORE<br>1 - 4</td>
-                                    <td class="text-center">Minimal Setiap<br>4 - 6 Jam Sekali</td>
-                                    <td>
-                                        <strong>1.</strong> Perawat pelaksana menginformasikan kepada ketua tim / penanggung
-                                        jawab jaga ruangan tentang siapa yang melaksanakan assesment selanjutnya.<br>
-                                        <strong>2.</strong> Ketua Tim / penanggunggjawab harus membuat keputusan:<br>
-                                        &nbsp;&nbsp;&nbsp; a. Meningkatkan frekuensi observasi / monitoring<br>
-                                        &nbsp;&nbsp;&nbsp; b. Perawatan asuhan yang dibutuhkan oleh pasien
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center">3</td>
-                                    <td class="text-center">TOTAL SCORE<br>5 DAN 6 ATAU 3<br>DALAM 1 (SATU)<br>PARAMETER
-                                    </td>
-                                    <td class="text-center">Peningkatan<br>Frekuensi Observasi / Monitoring<br>Setidaknya
-                                        Setiap<br>1 Jam Sekali</td>
-                                    <td>
-                                        <strong>1.</strong> Ketua Tim (Perawat) segera memberikan informasi tentang kondisi
-                                        pasien kepada dokter jaga atau DPJP<br>
-                                        <strong>2.</strong> Dokter jaga atau DPJP melakukan assesment sesuai kompetensinya
-                                        dan menentukan kondisi pasien apakah dalam penyakit akut,<br>
-                                        <strong>3.</strong> Siapkan fasilitas monitoring yang lebih canggih.
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center">4</td>
-                                    <td class="text-center">TOTAL SCORE 7<br>ATAU LEBIH</td>
-                                    <td class="text-center">Lanjutkan Observasi / Monitoring<br>Tanda-Tanda Vital</td>
-                                    <td>
-                                        <strong>1.</strong> Ketua Tim (Perawat) segera memberikan informasi tentang kondisi
-                                        pasien kepada dokter jaga atau DPJP<br>
-                                        <strong>2.</strong> Rencanakan transfer pasien ke ruang intensive<br>
-                                        <strong>3.</strong> Aktivasi code blue bila pasien henti jantung/henti nafas
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="col-md-6">
+                        <div class="resiko_jatuh__keterangan-box">
+                            <h6 class="resiko_jatuh__keterangan-title"><strong>Pengkajian resiko jatuh dilakukan pada waktu
+                                    :</strong></h6>
+                            <ul class="resiko_jatuh__keterangan-list">
+                                <li>
+                                    <strong>a.</strong> Saat pasien masuk RS / Initial Assessment (IA)
+                                </li>
+                                <li>
+                                    <strong>b.</strong> Saat kondisi pasien berubah atau ada suatu perubahan dalam terapi
+                                    medik yang dapat resiko jatuh / Change Of Condition (CC)
+                                </li>
+                                <li>
+                                    <strong>c.</strong> Saat pasien dipindahkan ke Unit lain / on Ward Transfer (WT)
+                                </li>
+                                <li>
+                                    <strong>d.</strong> Setelah kejadian jatuh / Post Fall (PF)
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 @endsection
 
-@push('js')
-    <script>
-        // Calculate EWS Score automatically
-        function calculateEWSScore() {
-            let totalScore = 0;
-
-            // Get all select elements
-            const parameters = ['avpu', 'saturasi_o2', 'dengan_bantuan', 'tekanan_darah', 'nafas', 'nadi', 'temperatur'];
-
-            parameters.forEach(function (param) {
-                const select = document.getElementById(param);
-                if (select && select.selectedIndex > 0) {
-                    // Get score from data attribute
-                    const selectedOption = select.options[select.selectedIndex];
-                    const score = parseInt(selectedOption.getAttribute('data-skor') || 0);
-                    totalScore += score;
-                }
-            });
-
-            // Update total score display
-            document.getElementById('total-skor').textContent = totalScore;
-            document.getElementById('ews-total-score').value = totalScore;
-
-            // Show appropriate conclusion based on score
-            showEWSResult(totalScore);
-        }
-
-        function showEWSResult(score) {
-            // Hide all conclusions first
-            document.getElementById('kesimpulan-hijau').classList.add('d-none');
-            document.getElementById('kesimpulan-kuning').classList.add('d-none');
-            document.getElementById('kesimpulan-merah').classList.add('d-none');
-
-            let result = '';
-
-            // Show conclusion based on score range (sesuai gambar)
-            if (score >= 0 && score <= 4) {
-                document.getElementById('kesimpulan-hijau').classList.remove('d-none');
-                result = 'RISIKO RENDAH';
-            } else if (score >= 5 && score <= 6) {
-                document.getElementById('kesimpulan-kuning').classList.remove('d-none');
-                result = 'RISIKO SEDANG';
-            } else if (score >= 7) {
-                document.getElementById('kesimpulan-merah').classList.remove('d-none');
-                result = 'RISIKO TINGGI';
-            }
-
-            // Check for single parameter score of 3 (also medium risk)
-            const parameters = ['avpu', 'saturasi_o2', 'dengan_bantuan', 'tekanan_darah', 'nafas', 'nadi', 'temperatur'];
-            let hasThreeInSingleParam = false;
-
-            parameters.forEach(function (param) {
-                const select = document.getElementById(param);
-                if (select && select.selectedIndex > 0) {
-                    const selectedOption = select.options[select.selectedIndex];
-                    const score = parseInt(selectedOption.getAttribute('data-skor') || 0);
-                    if (score === 3) {
-                        hasThreeInSingleParam = true;
-                    }
-                }
-            });
-
-            // Override to medium risk if single parameter = 3 and total score < 7
-            if (hasThreeInSingleParam && score < 7) {
-                // Hide all first
-                document.getElementById('kesimpulan-hijau').classList.add('d-none');
-                document.getElementById('kesimpulan-kuning').classList.add('d-none');
-                document.getElementById('kesimpulan-merah').classList.add('d-none');
-
-                // Show yellow (medium risk)
-                document.getElementById('kesimpulan-kuning').classList.remove('d-none');
-                result = 'RISIKO SEDANG';
-            }
-
-            document.getElementById('ews-hasil').value = result;
-        }
-
-        // Add event listeners to all select elements
-        document.addEventListener('DOMContentLoaded', function () {
-            const parameters = ['avpu', 'saturasi_o2', 'dengan_bantuan', 'tekanan_darah', 'nafas', 'nadi', 'temperatur'];
-
-            // Debug: Cetak nilai yang dipilih di setiap select box saat halaman dimuat
-            console.log('Current selected values:');
-            parameters.forEach(function(param) {
-                const select = document.getElementById(param);
-                if (select) {
-                    console.log(param + ': ' + select.value + ' (index: ' + select.selectedIndex + ')');
-                }
-            });
-
-            // Tambahkan event listener untuk setiap select
-            parameters.forEach(function (param) {
-                const select = document.getElementById(param);
-                if (select) {
-                    select.addEventListener('change', calculateEWSScore);
-                }
-            });
-
-            // Initial calculation
-            calculateEWSScore();
-        });
-    </script>
-@endpush

@@ -168,8 +168,9 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
-        ],
-        'icon' => 'info.png',
+        ],        
+        [
+            'icon' => 'info.png',
             'label' => 'Gizi',
             'link' => route('rawat-jalan.gizi.anak.index', [
                 $dataMedis->kd_unit,
@@ -177,6 +178,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+        ],
         [
             'icon' => 'observasi.png',
             'label' => 'EWS',
@@ -189,7 +191,7 @@
         ],
         [
             'icon' => 'agree.png',
-            'label' => 'Catatan Poloklinik',
+            'label' => 'Catatan Poliklinik',
             'link' => route('rawat-jalan.catatan-poliklinik.index', [
                 $dataMedis->kd_unit,
                 $dataMedis->kd_pasien,
@@ -211,18 +213,6 @@
 
 @endphp
 
-{{-- <div class="header-background">
-    <div class="nav-icons shadow-sm">
-        @foreach ($navItems as $item)
-            <a href="{{ $item['link'] }}" class="nav-item {{ $currentUrl === $item['link'] ? 'active' : '' }}">
-                <img id="image" src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }} Icon"
-                    width="20">
-                <span>{{ $item['label'] }}</span>
-            </a>
-        @endforeach
-    </div>
-</div> --}}
-
 <div class="card" style="height: fit-content; margin-bottom:10px !important;">
     <div class="card-body p-2">
         <div class="d-flex flex-wrap gap-2">
@@ -238,14 +228,3 @@
         </div>
     </div>
 </div>
-
-{{-- <div class="header-background">
-    <div class="nav-icons shadow-sm">
-        @foreach ($navItems as $item)
-            <a href="{{ $item['link'] }}">
-                <img src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }} Icon" width="25">
-                <span>{{ $item['label'] }}</span>
-            </a>
-        @endforeach
-    </div>
-</div> --}}

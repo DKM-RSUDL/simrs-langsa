@@ -306,7 +306,7 @@
                         <div class="soap-item">
                             <div class="soap-label">
                                 <span class="soap-badge">S</span>
-                                <span>Subjective (Anamnesis)</span>
+                                <span>Subjective</span>
                             </div>
                             <textarea class="form-control soap-textarea @error('subjective') is-invalid @enderror" name="subjective" rows="4">{{ old('subjective', $catatanPoliklinik->subjective) }}</textarea>
                             @error('subjective')
@@ -318,7 +318,7 @@
                         <div class="soap-item">
                             <div class="soap-label">
                                 <span class="soap-badge">O</span>
-                                <span>Objective (Pemeriksaan)</span>
+                                <span>Objective</span>
                             </div>
                             <textarea class="form-control soap-textarea @error('objective') is-invalid @enderror" name="objective" rows="4">{{ old('objective', $catatanPoliklinik->objective) }}</textarea>
                             @error('objective')
@@ -330,7 +330,7 @@
                         <div class="soap-item">
                             <div class="soap-label">
                                 <span class="soap-badge">A</span>
-                                <span>Assessment (Diagnosis)</span>
+                                <span>Assessment</span>
                             </div>
                             <textarea class="form-control soap-textarea @error('assessment') is-invalid @enderror" name="assessment" rows="3">{{ old('assessment', $catatanPoliklinik->assessment) }}</textarea>
                             @error('assessment')
@@ -342,7 +342,7 @@
                         <div class="soap-item">
                             <div class="soap-label">
                                 <span class="soap-badge">P</span>
-                                <span>Plan (Rencana Penatalaksanaan)</span>
+                                <span>Plan</span>
                             </div>
                             <textarea class="form-control soap-textarea @error('plan') is-invalid @enderror" name="plan" rows="4">{{ old('plan', $catatanPoliklinik->plan) }}</textarea>
                             @error('plan')

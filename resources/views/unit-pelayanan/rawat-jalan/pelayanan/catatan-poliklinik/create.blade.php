@@ -283,7 +283,7 @@
                             <div class="soap-item">
                                 <div class="soap-label">
                                     <span class="soap-badge">S</span>
-                                    <span>Subjective (Anamnesis)</span>
+                                    <span>Subjective</span>
                                 </div>
                                 <textarea class="form-control soap-textarea" name="subjective" rows="4"></textarea>
                             </div>
@@ -292,7 +292,7 @@
                             <div class="soap-item">
                                 <div class="soap-label">
                                     <span class="soap-badge">O</span>
-                                    <span>Objective (Pemeriksaan)</span>
+                                    <span>Objective</span>
                                 </div>
                                 <textarea class="form-control soap-textarea" name="objective" rows="4"></textarea>
                             </div>
@@ -301,7 +301,7 @@
                             <div class="soap-item">
                                 <div class="soap-label">
                                     <span class="soap-badge">A</span>
-                                    <span>Assessment (Diagnosis)</span>
+                                    <span>Assessment</span>
                                 </div>
                                 <textarea class="form-control soap-textarea" name="assessment" rows="3"></textarea>
                             </div>
@@ -310,7 +310,7 @@
                             <div class="soap-item">
                                 <div class="soap-label">
                                     <span class="soap-badge">P</span>
-                                    <span>Plan (Rencana Penatalaksanaan)</span>
+                                    <span>Plan</span>
                                 </div>
                                 <textarea class="form-control soap-textarea" name="plan" rows="4"></textarea>
                             </div>
