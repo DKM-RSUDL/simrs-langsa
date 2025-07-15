@@ -1783,7 +1783,6 @@ Route::middleware('ssoToken')->group(function () {
                              // Resiko Jatuh
                             Route::prefix('resiko-jatuh')->group(function () {
                                 Route::name('.resiko-jatuh')->group(function () {
-
                                     Route::prefix('morse')->group(function() {
                                         Route::prefix('.morse')->group(function() {
                                             Route::controller(SkalaMorseController::class)->group(function () {
