@@ -21,14 +21,14 @@
                         {{-- Tabs --}}
                         <ul class="nav nav-tabs" id="skalaMorseTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <a href="{{ route('rawat-inap.resiko-jatuh.morse.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                                <a href="{{ route('rawat-inap.resiko-jatuh.morse.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                     class="nav-link @if (request()->routeIs('rawat-inap.resiko-jatuh.morse.index')) active @endif">
                                     <i class="bi bi-person-heart me-2"></i>
                                     Skala Morse
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a href="{{ route('rawat-inap.resiko-jatuh.humpty-dumpty.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                                <a href="{{ route('rawat-inap.resiko-jatuh.humpty-dumpty.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                     class="nav-link @if (request()->routeIs('rawat-inap.resiko-jatuh.humpty-dumpty.index')) active @endif">
                                     <i class="bi bi-person-heart me-2"></i>
                                     Humpty Dumpty
@@ -46,22 +46,6 @@
                         {{-- Tab Content --}}
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active">
-                                {{-- TAB 1. list data --}}
-                                
-                                {{-- Alert Messages --}}
-                                @if(session('success'))
-                                    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-                                        <i class="ti-check-box"></i> {{ session('success') }}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                    </div>
-                                @endif
-
-                                @if(session('error'))
-                                    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-                                        <i class="ti-alert-triangle"></i> {{ session('error') }}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                    </div>
-                                @endif
                                 
                                 <div class="row">
                                     <div class="row m-3">
