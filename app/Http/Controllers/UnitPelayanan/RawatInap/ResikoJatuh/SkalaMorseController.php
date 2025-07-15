@@ -5,7 +5,10 @@ namespace App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh;
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
 use Illuminate\Http\Request;
+use Exception;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class SkalaMorseController extends Controller
 {
@@ -99,5 +102,26 @@ class SkalaMorseController extends Controller
         return view('unit-pelayanan.rawat-inap.pelayanan.resiko-jatuh.skala-morse.create', compact(
             'dataMedis',
         ));
+    }
+
+    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+
+        DB::beginTransaction();
+        try {
+    
+            DB::commit();
+
+            return to_route('rawat-inap.ews-pasien-dewasa.index', [
+                $kd_unit,
+                $kd_pasien,
+                $tgl_masuk,
+                $urut_masuk,
+            ])
+                ->with('success', 'Data EWS Pasien Dewasa berhasil disimpan');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }

@@ -127,7 +127,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapEdukasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapResumeController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh\SkalaHumptyDumptyController;
-use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh\SkalaMorseController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh\SkalaMorseController as RawatInapSkalaMorseController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SuratKematianController as RawatInapSuratKematianController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\TindakanController as RawatInapTindakanController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
@@ -1787,8 +1787,8 @@ Route::middleware('ssoToken')->group(function () {
 
                                     //Skala Morse
                                     Route::prefix('morse')->group(function() {
-                                        Route::prefix('.morse')->group(function() {
-                                            Route::controller(SkalaMorseController::class)->group(function () {
+                                        Route::name('.morse')->group(function() {
+                                            Route::controller(RawatInapSkalaMorseController::class)->group(function () {
                                                 Route::get('/', 'index')->name('.index');
                                                 Route::post('/', 'store')->name('.store');
                                                 Route::get('/create', 'create')->name('.create');
