@@ -35,10 +35,10 @@
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a href="#"
-                                    class="nav-link #">
+                                <a href="{{ route('rawat-inap.resiko-jatuh.geriatri.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                    class="nav-link @if (request()->routeIs('rawat-inap.resiko-jatuh.geriatri.index')) active @endif">
                                     <i class="bi bi-person-heart me-2"></i>
-                                    Skala 3
+                                    Skala Geriatri
                                 </a>
                             </li>
                         </ul>

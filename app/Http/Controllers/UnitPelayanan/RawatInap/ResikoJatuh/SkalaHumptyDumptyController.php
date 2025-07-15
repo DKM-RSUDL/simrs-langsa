@@ -382,6 +382,7 @@ class SkalaHumptyDumptyController extends Controller
                 $dataHumptyDumpty->edukasi_keluarga = $request->has('edukasi_keluarga') ? 1 : 0;
             }
 
+            $dataHumptyDumpty->user_updated = auth()->user()->id;
             $dataHumptyDumpty->save();
 
             DB::commit();
