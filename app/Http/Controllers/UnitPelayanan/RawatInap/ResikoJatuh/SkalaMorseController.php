@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan\RawatInap;
+namespace App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
-class ResikoJatuhController extends Controller
+class SkalaMorseController extends Controller
 {
     public function __construct()
     {
@@ -69,7 +69,7 @@ class ResikoJatuhController extends Controller
 
     private function skalaMorseTab($dataMedis, $activeTab)
     {
-        return view('unit-pelayanan.rawat-inap.pelayanan.resiko-jatuh.index', compact(
+        return view('unit-pelayanan.rawat-inap.pelayanan.resiko-jatuh.skala-morse.index', compact(
             'dataMedis',
             'activeTab'
         ));
@@ -96,7 +96,7 @@ class ResikoJatuhController extends Controller
     {
         $dataMedis = $this->getDataMedis($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.resiko-jatuh.create', compact(
+        return view('unit-pelayanan.rawat-inap.pelayanan.resiko-jatuh.skala-morse.create', compact(
             'dataMedis',
         ));
     }
