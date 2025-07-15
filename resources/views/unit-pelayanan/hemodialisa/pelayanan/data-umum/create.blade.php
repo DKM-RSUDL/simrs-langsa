@@ -257,13 +257,8 @@
 
                                     <div class="form-row">
                                         <label for="dokter_pengirim">Dokter pengirim</label>
-                                        <select name="dokter_pengirim" id="dokter_pengirim" class="form-control select2">
-                                            <option value="">--Pilih Dokter--</option>
-
-                                            @foreach ($dokter as $item)
-                                                <option value="{{ $item->kd_dokter }}">{{ $item->nama_lengkap }}</option>
-                                            @endforeach
-                                        </select>
+                                        <input type="text" name="dokter_pengirim" id="dokter_pengirim"
+                                            class="form-control">
                                     </div>
 
                                     <div class="form-row">
