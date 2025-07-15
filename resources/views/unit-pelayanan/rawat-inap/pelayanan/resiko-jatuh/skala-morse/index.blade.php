@@ -29,11 +29,10 @@
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a href="{{ request()->fullUrlWithQuery(['tab' => 'skalaMorse1']) }}"
-                                    class="nav-link {{ ($activeTab ?? 'skalaMorse') == 'skalaMorse1' ? 'active' : '' }}"
-                                    aria-selected="{{ ($activeTab ?? 'skalaMorse') == 'skalaMorse1' ? 'true' : 'false' }}">
+                                <a href="{{ route('rawat-inap.resiko-jatuh.humpty-dumpty.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                                    class="nav-link @if (request()->routeIs('rawat-inap.resiko-jatuh.humpty-dumpty.index')) active @endif">
                                     <i class="bi bi-person-heart me-2"></i>
-                                    Skala Morse 1
+                                    Humpty Dumpty
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
