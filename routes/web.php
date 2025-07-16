@@ -129,6 +129,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapResumeController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh\SkalaGeriatriController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh\SkalaHumptyDumptyController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh\SkalaMorseController as RawatInapSkalaMorseController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\StatusNyeri\SkalaNumerikController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SuratKematianController as RawatInapSuratKematianController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\TindakanController as RawatInapTindakanController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
@@ -1782,7 +1783,7 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
-                             // Resiko Jatuh
+                            // Resiko Jatuh
                             Route::prefix('resiko-jatuh')->group(function () {
                                 Route::name('.resiko-jatuh')->group(function () {
 
@@ -1832,6 +1833,41 @@ Route::middleware('ssoToken')->group(function () {
                                                 Route::put('/{data}', 'update')->name('.update');
                                                 Route::delete('/{data}', 'destroy')->name('.destroy');
                                             });
+                                        });
+                                    });
+                                });
+                            });
+
+                            //Status Nyeri
+                            Route::prefix('status-nyeri')->group(function () {
+                                Route::name('.status-nyeri')->group(function () {
+
+                                    //Status Nyeri Lanjutan Skala Numerik Dan Wong Baker
+                                    Route::prefix('skala-numerik')->group(function () {
+                                        Route::name('.skala-numerik')->group(function () {
+                                            Route::controller(SkalaNumerikController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::get('/{data}', 'show')->name('.show');
+                                                Route::get('/{data}/edit', 'edit')->name('.edit');
+                                                Route::put('/{data}', 'update')->name('.update');
+                                                Route::delete('/{data}', 'destroy')->name('.destroy');
+                                            });
+                                        });
+                                    });
+
+                                    //Status Nyeri Skala Cries (Neonatus 0 Sd 1 Bln)
+                                    Route::prefix('skala-cries')->group(function () {
+                                        Route::name('.skala-cries')->group(function () {
+                                            //
+                                        });
+                                    });
+
+                                    //Status Nyeri Lanjutan Skala Flacc (Anak  2 Bln Sd 7 Thn)
+                                    Route::prefix('skala-flacc')->group(function () {
+                                        Route::name('.skala-flacc')->group(function () {
+                                            //
                                         });
                                     });
                                 });

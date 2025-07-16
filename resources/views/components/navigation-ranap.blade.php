@@ -219,6 +219,16 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
+        [
+            'icon' => 'verified_badge.png',
+            'label' => 'Status Nyeri',
+            'link' => route('rawat-inap.status-nyeri.skala-numerik.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
     ];
 
     if (in_array($dataMedis->kd_unit, ['10015', '10016', '10131', '10132'])) {
