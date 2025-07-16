@@ -132,6 +132,9 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh\SkalaMorseControlle
 use App\Http\Controllers\UnitPelayanan\RawatInap\SuratKematianController as RawatInapSuratKematianController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\TindakanController as RawatInapTindakanController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\ResikoJatuh\SkalaGeriatriController as RawatJalanSkalaGeriatriController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\ResikoJatuh\SkalaHumptyDumptyController as RawatJalanSkalaHumptyDumptyController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\ResikoJatuh\SkalaMorseController as RawatJalanSkalaMorseController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenController as RawatJalanAsesmenController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenGeriatriController as RawatJalanAsesmenGeriatriController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenKeperawatanRajalController;
@@ -825,6 +828,63 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
+
+                            // Resiko Jatuh
+                            Route::prefix('resiko-jatuh')->group(function () {
+                                Route::name('.resiko-jatuh')->group(function () {
+
+                                    //Skala Morse
+                                    Route::prefix('morse')->group(function() {
+                                        Route::name('.morse')->group(function() {
+                                            Route::controller(RawatJalanSkalaMorseController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                                Route::get('/{data}', 'show')->name('.show');
+                                                Route::get('/{data}/edit', 'edit')->name('.edit');
+                                                Route::put('/{data}', 'update')->name('.update');
+                                                Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                                Route::delete('/{data}', 'destroy')->name('.destroy');
+                                            });
+                                        });
+                                    });
+
+                                    //Skala Humpty Dumpty
+                                    Route::prefix('humpty-dumpty')->group(function() {
+                                        Route::name('.humpty-dumpty')->group(function() {
+                                            Route::controller(RawatJalanSkalaHumptyDumptyController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                                Route::get('/{data}', 'show')->name('.show');
+                                                Route::get('/{data}/edit', 'edit')->name('.edit');
+                                                Route::put('/{data}', 'update')->name('.update');
+                                                Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                                Route::delete('/{data}', 'destroy')->name('.destroy');
+                                            });
+                                        });
+                                    });
+
+                                    //Risiko Jatuh Geriatri
+                                    Route::prefix('geriatri')->group(function() {
+                                        Route::name('.geriatri')->group(function() {
+                                            Route::controller(RawatJalanSkalaGeriatriController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                                Route::get('/{data}', 'show')->name('.show');
+                                                Route::get('/{data}/edit', 'edit')->name('.edit');
+                                                Route::put('/{data}', 'update')->name('.update');
+                                                Route::delete('/{data}', 'destroy')->name('.destroy');
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+
                         });
                     });
                 });
@@ -1782,7 +1842,7 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
-                             // Resiko Jatuh
+                            // Resiko Jatuh
                             Route::prefix('resiko-jatuh')->group(function () {
                                 Route::name('.resiko-jatuh')->group(function () {
 
