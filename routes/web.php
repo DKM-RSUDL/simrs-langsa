@@ -134,6 +134,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh\SkalaHumptyDumptyCo
 use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh\SkalaMorseController as RawatInapSkalaMorseController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SuratKematianController as RawatInapSuratKematianController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\TindakanController as RawatInapTindakanController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\StatusFungsionalController as RawatInapStatusFungsionalController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\ResikoJatuh\SkalaGeriatriController as RawatJalanSkalaGeriatriController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\ResikoJatuh\SkalaHumptyDumptyController as RawatJalanSkalaHumptyDumptyController;
@@ -1897,6 +1898,23 @@ Route::middleware('ssoToken')->group(function () {
                                                 Route::delete('/{data}', 'destroy')->name('.destroy');
                                             });
                                         });
+                                    });
+                                });
+                            });
+
+                            //Skala Morse
+                            Route::prefix('status-fungsional')->group(function() {
+                                Route::name('.status-fungsional')->group(function() {
+                                    Route::controller(RawatInapStatusFungsionalController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
                                     });
                                 });
                             });

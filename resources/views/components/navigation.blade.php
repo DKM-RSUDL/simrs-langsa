@@ -104,7 +104,7 @@
         ],
         [
             'icon' => 'verified_badge.png',
-            'label' => 'Resiko Tajuh',
+            'label' => 'Resiko Jatuh',
             'link' => route('resiko-jatuh.morse.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
     ];
