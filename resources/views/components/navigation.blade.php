@@ -102,6 +102,11 @@
             'label' => 'Resume',
             'link' => route('resume.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
         ],
+        [
+            'icon' => 'verified_badge.png',
+            'label' => 'Resiko Tajuh',
+            'link' => route('resiko-jatuh.morse.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+        ],
     ];
 @endphp
 

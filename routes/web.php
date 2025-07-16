@@ -48,6 +48,9 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\EWSPasienAnakController as GawatDaruratEWSPasienAnakController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\EWSPasienDewasaController as GawatDaruratEWSPasienDewasaController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\EWSPasienObstetrikController as GawatDaruratEWSPasienObstetrikController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResikoJatuh\SkalaGeriatriController as GawatDaruratSkalaGeriatriController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResikoJatuh\SkalaHumptyDumptyController as GawatDaruratSkalaHumptyDumptyController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResikoJatuh\SkalaMorseController as GawatDaruratSkalaMorseController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenHemodialisaKeperawatanController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenMedisController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\BeratBadanKeringController;
@@ -2297,6 +2300,62 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::delete('/{id}', 'destroyPengelolaan')->name('.pengelolaan.destroy');
                                     });
                                     Route::get('/print', 'printPengawasanDarah')->name('.print');
+                                });
+                            });
+                        });
+
+                        // Resiko Jatuh
+                        Route::prefix('{urut_masuk}/resiko-jatuh')->group(function () {
+                            Route::name('resiko-jatuh')->group(function () {
+
+                                //Skala Morse
+                                Route::prefix('morse')->group(function() {
+                                    Route::name('.morse')->group(function() {
+                                        Route::controller(GawatDaruratSkalaMorseController::class)->group(function () {
+                                            Route::get('/', 'index')->name('.index');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::get('/create', 'create')->name('.create');
+                                            Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                            Route::get('/{data}', 'show')->name('.show');
+                                            Route::get('/{data}/edit', 'edit')->name('.edit');
+                                            Route::put('/{data}', 'update')->name('.update');
+                                            Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                            Route::delete('/{data}', 'destroy')->name('.destroy');
+                                        });
+                                    });
+                                });
+
+                                //Skala Humpty Dumpty
+                                Route::prefix('humpty-dumpty')->group(function() {
+                                    Route::name('.humpty-dumpty')->group(function() {
+                                        Route::controller(GawatDaruratSkalaHumptyDumptyController::class)->group(function () {
+                                            Route::get('/', 'index')->name('.index');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::get('/create', 'create')->name('.create');
+                                            Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                            Route::get('/{data}', 'show')->name('.show');
+                                            Route::get('/{data}/edit', 'edit')->name('.edit');
+                                            Route::put('/{data}', 'update')->name('.update');
+                                            Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                            Route::delete('/{data}', 'destroy')->name('.destroy');
+                                        });
+                                    });
+                                });
+
+                                //Risiko Jatuh Geriatri
+                                Route::prefix('geriatri')->group(function() {
+                                    Route::name('.geriatri')->group(function() {
+                                        Route::controller(GawatDaruratSkalaGeriatriController::class)->group(function () {
+                                            Route::get('/', 'index')->name('.index');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::get('/create', 'create')->name('.create');
+                                            Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                            Route::get('/{data}', 'show')->name('.show');
+                                            Route::get('/{data}/edit', 'edit')->name('.edit');
+                                            Route::put('/{data}', 'update')->name('.update');
+                                            Route::delete('/{data}', 'destroy')->name('.destroy');
+                                        });
+                                    });
                                 });
                             });
                         });
