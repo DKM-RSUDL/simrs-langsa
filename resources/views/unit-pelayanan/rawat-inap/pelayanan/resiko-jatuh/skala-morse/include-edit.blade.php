@@ -420,6 +420,11 @@
             function checkDuplicateDateTime() {
                 const tanggal = $('#tanggal').val();
                 const shift = $('#shift').val();
+                
+                // Ambil ID record jika sedang edit (dari URL atau hidden input)
+                const currentId = window.location.pathname.split('/').pop(); // Ambil ID dari URL
+                // Atau bisa juga menggunakan hidden input jika ada
+                // const currentId = $('#record_id').val(); 
 
                 if (tanggal && shift) {
                     // AJAX call untuk mengecek duplikasi
@@ -427,9 +432,10 @@
                         url: "{{ route('rawat-inap.resiko-jatuh.morse.check-duplicate', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
                         method: 'POST',
                         data: {
-                            _token: $('input[name="_token"]').val(), // Ambil dari form token
+                            _token: $('input[name="_token"]').val(),
                             tanggal: tanggal,
-                            shift: shift
+                            shift: shift,
+                            id: currentId // TAMBAHKAN ID untuk exclude saat edit
                         },
                         success: function (response) {
                             if (response.exists) {

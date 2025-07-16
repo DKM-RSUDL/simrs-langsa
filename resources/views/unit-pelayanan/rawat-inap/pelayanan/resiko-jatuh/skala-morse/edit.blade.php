@@ -19,6 +19,7 @@
                 action="{{ route('rawat-inap.resiko-jatuh.morse.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $skalaMorse->id]) }}">
                 @csrf
                 @method('PUT')
+                <input type="hidden" id="record_id" value="{{ $skalaMorse->id }}">
 
                 <div class="resiko_jatuh__fade-in">
                     <div class="resiko_jatuh__header-asesmen text-center">

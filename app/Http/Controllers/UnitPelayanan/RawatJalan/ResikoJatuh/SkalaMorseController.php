@@ -94,14 +94,20 @@ class SkalaMorseController extends Controller
         ));
     }
 
-    public function checkDuplicate(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function checkDuplicate(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $exists = RmeSkalaMorse::where('kd_pasien', $kd_pasien)
+        $query = RmeSkalaMorse::where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->where('tanggal', $request->tanggal)
-            ->where('shift', $request->shift)
-            ->exists();
+            ->where('shift', $request->shift);
+
+        // Jika ada parameter id (untuk edit), exclude record tersebut
+        if ($request->has('id') && $request->id) {
+            $query->where('id', '!=', $request->id);
+        }
+
+        $exists = $query->exists();
 
         return response()->json([
             'exists' => $exists,
@@ -258,10 +264,11 @@ class SkalaMorseController extends Controller
                 ->where('urut_masuk', $urut_masuk)
                 ->where('tanggal', $request->tanggal)
                 ->where('shift', $request->shift)
+                ->where('id', '!=', $id) // TAMBAHKAN INI: exclude record yang sedang diedit
                 ->first();
 
             if ($existingData) {
-                return back()->with('error', 'Data dengan tanggal ' . date('d/m/Y', strtotime($request->tanggal_implementasi)) . ' dan shift ' . ucfirst($request->shift) . ' sudah ada. Silakan pilih tanggal atau shift yang berbeda.')
+                return back()->with('error', 'Data dengan tanggal ' . date('d/m/Y', strtotime($request->tanggal)) . ' dan shift ' . ucfirst($request->shift) . ' sudah ada. Silakan pilih tanggal atau shift yang berbeda.')
                     ->withInput();
             }
 

@@ -833,7 +833,7 @@
                 if (tanggal && shift) {
                     // AJAX call untuk mengecek duplikasi
                     $.ajax({
-                        url: "{{ route('resiko-jatuh.humpty-dumpty.check-duplicate', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
+                        url: "{{ route('humpty-dumpty.check-duplicate', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
                         method: 'POST',
                         data: {
                             _token: $('meta[name="csrf-token"]').attr('content'),
