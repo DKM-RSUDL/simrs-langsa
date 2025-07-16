@@ -1853,6 +1853,7 @@ Route::middleware('ssoToken')->group(function () {
                                                 Route::get('/', 'index')->name('.index');
                                                 Route::post('/', 'store')->name('.store');
                                                 Route::get('/create', 'create')->name('.create');
+                                                Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
                                                 Route::get('/{data}', 'show')->name('.show');
                                                 Route::get('/{data}/edit', 'edit')->name('.edit');
                                                 Route::put('/{data}', 'update')->name('.update');

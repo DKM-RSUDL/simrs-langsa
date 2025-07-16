@@ -36,7 +36,7 @@
                             <div class="col-md-4">
                                 <div class="form-group resiko_jatuh__form-group">
                                     <label>Tanggal</label>
-                                    <input type="date" class="form-control resiko_jatuh__form-control" name="tanggal"
+                                    <input type="date" class="form-control resiko_jatuh__form-control" name="tanggal" id="tanggal"
                                         value="{{ old('tanggal', date('Y-m-d', strtotime($skalaMorse->tanggal))) }}" required>
                                 </div>
                             </div>
@@ -50,7 +50,7 @@
                             <div class="col-md-4">
                                 <div class="form-group resiko_jatuh__form-group">
                                     <label>Shift</label>
-                                    <select class="form-control resiko_jatuh__form-control" name="shift" required>
+                                    <select class="form-control resiko_jatuh__form-control" name="shift" id="shift" required>
                                         <option value="">Pilih Shift</option>
                                         <option value="PG" {{ old('shift', $skalaMorse->shift) == 'PG' ? 'selected' : '' }}>🌅 Pagi (PG)</option>
                                         <option value="SI" {{ old('shift', $skalaMorse->shift) == 'SI' ? 'selected' : '' }}>☀️ Siang (SI)</option>
@@ -70,7 +70,7 @@
                             <label class="resiko_jatuh__font-weight-bold">1. Riwayat Jatuh:</label>
                             <div class="form-check resiko_jatuh__criteria-form-check {{ old('riwayat_jatuh', $skalaMorse->riwayat_jatuh) == '0' ? 'selected' : '' }}" data-group="riwayat_jatuh">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
-                                    name="riwayat_jatuh" id="resikoJatuh_riwayat_tidak" value="0" 
+                                    name="riwayat_jatuh" id="resikoJatuh_riwayat_tidak" value="0"
                                     {{ old('riwayat_jatuh', $skalaMorse->riwayat_jatuh) == '0' ? 'checked' : '' }} required>
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_riwayat_tidak">
@@ -99,7 +99,7 @@
                             <label class="resiko_jatuh__font-weight-bold">2. Diagnosa Sekunder:</label>
                             <div class="form-check resiko_jatuh__criteria-form-check {{ old('diagnosa_sekunder', $skalaMorse->diagnosa_sekunder) == '0' ? 'selected' : '' }}" data-group="diagnosa_sekunder">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
-                                    name="diagnosa_sekunder" id="resikoJatuh_diagnosa_tidak" value="0" 
+                                    name="diagnosa_sekunder" id="resikoJatuh_diagnosa_tidak" value="0"
                                     {{ old('diagnosa_sekunder', $skalaMorse->diagnosa_sekunder) == '0' ? 'checked' : '' }} required>
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_diagnosa_tidak">
@@ -128,7 +128,7 @@
                             <label class="resiko_jatuh__font-weight-bold">3. Bantuan Ambulasi:</label>
                             <div class="form-check resiko_jatuh__criteria-form-check {{ old('bantuan_ambulasi', $skalaMorse->bantuan_ambulasi) == '0' ? 'selected' : '' }}" data-group="bantuan_ambulasi">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
-                                    name="bantuan_ambulasi" id="resikoJatuh_ambulasi_tidak" value="0" 
+                                    name="bantuan_ambulasi" id="resikoJatuh_ambulasi_tidak" value="0"
                                     {{ old('bantuan_ambulasi', $skalaMorse->bantuan_ambulasi) == '0' ? 'checked' : '' }} required>
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_ambulasi_tidak">
@@ -169,7 +169,7 @@
                             <label class="resiko_jatuh__font-weight-bold">4. Terpasang Infus:</label>
                             <div class="form-check resiko_jatuh__criteria-form-check {{ old('terpasang_infus', $skalaMorse->terpasang_infus) == '0' ? 'selected' : '' }}" data-group="terpasang_infus">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
-                                    name="terpasang_infus" id="resikoJatuh_infus_tidak" value="0" 
+                                    name="terpasang_infus" id="resikoJatuh_infus_tidak" value="0"
                                     {{ old('terpasang_infus', $skalaMorse->terpasang_infus) == '0' ? 'checked' : '' }} required>
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_infus_tidak">
@@ -198,7 +198,7 @@
                             <label class="resiko_jatuh__font-weight-bold">5. Cara / gaya berjalan:</label>
                             <div class="form-check resiko_jatuh__criteria-form-check {{ old('gaya_berjalan', $skalaMorse->gaya_berjalan) == '0' ? 'selected' : '' }}" data-group="gaya_berjalan">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
-                                    name="gaya_berjalan" id="resikoJatuh_berjalan_normal" value="0" 
+                                    name="gaya_berjalan" id="resikoJatuh_berjalan_normal" value="0"
                                     {{ old('gaya_berjalan', $skalaMorse->gaya_berjalan) == '0' ? 'checked' : '' }} required>
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_berjalan_normal">
@@ -239,7 +239,7 @@
                             <label class="resiko_jatuh__font-weight-bold">6. Status Mental:</label>
                             <div class="form-check resiko_jatuh__criteria-form-check {{ old('status_mental', $skalaMorse->status_mental) == '0' ? 'selected' : '' }}" data-group="status_mental">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
-                                    name="status_mental" id="resikoJatuh_mental_orientasi" value="0" 
+                                    name="status_mental" id="resikoJatuh_mental_orientasi" value="0"
                                     {{ old('status_mental', $skalaMorse->status_mental) == '0' ? 'checked' : '' }} required>
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_mental_orientasi">
@@ -277,7 +277,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="card resiko_jatuh__card resiko_jatuh__result-card 
+                                <div class="card resiko_jatuh__card resiko_jatuh__result-card
                                     @switch(old('kategori_resiko', $skalaMorse->kategori_resiko))
                                         @case('RR') bg-success text-white @break
                                         @case('RS') bg-warning text-dark @break
@@ -301,12 +301,12 @@
                         <input type="hidden" name="kategori_resiko" id="resikoJatuh_kategoriResikoInput" value="{{ old('kategori_resiko', $skalaMorse->kategori_resiko) }}">
                     </div>
 
-                    @php 
+                    @php
                         // Mendapatkan data intervensi yang sudah tersimpan
                         $intervensiRR = $skalaMorse->intervensi_rr ?? [];
                         $intervensiRS = $skalaMorse->intervensi_rs ?? [];
                         $intervensiRT = $skalaMorse->intervensi_rt ?? [];
-                        
+
                         // Pastikan dalam format array
                         if (is_string($intervensiRR)) {
                             $intervensiRR = json_decode($intervensiRR, true) ?? [];
@@ -317,12 +317,12 @@
                         if (is_string($intervensiRT)) {
                             $intervensiRT = json_decode($intervensiRT, true) ?? [];
                         }
-                        
+
                         $currentKategori = old('kategori_resiko', $skalaMorse->kategori_resiko);
                     @endphp
 
                     <!-- INTERVENSI RESIKO RENDAH (RR) -->
-                    <div class="resiko_jatuh__section-separator resiko_jatuh__intervensi-rr" id="resikoJatuh_intervensiRR" 
+                    <div class="resiko_jatuh__section-separator resiko_jatuh__intervensi-rr" id="resikoJatuh_intervensiRR"
                          style="display: {{ $currentKategori == 'RR' ? 'block' : 'none' }};">
                         <h5><i class="ti-shield mr-2"></i> INTERVENSI PENCEGAHAN JATUH - RESIKO RENDAH/STANDAR (RR)</h5>
 

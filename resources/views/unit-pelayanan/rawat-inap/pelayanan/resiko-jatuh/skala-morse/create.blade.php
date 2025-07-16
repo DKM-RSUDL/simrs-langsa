@@ -35,7 +35,7 @@
                             <div class="col-md-4">
                                 <div class="form-group resiko_jatuh__form-group">
                                     <label>Tanggal</label>
-                                    <input type="date" class="form-control resiko_jatuh__form-control" name="tanggal"
+                                    <input type="date" class="form-control resiko_jatuh__form-control" id="tanggal" name="tanggal"
                                         value="{{ date('Y-m-d') }}" required>
                                 </div>
                             </div>
@@ -49,7 +49,7 @@
                             <div class="col-md-4">
                                 <div class="form-group resiko_jatuh__form-group">
                                     <label>Shift</label>
-                                    <select class="form-control resiko_jatuh__form-control" name="shift" required>
+                                    <select class="form-control resiko_jatuh__form-control" id="shift" name="shift" required>
                                         <option value="">Pilih Shift</option>
                                         <option value="PG">🌅 Pagi (PG)</option>
                                         <option value="SI">☀️ Siang (SI)</option>

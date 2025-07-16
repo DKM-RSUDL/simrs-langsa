@@ -94,6 +94,21 @@ class SkalaMorseController extends Controller
         ));
     }
 
+    public function checkDuplicate(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        $exists = RmeSkalaMorse::where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->where('tanggal', $request->tanggal)
+            ->where('shift', $request->shift)
+            ->exists();
+
+        return response()->json([
+            'exists' => $exists,
+            'message' => $exists ? 'Data dengan tanggal dan shift ini sudah ada!' : 'Data dapat disimpan'
+        ]);
+    }
+
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         // Validasi input
@@ -115,27 +130,15 @@ class SkalaMorseController extends Controller
         try {
             // Validasi duplikasi tanggal dan shift
             $existingData = RmeSkalaMorse::where('kd_pasien', $kd_pasien)
-                ->where('kd_unit', $kd_unit)
-                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('tgl_masuk', $tgl_masuk)
                 ->where('urut_masuk', $urut_masuk)
-                ->whereDate('tanggal', $request->tanggal)
+                ->where('tanggal', $request->tanggal)
                 ->where('shift', $request->shift)
-                ->exists();
+                ->first();
 
             if ($existingData) {
-                DB::rollBack();
-
-                // Format nama shift untuk error message
-                $shiftName = match ($request->shift) {
-                    'PG' => 'Pagi',
-                    'SI' => 'Siang',
-                    'ML' => 'Malam',
-                    default => $request->shift
-                };
-
-                return redirect()->back()
-                    ->withInput()
-                    ->with('error', 'Data pengkajian untuk tanggal ' . date('d-m-Y', strtotime($request->tanggal)) . ' shift ' . $shiftName . ' sudah ada. Silakan pilih tanggal atau shift yang berbeda.');
+                return back()->with('error', 'Data dengan tanggal ' . date('d/m/Y', strtotime($request->tanggal_implementasi)) . ' dan shift ' . ucfirst($request->shift) . ' sudah ada. Silakan pilih tanggal atau shift yang berbeda.')
+                    ->withInput();
             }
 
             // Siapkan data untuk disimpan
@@ -249,30 +252,17 @@ class SkalaMorseController extends Controller
                 ->where('urut_masuk', $urut_masuk)
                 ->findOrFail($id);
 
-            // Validasi duplikasi tanggal dan shift (kecuali data yang sedang diupdate)
+            // Validasi duplikasi tanggal dan shift
             $existingData = RmeSkalaMorse::where('kd_pasien', $kd_pasien)
-                ->where('kd_unit', $kd_unit)
-                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('tgl_masuk', $tgl_masuk)
                 ->where('urut_masuk', $urut_masuk)
-                ->whereDate('tanggal', $request->tanggal)
+                ->where('tanggal', $request->tanggal)
                 ->where('shift', $request->shift)
-                ->where('id', '!=', $id) // Exclude current record
-                ->exists();
+                ->first();
 
             if ($existingData) {
-                DB::rollBack();
-
-                // Format nama shift untuk error message
-                $shiftName = match ($request->shift) {
-                    'PG' => 'Pagi',
-                    'SI' => 'Siang',
-                    'ML' => 'Malam',
-                    default => $request->shift
-                };
-
-                return redirect()->back()
-                    ->withInput()
-                    ->with('error', 'Data pengkajian untuk tanggal ' . date('d-m-Y', strtotime($request->tanggal)) . ' shift ' . $shiftName . ' sudah ada. Silakan pilih tanggal atau shift yang berbeda.');
+                return back()->with('error', 'Data dengan tanggal ' . date('d/m/Y', strtotime($request->tanggal_implementasi)) . ' dan shift ' . ucfirst($request->shift) . ' sudah ada. Silakan pilih tanggal atau shift yang berbeda.')
+                    ->withInput();
             }
 
             // Siapkan data untuk diupdate

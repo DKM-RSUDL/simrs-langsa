@@ -411,6 +411,68 @@
                 $('#resikoJatuh_kategoriResikoInput').val(kategoriLengkap);
             }
 
+            // Function untuk mengecek duplikasi - DIPERBAIKI
+            function checkDuplicateDateTime() {
+                const tanggal = $('#tanggal').val();
+                const shift = $('#shift').val();
+
+                if (tanggal && shift) {
+                    // AJAX call untuk mengecek duplikasi
+                    $.ajax({
+                        url: "{{ route('rawat-inap.resiko-jatuh.morse.check-duplicate', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
+                        method: 'POST',
+                        data: {
+                            _token: $('input[name="_token"]').val(), // Ambil dari form token
+                            tanggal: tanggal,
+                            shift: shift
+                        },
+                        success: function (response) {
+                            if (response.exists) {
+                                // Show warning message
+                                showDuplicateWarning(true);
+                                $('#resikoJatuh_simpan').prop('disabled', true);
+                            } else {
+                                // Hide warning message
+                                showDuplicateWarning(false);
+                                $('#resikoJatuh_simpan').prop('disabled', false);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error checking duplicate:', error);
+                            // On error, allow submission
+                            showDuplicateWarning(false);
+                            $('#resikoJatuh_simpan').prop('disabled', false);
+                        }
+                    });
+                } else {
+                    showDuplicateWarning(false);
+                    $('#resikoJatuh_simpan').prop('disabled', false);
+                }
+            }
+
+            // Function untuk menampilkan/menyembunyikan warning
+            function showDuplicateWarning(show) {
+                if (show) {
+                    if ($('#duplicate-warning').length === 0) {
+                        const warningHtml = `
+                        <div id="duplicate-warning" class="alert alert-warning mt-2" style="border-left: 4px solid #ffc107;">
+                            <i class="ti-alert-triangle"></i>
+                            <strong>Peringatan:</strong> Data dengan tanggal dan shift ini sudah ada!
+                        </div>
+                    `;
+                        $('#shift').closest('.form-group').after(warningHtml);
+                    }
+                    $('#duplicate-warning').show();
+                } else {
+                    $('#duplicate-warning').hide();
+                }
+            }
+
+            // **TAMBAHAN EVENT LISTENER UNTUK TANGGAL DAN SHIFT - INI YANG HILANG**
+            $('#tanggal, #shift').on('change blur', function () {
+                checkDuplicateDateTime();
+            });
+
             // Event listener untuk radio button dengan efek visual
             $('input[type="radio"]').on('change', function () {
                 const group = $(this).attr('name');
