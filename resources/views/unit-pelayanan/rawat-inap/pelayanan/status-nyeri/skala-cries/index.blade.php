@@ -22,6 +22,21 @@
             background-color: #dc3545;
             color: white;
         }
+
+        .cries-breakdown {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+
+        .cries-score-item {
+            display: inline-block;
+            margin-right: 0.5rem;
+            padding: 0.1rem 0.3rem;
+            background-color: #f8f9fa;
+            border-radius: 3px;
+            border: 1px solid #dee2e6;
+        }
     </style>
 @endpush
 
@@ -38,19 +53,19 @@
                 <div class="card w-100 h-100">
                     <div class="card-body">
                         {{-- Tabs --}}
-                        <ul class="nav nav-tabs" id="skalaMorseTab" role="tablist">
+                        <ul class="nav nav-tabs" id="statusNyeriTab" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <a href="{{ route('rawat-inap.status-nyeri.skala-numerik.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
-                                    class="nav-link @if (request()->routeIs('rawat-inap.status-nyeri.skala-numerik.index')) active @endif">
+                                    class="nav-link @if (request()->routeIs('rawat-inap.status-nyeri.skala-numerik.*')) active @endif">
                                     <i class="bi bi-person-heart me-2"></i>
                                     Skala Numerik
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <a href="{{ route('rawat-inap.status-nyeri.skala-cries.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
-                                    class="nav-link @if (request()->routeIs('rawat-inap.status-nyeri.skala-cries.index')) active @endif">
+                                    class="nav-link @if (request()->routeIs('rawat-inap.status-nyeri.skala-cries.*')) active @endif">
                                     <i class="bi bi-person-heart me-2"></i>
-                                    Skala Cries
+                                    Skala CRIES
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
@@ -67,14 +82,14 @@
                             <div class="tab-pane fade show active">
 
                                 <div class="row">
-                                    <form method="GET" action="{{ route('rawat-inap.status-nyeri.skala-numerik.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                                    <form method="GET" action="{{ route('rawat-inap.status-nyeri.skala-cries.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
                                         <div class="row m-3">
                                             <div class="col-md-3">
                                                 <div class="input-group">
                                                     <span class="input-group-text">
                                                         <i class="ti-search"></i>
                                                     </span>
-                                                    <input type="text" name="search" class="form-control" placeholder="Cari data..." value="{{ request('search') }}">
+                                                    <input type="text" name="search" class="form-control" placeholder="Cari lokasi nyeri..." value="{{ request('search') }}">
                                                 </div>
                                             </div>
                                             
@@ -93,7 +108,7 @@
                                             </div>
                                             
                                             <div class="col-md-3 text-end">
-                                                <a href="{{ route('rawat-inap.status-nyeri.skala-numerik.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                                <a href="{{ route('rawat-inap.status-nyeri.skala-cries.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                                     class="btn btn-primary">
                                                     <i class="ti-plus"></i> Tambah
                                                 </a>
@@ -107,8 +122,8 @@
                                                 <tr>
                                                     <th>No</th>
                                                     <th>Tanggal & Jam</th>
-                                                    <th>Skala Nyeri</th>
-                                                    <th>Nilai Nyeri</th>
+                                                    <th>Skor CRIES</th>
+                                                    <th>Total Nilai</th>
                                                     <th>Lokasi Nyeri</th>
                                                     <th>Kategori Nyeri</th>
                                                     <th>Petugas</th>
@@ -116,22 +131,26 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @forelse($dataSkalaNumerik as $index => $item)
+                                                @forelse($dataSkalaCries as $index => $item)
                                                     <tr>
-                                                        <td>{{ $dataSkalaNumerik->firstItem() + $index }}</td>
+                                                        <td>{{ $dataSkalaCries->firstItem() + $index }}</td>
                                                         <td>
-                                                            {{ \Carbon\Carbon::parse($item->tanggal_implementasi)->format('d/m/Y') }}<br>
-                                                            <small class="text-muted">{{ date('H:i', strtotime($item->jam_implementasi)) }}</small>
+                                                            <div>{{ \Carbon\Carbon::parse($item->tanggal_implementasi)->format('d/m/Y') }}</div>
+                                                            <small class="text-muted">{{ date('H:i', strtotime($item->jam_implementasi)) }} WIB</small>
                                                         </td>
                                                         <td>
-                                                            <span class="badge bg-info text-white">
-                                                                {{ ucfirst(str_replace('_', ' ', $item->pain_scale_type)) }}
-                                                            </span>
+                                                            <div class="cries-breakdown">
+                                                                <span class="cries-score-item">C: {{ $item->crying }}</span>
+                                                                <span class="cries-score-item">R: {{ $item->requires }}</span>
+                                                                <span class="cries-score-item">I: {{ $item->increased }}</span>
+                                                                <span class="cries-score-item">E: {{ $item->expression }}</span>
+                                                                <span class="cries-score-item">S: {{ $item->sleepless }}</span>
+                                                            </div>
                                                         </td>
                                                         <td>
                                                             <span class="fs-5 fw-bold text-primary">{{ $item->pain_value }}/10</span>
                                                         </td>
-                                                        <td>{{ $item->lokasi_nyeri }}</td>
+                                                        <td>{{ $item->lokasi_nyeri ?: '-' }}</td>
                                                         <td>
                                                             @php
                                                                 $painValue = $item->pain_value;
@@ -139,42 +158,38 @@
                                                                     $kategori = 'Tidak Nyeri';
                                                                     $badgeClass = 'badge-nyeri-tidak';
                                                                 } elseif ($painValue >= 1 && $painValue <= 3) {
-                                                                    $kategori = 'Ringan';
+                                                                    $kategori = 'Nyeri Ringan';
                                                                     $badgeClass = 'badge-nyeri-ringan';
-                                                                } elseif ($painValue >= 4 && $painValue <= 6) {
-                                                                    $kategori = 'Sedang';
+                                                                } elseif ($painValue >= 4 && $painValue <= 7) {
+                                                                    $kategori = 'Nyeri Sedang';
                                                                     $badgeClass = 'badge-nyeri-sedang';
-                                                                } elseif ($painValue >= 7 && $painValue <= 9) {
-                                                                    $kategori = 'Berat';
+                                                                } elseif ($painValue >= 8 && $painValue <= 10) {
+                                                                    $kategori = 'Nyeri Berat';
                                                                     $badgeClass = 'badge-nyeri-berat';
                                                                 } else {
-                                                                    $kategori = 'Sangat Berat';
-                                                                    $badgeClass = 'badge-nyeri-sangat-berat';
+                                                                    $kategori = 'Invalid';
+                                                                    $badgeClass = 'badge-secondary';
                                                                 }
                                                             @endphp
                                                             <span class="badge {{ $badgeClass }}">{{ $kategori }}</span>
                                                         </td>
-                                                        <td>
-                                                            {{ $item->userCreated->name ?? 'N/A' }}<br>
-                                                            <small class="text-muted">{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y H:i') }}</small>
-                                                        </td>
+                                                        <td>{{ $item->userCreated->name ?? 'Unknown' }}</td>
                                                         <td>
                                                             <div class="btn-group" role="group">
-                                                                <a href="{{ route('rawat-inap.status-nyeri.skala-numerik.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
-                                                                class="btn btn-sm btn-outline-info" title="Lihat Detail">
+                                                                <a href="{{ route('rawat-inap.status-nyeri.skala-cries.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                   class="btn btn-info btn-sm me-2" title="Lihat Detail">
                                                                     <i class="ti-eye"></i>
                                                                 </a>
-                                                                <a href="{{ route('rawat-inap.status-nyeri.skala-numerik.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
-                                                                class="btn btn-sm btn-outline-warning" title="Edit">
+                                                                <a href="{{ route('rawat-inap.status-nyeri.skala-cries.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                   class="btn btn-warning btn-sm me-2" title="Edit">
                                                                     <i class="ti-pencil"></i>
                                                                 </a>
-                                                                <form method="POST" 
-                                                                    action="{{ route('rawat-inap.status-nyeri.skala-numerik.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
-                                                                    style="display: inline-block;"
-                                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                                                <form action="{{ route('rawat-inap.status-nyeri.skala-cries.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
+                                                                      method="POST" style="display: inline;" 
+                                                                      onsubmit="return confirm('Apakah Anda yakin ingin menghapus data CRIES tanggal {{ \Carbon\Carbon::parse($item->tanggal_implementasi)->format('d/m/Y') }} jam {{ $item->jam_implementasi }}?')">
                                                                     @csrf
                                                                     @method('DELETE')
-                                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
+                                                                    <button type="submit" class="btn btn-danger btn-sm" title="Hapus">
                                                                         <i class="ti-trash"></i>
                                                                     </button>
                                                                 </form>
@@ -183,11 +198,11 @@
                                                     </tr>
                                                 @empty
                                                     <tr>
-                                                        <td colspan="8" class="text-center">
-                                                            <div class="d-flex flex-column align-items-center justify-content-center py-4">
-                                                                <i class="ti-clipboard fs-1 text-muted mb-2"></i>
-                                                                <p class="text-muted mb-0">Belum ada data skala numerik</p>
-                                                                <small class="text-muted">Klik tombol "Tambah" untuk membuat data baru</small>
+                                                        <td colspan="8" class="text-center text-muted">
+                                                            <div class="py-4">
+                                                                <i class="ti-search fs-1 text-muted"></i>
+                                                                <div class="mt-2">Belum ada data skala CRIES</div>
+                                                                <small>Klik tombol "Tambah" untuk menambah data baru</small>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -197,11 +212,19 @@
                                     </div>
 
                                     {{-- Pagination --}}
-                                    @if($dataSkalaNumerik->hasPages())
-                                        <div class="d-flex justify-content-center">
-                                            {{ $dataSkalaNumerik->appends(request()->query())->links() }}
+                                    @if($dataSkalaCries->hasPages())
+                                        <div class="d-flex justify-content-center mt-3">
+                                            {{ $dataSkalaCries->withQueryString()->links() }}
                                         </div>
                                     @endif
+
+                                    {{-- Summary Info --}}
+                                    <div class="mt-3">
+                                        <small class="text-muted">
+                                            Menampilkan {{ $dataSkalaCries->firstItem() ?? 0 }} sampai {{ $dataSkalaCries->lastItem() ?? 0 }} 
+                                            dari {{ $dataSkalaCries->total() }} data
+                                        </small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -214,4 +237,29 @@
 @endsection
 
 @push('js')
+<script>
+    $(document).ready(function() {
+        // Auto submit form when date filter changes
+        $('input[name="dari_tanggal"], input[name="sampai_tanggal"]').on('change', function() {
+            $(this).closest('form').submit();
+        });
+
+        // Confirm delete with more context
+        $('form[method="POST"]').on('submit', function(e) {
+            const form = $(this);
+            if (form.find('input[name="_method"][value="DELETE"]').length > 0) {
+                const confirmText = form.find('button[type="submit"]').attr('onclick');
+                if (confirmText && !confirmText.includes('confirm(')) {
+                    e.preventDefault();
+                    if (confirm('Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.')) {
+                        form.off('submit').submit();
+                    }
+                }
+            }
+        });
+
+        // Tooltip initialization if using Bootstrap tooltips
+        $('[title]').tooltip();
+    });
+</script>
 @endpush

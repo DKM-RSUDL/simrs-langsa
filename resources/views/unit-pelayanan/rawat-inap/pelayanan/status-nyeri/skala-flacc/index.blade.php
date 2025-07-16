@@ -22,6 +22,32 @@
             background-color: #dc3545;
             color: white;
         }
+        
+        .score-display {
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+        
+        .score-0 { background-color: #28a745; color: white; }
+        .score-1, .score-2, .score-3 { background-color: #17a2b8; color: white; }
+        .score-4, .score-5, .score-6, .score-7 { background-color: #ffc107; color: black; }
+        .score-8, .score-9, .score-10 { background-color: #dc3545; color: white; }
+        
+        .table td {
+            vertical-align: middle;
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
     </style>
 @endpush
 
@@ -67,7 +93,7 @@
                             <div class="tab-pane fade show active">
 
                                 <div class="row">
-                                    <form method="GET" action="{{ route('rawat-inap.status-nyeri.skala-numerik.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                                    <form method="GET" action="{{ route('rawat-inap.status-nyeri.skala-flacc.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
                                         <div class="row m-3">
                                             <div class="col-md-3">
                                                 <div class="input-group">
@@ -93,7 +119,7 @@
                                             </div>
                                             
                                             <div class="col-md-3 text-end">
-                                                <a href="{{ route('rawat-inap.status-nyeri.skala-numerik.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                                <a href="{{ route('rawat-inap.status-nyeri.skala-flacc.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                                     class="btn btn-primary">
                                                     <i class="ti-plus"></i> Tambah
                                                 </a>
@@ -116,65 +142,62 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @forelse($dataSkalaNumerik as $index => $item)
+                                                @forelse($dataSkalaFlacc as $key => $flacc)
                                                     <tr>
-                                                        <td>{{ $dataSkalaNumerik->firstItem() + $index }}</td>
+                                                        <td>{{ $dataSkalaFlacc->firstItem() + $key }}</td>
                                                         <td>
-                                                            {{ \Carbon\Carbon::parse($item->tanggal_implementasi)->format('d/m/Y') }}<br>
-                                                            <small class="text-muted">{{ date('H:i', strtotime($item->jam_implementasi)) }}</small>
+                                                            <div class="fw-bold">
+                                                                {{ \Carbon\Carbon::parse($flacc->tanggal_implementasi)->format('d/m/Y') }}
+                                                            </div>
+                                                            <small class="text-muted">{{ date('H:i', strtotime($flacc->jam_implementasi)) }}</small>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <span class="badge bg-info text-white">FLACC</span>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="score-display score-{{ $flacc->pain_value }}">
+                                                                {{ $flacc->pain_value }}
+                                                            </div>
+                                                        </td>
+                                                        <td>{{ $flacc->lokasi_nyeri }}</td>
+                                                        <td>
+                                                            @if($flacc->pain_value == 0)
+                                                                <span class="badge badge-nyeri-tidak">Tidak Nyeri</span>
+                                                            @elseif($flacc->pain_value >= 1 && $flacc->pain_value <= 3)
+                                                                <span class="badge badge-nyeri-ringan">Nyeri Ringan</span>
+                                                            @elseif($flacc->pain_value >= 4 && $flacc->pain_value <= 7)
+                                                                <span class="badge badge-nyeri-sedang">Nyeri Sedang</span>
+                                                            @elseif($flacc->pain_value >= 8 && $flacc->pain_value <= 10)
+                                                                <span class="badge badge-nyeri-berat">Nyeri Berat</span>
+                                                            @endif
                                                         </td>
                                                         <td>
-                                                            <span class="badge bg-info text-white">
-                                                                {{ ucfirst(str_replace('_', ' ', $item->pain_scale_type)) }}
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            <span class="fs-5 fw-bold text-primary">{{ $item->pain_value }}/10</span>
-                                                        </td>
-                                                        <td>{{ $item->lokasi_nyeri }}</td>
-                                                        <td>
-                                                            @php
-                                                                $painValue = $item->pain_value;
-                                                                if ($painValue == 0) {
-                                                                    $kategori = 'Tidak Nyeri';
-                                                                    $badgeClass = 'badge-nyeri-tidak';
-                                                                } elseif ($painValue >= 1 && $painValue <= 3) {
-                                                                    $kategori = 'Ringan';
-                                                                    $badgeClass = 'badge-nyeri-ringan';
-                                                                } elseif ($painValue >= 4 && $painValue <= 6) {
-                                                                    $kategori = 'Sedang';
-                                                                    $badgeClass = 'badge-nyeri-sedang';
-                                                                } elseif ($painValue >= 7 && $painValue <= 9) {
-                                                                    $kategori = 'Berat';
-                                                                    $badgeClass = 'badge-nyeri-berat';
-                                                                } else {
-                                                                    $kategori = 'Sangat Berat';
-                                                                    $badgeClass = 'badge-nyeri-sangat-berat';
-                                                                }
-                                                            @endphp
-                                                            <span class="badge {{ $badgeClass }}">{{ $kategori }}</span>
-                                                        </td>
-                                                        <td>
-                                                            {{ $item->userCreated->name ?? 'N/A' }}<br>
-                                                            <small class="text-muted">{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y H:i') }}</small>
+                                                            <div class="fw-bold">{{ $flacc->userCreated->name ?? 'N/A' }}</div>
+                                                            <small class="text-muted">
+                                                                {{ $flacc->created_at ? $flacc->created_at->format('d/m/Y H:i') : '-' }}
+                                                            </small>
                                                         </td>
                                                         <td>
                                                             <div class="btn-group" role="group">
-                                                                <a href="{{ route('rawat-inap.status-nyeri.skala-numerik.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
-                                                                class="btn btn-sm btn-outline-info" title="Lihat Detail">
+                                                                <a href="{{ route('rawat-inap.status-nyeri.skala-flacc.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $flacc->id]) }}"
+                                                                    class="btn btn-info btn-sm me-2"
+                                                                    title="Lihat Detail">
                                                                     <i class="ti-eye"></i>
                                                                 </a>
-                                                                <a href="{{ route('rawat-inap.status-nyeri.skala-numerik.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
-                                                                class="btn btn-sm btn-outline-warning" title="Edit">
+                                                                <a href="{{ route('rawat-inap.status-nyeri.skala-flacc.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $flacc->id]) }}"
+                                                                    class="btn btn-warning btn-sm me-2"
+                                                                    title="Edit">
                                                                     <i class="ti-pencil"></i>
                                                                 </a>
-                                                                <form method="POST" 
-                                                                    action="{{ route('rawat-inap.status-nyeri.skala-numerik.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
+                                                                <form action="{{ route('rawat-inap.status-nyeri.skala-flacc.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $flacc->id]) }}"
+                                                                    method="POST" 
                                                                     style="display: inline-block;"
-                                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus data Skala FLACC tanggal {{ \Carbon\Carbon::parse($flacc->tanggal_implementasi)->format('d/m/Y') }} jam {{ $flacc->jam_implementasi }}?')">
                                                                     @csrf
                                                                     @method('DELETE')
-                                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
+                                                                    <button type="submit" 
+                                                                        class="btn btn-danger btn-sm"
+                                                                        title="Hapus">
                                                                         <i class="ti-trash"></i>
                                                                     </button>
                                                                 </form>
@@ -183,11 +206,15 @@
                                                     </tr>
                                                 @empty
                                                     <tr>
-                                                        <td colspan="8" class="text-center">
-                                                            <div class="d-flex flex-column align-items-center justify-content-center py-4">
-                                                                <i class="ti-clipboard fs-1 text-muted mb-2"></i>
-                                                                <p class="text-muted mb-0">Belum ada data skala numerik</p>
-                                                                <small class="text-muted">Klik tombol "Tambah" untuk membuat data baru</small>
+                                                        <td colspan="8" class="text-center py-4">
+                                                            <div class="d-flex flex-column align-items-center">
+                                                                <i class="ti-info-circle fs-1 text-muted mb-2"></i>
+                                                                <h5 class="text-muted">Belum Ada Data</h5>
+                                                                <p class="text-muted">Data Skala FLACC belum tersedia. Silakan tambah data baru.</p>
+                                                                <a href="{{ route('rawat-inap.status-nyeri.skala-flacc.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                                                    class="btn btn-primary">
+                                                                    <i class="ti-plus"></i> Tambah Data Pertama
+                                                                </a>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -197,9 +224,17 @@
                                     </div>
 
                                     {{-- Pagination --}}
-                                    @if($dataSkalaNumerik->hasPages())
-                                        <div class="d-flex justify-content-center">
-                                            {{ $dataSkalaNumerik->appends(request()->query())->links() }}
+                                    @if($dataSkalaFlacc->hasPages())
+                                        <div class="d-flex justify-content-between align-items-center mt-3">
+                                            <div class="showing-info">
+                                                <small class="text-muted">
+                                                    Menampilkan {{ $dataSkalaFlacc->firstItem() }} sampai {{ $dataSkalaFlacc->lastItem() }} 
+                                                    dari {{ $dataSkalaFlacc->total() }} data
+                                                </small>
+                                            </div>
+                                            <div class="pagination-wrapper">
+                                                {{ $dataSkalaFlacc->appends(request()->query())->links() }}
+                                            </div>
                                         </div>
                                     @endif
                                 </div>
@@ -214,4 +249,16 @@
 @endsection
 
 @push('js')
+    <script>
+        // Auto-submit form when date filter changes
+        $('input[name="dari_tanggal"], input[name="sampai_tanggal"]').on('change', function() {
+            // Optional: Auto submit when date changes
+            // $(this).closest('form').submit();
+        });
+
+        // Tooltip for buttons
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 @endpush
