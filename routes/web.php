@@ -126,6 +126,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPernyataandpjpController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapEdukasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapResumeController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh\SkalaGeriatriController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh\SkalaHumptyDumptyController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh\SkalaMorseController as RawatInapSkalaMorseController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SuratKematianController as RawatInapSuratKematianController;
@@ -1808,10 +1809,27 @@ Route::middleware('ssoToken')->group(function () {
                                                 Route::get('/', 'index')->name('.index');
                                                 Route::post('/', 'store')->name('.store');
                                                 Route::get('/create', 'create')->name('.create');
+                                                Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
                                                 Route::get('/{data}', 'show')->name('.show');
                                                 Route::get('/{data}/edit', 'edit')->name('.edit');
                                                 Route::put('/{data}', 'update')->name('.update');
                                                 Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                                Route::delete('/{data}', 'destroy')->name('.destroy');
+                                            });
+                                        });
+                                    });
+
+                                    //Risiko Jatuh Geriatri
+                                    Route::prefix('geriatri')->group(function() {
+                                        Route::name('.geriatri')->group(function() {
+                                            Route::controller(SkalaGeriatriController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                                Route::get('/{data}', 'show')->name('.show');
+                                                Route::get('/{data}/edit', 'edit')->name('.edit');
+                                                Route::put('/{data}', 'update')->name('.update');
                                                 Route::delete('/{data}', 'destroy')->name('.destroy');
                                             });
                                         });
