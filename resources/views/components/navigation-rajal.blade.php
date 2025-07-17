@@ -229,6 +229,16 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
+        [
+            'icon' => 'verified_badge.png',
+            'label' => 'Resiko Decubitus',
+            'link' => route('rawat-jalan.resiko-decubitus.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
     ];
 
 @endphp

@@ -48,6 +48,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\EWSPasienAnakController as GawatDaruratEWSPasienAnakController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\EWSPasienDewasaController as GawatDaruratEWSPasienDewasaController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\EWSPasienObstetrikController as GawatDaruratEWSPasienObstetrikController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResikoDecubitusController as GawatDaruratResikoDecubitusController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResikoJatuh\SkalaGeriatriController as GawatDaruratSkalaGeriatriController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResikoJatuh\SkalaHumptyDumptyController as GawatDaruratSkalaHumptyDumptyController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResikoJatuh\SkalaMorseController as GawatDaruratSkalaMorseController;
@@ -132,6 +133,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPernyataandpjpController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapEdukasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapResumeController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoDecubitusController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh\SkalaGeriatriController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh\SkalaHumptyDumptyController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh\SkalaMorseController as RawatInapSkalaMorseController;
@@ -179,6 +181,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\EWSPasienAnakController as Raj
 use App\Http\Controllers\UnitPelayanan\RawatJalan\EWSPasienDewasaController as RajalEWSPasienDewasaController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\EWSPasienObstetrikController as RajalEWSPasienObstetrikController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\CatatanPoliKlinikController as RajalCatatanPoliKlinikController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\ResikoDecubitusController as RawatJalanResikoDecubitusController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\StatusNyeri\SkalaNumerikController as StatusNyeriSkalaNumerikController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
@@ -943,6 +946,22 @@ Route::middleware('ssoToken')->group(function () {
                                                 Route::delete('/{data}', 'destroy')->name('.destroy');
                                             });
                                         });
+                                    });
+                                });
+                            });
+
+                            //Resiko Decubitus
+                            Route::prefix('resiko-decubitus')->group(function () {
+                                Route::name('.resiko-decubitus')->group(function () {
+                                    Route::controller(RawatJalanResikoDecubitusController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
                                     });
                                 });
                             });
@@ -2028,6 +2047,22 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
+                            //Resiko Decubitus
+                            Route::prefix('resiko-decubitus')->group(function () {
+                                Route::name('.resiko-decubitus')->group(function () {
+                                    Route::controller(ResikoDecubitusController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
                         });
                     });
                 });
@@ -2534,6 +2569,22 @@ Route::middleware('ssoToken')->group(function () {
                                             Route::delete('/{data}', 'destroy')->name('.destroy');
                                         });
                                     });
+                                });
+                            });
+                        });
+
+                        //Resiko Decubitus
+                        Route::prefix('{urut_masuk}/resiko-decubitus')->group(function () {
+                            Route::name('resiko-decubitus')->group(function () {
+                                Route::controller(GawatDaruratResikoDecubitusController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
                                 });
                             });
                         });
