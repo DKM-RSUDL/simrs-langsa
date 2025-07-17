@@ -109,6 +109,16 @@
         ],
         [
             'icon' => 'verified_badge.png',
+            'label' => 'Status Nyeri',
+            'link' => route('status-nyeri.skala-numerik.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+        ],
+        [
+            'icon' => 'verified_badge.png',
+            'label' => 'Decubitus',
+            'link' => route('resiko-decubitus.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+        ],
+        [
+            'icon' => 'verified_badge.png',
             'label' => 'Status Fungsional',
             'link' => route('status-fungsional.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],

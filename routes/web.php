@@ -48,9 +48,13 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\EWSPasienAnakController as GawatDaruratEWSPasienAnakController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\EWSPasienDewasaController as GawatDaruratEWSPasienDewasaController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\EWSPasienObstetrikController as GawatDaruratEWSPasienObstetrikController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResikoDecubitusController as GawatDaruratResikoDecubitusController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResikoJatuh\SkalaGeriatriController as GawatDaruratSkalaGeriatriController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResikoJatuh\SkalaHumptyDumptyController as GawatDaruratSkalaHumptyDumptyController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResikoJatuh\SkalaMorseController as GawatDaruratSkalaMorseController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\StatusNyeri\SkalaCriesController as StatusNyeriSkalaCriesController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\StatusNyeri\SkalaFlaccController as StatusNyeriSkalaFlaccController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\StatusNyeri\SkalaNumerikController as GawatDaruratStatusNyeriSkalaNumerikController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\StatusFungsionalController as GawatDaruratStatusFungsionalController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenHemodialisaKeperawatanController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenMedisController;
@@ -130,6 +134,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPernyataandpjpController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapEdukasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapResumeController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoDecubitusController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh\SkalaGeriatriController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh\SkalaHumptyDumptyController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\ResikoJatuh\SkalaMorseController as RawatInapSkalaMorseController;
@@ -177,7 +182,9 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\EWSPasienAnakController as Raj
 use App\Http\Controllers\UnitPelayanan\RawatJalan\EWSPasienDewasaController as RajalEWSPasienDewasaController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\EWSPasienObstetrikController as RajalEWSPasienObstetrikController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\CatatanPoliKlinikController as RajalCatatanPoliKlinikController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\ResikoDecubitusController as RawatJalanResikoDecubitusController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\StatusFungsionalController as RawatJalanStatusFungsionalController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\StatusNyeri\SkalaNumerikController as StatusNyeriSkalaNumerikController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
@@ -894,6 +901,57 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
+                            //Status Nyeri
+                            Route::prefix('status-nyeri')->group(function () {
+                                Route::name('.status-nyeri')->group(function () {
+
+                                    //Status Nyeri Lanjutan Skala Numerik Dan Wong Baker
+                                    Route::prefix('skala-numerik')->group(function () {
+                                        Route::name('.skala-numerik')->group(function () {
+                                            Route::controller(StatusNyeriSkalaNumerikController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::get('/{data}', 'show')->name('.show');
+                                                Route::get('/{data}/edit', 'edit')->name('.edit');
+                                                Route::put('/{data}', 'update')->name('.update');
+                                                Route::delete('/{data}', 'destroy')->name('.destroy');
+                                            });
+                                        });
+                                    });
+
+                                    //Status Nyeri Skala Cries (Neonatus 0 Sd 1 Bln)
+                                    Route::prefix('skala-cries')->group(function () {
+                                        Route::name('.skala-cries')->group(function () {
+                                            Route::controller(SkalaCriesController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::get('/{data}', 'show')->name('.show');
+                                                Route::get('/{data}/edit', 'edit')->name('.edit');
+                                                Route::put('/{data}', 'update')->name('.update');
+                                                Route::delete('/{data}', 'destroy')->name('.destroy');
+                                            });
+                                        });
+                                    });
+
+                                    //Status Nyeri Lanjutan Skala Flacc (Anak  2 Bln Sd 7 Thn)
+                                    Route::prefix('skala-flacc')->group(function () {
+                                        Route::name('.skala-flacc')->group(function () {
+                                            Route::controller(SkalaFlaccController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::get('/{data}', 'show')->name('.show');
+                                                Route::get('/{data}/edit', 'edit')->name('.edit');
+                                                Route::put('/{data}', 'update')->name('.update');
+                                                Route::delete('/{data}', 'destroy')->name('.destroy');
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+
                             //status fungsional
                             Route::prefix('status-fungsional')->group(function() {
                                 Route::name('.status-fungsional')->group(function() {
@@ -908,8 +966,21 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                                         Route::delete('/{data}', 'destroy')->name('.destroy');
                                     });
+
+                            //Resiko Decubitus
+                            Route::prefix('resiko-decubitus')->group(function () {
+                                Route::name('.resiko-decubitus')->group(function () {
+                                    Route::controller(RawatJalanResikoDecubitusController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
                                 });
-                            });
 
                         });
                     });
@@ -1992,6 +2063,22 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
+                            //Resiko Decubitus
+                            Route::prefix('resiko-decubitus')->group(function () {
+                                Route::name('.resiko-decubitus')->group(function () {
+                                    Route::controller(ResikoDecubitusController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
                         });
                     });
                 });
@@ -2451,9 +2538,57 @@ Route::middleware('ssoToken')->group(function () {
                             });
                         });
 
+                        //Status Nyeri
+
+                                //Status Nyeri Lanjutan Skala Numerik Dan Wong Baker
+                                Route::prefix('skala-numerik')->group(function () {
+                                    Route::name('.skala-numerik')->group(function () {
+                                        Route::controller(GawatDaruratStatusNyeriSkalaNumerikController::class)->group(function () {
+                                            Route::get('/', 'index')->name('.index');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::get('/create', 'create')->name('.create');
+                                            Route::get('/{data}', 'show')->name('.show');
+                                            Route::get('/{data}/edit', 'edit')->name('.edit');
+                                            Route::put('/{data}', 'update')->name('.update');
+                                            Route::delete('/{data}', 'destroy')->name('.destroy');
+                                        });
+                                    });
+                                });
+
+                                //Status Nyeri Skala Cries (Neonatus 0 Sd 1 Bln)
+                                Route::prefix('skala-cries')->group(function () {
+                                    Route::name('.skala-cries')->group(function () {
+                                        Route::controller(StatusNyeriSkalaCriesController::class)->group(function () {
+                                            Route::get('/', 'index')->name('.index');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::get('/create', 'create')->name('.create');
+                                            Route::get('/{data}', 'show')->name('.show');
+                                            Route::get('/{data}/edit', 'edit')->name('.edit');
+                                            Route::put('/{data}', 'update')->name('.update');
+                                            Route::delete('/{data}', 'destroy')->name('.destroy');
+                                        });
+                                    });
+                                });
+
+                                //Status Nyeri Lanjutan Skala Flacc (Anak  2 Bln Sd 7 Thn)
+                                Route::prefix('skala-flacc')->group(function () {
+                                    Route::name('.skala-flacc')->group(function () {
+                                        Route::controller(StatusNyeriSkalaFlaccController::class)->group(function () {
+                                            Route::get('/', 'index')->name('.index');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::get('/create', 'create')->name('.create');
+                                            Route::get('/{data}', 'show')->name('.show');
+                                            Route::get('/{data}/edit', 'edit')->name('.edit');
+                                            Route::put('/{data}', 'update')->name('.update');
+                                            Route::delete('/{data}', 'destroy')->name('.destroy');
+                                        });
+                                    });
+                                });
+                            });
+                        });
+
                         //status fungsional
                         Route::prefix('{urut_masuk}/status-fungsional')->group(function() {
-                            Route::name('status-fungsional')->group(function() {
                                 Route::controller(GawatDaruratStatusFungsionalController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::post('/', 'store')->name('.store');
@@ -2463,6 +2598,22 @@ Route::middleware('ssoToken')->group(function () {
                                     Route::get('/{data}/edit', 'edit')->name('.edit');
                                     Route::put('/{data}', 'update')->name('.update');
                                     Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
+                                });
+                            });
+                        });
+
+                        //Resiko Decubitus
+                        Route::prefix('{urut_masuk}/resiko-decubitus')->group(function () {
+                            Route::name('resiko-decubitus')->group(function () {
+                                Route::controller(GawatDaruratResikoDecubitusController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                    Route::put('/{data}', 'update')->name('.update');
                                     Route::delete('/{data}', 'destroy')->name('.destroy');
                                 });
                             });
@@ -2931,4 +3082,5 @@ Route::middleware('ssoToken')->group(function () {
             });
         });
     });
+
 });
