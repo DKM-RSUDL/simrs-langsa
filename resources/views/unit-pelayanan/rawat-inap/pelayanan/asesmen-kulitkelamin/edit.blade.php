@@ -735,31 +735,23 @@
                                                 value="{{ $asesmenKulitKelamin->kolaborasi ?? '[]' }}">
                                         </div>
 
-                                        <!-- Prognosis Section -->
+                                        {{-- prognosis --}}
                                         <div class="mb-4">
                                             <label class="text-primary fw-semibold">Prognosis</label>
-                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                keterangan Prognosis yang tidak ditemukan.</small>
-                                            <div class="input-group mb-3">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="rencana-input"
-                                                    class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Prognosis">
-                                                <span class="input-group-text bg-white" id="add-rencana">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-
-                                            <div id="rencana-list" class="list-group mb-3 bg-light rounded p-3">
-                                                <!-- Items will be added here dynamically -->
-                                            </div>
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="rencana_penatalaksanaan" name="prognosis"
-                                                value="{{ $asesmenKulitKelamin->prognosis ?? '[]' }}">
+                                            
+                                            <select class="form-select" name="prognosis">
+                                                <option value="">--Pilih Prognosis--</option>
+                                                @forelse ($satsetPrognosis as $item)                                            
+                                                    <option value="{{ $item->prognosis_id }}" 
+                                                        {{ isset($asesmenKulitKelamin->prognosis) && $asesmenKulitKelamin->prognosis == $item->prognosis_id ? 'selected' : '' }}>
+                                                        {{ $item->value ?? 'Field tidak ditemukan' }}
+                                                    </option>
+                                                @empty
+                                                    <option value="" disabled>Tidak ada data</option>
+                                                @endforelse
+                                            </select>
                                         </div>
+
                                     </div>
 
                                     {{-- Bagian lain akan ditambahkan secara bertahap --}}
@@ -2364,7 +2356,6 @@
             //====================================================================================//
 
             // Initialize all implementation sections
-            initImplementationSectionEdit('rencana', 'rencana_penatalaksanaan', 'prognosis');
             initImplementationSectionEdit('observasi', 'observasi', 'observasi');
             initImplementationSectionEdit('terapeutik', 'terapeutik', 'terapeutik');
             initImplementationSectionEdit('edukasi', 'edukasi', 'edukasi');

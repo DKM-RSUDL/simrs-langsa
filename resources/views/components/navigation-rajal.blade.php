@@ -16,6 +16,7 @@
             color: #ffffff;
             border-radius: 25px;
             transition: all 0.3s ease;
+            border: 1px solid #cecece;
         }
 
         .nav-icons .nav-item:hover {
@@ -158,29 +159,112 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
+        [
+            'icon' => 'info.png',
+            'label' => 'HIV ART',
+            'link' => route('rawat-jalan.hiv_art.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
+        [
+            'icon' => 'info.png',
+            'label' => 'Gizi',
+            'link' => route('rawat-jalan.gizi.anak.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
+        [
+            'icon' => 'observasi.png',
+            'label' => 'EWS',
+            'link' => route('rawat-jalan.ews-pasien-dewasa.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
+        [
+            'icon' => 'agree.png',
+            'label' => 'Catatan Poliklinik',
+            'link' => route('rawat-jalan.catatan-poliklinik.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
+        [
+            'icon' => 'verified_badge.png',
+            'label' => 'MPP',
+            'link' => route('rawat-jalan.mpp.form-a.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
+        [
+            'icon' => 'verified_badge.png',
+            'label' => 'Resiko Jatuh',
+            'link' => route('rawat-jalan.resiko-jatuh.morse.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
+        [
+            'icon' => 'verified_badge.png',
+            'label' => 'Status Nyeri',
+            'link' => route('rawat-jalan.status-nyeri.skala-numerik.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
+        [
+            'icon' => 'verified_badge.png',
+            'label' => 'Resiko Decubitus',
+            'link' => route('rawat-jalan.resiko-decubitus.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
+        [
+            'icon' => 'verified_badge.png',
+            'label' => 'Status Fungsional',
+            'link' => route('rawat-jalan.status-fungsional.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ]
     ];
 
 @endphp
 
-<div class="header-background">
-    <div class="nav-icons shadow-sm">
-        @foreach ($navItems as $item)
-            <a href="{{ $item['link'] }}" class="nav-item {{ $currentUrl === $item['link'] ? 'active' : '' }}">
-                <img id="image" src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }} Icon"
-                    width="20">
-                <span>{{ $item['label'] }}</span>
-            </a>
-        @endforeach
+<div class="card" style="height: fit-content; margin-bottom:10px !important;">
+    <div class="card-body p-2">
+        <div class="d-flex flex-wrap gap-2">
+            @foreach ($navItems as $item)
+                <a href="{{ $item['link'] }}"
+                    class="btn {{ $currentUrl === $item['link'] ? 'btn-primary' : 'btn-light' }} d-flex align-items-center"
+                    style="border-radius: 20px; padding: 6px 12px; font-size: 14px;">
+                    <img src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }}" width="18"
+                        height="18" class="{{ $currentUrl === $item['link'] ? '' : '' }} me-1">
+                    <span>{{ $item['label'] }}</span>
+                </a>
+            @endforeach
+        </div>
     </div>
 </div>
-
-{{-- <div class="header-background">
-    <div class="nav-icons shadow-sm">
-        @foreach ($navItems as $item)
-            <a href="{{ $item['link'] }}">
-                <img src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }} Icon" width="25">
-                <span>{{ $item['label'] }}</span>
-            </a>
-        @endforeach
-    </div>
-</div> --}}

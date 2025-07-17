@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
 use App\Models\RmeMonitoringGizi;
 use App\Models\RmePengkajianGiziDewasa;
+use App\Models\RmePengkajianGiziAnak;
 use App\Models\RmePengkajianIntervensiGiziDewasa;
+use App\Models\RmePengkajianIntervensiGiziAnak;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -52,8 +54,6 @@ class GiziMonitoringController extends Controller
                 ->orderBy('tanggal_monitoring', 'desc')
                 ->get();
 
-            
-
             return view('unit-pelayanan.rawat-inap.pelayanan.gizi.monitoring.index', compact(
                 'dataMedis',
                 'monitoringGizi'
@@ -92,18 +92,40 @@ class GiziMonitoringController extends Controller
                 $dataMedis->pasien->umur = 'Tidak Diketahui';
             }
 
-            // Ambil data TEE dari pengkajian gizi dewasa
-            $dataGiziDewasa = RmePengkajianGiziDewasa::where('kd_unit', $kd_unit)
-                ->where('kd_pasien', $kd_pasien)
-                ->where('tgl_masuk', $tgl_masuk)
-                ->where('urut_masuk', $urut_masuk)
-                ->orderBy('waktu_asesmen', 'desc')
-                ->first();
+            // Tentukan apakah pasien anak atau dewasa berdasarkan umur
+            $isAnak = $dataMedis->pasien->umur !== 'Tidak Diketahui' && $dataMedis->pasien->umur < 18;
 
-            $teeValue = null;
-            if ($dataGiziDewasa) {
-                $intervensiGizi = RmePengkajianIntervensiGiziDewasa::where('id_gizi', $dataGiziDewasa->id)->first();
-                $teeValue = $intervensiGizi ? $intervensiGizi->tee : null;
+            $energyValue = null;
+            $energySource = null;
+
+            if ($isAnak) {
+                // Untuk pasien anak, ambil data dari pengkajian gizi anak
+                $dataGiziAnak = RmePengkajianGiziAnak::where('kd_unit', $kd_unit)
+                    ->where('kd_pasien', $kd_pasien)
+                    ->where('tgl_masuk', $tgl_masuk)
+                    ->where('urut_masuk', $urut_masuk)
+                    ->orderBy('waktu_asesmen', 'desc')
+                    ->first();
+
+                if ($dataGiziAnak) {
+                    $intervensiGizi = RmePengkajianIntervensiGiziAnak::where('id_gizi', $dataGiziAnak->id)->first();
+                    $energyValue = $intervensiGizi ? $intervensiGizi->total_kebutuhan_kalori : null;
+                    $energySource = 'Total Kebutuhan Kalori';
+                }
+            } else {
+                // Untuk pasien dewasa, ambil data TEE dari pengkajian gizi dewasa
+                $dataGiziDewasa = RmePengkajianGiziDewasa::where('kd_unit', $kd_unit)
+                    ->where('kd_pasien', $kd_pasien)
+                    ->where('tgl_masuk', $tgl_masuk)
+                    ->where('urut_masuk', $urut_masuk)
+                    ->orderBy('waktu_asesmen', 'desc')
+                    ->first();
+
+                if ($dataGiziDewasa) {
+                    $intervensiGizi = RmePengkajianIntervensiGiziDewasa::where('id_gizi', $dataGiziDewasa->id)->first();
+                    $energyValue = $intervensiGizi ? $intervensiGizi->tee : null;
+                    $energySource = 'TEE (Total Energy Expenditure)';
+                }
             }
 
             return view('unit-pelayanan.rawat-inap.pelayanan.gizi.monitoring.create', compact(
@@ -112,7 +134,9 @@ class GiziMonitoringController extends Controller
                 'kd_pasien',
                 'tgl_masuk',
                 'urut_masuk',
-                'teeValue'
+                'energyValue',
+                'energySource',
+                'isAnak'
             ));
         } catch (\Exception $e) {
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
@@ -131,21 +155,23 @@ class GiziMonitoringController extends Controller
         try {
             $tanggal_monitoring = Carbon::createFromFormat('Y-m-d H:i', $request->tanggal . ' ' . $request->jam);
 
-            RmeMonitoringGizi::create([
-                'kd_unit' => $kd_unit,
-                'kd_pasien' => $kd_pasien,
-                'tgl_masuk' => $tgl_masuk,
-                'urut_masuk' => $urut_masuk,
-                'tanggal_monitoring' => $tanggal_monitoring,
-                'ahli_gizi' => Auth::id(),
-                'energi' => $request->energi,
-                'protein' => $request->protein,
-                'karbohidrat' => $request->karbohidrat,
-                'lemak' => $request->lemak,
-                'masalah_perkembangan' => $request->masalah_perkembangan,
-                'tindak_lanjut' => $request->tindak_lanjut,
-                'user_create' => Auth::id(),
-            ]);
+            DB::transaction(function () use ($request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tanggal_monitoring) {
+                RmeMonitoringGizi::create([
+                    'kd_unit' => $kd_unit,
+                    'kd_pasien' => $kd_pasien,
+                    'tgl_masuk' => $tgl_masuk,
+                    'urut_masuk' => $urut_masuk,
+                    'tanggal_monitoring' => $tanggal_monitoring,
+                    'ahli_gizi' => Auth::id(),
+                    'energi' => $request->energi,
+                    'protein' => $request->protein,
+                    'karbohidrat' => $request->karbohidrat,
+                    'lemak' => $request->lemak,
+                    'masalah_perkembangan' => $request->masalah_perkembangan,
+                    'tindak_lanjut' => $request->tindak_lanjut,
+                    'user_create' => Auth::id(),
+                ]);
+            });
 
             return redirect()->route('rawat-inap.gizi.monitoring.index', [
                 $kd_unit,

@@ -336,9 +336,11 @@
                                 <h5 class="section-title">7. Prognosis dan Therapy</h5>
 
                                 <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <label class="form-label fw-bold">Prognosis</label>
-                                        <p class="text-justify">{{ $asesmenPsikiatriDtl->prognosis ?: '-' }}</p>
+                                    <div class="mb-4">
+                                        <label class="text-primary fw-semibold">Prognosis</label>
+                                        <div class="form-control bg-light" style="min-height: 38px; display: flex; align-items: center;">
+                                                <span class="text-dark">{{ $asesmenPsikiatriDtl->prognosisValue->value ?? "Belum ada Prognosis" }}</span>
+                                        </div>
                                     </div>
                                 </div>
 

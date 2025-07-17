@@ -1003,10 +1003,18 @@
                                                     </ul>
                                                 </li>
                                                 <li class="dropdown-submenu">
+                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Transfusi Darah</a>
+                                                    <ul class="dropdown-menu shadow-lg">
+                                                        <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/permintaan-darah'}">Order</a></li>
+                                                        <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/pengawasan-darah'}">Pengawasan</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="dropdown-submenu">
                                                     <a class="dropdown-item m-1 dropdown-toggle" href="#">Surat-Surat</a>
                                                     <ul class="dropdown-menu shadow-lg">
                                                         <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/surat-kematian'}">Kematian</a></li>
                                                         <li><a class="dropdown-item m-1" href="#">Pernyataan DPJP</a></li>
+                                                        <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/paps'}">PAPS</a></li>
                                                         <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/penundaan'}">Penundaan Pelayanan</a></li>
                                                         <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/dnr'}">Penolakan Resusitasi</a></li>
                                                         <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/permintaan-second-opinion'}">Permintaan Second Opinion</a></li>

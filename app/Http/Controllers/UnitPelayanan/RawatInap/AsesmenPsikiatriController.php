@@ -20,6 +20,7 @@ use App\Models\RmeMasterImplementasi;
 use App\Models\RmeMenjalar;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
+use App\Models\SatsetPrognosis;
 use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -41,6 +42,7 @@ class AsesmenPsikiatriController extends Controller
         $jenisnyeri = RmeJenisNyeri::all();
         $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
         $rmeMasterImplementasi = RmeMasterImplementasi::all();
+        $satsetPrognosis = SatsetPrognosis::all();
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
         $poliklinik = Unit::where('kd_bagian', '2')
@@ -93,6 +95,7 @@ class AsesmenPsikiatriController extends Controller
             'rmeMasterImplementasi',
             'alergiPasien',
             'poliklinik',
+            'satsetPrognosis',
             'user'
         ));
     }
@@ -330,6 +333,7 @@ class AsesmenPsikiatriController extends Controller
         $jenisnyeri = RmeJenisNyeri::all();
         $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
         $rmeMasterImplementasi = RmeMasterImplementasi::all();
+        $satsetPrognosis = SatsetPrognosis::all();
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
         $poliklinik = Unit::where('kd_bagian', '2')
@@ -403,6 +407,7 @@ class AsesmenPsikiatriController extends Controller
             'user',
             'asesmen',
             'asesmenPsikiatri',
+            'satsetPrognosis',
             'asesmenPsikiatriDtl'
         ));
     }

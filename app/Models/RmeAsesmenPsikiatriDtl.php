@@ -12,4 +12,9 @@ class RmeAsesmenPsikiatriDtl extends Model
     protected $table = 'RME_ASESMEN_PSIKIATRI_DTL';
     public $timestamps = false;
     protected $guarded = ['id'];
+
+    public function prognosisValue()
+    {
+        return $this->belongsTo(SatsetPrognosis::class, 'prognosis', 'prognosis_id');
+    }
 }

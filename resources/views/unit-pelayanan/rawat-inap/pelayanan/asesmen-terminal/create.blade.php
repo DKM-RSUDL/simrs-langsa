@@ -119,7 +119,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="subsection-title">1.2. Kegawatan Tikus otot:</div>
+                                    <div class="subsection-title">1.2. Kegawatan Tinus otot:</div>
                                     <div class="checkbox-group">
                                         <div class="row">
                                             <div class="col-md-4">
@@ -154,7 +154,7 @@
                                                     <label for="tak2">T.A.K</label>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            {{-- <div class="col-md-4">
                                                 <div class="checkbox-item">
                                                     <input type="checkbox" name="sulit_berbicara" id="sulit_berbicara"
                                                         value="1">
@@ -165,7 +165,7 @@
                                                         id="inkontinensia_urine" value="1">
                                                     <label for="inkontinensia_urine">Inkontinensia Urine</label>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </div>
 
@@ -219,10 +219,10 @@
                                                     <input type="text" class="form-control" name="nadi_lambat"
                                                         placeholder="Masukkan nilai...">
                                                 </div> --}}
-                                                <div class="checkbox-item">
+                                                {{-- <div class="checkbox-item">
                                                     <input type="checkbox" name="tak3" id="tak3" value="1">
                                                     <label for="tak3">T.A.K</label>
-                                                </div>
+                                                </div> --}}
                                             </div>
                                         </div>
                                     </div>
@@ -251,11 +251,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="text-input-group">
+                                        {{-- <div class="text-input-group">
                                             <label class="form-label">Lainnya:</label>
                                             <textarea class="form-control" name="faktor_lainnya" rows="2"
                                                 placeholder="Sebutkan faktor lainnya..."></textarea>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
 
@@ -365,10 +365,10 @@
                                 <div class="form-section">
                                     <h5 class="section-title">
                                         <span class="section-number">5</span>
-                                        urusan dan kebutuhan spiritual psien dan keluarga seperti putus asa, penderitaan, rasa bersalah atau pengampunan:
+                                        urusan dan kebutuhan spiritual pasien dan keluarga seperti putus asa, penderitaan, rasa bersalah atau pengampunan:
                                     </h5>
 
-                                    <div class="subsection-title">Perlu bimbingan rohani :</div>
+                                    <div class="subsection-title">Perlu didoakan :</div>
                                     <div class="radio-group">
                                         <div class="radio-item">
                                             <input type="radio" name="perlu_didoakan" id="didoakan_tidak" value="0">
@@ -604,7 +604,7 @@
                                                 <div class="checkbox-group mt-4">
                                                     <div class="checkbox-item">
                                                         <input type="checkbox" name="keluarga_leth_lelah" id="keluarga_leth_lelah" value="1">
-                                                        <label for="keluarga_leth_lelah">Leth/lelah</label>
+                                                        <label for="keluarga_leth_lelah">Letih/lelah</label>
                                                     </div>
                                                     <div class="checkbox-item">
                                                         <input type="checkbox" name="keluarga_rasa_bersalah" id="keluarga_rasa_bersalah" value="1">
@@ -742,7 +742,7 @@
                                                 </div>
                                                 <div class="checkbox-item">
                                                     <input type="checkbox" name="faktor_resiko_tidak_mampu_memenuhi" id="faktor_resiko_tidak_mampu_memenuhi" value="1">
-                                                    <label for="faktor_resiko_tidak_mampu_memenuhi">Tidak mampu memenuhi peran yang diharapkan</label>
+                                                    <label for="faktor_resiko_tidak_mampu_memenuhi">Ketidak mampuan memenuhi peran yang diharapkan</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -750,7 +750,7 @@
                                             <div class="checkbox-group mt-4">
                                                 <div class="checkbox-item">
                                                     <input type="checkbox" name="faktor_resiko_leth_lelah" id="faktor_resiko_leth_lelah" value="1">
-                                                    <label for="faktor_resiko_leth_lelah">Leth/lelah</label>
+                                                    <label for="faktor_resiko_leth_lelah">Letih/lelah</label>
                                                 </div>
                                                 <div class="checkbox-item">
                                                     <input type="checkbox" name="faktor_resiko_gangguan_tidur" id="faktor_resiko_gangguan_tidur" value="1">
@@ -802,3 +802,211 @@
         </div>
     </div>
 @endsection
+
+@push('js')
+    <script>
+        // bagian : 6.2. Bagaimana rencana perawatan selanjutnya?
+        // Script untuk mengatur tampilan form rencana perawatan
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ambil semua elemen yang dibutuhkan dengan ID spesifik
+            const tetapRsCheckbox = document.getElementById('tetap_dirawat_rs');
+            const dirawatRumahCheckbox = document.getElementById('dirawat_rumah');
+            const lingkunganYa = document.getElementById('lingkungan_ya');
+            const lingkunganTidak = document.getElementById('lingkungan_tidak');
+            const mamputMerawatYa = document.getElementById('mampu_merawat_ya');
+            const mamputMerawatTidak = document.getElementById('mampu_merawat_tidak');
+            const perawatRumahKeterangan = document.getElementById('perawat_rumah_keterangan');
+            const homeCareYa = document.getElementById('home_care_ya');
+            const homeCareNot = document.getElementById('home_care_tidak');
+
+            // Buat ID unik untuk setiap bagian
+            const lingkunganRumahSection = document.getElementById('lingkungan_rumah_section');
+            const mamputMerawatSection = document.getElementById('mampu_merawat_section');
+            const homeCareSection = document.getElementById('home_care_section');
+
+            // Jika belum ada ID, buat berdasarkan struktur yang ada
+            if (!lingkunganRumahSection) {
+                // Cari berdasarkan parent element yang mengandung radio lingkungan
+                const lingkunganParent = lingkunganYa.closest('.text-input-group');
+                if (lingkunganParent) {
+                    lingkunganParent.id = 'lingkungan_rumah_section';
+                }
+            }
+
+            if (!mamputMerawatSection) {
+                const mamputParent = mamputMerawatYa.closest('.text-input-group');
+                if (mamputParent) {
+                    mamputParent.id = 'mampu_merawat_section';
+                }
+            }
+
+            if (!homeCareSection) {
+                const homeCareParent = homeCareYa.closest('.text-input-group');
+                if (homeCareParent) {
+                    homeCareParent.id = 'home_care_section';
+                }
+            }
+
+            // Fungsi untuk menyembunyikan semua bagian
+            function hideAllSections() {
+                const sections = [
+                    document.getElementById('lingkungan_rumah_section'),
+                    document.getElementById('mampu_merawat_section'),
+                    document.getElementById('home_care_section')
+                ];
+
+                sections.forEach(section => {
+                    if (section) {
+                        section.style.display = 'none';
+                    }
+                });
+
+                if (perawatRumahKeterangan) {
+                    perawatRumahKeterangan.style.display = 'none';
+                }
+            }
+
+            // Fungsi untuk reset semua pilihan
+            function resetAllChoices() {
+                if (lingkunganYa) lingkunganYa.checked = false;
+                if (lingkunganTidak) lingkunganTidak.checked = false;
+                if (mamputMerawatYa) mamputMerawatYa.checked = false;
+                if (mamputMerawatTidak) mamputMerawatTidak.checked = false;
+                if (homeCareYa) homeCareYa.checked = false;
+                if (homeCareNot) homeCareNot.checked = false;
+
+                const perawatInput = document.querySelector('input[name="perawat_rumah_oleh"]');
+                if (perawatInput) {
+                    perawatInput.value = '';
+                }
+            }
+
+            // Event listener untuk checkbox "Tetap dirawat di RS"
+            if (tetapRsCheckbox) {
+                tetapRsCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        // Uncheck "Dirawat di rumah"
+                        if (dirawatRumahCheckbox) {
+                            dirawatRumahCheckbox.checked = false;
+                        }
+                        // Sembunyikan semua bagian
+                        hideAllSections();
+                        resetAllChoices();
+                    }
+                });
+            }
+
+            // Event listener untuk checkbox "Dirawat di rumah"
+            if (dirawatRumahCheckbox) {
+                dirawatRumahCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        // Uncheck "Tetap dirawat di RS"
+                        if (tetapRsCheckbox) {
+                            tetapRsCheckbox.checked = false;
+                        }
+                        // Tampilkan pertanyaan lingkungan rumah
+                        const lingkunganSection = document.getElementById('lingkungan_rumah_section');
+                        if (lingkunganSection) {
+                            lingkunganSection.style.display = 'block';
+                        }
+                        // Sembunyikan bagian lainnya
+                        const mamputSection = document.getElementById('mampu_merawat_section');
+                        const homeCareSection = document.getElementById('home_care_section');
+                        if (mamputSection) mamputSection.style.display = 'none';
+                        if (homeCareSection) homeCareSection.style.display = 'none';
+                        if (perawatRumahKeterangan) perawatRumahKeterangan.style.display = 'none';
+                        resetAllChoices();
+                    } else {
+                        // Jika unchecked, sembunyikan semua
+                        hideAllSections();
+                        resetAllChoices();
+                    }
+                });
+            }
+
+            // Event listener untuk radio "Lingkungan rumah siap - Ya"
+            if (lingkunganYa) {
+                lingkunganYa.addEventListener('change', function() {
+                    if (this.checked) {
+                        // Tampilkan pertanyaan mampu merawat
+                        const mamputSection = document.getElementById('mampu_merawat_section');
+                        if (mamputSection) {
+                            mamputSection.style.display = 'block';
+                        }
+                        // Sembunyikan pertanyaan home care
+                        const homeCareSection = document.getElementById('home_care_section');
+                        if (homeCareSection) {
+                            homeCareSection.style.display = 'none';
+                        }
+                        if (perawatRumahKeterangan) {
+                            perawatRumahKeterangan.style.display = 'none';
+                        }
+                        // Reset pilihan home care dan mampu merawat
+                        if (homeCareYa) homeCareYa.checked = false;
+                        if (homeCareNot) homeCareNot.checked = false;
+                        if (mamputMerawatYa) mamputMerawatYa.checked = false;
+                        if (mamputMerawatTidak) mamputMerawatTidak.checked = false;
+                        const perawatInput = document.querySelector('input[name="perawat_rumah_oleh"]');
+                        if (perawatInput) perawatInput.value = '';
+                    }
+                });
+            }
+
+            // Event listener untuk radio "Lingkungan rumah siap - Tidak"
+            if (lingkunganTidak) {
+                lingkunganTidak.addEventListener('change', function() {
+                    if (this.checked) {
+                        // Tampilkan pertanyaan home care
+                        const homeCareSection = document.getElementById('home_care_section');
+                        if (homeCareSection) {
+                            homeCareSection.style.display = 'block';
+                        }
+                        // Sembunyikan pertanyaan mampu merawat
+                        const mamputSection = document.getElementById('mampu_merawat_section');
+                        if (mamputSection) {
+                            mamputSection.style.display = 'none';
+                        }
+                        if (perawatRumahKeterangan) {
+                            perawatRumahKeterangan.style.display = 'none';
+                        }
+                        // Reset pilihan mampu merawat
+                        if (mamputMerawatYa) mamputMerawatYa.checked = false;
+                        if (mamputMerawatTidak) mamputMerawatTidak.checked = false;
+                        const perawatInput = document.querySelector('input[name="perawat_rumah_oleh"]');
+                        if (perawatInput) perawatInput.value = '';
+                    }
+                });
+            }
+
+            // Event listener untuk radio "Mampu merawat - Ya"
+            if (mamputMerawatYa) {
+                mamputMerawatYa.addEventListener('change', function() {
+                    if (this.checked) {
+                        if (perawatRumahKeterangan) {
+                            perawatRumahKeterangan.style.display = 'block';
+                        }
+                    }
+                });
+            }
+
+            // Event listener untuk radio "Mampu merawat - Tidak"
+            if (mamputMerawatTidak) {
+                mamputMerawatTidak.addEventListener('change', function() {
+                    if (this.checked) {
+                        if (perawatRumahKeterangan) {
+                            perawatRumahKeterangan.style.display = 'none';
+                        }
+                        const perawatInput = document.querySelector('input[name="perawat_rumah_oleh"]');
+                        if (perawatInput) {
+                            perawatInput.value = '';
+                        }
+                    }
+                });
+            }
+
+            // Inisialisasi - sembunyikan semua bagian saat halaman dimuat
+            hideAllSections();
+
+        });
+    </script>
+@endpush

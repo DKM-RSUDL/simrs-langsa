@@ -49,7 +49,6 @@
                     <a href="{{ url()->previous() }}" class="btn btn-outline-primary btn-sm me-2">
                         <i class="fas fa-arrow-left"></i> Kembali
                     </a>
-                    <a href="{{ route('rawat-jalan.prmrj.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $prmrj->id]) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
                 </div>
 
                 <form id="praAnestesiForm" method="" action="#">
@@ -60,6 +59,25 @@
                         </div>
 
                         <div class="card-body p-4">
+
+                            <div class="card mb-4 shadow-sm">
+                                <div class="card-body">
+                                    <div class="alert alert-info border-0 mb-3">
+                                        <div class="d-flex">
+                                            <i class="fas fa-info-circle me-3 mt-1"></i>
+                                            <div>
+                                                <h6 class="alert-heading mb-2">Kriteria Profil Ringkas Medis Rawat Jalan</h6>
+                                                <ol class="mb-0">
+                                                    <li class="mb-2">Pasien memiliki diagnosis penyerta seperti diabetes melitus, hypertensi, tuberculosis paru dalam pengobatan, post tindakan besar dll.</li>
+                                                    <li class="mb-2">Pasien dengan diagnosis kegagalan fungsi organ seperti gagal ginjal kronik, heart failure, corrhosis dll.</li>
+                                                    <li class="mb-2">Pasien yang mendapat > 3 asuhan, seperti gizi, radiologi, laboratorium, rehabilitasi medis, kemoterapi, EKG, dan tindakan operasi</li>
+                                                    <li class="mb-0">Pasien yang memiliki alergi obat atau multi drug resistance.</li>
+                                                </ol>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <!-- Masuk -->
                             <div class="card mb-4 shadow-sm">

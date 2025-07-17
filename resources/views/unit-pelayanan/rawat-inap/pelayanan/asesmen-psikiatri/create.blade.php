@@ -220,33 +220,21 @@
                                         <h5 class="section-title">4. Pengkajian Medis</h5>
 
                                         <div class="form-group">
-                                            <label style="min-width: 220px;">Anamnesis</label>
-                                            <input type="text" class="form-control" name="anamnesis"
-                                                placeholder="Masukkan anamnesis" required>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Keluhan Utama/Alasan Masuk RS</label>
-                                            <textarea class="form-control" name="keluhan_utama" rows="4"
-                                                placeholder="Masukkan keluhan utama atau alasan masuk rumah sakit" required></textarea>
-                                        </div>
-
-                                        <div class="form-group">
                                             <label style="min-width: 220px;">Riwayat Penyakit Sekarang</label>
-                                            <input type="text" class="form-control" name="riwayat_penyakit_sekarang"
-                                                placeholder="Masukkan riwayat penyakit sekarang">
+                                            <textarea class="form-control" name="riwayat_penyakit_sekarang" rows="4"
+                                                placeholder="Masukkan riwayat penyakit sekarang"></textarea>
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Riwayat Penyakit Terdahulu</label>
-                                            <input type="text" class="form-control" name="riwayat_penyakit_terdahulu"
-                                                placeholder="Masukkan riwayat penyakit terdahulu">
+                                            <textarea class="form-control" name="riwayat_penyakit_terdahulu" rows="4"
+                                                placeholder="Masukkan riwayat penyakit terdahulu"></textarea>
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Riwayat Perkembangan Masa Kanak</label>
-                                            <input type="text" class="form-control" name="riwayat_penyakit_perkembangan_masa_kanak"
-                                                placeholder="Masukkan riwayat penyakit perkembangan masa kanak">
+                                            <textarea class="form-control" name="riwayat_perkembangan_masa_kanak"
+                                                rows="4" placeholder="Masukkan riwayat perkembangan masa kanak"></textarea>
                                         </div>
 
                                         <div class="form-group">
@@ -373,17 +361,26 @@
                                         <h5 class="fw-semibold mb-4">7. Prognosis dan Therapy</h5>
 
                                         <div class="form-group">
-                                            <label style="min-width: 200px;">Prognosis</label>
-                                            <textarea class="form-control" name="prognosis"
-                                                rows="4" placeholder="Masukkan prognosis"></textarea>
-                                        </div>
-
-                                        <div class="form-group">
                                             <label style="min-width: 200px;">Therapi</label>
                                             <textarea class="form-control" name="therapi"
                                                 rows="4" placeholder="Masukkan terapi"></textarea>
                                         </div>
 
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="text-primary fw-semibold">Prognosis</label>
+                                        
+                                        <select class="form-select" name="prognosis">
+                                            <option value="">--Pilih Prognosis--</option>
+                                            @forelse ($satsetPrognosis as $item)                                            
+                                                <option value="{{ $item->prognosis_id }}">
+                                                    {{ $item->value ?? 'Field tidak ditemukan' }}
+                                                </option>
+                                            @empty
+                                                <option value="" disabled>Tidak ada data</option>
+                                            @endforelse
+                                        </select>
                                     </div>
 
 
