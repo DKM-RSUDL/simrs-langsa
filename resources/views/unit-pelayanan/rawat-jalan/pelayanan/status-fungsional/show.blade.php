@@ -1,5 +1,5 @@
 @extends('layouts.administrator.master')
-@include('unit-pelayanan.rawat-inap.pelayanan.status-fungsional.include')
+@include('unit-pelayanan.rawat-jalan.pelayanan.status-fungsional.include')
 
 @push('css')
     <style>
@@ -113,7 +113,7 @@
         <div class="col-md-9">
             <!-- Tombol Kembali -->
             <div class="mb-3">
-                <a href="{{ route('rawat-inap.status-fungsional.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                <a href="{{ route('rawat-jalan.status-fungsional.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                     class="btn btn-outline-primary">
                     <i class="ti-arrow-left"></i> Kembali ke Daftar
                 </a>
@@ -385,15 +385,15 @@
 
             <!-- Action Buttons -->
             <div class="text-center mt-4">
-                <a href="{{ route('rawat-inap.status-fungsional.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                <a href="{{ route('rawat-jalan.status-fungsional.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                     class="btn btn-outline-primary btn-action">
                     <i class="ti-list"></i> Daftar Data
                 </a>
-                <a href="{{ route('rawat-inap.status-fungsional.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $statusFungsional->id]) }}"
+                <a href="{{ route('rawat-jalan.status-fungsional.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $statusFungsional->id]) }}"
                     class="btn btn-warning btn-action">
                     <i class="ti-pencil"></i> Edit Data
                 </a>
-                <form action="{{ route('rawat-inap.status-fungsional.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $statusFungsional->id]) }}"
+                <form action="{{ route('rawat-jalan.status-fungsional.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $statusFungsional->id]) }}"
                     method="POST" class="d-inline-block" id="deleteForm">
                     @csrf
                     @method('DELETE')

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan\RawatInap;
+namespace App\Http\Controllers\UnitPelayanan\RawatJalan;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
@@ -15,7 +15,7 @@ class StatusFungsionalController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->middleware('can:read unit-pelayanan/rawat-jalan');
     }
 
     /**
@@ -111,7 +111,7 @@ class StatusFungsionalController extends Controller
             return $item;
         });
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.status-fungsional.index', compact(
+        return view('unit-pelayanan.rawat-jalan.pelayanan.status-fungsional.index', compact(
             'dataMedis',
             'statusFungsionalData'
         ));
@@ -124,7 +124,7 @@ class StatusFungsionalController extends Controller
     {
         $dataMedis = $this->getDataMedis($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.status-fungsional.create', compact(
+        return view('unit-pelayanan.rawat-jalan.pelayanan.status-fungsional.create', compact(
             'dataMedis',
         ));
     }
@@ -202,7 +202,7 @@ class StatusFungsionalController extends Controller
             
             DB::commit();
 
-            return redirect()->route('rawat-inap.status-fungsional.index', [
+            return redirect()->route('rawat-jalan.status-fungsional.index', [
                 $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk
             ])->with('success', 'Data Status Fungsional berhasil disimpan!');
 
@@ -251,7 +251,7 @@ class StatusFungsionalController extends Controller
         ];
         $statusFungsional->nilai_skor_text = $nilaiSkorOptions[$statusFungsional->nilai_skor] ?? 'Tidak Diketahui';
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.status-fungsional.show', compact(
+        return view('unit-pelayanan.rawat-jalan.pelayanan.status-fungsional.show', compact(
             'dataMedis',
             'statusFungsional'
         ));
@@ -271,7 +271,7 @@ class StatusFungsionalController extends Controller
             ->where('urut_masuk', $urut_masuk)
             ->firstOrFail();
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.status-fungsional.edit', compact(
+        return view('unit-pelayanan.rawat-jalan.pelayanan.status-fungsional.edit', compact(
             'dataMedis',
             'statusFungsional'
         ));
@@ -339,7 +339,7 @@ class StatusFungsionalController extends Controller
 
             DB::commit();
 
-            return redirect()->route('rawat-inap.status-fungsional.index', [
+            return redirect()->route('rawat-jalan.status-fungsional.index', [
                 $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk
             ])->with('success', 'Data Status Fungsional berhasil diperbarui!');
 
@@ -366,7 +366,7 @@ class StatusFungsionalController extends Controller
 
             $statusFungsional->delete();
 
-            return redirect()->route('rawat-inap.status-fungsional.index', [
+            return redirect()->route('rawat-jalan.status-fungsional.index', [
                 $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk
             ])->with('success', 'Data Status Fungsional berhasil dihapus!');
 

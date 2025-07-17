@@ -51,6 +51,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\EWSPasienObstetrikController
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResikoJatuh\SkalaGeriatriController as GawatDaruratSkalaGeriatriController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResikoJatuh\SkalaHumptyDumptyController as GawatDaruratSkalaHumptyDumptyController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResikoJatuh\SkalaMorseController as GawatDaruratSkalaMorseController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\StatusFungsionalController as GawatDaruratStatusFungsionalController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenHemodialisaKeperawatanController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenMedisController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\BeratBadanKeringController;
@@ -176,6 +177,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\EWSPasienAnakController as Raj
 use App\Http\Controllers\UnitPelayanan\RawatJalan\EWSPasienDewasaController as RajalEWSPasienDewasaController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\EWSPasienObstetrikController as RajalEWSPasienObstetrikController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\CatatanPoliKlinikController as RajalCatatanPoliKlinikController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\StatusFungsionalController as RawatJalanStatusFungsionalController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
@@ -888,6 +890,23 @@ Route::middleware('ssoToken')->group(function () {
                                                 Route::delete('/{data}', 'destroy')->name('.destroy');
                                             });
                                         });
+                                    });
+                                });
+                            });
+
+                            //status fungsional
+                            Route::prefix('status-fungsional')->group(function() {
+                                Route::name('.status-fungsional')->group(function() {
+                                    Route::controller(RawatJalanStatusFungsionalController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
                                     });
                                 });
                             });
@@ -1956,7 +1975,7 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
-                            //Skala Morse
+                            //status fungsional
                             Route::prefix('status-fungsional')->group(function() {
                                 Route::name('.status-fungsional')->group(function() {
                                     Route::controller(RawatInapStatusFungsionalController::class)->group(function () {
@@ -2428,6 +2447,23 @@ Route::middleware('ssoToken')->group(function () {
                                             Route::delete('/{data}', 'destroy')->name('.destroy');
                                         });
                                     });
+                                });
+                            });
+                        });
+
+                        //status fungsional
+                        Route::prefix('{urut_masuk}/status-fungsional')->group(function() {
+                            Route::name('status-fungsional')->group(function() {
+                                Route::controller(GawatDaruratStatusFungsionalController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
                                 });
                             });
                         });

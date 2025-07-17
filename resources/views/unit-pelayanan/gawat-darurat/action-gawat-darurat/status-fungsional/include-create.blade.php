@@ -313,7 +313,7 @@
 
                 if (tanggal && nilaiSkor) {
                     $.ajax({
-                        url: '{{ route("rawat-inap.status-fungsional.check-duplicate", [$dataMedis->kd_unit, $dataMedis->kd_pasien, date("Y-m-d", strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}',
+                        url: '{{ route("status-fungsional.check-duplicate", [$dataMedis->kd_pasien, date("Y-m-d", strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}',
                         method: 'GET',
                         data: {
                             tanggal: tanggal,

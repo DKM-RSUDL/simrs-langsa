@@ -1,5 +1,5 @@
 @extends('layouts.administrator.master')
-@include('unit-pelayanan.rawat-inap.pelayanan.status-fungsional.include')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.status-fungsional.include')
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
@@ -34,7 +34,7 @@
         </div>
 
         <div class="col-md-9">
-            @include('components.navigation-ranap')
+            @include('components.navigation')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
@@ -88,7 +88,7 @@
 
                                     <!-- Add Button -->
                                     <div>
-                                        <a href="{{ route('rawat-inap.status-fungsional.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                        <a href="{{ route('status-fungsional.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                             class="btn btn-primary btn-sm">
                                             <i class="ti-plus"></i> Tambah Data
                                         </a>
@@ -127,19 +127,19 @@
                                             <td>
                                                 <div class="btn-group" role="group">
                                                     <!-- Detail Button -->
-                                                    <a href="{{ route('rawat-inap.status-fungsional.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                    <a href="{{ route('status-fungsional.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                         class="btn btn-info btn-sm" title="Detail">
                                                         <i class="ti-eye"></i>
                                                     </a>
 
                                                     <!-- Edit Button -->
-                                                    <a href="{{ route('rawat-inap.status-fungsional.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                    <a href="{{ route('status-fungsional.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                         class="btn btn-warning btn-sm" title="Edit">
                                                         <i class="ti-pencil"></i>
                                                     </a>
 
                                                     <!-- Delete Button -->
-                                                    <form action="{{ route('rawat-inap.status-fungsional.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                    <form action="{{ route('status-fungsional.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                         method="POST" class="delete-form" style="display: inline;">
                                                         @csrf
                                                         @method('DELETE')

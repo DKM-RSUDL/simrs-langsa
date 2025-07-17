@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan\RawatInap;
+namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
@@ -15,13 +15,13 @@ class StatusFungsionalController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->middleware('can:read unit-pelayanan/gawat-darurat');
     }
 
     /**
      * Helper method untuk mendapatkan data medis
      */
-    private function getDataMedis($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk)
+    private function getDataMedis($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -31,7 +31,7 @@ class StatusFungsionalController extends Controller
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
             ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.kd_unit', 3)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->first();
@@ -52,12 +52,12 @@ class StatusFungsionalController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function index(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $dataMedis = $this->getDataMedis($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
+        $dataMedis = $this->getDataMedis($kd_pasien, $tgl_masuk, $urut_masuk);
 
         $query = RmeStatusFungsional::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
+            ->where('kd_unit', 3)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->with('userCreate');
@@ -111,7 +111,7 @@ class StatusFungsionalController extends Controller
             return $item;
         });
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.status-fungsional.index', compact(
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.status-fungsional.index', compact(
             'dataMedis',
             'statusFungsionalData'
         ));
@@ -120,11 +120,11 @@ class StatusFungsionalController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function create(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $dataMedis = $this->getDataMedis($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
+        $dataMedis = $this->getDataMedis($kd_pasien, $tgl_masuk, $urut_masuk);
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.status-fungsional.create', compact(
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.status-fungsional.create', compact(
             'dataMedis',
         ));
     }
@@ -132,7 +132,7 @@ class StatusFungsionalController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function store(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         // Debug data yang diterima (optional - bisa dihapus setelah testing)
         // dd($request->all(), compact('kd_unit', 'kd_pasien', 'tgl_masuk', 'urut_masuk'));
@@ -157,7 +157,7 @@ class StatusFungsionalController extends Controller
 
         // Cek duplikasi data
         $exists = RmeStatusFungsional::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
+            ->where('kd_unit', 3)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->whereDate('tanggal', $request->tanggal)
@@ -176,7 +176,7 @@ class StatusFungsionalController extends Controller
             // Siapkan data yang akan disimpan
             $data = [
                 'kd_pasien' => $kd_pasien,
-                'kd_unit' => $kd_unit,
+                'kd_unit' => 3,
                 'tgl_masuk' => $tgl_masuk,
                 'urut_masuk' => $urut_masuk,
                 'tanggal' => $request->tanggal,
@@ -202,8 +202,8 @@ class StatusFungsionalController extends Controller
             
             DB::commit();
 
-            return redirect()->route('rawat-inap.status-fungsional.index', [
-                $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk
+            return redirect()->route('status-fungsional.index', [
+                $kd_pasien, $tgl_masuk, $request->urut_masuk
             ])->with('success', 'Data Status Fungsional berhasil disimpan!');
 
         } catch (\Exception $e) {
@@ -218,14 +218,14 @@ class StatusFungsionalController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function show($kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-        $dataMedis = $this->getDataMedis($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
+        $dataMedis = $this->getDataMedis($kd_pasien, $tgl_masuk, $urut_masuk);
 
         $statusFungsional = RmeStatusFungsional::with('userCreate')
             ->where('id', $id)
             ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
+            ->where('kd_unit', 3)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->firstOrFail();
@@ -251,7 +251,7 @@ class StatusFungsionalController extends Controller
         ];
         $statusFungsional->nilai_skor_text = $nilaiSkorOptions[$statusFungsional->nilai_skor] ?? 'Tidak Diketahui';
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.status-fungsional.show', compact(
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.status-fungsional.show', compact(
             'dataMedis',
             'statusFungsional'
         ));
@@ -260,18 +260,18 @@ class StatusFungsionalController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function edit($kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-        $dataMedis = $this->getDataMedis($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
+        $dataMedis = $this->getDataMedis($kd_pasien, $tgl_masuk, $urut_masuk);
 
         $statusFungsional = RmeStatusFungsional::where('id', $id)
             ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
+            ->where('kd_unit', 3)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->firstOrFail();
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.status-fungsional.edit', compact(
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.status-fungsional.edit', compact(
             'dataMedis',
             'statusFungsional'
         ));
@@ -280,7 +280,7 @@ class StatusFungsionalController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function update(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         $request->validate([
             'tanggal' => 'required|date',
@@ -302,14 +302,14 @@ class StatusFungsionalController extends Controller
 
         $statusFungsional = RmeStatusFungsional::where('id', $id)
             ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
+            ->where('kd_unit', 3)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->firstOrFail();
 
         // Cek duplikasi data (exclude current record)
         $exists = RmeStatusFungsional::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
+            ->where('kd_unit', 3)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->whereDate('tanggal', $request->tanggal)
@@ -339,8 +339,8 @@ class StatusFungsionalController extends Controller
 
             DB::commit();
 
-            return redirect()->route('rawat-inap.status-fungsional.index', [
-                $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk
+            return redirect()->route('status-fungsional.index', [
+                $kd_pasien, $tgl_masuk, $request->urut_masuk
             ])->with('success', 'Data Status Fungsional berhasil diperbarui!');
 
         } catch (\Exception $e) {
@@ -354,20 +354,20 @@ class StatusFungsionalController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function destroy(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         try {
             $statusFungsional = RmeStatusFungsional::where('id', $id)
                 ->where('kd_pasien', $kd_pasien)
-                ->where('kd_unit', $kd_unit)
+                ->where('kd_unit', 3)
                 ->whereDate('tgl_masuk', $tgl_masuk)
                 ->where('urut_masuk', $urut_masuk)
                 ->firstOrFail();
 
             $statusFungsional->delete();
 
-            return redirect()->route('rawat-inap.status-fungsional.index', [
-                $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk
+            return redirect()->route('status-fungsional.index', [
+                $kd_pasien, $tgl_masuk, $request->urut_masuk
             ])->with('success', 'Data Status Fungsional berhasil dihapus!');
 
         } catch (\Exception $e) {
@@ -378,10 +378,10 @@ class StatusFungsionalController extends Controller
     /**
      * Check for duplicate data
      */
-    public function checkDuplicate(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function checkDuplicate(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $query = RmeStatusFungsional::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
+            ->where('kd_unit', 3)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->whereDate('tanggal', $request->tanggal)
