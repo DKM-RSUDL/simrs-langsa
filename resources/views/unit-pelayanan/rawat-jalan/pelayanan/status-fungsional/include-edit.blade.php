@@ -263,9 +263,8 @@
             function hitungSkorTotal() {
                 let total = 0;
 
-                // PERBAIKAN: Array criteria yang sesuai dengan nama field di HTML
                 const criteria = [
-                    'bab', 'bak', 'membersihkan_diri', 'penggunaan_jamban', 'makan',
+                    'bab', 'bak', 'membersikan_diri', 'penggunaan_jamban', 'makan',
                     'berubah_sikap', 'berpindah', 'berpakaian', 'naik_turun_tangga', 'mandi'
                 ];
 
@@ -306,6 +305,22 @@
                 $('#barthel_kategori').removeClass('bg-success bg-info bg-warning bg-danger bg-light text-white text-dark').addClass(cardClass);
             }
 
+            // Event listener untuk radio button
+            $('input[type="radio"]').on('change', function () {
+                const group = $(this).attr('name');
+                $(`.resiko_jatuh__criteria-form-check[data-group="${group}"]`).removeClass('selected');
+                $(this).closest('.resiko_jatuh__criteria-form-check').addClass('selected');
+                hitungSkorTotal();
+            });
+
+            // Tambahkan efek klik pada form-check
+            $('.resiko_jatuh__criteria-form-check').on('click', function () {
+                const radio = $(this).find('input[type="radio"]');
+                if (radio.length && !radio.prop('checked')) {
+                    radio.prop('checked', true).trigger('change');
+                }
+            });
+
             // Cek duplikasi data
             function checkDuplicate() {
                 const tanggal = $('#tanggal').val();
@@ -313,11 +328,12 @@
 
                 if (tanggal && nilaiSkor) {
                     $.ajax({
-                        url: '{{ route("rawat-inap.status-fungsional.check-duplicate", [$dataMedis->kd_unit, $dataMedis->kd_pasien, date("Y-m-d", strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}',
+                        url: '{{ route("rawat-jalan.status-fungsional.check-duplicate", [$dataMedis->kd_unit, $dataMedis->kd_pasien, date("Y-m-d", strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}',
                         method: 'GET',
                         data: {
                             tanggal: tanggal,
-                            nilai_skor: nilaiSkor
+                            nilai_skor: nilaiSkor,
+                            id: {{ $statusFungsional->id }}
                         },
                         success: function(response) {
                             if (response.exists) {
@@ -336,22 +352,6 @@
             // Event listener untuk cek duplikasi
             $('#tanggal, #nilai_skor').on('change', checkDuplicate);
 
-            // Event listener untuk radio button
-            $('input[type="radio"]').on('change', function () {
-                const group = $(this).attr('name');
-                $(`.resiko_jatuh__criteria-form-check[data-group="${group}"]`).removeClass('selected');
-                $(this).closest('.resiko_jatuh__criteria-form-check').addClass('selected');
-                hitungSkorTotal();
-            });
-
-            // Tambahkan efek klik pada form-check
-            $('.resiko_jatuh__criteria-form-check').on('click', function () {
-                const radio = $(this).find('input[type="radio"]');
-                if (radio.length && !radio.prop('checked')) {
-                    radio.prop('checked', true).trigger('change');
-                }
-            });
-
             // Inisialisasi skor awal dan status form
             hitungSkorTotal();
             $('input[type="radio"]:checked').each(function () {
@@ -360,9 +360,8 @@
 
             // Validasi form sebelum submit
             $('#barthel_form').on('submit', function (e) {
-                // PERBAIKAN: Array criteria yang sesuai dengan nama field di HTML
                 const criteria = [
-                    'bab', 'bak', 'membersihkan_diri', 'penggunaan_jamban', 'makan',
+                    'bab', 'bak', 'membersikan_diri', 'penggunaan_jamban', 'makan',
                     'berubah_sikap', 'berpindah', 'berpakaian', 'naik_turun_tangga', 'mandi'
                 ];
                 let allAnswered = true;

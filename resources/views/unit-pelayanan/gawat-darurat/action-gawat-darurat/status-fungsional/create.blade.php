@@ -1,6 +1,6 @@
 @extends('layouts.administrator.master')
-@include('unit-pelayanan.rawat-inap.pelayanan.status-fungsional.include')
-@include('unit-pelayanan.rawat-inap.pelayanan.status-fungsional.include-create')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.status-fungsional.include')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.status-fungsional.include-create')
 
 @section('content')
     <div class="row">
@@ -9,7 +9,7 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ route('rawat-inap.status-fungsional.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+            <a href="{{ route('status-fungsional.index', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
                 class="btn btn-outline-primary resiko_jatuh__btn-outline-primary mb-3">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
@@ -21,7 +21,7 @@
             </div>
 
             <form id="barthel_form" method="POST"
-                action="{{ route('rawat-inap.status-fungsional.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}">
+                action="{{ route('status-fungsional.store', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}">
                 @csrf
 
                 <div class="resiko_jatuh__fade-in">
@@ -435,7 +435,7 @@
                     </div>
 
                     <div class="text-end mt-4">
-                        <a href="{{ route('rawat-inap.status-fungsional.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                        <a href="{{ route('rawat-jalan.status-fungsional.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                             class="btn btn-secondary me-2">
                             <i class="ti-arrow-left mr-2"></i> Batal
                         </a>
