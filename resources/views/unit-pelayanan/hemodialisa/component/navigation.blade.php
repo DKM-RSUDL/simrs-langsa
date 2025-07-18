@@ -153,6 +153,15 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
+        [
+            'icon' => 'agree.png',
+            'label' => 'Hasil Lab',
+            'link' => route('hemodialisa.pelayanan.hasil-lab.index', [
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
         // [
         //     'icon' => 'test_tube.png',
         //     'label' => 'Labor',
