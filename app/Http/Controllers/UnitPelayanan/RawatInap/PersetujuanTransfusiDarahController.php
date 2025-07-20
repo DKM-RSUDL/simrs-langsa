@@ -364,36 +364,81 @@ class PersetujuanTransfusiDarahController extends Controller
      */
     public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-        $dataMedis = $this->getDataMedis($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
+        try {
+            // Ambil data medis pasien
+            $dataMedis = $this->getDataMedis($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
 
-        $persetujuan = RmePersetujuanTransfusiDarah::with(['userCreate', 'userEdit', 'dokter'])
+            if (!$dataMedis) {
+                abort(404, 'Data medis tidak ditemukan');
+            }
+
+            // Ambil data persetujuan transfusi darah
+            $persetujuan = RmePersetujuanTransfusiDarah::with([
+                'userCreate',
+                'userEdit'
+            ])
             ->where('kd_pasien', $kd_pasien)
             ->where('kd_unit', $kd_unit)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->findOrFail($id);
 
-        // Load view untuk PDF
-        $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.persetujuan-transfusi-darah.print', compact(
-            'dataMedis',
-            'persetujuan'
-        ));
+            // Ambil semua data dokter seperti di index (sesuaikan dengan model dokter Anda)
+            $dokter = \App\Models\Dokter::all(); // atau bisa menggunakan \App\Models\MsDokter::all()
 
-        // Set paper size ke A4 portrait (sesuai form asli)
-        $pdf->setPaper('a4', 'portrait');
+            // Jika ingin lebih efisien, hanya ambil dokter yang dibutuhkan:
+            // $dokter = \App\Models\Dokter::where('kd_dokter', $persetujuan->dokter)->get();
 
-        // Set options untuk DomPDF
-        $pdf->setOptions([
-            'isHtml5ParserEnabled' => true,
-            'isRemoteEnabled' => true,
-            'defaultFont' => 'Arial'
-        ]);
+            // Load view untuk PDF
+            $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.persetujuan-transfusi-darah.print', compact(
+                'dataMedis',
+                'persetujuan',
+                'dokter'
+            ));
 
-        // Generate filename
-        $filename = 'persetujuan-transfusi-darah-' . $kd_pasien . '-' . 
-                   ($persetujuan->tanggal ? $persetujuan->tanggal->format('d-m-Y') : date('d-m-Y')) . '.pdf';
+            // Konfigurasi PDF
+            $pdf->setPaper('a4', 'portrait');
 
-        return $pdf->stream($filename);
+            // Set options untuk DomPDF
+            $pdf->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'defaultFont' => 'Arial',
+                'fontSubsetting' => false,
+                'debugKeepTemp' => false,
+                'debugCss' => false,
+                'debugLayout' => false,
+                'debugLayoutLines' => false,
+                'debugLayoutBlocks' => false,
+                'debugLayoutInline' => false,
+                'debugLayoutPaddingBox' => false,
+                'pdfBackend' => 'CPDF',
+                'defaultPaperSize' => 'a4',
+                'defaultPaperOrientation' => 'portrait',
+            ]);
+
+            // Generate nama file yang informatif
+            $pasienNama = $dataMedis->pasien->nama ?? 'unknown';
+            $tanggal = $persetujuan->tanggal ? $persetujuan->tanggal->format('d-m-Y') : date('d-m-Y');
+            $filename = 'Persetujuan_Transfusi_Darah_' .
+                    str_replace([' ', '.', ','], '_', $pasienNama) . '_' .
+                    $kd_pasien . '_' .
+                    $tanggal . '.pdf';
+
+            // Return PDF sebagai response stream
+            return $pdf->stream($filename);
+
+        } catch (\Exception $e) {
+
+            // Return error response yang user-friendly
+            return back()->withErrors(['error' => 'Gagal generate PDF: ' . $e->getMessage()]);
+        }
+    }
+
+    // Method untuk print (alias untuk generatePDF)
+    public function printPDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        return $this->generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id);
     }
 
     /**
@@ -422,7 +467,7 @@ class PersetujuanTransfusiDarahController extends Controller
             'defaultFont' => 'Arial'
         ]);
 
-        $filename = 'persetujuan-transfusi-darah-' . $kd_pasien . '-' . 
+        $filename = 'persetujuan-transfusi-darah-' . $kd_pasien . '-' .
                    ($persetujuan->tanggal ? $persetujuan->tanggal->format('d-m-Y') : date('d-m-Y')) . '.pdf';
 
         return $pdf->download($filename);

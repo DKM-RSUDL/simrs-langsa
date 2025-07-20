@@ -259,7 +259,7 @@
                         <i class="ti-pencil"></i> Edit
                     </a>
                     <a href="{{ route('rawat-inap.persetujuan-transfusi-darah.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $persetujuan->id]) }}"
-                        class="btn print-button btn-action">
+                        class="btn print-button btn-action" target="_blank">
                         <i class="ti-printer"></i> Print
                     </a>
                     <a href="{{ asset('assets/file/F.3_persetujuan_transfusi_darah.pdf') }}" class="btn btn-info btn-action"
@@ -293,10 +293,6 @@
                             {{ $persetujuan->jam ? date('H:i', strtotime($persetujuan->jam)) : '-' }}</div>
                     </div>
                     <div class="data-item">
-                        <div class="data-item-label">Diagnosa</div>
-                        <div class="data-item-value">{{ $persetujuan->diagnosa ?: '-' }}</div>
-                    </div>
-                    <div class="data-item">
                         <div class="data-item-label">Persetujuan Untuk</div>
                         <div class="data-item-value">
                             @if($persetujuan->persetujuan_untuk === 'diri_sendiri')
@@ -305,6 +301,10 @@
                                 <span class="badge bg-warning">Keluarga/Wali</span>
                             @endif
                         </div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-item-label">Diagnosa</div>
+                        <div class="data-item-value">{{ $persetujuan->diagnosa ?: '-' }}</div>
                     </div>
                 </div>
             </div>
