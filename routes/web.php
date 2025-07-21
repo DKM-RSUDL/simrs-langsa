@@ -56,6 +56,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\StatusNyeri\SkalaCriesContro
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\StatusNyeri\SkalaFlaccController as StatusNyeriSkalaFlaccController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\StatusNyeri\SkalaNumerikController as GawatDaruratStatusNyeriSkalaNumerikController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\StatusFungsionalController as GawatDaruratStatusFungsionalController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\PersetujuanTransfusiDarahController as GawatDaruratPersetujuanTransfusiDarahController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenHemodialisaKeperawatanController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenMedisController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\BeratBadanKeringController;
@@ -2653,6 +2654,23 @@ Route::middleware('ssoToken')->group(function () {
                                     Route::get('/{data}/edit', 'edit')->name('.edit');
                                     Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
                                     Route::put('/{data}', 'update')->name('.update');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
+                                });
+                            });
+                        });
+
+                        // persetujuan transfusi darah
+                        Route::prefix('{urut_masuk}/persetujuan-transfusi-darah')->group(function () {
+                            Route::name('persetujuan-transfusi-darah')->group(function () {
+                                Route::controller(GawatDaruratPersetujuanTransfusiDarahController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                                     Route::delete('/{data}', 'destroy')->name('.destroy');
                                 });
                             });
