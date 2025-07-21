@@ -162,6 +162,15 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
+        [
+            'icon' => 'agree.png',
+            'label' => 'Persetujuan Tindakan',
+            'link' => route('hemodialisa.pelayanan.persetujuan.tindakan-hd.index', [
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
         // [
         //     'icon' => 'test_tube.png',
         //     'label' => 'Labor',
