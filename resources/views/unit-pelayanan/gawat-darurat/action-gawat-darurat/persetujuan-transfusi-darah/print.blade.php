@@ -330,7 +330,7 @@
                 <h1 class="main-title">PERSETUJUAN TRANSFUSI DARAH/ PRODUK DARAH</h1>
             </div>
 
-            <div class="patient-info">
+            {{-- <div class="patient-info">
 
                 <table class="patient-table">
                     <tr>
@@ -356,7 +356,7 @@
                         <td>{{ $dataMedis->pasien->tgl_lahir ? date('d/m/Y', strtotime($dataMedis->pasien->tgl_lahir)) : '-' }}</td>
                     </tr>
                 </table>
-            </div>
+            </div> --}}
         </div>
     </div>
 
@@ -454,14 +454,9 @@
             <div class="decision-section">
                 <p><strong>Dan saya menyatakan untuk</strong></p>
                 <div style="margin: 15px 0; font-size: 14px;">
-                    <span style="margin-right: 40px; {{ $persetujuan->persetujuan === 'setuju' ? 'text-decoration: underline; font-weight: bold;' : '' }}">
-                        SETUJU
+                    <span style="text-decoration: underline; font-weight: bold;">
+                        {{ $persetujuan->persetujuan === 'setuju' ? 'SETUJU' : 'TIDAK SETUJU' }}
                     </span>
-                    <span>/</span>
-                    <span style="margin-left: 40px; {{ $persetujuan->persetujuan === 'tidak_setuju' ? 'text-decoration: underline; font-weight: bold;' : '' }}">
-                        TIDAK SETUJU
-                    </span>
-                    <span style="font-size: 10px;"> *(coret salah satu)</span>
                 </div>
                 <p><strong>Atas pemberian darah dan produk darah terhadap diri saya sendiri / pihak yang saya wakili.</strong></p>
             </div>
