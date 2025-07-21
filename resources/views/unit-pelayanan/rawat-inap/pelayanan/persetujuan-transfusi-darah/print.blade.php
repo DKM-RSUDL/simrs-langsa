@@ -302,6 +302,11 @@
         .clear-fix {
             clear: both;
         }
+        @media print {
+            .page-break {
+                page-break-before: always;
+            }
+        }
     </style>
 </head>
 <body>
@@ -506,6 +511,127 @@
             </div>
 
         </div>
+
+        <!-- Page Break untuk halaman 2 -->
+        <div class="page-break"></div>
+
+        <!-- Consent Statement -->
+        <div class="consent-statement" style="margin-right: 10px; margin-left: 10px;">
+            <h3 style="text-align: center">FORM EDUKASI PEMBERIAN DARAH DAN PRODUK DARAH</h3>
+            <h5>
+                1. APA ITU DARAH DAN PRODUK DARAH?
+            </h5>
+            <p style="margin-left: 10px;">
+                Darah yang mengalir dalam tubuh manusia adalah cairan yang mempunyai banyak kegunaan. Salah satu kegunaannya adalah
+                mengantarkan oksigen dan makanan kedalam sel. Untuk itu dari, darah mempunyai banyak komponen yang membuat darah menjadi
+                cairan yang kompleks. Sebagai satu kesatuan, darah bisa disebut sebagai darah lengkap atau Whole Blood / WB.
+                Darah lengkap ini bisa dipisah menjadi beberapa bagian yang biasa dikenal sebagai komponen darah atau produk darah. Beberapa
+                komponen darah yang biasa diberikan adalah :
+            </p>
+            <ol type="a">
+                <li><strong>Sel Darah Merah</strong> atau <strong>Eritrosit</strong> : Sel darah yang membawa oksigen ke dalam sel.</li>
+                <li><strong>Sel Darah Putih</strong> atau <strong>Leukosit</strong> : sel darah yang menjaga tubuh dari penyakit infeksi seperti bakteri</li>
+                <li><strong>Keping Darah</strong> atau <strong>Trombosit</strong> : Sel darah yang menghentikan perdarahan untuk sementara</li>
+                <li><strong>Plasma</strong> : terdiri dari 92% air, 7% protein dan 1 % mineral. Sesuai kebutuhan, plasma dapat menjadi beberapa bagian seperti faktor
+                    pembekuan, albumin dan globulin.</li>
+            </ol>
+
+            <h5 style="margin-top: 5px;">2. KENAPA ANDA TAHU KELUARGA ANDA MEMBUTUHKAN PEMBERIAN DARAH DAN PRODUK DARAH?</h5>
+            <p style="margin-left: 10px">
+                Pemberian darah dan produk darah atau yang biasa dikenal sebagai tranfusi darah biasanya perlu dilakukan ketika seseorang mengalami
+                suatu hal yang menyebabkan darah atau komponen darah berkurang baik dalam jumlah maupun fungsinya. Salah satu hal yang mungkin
+                menyebabkab anda membutuhkan darah adalah pelaksanaan operasi dengan pendarahan yang banyak. Dokter memutuskan untuk
+                memberikan darah setelah mempertimbangkan banyak hal seperti keadaan kesehatan anda dan riwayat penyakit yang pernah anda
+                derita. Anda bisa menanyakan lebih lanjut mengenai alasan pemberian darah ini kepada dokter yang merawat anda.
+            </p>
+
+            <h5 style="margin-top: 5px">3. DARI MANA DARAH YANG DIBERIKAN BERASAL? </h5>
+            <p style="margin-left: 10px">
+                Darah yang anda terima berasal dari seseorang yang menyumbang darah. Umumnya, darah yang ditransfusi kepada pasien di RSUD dr.
+                Kota Langsa adalah darah yang di sumbangkan di Unit Tranfusi Darah PMI Kota Langsa.
+            </p>
+
+            <h5 style="margin-top: 5px">4. APA MANFAAT PEMBERIAN DARAH DAN PRODUK DARAH?</h5>
+            <p style="margin-left: 10px">
+                Darah dan produk darah diberikan dengan maksud untuk menyelamatkan nyawa atau untuk memperbaiki kualitas hidup dari seseorang.
+            </p>
+
+            <h5 style="margin-top: 5px">5. APA RESIKO DARI PEMBERIAN DARAH DAN PRODUK DARAH?</h5>
+            <p style="margin-left: 10px">
+                Seperti umumnya tindakan medik yang lain, pemberian darah dan produk darah mempunyai berbagai resiko. Namun, darah yang diberikan
+                telah melalui berbagai proses yang membuat resiko ini menjadi sangat kecil.
+                Beberapa resiko yang mungkin terjadi mencakup :
+            </p>
+            <ol type="a">
+                <li>
+                    Penularan penyakit menular lewat transfusi darah, seperti HIV, Hepatitis B, Hepatitis C dan sifilis darah yang berasal dari Unit Tranfusi
+                    darah PMI Kota Langsa telah melalui proses pemeriksaan terhadap keempat penyakit tersebut diatas. Bila hasil pemeriksaan
+                    memperlihatkan adanya kemungkinan didapatkan dari pendonor yang memiliki salah satu dari penyakit ini, maka darah tersebut akan
+                    dibuang
+                </li>
+                <li>
+                    Reaksi tranfusi darah ringan dan sementara. <br>
+                    Reaksi tranfusi yang ringan dan sementara dapat terjadi pada 1 dari 100 pasien yang mendapat tranfusi. Hal yang biasanya terjadi
+                    dapat berupa demam, menggigil atau timbulnya bengkak atau warna kemerahan pada kulit.
+                    Beritahu pada dokter apabila hal ini pernah terjadi pada pelaksanaan tranfusi sebelumnya bila hal ini terjadi saat pelaksanaan tranfusi
+                </li>
+                <li>
+                    Alloimunisasi atau pembentukan zat kekebalan atau antibodi. <br>
+                    Pada beberapa keadaan, pemberian darah dan produk darah dapat menyebabkan tubuh membuat zat kekebalan atau antibodi
+                    terhadap darah yang diberikan. Umumnya hal ini tidak menimbulkan gejala dan tidak membahayakan nyawa pasien. Namun,
+                    pemeriksaan tambahan biasanya perlu dilakukan sebelum pelaksanaan pemberian darah dan produk darah berikutnya.
+                </li>
+            </ol>
+
+            <h5 style="margin-top: 5px">6. KENAPA ANDA HARUS MEMBAYAR UNTUK PEMBERIAN DARAH DAN PRODUK DARAH?</h5>
+            <p style="margin-left: 10px">
+                Darah diberikan secara Cuma-Cuma atau gratis oleh orang yang menyumbang darah.
+                Namun, darah tersebut perlu diolah terlebih dahulu sebelum dapat diberikan kepada pasien pengolahan ini menimbulkan biaya yang biasa
+                disebut sebagai biaya pengganti pengolahan darah service cost.
+                Beberapa pengolahan yang membutuhkan biaya tersebut mencakup :
+            </p>
+            <ol type="a">
+                <li>Rekruitmen donor atau usaha untuk mencari donor darah sehingga persediaan darah cukup tidak perlu menunggu lama sebelum bias
+                    mendapatkan darah.
+                </li>
+                <li>
+                    Proses pendonoran darah yang memerlukan biaya seperti pembelian kantong darah dan pendukung proses pendonoran darah.
+                </li>
+                <li>
+                    Pemeriksaan keadaan darah seperti pemeriksaan terhadap penyakit menular lewat tranfusi pemeriksaan antara dengan donor.
+                </li>
+            </ol>
+
+            <h5 style="margin-top: 5px">7. APA PILIHAN YANG DAPAT ANDA AMBIL</h5>
+            <p style="margin-left: 10px">
+                Beberapa pilihan mengenai tranfusi yang dapat anda ambil adalah :
+            </p>
+            <ol type="a">
+                <li>Tranfusi autologus <br>
+                    Tranfusi autologus adalah pemberian darah yang diambil dari tubuh pasien sendiri. Cara ini umumnya dapat dilakukan pada pasien
+                    yang akan menjalani operasi.
+                </li>
+                <li>
+                    Tranfusi darah dari keluarga <br>
+                    Tranfusi darah dari keluarga adalah pemberian darah yang didonorkan oleh keluarga pasien unit. Tranfusi darah PMI Kota Langsa
+                    biasanya membutuhkan waktu sekitar 12 jam untuk melakukan pemrosesan darah sebelum pemeriksaan kecocokan antara
+                    pasien dan donor bisa dilakukan.
+                </li>
+                <li>
+                    Tidak tranfusi <br>
+                    Pilihan ini mempunyai resiko terhadap kesehatan pasien. Diskusikan kemungkinan yang dapat terjadi bila anda menolak pemberian
+                    darah dan produk darah dari dokter yang merawat anda.
+                </li>
+            </ol>
+
+            <h5 style="margin-top: 5px">8. HAL LAIN</h5>
+            <p style="margin-left: 10px">
+                Anda mempunyai hak untuk menanyakan dan mendiskusikan lebih lanjut mengenai berbagai hal mengenai pemberian darah dan produk
+                darah dengan dokter yang merawat anda dan jangan ragu untuk melakukan hal tersebut.
+            </p>
+
+        </div>
+
     </div>
 </body>
 </html>

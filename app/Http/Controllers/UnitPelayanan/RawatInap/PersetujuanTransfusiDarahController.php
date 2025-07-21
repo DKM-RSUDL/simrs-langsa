@@ -440,36 +440,4 @@ class PersetujuanTransfusiDarahController extends Controller
     {
         return $this->generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id);
     }
-
-    /**
-     * Download PDF document
-     */
-    public function downloadPDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
-    {
-        $dataMedis = $this->getDataMedis($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
-
-        $persetujuan = RmePersetujuanTransfusiDarah::with(['userCreate', 'userEdit', 'dokter'])
-            ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->findOrFail($id);
-
-        $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.persetujuan-transfusi-darah.print', compact(
-            'dataMedis',
-            'persetujuan'
-        ));
-
-        $pdf->setPaper('a4', 'portrait');
-        $pdf->setOptions([
-            'isHtml5ParserEnabled' => true,
-            'isRemoteEnabled' => true,
-            'defaultFont' => 'Arial'
-        ]);
-
-        $filename = 'persetujuan-transfusi-darah-' . $kd_pasien . '-' .
-                   ($persetujuan->tanggal ? $persetujuan->tanggal->format('d-m-Y') : date('d-m-Y')) . '.pdf';
-
-        return $pdf->download($filename);
-    }
 }
