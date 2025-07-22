@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\SsoController;
+use App\Http\Controllers\HDHasilLabController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NavigationController;
 use App\Http\Controllers\PermissionController;
@@ -63,6 +64,8 @@ use App\Http\Controllers\UnitPelayanan\Hemodialisa\MalnutritionInflammationScore
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\HDEdukasiController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\HDTindakanKhususController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\HDHasilEKGController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\HDHasilLabController as HemodialisaHDHasilLabController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\PersetujuanTindakanHDController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\TravelingDialysisController;
 use App\Http\Controllers\UnitPelayanan\HemodialisaController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
@@ -3050,6 +3053,46 @@ Route::middleware('ssoToken')->group(function () {
                                     Route::delete('/{id}', 'destroy')->name('.destroy');
                                     Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                                 });
+                            });
+                        });
+
+                        //Hasil Lab
+                        Route::prefix('hasil-lab')->group(function () {
+                            Route::name('.hasil-lab')->group(function () {
+                                Route::controller(HemodialisaHDHasilLabController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
+                                });
+                            });
+                        });
+
+                        //PERSETUJUAN
+                        Route::prefix('persetujuan')->group(function () {
+                            Route::name('.persetujuan')->group(function () {
+
+                                //Persetujuan Tindakan HD
+                                Route::prefix('tindakan-hd')->group(function () {
+                                    Route::name('.tindakan-hd')->group(function () {
+                                        Route::controller(PersetujuanTindakanHDController::class)->group(function () {
+                                            Route::get('/', 'index')->name('.index');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::get('/create', 'create')->name('.create');
+                                            Route::get('/{data}', 'show')->name('.show');
+                                            Route::get('/{data}/edit', 'edit')->name('.edit');
+                                            Route::put('/{data}', 'update')->name('.update');
+                                            Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                            Route::delete('/{data}', 'destroy')->name('.destroy');
+                                        });
+                                    });
+                                });
+
+                                //Persetujuan Tindakan Lainnya
                             });
                         });
                     });
