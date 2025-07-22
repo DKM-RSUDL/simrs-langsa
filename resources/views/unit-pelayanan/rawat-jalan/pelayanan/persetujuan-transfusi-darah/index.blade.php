@@ -32,7 +32,7 @@
         </div>
 
         <div class="col-md-9">
-            @include('components.navigation-ranap')
+            @include('components.navigation-rajal')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
