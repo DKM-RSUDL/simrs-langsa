@@ -60,26 +60,6 @@ class RmeCovid19 extends Model
         return $this->jam ? date('H:i', strtotime($this->jam)) : '-';
     }
 
-    // public function getJamFormattedAttribute()
-    // {
-    //     try {
-    //         if (!$this->jam) return '-';
-
-    //         // Handle different time formats
-    //         if (strlen($this->jam) === 8) {
-    //             // Format H:i:s
-    //             return Carbon::createFromFormat('H:i:s', $this->jam)->format('H:i');
-    //         } elseif (strlen($this->jam) === 5) {
-    //             // Format H:i
-    //             return Carbon::createFromFormat('H:i', $this->jam)->format('H:i');
-    //         }
-
-    //         return $this->jam;
-    //     } catch (\Exception $e) {
-    //         return $this->jam ?? '-';
-    //     }
-    // }
-
     public function getGejalaDecodedAttribute()
     {
         try {
