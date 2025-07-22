@@ -1,10 +1,5 @@
 @extends('layouts.administrator.master')
 
-@php
-function formatNumber($value) {
-    return $value ? number_format($value, 1, '.', '') : '';
-}
-@endphp
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
@@ -232,7 +227,7 @@ function formatNumber($value) {
                                         <label for="hb" class="form-label">Hemoglobin (Hb)</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.1" class="form-control" id="hb" name="hb" 
-                                                   value="{{ old('hb', formatNumber($dataHasilLab->detail->hb ?? '')) }}" placeholder="12.5">
+                                                   value="{{ old('hb', number_format($dataHasilLab->detail->hb ?? 0, 2)) }}" placeholder="12.5">
                                             <span class="unit-label">g/dL</span>
                                         </div>
                                     </div>
@@ -242,7 +237,7 @@ function formatNumber($value) {
                                         <label for="leukosit" class="form-label">Leukosit</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.1" class="form-control" id="leukosit" name="leukosit" 
-                                                value="{{ old('leukosit', formatNumber($dataHasilLab->detail->leukosit ?? '')) }}" placeholder="8.5">
+                                                value="{{ old('leukosit', number_format($dataHasilLab->detail->leukosit ?? 0, 2)) }}" placeholder="8.5">
                                             <span class="unit-label">10³/µL</span>
                                         </div>
                                     </div>
@@ -265,7 +260,7 @@ function formatNumber($value) {
                                         <label for="hematokrit" class="form-label">Hematokrit</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.1" class="form-control" id="hematokrit" name="hematokrit" 
-                                                   value="{{ old('hematokrit', number_format($dataHasilLab->detail->hematokrit ?? '', 2)) }}" placeholder="38.5">
+                                                   value="{{ old('hematokrit', number_format($dataHasilLab->detail->hematokrit ?? 0, 2)) }}" placeholder="38.5">
                                             <span class="unit-label">%</span>
                                         </div>
                                     </div>
@@ -275,7 +270,7 @@ function formatNumber($value) {
                                         <label for="eritrosit" class="form-label">Eritrosit</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.1" class="form-control" id="eritrosit" name="eritrosit" 
-                                                   value="{{ old('eritrosit', number_format($dataHasilLab->detail->eritrosit ?? '', 2)) }}" placeholder="4.5">
+                                                   value="{{ old('eritrosit', number_format($dataHasilLab->detail->eritrosit ?? 0, 2)) }}" placeholder="4.5">
                                             <span class="unit-label">10⁶/µL</span>
                                         </div>
                                     </div>
@@ -364,7 +359,7 @@ function formatNumber($value) {
                                         <label>Pre-Dialisis</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.1" class="form-control" name="kreatinin_pre" 
-                                                   value="{{ old('kreatinin_pre', number_format($dataHasilLab->detail ? $dataHasilLab->detail->kreatinin_pre : '', 2)) }}" placeholder="8.5">
+                                                   value="{{ old('kreatinin_pre', number_format($dataHasilLab->detail ? $dataHasilLab->detail->kreatinin_pre : 0, 2)) }}" placeholder="8.5">
                                             <span class="unit-label">mg/dL</span>
                                         </div>
                                     </div>
@@ -372,7 +367,7 @@ function formatNumber($value) {
                                         <label>Post-Dialisis</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.1" class="form-control" name="kreatinin_post" 
-                                                   value="{{ old('kreatinin_post', number_format($dataHasilLab->detail ? $dataHasilLab->detail->kreatinin_post : '', 2)) }}" placeholder="3.2">
+                                                   value="{{ old('kreatinin_post', number_format($dataHasilLab->detail ? $dataHasilLab->detail->kreatinin_post : 0, 2)) }}" placeholder="3.2">
                                             <span class="unit-label">mg/dL</span>
                                         </div>
                                     </div>
@@ -438,7 +433,7 @@ function formatNumber($value) {
                                         <label for="sgot" class="form-label">SGOT</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.1" class="form-control" id="sgot" name="sgot" 
-                                                   value="{{ old('sgot', number_format($dataHasilLab->detail ? $dataHasilLab->detail->sgot : '', 2)) }}" placeholder="25">
+                                                   value="{{ old('sgot', number_format($dataHasilLab->detail ? $dataHasilLab->detail->sgot : 0, 2)) }}" placeholder="25">
                                             <span class="unit-label">U/L</span>
                                         </div>
                                     </div>
@@ -448,7 +443,7 @@ function formatNumber($value) {
                                         <label for="sgpt" class="form-label">SGPT</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.1" class="form-control" id="sgpt" name="sgpt" 
-                                                   value="{{ old('sgpt', number_format($dataHasilLab->detail ? $dataHasilLab->detail->sgpt : '', 2)) }}" placeholder="30">
+                                                   value="{{ old('sgpt', number_format($dataHasilLab->detail ? $dataHasilLab->detail->sgpt : 0, 2)) }}" placeholder="30">
                                             <span class="unit-label">U/L</span>
                                         </div>
                                     </div>
@@ -458,7 +453,7 @@ function formatNumber($value) {
                                         <label for="bilirubin_total" class="form-label">Bilirubin Total</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.1" class="form-control" id="bilirubin_total" name="bilirubin_total" 
-                                                   value="{{ old('bilirubin_total', number_format($dataHasilLab->detail ? $dataHasilLab->detail->bilirubin_total : '', 2)) }}" placeholder="1.2">
+                                                   value="{{ old('bilirubin_total', number_format($dataHasilLab->detail ? $dataHasilLab->detail->bilirubin_total : 0, 2)) }}" placeholder="1.2">
                                             <span class="unit-label">mg/dL</span>
                                         </div>
                                     </div>
@@ -468,7 +463,7 @@ function formatNumber($value) {
                                         <label for="bilirubin_direct" class="form-label">Bilirubin Direct</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.1" class="form-control" id="bilirubin_direct" name="bilirubin_direct" 
-                                                   value="{{ old('bilirubin_direct', number_format($dataHasilLab->detail ? $dataHasilLab->detail->bilirubin_direct : '', 2)) }}" placeholder="0.3">
+                                                   value="{{ old('bilirubin_direct', number_format($dataHasilLab->detail ? $dataHasilLab->detail->bilirubin_direct : 0, 2)) }}" placeholder="0.3">
                                             <span class="unit-label">mg/dL</span>
                                         </div>
                                     </div>
@@ -481,7 +476,7 @@ function formatNumber($value) {
                                         <label for="protein_total" class="form-label">Protein Total</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.1" class="form-control" id="protein_total" name="protein_total" 
-                                                   value="{{ old('protein_total', number_format($dataHasilLab->detail ? $dataHasilLab->detail->protein_total : '', 2)) }}" placeholder="7.5">
+                                                   value="{{ old('protein_total', number_format($dataHasilLab->detail ? $dataHasilLab->detail->protein_total : 0, 2)) }}" placeholder="7.5">
                                             <span class="unit-label">g/dL</span>
                                         </div>
                                     </div>
@@ -491,7 +486,7 @@ function formatNumber($value) {
                                         <label for="albumin" class="form-label">Albumin</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.1" class="form-control" id="albumin" name="albumin" 
-                                                   value="{{ old('albumin', number_format($dataHasilLab->detail ? $dataHasilLab->detail->albumin : '', 2)) }}" placeholder="4.2">
+                                                   value="{{ old('albumin', number_format($dataHasilLab->detail ? $dataHasilLab->detail->albumin : 0, 2)) }}" placeholder="4.2">
                                             <span class="unit-label">g/dL</span>
                                         </div>
                                     </div>
@@ -501,7 +496,7 @@ function formatNumber($value) {
                                         <label for="fosfatase_alkali" class="form-label">Fosfatase Alkali</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.1" class="form-control" id="fosfatase_alkali" name="fosfatase_alkali" 
-                                                   value="{{ old('fosfatase_alkali', number_format($dataHasilLab->detail ? $dataHasilLab->detail->fosfatase_alkali : '', 2)) }}" placeholder="120">
+                                                   value="{{ old('fosfatase_alkali', number_format($dataHasilLab->detail ? $dataHasilLab->detail->fosfatase_alkali : 0, 2)) }}" placeholder="120">
                                             <span class="unit-label">U/L</span>
                                         </div>
                                     </div>
@@ -511,7 +506,7 @@ function formatNumber($value) {
                                         <label for="gamma_gt" class="form-label">Gamma GT</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.1" class="form-control" id="gamma_gt" name="gamma_gt" 
-                                                   value="{{ old('gamma_gt', number_format($dataHasilLab->detail ? $dataHasilLab->detail->gamma_gt : '', 2)) }}" placeholder="45">
+                                                   value="{{ old('gamma_gt', number_format($dataHasilLab->detail ? $dataHasilLab->detail->gamma_gt : 0, 2)) }}" placeholder="45">
                                             <span class="unit-label">U/L</span>
                                         </div>
                                     </div>
@@ -686,7 +681,7 @@ function formatNumber($value) {
                                         <label for="natrium" class="form-label">Natrium</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.1" class="form-control" id="natrium" name="natrium" 
-                                                   value="{{ old('natrium', number_format($dataHasilLab->detail ? $dataHasilLab->detail->natrium : '', 2)) }}" placeholder="140">
+                                                   value="{{ old('natrium', number_format($dataHasilLab->detail ? $dataHasilLab->detail->natrium : 0, 2)) }}" placeholder="140">
                                             <span class="unit-label">mEq/L</span>
                                         </div>
                                     </div>
@@ -696,7 +691,7 @@ function formatNumber($value) {
                                         <label for="kalium" class="form-label">Kalium</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.1" class="form-control" id="kalium" name="kalium" 
-                                                   value="{{ old('kalium', number_format($dataHasilLab->detail ? $dataHasilLab->detail->kalium : '', 2)) }}" placeholder="4.0">
+                                                   value="{{ old('kalium', number_format($dataHasilLab->detail ? $dataHasilLab->detail->kalium : 0, 2)) }}" placeholder="4.0">
                                             <span class="unit-label">mEq/L</span>
                                         </div>
                                     </div>
@@ -706,7 +701,7 @@ function formatNumber($value) {
                                         <label for="calcium_ion" class="form-label">Calcium Ion</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.01" class="form-control" id="calcium_ion" name="calcium_ion" 
-                                                   value="{{ old('calcium_ion', number_format($dataHasilLab->detail ? $dataHasilLab->detail->calcium_ion : '', 2)) }}" placeholder="1.20">
+                                                   value="{{ old('calcium_ion', number_format($dataHasilLab->detail ? $dataHasilLab->detail->calcium_ion : 0, 2)) }}" placeholder="1.20">
                                             <span class="unit-label">mmol/L</span>
                                         </div>
                                     </div>
@@ -716,7 +711,7 @@ function formatNumber($value) {
                                         <label for="clorida" class="form-label">Clorida</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.1" class="form-control" id="clorida" name="clorida" 
-                                                   value="{{ old('clorida', number_format($dataHasilLab->detail ? $dataHasilLab->detail->clorida : '', 2)) }}" placeholder="100">
+                                                   value="{{ old('clorida', number_format($dataHasilLab->detail ? $dataHasilLab->detail->clorida : 0, 2)) }}" placeholder="100">
                                             <span class="unit-label">mEq/L</span>
                                         </div>
                                     </div>
@@ -729,7 +724,7 @@ function formatNumber($value) {
                                         <label for="magnesium" class="form-label">Magnesium</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.01" class="form-control" id="magnesium" name="magnesium" 
-                                                   value="{{ old('magnesium', number_format($dataHasilLab->detail ? $dataHasilLab->detail->magnesium : '', 2)) }}" placeholder="1.80">
+                                                   value="{{ old('magnesium', number_format($dataHasilLab->detail ? $dataHasilLab->detail->magnesium : 0, 2)) }}" placeholder="1.80">
                                             <span class="unit-label">mg/dL</span>
                                         </div>
                                     </div>
@@ -739,7 +734,7 @@ function formatNumber($value) {
                                         <label for="calcium_total" class="form-label">Calcium Total</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.1" class="form-control" id="calcium_total" name="calcium_total" 
-                                                   value="{{ old('calcium_total', number_format($dataHasilLab->detail ? $dataHasilLab->detail->calcium_total : '', 2)) }}" placeholder="9.5">
+                                                   value="{{ old('calcium_total', number_format($dataHasilLab->detail ? $dataHasilLab->detail->calcium_total : 0, 2)) }}" placeholder="9.5">
                                             <span class="unit-label">mg/dL</span>
                                         </div>
                                     </div>
@@ -749,7 +744,7 @@ function formatNumber($value) {
                                         <label for="phospor" class="form-label">Phospor</label>
                                         <div class="input-with-unit">
                                             <input type="number" step="0.1" class="form-control" id="phospor" name="phospor" 
-                                                   value="{{ old('phospor', number_format($dataHasilLab->detail ? $dataHasilLab->detail->phospor : '', 2)) }}" placeholder="3.5">
+                                                   value="{{ old('phospor', number_format($dataHasilLab->detail ? $dataHasilLab->detail->phospor : 0, 2)) }}" placeholder="3.5">
                                             <span class="unit-label">mg/dL</span>
                                         </div>
                                     </div>
