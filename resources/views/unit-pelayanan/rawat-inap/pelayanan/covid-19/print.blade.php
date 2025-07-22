@@ -7,14 +7,14 @@
     <title>Covid 19 - {{ $dataMedis->pasien->nama ?? 'Pasien' }}</title>
     <style>
         @page {
-            margin: 1.5cm 1cm 1cm 1cm;
-            size: A4 portrait;
+            size: 8.5in 13in; /* Letter/F4 size */
+            margin: 10mm 12mm 10mm 12mm;
         }
 
         body {
-            font-family: Arial, sans-serif;
-            font-size: 11px;
-            line-height: 1.3;
+            font-family: DejaVu Sans, Arial, sans-serif;
+            font-size: 10px;
+            line-height: 1.2;
             color: #000;
             margin: 0;
             padding: 0;
@@ -22,9 +22,9 @@
 
         .header {
             width: 100%;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             border-bottom: 2px solid #000;
-            padding-bottom: 10px;
+            padding-bottom: 8px;
         }
 
         .header-content {
@@ -34,103 +34,100 @@
 
         .logo-section {
             display: table-cell;
-            width: 15%;
+            width: 12%;
             vertical-align: middle;
             text-align: center;
         }
 
         .title-section {
             display: table-cell;
-            width: 50%;
+            width: 25%;
             vertical-align: middle;
             text-align: center;
-            padding: 0 10px;
+            padding: 0 5px;
         }
 
         .patient-info {
             display: table-cell;
-            width: 35%;
+            width: 20%;
             vertical-align: top;
         }
 
         .logo-box {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 8px;
+            font-weight: bold;
         }
 
         .hospital-name {
-            font-size: 10px;
+            font-size: 9px;
             font-weight: bold;
-            margin-top: 5px;
+            margin-top: 3px;
         }
 
         .hospital-address {
-            font-size: 8px;
+            font-size: 7px;
             margin-top: 2px;
+            line-height: 1.1;
         }
 
         .main-title {
-            font-size: 16px;
+            font-size: 12px;
             font-weight: bold;
             margin: 0;
             text-transform: uppercase;
+            line-height: 1.2;
         }
 
         .form-number {
-            font-size: 9px;
+            font-size: 8px;
             margin-top: 5px;
         }
 
         .patient-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 9px;
+            font-size: 8px;
         }
 
         .patient-table td {
             border: 1px solid #000;
-            padding: 3px 5px;
+            padding: 2px 2px;
             vertical-align: top;
         }
 
         .patient-table .label {
             background-color: #f5f5f5;
             font-weight: bold;
-            width: 30%;
+            width: 35%;
         }
 
         .content {
-            margin-top: 20px;
+            margin-top: 10px;
             clear: both;
         }
 
-        .section {
-            margin-bottom: 15px;
-        }
-
-        .section-title {
+        .instruction {
             font-weight: bold;
-            font-size: 12px;
-            margin-bottom: 8px;
-            text-align: center;
-            text-transform: uppercase;
+            margin-bottom: 5px;
+            font-size: 10px;
         }
 
         .table-form {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .table-form th,
         .table-form td {
             border: 1px solid #000;
-            padding: 4px 6px;
+            padding: 2px 2px;
             text-align: left;
             vertical-align: middle;
         }
@@ -139,15 +136,18 @@
             background-color: #f5f5f5;
             font-weight: bold;
             text-align: center;
+            font-size: 9px;
         }
 
         .table-form .no-col {
-            width: 8%;
+            width: 6%;
             text-align: center;
+            font-size: 9px;
         }
 
         .table-form .item-col {
-            width: 62%;
+            width: 64%;
+            font-size: 9px;
         }
 
         .table-form .ya-col,
@@ -156,14 +156,17 @@
             text-align: center;
         }
 
+        /* Checkbox styling for DomPDF */
         .checkbox {
             width: 12px;
             height: 12px;
-            border: 1px solid #000;
+            border: 1.5px solid #000;
             display: inline-block;
             text-align: center;
             line-height: 10px;
             font-weight: bold;
+            vertical-align: middle;
+            margin: 0 auto;
         }
 
         .checkbox.checked {
@@ -171,26 +174,42 @@
             color: white;
         }
 
-        .checkbox.checked::after {
+        .checkbox.checked::before {
             content: "✓";
-            font-size: 8px;
+            font-size: 7px;
+            font-weight: bold;
         }
 
         .date-input {
             border-bottom: 1px solid #000;
             display: inline-block;
-            min-width: 80px;
+            min-width: 60px;
             text-align: center;
-            padding: 2px;
+            padding: 1px 3px;
+            font-size: 9px;
+        }
+
+        .date-label {
+            font-weight: bold;
+            margin: 10px 0;
+            font-size: 9px;
         }
 
         .komorbid-section {
-            margin: 15px 0;
+            margin: 12px 0;
         }
 
         .komorbid-title {
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .komorbid-subtitle {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 9px;
         }
 
         .komorbid-list {
@@ -205,16 +224,24 @@
         .komorbid-col {
             display: table-cell;
             width: 33.33%;
-            padding: 3px 10px;
+            padding: 2px 6px;
             vertical-align: top;
         }
 
         .komorbid-item {
-            margin-bottom: 5px;
+            margin-bottom: 4px;
+            font-size: 9px;
         }
 
         .penilaian-section {
-            margin: 20px 0;
+            margin: 10px 0;
+        }
+
+        .penilaian-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 9px;
+            text-transform: uppercase;
         }
 
         .penilaian-table {
@@ -225,7 +252,7 @@
         .penilaian-table th,
         .penilaian-table td {
             border: 1px solid #000;
-            padding: 8px;
+            padding: 6px;
             text-align: center;
             vertical-align: top;
         }
@@ -233,113 +260,237 @@
         .penilaian-table th {
             background-color: #f5f5f5;
             font-weight: bold;
+            font-size: 9px;
         }
 
         .penilaian-table .criteria-cell {
             text-align: left;
-            font-size: 10px;
+            font-size: 8px;
+            line-height: 1.3;
         }
 
         .kesimpulan-section {
-            margin: 20px 0;
-            text-align: center;
+            margin: 15px 0;
+        }
+
+        .kesimpulan-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 9px;
+            text-transform: uppercase;
+            text-align: start;
         }
 
         .kesimpulan-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 10px 0;
+            margin: 8px 0;
         }
 
         .kesimpulan-table th,
         .kesimpulan-table td {
             border: 1px solid #000;
-            padding: 10px;
+            padding: 8px;
             text-align: center;
         }
 
         .kesimpulan-table th {
             background-color: #f5f5f5;
             font-weight: bold;
+            font-size: 9px;
         }
 
         .tindak-lanjut {
-            margin: 20px 0;
-            padding: 10px;
+            margin: 5px 0;
+            padding: 4px;
             border: 1px solid #000;
         }
 
         .tindak-lanjut-title {
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            font-size: 9px;
+            text-transform: uppercase;
+        }
+
+        .tindak-lanjut-item {
+            margin-bottom: 3px;
+            font-size: 8px;
+        }
+
+        .declaration {
+            margin: 10px 0;
+            text-align: justify;
+            line-height: 1.4;
+            font-size: 8px;
+        }
+
+        .location-date {
+            margin: 10px 0;
+            text-align: start;
+            font-size: 9px;
+        }
+
+        .underline {
+            border-bottom: 1px solid #000;
+            display: inline-block;
+            min-width: 80px;
+            padding-bottom: 2px;
+            text-align: center;
         }
 
         .signature-section {
-            margin-top: 30px;
+            margin-top: 10px;
             page-break-inside: avoid;
         }
 
         .signature-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 5px;
         }
 
         .signature-table td {
             border: none;
-            padding: 10px;
+            padding: 8px;
             text-align: center;
             vertical-align: top;
             width: 50%;
         }
 
         .signature-box {
-            height: 60px;
+            height: 50px;
             border-bottom: 1px solid #000;
             margin-bottom: 5px;
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
         .signature-label {
-            font-size: 10px;
+            font-size: 8px;
             font-weight: bold;
         }
 
-        .location-date {
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .underline {
-            border-bottom: 1px solid #000;
-            display: inline-block;
-            min-width: 100px;
-            padding-bottom: 2px;
-            text-align: center;
-        }
-
-        .page-break {
-            page-break-before: always;
+        .signature-name {
+            margin-top: 5px;
+            font-size: 8px;
         }
 
         .note-section {
-            margin-top: 20px;
-            font-size: 9px;
+            margin-top: 5px;
+            font-size: 8px;
+            line-height: 1.3;
         }
 
         .note-title {
             font-weight: bold;
         }
 
-        @media print {
-            .page-break {
-                page-break-before: always;
-            }
+        .page-break {
+            page-break-before: always;
+        }
+
+        /* Page 2 Styles */
+        .informed-title {
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            text-transform: uppercase;
+            margin: 7px 0;
+        }
+
+        .dasar-section {
+            margin-bottom: 12px;
+        }
+
+        .dasar-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 9px;
+        }
+
+        .dasar-list {
+            margin-left: 15px;
+            line-height: 1.4;
+            font-size: 8px;
+        }
+
+        .dasar-list li {
+            margin-bottom: 4px;
+        }
+
+        .maka-section {
+            margin-bottom: 12px;
+        }
+
+        .maka-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 9px;
+        }
+
+        .maka-content {
+            text-align: justify;
+            line-height: 1.4;
+            margin-bottom: 8px;
+            font-size: 8px;
+        }
+
+        .maka-list {
+            margin-left: 15px;
+            line-height: 1.4;
+            font-size: 8px;
+        }
+
+        .maka-list li {
+            margin-bottom: 4px;
+        }
+
+        .persetujuan-section {
+            margin: 15px 0;
+            text-align: justify;
+            line-height: 1.4;
+            font-size: 8px;
+        }
+
+        .signature-table-page2 {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .signature-table-page2 td {
+            text-align: center;
+            vertical-align: top;
+            width: 33.33%;
+            padding: 5px;
+        }
+
+        .signature-box-page2 {
+            height: 40px;
+            border-bottom: 1px solid #000;
+            margin: 8px 0 5px 0;
+        }
+
+        /* Additional styles for komorbid section borders */
+        .no-border-left {
+            border-left: none !important;
+        }
+        
+        .no-border-right {
+            border-right: none !important;
+        }
+        
+        .no-border-top {
+            border-top: none !important;
+        }
+        
+        .no-border-bottom {
+            border-bottom: none !important;
         }
     </style>
 </head>
 
 <body>
+    <!-- PAGE 1: FORMULIR DETEKSI DINI -->
     <!-- Header Section -->
     <div class="header">
         <div class="header-content">
@@ -362,18 +513,17 @@
 
             <div class="title-section">
                 <h1 class="main-title">FORMULIR DETEKSI DINI CORONA VIRUS DISEASE (COVID-19) REVISI 5</h1>
-                <div class="form-number">F.11/IRM/Rev 0/2020</div>
             </div>
 
             <div class="patient-info">
                 <table class="patient-table">
                     <tr>
                         <td class="label">No RM</td>
-                        <td>{{ $dataMedis->pasien->kd_pasien ?? '-' }}</td>
+                        <td>{{ $dataMedis->pasien->kd_pasien ?? '' }}</td>
                     </tr>
                     <tr>
                         <td class="label">Nama</td>
-                        <td>{{ $dataMedis->pasien->nama ?? '-' }}</td>
+                        <td>{{ $dataMedis->pasien->nama ?? '' }}</td>
                     </tr>
                     <tr>
                         <td class="label">Jenis Kelamin</td>
@@ -381,18 +531,15 @@
                             @if(isset($dataMedis->pasien->jenis_kelamin))
                                 {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : 'Perempuan' }}
                             @else
-                                Laki-laki / Perempuan
+                                Laki-laki / Perempuan *
                             @endif
                         </td>
                     </tr>
                     <tr>
                         <td class="label">Tanggal Lahir</td>
-                        <td>{{ $dataMedis->pasien->tgl_lahir ? date('d/m/Y', strtotime($dataMedis->pasien->tgl_lahir)) : '-' }}</td>
+                        <td>{{ $dataMedis->pasien->tgl_lahir ? date('d/m/Y', strtotime($dataMedis->pasien->tgl_lahir)) : '' }}</td>
                     </tr>
                 </table>
-                <div style="font-size: 8px; font-style: italic; margin-top: 5px;">
-                    (mohon diisi atau tempelkan stiker jika ada)
-                </div>
             </div>
         </div>
     </div>
@@ -400,7 +547,7 @@
     <!-- Main Content -->
     <div class="content">
         <!-- Instructions -->
-        <div style="margin-bottom: 15px; font-weight: bold;">
+        <div class="instruction">
             Beri Tanda centang ✓ pada kolom yang sesuai
         </div>
 
@@ -442,14 +589,14 @@
         </table>
 
         <!-- Tanggal Gejala -->
-        <div style="margin-bottom: 20px;">
+        <div class="date-label">
             <strong>Tanggal pertama timbul gejala:</strong>
             <span class="date-input">{{ $covidData->tgl_gejala ? $covidData->tgl_gejala->format('d') : '' }}</span> /
             <span class="date-input">{{ $covidData->tgl_gejala ? $covidData->tgl_gejala->format('m') : '' }}</span> /
             <span class="date-input">{{ $covidData->tgl_gejala ? $covidData->tgl_gejala->format('Y') : '' }}</span>
         </div>
 
-        <!-- Faktor Risiko Section -->
+        <!-- Faktor Risiko & Komorbid Section -->
         <table class="table-form">
             <thead>
                 <tr>
@@ -473,10 +620,8 @@
                     <td class="no-col">{{ $loop->iteration }}</td>
                     <td class="item-col">
                         {{ $label }}
-                        @if($key == 'perjalanan' && $covidData->lokasi_perjalanan)
-                            <br><strong>Sebutkan Negara/ Propinsi/ Kota:</strong> {{ $covidData->lokasi_perjalanan }}
-                        @elseif($key == 'perjalanan')
-                            <br>Sebutkan Negara/ Propinsi/ Kota: ...............................
+                        @if($key == 'perjalanan')
+                            <br><strong>Sebutkan Negara/ Propinsi/ Kota:</strong> {{ $covidData->lokasi_perjalanan ?? '................................' }}
                         @endif
                     </td>
                     <td class="ya-col">
@@ -487,45 +632,57 @@
                     </td>
                 </tr>
                 @endforeach
+
+                <!-- Header Faktor Komorbid -->
+                <tr>
+                    <td colspan="4" style="background-color: #f5f5f5; font-weight: bold; text-align: left; padding: 6px;">
+                        <strong>FAKTOR KOMORBID</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align: left; padding: 4px 6px;">
+                        <strong>Mempunyai riwayat:</strong>
+                    </td>
+                </tr>
+
+                @php
+                    $komorbidList = [
+                        'hipertensi' => 'Hipertensi',
+                        'diabetes' => 'Diabetes Mellitus',
+                        'jantung' => 'Jantung',
+                        'ginjal' => 'Ginjal',
+                        'hemodialisis' => 'Riwayat hemodialisis',
+                        'usia_50' => 'Usia > 50 Tahun'
+                    ];
+                    $komorbidData = $covidData->komorbid_decoded ?? [];
+                @endphp
+
+                @foreach($komorbidList as $key => $label)
+                <tr>
+                    <td class="no-col">{{ $loop->iteration }}</td>
+                    <td class="no-border-left no-border-right" style="text-align: left; padding: 4px 8px;">
+                        • {{ $label }}
+                    </td>
+                    <td class="no-col" style="text-align: center;">
+                        <span class="checkbox {{ isset($komorbidData[$key]) && $komorbidData[$key] == 1 ? 'checked' : '' }}"></span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span class="checkbox {{ !isset($komorbidData[$key]) || $komorbidData[$key] != 1 ? 'checked' : '' }}"></span>
+                    </td>
+                </tr>
+                @endforeach
+
+        @media print {
+            .page-break {
+                page-break-before: always;
+            }
+        }
             </tbody>
         </table>
 
-        <!-- Faktor Komorbid -->
-        <div class="komorbid-section">
-            <div class="komorbid-title">FAKTOR KOMORBID</div>
-            <div style="margin-bottom: 10px;"><strong>Mempunyai riwayat:</strong></div>
-
-            @php
-                $komorbidList = [
-                    'hipertensi' => 'Hipertensi',
-                    'diabetes' => 'Diabetes Mellitus',
-                    'jantung' => 'Jantung',
-                    'ginjal' => 'Ginjal',
-                    'hemodialisis' => 'Riwayat hemodialisis',
-                    'usia_50' => 'Usia > 50 Tahun'
-                ];
-                $komorbidData = $covidData->komorbid_decoded ?? [];
-            @endphp
-
-            <div class="komorbid-list">
-                @foreach(array_chunk($komorbidList, 2, true) as $chunk)
-                <div class="komorbid-row">
-                    @foreach($chunk as $key => $label)
-                    <div class="komorbid-col">
-                        <div class="komorbid-item">
-                            <span class="checkbox {{ isset($komorbidData[$key]) && $komorbidData[$key] == 1 ? 'checked' : '' }}"></span>
-                            {{ $label }}
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-                @endforeach
-            </div>
-        </div>
-
         <!-- Cara Penilaian -->
         <div class="penilaian-section">
-            <div style="font-weight: bold; margin-bottom: 10px;">CARA PENILAIAN (Cocokan dengan temuan pada gejala dan faktor risiko)</div>
+            <div class="penilaian-title">CARA PENILAIAN (Cocokan dengan temuan pada gejala dan faktor risiko)</div>
 
             <table class="penilaian-table">
                 <thead>
@@ -555,7 +712,7 @@
 
         <!-- Kesimpulan -->
         <div class="kesimpulan-section">
-            <div style="font-weight: bold; margin-bottom: 10px;">KESIMPULAN (beri tanda centang pada kolom yang sesuai)</div>
+            <div class="kesimpulan-title">KESIMPULAN (beri tanda centang pada kolom yang sesuai)</div>
 
             <table class="kesimpulan-table">
                 <tr>
@@ -580,14 +737,14 @@
         <!-- Tindak Lanjut -->
         <div class="tindak-lanjut">
             <div class="tindak-lanjut-title">TINDAK LANJUT:</div>
-            <div><strong>Kontak erat</strong> : Rujuk ke pelayanan COVID-19 (IGD PIE)</div>
-            <div><strong>SUSPEK</strong> : Rujuk ke pelayanan COVID-19 (IGD PIE)</div>
-            <div><strong>NON SUSPEK</strong>: Lanjut ke pelayanan Non COVID-19 (IGD/Poliklinik/ Rawat Inap Non PIE)</div>
+            <div class="tindak-lanjut-item"><strong>Kontak erat</strong> : Rujuk ke pelayanan COVID-19 (IGD PIE)</div>
+            <div class="tindak-lanjut-item"><strong>SUSPEK</strong> : Rujuk ke pelayanan COVID-19 (IGD PIE)</div>
+            <div class="tindak-lanjut-item"><strong>NON SUSPEK</strong>: Lanjut ke pelayanan Non COVID-19 (IGD/Poliklinik/ Rawat Inap Non PIE)</div>
         </div>
 
         <!-- Declaration -->
-        <div style="margin: 20px 0; text-align: justify; line-height: 1.5;">
-            Demikian pernyataan ini saya sampaikan dengan sebenar-benarnya. Saya menyadari pemberian informasi yang tidak sesuai dengan yang sebenarnya dapat dikenakan sanksi menurut Undang-undang yang berlaku.
+        <div class="declaration">
+            Demikian pernyataan ini saya sampaikan dengan sebenar-benarnya. Saya menyadari pemberian informasi yang tidak sesuai dengan yang sebenarnya dapat dikenakan sa
         </div>
 
         <!-- Location and Date -->
@@ -607,47 +764,47 @@
                         <div class="signature-label">Pasien/pendamping</div>
                     @endif
                     <div class="signature-box"></div>
-                    <div style="margin-top: 5px;">
+                    <div class="signature-name">
                         @if($covidData->persetujuan_untuk == 'keluarga' && $covidData->nama_keluarga)
                             ({{ $covidData->nama_keluarga }})
                         @else
                             ({{ $dataMedis->pasien->nama ?? '.....................................' }})
                         @endif
                     </div>
-                    <div style="font-size: 9px;">Nama lengkap dan TTD</div>
+                    <div style="font-size: 7px;">Nama lengkap dan TTD</div>
                 </td>
                 <td>
                     <div class="signature-label">Petugas skrining</div>
                     <div class="signature-box"></div>
-                    <div style="margin-top: 5px;">
+                    <div class="signature-name">
                         ({{ $covidData->userCreate->name ?? '.....................................' }})
                     </div>
-                    <div style="font-size: 9px;">Nama lengkap dan TTD</div>
+                    <div style="font-size: 7px;">Nama lengkap dan TTD</div>
                 </td>
             </tr>
         </table>
 
         <!-- Notes -->
-        <div class="note-section">
+        <div class="note-section" style="font-size: 10px;">
             <div class="note-title">Ket:</div>
             <div><strong>Kasus konfirmasi:</strong> Seseorang yang dinyatakan positif virus COVID-19 berdasarkan pemeriksaan laboratorium RT-PCR.</div>
             <div><strong>Kasus Probable :</strong> Kasus suspek ISPA/ARDS/meninggal dengan gambaran klinis yang meyakinkan COVID-19 dan belum ada hasil pemeriksaan.</div>
         </div>
     </div>
 
-    <!-- Page 2: Informed Consent -->
+    <!-- PAGE 2: INFORMED CONSENT -->
     <div class="page-break">
         <!-- Header for Page 2 -->
         <div class="header">
             <div class="header-content">
                 <div class="logo-section">
                     <div class="logo-box">
-                        @if(file_exists(public_path('assets/img/Logo-RSUD-Langsa-1.png')))
-                            <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/img/Logo-RSUD-Langsa-1.png'))) }}"
-                                style="width: 50px; height: 50px;" alt="Logo RSUD Langsa">
-                        @else
-                            LOGO
-                        @endif
+                    @if(file_exists(public_path('assets/img/Logo-RSUD-Langsa-1.png')))
+                        <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/img/Logo-RSUD-Langsa-1.png'))) }}"
+                            style="width: 50px; height: 50px;" alt="Logo RSUD Langsa">
+                    @else
+                        LOGO
+                    @endif
                     </div>
                     <div class="hospital-name">RSUD LANGSA</div>
                     <div class="hospital-address">
@@ -658,19 +815,18 @@
                 </div>
 
                 <div class="title-section">
-                    <h1 class="main-title">INFORMED CONSENT KEWASPADAAN COVID-19</h1>
-                    <div class="form-number">F.11/IRM/Rev 0/2020</div>
+                    <h1 class="main-title">INFORMED CONCENT KEWASPADAAN COVID-19</h1>
                 </div>
 
                 <div class="patient-info">
                     <table class="patient-table">
                         <tr>
                             <td class="label">No RM</td>
-                            <td>{{ $dataMedis->pasien->kd_pasien ?? '-' }}</td>
+                            <td>{{ $dataMedis->pasien->kd_pasien ?? '' }}</td>
                         </tr>
                         <tr>
                             <td class="label">Nama</td>
-                            <td>{{ $dataMedis->pasien->nama ?? '-' }}</td>
+                            <td>{{ $dataMedis->pasien->nama ?? '' }}</td>
                         </tr>
                         <tr>
                             <td class="label">Jenis Kelamin</td>
@@ -684,41 +840,87 @@
                         </tr>
                         <tr>
                             <td class="label">Tanggal Lahir</td>
-                            <td>{{ $dataMedis->pasien->tgl_lahir ? date('d/m/Y', strtotime($dataMedis->pasien->tgl_lahir)) : '-' }}</td>
+                            <td>{{ $dataMedis->pasien->tgl_lahir ? date('d/m/Y', strtotime($dataMedis->pasien->tgl_lahir)) : '' }}</td>
                         </tr>
                     </table>
-                    <div style="font-size: 8px; font-style: italic; margin-top: 5px;">
-                        (mohon diisi atau tempelkan stiker jika ada)
-                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Informed Consent Content -->
         <div class="content">
-            <div style="margin-bottom: 15px;">
-                <div style="font-weight: bold; margin-bottom: 10px;">Dasar:</div>
-                <ol style="margin-left: 20px; line-height: 1.5;">
+            <div class="dasar-section">
+                <div class="dasar-title" style="font-size: 12px;">Dasar:</div>
+                <ol class="dasar-list" style="font-size: 12px;">
                     <li>Instruksi Presiden Republik Indonesia Indonesia Nomor 6 Tahun 2020 tentang Peningkatan Disiplin dan Penegakan Hukum Protokol Kesehatan dalam Pencegahan dan Pengendalian Corona Virus Disease 2019;</li>
                     <li>Keputusan Menteri Kesehatan No.HK.01.07 /MENKES/413/2020 tentang Pedoman Pencegahan dan Pengendalian COVID-19;</li>
                     <li>Keputusan Gubernur Aceh Nomor 360/969/2020 tentang Penetapan Status Tanggap Darurat Skala Provinsi untuk Penanganan Corona Virus Disease 2019;</li>
-                    <li>Peraturan Walikota Langsa Nomor 31 Tentang Penerapan Disiplin dan Penegakan Hukum Protokol Kesehatan Sebagai Upaya Pencegahan dan Pengendalian Corona Virus Disease 2019 di Kota Langsa.</li>
+                    <li>Peraturan Walikota Langsa Nomor 31 Tentang Penerapan Disiplin dan Penegakan Hukum Protokol Kesehatan Sebagai Upaya Pencegehan dan Pengendalian Corona Virus Disease 2019 di Kota Langsa</li>
                 </ol>
             </div>
 
-            <div style="margin-bottom: 15px;">
-                <div style="font-weight: bold; margin-bottom: 10px;">Maka:</div>
-                <div style="text-align: justify; line-height: 1.5; margin-bottom: 10px;">
+            <div class="maka-section">
+                <div class="maka-title" style="font-size: 12px;">Maka:</div>
+                <div class="maka-content" style="font-size: 12px;">
                     Dalam rangka menindaklanjuti Kebijakan Pemerintah untuk Penegakan Protokol Kesehatan dalam Pencegahan dan Pengendalian COVID-19, maka RSUD Kota Langsa akan melakukan Skrining (penapisan) COVID-19 yang terdiri dari anamnesa, pemeriksaan laboratorium dan radiologi bagi semua pasien yang akan dilayani. Bila dari hasil pemeriksaan tersebut, pasien diduga terinfeksi COVID-19 maka:
                 </div>
-                <ol style="margin-left: 20px; line-height: 1.5;">
+                <ol class="maka-list" style="font-size: 12px;">
                     <li>Akan dilakukan pemeriksaan SWAB RT-PCR yang akan dikirim ke Laboratorium yang mampu melakukan pemeriksaan RT-PCR;</li>
                     <li>Selama menunggu hasil, pasien akan dirawat di Ruang PINERE;</li>
                     <li>TIDAK BOLEH didampingi/dibesuk, kecuali bagi pasien dengan kondisi tidak dapat mandiri dapat didampingi 1 (satu) orang keluarga yang sehat;</li>
                     <li>Pendamping juga ikut diisolasi bersama pasien di kamar dan tidak boleh keluar masuk selama pasien dirawat;</li>
-                    <li>Jika Pasien meninggal selama perawatan meskipun hasil</li>
+                    <li>Jika Pasien meninggal selama perawatan meskipun hasil SWAB Test belum keluar, pasien akan dimakamkan secara Protokol Covid-19;</li>
+                    <li>Dalam proses Pemulasaran Jenazah, jika Keluarga ingin berpartisipasi dalam kegiatan tersebutkeluarga dekat (sehat) dapat mengikuti proses tersebut dengan menggunakan APO Level 3 yang disediakan Ru mah Sakit maksimal 2 (dua) orang</li>
                 </ol>
             </div>
+
+            <div class="persetujuan-section" style="font-size: 12px;">
+                Dengan ini Saya dan telah menendapat penjelasan dan memahami penjelasan tersebut di atas dan menyatakan <strong>{{ $covidData->persetujuan === 'setuju' ? 'SETUJU' : 'TIDAK SETUJU' }}</strong> untuk setiap hal yang ditetapkan RSUD Langsa di atas.
+            </div>
+
+            <!-- Signature Section for Page 2 -->
+            <div class="location-date" style="font-size: 12px;">
+                Langsa, tanggal: <span class="underline">{{ $covidData->tanggal ? $covidData->tanggal->format('d/m/Y') : '................' }}</span>
+                Jam: <span class="underline">{{ $covidData->jam_formatted ? $covidData->jam_formatted : '........' }}</span>
+            </div>
+
+            <table class="signature-table-page2">
+                <tr>
+                    <td>
+                        @if($covidData->persetujuan_untuk == 'keluarga')
+                            <div class="signature-label" style="font-size: 12px;">Keluarga pasien:</div>
+                        @else
+                            <div class="signature-label" style="font-size: 12px;">Pasien:</div>
+                        @endif
+                        <div class="signature-box-page2"></div>
+                        <div class="signature-name" style="font-size: 12px;">
+                            @if($covidData->persetujuan_untuk == 'keluarga' && $covidData->nama_keluarga)
+                                ({{ $covidData->nama_keluarga }})
+                            @else
+                                ({{ $dataMedis->pasien->nama ?? '.....................................' }})
+                            @endif
+                        </div>
+                        <div style="font-size: 7px; font-size: 12px;">Ttd dan nama jelas</div>
+                    </td>
+                    <td>
+                        <div class="signature-label" style="font-size: 12px;">Saksi:</div>
+                        <div class="signature-box-page2"></div>
+                        <div class="signature-name" style="font-size: 12px;">
+                            ({{ $covidData->nama_saksi1 ?? '.....................................' }})
+                        </div>
+                        <div style="font-size: 7px; font-size: 12px;">Ttd dan nama jelas</div>
+                    </td>
+                    <td>
+                        <div class="signature-label" style="font-size: 12px;">Yang menjelaskan:</div>
+                        <div class="signature-box-page2"></div>
+                        <div class="signature-name" style="font-size: 12px;">
+                            ({{ $covidData->userCreate->name ?? '.....................................' }})
+                        </div>
+                        <div style="font-size: 7px; font-size: 12px;">Ttd dan nama jelas</div>
+                    </td>
+                </tr>
+            </table>
+
         </div>
     </div>
 </body>

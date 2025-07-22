@@ -6,7 +6,7 @@
         .covid-detail {
             background: #fff;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             overflow: hidden;
         }
 
@@ -151,6 +151,53 @@
                 border: 1px solid #ccc;
             }
         }
+
+        /* Assessment Display Styles */
+        .assessment-display {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 5px;
+        }
+
+        .assessment-display.kontak-erat {
+            border-left: 4px solid #f6ad55;
+            background: #fffbeb;
+        }
+
+        .assessment-display.suspek {
+            border-left: 4px solid #f56565;
+            background: #fef5e7;
+        }
+
+        .assessment-display.non-suspek {
+            border-left: 4px solid #48bb78;
+            background: #f0fff4;
+        }
+
+        .assessment-display-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .assessment-display-desc {
+            font-size: 0.9rem;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+
+        .assessment-display-desc ul {
+            padding-left: 15px;
+        }
+
+        .assessment-display-desc ul li {
+            margin-bottom: 3px;
+        }
     </style>
 @endpush
 
@@ -216,10 +263,10 @@
                                 <div class="info-value">{{ $covidData->userCreate->name ?? 'Tidak Diketahui' }}</div>
                             </div>
                             @if($covidData->user_edit)
-                            <div class="info-row">
-                                <div class="info-label">Terakhir Diubah</div>
-                                <div class="info-value">{{ $covidData->userEdit->name ?? 'Tidak Diketahui' }}</div>
-                            </div>
+                                <div class="info-row">
+                                    <div class="info-label">Terakhir Diubah</div>
+                                    <div class="info-value">{{ $covidData->userEdit->name ?? 'Tidak Diketahui' }}</div>
+                                </div>
                             @endif
                         </div>
                     </div>
@@ -271,7 +318,7 @@
                             @if($covidData->lokasi_perjalanan)
                                 <hr>
                                 <div class="info-row">
-                                    <div class="info-label">Lokasi Perjalanan</div>
+                                    <div class="info-label">Lokasi Negara/ Propinsi/ Kota : </div>
                                     <div class="info-value">{{ $covidData->lokasi_perjalanan }}</div>
                                 </div>
                             @endif
@@ -284,6 +331,7 @@
                             <i class="fas fa-heartbeat text-info"></i>
                             <span>FAKTOR KOMORBID</span>
                         </div>
+                        <p style="margin-left: 10px; margin-top: 5px;">Mempunyai riwayat : </p>
                         <div class="section-content">
                             @if(count($covidData->komorbid_list) > 0)
                                 @foreach($covidData->komorbid_list as $komorbid)
@@ -301,8 +349,27 @@
                         </div>
                     </div>
 
+                    <!-- Persetujuan -->
+                    <div class="consent-card">
+                        <div class="consent-title fw-bold">
+                            <i class="ti-help"></i> Pernyataan Persetujuan Informed Consent COVID-19
+                        </div>
+                        <p class="mb-3">Dengan ini Saya telah mendapat penjelasan dan memahami penjelasan tersebut di atas dan menyatakan:</p>
+                        <div class="mt-3">
+                            @if($covidData->persetujuan === 'setuju')
+                                <span class="badge bg-success fs-6 px-4 py-2">
+                                    <i class="ti-check"></i> YA, SETUJU
+                                </span>
+                            @else
+                                <span class="badge bg-danger fs-6 px-4 py-2">
+                                    <i class="ti-close"></i> TIDAK SETUJU
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
                     <!-- Kesimpulan -->
-                    <div class="detail-section">
+                    <div class="detail-section mt-4">
                         <div class="section-header">
                             <i class="fas fa-clipboard-check text-purple"></i>
                             <span>KESIMPULAN PENILAIAN</span>
@@ -310,7 +377,47 @@
                         <div class="section-content">
                             <div class="info-row">
                                 <div class="info-label">Cara Penilaian</div>
-                                <div class="info-value">{{ $covidData->cara_penilaian ?? '-' }}</div>
+                                <div class="info-value">
+                                    @if($covidData->cara_penilaian == 'kontak_erat')
+                                        <div class="assessment-display kontak-erat">
+                                            <div class="assessment-display-title">
+                                                <i class="fas fa-user-friends text-warning me-2"></i>
+                                                <strong>KONTAK ERAT</strong>
+                                            </div>
+                                            <div class="assessment-display-desc">
+                                                Tanpa gejala + Faktor risiko utama no. 2 (Kasus konfirmasi*/ Probable**)
+                                            </div>
+                                        </div>
+                                    @elseif($covidData->cara_penilaian == 'suspek')
+                                        <div class="assessment-display suspek">
+                                            <div class="assessment-display-title">
+                                                <i class="fas fa-exclamation-triangle text-danger me-2"></i>
+                                                <strong>SUSPEK</strong>
+                                            </div>
+                                            <div class="assessment-display-desc">
+                                                <ul class="mb-0" style="margin-left: 5px">
+                                                    <li>Gejala No.1 atau No.2 + Faktor risiko utama No.1 atau No.2</li>
+                                                    <li>Gejala No.1 atau No.2 + Faktor risiko utama No.2 (kasus konfirmasi*)
+                                                    </li>
+                                                    <li>Gejala No.4 DAN tidak ada penyebab lain berdasarkan gambaran klinis yang
+                                                        meyakinkan.</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    @elseif($covidData->cara_penilaian == 'non_suspek')
+                                        <div class="assessment-display non-suspek">
+                                            <div class="assessment-display-title">
+                                                <i class="fas fa-check-circle text-success me-2"></i>
+                                                <strong>NON SUSPEK</strong>
+                                            </div>
+                                            <div class="assessment-display-desc">
+                                                Tidak memenuhi kriteria kontak erat, kasus suspek.
+                                            </div>
+                                        </div>
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </div>
                             </div>
                             <div class="info-row">
                                 <div class="info-label">Kesimpulan</div>
@@ -332,41 +439,42 @@
                             </div>
 
                             @if($covidData->persetujuan_untuk === 'keluarga')
-                                <hr>
-                                <h6 class="fw-bold mb-3">Saksi 1:</h6>
-                            <div class="info-row">
-                                <div class="info-label">Nama Lengkap</div>
-                                <div class="info-value">{{ $covidData->nama_saksi1 }}</div>
-                            </div>
-                            <div class="info-row">
-                                <div class="info-label">Tanggal Lahir</div>
-                                <div class="info-value">
-                                    @if($covidData->tgl_lahir_saksi1)
-                                        {{ Carbon\Carbon::parse($covidData->tgl_lahir_saksi1)->format('d/m/Y') }}
-                                    @else
-                                        <span class="text-muted">-</span>
-                                    @endif
+                                        <hr>
+                                        <h6 class="fw-bold mb-3">Saksi:</h6>
+                                        <div class="info-row">
+                                            <div class="info-label">Nama Lengkap</div>
+                                            <div class="info-value">{{ $covidData->nama_saksi1 }}</div>
+                                        </div>
+                                        <div class="info-row">
+                                            <div class="info-label">Tanggal Lahir</div>
+                                            <div class="info-value">
+                                                @if($covidData->tgl_lahir_saksi1)
+                                                    {{ Carbon\Carbon::parse($covidData->tgl_lahir_saksi1)->format('d/m/Y') }}
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="info-row">
+                                            <div class="info-label">Alamat</div>
+                                            <div class="info-value">{{ $covidData->alamat_saksi1 ?? '-' }}</div>
+                                        </div>
+                                        <div class="info-row">
+                                            <div class="info-label">Jenis Kelamin</div>
+                                            <div class="info-value">{{ $covidData->jenis_kelamin_saksi1 }}</div>
+                                        </div>
+                                        <div class="info-row">
+                                            <div class="info-label">No. Telepon</div>
+                                            <div class="info-value">{{ $covidData->no_telp_saksi1 ?? '-' }}</div>
+                                        </div>
+                                        <div class="info-row">
+                                            <div class="info-label">No. KTP/SIM</div>
+                                            <div class="info-value">{{ $covidData->no_ktp_saksi1 ?? '-' }}</div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="info-row">
-                                <div class="info-label">Alamat</div>
-                                <div class="info-value">{{ $covidData->alamat_saksi1 ?? '-' }}</div>
-                            </div>
-                            <div class="info-row">
-                                <div class="info-label">Jenis Kelamin</div>
-                                <div class="info-value">{{ $covidData->jenis_kelamin_saksi1 }}</div>
-                            </div>
-                            <div class="info-row">
-                                <div class="info-label">No. Telepon</div>
-                                <div class="info-value">{{ $covidData->no_telp_saksi1 ?? '-' }}</div>
-                            </div>
-                            <div class="info-row">
-                                <div class="info-label">No. KTP/SIM</div>
-                                <div class="info-value">{{ $covidData->no_ktp_saksi1 ?? '-' }}</div>
-                            </div>
-                        </div>
+                            @endif
                     </div>
-                    @endif
                 </div>
             </div>
         </div>
@@ -376,11 +484,11 @@
 @push('js')
     <script>
         // Print functionality
-        window.addEventListener('beforeprint', function() {
+        window.addEventListener('beforeprint', function () {
             document.title = 'COVID-19 Form - {{ $dataMedis->pasien->nama_lengkap }} - {{ $covidData->tanggal_formatted }}';
         });
 
-        window.addEventListener('afterprint', function() {
+        window.addEventListener('afterprint', function () {
             document.title = 'Detail COVID-19 Form';
         });
     </script>

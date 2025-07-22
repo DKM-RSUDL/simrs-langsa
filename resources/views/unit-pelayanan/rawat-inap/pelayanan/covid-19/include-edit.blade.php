@@ -1,93 +1,206 @@
 @push('css')
     <style>
-        .main-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            margin: 20px auto;
-            max-width: 900px;
+        .covid-form {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             overflow: hidden;
         }
 
-        .header {
+        .form-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 30px;
+            padding: 20px;
             text-align: center;
+            border-bottom: 4px solid #5a67d8;
         }
 
-        .header h2 {
+        .form-header h4 {
             margin: 0;
             font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .hospital-info {
-            font-size: 14px;
-            margin-top: 10px;
-            opacity: 0.9;
+        .form-section {
+            margin-bottom: 30px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
-        .form-content {
-            padding: 40px;
+        .section-header {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 15px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 600;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .section-card {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 25px;
-            border-left: 5px solid #667eea;
+        .section-content {
+            padding: 20px;
+        }
+
+        .symptom-item, .risk-item, .comorbid-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 10px;
             transition: all 0.3s ease;
         }
 
-        .section-card:hover {
+        .symptom-item:hover, .risk-item:hover, .comorbid-item:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+            transform: translateY(-1px);
+        }
+
+        .form-check-input:checked {
+            background-color: #48bb78;
+            border-color: #48bb78;
+        }
+
+        .form-check-input:checked + .form-check-label {
+            color: #2d3748;
+            font-weight: 500;
+        }
+
+        .date-input {
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 10px 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .date-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .assessment-section {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .assessment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .assessment-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .assessment-card:hover {
+            border-color: #cbd5e0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .assessment-card.selected {
+            border-color: #48bb78;
+            background: #f0fff4;
+        }
+
+        .assessment-title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .assessment-desc {
+            font-size: 0.9em;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary-custom {
+            background: #e2e8f0;
+            color: #4a5568;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary-custom:hover {
+            background: #cbd5e0;
+            color: #2d3748;
+        }
+
+        .alert-info-custom {
+            background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%);
+            border: 1px solid #81e6d9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .icon-symptom { color: #e53e3e; }
+        .icon-risk { color: #d69e2e; }
+        .icon-comorbid { color: #3182ce; }
+        .icon-assessment { color: #805ad5; }
+
+        .section-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
         }
 
         .section-title {
-            color: #667eea;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 15px 20px;
+            border-bottom: 1px solid #e2e8f0;
             font-weight: 600;
-            margin-bottom: 20px;
+            color: #2d3748;
             display: flex;
             align-items: center;
-            font-size: 18px;
-        }
-
-        .section-title i {
-            margin-right: 10px;
-            width: 20px;
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 8px;
-        }
-
-        .form-control,
-        .form-select {
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            padding: 12px 15px;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-
-        .form-control:focus,
-        .form-select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            gap: 10px;
         }
 
         .radio-group {
             display: flex;
-            gap: 15px;
-            margin-top: 10px;
+            gap: 20px;
+            justify-content: center;
+            padding: 20px;
+            flex-wrap: wrap;
         }
 
         .radio-item {
-            flex: 1;
             position: relative;
         }
 
@@ -97,492 +210,230 @@
 
         .radio-label {
             display: block;
-            padding: 15px 20px;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 25px 35px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: white;
             font-weight: 500;
+            color: #4a5568;
+            min-width: 150px;
+        }
+
+        .radio-label i {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            color: #667eea;
         }
 
         .radio-label:hover {
-            border-color: #667eea;
-            background: #f0f2ff;
+            background: #edf2f7;
+            border-color: #cbd5e0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        .radio-item input[type="radio"]:checked+.radio-label {
+        .radio-item input[type="radio"]:checked + .radio-label {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             border-color: #667eea;
-            background: #667eea;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .radio-item input[type="radio"]:checked + .radio-label i {
             color: white;
         }
 
         .hidden-section {
             display: none;
-            animation: fadeIn 0.5s ease-in;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .section-card .row {
+            padding: 0 20px;
         }
 
-        .consent-section {
-            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-            border: 2px solid #ffc107;
-            border-radius: 15px;
-            padding: 25px;
-            margin: 25px 0;
+        .section-card .row:last-child {
+            padding-bottom: 20px;
         }
 
-        .consent-title {
-            color: #856404;
-            font-weight: 600;
-            font-size: 18px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .info-box {
-            background: #e3f2fd;
-            border: 1px solid #90caf9;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-
-        .info-title {
-            color: #0d47a1;
-            font-weight: 600;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-        }
-
-        .info-title i {
-            margin-right: 8px;
-        }
-
-        .info-list {
-            margin: 0;
-            padding-left: 20px;
-        }
-
-        .info-list li {
-            margin-bottom: 8px;
-            color: #1976d2;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            padding: 12px 30px;
-            border-radius: 10px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 10px;
-            font-weight: 600;
-        }
-
-        .required {
-            color: #dc3545;
-        }
-
-        .declarant-info {
-            background: #f0f8ff;
-            border: 2px solid #b3d9ff;
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .declarant-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: #0066cc;
-            margin-top: 10px;
-            min-height: 20px;
-        }
-
-        .form-control.is-invalid,
-        .form-select.is-invalid {
-            border-color: #dc3545;
-            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-        }
-
-        .edit-badge {
-            background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);
+        .edit-header {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
             color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-left: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .form-content {
-                padding: 20px;
-            }
-
-            .radio-group {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .main-container {
-                margin: 10px;
-                border-radius: 15px;
-            }
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 20px;
         }
     </style>
 @endpush
 
 @push('js')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // DEBUGGING: Cek semua element penting
-            const dokterSelect = document.getElementById('dokter');
-            const dokterName = document.getElementById('dokter-name');
-
-            // Handle persetujuan untuk selection
-            const persetujuanRadios = document.querySelectorAll('input[name="persetujuan_untuk"]');
-            const keluargaSection = document.getElementById('keluarga-section');
-            const declarantName = document.getElementById('declarant-name');
-            const yangMenyatakan = document.getElementById('yang_menyatakan');
-            const namaKeluarga = document.getElementById('nama_keluarga');
-
-            // Initialize declarant name dengan data existing atau nama pasien
-            const currentDeclarant = '{{ old("yang_menyatakan", $persetujuan->yang_menyatakan) }}';
-            const pasienName = '{{ $dataMedis->pasien->nama ?? "" }}';
-
-            if (declarantName) {
-                declarantName.textContent = currentDeclarant || pasienName || 'Akan terisi otomatis';
-            }
-            if (yangMenyatakan) {
-                yangMenyatakan.value = currentDeclarant || pasienName || '';
-            }
-
-            persetujuanRadios.forEach(radio => {
-                radio.addEventListener('change', function () {
-                    if (this.value === 'keluarga') {
-                        if (keluargaSection) {
-                            keluargaSection.style.display = 'block';
-                            keluargaSection.classList.remove('hidden-section');
-
-                            // Make family fields required when keluarga is selected
-                            const familyInputs = keluargaSection.querySelectorAll('input[name="nama_keluarga"], input[name="tgl_lahir_keluarga"], textarea[name="alamat_keluarga"], select[name="jk_keluarga"], input[name="no_telp_keluarga"], input[name="no_ktp_keluarga"], input[name="hubungan_keluarga"]');
-                            familyInputs.forEach(input => {
-                                if (input.name !== 'tgl_lahir_keluarga' && input.name !== 'alamat_keluarga' && input.name !== 'jk_keluarga' && input.name !== 'no_telp_keluarga' && input.name !== 'no_ktp_keluarga') {
-                                    input.setAttribute('required', 'required');
-                                }
-                            });
-                        }
-
-                        // Auto-fill declarant name from family name
-                        if (namaKeluarga) {
-                            const currentFamilyName = namaKeluarga.value;
-                            if (currentFamilyName) {
-                                if (declarantName) declarantName.textContent = currentFamilyName;
-                                if (yangMenyatakan) yangMenyatakan.value = currentFamilyName;
-                            } else {
-                                if (declarantName) declarantName.textContent = 'Akan terisi dari nama keluarga yang diisi';
-                            }
-
-                            namaKeluarga.addEventListener('input', function () {
-                                const namaValue = this.value || 'Akan terisi dari nama keluarga yang diisi';
-                                if (declarantName) declarantName.textContent = namaValue;
-                                if (yangMenyatakan) yangMenyatakan.value = this.value;
-                            });
-                        }
-
-                    } else if (this.value === 'diri_sendiri') {
-                        if (keluargaSection) {
-                            keluargaSection.style.display = 'none';
-                            keluargaSection.classList.add('hidden-section');
-
-                            // Remove required attribute from family fields
-                            const familyInputs = keluargaSection.querySelectorAll('input, select, textarea');
-                            familyInputs.forEach(input => {
-                                input.removeAttribute('required');
-                            });
-                        }
-
-                        const pasienName = '{{ $dataMedis->pasien->nama ?? "Nama Pasien" }}';
-                        if (declarantName) declarantName.textContent = pasienName;
-                        if (yangMenyatakan) yangMenyatakan.value = pasienName;
-                    }
-                });
+        $(document).ready(function() {
+            // Show/hide keluarga section based on persetujuan_untuk selection
+            $('input[name="persetujuan_untuk"]').change(function() {
+                if ($(this).val() === 'keluarga') {
+                    $('#keluarga-section').slideDown();
+                } else {
+                    $('#keluarga-section').slideUp();
+                }
             });
 
-            function updateDokterName() {
-                if (!dokterSelect || !dokterName) {
+            // Show/hide location input when travel history is checked
+            $('#perjalanan').change(function() {
+                if (this.checked) {
+                    $('#lokasi_perjalanan').slideDown();
+                } else {
+                    $('#lokasi_perjalanan').slideUp();
+                    $('input[name="lokasi_perjalanan"]').val('');
+                }
+            });
+
+            // Assessment card selection (manual click)
+            $('.assessment-card').click(function() {
+                $('.assessment-card').removeClass('selected');
+                $(this).addClass('selected');
+                $(this).find('.assessment-radio').prop('checked', true);
+
+                // Update kesimpulan based on manual selection
+                updateConclusionBasedOnAssessment($(this).data('value'));
+            });
+
+            // Mark currently selected assessment card on page load
+            var currentAssessment = $('input[name="cara_penilaian"]:checked').val();
+            if (currentAssessment) {
+                $('.assessment-card[data-value="' + currentAssessment + '"]').addClass('selected');
+            }
+
+            // Function to update cara penilaian automatically
+            function updateCaraPenilaian() {
+                let demam = $('#demam').is(':checked');
+                let ispa = $('#ispa').is(':checked');
+                let ispaBerat = $('#ispa_berat').is(':checked');
+                let kontakErat = $('#kontak_erat').is(':checked');
+                let perjalanan = $('#perjalanan').is(':checked');
+
+                let recommendedAssessment = '';
+
+                // Logic for automatic assessment
+                if (!demam && !ispa && !ispaBerat && kontakErat) {
+                    recommendedAssessment = 'kontak_erat';
+                } else if ((demam || ispa) && (kontakErat || perjalanan)) {
+                    recommendedAssessment = 'suspek';
+                } else if (ispaBerat) {
+                    recommendedAssessment = 'suspek';
+                } else {
+                    recommendedAssessment = 'non_suspek';
+                }
+
+                // Update assessment card selection
+                $('.assessment-card').removeClass('selected');
+                $('.assessment-card[data-value="' + recommendedAssessment + '"]').addClass('selected');
+                $('.assessment-card[data-value="' + recommendedAssessment + '"] .assessment-radio').prop('checked', true);
+
+                return recommendedAssessment;
+            }
+
+            // Function to update conclusion based on assessment
+            function updateConclusionBasedOnAssessment(assessment) {
+                let title = $('#conclusion-title');
+                let desc = $('#conclusion-desc');
+                let kesimpulanInput = $('#kesimpulan');
+
+                switch(assessment) {
+                    case 'kontak_erat':
+                        title.html('<i class="fas fa-user-friends text-warning"></i> KONTAK ERAT');
+                        desc.text('Tanpa gejala + Faktor risiko utama no. 2 (Kasus konfirmasi/Probable*)');
+                        kesimpulanInput.val('kontak_erat');
+                        break;
+                    case 'suspek':
+                        title.html('<i class="fas fa-exclamation-triangle text-danger"></i> SUSPEK');
+                        desc.html('• Gejala No.1 atau No.2 + Faktor risiko utama No.1 atau No.2<br>• Gejala No.4 DAN tidak ada penyebab lain berdasarkan gambaran klinis yang meyakinkan');
+                        kesimpulanInput.val('suspek');
+                        break;
+                    case 'non_suspek':
+                        title.html('<i class="fas fa-check-circle text-success"></i> NON SUSPEK');
+                        desc.text('Tidak memenuhi kriteria kontak erat atau kasus suspek');
+                        kesimpulanInput.val('non_suspek');
+                        break;
+                    default:
+                        title.html('<i class="fas fa-spinner fa-spin"></i> Menghitung...');
+                        desc.text('Silakan isi gejala dan faktor risiko untuk melihat kesimpulan.');
+                        kesimpulanInput.val('');
+                }
+            }
+
+            // Function to update both assessment and conclusion
+            function updateAssessmentAndConclusion() {
+                // Get recommended assessment based on symptoms and risk factors
+                let recommendedAssessment = updateCaraPenilaian();
+
+                // Update conclusion based on the recommended assessment
+                updateConclusionBasedOnAssessment(recommendedAssessment);
+            }
+
+            // Trigger updates when checkboxes change
+            $('input[type="checkbox"]').change(function() {
+                updateAssessmentAndConclusion();
+            });
+
+            // Form validation
+            $('#covid_form').submit(function(e) {
+                let hasSymptoms = false;
+                $('input[name^="gejala"]').each(function() {
+                    if ($(this).is(':checked')) {
+                        hasSymptoms = true;
+                        return false;
+                    }
+                });
+
+                let hasPersetujuanUntuk = $('input[name="persetujuan_untuk"]:checked').length > 0;
+                let hasCaraPenilaian = $('input[name="cara_penilaian"]:checked').length > 0;
+
+                if (!hasPersetujuanUntuk) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'Persetujuan Untuk Siapa?',
+                        text: 'Mohon pilih persetujuan untuk diri sendiri atau keluarga/wali.',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
                     return false;
                 }
 
-                const selectedValue = dokterSelect.value;
-
-                if (selectedValue && selectedValue !== '') {
-                    // Method 1: Menggunakan selectedIndex
-                    const selectedOption = dokterSelect.options[dokterSelect.selectedIndex];
-                    if (selectedOption) {
-                        const namaDokter = selectedOption.textContent.trim();
-
-                        dokterName.textContent = namaDokter;
-                        dokterName.innerHTML = namaDokter;
-                        dokterName.innerText = namaDokter;
-
-                        dokterName.style.color = '#0066cc';
-                        dokterName.style.fontWeight = '600';
-
-                        return true;
-                    }
-
-                    // Method 2: Menggunakan querySelector (backup)
-                    const option = dokterSelect.querySelector(`option[value="${selectedValue}"]`);
-                    if (option) {
-                        const namaDokter = option.textContent.trim();
-                        dokterName.textContent = namaDokter;
-                        dokterName.style.color = '#0066cc';
-                        dokterName.style.fontWeight = '600';
-                        return true;
-                    }
-                }
-
-                // Default jika tidak ada yang dipilih
-                dokterName.textContent = 'Pilih dokter di atas';
-                dokterName.style.color = '#999';
-                dokterName.style.fontWeight = 'normal';
-                return false;
-            }
-
-            function forceDOMRefresh(element) {
-                if (!element) return;
-
-                // Method 1: Hide and show
-                const originalDisplay = element.style.display;
-                element.style.display = 'none';
-                element.offsetHeight;
-                element.style.display = originalDisplay || 'block';
-            }
-
-            // Event listener untuk perubahan dokter
-            if (dokterSelect) {
-                dokterSelect.addEventListener('change', function () {
-                    const success = updateDokterName();
-                    if (success) {
-                        setTimeout(() => forceDOMRefresh(dokterName), 50);
-                    }
-                });
-
-                if (typeof $ !== 'undefined' && $.fn.select2) {
-
-                    // Primary Select2 select event
-                    $('#dokter').on('select2:select', function (e) {
-                        const data = e.params.data;
-
-                        // Direct update dari Select2 data
-                        if (data && data.text && dokterName) {
-                            const cleanText = data.text.trim();
-
-                            dokterName.textContent = cleanText;
-                            $(dokterName).text(cleanText);
-                            dokterName.innerHTML = cleanText;
-
-                            // Style update
-                            dokterName.style.color = '#0066cc';
-                            dokterName.style.fontWeight = '600';
-
-                            // Force jQuery update
-                            $(dokterName).trigger('change');
-                        }
-
-                        // Backup: Use standard method
-                        setTimeout(() => {
-                            updateDokterName();
-                            forceDOMRefresh(dokterName);
-                        }, 100);
+                if (!hasCaraPenilaian) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'Cara Penilaian Belum Dipilih!',
+                        text: 'Mohon pilih cara penilaian terlebih dahulu.',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
                     });
-
-                    // Select2 clear event
-                    $('#dokter').on('select2:clear', function (e) {
-                        if (dokterName) {
-                            dokterName.textContent = 'Pilih dokter di atas';
-                            dokterName.style.color = '#999';
-                            dokterName.style.fontWeight = 'normal';
-                        }
-                    });
-
-                    // Additional Select2 events for robustness
-                    $('#dokter').on('select2:close', function (e) {
-                        setTimeout(updateDokterName, 150);
-                    });
-
-                    $('#dokter').on('change.select2', function (e) {
-                        setTimeout(updateDokterName, 100);
-                    });
+                    return false;
                 }
 
-                let lastDokterValue = '';
-                setInterval(() => {
-                    if (dokterSelect.value !== lastDokterValue) {
-                        lastDokterValue = dokterSelect.value;
-                        updateDokterName();
-                    }
-                }, 1000);
-            }
+                // Validate keluarga section if selected
+                if ($('input[name="persetujuan_untuk"]:checked').val() === 'keluarga') {
+                    let namaKeluarga = $('#nama_keluarga').val().trim();
+                    let hubunganKeluarga = $('#hubungan_keluarga').val().trim();
 
-            // Handle saksi names
-            const namaSaksi1 = document.getElementById('nama_saksi1');
-            const namaSaksi2 = document.getElementById('nama_saksi2');
-            const saksi1Name = document.getElementById('saksi1-name');
-            const saksi2Name = document.getElementById('saksi2-name');
-
-            if (namaSaksi1 && saksi1Name) {
-                namaSaksi1.addEventListener('input', function () {
-                    const nama = this.value || 'Masukkan nama saksi 1';
-                    saksi1Name.textContent = nama;
-                    if (this.value) {
-                        saksi1Name.style.color = '#0066cc';
-                        saksi1Name.style.fontWeight = '600';
-                    } else {
-                        saksi1Name.style.color = '#999';
-                        saksi1Name.style.fontWeight = 'normal';
-                    }
-                });
-            }
-
-            if (namaSaksi2 && saksi2Name) {
-                namaSaksi2.addEventListener('input', function () {
-                    const nama = this.value || 'Masukkan nama saksi 2';
-                    saksi2Name.textContent = nama;
-                    if (this.value) {
-                        saksi2Name.style.color = '#0066cc';
-                        saksi2Name.style.fontWeight = '600';
-                    } else {
-                        saksi2Name.style.color = '#999';
-                        saksi2Name.style.fontWeight = 'normal';
-                    }
-                });
-            }
-
-            // Phone number formatting
-            const phoneInputs = document.querySelectorAll('input[type="tel"]');
-            phoneInputs.forEach(input => {
-                input.addEventListener('input', function () {
-                    let value = this.value.replace(/\D/g, '');
-                    if (value.length > 0 && !value.startsWith('0')) {
-                        value = '0' + value;
-                    }
-                    this.value = value;
-                });
-            });
-
-            // KTP number formatting - Updated for text input
-            const ktpInputs = document.querySelectorAll('input[name*="no_ktp"]');
-            ktpInputs.forEach(input => {
-                input.addEventListener('input', function () {
-                    let value = this.value.replace(/\D/g, '');
-                    if (value.length > 16) {
-                        value = value.substring(0, 16);
-                    }
-                    this.value = value;
-                });
-            });
-
-            setTimeout(function () {
-                // Initialize dokter jika ada old value atau existing value
-                if (dokterSelect && dokterSelect.value) {
-                    updateDokterName();
-                }
-
-                // Initialize saksi names jika ada old value atau existing value
-                if (namaSaksi1 && namaSaksi1.value && saksi1Name) {
-                    saksi1Name.textContent = namaSaksi1.value;
-                    saksi1Name.style.color = '#0066cc';
-                    saksi1Name.style.fontWeight = '600';
-                }
-
-                if (namaSaksi2 && namaSaksi2.value && saksi2Name) {
-                    saksi2Name.textContent = namaSaksi2.value;
-                    saksi2Name.style.color = '#0066cc';
-                    saksi2Name.style.fontWeight = '600';
-                }
-
-                // Initialize persetujuan untuk based on existing data
-                const checkedPersetujuan = document.querySelector('input[name="persetujuan_untuk"]:checked');
-                if (checkedPersetujuan) {
-                    checkedPersetujuan.dispatchEvent(new Event('change'));
-                }
-
-            }, 800);
-
-            // Form submission validation
-            const transfusiForm = document.getElementById('transfusi_form');
-            if (transfusiForm) {
-                transfusiForm.addEventListener('submit', function (e) {
-                    const requiredFields = this.querySelectorAll('input[required], select[required], textarea[required]');
-                    let isValid = true;
-                    let firstInvalidField = null;
-
-                    requiredFields.forEach(field => {
-                        if (!field.value.trim()) {
-                            isValid = false;
-                            field.classList.add('is-invalid');
-                            if (!firstInvalidField) {
-                                firstInvalidField = field;
-                            }
-                        } else {
-                            field.classList.remove('is-invalid');
-                        }
-                    });
-
-                    if (!isValid) {
+                    if (!namaKeluarga || !hubunganKeluarga) {
                         e.preventDefault();
-                        if (firstInvalidField) {
-                            firstInvalidField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            firstInvalidField.focus();
-                        }
-                        alert('Mohon lengkapi semua field yang wajib diisi');
+                        Swal.fire({
+                            title: 'Data Keluarga/Wali Tidak Lengkap!',
+                            text: 'Mohon lengkapi minimal nama dan hubungan keluarga/wali.',
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
+                        });
                         return false;
                     }
+                }
+            });
 
-                    // Show loading state
-                    const submitBtn = this.querySelector('button[type="submit"]');
-                    if (submitBtn) {
-                        submitBtn.disabled = true;
-                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
-                    }
-
-                    return true;
-                });
-            }
-
-            // Auto dismiss alerts after 5 seconds
-            setTimeout(function() {
-                $('.alert').fadeOut('slow');
-            }, 5000);
-
+            // Initialize on page load
+            updateAssessmentAndConclusion();
         });
     </script>
 @endpush

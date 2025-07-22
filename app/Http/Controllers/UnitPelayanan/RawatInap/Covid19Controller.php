@@ -82,9 +82,6 @@ class Covid19Controller extends Controller
                     ->orWhere('faktor_risiko', 'LIKE', "%{$search}%")
                     ->orWhere('komorbid', 'LIKE', "%{$search}%")
                     ->orWhere('kesimpulan', 'LIKE', "%{$search}%")
-                    ->orWhereHas('dokter', function ($dokterQuery) use ($search) {
-                        $dokterQuery->where('nama_lengkap', 'LIKE', "%{$search}%");
-                    })
                     ->orWhereHas('userCreate', function ($userQuery) use ($search) {
                         $userQuery->where('name', 'LIKE', "%{$search}%");
                     });
@@ -133,6 +130,7 @@ class Covid19Controller extends Controller
             'persetujuan_untuk' => 'required|in:diri_sendiri,keluarga',
             'cara_penilaian' => 'nullable|string|max:255',
             'kesimpulan' => 'required|string|max:255',
+            'persetujuan' => 'required|string|max:255',
 
             // Data keluarga (required jika persetujuan_untuk = keluarga)
             'nama_keluarga' => 'nullable:persetujuan_untuk,keluarga|string|max:255',
@@ -190,6 +188,7 @@ class Covid19Controller extends Controller
 
                 'cara_penilaian' => $request->cara_penilaian,
                 'kesimpulan' => $request->kesimpulan,
+                'persetujuan' => $request->persetujuan,
             ];
 
             RmeCovid19::create($data);
@@ -283,6 +282,7 @@ class Covid19Controller extends Controller
             'persetujuan_untuk' => 'required|in:diri_sendiri,keluarga',
             'cara_penilaian' => 'nullable|string|max:255',
             'kesimpulan' => 'required|string|max:255',
+            'persetujuan' => 'required|string|max:255',
 
             // Data keluarga (required jika persetujuan_untuk = keluarga)
             'nama_keluarga' => 'nullable:persetujuan_untuk,keluarga|string|max:255',
@@ -334,6 +334,7 @@ class Covid19Controller extends Controller
 
                 'cara_penilaian' => $request->cara_penilaian,
                 'kesimpulan' => $request->kesimpulan,
+                'persetujuan' => $request->persetujuan,
             ];
 
             $covidData->update($updateData);
