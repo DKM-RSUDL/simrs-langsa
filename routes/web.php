@@ -189,6 +189,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\ResikoDecubitusController as R
 use App\Http\Controllers\UnitPelayanan\RawatJalan\StatusFungsionalController as RawatJalanStatusFungsionalController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\StatusNyeri\SkalaNumerikController as StatusNyeriSkalaNumerikController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\PersetujuanTransfusiDarahController as RawatJalanPersetujuanTransfusiDarahController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\Covid19Controller as RawatJalanCovid19Controller;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
@@ -991,6 +992,23 @@ Route::middleware('ssoToken')->group(function () {
                             Route::prefix('persetujuan-transfusi-darah')->group(function () {
                                 Route::name('.persetujuan-transfusi-darah')->group(function () {
                                     Route::controller(RawatJalanPersetujuanTransfusiDarahController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
+                            // Covid 19
+                            Route::prefix('covid-19')->group(function () {
+                                Route::name('.covid-19')->group(function () {
+                                    Route::controller(RawatJalanCovid19Controller::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/create', 'create')->name('.create');

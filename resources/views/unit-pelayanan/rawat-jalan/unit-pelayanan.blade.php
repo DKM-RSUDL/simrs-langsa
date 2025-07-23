@@ -283,6 +283,7 @@
                                                     <ul class="dropdown-menu shadow-lg">
                                                         <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/anestesi-sedasi' }">Anestesi dan Sedasi</a></li>
                                                         <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/persetujuan-transfusi-darah' }">Persetujuan Transfusi Darah</a></li>
+                                                        <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/covid-19' }">Covid 19</a></li>
                                                     </ul>
                                                 </li>
                                                 <li><a class="dropdown-item m-1" href="#">Edukasi dan Informasi</a></li>
