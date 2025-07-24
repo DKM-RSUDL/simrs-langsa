@@ -70,41 +70,76 @@
     </div>
 </div>
 
+
 @push('js')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            console.log('DOM loaded, initializing scripts...');
+            console.log('Mitra management script loaded...');
 
-            // ===== BAGIAN 2: Mitra Table Management =====
+            // ===== INISIALISASI DATA MITRA =====
             let mitraData = [];
             let editIndex = -1;
 
-            // Function to save data to JSON format (in memory)
+            // Load existing data jika ada (untuk edit form)
+            function initializeMitraData() {
+                // Ambil data dari server jika edit mode
+                const existingDataElement = document.getElementById('existing-mitra-data');
+                if (existingDataElement && existingDataElement.value) {
+                    try {
+                        mitraData = JSON.parse(existingDataElement.value);
+                        console.log('Loaded existing mitra data:', mitraData);
+                    } catch (e) {
+                        console.error('Error parsing existing mitra data:', e);
+                        mitraData = [];
+                    }
+                }
+                renderTable();
+            }
+
+            // ===== MODIFIKASI: UPDATE HIDDEN INPUT =====
             function saveToJSON() {
                 const jsonData = JSON.stringify(mitraData, null, 2);
                 console.log('Data tersimpan ke JSON:', jsonData);
+
+                // **PENTING: Update hidden input untuk dikirim ke server**
+                const hiddenInput = document.getElementById('dataKeluargaInput') ||
+                    document.querySelector('input[name="data_keluarga"]');
+                if (hiddenInput) {
+                    hiddenInput.value = jsonData;
+                    console.log('Hidden input updated with JSON data');
+                } else {
+                    console.warn('Hidden input for data_keluarga not found!');
+                }
+
+                // Global variables untuk debugging
                 window.mitraDataJSON = jsonData;
                 window.mitraDataArray = mitraData;
             }
 
-            // Function to show toast notification
+            // Function to show toast notification (gunakan SweetAlert atau alert biasa)
             function showToast(message, type = 'success') {
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    icon: type,
-                    title: message,
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer)
-                        toast.addEventListener('mouseleave', Swal.resumeTimer)
-                    }
-                });
+                // Jika ada SweetAlert
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: type,
+                        title: message,
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    });
+                } else {
+                    // Fallback ke alert biasa
+                    alert(message);
+                }
             }
 
-            // Function to escape HTML
+            // Function to escape HTML (untuk security)
             function escapeHtml(text) {
                 if (!text) return '';
                 const div = document.createElement('div');
@@ -112,12 +147,12 @@
                 return div.innerHTML;
             }
 
-            // Badge class functions
+            // Badge class functions (untuk styling status)
             function getHivBadgeClass(status) {
                 switch (status) {
                     case 'Positif': return 'bg-danger';
                     case 'Negatif': return 'bg-success';
-                    case 'Tidak Diketahui': return 'bg-warning';
+                    case 'Tidak Diketahui': return 'bg-warning text-dark';
                     case 'Belum Tes': return 'bg-secondary';
                     default: return 'bg-light text-dark';
                 }
@@ -132,7 +167,7 @@
                 }
             }
 
-            // Function to render table
+            // ===== RENDER TABLE =====
             function renderTable() {
                 console.log('Rendering table with data:', mitraData);
                 const tbody = document.querySelector('#mitraTable tbody');
@@ -158,37 +193,37 @@
                         const row = document.createElement('tr');
                         row.style.animation = 'fadeIn 0.3s ease-in';
                         row.innerHTML = `
-                                <td>${escapeHtml(item.nama)}</td>
-                                <td>${escapeHtml(item.hubungan)}</td>
-                                <td>${item.umur}</td>
-                                <td>
-                                    <span class="badge ${getHivBadgeClass(item.status_hiv)}">
-                                        ${item.status_hiv || '-'}
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="badge ${getArtBadgeClass(item.status_art)}">
-                                        ${item.status_art || '-'}
-                                    </span>
-                                </td>
-                                <td>${escapeHtml(item.no_reg_nas) || '-'}</td>
-                                <td>
-                                    <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-sm btn-outline-warning edit-btn"
-                                                data-index="${index}" title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-sm btn-outline-danger delete-btn"
-                                                data-index="${index}" title="Hapus">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            `;
+                        <td>${escapeHtml(item.nama)}</td>
+                        <td>${escapeHtml(item.hubungan)}</td>
+                        <td>${item.umur}</td>
+                        <td>
+                            <span class="badge ${getHivBadgeClass(item.status_hiv)}">
+                                ${item.status_hiv || '-'}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge ${getArtBadgeClass(item.status_art)}">
+                                ${item.status_art || '-'}
+                            </span>
+                        </td>
+                        <td>${escapeHtml(item.no_reg_nas) || '-'}</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-sm btn-outline-warning edit-btn"
+                                        data-index="${index}" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-danger delete-btn"
+                                        data-index="${index}" title="Hapus">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
                         tbody.appendChild(row);
                     });
 
-                    // Add event listeners to buttons after they're created
+                    // Add event listeners to buttons
                     tbody.querySelectorAll('.edit-btn').forEach(btn => {
                         btn.addEventListener('click', function (e) {
                             e.preventDefault();
@@ -208,10 +243,11 @@
                     });
                 }
 
+                // **PENTING: Selalu update hidden input setelah render**
                 saveToJSON();
             }
 
-            // Function to reset form
+            // ===== FORM FUNCTIONS =====
             function resetForm() {
                 const form = document.getElementById('mitraForm');
                 if (form) {
@@ -220,7 +256,10 @@
                 }
                 editIndex = -1;
                 document.getElementById('tambahMitraModalLabel').innerText = 'Tambah Data Keluarga / Mitra';
-                document.getElementById('simpanMitra').innerHTML = '<i class="fas fa-save"></i> Simpan';
+                const saveBtn = document.getElementById('simpanMitra');
+                if (saveBtn) {
+                    saveBtn.innerHTML = '<i class="fas fa-save"></i> Simpan';
+                }
             }
 
             // Edit function
@@ -234,6 +273,7 @@
                 editIndex = index;
                 const item = mitraData[index];
 
+                // Populate form fields
                 document.getElementById('nama').value = item.nama || '';
                 document.getElementById('hubungan').value = item.hubungan || '';
                 document.getElementById('umur').value = item.umur || '';
@@ -241,14 +281,16 @@
                 document.getElementById('status_art').value = item.status_art || '';
                 document.getElementById('no_reg_nas').value = item.no_reg_nas || '';
 
+                // Update modal title and button
                 document.getElementById('tambahMitraModalLabel').innerText = 'Edit Data Keluarga / Mitra';
                 document.getElementById('simpanMitra').innerHTML = '<i class="fas fa-save"></i> Update';
 
+                // Show modal
                 const modal = new bootstrap.Modal(document.getElementById('tambahMitraModal'));
                 modal.show();
             }
 
-            // Delete function with SweetAlert
+            // Delete function
             function deleteMitra(index) {
                 console.log('Delete mitra called for index:', index);
                 if (index < 0 || index >= mitraData.length) {
@@ -258,35 +300,46 @@
 
                 const item = mitraData[index];
 
-                Swal.fire({
-                    title: 'Konfirmasi Hapus',
-                    text: `Apakah Anda yakin ingin menghapus data "${item.nama}"?`,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Ya, Hapus!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        console.log('Deleting item at index:', index);
-                        console.log('Data before delete:', mitraData);
-
-                        // Remove item from array
-                        mitraData.splice(index, 1);
-
-                        console.log('Data after delete:', mitraData);
-
-                        // Re-render table
-                        renderTable();
-
-                        // Show success message
-                        showToast(`Data "${item.nama}" berhasil dihapus!`, 'success');
+                // Confirm deletion
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Konfirmasi Hapus',
+                        text: `Apakah Anda yakin ingin menghapus data "${item.nama}"?`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Ya, Hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            performDelete(index, item);
+                        }
+                    });
+                } else {
+                    // Fallback ke confirm biasa
+                    if (confirm(`Apakah Anda yakin ingin menghapus data "${item.nama}"?`)) {
+                        performDelete(index, item);
                     }
-                });
+                }
             }
 
-            // Modal event handlers
+            function performDelete(index, item) {
+                console.log('Deleting item at index:', index);
+
+                // Remove from array
+                mitraData.splice(index, 1);
+
+                // Re-render table
+                renderTable();
+
+                // Show success message
+                showToast(`Data "${item.nama}" berhasil dihapus!`, 'success');
+            }
+
+            // ===== EVENT LISTENERS =====
+
+            // Modal close event
             const tambahMitraModal = document.getElementById('tambahMitraModal');
             if (tambahMitraModal) {
                 tambahMitraModal.addEventListener('hidden.bs.modal', function () {
@@ -294,7 +347,7 @@
                 });
             }
 
-            // Form submission handler
+            // Form submission
             const simpanMitraBtn = document.getElementById('simpanMitra');
             if (simpanMitraBtn) {
                 simpanMitraBtn.addEventListener('click', function (e) {
@@ -303,6 +356,16 @@
 
                     const form = document.getElementById('mitraForm');
                     form.classList.add('was-validated');
+
+                    // Validate required fields
+                    const nama = document.getElementById('nama').value.trim();
+                    const hubungan = document.getElementById('hubungan').value;
+                    const umur = document.getElementById('umur').value;
+
+                    if (!nama || !hubungan || !umur) {
+                        showToast('Mohon lengkapi field Nama, Hubungan, dan Umur!', 'error');
+                        return;
+                    }
 
                     if (form.checkValidity()) {
                         const formData = new FormData(form);
@@ -328,6 +391,7 @@
 
                         renderTable();
 
+                        // Close modal
                         const modal = bootstrap.Modal.getInstance(document.getElementById('tambahMitraModal'));
                         if (modal) {
                             modal.hide();
@@ -338,7 +402,7 @@
                 });
             }
 
-            // Prevent form submission on Enter key
+            // Prevent form submission on Enter
             const mitraForm = document.getElementById('mitraForm');
             if (mitraForm) {
                 mitraForm.addEventListener('submit', function (e) {
@@ -348,36 +412,10 @@
                 });
             }
 
-            // // Add some demo data for testing
-            // mitraData = [
-            //     {
-            //         id: 1,
-            //         nama: 'John Doe',
-            //         hubungan: 'Suami',
-            //         umur: 35,
-            //         status_hiv: 'Negatif',
-            //         status_art: 'Tidak Berlaku',
-            //         no_reg_nas: '123456',
-            //         created_at: new Date().toISOString(),
-            //         updated_at: new Date().toISOString()
-            //     },
-            //     {
-            //         id: 2,
-            //         nama: 'Jane Smith',
-            //         hubungan: 'Istri',
-            //         umur: 32,
-            //         status_hiv: 'Positif',
-            //         status_art: 'Ya',
-            //         no_reg_nas: '789012',
-            //         created_at: new Date().toISOString(),
-            //         updated_at: new Date().toISOString()
-            //     }
-            // ];
+            // ===== INITIALIZATION =====
+            initializeMitraData();
 
-            // Initialize table
-            renderTable();
-
-            console.log('All scripts initialized successfully');
+            console.log('Mitra management script initialized successfully');
         });
     </script>
 @endpush
