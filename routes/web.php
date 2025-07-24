@@ -65,7 +65,10 @@ use App\Http\Controllers\UnitPelayanan\Hemodialisa\HDEdukasiController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\HDTindakanKhususController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\HDHasilEKGController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\HDHasilLabController as HemodialisaHDHasilLabController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\PersetujuanAksesFemoralisController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\PersetujuanImplementasiEvaluasiKeperawatanController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\PersetujuanTindakanHDController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\PersetujuanTindakanMedisController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\TravelingDialysisController;
 use App\Http\Controllers\UnitPelayanan\HemodialisaController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
@@ -3092,7 +3095,54 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
 
-                                //Persetujuan Tindakan Lainnya
+                                //Persetujuan Akses Femoralis
+                                Route::prefix('akses-femoralis')->group(function () {
+                                    Route::name('.akses-femoralis')->group(function () {
+                                        Route::controller(PersetujuanAksesFemoralisController::class)->group(function () {
+                                            Route::get('/', 'index')->name('.index');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::get('/create', 'create')->name('.create');
+                                            Route::get('/{data}', 'show')->name('.show');
+                                            Route::get('/{data}/edit', 'edit')->name('.edit');
+                                            Route::put('/{data}', 'update')->name('.update');
+                                            Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                            Route::delete('/{data}', 'destroy')->name('.destroy');
+                                        });
+                                    });
+                                });
+
+                                //Persetujuan Tindakan Medis
+                                Route::prefix('tindakan-medis')->group(function () {
+                                    Route::name('.tindakan-medis')->group(function () {
+                                        Route::controller(PersetujuanTindakanMedisController::class)->group(function () {
+                                            Route::get('/', 'index')->name('.index');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::get('/create', 'create')->name('.create');
+                                            Route::get('/{data}', 'show')->name('.show');
+                                            Route::get('/{data}/edit', 'edit')->name('.edit');
+                                            Route::put('/{data}', 'update')->name('.update');
+                                            Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                            Route::delete('/{data}', 'destroy')->name('.destroy');
+                                        });
+                                    });
+                                });
+
+                                // Implementasi dan Evaluasi Keperawatan
+                                Route::prefix('implementasi-evaluasi-keperawatan')->group(function () {
+                                    Route::name('.implementasi-evaluasi-keperawatan')->group(function () {
+                                        Route::controller(PersetujuanImplementasiEvaluasiKeperawatanController::class)->group(function () {
+                                            Route::get('/', 'index')->name('.index');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::get('/create', 'create')->name('.create');
+                                            Route::get('/{data}', 'show')->name('.show');
+                                            Route::get('/{data}/edit', 'edit')->name('.edit');
+                                            Route::put('/{data}', 'update')->name('.update');
+                                            Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                            Route::delete('/{data}', 'destroy')->name('.destroy');
+                                        });
+                                    });
+                                });
+
                             });
                         });
                     });

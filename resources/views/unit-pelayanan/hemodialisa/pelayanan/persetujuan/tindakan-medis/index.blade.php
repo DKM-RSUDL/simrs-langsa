@@ -90,7 +90,7 @@
                             <div class="tab-pane fade show active">
 
                                 <div class="row">
-                                    <form method="GET" action="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-hd.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                                    <form method="GET" action="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-medis.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
                                         <div class="row m-3">
                                             <div class="col-md-3">
                                                 <div class="input-group">
@@ -116,7 +116,7 @@
                                             </div>
                                             
                                             <div class="col-md-3 text-end">
-                                                <a href="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-hd.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                                <a href="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-medis.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                                     class="btn btn-primary">
                                                     <i class="ti-plus"></i> Tambah Data
                                                 </a>
@@ -130,87 +130,67 @@
                                                 <tr>
                                                     <th>No</th>
                                                     <th>Tanggal & Jam</th>
-                                                    <th>DPJP</th>
                                                     <th>Penerima Info</th>
-                                                    <th>Keputusan</th>
-                                                    <th>Info Dijelaskan</th>
+                                                    <th>Tindakan</th>
                                                     <th>Petugas Input</th>
                                                     <th>Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @forelse ($dataPersetujuan as $key => $item)
+                                                @foreach ($dataPersetujuan as $key => $item)
                                                     <tr>
                                                         <td>{{ $dataPersetujuan->firstItem() + $key }}</td>
                                                         <td>
-                                                            <strong>{{ date('d/m/Y', strtotime($item->tanggal_implementasi)) }}</strong><br>
-                                                            <small class="text-muted">{{ date('H:i', strtotime($item->jam_implementasi)) }} WIB</small>
+                                                            {{ date('d-m-Y', strtotime($item->tanggal_implementasi)) }} 
+                                                            {{ date('H:i', strtotime($item->jam_implementasi)) }}
                                                         </td>
                                                         <td>
-                                                            @if($item->dokter)
-                                                                {{ $item->dokter->nama_lengkap }}
+                                                            <span class="badge badge-{{ $item->tipe_penerima }}">{{ ucfirst($item->tipe_penerima) }}</span>
+                                                            @if ($item->tipe_penerima == 'pasien')
+                                                                <div class="info-breakdown">
+                                                                    Nama: {{ $dataMedis->pasien->nama }} | Umur: {{ $dataMedis->pasien->umur }} | JK: {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : 'Perempuan' }} | Alamat: {{ $dataMedis->pasien->alamat }}
+                                                                </div>
                                                             @else
-                                                                <span class="text-muted">-</span>
+                                                                <div class="info-breakdown">
+                                                                    Nama: {{ $item->nama_keluarga }} | Umur: {{ $item->umur_keluarga }} | JK: {{ $item->jk_keluarga }} | Status: {{ ucfirst($item->status_keluarga) }} | Alamat: {{ $item->alamat_keluarga }}
+                                                                </div>
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            <span class="badge badge-{{ $item->tipe_penerima }}">
-                                                                {{ ucfirst($item->tipe_penerima) }}
-                                                            </span>
-                                                            @if($item->tipe_penerima == 'keluarga' && $item->nama_keluarga)
-                                                                <br><small>{{ $item->nama_keluarga }}</small>
-                                                                @if($item->status_keluarga)
-                                                                    <br><small class="text-muted">({{ ucfirst(str_replace('_', ' ', $item->status_keluarga)) }})</small>
+                                                            <ul class="list-unstyled m-0">
+                                                                @php
+                                                                    $tindakanList = json_decode($item->tindakan, true) ?? [];
+                                                                    $allTindakan = [
+                                                                        'hemodialisis' => 'HEMODIALISIS',
+                                                                        'akses_vascular_fmoralis' => 'AKSES VASCULAR FMORALIS',
+                                                                        'akses_vascular_subclavicula' => 'AKSES VASCULAR SUBCLAVICULA CATHETER',
+                                                                        'akses_vascular_cimino' => 'AKSES VASCULAR ANTERIOR VENOUS FISTULA (CIMINO)'
+                                                                    ];
+                                                                @endphp
+                                                                @foreach ($allTindakan as $key => $label)
+                                                                    @if (in_array($key, $tindakanList))
+                                                                        <li class="info-item info-checked">{{ $label }}</li>
+                                                                    @endif
+                                                                @endforeach
+                                                                @if (empty($tindakanList))
+                                                                    <li class="info-item">Tidak ada tindakan</li>
                                                                 @endif
-                                                            @endif
+                                                            </ul>
                                                         </td>
-                                                        <td>
-                                                            @if($item->keputusan)
-                                                                <span class="badge badge-{{ $item->keputusan }}">
-                                                                    {{ strtoupper($item->keputusan) }}
-                                                                </span>
-                                                            @else
-                                                                <span class="text-muted">-</span>
-                                                            @endif
-                                                        </td>
-                                                        <td>
-                                                            @php
-                                                                $infoCount = 0;
-                                                                if($item->info_diagnosis) $infoCount++;
-                                                                if($item->info_dasar_diagnosis) $infoCount++;
-                                                                if($item->info_tindakan) $infoCount++;
-                                                                if($item->info_indikasi) $infoCount++;
-                                                                if($item->info_tata_cara) $infoCount++;
-                                                                if($item->info_tujuan) $infoCount++;
-                                                                if($item->info_resiko) $infoCount++;
-                                                                if($item->info_prognosis) $infoCount++;
-                                                                if($item->info_alternatif) $infoCount++;
-                                                                if($item->info_lain_lain_check) $infoCount++;
-                                                            @endphp
-                                                            
-                                                            <span class="badge bg-info">{{ $infoCount }} item</span>
-                                                        </td>
-                                                        <td>
-                                                            @if($item->userCreated)
-                                                                {{ $item->userCreated->name }}
-                                                            @else
-                                                                <span class="text-muted">-</span>
-                                                            @endif
-                                                            <br><small class="text-muted">{{ $item->created_at ? $item->created_at->format('d/m/Y H:i') : '-' }}</small>
-                                                        </td>
+                                                        <td>{{ $item->userCreated->name ?? 'Tidak Diketahui' }}</td>
                                                         <td>
                                                             <div class="btn-group" role="group">
-                                                                <a href="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-hd.print-pdf', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
-                                                                   class="btn btn-info btn-sm me-2" target="_blank" title="Lihat Detail">
+                                                                <a href="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-medis.print-pdf', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
+                                                                class="btn btn-info btn-sm me-2" target="_blank" title="Lihat Detail">
                                                                     <i class="fas fa-print"></i>
                                                                 </a>
-                                                                <a href="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-hd.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
-                                                                   class="btn btn-warning btn-sm me-2" title="Edit">
+                                                                <a href="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-medis.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
+                                                                class="btn btn-warning btn-sm me-2" title="Edit">
                                                                     <i class="ti-pencil"></i>
                                                                 </a>
-                                                                <form action="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-hd.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
-                                                                      method="POST" style="display: inline;" 
-                                                                      onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                                                <form action="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-medis.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
+                                                                    method="POST" style="display: inline;" 
+                                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                                     @csrf
                                                                     @method('DELETE')
                                                                     <button type="submit" class="btn btn-danger btn-sm" title="Hapus">
@@ -220,30 +200,16 @@
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                @empty
+                                                @endforeach
+                                                @if ($dataPersetujuan->isEmpty())
                                                     <tr>
-                                                        <td colspan="8" class="text-center">
-                                                            <div class="py-3">
-                                                                <i class="ti-info-alt" style="font-size: 3rem; color: #dee2e6;"></i>
-                                                                <p class="mt-2 text-muted">Belum ada data persetujuan tindakan HD</p>
-                                                                <a href="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-hd.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" 
-                                                                   class="btn btn-primary btn-sm">
-                                                                    <i class="ti-plus"></i> Tambah Data Pertama
-                                                                </a>
-                                                            </div>
-                                                        </td>
+                                                        <td colspan="6" class="text-center">Tidak ada data</td>
                                                     </tr>
-                                                @endforelse
+                                                @endif
                                             </tbody>
                                         </table>
+                                        {{ $dataPersetujuan->links() }}
                                     </div>
-
-                                    {{-- Pagination --}}
-                                    @if($dataPersetujuan->hasPages())
-                                        <div class="d-flex justify-content-center mt-3">
-                                            {{ $dataPersetujuan->appends(request()->query())->links() }}
-                                        </div>
-                                    @endif
                                     
                                 </div>
                             </div>
@@ -258,9 +224,5 @@
 
 @push('js')
 <script>
-    // Auto submit form ketika filter tanggal berubah
-    $('input[name="dari_tanggal"], input[name="sampai_tanggal"]').on('change', function() {
-        $(this).closest('form').submit();
-    });
 </script>
 @endpush
