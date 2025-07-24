@@ -3142,7 +3142,6 @@ Route::middleware('ssoToken')->group(function () {
                                         });
                                     });
                                 });
-
                             });
                         });
                     });
