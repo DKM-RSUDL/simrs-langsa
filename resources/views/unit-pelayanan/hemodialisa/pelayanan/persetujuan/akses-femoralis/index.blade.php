@@ -90,7 +90,7 @@
                             <div class="tab-pane fade show active">
 
                                 <div class="row">
-                                    <form method="GET" action="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-hd.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                                    <form method="GET" action="{{ route('hemodialisa.pelayanan.persetujuan.akses-femoralis.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
                                         <div class="row m-3">
                                             <div class="col-md-3">
                                                 <div class="input-group">
@@ -116,7 +116,7 @@
                                             </div>
                                             
                                             <div class="col-md-3 text-end">
-                                                <a href="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-hd.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                                <a href="{{ route('hemodialisa.pelayanan.persetujuan.akses-femoralis.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                                     class="btn btn-primary">
                                                     <i class="ti-plus"></i> Tambah Data
                                                 </a>
@@ -200,15 +200,15 @@
                                                         </td>
                                                         <td>
                                                             <div class="btn-group" role="group">
-                                                                <a href="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-hd.print-pdf', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
+                                                                <a href="{{ route('hemodialisa.pelayanan.persetujuan.akses-femoralis.print-pdf', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
                                                                    class="btn btn-info btn-sm me-2" target="_blank" title="Lihat Detail">
                                                                     <i class="fas fa-print"></i>
                                                                 </a>
-                                                                <a href="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-hd.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
+                                                                <a href="{{ route('hemodialisa.pelayanan.persetujuan.akses-femoralis.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
                                                                    class="btn btn-warning btn-sm me-2" title="Edit">
                                                                     <i class="ti-pencil"></i>
                                                                 </a>
-                                                                <form action="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-hd.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
+                                                                <form action="{{ route('hemodialisa.pelayanan.persetujuan.akses-femoralis.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
                                                                       method="POST" style="display: inline;" 
                                                                       onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                                     @csrf
@@ -225,8 +225,8 @@
                                                         <td colspan="8" class="text-center">
                                                             <div class="py-3">
                                                                 <i class="ti-info-alt" style="font-size: 3rem; color: #dee2e6;"></i>
-                                                                <p class="mt-2 text-muted">Belum ada data persetujuan tindakan HD</p>
-                                                                <a href="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-hd.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" 
+                                                                <p class="mt-2 text-muted">Belum ada data persetujuan tindakan akses femoralis</p>
+                                                                <a href="{{ route('hemodialisa.pelayanan.persetujuan.akses-femoralis.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" 
                                                                    class="btn btn-primary btn-sm">
                                                                     <i class="ti-plus"></i> Tambah Data Pertama
                                                                 </a>
