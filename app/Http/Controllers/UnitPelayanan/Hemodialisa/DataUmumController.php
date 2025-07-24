@@ -62,7 +62,6 @@ class DataUmumController extends Controller
         ));
     }
 
-
     public function create($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])

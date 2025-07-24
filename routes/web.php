@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Route;
 
 // unit pelanayan
 use App\Http\Controllers\UnitPelayanan\RawatJalanController;
-use App\Http\Controllers\UnitPelayanan\RawatJalan\BedahController;
 use App\Http\Controllers\UnitPelayanan\GawatDaruratController;
 use App\Http\Controllers\MedisGawatDaruratController;
 use App\Http\Controllers\TransfusiDarah\PermintaanController;
@@ -77,13 +76,11 @@ use App\Http\Controllers\UnitPelayanan\Operasi\CeklistAnasthesiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\CeklistKeselamatanController;
 use App\Http\Controllers\UnitPelayanan\Operasi\EdukasiAnestesiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\LaporanAnastesiController;
-use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperatifController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiMedisController;
 use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperasiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiPerawatController;
 use App\Http\Controllers\UnitPelayanan\Operasi\SiteMarkingController;
 use App\Http\Controllers\UnitPelayanan\OperasiController;
-use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenGeriatriController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenGinekologikController;
@@ -129,7 +126,6 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\PenolakanResusitasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PenundaanPelayananController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PermintaanPrivasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PersetujuanAnestesiController;
-use App\Http\Controllers\UnitPelayanan\RawatInap\PermintaanSecondOpinionController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PengawasanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenPraAnestesiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
@@ -192,7 +188,6 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\ResikoDecubitusController as R
 use App\Http\Controllers\UnitPelayanan\RawatJalan\StatusFungsionalController as RawatJalanStatusFungsionalController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\StatusNyeri\SkalaNumerikController as StatusNyeriSkalaNumerikController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
-use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\TindakanController as RehamMedisTindakanController;
 use App\Http\Middleware\AssignAdminPermissions;
@@ -990,7 +985,6 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
-
                         });
                     });
                 });
@@ -2087,7 +2081,6 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
-
                         });
                     });
                 });
