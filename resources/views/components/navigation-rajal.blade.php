@@ -221,6 +221,16 @@
         ],
         [
             'icon' => 'verified_badge.png',
+            'label' => 'Status Fungsional',
+            'link' => route('rawat-jalan.status-fungsional.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
+        [
+            'icon' => 'verified_badge.png',
             'label' => 'Status Nyeri',
             'link' => route('rawat-jalan.status-nyeri.skala-numerik.index', [
                 $dataMedis->kd_unit,
