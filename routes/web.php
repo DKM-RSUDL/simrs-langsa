@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Auth\SsoController;
-use App\Http\Controllers\HDHasilLabController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NavigationController;
 use App\Http\Controllers\PermissionController;
@@ -14,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 // unit pelanayan
 use App\Http\Controllers\UnitPelayanan\RawatJalanController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\BedahController;
 use App\Http\Controllers\UnitPelayanan\GawatDaruratController;
 use App\Http\Controllers\MedisGawatDaruratController;
 use App\Http\Controllers\TransfusiDarah\PermintaanController;
@@ -56,6 +56,8 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\StatusNyeri\SkalaCriesContro
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\StatusNyeri\SkalaFlaccController as StatusNyeriSkalaFlaccController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\StatusNyeri\SkalaNumerikController as GawatDaruratStatusNyeriSkalaNumerikController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\StatusFungsionalController as GawatDaruratStatusFungsionalController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\PersetujuanTransfusiDarahController as GawatDaruratPersetujuanTransfusiDarahController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\Covid19Controller as GawatDaruratCovid19Controller;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenHemodialisaKeperawatanController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenMedisController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\BeratBadanKeringController;
@@ -64,11 +66,6 @@ use App\Http\Controllers\UnitPelayanan\Hemodialisa\MalnutritionInflammationScore
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\HDEdukasiController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\HDTindakanKhususController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\HDHasilEKGController;
-use App\Http\Controllers\UnitPelayanan\Hemodialisa\HDHasilLabController as HemodialisaHDHasilLabController;
-use App\Http\Controllers\UnitPelayanan\Hemodialisa\PersetujuanAksesFemoralisController;
-use App\Http\Controllers\UnitPelayanan\Hemodialisa\PersetujuanImplementasiEvaluasiKeperawatanController;
-use App\Http\Controllers\UnitPelayanan\Hemodialisa\PersetujuanTindakanHDController;
-use App\Http\Controllers\UnitPelayanan\Hemodialisa\PersetujuanTindakanMedisController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\TravelingDialysisController;
 use App\Http\Controllers\UnitPelayanan\HemodialisaController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
@@ -76,11 +73,13 @@ use App\Http\Controllers\UnitPelayanan\Operasi\CeklistAnasthesiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\CeklistKeselamatanController;
 use App\Http\Controllers\UnitPelayanan\Operasi\EdukasiAnestesiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\LaporanAnastesiController;
+use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperatifController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiMedisController;
 use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperasiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiPerawatController;
 use App\Http\Controllers\UnitPelayanan\Operasi\SiteMarkingController;
 use App\Http\Controllers\UnitPelayanan\OperasiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenGeriatriController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenGinekologikController;
@@ -126,6 +125,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\PenolakanResusitasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PenundaanPelayananController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PermintaanPrivasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PersetujuanAnestesiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\PermintaanSecondOpinionController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PengawasanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenPraAnestesiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
@@ -146,6 +146,8 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\StatusNyeri\SkalaNumerikControl
 use App\Http\Controllers\UnitPelayanan\RawatInap\SuratKematianController as RawatInapSuratKematianController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\TindakanController as RawatInapTindakanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\StatusFungsionalController as RawatInapStatusFungsionalController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\PersetujuanTransfusiDarahController as RawatInapPersetujuanTransfusiDarahController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\Covid19Controller as RawatInapCovid19Controller;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\ResikoJatuh\SkalaGeriatriController as RawatJalanSkalaGeriatriController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\ResikoJatuh\SkalaHumptyDumptyController as RawatJalanSkalaHumptyDumptyController;
@@ -187,7 +189,10 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\CatatanPoliKlinikController as
 use App\Http\Controllers\UnitPelayanan\RawatJalan\ResikoDecubitusController as RawatJalanResikoDecubitusController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\StatusFungsionalController as RawatJalanStatusFungsionalController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\StatusNyeri\SkalaNumerikController as StatusNyeriSkalaNumerikController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\PersetujuanTransfusiDarahController as RawatJalanPersetujuanTransfusiDarahController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\Covid19Controller as RawatJalanCovid19Controller;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
+use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\TindakanController as RehamMedisTindakanController;
 use App\Http\Middleware\AssignAdminPermissions;
@@ -985,6 +990,41 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
+
+                            // persetujuan transfusi darah
+                            Route::prefix('persetujuan-transfusi-darah')->group(function () {
+                                Route::name('.persetujuan-transfusi-darah')->group(function () {
+                                    Route::controller(RawatJalanPersetujuanTransfusiDarahController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
+                            // Covid 19
+                            Route::prefix('covid-19')->group(function () {
+                                Route::name('.covid-19')->group(function () {
+                                    Route::controller(RawatJalanCovid19Controller::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
                         });
                     });
                 });
@@ -2081,6 +2121,41 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
+
+                            // persetujuan transfusi darah
+                            Route::prefix('persetujuan-transfusi-darah')->group(function () {
+                                Route::name('.persetujuan-transfusi-darah')->group(function () {
+                                    Route::controller(RawatInapPersetujuanTransfusiDarahController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
+                            // Covid 19
+                            Route::prefix('covid-19')->group(function () {
+                                Route::name('.covid-19')->group(function () {
+                                    Route::controller(RawatInapCovid19Controller::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
                         });
                     });
                 });
@@ -2624,6 +2699,40 @@ Route::middleware('ssoToken')->group(function () {
                             });
                         });
 
+                        // persetujuan transfusi darah
+                        Route::prefix('{urut_masuk}/persetujuan-transfusi-darah')->group(function () {
+                            Route::name('persetujuan-transfusi-darah')->group(function () {
+                                Route::controller(GawatDaruratPersetujuanTransfusiDarahController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
+                                });
+                            });
+                        });
+
+                        // Covid 19
+                        Route::prefix('{urut_masuk}/covid-19')->group(function () {
+                            Route::name('covid-19')->group(function () {
+                                Route::controller(GawatDaruratCovid19Controller::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
+                                });
+                            });
+                        });
+
                         Route::resource('/', MedisGawatDaruratController::class);
                         // Route::resource('asesmen', GawatDaruratAsesmenController::class);
                         Route::resource('labor', GawatDaruratLaborController::class);
@@ -3058,93 +3167,6 @@ Route::middleware('ssoToken')->group(function () {
                                     Route::delete('/{id}', 'destroy')->name('.destroy');
                                     Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                                 });
-                            });
-                        });
-
-                        //Hasil Lab
-                        Route::prefix('hasil-lab')->group(function () {
-                            Route::name('.hasil-lab')->group(function () {
-                                Route::controller(HemodialisaHDHasilLabController::class)->group(function () {
-                                    Route::get('/', 'index')->name('.index');
-                                    Route::post('/', 'store')->name('.store');
-                                    Route::get('/create', 'create')->name('.create');
-                                    Route::get('/{data}', 'show')->name('.show');
-                                    Route::get('/{data}/edit', 'edit')->name('.edit');
-                                    Route::put('/{data}', 'update')->name('.update');
-                                    Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
-                                    Route::delete('/{data}', 'destroy')->name('.destroy');
-                                });
-                            });
-                        });
-
-                        //PERSETUJUAN
-                        Route::prefix('persetujuan')->group(function () {
-                            Route::name('.persetujuan')->group(function () {
-
-                                //Persetujuan Tindakan HD
-                                Route::prefix('tindakan-hd')->group(function () {
-                                    Route::name('.tindakan-hd')->group(function () {
-                                        Route::controller(PersetujuanTindakanHDController::class)->group(function () {
-                                            Route::get('/', 'index')->name('.index');
-                                            Route::post('/', 'store')->name('.store');
-                                            Route::get('/create', 'create')->name('.create');
-                                            Route::get('/{data}', 'show')->name('.show');
-                                            Route::get('/{data}/edit', 'edit')->name('.edit');
-                                            Route::put('/{data}', 'update')->name('.update');
-                                            Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
-                                            Route::delete('/{data}', 'destroy')->name('.destroy');
-                                        });
-                                    });
-                                });
-
-                                //Persetujuan Akses Femoralis
-                                Route::prefix('akses-femoralis')->group(function () {
-                                    Route::name('.akses-femoralis')->group(function () {
-                                        Route::controller(PersetujuanAksesFemoralisController::class)->group(function () {
-                                            Route::get('/', 'index')->name('.index');
-                                            Route::post('/', 'store')->name('.store');
-                                            Route::get('/create', 'create')->name('.create');
-                                            Route::get('/{data}', 'show')->name('.show');
-                                            Route::get('/{data}/edit', 'edit')->name('.edit');
-                                            Route::put('/{data}', 'update')->name('.update');
-                                            Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
-                                            Route::delete('/{data}', 'destroy')->name('.destroy');
-                                        });
-                                    });
-                                });
-
-                                //Persetujuan Tindakan Medis
-                                Route::prefix('tindakan-medis')->group(function () {
-                                    Route::name('.tindakan-medis')->group(function () {
-                                        Route::controller(PersetujuanTindakanMedisController::class)->group(function () {
-                                            Route::get('/', 'index')->name('.index');
-                                            Route::post('/', 'store')->name('.store');
-                                            Route::get('/create', 'create')->name('.create');
-                                            Route::get('/{data}', 'show')->name('.show');
-                                            Route::get('/{data}/edit', 'edit')->name('.edit');
-                                            Route::put('/{data}', 'update')->name('.update');
-                                            Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
-                                            Route::delete('/{data}', 'destroy')->name('.destroy');
-                                        });
-                                    });
-                                });
-
-                                // Implementasi dan Evaluasi Keperawatan
-                                Route::prefix('implementasi-evaluasi-keperawatan')->group(function () {
-                                    Route::name('.implementasi-evaluasi-keperawatan')->group(function () {
-                                        Route::controller(PersetujuanImplementasiEvaluasiKeperawatanController::class)->group(function () {
-                                            Route::get('/', 'index')->name('.index');
-                                            Route::post('/', 'store')->name('.store');
-                                            Route::get('/create', 'create')->name('.create');
-                                            Route::get('/{data}', 'show')->name('.show');
-                                            Route::get('/{data}/edit', 'edit')->name('.edit');
-                                            Route::put('/{data}', 'update')->name('.update');
-                                            Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
-                                            Route::delete('/{data}', 'destroy')->name('.destroy');
-                                        });
-                                    });
-                                });
-
                             });
                         });
                     });

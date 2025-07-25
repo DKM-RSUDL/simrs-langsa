@@ -357,58 +357,6 @@
                     </div>
                 @endif
 
-                <!-- Summary Statistics -->
-                @if(isset($hivArtRecords) && $hivArtRecords->count() > 0)
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h6 class="mb-0">
-                                    <i class="fas fa-chart-bar me-2"></i>
-                                    Ringkasan Data HIV ART
-                                </h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="text-center">
-                                            <h4 class="text-primary">{{ $hivArtRecords->total() }}</h4>
-                                            <small class="text-muted">Total Records</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="text-center">
-                                            @php
-                                                $onArt = $hivArtRecords->where('menerima_art', 'Ya')->count();
-                                            @endphp
-                                            <h4 class="text-success">{{ $onArt }}</h4>
-                                            <small class="text-muted">Sudah ART</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="text-center">
-                                            @php
-                                                $notOnArt = $hivArtRecords->where('menerima_art', 'Tidak')->count();
-                                            @endphp
-                                            <h4 class="text-warning">{{ $notOnArt }}</h4>
-                                            <small class="text-muted">Belum ART</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="text-center">
-                                            @php
-                                                $withTb = $hivArtRecords->whereNotNull('tgl_mulai_terapi_tb')->count();
-                                            @endphp
-                                            <h4 class="text-danger">{{ $withTb }}</h4>
-                                            <small class="text-muted">Ko-infeksi TB</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endif
             </div>
         </div>
     </div>
