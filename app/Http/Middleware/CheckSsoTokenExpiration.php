@@ -29,6 +29,7 @@ class CheckSsoTokenExpiration
      */
     public function handle(Request $request, Closure $next): Response
     {
+
         $accessToken = $request->cookie('sso_tok');
         $expiresAt = $request->cookie('sso_tok_expired');
 

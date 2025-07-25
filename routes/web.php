@@ -211,10 +211,8 @@ Auth::routes(['register' => false]); // Nonaktifkan register
 
 
 
-// Auth::routes();
+Auth::routes();
 Route::middleware('guest')->group(function () {
-
-
     Route::get('/', function () {
         return view('auth.login');
     });
@@ -226,14 +224,12 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('ssoToken')->group(function () {
 
-    // Route::middleware('auth')->group(function () {
-
     Route::get('/user-sso', [SsoController::class, 'getUser']);
     Route::get('/logout', [SsoController::class, 'logout'])->name('logout');
 
 
-    Route::get('/login', [SsoController::class, 'redirectToSso'])->name('login');
-    Route::get('/callback', [SsoController::class, 'handleCallback'])->name('callback');
+    // Route::get('/login', [SsoController::class, 'redirectToSso'])->name('login');
+    // Route::get('/callback', [SsoController::class, 'handleCallback'])->name('callback');
 });
 
 
@@ -534,8 +530,6 @@ Route::middleware('ssoToken')->group(function () {
                                                     });
                                                 });
                                             });
-
-
                                         });
                                     });
 
@@ -861,8 +855,8 @@ Route::middleware('ssoToken')->group(function () {
                                 Route::name('.resiko-jatuh')->group(function () {
 
                                     //Skala Morse
-                                    Route::prefix('morse')->group(function() {
-                                        Route::name('.morse')->group(function() {
+                                    Route::prefix('morse')->group(function () {
+                                        Route::name('.morse')->group(function () {
                                             Route::controller(RawatJalanSkalaMorseController::class)->group(function () {
                                                 Route::get('/', 'index')->name('.index');
                                                 Route::post('/', 'store')->name('.store');
@@ -878,8 +872,8 @@ Route::middleware('ssoToken')->group(function () {
                                     });
 
                                     //Skala Humpty Dumpty
-                                    Route::prefix('humpty-dumpty')->group(function() {
-                                        Route::name('.humpty-dumpty')->group(function() {
+                                    Route::prefix('humpty-dumpty')->group(function () {
+                                        Route::name('.humpty-dumpty')->group(function () {
                                             Route::controller(RawatJalanSkalaHumptyDumptyController::class)->group(function () {
                                                 Route::get('/', 'index')->name('.index');
                                                 Route::post('/', 'store')->name('.store');
@@ -895,8 +889,8 @@ Route::middleware('ssoToken')->group(function () {
                                     });
 
                                     //Risiko Jatuh Geriatri
-                                    Route::prefix('geriatri')->group(function() {
-                                        Route::name('.geriatri')->group(function() {
+                                    Route::prefix('geriatri')->group(function () {
+                                        Route::name('.geriatri')->group(function () {
                                             Route::controller(RawatJalanSkalaGeriatriController::class)->group(function () {
                                                 Route::get('/', 'index')->name('.index');
                                                 Route::post('/', 'store')->name('.store');
@@ -964,8 +958,8 @@ Route::middleware('ssoToken')->group(function () {
                             });
 
                             //status fungsional
-                            Route::prefix('status-fungsional')->group(function() {
-                                Route::name('.status-fungsional')->group(function() {
+                            Route::prefix('status-fungsional')->group(function () {
+                                Route::name('.status-fungsional')->group(function () {
                                     Route::controller(RawatJalanStatusFungsionalController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::post('/', 'store')->name('.store');
@@ -1029,7 +1023,6 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
-
                         });
                     });
                 });
@@ -1992,8 +1985,8 @@ Route::middleware('ssoToken')->group(function () {
                                 Route::name('.resiko-jatuh')->group(function () {
 
                                     //Skala Morse
-                                    Route::prefix('morse')->group(function() {
-                                        Route::name('.morse')->group(function() {
+                                    Route::prefix('morse')->group(function () {
+                                        Route::name('.morse')->group(function () {
                                             Route::controller(RawatInapSkalaMorseController::class)->group(function () {
                                                 Route::get('/', 'index')->name('.index');
                                                 Route::post('/', 'store')->name('.store');
@@ -2009,8 +2002,8 @@ Route::middleware('ssoToken')->group(function () {
                                     });
 
                                     //Skala Humpty Dumpty
-                                    Route::prefix('humpty-dumpty')->group(function() {
-                                        Route::name('.humpty-dumpty')->group(function() {
+                                    Route::prefix('humpty-dumpty')->group(function () {
+                                        Route::name('.humpty-dumpty')->group(function () {
                                             Route::controller(SkalaHumptyDumptyController::class)->group(function () {
                                                 Route::get('/', 'index')->name('.index');
                                                 Route::post('/', 'store')->name('.store');
@@ -2026,8 +2019,8 @@ Route::middleware('ssoToken')->group(function () {
                                     });
 
                                     //Risiko Jatuh Geriatri
-                                    Route::prefix('geriatri')->group(function() {
-                                        Route::name('.geriatri')->group(function() {
+                                    Route::prefix('geriatri')->group(function () {
+                                        Route::name('.geriatri')->group(function () {
                                             Route::controller(SkalaGeriatriController::class)->group(function () {
                                                 Route::get('/', 'index')->name('.index');
                                                 Route::post('/', 'store')->name('.store');
@@ -2095,8 +2088,8 @@ Route::middleware('ssoToken')->group(function () {
                             });
 
                             //status fungsional
-                            Route::prefix('status-fungsional')->group(function() {
-                                Route::name('.status-fungsional')->group(function() {
+                            Route::prefix('status-fungsional')->group(function () {
+                                Route::name('.status-fungsional')->group(function () {
                                     Route::controller(RawatInapStatusFungsionalController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::post('/', 'store')->name('.store');
@@ -2160,7 +2153,6 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
-
                         });
                     });
                 });
@@ -2569,8 +2561,8 @@ Route::middleware('ssoToken')->group(function () {
                             Route::name('resiko-jatuh')->group(function () {
 
                                 //Skala Morse
-                                Route::prefix('morse')->group(function() {
-                                    Route::name('.morse')->group(function() {
+                                Route::prefix('morse')->group(function () {
+                                    Route::name('.morse')->group(function () {
                                         Route::controller(GawatDaruratSkalaMorseController::class)->group(function () {
                                             Route::get('/', 'index')->name('.index');
                                             Route::post('/', 'store')->name('.store');
@@ -2586,8 +2578,8 @@ Route::middleware('ssoToken')->group(function () {
                                 });
 
                                 //Skala Humpty Dumpty
-                                Route::prefix('humpty-dumpty')->group(function() {
-                                    Route::name('.humpty-dumpty')->group(function() {
+                                Route::prefix('humpty-dumpty')->group(function () {
+                                    Route::name('.humpty-dumpty')->group(function () {
                                         Route::controller(GawatDaruratSkalaHumptyDumptyController::class)->group(function () {
                                             Route::get('/', 'index')->name('.index');
                                             Route::post('/', 'store')->name('.store');
@@ -2603,8 +2595,8 @@ Route::middleware('ssoToken')->group(function () {
                                 });
 
                                 //Risiko Jatuh Geriatri
-                                Route::prefix('geriatri')->group(function() {
-                                    Route::name('.geriatri')->group(function() {
+                                Route::prefix('geriatri')->group(function () {
+                                    Route::name('.geriatri')->group(function () {
                                         Route::controller(GawatDaruratSkalaGeriatriController::class)->group(function () {
                                             Route::get('/', 'index')->name('.index');
                                             Route::post('/', 'store')->name('.store');
@@ -2672,8 +2664,8 @@ Route::middleware('ssoToken')->group(function () {
                         });
 
                         //status fungsional
-                        Route::prefix('{urut_masuk}/status-fungsional')->group(function() {
-                            Route::name('status-fungsional')->group(function() {
+                        Route::prefix('{urut_masuk}/status-fungsional')->group(function () {
+                            Route::name('status-fungsional')->group(function () {
                                 Route::controller(GawatDaruratStatusFungsionalController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::post('/', 'store')->name('.store');
@@ -3260,7 +3252,6 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
                         });
-
                     });
                 });
             });
@@ -3287,5 +3278,4 @@ Route::middleware('ssoToken')->group(function () {
             });
         });
     });
-    
 });
