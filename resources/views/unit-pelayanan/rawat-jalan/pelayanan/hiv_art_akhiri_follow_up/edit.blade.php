@@ -32,25 +32,23 @@
                     </div>
                 @endif
 
-                @if($existingData)
-                    <div class="alert alert-info" role="alert">
-                        <i class="fas fa-info-circle me-2"></i>
-                        Sudah ada data follow-up untuk hari ini ({{ $existingData->tanggal->format('d/m/Y') }}) dengan {{ $existingData->total_visits }} kunjungan.
-                        <a href="{{ route('rawat-jalan.hiv_art_akhir_follow_up.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $existingData->id]) }}"
-                           class="btn btn-sm btn-outline-primary ms-2">
-                            <i class="fas fa-edit"></i> Edit Data
-                        </a>
-                    </div>
-                @endif
+                <!-- Edit Info Alert -->
+                <div class="alert alert-info" role="alert">
+                    <i class="fas fa-edit me-2"></i>
+                    Anda sedang mengedit data follow-up HIV ART tanggal <strong>{{ $hivArtData->tanggal->format('d/m/Y') }}</strong>
+                    dengan <strong>{{ $hivArtData->total_visits }} kunjungan</strong>.
+                </div>
 
                 <form id="praAnestesiForm" method="POST"
-                    action="{{ route('rawat-jalan.hiv_art_akhir_follow_up.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}">
+                    action="{{ route('rawat-jalan.hiv_art_akhir_follow_up.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $hivArtData->id]) }}">
                     @csrf
+                    @method('PUT')
 
                     <div class="card shadow-sm border-0">
-                        <div class="card-header bg-primary text-white text-center py-3">
-                            <h5 class="mb-0 font-weight-bold">IKHTISAR FOLLOW-UP PERAWATAN PASIEN HIV DAN TERAPI
-                                ANTIRETROVIRAL (ART)
+                        <div class="card-header bg-warning text-dark text-center py-3">
+                            <h5 class="mb-0 font-weight-bold">
+                                <i class="fas fa-edit me-2"></i>
+                                EDIT IKHTISAR FOLLOW-UP PERAWATAN PASIEN HIV DAN TERAPI ANTIRETROVIRAL (ART)
                             </h5>
                         </div>
 
@@ -66,7 +64,7 @@
                                 <!-- Toolbar -->
                                 <div class="toolbar">
                                     <div class="visit-counter" id="visitCounter">
-                                        <i class="fas fa-calendar-check me-2"></i>0 Kunjungan
+                                        <i class="fas fa-calendar-check me-2"></i>{{ $hivArtData->total_visits }} Kunjungan
                                     </div>
                                     {{-- <button type="button" class="btn btn-add-visit" onclick="addNewVisit()">
                                         <i class="fas fa-plus me-2"></i>Tambah Kunjungan Baru
@@ -79,11 +77,9 @@
                                         <div class="d-flex align-items-center">
                                             <i class="fas fa-info-circle text-primary me-3" style="font-size: 1.5rem;"></i>
                                             <div>
-                                                <h6 class="mb-1">Panduan Pengisian Form</h6>
-                                                <p class="mb-0">Isi data untuk setiap kunjungan follow-up pasien HIV. Field
-                                                    berwarna kuning akan muncul otomatis jika Anda memilih "Ya" pada
-                                                    pertanyaan
-                                                    tertentu.</p>
+                                                <h6 class="mb-1">Edit Data Follow-Up</h6>
+                                                <p class="mb-0">Anda dapat mengedit data kunjungan follow-up pasien HIV yang sudah ada.
+                                                Field berwarna kuning akan muncul otomatis jika Anda memilih "Ya" pada pertanyaan tertentu.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -92,15 +88,13 @@
                                     {{-- <div class="mb-4">
                                         <label class="form-label fw-bold">Catatan Umum (Opsional)</label>
                                         <textarea name="catatan_umum" class="form-control" rows="3"
-                                                  placeholder="Catatan umum untuk semua kunjungan follow-up...">{{ old('catatan_umum') }}</textarea>
+                                                  placeholder="Catatan umum untuk semua kunjungan follow-up...">{{ old('catatan_umum', $hivArtData->catatan_umum) }}</textarea>
                                     </div> --}}
 
-                                    <!-- Form -->
-                                    <form id="hivArtForm">
-                                        <div id="visitContainer">
-                                            <!-- Visit cards akan ditambahkan di sini -->
-                                        </div>
-                                    </form>
+                                    <!-- Visit Container -->
+                                    <div id="visitContainer">
+                                        <!-- Visit cards akan ditambahkan di sini oleh JavaScript -->
+                                    </div>
 
                                     <!-- Legend -->
                                     <div class="legend-section">
@@ -187,10 +181,9 @@
                         <!-- Form Buttons -->
                         <div class="card-footer">
                             <div class="d-flex justify-content-end align-items-center">
-                                <button type="submit" class="btn btn-primary" onclick="return validateForm()">
-                                    <i class="fas fa-save"></i> Simpan Data
+                                <button type="submit" class="btn btn-warning" onclick="return validateForm()">
+                                    <i class="fas fa-save"></i> Update Data
                                 </button>
-
                             </div>
                         </div>
                     </div>
@@ -218,7 +211,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Preview Data Follow-Up HIV ART</h5>
+                    <h5 class="modal-title">Preview Update Data Follow-Up HIV ART</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -228,7 +221,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary" onclick="submitForm()">Simpan Data</button>
+                    <button type="button" class="btn btn-warning" onclick="submitForm()">Update Data</button>
                 </div>
             </div>
         </div>
@@ -238,10 +231,23 @@
 
 @push('js')
     <script>
-        let visitCount = 0; // Mulai dari 0 karena akan ditambah di addNewVisit
+        let visitCount = 0; // Mulai dari 0 karena akan ditambah di loadExistingData
+        let existingData = @json($hivArtData->visits_data ?? []); // Data yang sudah ada
 
-        // Fungsi untuk menambah kunjungan baru
-        function addNewVisit() {
+        // Load existing data saat halaman dimuat
+        function loadExistingData() {
+            if (existingData && existingData.length > 0) {
+                existingData.forEach(visitData => {
+                    addNewVisit(visitData);
+                });
+            } else {
+                // Jika tidak ada data, buat 1 kunjungan kosong
+                addNewVisit();
+            }
+        }
+
+        // Fungsi untuk menambah kunjungan baru (dengan data existing jika ada)
+        function addNewVisit(existingVisitData = null) {
             visitCount++;
             updateVisitCounter();
             updateProgressBar();
@@ -253,353 +259,384 @@
 
             // Tentukan apakah tombol hapus ditampilkan (tidak tampil untuk kunjungan pertama)
             const removeButton = visitCount === 1 ? '' : `
-            <button type="button" class="btn btn-remove" onclick="removeVisit(${visitCount})">
-                <i class="fas fa-trash-alt me-1"></i>Hapus
-            </button>
-        `;
+                <button type="button" class="btn btn-remove" onclick="removeVisit(${visitCount})">
+                    <i class="fas fa-trash-alt me-1"></i>Hapus
+                </button>
+            `;
+
+            // Function untuk get value dari existing data
+            const getValue = (fieldName, defaultValue = '') => {
+                if (existingVisitData && existingVisitData[fieldName] !== undefined) {
+                    return existingVisitData[fieldName];
+                }
+                return defaultValue;
+            };
+
+            // Function untuk set selected option
+            const getSelectedOption = (fieldName, value, text) => {
+                return getValue(fieldName) === value ? 'selected' : '';
+            };
 
             visitCard.innerHTML = `
-            <div class="visit-header">
-                <div class="visit-title">
-                    <div class="visit-number">${visitCount}</div>
-                    <div>
-                        <h5 class="mb-0">Kunjungan Follow-Up #${visitCount}</h5>
-                        <small class="opacity-75">Data kunjungan pasien HIV/ART</small>
-                    </div>
-                </div>
-                ${removeButton}
-            </div>
-
-            <div class="form-section">
-                <!-- Section 1: Informasi Kunjungan -->
-                <div class="section-header">
-                    <div class="section-icon">
-                        <i class="fas fa-calendar-check"></i>
-                    </div>
-                    <h3 class="section-title">Informasi Kunjungan</h3>
-                </div>
-
-                <div class="two-col">
-                    <div class="form-group">
-                        <label class="form-label">Tanggal Kunjungan Follow-Up <span class="text-danger">*</span></label>
-                        <input type="date" name="tanggal_kunjungan_${visitCount}" class="form-control" required>
-                        <div class="help-text">Masukkan tanggal kunjungan yang sebenarnya</div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Rencana Tanggal Kunjungan y.a.d.?</label>
-                        <input type="date" name="tanggal_rencana_${visitCount}" class="form-control">
-                    </div>
-                </div>
-
-                <!-- Section 2: Status Rujukan -->
-                <div class="section-header">
-                    <div class="section-icon">
-                        <i class="fas fa-exchange-alt"></i>
-                    </div>
-                    <h3 class="section-title">Status Rujukan Pasien</h3>
-                </div>
-
-                <div class="two-col">
-                    <div class="form-group">
-                        <label class="form-label">Apakah pasien merupakan rujukan masuk?</label>
-                        <select name="pasien_rujuk_masuk_${visitCount}" class="form-select" onchange="toggleRujukanFields(this, ${visitCount})">
-                            <option value="">-- Pilih --</option>
-                            <option value="ya">Ya, pasien rujukan</option>
-                            <option value="tidak">Tidak, pasien langsung</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group" id="rujukan_container_${visitCount}" style="display: none;">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="form-label">Nama Klinik ART Sebelumnya</label>
-                            <input type="text" name="nama_klinik_art_${visitCount}" id="nama_klinik_art_${visitCount}"
-                                    class="form-control" placeholder="Masukkan nama klinik ART sebelumnya">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Dengan ART</label>
-                            <input type="text" name="dengan_art_${visitCount}" id="dengan_art_${visitCount}"
-                            class="form-control" placeholder="Masukkan dengan ART">
+                <div class="visit-header">
+                    <div class="visit-title">
+                        <div class="visit-number">${visitCount}</div>
+                        <div>
+                            <h5 class="mb-0">Kunjungan Follow-Up #${visitCount}</h5>
+                            <small class="opacity-75">Data kunjungan pasien HIV/ART</small>
                         </div>
                     </div>
+                    ${removeButton}
                 </div>
 
-                <!-- Section 3: Data Fisik & Klinis -->
-                <div class="section-header">
-                    <div class="section-icon">
-                        <i class="fas fa-weight"></i>
+                <div class="form-section">
+                    <!-- Section 1: Informasi Kunjungan -->
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <h3 class="section-title">Informasi Kunjungan</h3>
                     </div>
-                    <h3 class="section-title">Data Fisik & Status Klinis</h3>
-                </div>
 
-                <div class="four-col">
-                    <div class="form-group">
-                        <label class="form-label">Berat Badan <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <input type="number" name="bb_${visitCount}" class="form-control" step="0.1" placeholder="0" required min="0" max="500">
-                            <span class="input-group-text">kg</span>
+                    <div class="two-col">
+                        <div class="form-group">
+                            <label class="form-label">Tanggal Kunjungan Follow-Up <span class="text-danger">*</span></label>
+                            <input type="date" name="tanggal_kunjungan_${visitCount}" class="form-control"
+                                   value="${getValue('tanggal_kunjungan')}" required>
+                            <div class="help-text">Masukkan tanggal kunjungan yang sebenarnya</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Rencana Tanggal Kunjungan y.a.d.?</label>
+                            <input type="date" name="tanggal_rencana_${visitCount}" class="form-control"
+                                   value="${getValue('tanggal_rencana')}">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Tinggi Badan (untuk anak)</label>
-                        <div class="input-group">
-                            <input type="number" name="tb_${visitCount}" class="form-control" step="0.1" placeholder="0" min="0" max="300">
-                            <span class="input-group-text">cm</span>
+
+                    <!-- Section 2: Status Rujukan -->
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <h3 class="section-title">Status Rujukan Pasien</h3>
+                    </div>
+
+                    <div class="two-col">
+                        <div class="form-group">
+                            <label class="form-label">Apakah pasien merupakan rujukan masuk?</label>
+                            <select name="pasien_rujuk_masuk_${visitCount}" class="form-select" onchange="toggleRujukanFields(this, ${visitCount})">
+                                <option value="">-- Pilih --</option>
+                                <option value="ya" ${getSelectedOption('pasien_rujuk_masuk', 'ya')}>Ya, pasien rujukan</option>
+                                <option value="tidak" ${getSelectedOption('pasien_rujuk_masuk', 'tidak')}>Tidak, pasien langsung</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Status Fungsional <span class="text-danger">*</span></label>
-                        <select name="status_fungsional_${visitCount}" class="form-select" required>
-                            <option value="">-- Pilih --</option>
-                            <option value="1">1 - Kerja</option>
-                            <option value="2">2 - Ambulatori</option>
-                            <option value="3">3 - Baring</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Stadium Klinis</label>
-                        <input type="text" name="stad_klinis_${visitCount}" class="form-control">
-                    </div>
-                </div>
 
-                <div class="two-col">
-                    <div class="form-group">
-                        <label class="form-label">Hamil</label>
-                        <select name="hamil_${visitCount}" class="form-select">
-                            <option value="">-- Pilih --</option>
-                            <option value="1">1 - Hamilan Baru</option>
-                            <option value="2">2 - Kehamilan Lama</option>
-                            <option value="3">3 - Tidak Hamil</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Infeksi Opportunistik</label>
-                        <select name="infeksi_opportunistik_${visitCount}" class="form-select">
-                            <option value="">-- Pilih --</option>
-                            <option value="K">K - kandidiasis</option>
-                            <option value="D">D - Diare Cryptosporidia</option>
-                            <option value="Cr">Cr - Meningitis Cryptocococal</option>
-                            <option value="PCP">PCP - Pneumonia Pneumocystis</option>
-                            <option value="CMV">CMV - Cytomeg alovirus</option>
-                            <option value="P">P - Peniciliosis</option>
-                            <option value="Z">Z - Herpes Zoster</option>
-                            <option value="S">S - Herpessimpleks</option>
-                            <option value="T">T - Toxoplasmosis</option>
-                            <option value="H">H - Hepatitis</option>
-                            <option value="Lainnya">Lainnya</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="two-col">
-                    <div class="form-group">
-                        <label class="form-label">Obat untuk IO</label>
-                        <input type="text" name="obat_io_${visitCount}" class="form-control">
-                    </div>
-                </div>
-
-                <!-- Section 4: Status TB -->
-                <div class="section-header">
-                    <div class="section-icon">
-                        <i class="fas fa-lungs"></i>
-                    </div>
-                    <h3 class="section-title">Status (TB)</h3>
-                </div>
-
-                <div class="two-col">
-                    <div class="form-group">
-                        <label class="form-label">Status TB</label>
-                        <select name="status_tb_${visitCount}" class="form-select">
-                            <option value="">-- Pilih --</option>
-                            <option value="1">1 - Tidak ada gejala/tanda TB</option>
-                            <option value="2">2 - Suspek TB (rujuk DOTS)</option>
-                            <option value="3">3 - Dalam terapi TB</option>
-                            <option value="4">4 - Tidak dilakukan skrining</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Section 5: Pengobatan Pencegahan -->
-                <div class="section-header">
-                    <div class="section-icon">
-                        <i class="fas fa-pills"></i>
-                    </div>
-                    <h3 class="section-title">Pengobatan Pencegahan (PP INH)</h3>
-                </div>
-
-                <div class="three-col">
-                    <div class="form-group">
-                        <label class="form-label">Apakah mendapat PP INH?</label>
-                        <select name="pp_inh_${visitCount}" class="form-select" onchange="toggleField(this, 'pp_inh_kode_${visitCount}')">
-                            <option value="">-- Pilih --</option>
-                            <option value="ya">Ya</option>
-                            <option value="tidak">Tidak</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Apakah mendapat PPK?</label>
-                        <select name="ppk_${visitCount}" class="form-select" onchange="toggleField(this, 'ppk_hasil_${visitCount}')">
-                            <option value="">-- Pilih --</option>
-                            <option value="ya">Ya</option>
-                            <option value="tidak">Tidak</option>
-                        </select>
-                        <div class="help-text">PPK = Pengobatan Pencegahan Kotrimoksazol</div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Hasil Akhir PP INH</label>
-                        <select name="pp_inh_hasil_${visitCount}" class="form-select">
-                            <option value="">-- Pilih --</option>
-                            <option value="1">1 - Serobat</option>
-                            <option value="2">2 - Gagal</option>
-                            <option value="3">3 - Pindah</option>
-                            <option value="4">4 - Meninggal</option>
-                            <option value="5">5 - Efek samping</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="two-col">
-                    <div class="form-group">
-                        <input type="text" name="pp_inh_kode_${visitCount}" id="pp_inh_kode_${visitCount}"
-                               class="form-control conditional-field" placeholder="Masukkan kode PP INH">
-                    </div>
-                    <div class="form-group">
-                        <input type="text" name="ppk_hasil_${visitCount}" id="ppk_hasil_${visitCount}"
-                               class="form-control conditional-field" placeholder="Hasil akhir PPK">
-                    </div>
-                </div>
-
-                <!-- Section 6: Obat ARV -->
-                <div class="section-header">
-                    <div class="section-icon">
-                        <i class="fas fa-prescription-bottle-alt"></i>
-                    </div>
-                    <h3 class="section-title">Obat ARV & Adherence</h3>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Obat ARV dan Dosis yang Diberikan</label>
-                    <textarea name="obat_arv_${visitCount}" class="form-control" rows="3"
-                              placeholder="Contoh: TDF+3TC+EFV 1x1 tablet per hari"></textarea>
-                    <div class="help-text">Tuliskan nama obat dan dosis lengkap</div>
-                </div>
-
-                <div class="three-col">
-                    <div class="form-group">
-                        <label class="form-label">Sisa Obat ART</label>
-                        <input type="text" name="sisa_obat_${visitCount}" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Adherence ART</label>
-                        <select name="adherence_art_${visitCount}" class="form-select">
-                            <option value="">-- Pilih --</option>
-                            <option value="1">1 - Sangat Baik (>95%)</option>
-                            <option value="2">2 - Baik (80-95%)</option>
-                            <option value="3">3 - Kurang (<80%)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Efek Samping ART</label>
-                        <input type="text" name="efek_samping_${visitCount}" class="form-control">
-                    </div>
-                </div>
-
-                <!-- Section 7: Laboratorium -->
-                <div class="section-header">
-                    <div class="section-icon">
-                        <i class="fas fa-flask"></i>
-                    </div>
-                    <h3 class="section-title">Hasil Laboratorium</h3>
-                </div>
-
-                <div class="two-col">
-                    <div class="form-group">
-                        <label class="form-label">Jumlah CD4</label>
-                        <div class="input-group">
-                            <input type="number" name="cd4_${visitCount}" class="form-control" placeholder="0" min="0">
-                            <span class="input-group-text">sel/mm³</span>
+                    <div class="form-group" id="rujukan_container_${visitCount}" style="display: ${getValue('pasien_rujuk_masuk') === 'ya' ? 'block' : 'none'};">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Nama Klinik ART Sebelumnya</label>
+                                <input type="text" name="nama_klinik_art_${visitCount}" id="nama_klinik_art_${visitCount}"
+                                        class="form-control" placeholder="Masukkan nama klinik ART sebelumnya"
+                                        value="${getValue('nama_klinik_art')}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Dengan ART</label>
+                                <input type="text" name="dengan_art_${visitCount}" id="dengan_art_${visitCount}"
+                                class="form-control" placeholder="Masukkan dengan ART"
+                                value="${getValue('dengan_art')}">
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Hasil Lab</label>
-                        <input type="text" name="hasil_lab_${visitCount}" class="form-control"
-                               placeholder="Hasil pemeriksaan lab lain">
-                    </div>
-                </div>
 
-                <!-- Section 8: Follow-Up & Rujukan -->
-                <div class="section-header">
-                    <div class="section-icon">
-                        <i class="fas fa-arrow-right"></i>
+                    <!-- Section 3: Data Fisik & Klinis -->
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-weight"></i>
+                        </div>
+                        <h3 class="section-title">Data Fisik & Status Klinis</h3>
                     </div>
-                    <h3 class="section-title">Follow-Up & Rujukan</h3>
-                </div>
 
-                <div class="two-col">
-                    <div class="form-group">
-                        <label class="form-label">Diberikan Kondom?</label>
-                        <select name="diberikan_kondom_${visitCount}" class="form-select" onchange="toggleField(this, 'diberikan_kondom_detail_${visitCount}')">
-                            <option value="">-- Pilih --</option>
-                            <option value="ya">Ya</option>
-                            <option value="tidak">Tidak</option>
-                            <option value="tt">TT - Tidak Tersedia</option>
-                        </select>
+                    <div class="four-col">
+                        <div class="form-group">
+                            <label class="form-label">Berat Badan <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input type="number" name="bb_${visitCount}" class="form-control" step="0.1"
+                                       placeholder="0" required min="0" max="500" value="${getValue('bb')}">
+                                <span class="input-group-text">kg</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tinggi Badan (untuk anak)</label>
+                            <div class="input-group">
+                                <input type="number" name="tb_${visitCount}" class="form-control" step="0.1"
+                                       placeholder="0" min="0" max="300" value="${getValue('tb')}">
+                                <span class="input-group-text">cm</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status Fungsional <span class="text-danger">*</span></label>
+                            <select name="status_fungsional_${visitCount}" class="form-select" required>
+                                <option value="">-- Pilih --</option>
+                                <option value="1" ${getSelectedOption('status_fungsional', '1')}>1 - Kerja</option>
+                                <option value="2" ${getSelectedOption('status_fungsional', '2')}>2 - Ambulatori</option>
+                                <option value="3" ${getSelectedOption('status_fungsional', '3')}>3 - Baring</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Stadium Klinis</label>
+                            <input type="text" name="stad_klinis_${visitCount}" class="form-control"
+                                   value="${getValue('stad_klinis')}">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Apakah dirujuk ke spesialis (MRS)?</label>
-                        <input type="text" name="rujuk_spesialis_${visitCount}" class="form-control">
-                    </div>
-                </div>
 
-                <div class="two-col">
-                    <div class="form-group">
-                        <input type="text" name="diberikan_kondom_detail_${visitCount}" id="diberikan_kondom_detail_${visitCount}"
-                               class="form-control conditional-field" placeholder="tuliskan jumlah">
+                    <div class="two-col">
+                        <div class="form-group">
+                            <label class="form-label">Hamil</label>
+                            <select name="hamil_${visitCount}" class="form-select">
+                                <option value="">-- Pilih --</option>
+                                <option value="1" ${getSelectedOption('hamil', '1')}>1 - Hamilan Baru</option>
+                                <option value="2" ${getSelectedOption('hamil', '2')}>2 - Kehamilan Lama</option>
+                                <option value="3" ${getSelectedOption('hamil', '3')}>3 - Tidak Hamil</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Infeksi Opportunistik</label>
+                            <select name="infeksi_opportunistik_${visitCount}" class="form-select">
+                                <option value="">-- Pilih --</option>
+                                <option value="K" ${getSelectedOption('infeksi_opportunistik', 'K')}>K - kandidiasis</option>
+                                <option value="D" ${getSelectedOption('infeksi_opportunistik', 'D')}>D - Diare Cryptosporidia</option>
+                                <option value="Cr" ${getSelectedOption('infeksi_opportunistik', 'Cr')}>Cr - Meningitis Cryptocococal</option>
+                                <option value="PCP" ${getSelectedOption('infeksi_opportunistik', 'PCP')}>PCP - Pneumonia Pneumocystis</option>
+                                <option value="CMV" ${getSelectedOption('infeksi_opportunistik', 'CMV')}>CMV - Cytomeg alovirus</option>
+                                <option value="P" ${getSelectedOption('infeksi_opportunistik', 'P')}>P - Peniciliosis</option>
+                                <option value="Z" ${getSelectedOption('infeksi_opportunistik', 'Z')}>Z - Herpes Zoster</option>
+                                <option value="S" ${getSelectedOption('infeksi_opportunistik', 'S')}>S - Herpessimpleks</option>
+                                <option value="T" ${getSelectedOption('infeksi_opportunistik', 'T')}>T - Toxoplasmosis</option>
+                                <option value="H" ${getSelectedOption('infeksi_opportunistik', 'H')}>H - Hepatitis</option>
+                                <option value="Lainnya" ${getSelectedOption('infeksi_opportunistik', 'Lainnya')}>Lainnya</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Section 9: Akhir Follow-Up -->
-                <div class="section-header">
-                    <div class="section-icon">
-                        <i class="fas fa-flag-checkered"></i>
+                    <div class="two-col">
+                        <div class="form-group">
+                            <label class="form-label">Obat untuk IO</label>
+                            <input type="text" name="obat_io_${visitCount}" class="form-control"
+                                   value="${getValue('obat_io')}">
+                        </div>
                     </div>
-                    <h3 class="section-title">Status Akhir Follow-Up</h3>
-                </div>
 
-                <div class="two-col">
-                    <div class="form-group">
-                        <label class="form-label">Status Akhir Follow-Up</label>
-                        <select name="akhir_followup_${visitCount}" class="form-select" onchange="toggleField(this, 'akhir_detail_${visitCount}')">
-                            <option value="">-- Pilih --</option>
-                            <option value="aktif">Aktif - Masih dalam perawatan</option>
-                            <option value="m">M - Meninggal</option>
-                            <option value="lfu">LFU - Lost Follow Up</option>
-                            <option value="rk">RK - Rujuk Keluar</option>
-                        </select>
+                    <!-- Section 4: Status TB -->
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-lungs"></i>
+                        </div>
+                        <h3 class="section-title">Status (TB)</h3>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Catatan Kunjungan</label>
-                        <textarea name="catatan_${visitCount}" class="form-control" rows="3"
-                                  placeholder="Catatan kondisi pasien, efek samping, atau rencana tindak lanjut..."></textarea>
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <input type="text" name="akhir_detail_${visitCount}" id="akhir_detail_${visitCount}"
-                           class="form-control conditional-field"
-                           placeholder="Detail: tanggal meninggal / tanggal terakhir datang / tempat rujuk">
-                    <div class="help-text">Isi sesuai status yang dipilih di atas</div>
+                    <div class="two-col">
+                        <div class="form-group">
+                            <label class="form-label">Status TB</label>
+                            <select name="status_tb_${visitCount}" class="form-select">
+                                <option value="">-- Pilih --</option>
+                                <option value="1" ${getSelectedOption('status_tb', '1')}>1 - Tidak ada gejala/tanda TB</option>
+                                <option value="2" ${getSelectedOption('status_tb', '2')}>2 - Suspek TB (rujuk DOTS)</option>
+                                <option value="3" ${getSelectedOption('status_tb', '3')}>3 - Dalam terapi TB</option>
+                                <option value="4" ${getSelectedOption('status_tb', '4')}>4 - Tidak dilakukan skrining</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Section 5: Pengobatan Pencegahan -->
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-pills"></i>
+                        </div>
+                        <h3 class="section-title">Pengobatan Pencegahan (PP INH)</h3>
+                    </div>
+
+                    <div class="three-col">
+                        <div class="form-group">
+                            <label class="form-label">Apakah mendapat PP INH?</label>
+                            <select name="pp_inh_${visitCount}" class="form-select" onchange="toggleField(this, 'pp_inh_kode_${visitCount}')">
+                                <option value="">-- Pilih --</option>
+                                <option value="ya" ${getSelectedOption('pp_inh', 'ya')}>Ya</option>
+                                <option value="tidak" ${getSelectedOption('pp_inh', 'tidak')}>Tidak</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Apakah mendapat PPK?</label>
+                            <select name="ppk_${visitCount}" class="form-select" onchange="toggleField(this, 'ppk_hasil_${visitCount}')">
+                                <option value="">-- Pilih --</option>
+                                <option value="ya" ${getSelectedOption('ppk', 'ya')}>Ya</option>
+                                <option value="tidak" ${getSelectedOption('ppk', 'tidak')}>Tidak</option>
+                            </select>
+                            <div class="help-text">PPK = Pengobatan Pencegahan Kotrimoksazol</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Hasil Akhir PP INH</label>
+                            <select name="pp_inh_hasil_${visitCount}" class="form-select">
+                                <option value="">-- Pilih --</option>
+                                <option value="1" ${getSelectedOption('pp_inh_hasil', '1')}>1 - Serobat</option>
+                                <option value="2" ${getSelectedOption('pp_inh_hasil', '2')}>2 - Gagal</option>
+                                <option value="3" ${getSelectedOption('pp_inh_hasil', '3')}>3 - Pindah</option>
+                                <option value="4" ${getSelectedOption('pp_inh_hasil', '4')}>4 - Meninggal</option>
+                                <option value="5" ${getSelectedOption('pp_inh_hasil', '5')}>5 - Efek samping</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="two-col">
+                        <div class="form-group">
+                            <input type="text" name="pp_inh_kode_${visitCount}" id="pp_inh_kode_${visitCount}"
+                                   class="form-control conditional-field ${getValue('pp_inh') === 'ya' ? 'show' : ''}"
+                                   placeholder="Masukkan kode PP INH" value="${getValue('pp_inh_kode')}">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="ppk_hasil_${visitCount}" id="ppk_hasil_${visitCount}"
+                                   class="form-control conditional-field ${getValue('ppk') === 'ya' ? 'show' : ''}"
+                                   placeholder="Hasil akhir PPK" value="${getValue('ppk_hasil')}">
+                        </div>
+                    </div>
+
+                    <!-- Section 6: Obat ARV -->
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-prescription-bottle-alt"></i>
+                        </div>
+                        <h3 class="section-title">Obat ARV & Adherence</h3>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Obat ARV dan Dosis yang Diberikan</label>
+                        <textarea name="obat_arv_${visitCount}" class="form-control" rows="3"
+                                  placeholder="Contoh: TDF+3TC+EFV 1x1 tablet per hari">${getValue('obat_arv')}</textarea>
+                        <div class="help-text">Tuliskan nama obat dan dosis lengkap</div>
+                    </div>
+
+                    <div class="three-col">
+                        <div class="form-group">
+                            <label class="form-label">Sisa Obat ART</label>
+                            <input type="text" name="sisa_obat_${visitCount}" class="form-control"
+                                   value="${getValue('sisa_obat')}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Adherence ART</label>
+                            <select name="adherence_art_${visitCount}" class="form-select">
+                                <option value="">-- Pilih --</option>
+                                <option value="1" ${getSelectedOption('adherence_art', '1')}>1 - Sangat Baik (>95%)</option>
+                                <option value="2" ${getSelectedOption('adherence_art', '2')}>2 - Baik (80-95%)</option>
+                                <option value="3" ${getSelectedOption('adherence_art', '3')}>3 - Kurang (<80%)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Efek Samping ART</label>
+                            <input type="text" name="efek_samping_${visitCount}" class="form-control"
+                                   value="${getValue('efek_samping')}">
+                        </div>
+                    </div>
+
+                    <!-- Section 7: Laboratorium -->
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-flask"></i>
+                        </div>
+                        <h3 class="section-title">Hasil Laboratorium</h3>
+                    </div>
+
+                    <div class="two-col">
+                        <div class="form-group">
+                            <label class="form-label">Jumlah CD4</label>
+                            <div class="input-group">
+                                <input type="number" name="cd4_${visitCount}" class="form-control"
+                                       placeholder="0" min="0" value="${getValue('cd4')}">
+                                <span class="input-group-text">sel/mm³</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Hasil Lab</label>
+                            <input type="text" name="hasil_lab_${visitCount}" class="form-control"
+                                   placeholder="Hasil pemeriksaan lab lain" value="${getValue('hasil_lab')}">
+                        </div>
+                    </div>
+
+                    <!-- Section 8: Follow-Up & Rujukan -->
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                        <h3 class="section-title">Follow-Up & Rujukan</h3>
+                    </div>
+
+                    <div class="two-col">
+                        <div class="form-group">
+                            <label class="form-label">Diberikan Kondom?</label>
+                            <select name="diberikan_kondom_${visitCount}" class="form-select" onchange="toggleField(this, 'diberikan_kondom_detail_${visitCount}')">
+                                <option value="">-- Pilih --</option>
+                                <option value="ya" ${getSelectedOption('diberikan_kondom', 'ya')}>Ya</option>
+                                <option value="tidak" ${getSelectedOption('diberikan_kondom', 'tidak')}>Tidak</option>
+                                <option value="tt" ${getSelectedOption('diberikan_kondom', 'tt')}>TT - Tidak Tersedia</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Apakah dirujuk ke spesialis (MRS)?</label>
+                            <input type="text" name="rujuk_spesialis_${visitCount}" class="form-control"
+                                   value="${getValue('rujuk_spesialis')}">
+                        </div>
+                    </div>
+
+                    <div class="two-col">
+                        <div class="form-group">
+                            <input type="text" name="diberikan_kondom_detail_${visitCount}" id="diberikan_kondom_detail_${visitCount}"
+                                   class="form-control conditional-field ${getValue('diberikan_kondom') === 'ya' ? 'show' : ''}"
+                                   placeholder="tuliskan jumlah" value="${getValue('diberikan_kondom_detail')}">
+                        </div>
+                    </div>
+
+                    <!-- Section 9: Akhir Follow-Up -->
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-flag-checkered"></i>
+                        </div>
+                        <h3 class="section-title">Status Akhir Follow-Up</h3>
+                    </div>
+
+                    <div class="two-col">
+                        <div class="form-group">
+                            <label class="form-label">Status Akhir Follow-Up</label>
+                            <select name="akhir_followup_${visitCount}" class="form-select" onchange="toggleField(this, 'akhir_detail_${visitCount}')">
+                                <option value="">-- Pilih --</option>
+                                <option value="aktif" ${getSelectedOption('akhir_followup', 'aktif')}>Aktif - Masih dalam perawatan</option>
+                                <option value="m" ${getSelectedOption('akhir_followup', 'm')}>M - Meninggal</option>
+                                <option value="lfu" ${getSelectedOption('akhir_followup', 'lfu')}>LFU - Lost Follow Up</option>
+                                <option value="rk" ${getSelectedOption('akhir_followup', 'rk')}>RK - Rujuk Keluar</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Catatan Kunjungan</label>
+                            <textarea name="catatan_${visitCount}" class="form-control" rows="3"
+                                      placeholder="Catatan kondisi pasien, efek samping, atau rencana tindak lanjut...">${getValue('catatan')}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" name="akhir_detail_${visitCount}" id="akhir_detail_${visitCount}"
+                               class="form-control conditional-field ${getValue('akhir_followup') && getValue('akhir_followup') !== 'aktif' ? 'show' : ''}"
+                               placeholder="Detail: tanggal meninggal / tanggal terakhir datang / tempat rujuk"
+                               value="${getValue('akhir_detail')}">
+                        <div class="help-text">Isi sesuai status yang dipilih di atas</div>
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
 
             container.appendChild(visitCard);
 
-            // Smooth scroll to new card
-            setTimeout(() => {
-                visitCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 100);
+            // Smooth scroll to new card (hanya untuk kunjungan baru, bukan saat load existing)
+            if (!existingVisitData) {
+                setTimeout(() => {
+                    visitCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            }
 
             // Add fade-in animation
             visitCard.style.opacity = '0';
@@ -913,127 +950,9 @@
             document.getElementById('praAnestesiForm').submit();
         }
 
-        // Auto-save draft functionality
-        let autoSaveTimer;
-        function autoSave() {
-            clearTimeout(autoSaveTimer);
-            autoSaveTimer = setTimeout(() => {
-                const form = document.getElementById('praAnestesiForm');
-                if (form) {
-                    const formData = new FormData(form);
-                    const data = {};
-
-                    for (let [key, value] of formData.entries()) {
-                        if (value.trim()) {
-                            data[key] = value;
-                        }
-                    }
-
-                    localStorage.setItem('hivArtDraft', JSON.stringify(data));
-                    console.log('Auto-saved draft');
-                }
-            }, 2000);
-        }
-
-        // Fungsi untuk load draft
-        function loadDraft() {
-            const draft = localStorage.getItem('hivArtDraft');
-            if (draft) {
-                try {
-                    const data = JSON.parse(draft);
-
-                    // Count visits needed
-                    const visitNumbers = new Set();
-                    Object.keys(data).forEach(key => {
-                        const match = key.match(/_(\d+)$/);
-                        if (match) {
-                            visitNumbers.add(parseInt(match[1]));
-                        }
-                    });
-
-                    // Add visits
-                    const maxVisit = Math.max(...visitNumbers);
-                    for (let i = 1; i <= maxVisit; i++) {
-                        addNewVisit();
-                    }
-
-                    // Fill data
-                    setTimeout(() => {
-                        Object.keys(data).forEach(name => {
-                            const field = document.querySelector(`[name="${name}"]`);
-                            if (field) {
-                                field.value = data[name];
-
-                                // Trigger change for conditional fields
-                                if (field.onchange) {
-                                    field.onchange();
-                                }
-                            }
-                        });
-                        showToast('Draft data berhasil dimuat');
-                    }, 500);
-                } catch (e) {
-                    console.log('Error loading draft:', e);
-                }
-            }
-        }
-
-        // Event listeners
-        document.addEventListener('input', function (e) {
-            if (e.target.matches('input, select, textarea')) {
-                autoSave();
-            }
-        });
-
-        document.addEventListener('keydown', function (e) {
-            // Ctrl + S to save
-            if (e.ctrlKey && e.key === 's') {
-                e.preventDefault();
-                if (validateForm()) {
-                    submitForm();
-                }
-            }
-
-            // Ctrl + N to add visit
-            if (e.ctrlKey && e.key === 'n') {
-                e.preventDefault();
-                addNewVisit();
-            }
-        });
-
-        // Initialize - Buat 1 kunjungan default saat halaman dimuat
+        // Initialize - Load existing data saat halaman dimuat
         document.addEventListener('DOMContentLoaded', function () {
-            // Check for draft
-            if (localStorage.getItem('hivArtDraft')) {
-                if (confirm('Ditemukan data draft sebelumnya. Apakah ingin memuat data tersebut?')) {
-                    loadDraft();
-                } else {
-                    // Buat 1 kunjungan default
-                    addNewVisit();
-                    localStorage.removeItem('hivArtDraft');
-                }
-            } else {
-                // Buat 1 kunjungan default
-                addNewVisit();
-            }
-        });
-
-        // Clear draft on successful submission
-        function clearDraft() {
-            localStorage.removeItem('hivArtDraft');
-        }
-
-        // Handle form submission
-        document.getElementById('praAnestesiForm').addEventListener('submit', function(e) {
-            if (!validateForm()) {
-                e.preventDefault();
-                return false;
-            }
-
-            // Clear draft on successful submission
-            setTimeout(() => {
-                clearDraft();
-            }, 1000);
+            loadExistingData();
         });
     </script>
 @endpush
