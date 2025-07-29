@@ -45,7 +45,12 @@ class RmeHivArt extends Model
 
     public function terapiAntiretroviral()
     {
-        return $this->hasMany(RmeHivArtTerapiAntiretroviral::class, 'id_hiv_art', 'id');
+        return $this->hasOne(RmeHivArtTerapiAntiretroviral::class, 'id_hiv_art', 'id');
+    }
+
+    public function rmeAlergiPasien()
+    {
+        return $this->hasMany(RmeAlergiPasien::class, 'kd_pasien', 'kd_pasien');
     }
 
     public function kunjungan()

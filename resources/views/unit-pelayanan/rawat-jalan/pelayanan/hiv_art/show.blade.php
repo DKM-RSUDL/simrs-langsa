@@ -18,14 +18,13 @@
                     </a>
                 </div>
 
-                <form id="praAnestesiForm" method="POST"
-                    action="{{ route('rawat-jalan.hiv_art.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $hivArt->id]) }}">
+                <form id="praAnestesiForm" method=""
+                    action="">
                     @csrf
-                    @method('PUT')
 
                     <div class="card shadow-sm border-0">
                         <div class="card-header bg-primary text-white text-center py-3">
-                            <h5 class="mb-0 font-weight-bold"><strong class="text-info fw-bold">(EDIT)</strong> IKHTISAR PERAWATAN PASIEN HIV DAN TERAPI ANTIRETROVIRAL (ART)
+                            <h5 class="mb-0 font-weight-bold"><strong class="text-info fw-bold">(DETAIL)</strong> IKHTISAR PERAWATAN PASIEN HIV DAN TERAPI ANTIRETROVIRAL (ART)
                             </h5>
                         </div>
 
@@ -43,7 +42,7 @@
                                                 <label class="form-label fw-bold">Tanggal</label>
                                                 <input type="date" class="form-control" name="tanggal"
                                                     value="{{ old('tanggal', $hivArt->tanggal ? $hivArt->tanggal->format('Y-m-d') : '') }}"
-                                                    required>
+                                                    required disabled>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -51,7 +50,7 @@
                                                 <label class="form-label fw-bold">Jam</label>
                                                 <input type="time" class="form-control" name="jam"
                                                     value="{{ $hivArt->jam_masuk ? \Carbon\Carbon::parse($hivArt->jam_masuk)->format('H:i') : date('H:i') }}"
-                                                    required>
+                                                    required disabled>
                                             </div>
                                         </div>
                                     </div>
@@ -60,12 +59,10 @@
 
                             <!-- Alergi -->
                             <div class="card mb-4 shadow-sm">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0 fw-bold text-primary">Alergi</h6>
+                                </div>
                                 <div class="section-separator" id="alergi">
-
-                                    <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openAlergiModal"
-                                        data-bs-toggle="modal" data-bs-target="#alergiModal">
-                                        <i class="ti-plus"></i> Tambah Alergi
-                                    </button>
                                     <input type="hidden" name="alergis" id="alergisInput" value="[]">
                                     <div class="table-responsive">
                                         <table class="table table-bordered" id="createAlergiTable">
@@ -75,7 +72,6 @@
                                                     <th width="25%">Alergen</th>
                                                     <th width="25%">Reaksi</th>
                                                     <th width="20%">Tingkat Keparahan</th>
-                                                    <th width="10%">Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -101,7 +97,7 @@
                                             <div class="col-md-9">
                                                 <input type="number" class="form-control" name="no_reg_nas"
                                                     value="{{ old('no_reg_nas', $hivArt->no_reg_nas) }}"
-                                                    placeholder="No registrasi Nasional">
+                                                    placeholder="No registrasi Nasional" disabled>
                                                 @error('no_reg_nas')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
@@ -114,7 +110,7 @@
                                             <div class="col-md-9">
                                                 <input type="number" class="form-control" name="nik"
                                                     placeholder="Nomor Indok Kependudukan"
-                                                    value="{{ old('nik', $hivArt->nik) }}">
+                                                    value="{{ old('nik', $hivArt->nik) }}" disabled>
                                                 @error('nik')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
@@ -127,7 +123,7 @@
                                             <div class="col-md-9">
                                                 <input type="text" class="form-control" name="nama_ibu_kandung"
                                                     placeholder="Nama Ibu Kandung"
-                                                    value="{{ old('nama_ibu_kandung', $hivArt->nama_ibu_kandung) }}">
+                                                    value="{{ old('nama_ibu_kandung', $hivArt->nama_ibu_kandung) }}" disabled>
                                                 @error('nama_ibu_kandung')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
@@ -140,7 +136,7 @@
                                             </div>
                                             <div class="col-md-9">
                                                 <textarea class="form-control" name="alamat_telp" rows="2"
-                                                    placeholder="Alamat dan No. Telp. Pasien">{{ $hivArt->alamat_telp }}</textarea>
+                                                    placeholder="Alamat dan No. Telp. Pasien" disabled>{{ $hivArt->alamat_telp }}</textarea>
                                                 @error('alamat_telp')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
@@ -154,7 +150,7 @@
                                             <div class="col-md-9">
                                                 <input type="text" class="form-control" name="pmo"
                                                     placeholder="Nama Pengawas Minum Obat"
-                                                    value="{{ old('pmo', $hivArt->pmo) }}">
+                                                    value="{{ old('pmo', $hivArt->pmo) }}" disabled>
                                                 @error('pmo')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
@@ -168,7 +164,7 @@
                                             <div class="col-md-9">
                                                 <input type="text" class="form-control" name="hubungan_pasien"
                                                     placeholder="Hubungan dengan Pasien"
-                                                    value="{{ old('hubungan_pasien', $hivArt->hubungan_pasien) }}">
+                                                    value="{{ old('hubungan_pasien', $hivArt->hubungan_pasien) }}" disabled>
                                                 @error('hubungan_pasien')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
@@ -182,7 +178,7 @@
                                             <div class="col-md-9">
                                                 <input type="text" class="form-control" name="alamat_no_telp_pmo"
                                                     placeholder="Alamat dan No. Telp. PMO"
-                                                    value="{{ old('alamat_no_telp_pmo', $hivArt->alamat_no_telp_pmo) }}">
+                                                    value="{{ old('alamat_no_telp_pmo', $hivArt->alamat_no_telp_pmo) }}" disabled>
                                                 @error('alamat_no_telp_pmo')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
@@ -195,7 +191,7 @@
                                             </div>
                                             <div class="col-md-9">
                                                 <input type="date" class="form-control" name="tgl_tes_hiv"
-                                                    value="{{ old('tgl_tes_hiv', $hivArt->tgl_tes_hiv ? $hivArt->tgl_tes_hiv->format('Y-m-d') : '') }}">
+                                                    value="{{ old('tgl_tes_hiv', $hivArt->tgl_tes_hiv ? $hivArt->tgl_tes_hiv->format('Y-m-d') : '') }}" disabled>
                                             </div>
                                         </div>
 
@@ -206,7 +202,7 @@
                                             <div class="col-md-9">
                                                 <input type="text" class="form-control" name="tempat_tes_hiv"
                                                     placeholder="Tempat Tes HIV"
-                                                    value="{{ old('tempat_tes_hiv', $hivArt->tempat_tes_hiv) }}">
+                                                    value="{{ old('tempat_tes_hiv', $hivArt->tempat_tes_hiv) }}" disabled>
                                             </div>
                                         </div>
 
@@ -232,7 +228,7 @@
                                                 <!-- 1. KIA -->
                                                 <div class="form-check mb-2">
                                                     <input class="form-check-input" type="radio" value="kia" id="kia"
-                                                        name="kia_details[]" {{ $selectedValue == 'kia' ? 'checked' : '' }}>
+                                                        name="kia_details[]" {{ $selectedValue == 'kia' ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label" for="kia">
                                                         1. KIA
                                                     </label>
@@ -241,7 +237,7 @@
                                                 <!-- 2-Rujukan Jalan dengan input tambahan -->
                                                 <div class="form-check mb-2">
                                                     <input class="form-check-input" type="radio" value="rujukan_jalan_tb"
-                                                        id="kia_rujukan_jalan_tb" name="kia_details[]" {{ $selectedValue == 'rujukan_jalan_tb' ? 'checked' : '' }}>
+                                                        id="kia_rujukan_jalan_tb" name="kia_details[]" {{ $selectedValue == 'rujukan_jalan_tb' ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label" for="kia_rujukan_jalan_tb">
                                                         2. Rujukan Jalan (TB, Anak, Penyakit Dalam, MIS, Lainnya...)
                                                     </label>
@@ -249,13 +245,13 @@
                                                 <div id="rujukan-details"
                                                     class="bg-light p-3 mb-3 rounded {{ $selectedValue == 'rujukan_jalan_tb' ? '' : 'd-none' }}">
                                                     <textarea class="form-control" name="rujukan_keterangan" rows="2"
-                                                        placeholder="Sebutkan detail...">{{ isset($hivArt) ? $hivArt->rujukan_keterangan : '' }}</textarea>
+                                                        placeholder="Sebutkan detail..." disabled>{{ isset($hivArt) ? $hivArt->rujukan_keterangan : '' }}</textarea>
                                                 </div>
 
                                                 <!-- 3-Rawat Inap -->
                                                 <div class="form-check mb-2">
                                                     <input class="form-check-input" type="radio" value="rujukan_rawat_inap"
-                                                        id="kia_rawat_inap" name="kia_details[]" {{ $selectedValue == 'rujukan_rawat_inap' ? 'checked' : '' }}>
+                                                        id="kia_rawat_inap" name="kia_details[]" {{ $selectedValue == 'rujukan_rawat_inap' ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label" for="kia_rawat_inap">
                                                         3. Rawat Inap
                                                     </label>
@@ -264,7 +260,7 @@
                                                 <!-- 4-Praktek Swasta -->
                                                 <div class="form-check mb-2">
                                                     <input class="form-check-input" type="radio" value="praktek_swasta"
-                                                        id="kia_praktek_swasta" name="kia_details[]" {{ $selectedValue == 'praktek_swasta' ? 'checked' : '' }}>
+                                                        id="kia_praktek_swasta" name="kia_details[]" {{ $selectedValue == 'praktek_swasta' ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label" for="kia_praktek_swasta">
                                                         4. Praktek Swasta
                                                     </label>
@@ -273,7 +269,7 @@
                                                 <!-- 5-Jangkauan dengan input tambahan -->
                                                 <div class="form-check mb-2">
                                                     <input class="form-check-input" type="radio" value="jangkauan"
-                                                        id="kia_jangkauan" name="kia_details[]" {{ $selectedValue == 'jangkauan' ? 'checked' : '' }}>
+                                                        id="kia_jangkauan" name="kia_details[]" {{ $selectedValue == 'jangkauan' ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label" for="kia_jangkauan">
                                                         5. Jangkauan (Penasun, WPS, LSL, ...)
                                                     </label>
@@ -281,13 +277,13 @@
                                                 <div id="jangkauan-details"
                                                     class="bg-light p-3 mb-3 rounded {{ $selectedValue == 'jangkauan' ? '' : 'd-none' }}">
                                                     <textarea class="form-control" name="jangkauan_keterangan" rows="2"
-                                                        placeholder="Sebutkan detail jangkauan...">{{ isset($hivArt) ? $hivArt->jangkauan_keterangan : '' }}</textarea>
+                                                        placeholder="Sebutkan detail jangkauan..." disabled>{{ isset($hivArt) ? $hivArt->jangkauan_keterangan : '' }}</textarea>
                                                 </div>
 
                                                 <!-- 6-LSM -->
                                                 <div class="form-check mb-2">
                                                     <input class="form-check-input" type="radio" value="lsm" id="kia_lsm"
-                                                        name="kia_details[]" {{ $selectedValue == 'lsm' ? 'checked' : '' }}>
+                                                        name="kia_details[]" {{ $selectedValue == 'lsm' ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label" for="kia_lsm">
                                                         6. LSM
                                                     </label>
@@ -296,7 +292,7 @@
                                                 <!-- 7-Datang sendiri -->
                                                 <div class="form-check mb-2">
                                                     <input class="form-check-input" type="radio" value="datang_sendiri"
-                                                        id="kia_datang_sendiri" name="kia_details[]" {{ $selectedValue == 'datang_sendiri' ? 'checked' : '' }}>
+                                                        id="kia_datang_sendiri" name="kia_details[]" {{ $selectedValue == 'datang_sendiri' ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label" for="kia_datang_sendiri">
                                                         7. Datang sendiri
                                                     </label>
@@ -305,7 +301,7 @@
                                                 <!-- 8-Lainnya dengan input tambahan -->
                                                 <div class="form-check mb-2">
                                                     <input class="form-check-input" type="radio" value="lainnya_uraikan"
-                                                        id="kia_lainnya" name="kia_details[]" {{ $selectedValue == 'lainnya_uraikan' ? 'checked' : '' }}>
+                                                        id="kia_lainnya" name="kia_details[]" {{ $selectedValue == 'lainnya_uraikan' ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label" for="kia_lainnya">
                                                         8. Lainnya, uraikan...
                                                     </label>
@@ -313,7 +309,7 @@
                                                 <div id="lainnya-kia-details"
                                                     class="bg-light p-3 mb-3 rounded {{ $selectedValue == 'lainnya_uraikan' ? '' : 'd-none' }}">
                                                     <textarea class="form-control" name="lainnya_kia_keterangan" rows="2"
-                                                        placeholder="Sebutkan lainnya...">{{ isset($hivArt) ? $hivArt->lainnya_kia_keterangan : '' }}</textarea>
+                                                        placeholder="Sebutkan lainnya..." disabled>{{ isset($hivArt) ? $hivArt->lainnya_kia_keterangan : '' }}</textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -346,7 +342,7 @@
                                                 <label class="form-label">Pendidikan</label>
                                             </div>
                                             <div class="col-md-9">
-                                                <select class="form-select" name="pendidikan">
+                                                <select class="form-select" name="pendidikan" disabled>
                                                     <option value="">--pilih--</option>
                                                     <option value="0" {{ (isset($hivArt) && $hivArt->pendidikan == '0') ? 'selected' : '' }}>Tidak Sekolah</option>
                                                     <option value="1" {{ (isset($hivArt) && $hivArt->pendidikan == '1') ? 'selected' : '' }}>SD</option>
@@ -362,7 +358,7 @@
                                                 <label class="form-label">Kerja</label>
                                             </div>
                                             <div class="col-md-9">
-                                                <select class="form-select" name="pekerjaan">
+                                                <select class="form-select" name="pekerjaan" disabled>
                                                     <option value="">--pilih--</option>
                                                     <option value="0" {{ (isset($hivArt) && $hivArt->pekerjaan == '0') ? 'selected' : '' }}>Tidak Bekerja</option>
                                                     <option value="1" {{ (isset($hivArt) && $hivArt->pekerjaan == '1') ? 'selected' : '' }}>Bekerja</option>
@@ -380,7 +376,7 @@
                                                 <div class="form-check mb-2">
                                                     <input class="form-check-input" type="checkbox"
                                                         value="Seks Vaginal Berisiko" id="seks_vaginal"
-                                                        name="faktor_risiko[]" {{ in_array('Seks Vaginal Berisiko', $selectedFaktorRisiko) ? 'checked' : '' }}>
+                                                        name="faktor_risiko[]" {{ in_array('Seks Vaginal Berisiko', $selectedFaktorRisiko) ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label" for="seks_vaginal">
                                                         Seks Vaginal Berisiko
                                                     </label>
@@ -389,7 +385,7 @@
                                                 <!-- Seks Anal Berisiko -->
                                                 <div class="form-check mb-2">
                                                     <input class="form-check-input" type="checkbox"
-                                                        value="Seks Anal Berisiko" id="seks_anal" name="faktor_risiko[]" {{ in_array('Seks Anal Berisiko', $selectedFaktorRisiko) ? 'checked' : '' }}>
+                                                        value="Seks Anal Berisiko" id="seks_anal" name="faktor_risiko[]" {{ in_array('Seks Anal Berisiko', $selectedFaktorRisiko) ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label" for="seks_anal">
                                                         Seks Anal Berisiko
                                                     </label>
@@ -398,7 +394,7 @@
                                                 <!-- Perinatal -->
                                                 <div class="form-check mb-2">
                                                     <input class="form-check-input" type="checkbox" value="Perinatal"
-                                                        id="perinatal" name="faktor_risiko[]" {{ in_array('Perinatal', $selectedFaktorRisiko) ? 'checked' : '' }}>
+                                                        id="perinatal" name="faktor_risiko[]" {{ in_array('Perinatal', $selectedFaktorRisiko) ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label" for="perinatal">
                                                         Perinatal
                                                     </label>
@@ -407,7 +403,7 @@
                                                 <!-- Transfusi Darah -->
                                                 <div class="form-check mb-2">
                                                     <input class="form-check-input" type="checkbox" value="Transfusi Darah"
-                                                        id="transfusi_darah" name="faktor_risiko[]" {{ in_array('Transfusi Darah', $selectedFaktorRisiko) ? 'checked' : '' }}>
+                                                        id="transfusi_darah" name="faktor_risiko[]" {{ in_array('Transfusi Darah', $selectedFaktorRisiko) ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label" for="transfusi_darah">
                                                         Transfusi Darah
                                                     </label>
@@ -416,7 +412,7 @@
                                                 <!-- NAPZA Suntik -->
                                                 <div class="form-check mb-2">
                                                     <input class="form-check-input" type="checkbox" value="NAPZA Suntik"
-                                                        id="napza_suntik" name="faktor_risiko[]" {{ in_array('NAPZA Suntik', $selectedFaktorRisiko) ? 'checked' : '' }}>
+                                                        id="napza_suntik" name="faktor_risiko[]" {{ in_array('NAPZA Suntik', $selectedFaktorRisiko) ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label" for="napza_suntik">
                                                         NAPZA Suntik
                                                     </label>
@@ -425,7 +421,7 @@
                                                 <!-- Lain-lainnya dengan input tambahan -->
                                                 <div class="form-check mb-2">
                                                     <input class="form-check-input" type="checkbox" value="Lain-lainnya"
-                                                        id="lain_lainnya" name="faktor_risiko[]" {{ $isLainLainnyaSelected ? 'checked' : '' }}>
+                                                        id="lain_lainnya" name="faktor_risiko[]" {{ $isLainLainnyaSelected ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label" for="lain_lainnya">
                                                         Lain-lain, Uraikan...
                                                     </label>
@@ -433,7 +429,7 @@
                                                 <div id="lain-lainnya-details"
                                                     class="bg-light p-3 mb-3 rounded {{ $isLainLainnyaSelected ? '' : 'd-none' }}">
                                                     <textarea class="form-control" name="lain_lainnya_keterangan" rows="2"
-                                                        placeholder="Sebutkan faktor risiko lainnya...">{{ isset($hivArt) ? $hivArt->lain_lainnya_keterangan : '' }}</textarea>
+                                                        placeholder="Sebutkan faktor risiko lainnya..." disabled>{{ isset($hivArt) ? $hivArt->lain_lainnya_keterangan : '' }}</textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -454,18 +450,18 @@
                                             <div class="col-md-9">
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" id="inlineCheckbox1"
-                                                        name="status_pernikahan" value="Menikah" {{ (isset($hivArt) && $hivArt->status_pernikahan == 'Menikah') ? 'checked' : '' }}>
+                                                        name="status_pernikahan" value="Menikah" {{ (isset($hivArt) && $hivArt->status_pernikahan == 'Menikah') ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label" for="inlineCheckbox1">Menikah</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" id="inlineCheckbox2"
-                                                        name="status_pernikahan" value="Belum Menikah" {{ (isset($hivArt) && $hivArt->status_pernikahan == 'Belum Menikah') ? 'checked' : '' }}>
+                                                        name="status_pernikahan" value="Belum Menikah" {{ (isset($hivArt) && $hivArt->status_pernikahan == 'Belum Menikah') ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label" for="inlineCheckbox2">Belum
                                                         Menikah</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" id="inlineCheckbox3"
-                                                        name="status_pernikahan" value="Janda/Duda" {{ (isset($hivArt) && $hivArt->status_pernikahan == 'Janda/Duda') ? 'checked' : '' }}>
+                                                        name="status_pernikahan" value="Janda/Duda" {{ (isset($hivArt) && $hivArt->status_pernikahan == 'Janda/Duda') ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label" for="inlineCheckbox3">Janda/Duda</label>
                                                 </div>
                                             </div>
@@ -489,10 +485,6 @@
                                             <div class="col-md-12">
                                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                                     <h6 class="mb-0">Data Keluarga / Mitra</h6>
-                                                    <button type="button" class="btn btn-primary btn-sm"
-                                                        data-bs-toggle="modal" data-bs-target="#tambahMitraModal">
-                                                        <i class="fas fa-plus"></i> Tambah
-                                                    </button>
                                                 </div>
                                                 <div class="table-responsive">
                                                     <table class="table table-bordered table-hover" id="mitraTable">
@@ -504,7 +496,6 @@
                                                                 <th width="15%">HIV +/-</th>
                                                                 <th width="15%">ART Y/T</th>
                                                                 <th width="20%">NoRegNas</th>
-                                                                <th width="10%">Aksi</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -562,20 +553,6 @@
                                                                             </span>
                                                                         </td>
                                                                         <td>{{ $mitra['no_reg_nas'] ?? '-' }}</td>
-                                                                        <td>
-                                                                            <div class="btn-group" role="group">
-                                                                                <button type="button"
-                                                                                    class="btn btn-sm btn-outline-warning edit-btn"
-                                                                                    data-index="{{ $index }}" title="Edit">
-                                                                                    <i class="fas fa-edit"></i>
-                                                                                </button>
-                                                                                <button type="button"
-                                                                                    class="btn btn-sm btn-outline-danger delete-btn"
-                                                                                    data-index="{{ $index }}" title="Hapus">
-                                                                                    <i class="fas fa-trash"></i>
-                                                                                </button>
-                                                                            </div>
-                                                                        </td>
                                                                     </tr>
                                                                 @endforeach
                                                             @else
@@ -613,12 +590,12 @@
                                             <div class="col-md-9">
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" id="menerima_art_ya"
-                                                        value="Ya" name="menerima_art" {{ (isset($hivArt) && $hivArt->menerima_art == 'Ya') ? 'checked' : '' }}>
+                                                        value="Ya" name="menerima_art" {{ (isset($hivArt) && $hivArt->menerima_art == 'Ya') ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label" for="menerima_art_ya">1. Ya</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" id="menerima_art_tidak"
-                                                        value="Tidak" name="menerima_art" {{ (isset($hivArt) && $hivArt->menerima_art == 'Tidak') ? 'checked' : '' }}>
+                                                        value="Tidak" name="menerima_art" {{ (isset($hivArt) && $hivArt->menerima_art == 'Tidak') ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label" for="menerima_art_tidak">2.
                                                         Tidak</label>
                                                 </div>
@@ -636,17 +613,17 @@
                                                 <div class="col-md-9">
                                                     <div class="form-check form-check-inline">
                                                         <input class="form-check-input" type="radio" id="ppia" value="PPIA"
-                                                            name="jenis_art" {{ (isset($hivArt) && $hivArt->jenis_art == 'PPIA') ? 'checked' : '' }}>
+                                                            name="jenis_art" {{ (isset($hivArt) && $hivArt->jenis_art == 'PPIA') ? 'checked' : '' }} disabled>
                                                         <label class="form-check-label" for="ppia">1. PPIA</label>
                                                     </div>
                                                     <div class="form-check form-check-inline">
                                                         <input class="form-check-input" type="radio" id="art" value="ART"
-                                                            name="jenis_art" {{ (isset($hivArt) && $hivArt->jenis_art == 'ART') ? 'checked' : '' }}>
+                                                            name="jenis_art" {{ (isset($hivArt) && $hivArt->jenis_art == 'ART') ? 'checked' : '' }} disabled>
                                                         <label class="form-check-label" for="art">2. ART</label>
                                                     </div>
                                                     <div class="form-check form-check-inline">
                                                         <input class="form-check-input" type="radio" id="ppp" value="PPP"
-                                                            name="jenis_art" {{ (isset($hivArt) && $hivArt->jenis_art == 'PPP') ? 'checked' : '' }}>
+                                                            name="jenis_art" {{ (isset($hivArt) && $hivArt->jenis_art == 'PPP') ? 'checked' : '' }} disabled>
                                                         <label class="form-check-label" for="ppp">3. PPP</label>
                                                     </div>
                                                 </div>
@@ -660,18 +637,18 @@
                                                 <div class="col-md-9">
                                                     <div class="form-check form-check-inline">
                                                         <input class="form-check-input" type="radio" id="rs_pemerintah"
-                                                            value="RS Pemerintah" name="tempat_art" {{ (isset($hivArt) && $hivArt->tempat_art == 'RS Pemerintah') ? 'checked' : '' }}>
+                                                            value="RS Pemerintah" name="tempat_art" {{ (isset($hivArt) && $hivArt->tempat_art == 'RS Pemerintah') ? 'checked' : '' }} disabled>
                                                         <label class="form-check-label" for="rs_pemerintah">1. RS
                                                             Pem</label>
                                                     </div>
                                                     <div class="form-check form-check-inline">
                                                         <input class="form-check-input" type="radio" id="rs_swasta"
-                                                            value="RS Swasta" name="tempat_art" {{ (isset($hivArt) && $hivArt->tempat_art == 'RS Swasta') ? 'checked' : '' }}>
+                                                            value="RS Swasta" name="tempat_art" {{ (isset($hivArt) && $hivArt->tempat_art == 'RS Swasta') ? 'checked' : '' }} disabled>
                                                         <label class="form-check-label" for="rs_swasta">2. RS Swasta</label>
                                                     </div>
                                                     <div class="form-check form-check-inline">
                                                         <input class="form-check-input" type="radio" id="pkm" value="PKM"
-                                                            name="tempat_art" {{ (isset($hivArt) && $hivArt->tempat_art == 'PKM') ? 'checked' : '' }}>
+                                                            name="tempat_art" {{ (isset($hivArt) && $hivArt->tempat_art == 'PKM') ? 'checked' : '' }} disabled>
                                                         <label class="form-check-label" for="pkm">3. PKM</label>
                                                     </div>
                                                 </div>
@@ -685,7 +662,7 @@
                                                 </div>
                                                 <div class="col-md-9">
                                                     <textarea class="form-control" name="nama_dosis_arv" rows="4"
-                                                        placeholder="Sebutkan nama obat ARV, dosis, dan lama penggunaan secara detail...">{{ isset($hivArt) ? $hivArt->nama_dosis_arv : '' }}</textarea>
+                                                        placeholder="Sebutkan nama obat ARV, dosis, dan lama penggunaan secara detail..." disabled>{{ isset($hivArt) ? $hivArt->nama_dosis_arv : '' }}</textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -729,20 +706,20 @@
                                                                 <label class="form-label fw-bold">Tanggal Kunjungan</label>
                                                                 <input type="date" name="kunjungan_pertama_tanggal"
                                                                     class="form-control"
-                                                                    value="{{ old('kunjungan_pertama_tanggal', $hivArt->dataPemeriksaanKlinis->kunjungan_pertama_tanggal ? $hivArt->dataPemeriksaanKlinis->kunjungan_pertama_tanggal->format('Y-m-d') : '') }}">
+                                                                    value="{{ old('kunjungan_pertama_tanggal', $hivArt->dataPemeriksaanKlinis->kunjungan_pertama_tanggal ? $hivArt->dataPemeriksaanKlinis->kunjungan_pertama_tanggal->format('Y-m-d') : '') }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">Stad. Klinis</label>
                                                                 <input type="text" name="kunjungan_pertama_klinis"
                                                                     class="form-control"
-                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->kunjungan_pertama_klinis : '' }}">
+                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->kunjungan_pertama_klinis : '' }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">BB</label>
                                                                 <div class="input-group">
                                                                     <input type="number" name="kunjungan_pertama_bb"
                                                                         class="form-control" placeholder="0"
-                                                                        value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->kunjungan_pertama_bb : '' }}">
+                                                                        value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->kunjungan_pertama_bb : '' }}" disabled>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -756,7 +733,7 @@
                                                                 <input type="text"
                                                                     name="kunjungan_pertama_status_fungsional"
                                                                     class="form-control"
-                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->kunjungan_pertama_status_fungsional : '' }}">
+                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->kunjungan_pertama_status_fungsional : '' }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">JumlahCD4
@@ -764,13 +741,13 @@
                                                                         anak)</small></label>
                                                                 <input type="number" name="kunjungan_pertama_cd4"
                                                                     class="form-control" placeholder="0"
-                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->kunjungan_pertama_cd4 : '' }}">
+                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->kunjungan_pertama_cd4 : '' }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">Lain-lain</label>
                                                                 <textarea name="kunjungan_pertama_lain" class="form-control"
                                                                     rows="2"
-                                                                    placeholder="Isi Lainnya...">{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->kunjungan_pertama_lain : '' }}</textarea>
+                                                                    placeholder="Isi Lainnya..." disabled>{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->kunjungan_pertama_lain : '' }}</textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -792,20 +769,20 @@
                                                                 <label class="form-label fw-bold">Tanggal</label>
                                                                 <input type="date" name="memenuhi_syarat_tanggal"
                                                                     class="form-control"
-                                                                    value="{{ old('memenuhi_syarat_tanggal', $hivArt->dataPemeriksaanKlinis->memenuhi_syarat_tanggal ? $hivArt->dataPemeriksaanKlinis->memenuhi_syarat_tanggal->format('Y-m-d') : '') }}">
+                                                                    value="{{ old('memenuhi_syarat_tanggal', $hivArt->dataPemeriksaanKlinis->memenuhi_syarat_tanggal ? $hivArt->dataPemeriksaanKlinis->memenuhi_syarat_tanggal->format('Y-m-d') : '') }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">Stad. Klinis</label>
                                                                 <input type="text" name="memenuhi_syarat_klinis"
                                                                     class="form-control"
-                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->memenuhi_syarat_klinis : '' }}">
+                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->memenuhi_syarat_klinis : '' }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">BB</label>
                                                                 <div class="input-group">
                                                                     <input type="number" name="memenuhi_syarat_bb"
                                                                         class="form-control" placeholder="0"
-                                                                        value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->memenuhi_syarat_bb : '' }}">
+                                                                        value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->memenuhi_syarat_bb : '' }}" disabled>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -818,7 +795,7 @@
                                                                 </label>
                                                                 <input type="text" name="memenuhi_syarat_status_fungsional"
                                                                     class="form-control"
-                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->memenuhi_syarat_status_fungsional : '' }}">
+                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->memenuhi_syarat_status_fungsional : '' }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">JumlahCD4
@@ -826,13 +803,13 @@
                                                                         anak)</small></label>
                                                                 <input type="number" name="memenuhi_syarat_cd4"
                                                                     class="form-control" placeholder="0"
-                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->memenuhi_syarat_cd4 : '' }}">
+                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->memenuhi_syarat_cd4 : '' }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">Lain-lain</label>
                                                                 <textarea name="memenuhi_syarat_lain" class="form-control"
                                                                     rows="2"
-                                                                    placeholder="Isi Lainnya...">{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->memenuhi_syarat_lain : '' }}</textarea>
+                                                                    placeholder="Isi Lainnya..." disabled>{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->memenuhi_syarat_lain : '' }}</textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -854,20 +831,20 @@
                                                                 <label class="form-label fw-bold">Tanggal</label>
                                                                 <input type="date" name="saat_mulai_art_tanggal"
                                                                     class="form-control"
-                                                                    value="{{ old('saat_mulai_art_tanggal', $hivArt->dataPemeriksaanKlinis->saat_mulai_art_tanggal ? $hivArt->dataPemeriksaanKlinis->saat_mulai_art_tanggal->format('Y-m-d') : '') }}">
+                                                                    value="{{ old('saat_mulai_art_tanggal', $hivArt->dataPemeriksaanKlinis->saat_mulai_art_tanggal ? $hivArt->dataPemeriksaanKlinis->saat_mulai_art_tanggal->format('Y-m-d') : '') }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">Stad. Klinis</label>
                                                                 <input type="text" name="saat_mulai_art_klinis"
                                                                     class="form-control"
-                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->saat_mulai_art_klinis : '' }}">
+                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->saat_mulai_art_klinis : '' }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">BB</label>
                                                                 <div class="input-group">
                                                                     <input type="number" name="saat_mulai_art_bb"
                                                                         class="form-control" placeholder="0"
-                                                                        value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->saat_mulai_art_bb : '' }}">
+                                                                        value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->saat_mulai_art_bb : '' }}" disabled>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -880,7 +857,7 @@
                                                                 </label>
                                                                 <input type="text" name="saat_mulai_art_status_fungsional"
                                                                     class="form-control"
-                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->saat_mulai_art_status_fungsional : '' }}">
+                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->saat_mulai_art_status_fungsional : '' }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">JumlahCD4
@@ -888,13 +865,13 @@
                                                                         anak)</small></label>
                                                                 <input type="number" name="saat_mulai_art_cd4"
                                                                     class="form-control" placeholder="0"
-                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->saat_mulai_art_cd4 : '' }}">
+                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->saat_mulai_art_cd4 : '' }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">Lain-lain</label>
                                                                 <textarea name="saat_mulai_art_lain" class="form-control"
                                                                     rows="2"
-                                                                    placeholder="Isi Lainnya...">{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->saat_mulai_art_lain : '' }}</textarea>
+                                                                    placeholder="Isi Lainnya..." disabled>{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->saat_mulai_art_lain : '' }}</textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -916,20 +893,20 @@
                                                                 <label class="form-label fw-bold">Tanggal</label>
                                                                 <input type="date" name="setelah_6_bulan_tanggal"
                                                                     class="form-control"
-                                                                    value="{{ old('setelah_6_bulan_tanggal', $hivArt->dataPemeriksaanKlinis->setelah_6_bulan_tanggal ? $hivArt->dataPemeriksaanKlinis->setelah_6_bulan_tanggal->format('Y-m-d') : '') }}">
+                                                                    value="{{ old('setelah_6_bulan_tanggal', $hivArt->dataPemeriksaanKlinis->setelah_6_bulan_tanggal ? $hivArt->dataPemeriksaanKlinis->setelah_6_bulan_tanggal->format('Y-m-d') : '') }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">Stad. Klinis</label>
                                                                 <input type="text" name="setelah_6_bulan_klinis"
                                                                     class="form-control"
-                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_6_bulan_klinis : '' }}">
+                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_6_bulan_klinis : '' }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">BB</label>
                                                                 <div class="input-group">
                                                                     <input type="number" name="setelah_6_bulan_bb"
                                                                         class="form-control" placeholder="0"
-                                                                        value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_6_bulan_bb : '' }}">
+                                                                        value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_6_bulan_bb : '' }}" disabled>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -942,7 +919,7 @@
                                                                 </label>
                                                                 <input type="text" name="setelah_6_bulan_status_fungsional"
                                                                     class="form-control"
-                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_6_bulan_status_fungsional : '' }}">
+                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_6_bulan_status_fungsional : '' }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">JumlahCD4
@@ -950,13 +927,13 @@
                                                                         anak)</small></label>
                                                                 <input type="number" name="setelah_6_bulan_cd4"
                                                                     class="form-control" placeholder="0"
-                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_6_bulan_cd4 : '' }}">
+                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_6_bulan_cd4 : '' }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">Lain-lain</label>
                                                                 <textarea name="setelah_6_bulan_lain" class="form-control"
                                                                     rows="2"
-                                                                    placeholder="Isi Lainnya...">{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_6_bulan_lain : '' }}</textarea>
+                                                                    placeholder="Isi Lainnya..." disabled>{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_6_bulan_lain : '' }}</textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -978,20 +955,20 @@
                                                                 <label class="form-label fw-bold">Tanggal</label>
                                                                 <input type="date" name="setelah_12_bulan_tanggal"
                                                                     class="form-control"
-                                                                    value="{{ old('setelah_12_bulan_tanggal', $hivArt->dataPemeriksaanKlinis->setelah_12_bulan_tanggal ? $hivArt->dataPemeriksaanKlinis->setelah_12_bulan_tanggal->format('Y-m-d') : '') }}">
+                                                                    value="{{ old('setelah_12_bulan_tanggal', $hivArt->dataPemeriksaanKlinis->setelah_12_bulan_tanggal ? $hivArt->dataPemeriksaanKlinis->setelah_12_bulan_tanggal->format('Y-m-d') : '') }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">Stad. Klinis</label>
                                                                 <input type="text" name="setelah_12_bulan_klinis"
                                                                     class="form-control"
-                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_12_bulan_klinis : '' }}">
+                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_12_bulan_klinis : '' }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">BB</label>
                                                                 <div class="input-group">
                                                                     <input type="number" name="setelah_12_bulan_bb"
                                                                         class="form-control" placeholder="0"
-                                                                        value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_12_bulan_bb : '' }}">
+                                                                        value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_12_bulan_bb : '' }}" disabled>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1004,7 +981,7 @@
                                                                 </label>
                                                                 <input type="text" name="setelah_12_bulan_status_fungsional"
                                                                     class="form-control"
-                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_12_bulan_status_fungsional : '' }}">
+                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_12_bulan_status_fungsional : '' }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">JumlahCD4
@@ -1012,13 +989,13 @@
                                                                         anak)</small></label>
                                                                 <input type="number" name="setelah_12_bulan_cd4"
                                                                     class="form-control" placeholder="0"
-                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_12_bulan_cd4 : '' }}">
+                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_12_bulan_cd4 : '' }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">Lain-lain</label>
                                                                 <textarea name="setelah_12_bulan_lain" class="form-control"
                                                                     rows="2"
-                                                                    placeholder="Isi Lainnya...">{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_12_bulan_lain : '' }}</textarea>
+                                                                    placeholder="Isi Lainnya..." disabled>{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_12_bulan_lain : '' }}</textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1040,20 +1017,20 @@
                                                                 <label class="form-label fw-bold">Tanggal</label>
                                                                 <input type="date" name="setelah_24_bulan_tanggal"
                                                                     class="form-control"
-                                                                    value="{{ old('setelah_24_bulan_tanggal', $hivArt->dataPemeriksaanKlinis->setelah_24_bulan_tanggal ? $hivArt->dataPemeriksaanKlinis->setelah_24_bulan_tanggal->format('Y-m-d') : '') }}">
+                                                                    value="{{ old('setelah_24_bulan_tanggal', $hivArt->dataPemeriksaanKlinis->setelah_24_bulan_tanggal ? $hivArt->dataPemeriksaanKlinis->setelah_24_bulan_tanggal->format('Y-m-d') : '') }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">Stad. Klinis</label>
                                                                 <input type="text" name="setelah_24_bulan_klinis"
                                                                     class="form-control"
-                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_24_bulan_klinis : '' }}">
+                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_24_bulan_klinis : '' }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">BB</label>
                                                                 <div class="input-group">
                                                                     <input type="number" name="setelah_24_bulan_bb"
                                                                         class="form-control" placeholder="0"
-                                                                        value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_24_bulan_bb : '' }}">
+                                                                        value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_24_bulan_bb : '' }}" disabled>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1066,7 +1043,7 @@
                                                                 </label>
                                                                 <input type="text" name="setelah_24_bulan_status_fungsional"
                                                                     class="form-control"
-                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_24_bulan_status_fungsional : '' }}">
+                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_24_bulan_status_fungsional : '' }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">JumlahCD4
@@ -1074,13 +1051,13 @@
                                                                         anak)</small></label>
                                                                 <input type="number" name="setelah_24_bulan_cd4"
                                                                     class="form-control" placeholder="0"
-                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_24_bulan_cd4 : '' }}">
+                                                                    value="{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_24_bulan_cd4 : '' }}" disabled>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="form-label fw-bold">Lain-lain</label>
                                                                 <textarea name="setelah_24_bulan_lain" class="form-control"
                                                                     rows="2"
-                                                                    placeholder="Isi Lainnya...">{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_24_bulan_lain : '' }}</textarea>
+                                                                    placeholder="Isi Lainnya..." disabled>{{ isset($hivArt->dataPemeriksaanKlinis) ? $hivArt->dataPemeriksaanKlinis->setelah_24_bulan_lain : '' }}</textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1186,21 +1163,7 @@
                                                                     <i class="fas fa-pills me-2"></i>
                                                                     Terapi ART #{{ $sectionNumber }}
                                                                 </h6>
-                                                                @if($index > 0)
-                                                                    <button type="button"
-                                                                        class="btn btn-outline-danger btn-sm remove-art-btn"
-                                                                        onclick="removeArtSection({{ $sectionNumber }})">
-                                                                        <i class="fas fa-trash me-1"></i>
-                                                                        Hapus
-                                                                    </button>
-                                                                @else
-                                                                    <button type="button"
-                                                                        class="btn btn-outline-danger btn-sm remove-art-btn d-none"
-                                                                        onclick="removeArtSection({{ $sectionNumber }})">
-                                                                        <i class="fas fa-trash me-1"></i>
-                                                                        Hapus
-                                                                    </button>
-                                                                @endif
+
                                                             </div>
                                                             <div class="card-body">
                                                                 <!-- Nama Paduan ART -->
@@ -1214,7 +1177,7 @@
                                                                                     <input class="form-check-input" type="radio"
                                                                                         name="nama_paduan_art_{{ $sectionNumber }}"
                                                                                         value="TDF+3TC+EFV"
-                                                                                        id="art1_{{ $sectionNumber }}" {{ (isset($artData['nama_paduan_art']) && $artData['nama_paduan_art'] == 'TDF+3TC+EFV') ? 'checked' : '' }}>
+                                                                                        id="art1_{{ $sectionNumber }}" {{ (isset($artData['nama_paduan_art']) && $artData['nama_paduan_art'] == 'TDF+3TC+EFV') ? 'checked' : '' }} disabled>
                                                                                     <label class="form-check-label"
                                                                                         for="art1_{{ $sectionNumber }}">
                                                                                         1. TDF+3TC+EFV
@@ -1224,7 +1187,7 @@
                                                                                     <input class="form-check-input" type="radio"
                                                                                         name="nama_paduan_art_{{ $sectionNumber }}"
                                                                                         value="TDF+FTC+EFV"
-                                                                                        id="art2_{{ $sectionNumber }}" {{ (isset($artData['nama_paduan_art']) && $artData['nama_paduan_art'] == 'TDF+FTC+EFV') ? 'checked' : '' }}>
+                                                                                        id="art2_{{ $sectionNumber }}" {{ (isset($artData['nama_paduan_art']) && $artData['nama_paduan_art'] == 'TDF+FTC+EFV') ? 'checked' : '' }} disabled>
                                                                                     <label class="form-check-label"
                                                                                         for="art2_{{ $sectionNumber }}">
                                                                                         2. TDF+FTC+EFV
@@ -1234,7 +1197,7 @@
                                                                                     <input class="form-check-input" type="radio"
                                                                                         name="nama_paduan_art_{{ $sectionNumber }}"
                                                                                         value="TDF+3TC+NVP"
-                                                                                        id="art3_{{ $sectionNumber }}" {{ (isset($artData['nama_paduan_art']) && $artData['nama_paduan_art'] == 'TDF+3TC+NVP') ? 'checked' : '' }}>
+                                                                                        id="art3_{{ $sectionNumber }}" {{ (isset($artData['nama_paduan_art']) && $artData['nama_paduan_art'] == 'TDF+3TC+NVP') ? 'checked' : '' }} disabled>
                                                                                     <label class="form-check-label"
                                                                                         for="art3_{{ $sectionNumber }}">
                                                                                         3. TDF+3TC+NVP
@@ -1244,7 +1207,7 @@
                                                                                     <input class="form-check-input" type="radio"
                                                                                         name="nama_paduan_art_{{ $sectionNumber }}"
                                                                                         value="TDF+FTC+NVP"
-                                                                                        id="art4_{{ $sectionNumber }}" {{ (isset($artData['nama_paduan_art']) && $artData['nama_paduan_art'] == 'TDF+FTC+NVP') ? 'checked' : '' }}>
+                                                                                        id="art4_{{ $sectionNumber }}" {{ (isset($artData['nama_paduan_art']) && $artData['nama_paduan_art'] == 'TDF+FTC+NVP') ? 'checked' : '' }} disabled>
                                                                                     <label class="form-check-label"
                                                                                         for="art4_{{ $sectionNumber }}">
                                                                                         4. TDF+FTC+NVP
@@ -1254,7 +1217,7 @@
                                                                                     <input class="form-check-input" type="radio"
                                                                                         name="nama_paduan_art_{{ $sectionNumber }}"
                                                                                         value="AZT+3TC+EFV"
-                                                                                        id="art5_{{ $sectionNumber }}" {{ (isset($artData['nama_paduan_art']) && $artData['nama_paduan_art'] == 'AZT+3TC+EFV') ? 'checked' : '' }}>
+                                                                                        id="art5_{{ $sectionNumber }}" {{ (isset($artData['nama_paduan_art']) && $artData['nama_paduan_art'] == 'AZT+3TC+EFV') ? 'checked' : '' }} disabled>
                                                                                     <label class="form-check-label"
                                                                                         for="art5_{{ $sectionNumber }}">
                                                                                         5. AZT+3TC+EFV
@@ -1264,7 +1227,7 @@
                                                                                     <input class="form-check-input" type="radio"
                                                                                         name="nama_paduan_art_{{ $sectionNumber }}"
                                                                                         value="AZT+3TC+NVP"
-                                                                                        id="art6_{{ $sectionNumber }}" {{ (isset($artData['nama_paduan_art']) && $artData['nama_paduan_art'] == 'AZT+3TC+NVP') ? 'checked' : '' }}>
+                                                                                        id="art6_{{ $sectionNumber }}" {{ (isset($artData['nama_paduan_art']) && $artData['nama_paduan_art'] == 'AZT+3TC+NVP') ? 'checked' : '' }} disabled>
                                                                                     <label class="form-check-label"
                                                                                         for="art6_{{ $sectionNumber }}">
                                                                                         6. AZT+3TC+NVP
@@ -1274,7 +1237,7 @@
                                                                                     <input class="form-check-input" type="radio"
                                                                                         name="nama_paduan_art_{{ $sectionNumber }}"
                                                                                         value="lainnya"
-                                                                                        id="art7_{{ $sectionNumber }}" {{ $isLainnyaSelected ? 'checked' : '' }}>
+                                                                                        id="art7_{{ $sectionNumber }}" {{ $isLainnyaSelected ? 'checked' : '' }} disabled>
                                                                                     <label class="form-check-label"
                                                                                         for="art7_{{ $sectionNumber }}">
                                                                                         7. Lainnya
@@ -1286,7 +1249,7 @@
                                                                                         name="art_lainnya_{{ $sectionNumber }}"
                                                                                         class="form-control form-control-sm"
                                                                                         placeholder="Sebutkan nama paduan ART lainnya"
-                                                                                        value="{{ isset($artData['art_lainnya']) ? $artData['art_lainnya'] : '' }}">
+                                                                                        value="{{ isset($artData['art_lainnya']) ? $artData['art_lainnya'] : '' }}" disabled>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1300,21 +1263,21 @@
                                                                                 <input type="date"
                                                                                     name="substitusi_tanggal_{{ $sectionNumber }}"
                                                                                     class="form-control"
-                                                                                    value="{{ isset($artData['substitusi_tanggal']) ? $artData['substitusi_tanggal'] : '' }}">
+                                                                                    value="{{ isset($artData['substitusi_tanggal']) ? $artData['substitusi_tanggal'] : '' }}" disabled>
                                                                             </div>
                                                                             <div class="col-md-4">
                                                                                 <label class="form-label fw-bold">Substitusi</label>
                                                                                 <input type="text"
                                                                                     name="substitusi_{{ $sectionNumber }}"
                                                                                     class="form-control"
-                                                                                    value="{{ isset($artData['substitusi']) ? $artData['substitusi'] : '' }}">
+                                                                                    value="{{ isset($artData['substitusi']) ? $artData['substitusi'] : '' }}" disabled>
                                                                             </div>
                                                                             <div class="col-md-4">
                                                                                 <label class="form-label fw-bold">Switch</label>
                                                                                 <input type="text"
                                                                                     name="switch_{{ $sectionNumber }}"
                                                                                     class="form-control"
-                                                                                    value="{{ isset($artData['switch']) ? $artData['switch'] : '' }}">
+                                                                                    value="{{ isset($artData['switch']) ? $artData['switch'] : '' }}" disabled>
                                                                             </div>
                                                                         </div>
                                                                         <div class="row g-3">
@@ -1322,19 +1285,19 @@
                                                                                 <label class="form-label fw-bold">Stop</label>
                                                                                 <input type="text" name="stop_{{ $sectionNumber }}"
                                                                                     class="form-control"
-                                                                                    value="{{ isset($artData['stop']) ? $artData['stop'] : '' }}">
+                                                                                    value="{{ isset($artData['stop']) ? $artData['stop'] : '' }}" disabled>
                                                                             </div>
                                                                             <div class="col-md-4">
                                                                                 <label class="form-label fw-bold">Restart</label>
                                                                                 <input type="text"
                                                                                     name="restart_{{ $sectionNumber }}"
                                                                                     class="form-control"
-                                                                                    value="{{ isset($artData['restart']) ? $artData['restart'] : '' }}">
+                                                                                    value="{{ isset($artData['restart']) ? $artData['restart'] : '' }}" disabled>
                                                                             </div>
                                                                             <div class="col-md-4">
                                                                                 <label class="form-label fw-bold">Alasan</label>
                                                                                 <select name="alasan_{{ $sectionNumber }}"
-                                                                                    class="form-select">
+                                                                                    class="form-select" disabled>
                                                                                     <option value="">Pilih alasan</option>
                                                                                     <option value="1" {{ (isset($artData['alasan']) && $artData['alasan'] == '1') ? 'selected' : '' }}>1. Toksisitas/efek samping</option>
                                                                                     <option value="2" {{ (isset($artData['alasan']) && $artData['alasan'] == '2') ? 'selected' : '' }}>2. Hamil</option>
@@ -1356,7 +1319,7 @@
                                                                                 <input type="text"
                                                                                     name="nama_paduan_baru_{{ $sectionNumber }}"
                                                                                     class="form-control"
-                                                                                    value="{{ isset($artData['nama_paduan_baru']) ? $artData['nama_paduan_baru'] : '' }}">
+                                                                                    value="{{ isset($artData['nama_paduan_baru']) ? $artData['nama_paduan_baru'] : '' }}" disabled>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1369,19 +1332,7 @@
                                                 <!-- Initial ART Section (jika tidak ada data existing) -->
                                                 <div class="art-section mb-4" data-section="1">
                                                     <div class="card border-start border-primary border-4">
-                                                        <div
-                                                            class="card-header bg-body-secondary d-flex justify-content-between align-items-center">
-                                                            <h6 class="mb-0 text-primary">
-                                                                <i class="fas fa-pills me-2"></i>
-                                                                Terapi ART #1
-                                                            </h6>
-                                                            <button type="button"
-                                                                class="btn btn-outline-danger btn-sm d-none remove-art-btn"
-                                                                onclick="removeArtSection(1)">
-                                                                <i class="fas fa-trash me-1"></i>
-                                                                Hapus
-                                                            </button>
-                                                        </div>
+
                                                         <div class="card-body">
                                                             <!-- Empty form structure sama seperti di atas, tapi tanpa value -->
                                                             <div class="row mb-3">
@@ -1393,7 +1344,7 @@
                                                                             <div class="form-check mb-2">
                                                                                 <input class="form-check-input" type="radio"
                                                                                     name="nama_paduan_art_1" value="TDF+3TC+EFV"
-                                                                                    id="art1_1">
+                                                                                    id="art1_1" disabled>
                                                                                 <label class="form-check-label" for="art1_1">1.
                                                                                     TDF+3TC+EFV</label>
                                                                             </div>
@@ -1401,49 +1352,49 @@
                                                                             <div class="form-check mb-2">
                                                                                 <input class="form-check-input" type="radio"
                                                                                     name="nama_paduan_art_1" value="TDF+FTC+EFV"
-                                                                                    id="art2_1">
+                                                                                    id="art2_1" disabled>
                                                                                 <label class="form-check-label" for="art2_1">2.
                                                                                     TDF+FTC+EFV</label>
                                                                             </div>
                                                                             <div class="form-check mb-2">
                                                                                 <input class="form-check-input" type="radio"
                                                                                     name="nama_paduan_art_1" value="TDF+3TC+NVP"
-                                                                                    id="art3_1">
+                                                                                    id="art3_1" disabled>
                                                                                 <label class="form-check-label" for="art3_1">3.
                                                                                     TDF+3TC+NVP</label>
                                                                             </div>
                                                                             <div class="form-check mb-2">
                                                                                 <input class="form-check-input" type="radio"
                                                                                     name="nama_paduan_art_1" value="TDF+FTC+NVP"
-                                                                                    id="art4_1">
+                                                                                    id="art4_1" disabled>
                                                                                 <label class="form-check-label" for="art4_1">4.
                                                                                     TDF+FTC+NVP</label>
                                                                             </div>
                                                                             <div class="form-check mb-2">
                                                                                 <input class="form-check-input" type="radio"
                                                                                     name="nama_paduan_art_1" value="AZT+3TC+EFV"
-                                                                                    id="art5_1">
+                                                                                    id="art5_1" disabled>
                                                                                 <label class="form-check-label" for="art5_1">5.
                                                                                     AZT+3TC+EFV</label>
                                                                             </div>
                                                                             <div class="form-check mb-2">
                                                                                 <input class="form-check-input" type="radio"
                                                                                     name="nama_paduan_art_1" value="AZT+3TC+NVP"
-                                                                                    id="art6_1">
+                                                                                    id="art6_1" disabled>
                                                                                 <label class="form-check-label" for="art6_1">6.
                                                                                     AZT+3TC+NVP</label>
                                                                             </div>
                                                                             <div class="form-check mb-3">
                                                                                 <input class="form-check-input" type="radio"
                                                                                     name="nama_paduan_art_1" value="lainnya"
-                                                                                    id="art7_1">
+                                                                                    id="art7_1" disabled>
                                                                                 <label class="form-check-label" for="art7_1">7.
                                                                                     Lainnya</label>
                                                                             </div>
                                                                             <div id="lainnya-art-details-1" class="d-none">
                                                                                 <input type="text" name="art_lainnya_1"
                                                                                     class="form-control form-control-sm"
-                                                                                    placeholder="Sebutkan nama paduan ART lainnya">
+                                                                                    placeholder="Sebutkan nama paduan ART lainnya" disabled>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1455,33 +1406,33 @@
                                                                         <div class="col-md-4">
                                                                             <label class="form-label fw-bold">Tanggal</label>
                                                                             <input type="date" name="substitusi_tanggal_1"
-                                                                                class="form-control">
+                                                                                class="form-control" disabled>
                                                                         </div>
                                                                         <div class="col-md-4">
                                                                             <label class="form-label fw-bold">Substitusi</label>
                                                                             <input type="text" name="substitusi_1"
-                                                                                class="form-control">
+                                                                                class="form-control" disabled>
                                                                         </div>
                                                                         <div class="col-md-4">
                                                                             <label class="form-label fw-bold">Switch</label>
                                                                             <input type="text" name="switch_1"
-                                                                                class="form-control">
+                                                                                class="form-control" disabled>
                                                                         </div>
                                                                     </div>
                                                                     <div class="row g-3">
                                                                         <div class="col-md-4">
                                                                             <label class="form-label fw-bold">Stop</label>
                                                                             <input type="text" name="stop_1"
-                                                                                class="form-control">
+                                                                                class="form-control" disabled>
                                                                         </div>
                                                                         <div class="col-md-4">
                                                                             <label class="form-label fw-bold">Restart</label>
                                                                             <input type="text" name="restart_1"
-                                                                                class="form-control">
+                                                                                class="form-control" disabled>
                                                                         </div>
                                                                         <div class="col-md-4">
                                                                             <label class="form-label fw-bold">Alasan</label>
-                                                                            <select name="alasan_1" class="form-select">
+                                                                            <select name="alasan_1" class="form-select" disabled>
                                                                                 <option value="">Pilih alasan</option>
                                                                                 <option value="1">1. Toksisitas/efek samping
                                                                                 </option>
@@ -1503,7 +1454,7 @@
                                                                             <label class="form-label fw-bold">Nama Paduan
                                                                                 Baru</label>
                                                                             <input type="text" name="nama_paduan_baru_1"
-                                                                                class="form-control">
+                                                                                class="form-control" disabled>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1515,12 +1466,12 @@
                                         </div>
 
                                         <!-- Add New ART Button -->
-                                        <div class="text-center mb-4">
+                                        {{-- <div class="text-center mb-4">
                                             <button type="button" class="btn btn-success btn-sm" onclick="addArtSection()">
                                                 <i class="fas fa-plus-circle me-2"></i>
                                                 Tambah ART Baru
                                             </button>
-                                        </div>
+                                        </div> --}}
 
                                         <!-- Hidden Inputs -->
                                         <input type="hidden" name="data_terapi_art" id="dataARTInput"
@@ -1595,7 +1546,7 @@
                                                     <label class="form-label fw-bold">Tgl. Mulai terapi TB</label>
                                                     <input type="date" class="form-control" name="tgl_mulai_terapi_tb"
                                                         value="{{ old('tgl_mulai_terapi_tb', $hivArt->terapiAntiretroviral->tgl_mulai_terapi_tb ?? '') }}"
-                                                        placeholder="Pilih tanggal mulai terapi">
+                                                        placeholder="Pilih tanggal mulai terapi" disabled>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -1603,7 +1554,7 @@
                                                     <label class="form-label fw-bold">Tgl. Selesai terapi TB</label>
                                                     <input type="date" class="form-control" name="tgl_selesai_terapi_tb"
                                                         value="{{ old('tgl_selesai_terapi_tb', $hivArt->terapiAntiretroviral->tgl_selesai_terapi_tb ?? '') }}"
-                                                        placeholder="Pilih tanggal selesai terapi">
+                                                        placeholder="Pilih tanggal selesai terapi" disabled>
                                                 </div>
                                             </div>
                                         </div>
@@ -1621,7 +1572,7 @@
                                                     <div class="card-body">
                                                         <div class="form-check mb-3">
                                                             <input class="form-check-input" type="radio"
-                                                                name="klasifikasi_tb" value="tb_paru" id="tb_paru" {{ old('klasifikasi_tb', $hivArt->terapiAntiretroviral->klasifikasi_tb) == 'tb_paru' ? 'checked' : '' }}>
+                                                                name="klasifikasi_tb" value="tb_paru" id="tb_paru" {{ old('klasifikasi_tb', $hivArt->terapiAntiretroviral->klasifikasi_tb) == 'tb_paru' ? 'checked' : '' }} disabled>
                                                             <label class="form-check-label fw-bold" for="tb_paru">
                                                                 <i class="fas fa-lungs text-danger me-2"></i>
                                                                 1. TB Paru
@@ -1630,7 +1581,7 @@
                                                         <div class="form-check mb-3">
                                                             <input class="form-check-input" type="radio"
                                                                 name="klasifikasi_tb" value="tb_ekstra_paru"
-                                                                id="tb_ekstra_paru" {{ old('klasifikasi_tb', $hivArt->terapiAntiretroviral->klasifikasi_tb) == 'tb_ekstra_paru' ? 'checked' : '' }}>
+                                                                id="tb_ekstra_paru" {{ old('klasifikasi_tb', $hivArt->terapiAntiretroviral->klasifikasi_tb) == 'tb_ekstra_paru' ? 'checked' : '' }} >
                                                             <label class="form-check-label fw-bold" for="tb_ekstra_paru">
                                                                 <i class="fas fa-user-injured text-warning me-2"></i>
                                                                 2. TB Ekstra Paru
@@ -1638,7 +1589,7 @@
                                                         </div>
                                                         <div class="form-check mb-3">
                                                             <input class="form-check-input" type="radio"
-                                                                name="klasifikasi_tb" value="tidak_ada" id="tidak_ada" {{ old('klasifikasi_tb', $hivArt->terapiAntiretroviral->klasifikasi_tb) == 'tidak_ada' ? 'checked' : '' }}>
+                                                                name="klasifikasi_tb" value="tidak_ada" id="tidak_ada" {{ old('klasifikasi_tb', $hivArt->terapiAntiretroviral->klasifikasi_tb) == 'tidak_ada' ? 'checked' : '' }} disabled>
                                                             <label class="form-check-label fw-bold" for="tidak_ada">
                                                                 <i class="fas fa-times-circle text-success me-2"></i>
                                                                 Tidak Ada
@@ -1650,7 +1601,7 @@
                                                                 Paru:</label>
                                                             <input type="text" name="lokasi_tb_ekstra" class="form-control"
                                                                 value="{{ old('lokasi_tb_ekstra', $hivArt->terapiAntiretroviral->lokasi_tb_ekstra) }}"
-                                                                placeholder="Sebutkan lokasi TB ekstra paru">
+                                                                placeholder="Sebutkan lokasi TB ekstra paru" disabled>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1668,7 +1619,7 @@
                                                     <div class="card-body">
                                                         <div class="form-check mb-3">
                                                             <input class="form-check-input" type="radio" name="paduan_tb"
-                                                                value="kategori_1" id="kategori_1" {{ old('paduan_tb', $hivArt->terapiAntiretroviral->paduan_tb) == 'kategori_1' ? 'checked' : '' }}>
+                                                                value="kategori_1" id="kategori_1" {{ old('paduan_tb', $hivArt->terapiAntiretroviral->paduan_tb) == 'kategori_1' ? 'checked' : '' }} disabled>
                                                             <label class="form-check-label fw-bold" for="kategori_1">
                                                                 <span class="badge bg-success me-2">1</span>
                                                                 Kategori I
@@ -1679,7 +1630,7 @@
                                                         </div>
                                                         <div class="form-check mb-3">
                                                             <input class="form-check-input" type="radio" name="paduan_tb"
-                                                                value="kategori_2" id="kategori_2" {{ old('paduan_tb', $hivArt->terapiAntiretroviral->paduan_tb) == 'kategori_2' ? 'checked' : '' }}>
+                                                                value="kategori_2" id="kategori_2" {{ old('paduan_tb', $hivArt->terapiAntiretroviral->paduan_tb) == 'kategori_2' ? 'checked' : '' }} disabled>
                                                             <label class="form-check-label fw-bold" for="kategori_2">
                                                                 <span class="badge bg-warning me-2">2</span>
                                                                 Kategori II
@@ -1690,7 +1641,7 @@
                                                         </div>
                                                         <div class="form-check mb-3">
                                                             <input class="form-check-input" type="radio" name="paduan_tb"
-                                                                value="kategori_anak" id="kategori_anak" {{ old('paduan_tb', $hivArt->terapiAntiretroviral->paduan_tb) == 'kategori_anak' ? 'checked' : '' }}>
+                                                                value="kategori_anak" id="kategori_anak" {{ old('paduan_tb', $hivArt->terapiAntiretroviral->paduan_tb) == 'kategori_anak' ? 'checked' : '' }} disabled>
                                                             <label class="form-check-label fw-bold" for="kategori_anak">
                                                                 <span class="badge bg-info me-2">3</span>
                                                                 Kategori Anak
@@ -1701,7 +1652,7 @@
                                                         </div>
                                                         <div class="form-check mb-3">
                                                             <input class="form-check-input" type="radio" name="paduan_tb"
-                                                                value="oat_lini_2" id="oat_lini_2" {{ old('paduan_tb', $hivArt->terapiAntiretroviral->paduan_tb) == 'oat_lini_2' ? 'checked' : '' }}>
+                                                                value="oat_lini_2" id="oat_lini_2" {{ old('paduan_tb', $hivArt->terapiAntiretroviral->paduan_tb) == 'oat_lini_2' ? 'checked' : '' }} disabled>
                                                             <label class="form-check-label fw-bold" for="oat_lini_2">
                                                                 <span class="badge bg-danger me-2">4</span>
                                                                 OAT Lini 2 (MDR)
@@ -1726,7 +1677,7 @@
                                                     <div class="card-body">
                                                         <div class="form-check mb-3">
                                                             <input class="form-check-input" type="radio" name="tipe_tb"
-                                                                value="baru" id="tb_baru" {{ old('tipe_tb', $hivArt->terapiAntiretroviral->tipe_tb) == 'baru' ? 'checked' : '' }}>
+                                                                value="baru" id="tb_baru" {{ old('tipe_tb', $hivArt->terapiAntiretroviral->tipe_tb) == 'baru' ? 'checked' : '' }} disabled>
                                                             <label class="form-check-label fw-bold" for="tb_baru">
                                                                 <i class="fas fa-plus-circle text-success me-2"></i>
                                                                 1. Baru
@@ -1737,7 +1688,7 @@
                                                         </div>
                                                         <div class="form-check mb-3">
                                                             <input class="form-check-input" type="radio" name="tipe_tb"
-                                                                value="kambuh" id="tb_kambuh" {{ old('tipe_tb', $hivArt->terapiAntiretroviral->tipe_tb) == 'kambuh' ? 'checked' : '' }}>
+                                                                value="kambuh" id="tb_kambuh" {{ old('tipe_tb', $hivArt->terapiAntiretroviral->tipe_tb) == 'kambuh' ? 'checked' : '' }} disabled>
                                                             <label class="form-check-label fw-bold" for="tb_kambuh">
                                                                 <i class="fas fa-redo text-warning me-2"></i>
                                                                 2. Kambuh
@@ -1748,7 +1699,7 @@
                                                         </div>
                                                         <div class="form-check mb-3">
                                                             <input class="form-check-input" type="radio" name="tipe_tb"
-                                                                value="default" id="tb_default" {{ old('tipe_tb', $hivArt->terapiAntiretroviral->tipe_tb) == 'default' ? 'checked' : '' }}>
+                                                                value="default" id="tb_default" {{ old('tipe_tb', $hivArt->terapiAntiretroviral->tipe_tb) == 'default' ? 'checked' : '' }} disabled>
                                                             <label class="form-check-label fw-bold" for="tb_default">
                                                                 <i class="fas fa-exclamation-triangle text-danger me-2"></i>
                                                                 3. Default
@@ -1759,7 +1710,7 @@
                                                         </div>
                                                         <div class="form-check mb-3">
                                                             <input class="form-check-input" type="radio" name="tipe_tb"
-                                                                value="gagal" id="tb_gagal" {{ old('tipe_tb', $hivArt->terapiAntiretroviral->tipe_tb) == 'gagal' ? 'checked' : '' }}>
+                                                                value="gagal" id="tb_gagal" {{ old('tipe_tb', $hivArt->terapiAntiretroviral->tipe_tb) == 'gagal' ? 'checked' : '' }} disabled>
                                                             <label class="form-check-label fw-bold" for="tb_gagal">
                                                                 <i class="fas fa-times-circle text-danger me-2"></i>
                                                                 4. Gagal
@@ -1787,7 +1738,7 @@
                                                                 <label class="form-label fw-bold">Kabupaten:</label>
                                                                 <input type="text" name="kabupaten_tb" class="form-control"
                                                                     value="{{ old('kabupaten_tb', $hivArt->terapiAntiretroviral->kabupaten_tb) }}"
-                                                                    placeholder="Nama kabupaten tempat pengobatan">
+                                                                    placeholder="Nama kabupaten tempat pengobatan" disabled>
                                                             </div>
                                                             <div class="col-12">
                                                                 <label class="form-label fw-bold">Nama Sarana
@@ -1795,14 +1746,14 @@
                                                                 <input type="text" name="nama_sarana_kesehatan"
                                                                     class="form-control"
                                                                     value="{{ old('nama_sarana_kesehatan', $hivArt->terapiAntiretroviral->nama_sarana_kesehatan) }}"
-                                                                    placeholder="Nama Puskesmas/RS tempat pengobatan">
+                                                                    placeholder="Nama Puskesmas/RS tempat pengobatan" disabled>
                                                             </div>
                                                             <div class="col-12">
                                                                 <label class="form-label fw-bold">No Reg TB
                                                                     Kabupaten/Kota:</label>
                                                                 <input type="text" name="no_reg_tb" class="form-control"
                                                                     value="{{ old('no_reg_tb', $hivArt->terapiAntiretroviral->no_reg_tb) }}"
-                                                                    placeholder="Nomor registrasi TB">
+                                                                    placeholder="Nomor registrasi TB" disabled>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1838,7 +1789,7 @@
                                             <div class="col-md-4 mb-3">
                                                 <div class="form-check p-3 border rounded">
                                                     <input class="form-check-input" type="radio"
-                                                        name="indikasi_inisiasi_art" value="penasun" id="penasun" {{ old('indikasi_inisiasi_art', $hivArt->terapiAntiretroviral->indikasi_inisiasi_art) == 'penasun' ? 'checked' : '' }}>
+                                                        name="indikasi_inisiasi_art" value="penasun" id="penasun" {{ old('indikasi_inisiasi_art', $hivArt->terapiAntiretroviral->indikasi_inisiasi_art) == 'penasun' ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label fw-bold" for="penasun">
                                                         <i class="fas fa-syringe text-danger me-2"></i>
                                                         Penasun
@@ -1848,7 +1799,7 @@
                                             <div class="col-md-4 mb-3">
                                                 <div class="form-check p-3 border rounded">
                                                     <input class="form-check-input" type="radio"
-                                                        name="indikasi_inisiasi_art" value="lsl" id="lsl" {{ old('indikasi_inisiasi_art', $hivArt->terapiAntiretroviral->indikasi_inisiasi_art) == 'lsl' ? 'checked' : '' }}>
+                                                        name="indikasi_inisiasi_art" value="lsl" id="lsl" {{ old('indikasi_inisiasi_art', $hivArt->terapiAntiretroviral->indikasi_inisiasi_art) == 'lsl' ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label fw-bold" for="lsl">
                                                         <i class="fas fa-male text-info me-2"></i>
                                                         LSL
@@ -1859,7 +1810,7 @@
                                                 <div class="form-check p-3 border rounded">
                                                     <input class="form-check-input" type="radio"
                                                         name="indikasi_inisiasi_art" value="pasien_ko_infeksi_tb_hiv"
-                                                        id="pasien_ko_infeksi_tb_hiv" {{ old('indikasi_inisiasi_art', $hivArt->terapiAntiretroviral->indikasi_inisiasi_art) == 'pasien_ko_infeksi_tb_hiv' ? 'checked' : '' }}>
+                                                        id="pasien_ko_infeksi_tb_hiv" {{ old('indikasi_inisiasi_art', $hivArt->terapiAntiretroviral->indikasi_inisiasi_art) == 'pasien_ko_infeksi_tb_hiv' ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label fw-bold" for="pasien_ko_infeksi_tb_hiv">
                                                         <i class="fas fa-lungs text-danger me-2"></i>
                                                         Pasien Ko-Infeksi TB-HIV
@@ -1870,7 +1821,7 @@
                                             <div class="col-md-4 mb-3">
                                                 <div class="form-check p-3 border rounded">
                                                     <input class="form-check-input" type="radio"
-                                                        name="indikasi_inisiasi_art" value="wps" id="wps" {{ old('indikasi_inisiasi_art', $hivArt->terapiAntiretroviral->indikasi_inisiasi_art) == 'wps' ? 'checked' : '' }}>
+                                                        name="indikasi_inisiasi_art" value="wps" id="wps" {{ old('indikasi_inisiasi_art', $hivArt->terapiAntiretroviral->indikasi_inisiasi_art) == 'wps' ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label fw-bold" for="wps">
                                                         <i class="fas fa-female text-warning me-2"></i>
                                                         WPS
@@ -1880,7 +1831,7 @@
                                             <div class="col-md-4 mb-3">
                                                 <div class="form-check p-3 border rounded">
                                                     <input class="form-check-input" type="radio"
-                                                        name="indikasi_inisiasi_art" value="waria" id="waria" {{ old('indikasi_inisiasi_art', $hivArt->terapiAntiretroviral->indikasi_inisiasi_art) == 'waria' ? 'checked' : '' }}>
+                                                        name="indikasi_inisiasi_art" value="waria" id="waria" {{ old('indikasi_inisiasi_art', $hivArt->terapiAntiretroviral->indikasi_inisiasi_art) == 'waria' ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label fw-bold" for="waria">
                                                         <i class="fas fa-transgender text-info me-2"></i>
                                                         Waria
@@ -1892,7 +1843,7 @@
                                                     <input class="form-check-input" type="radio"
                                                         name="indikasi_inisiasi_art"
                                                         value="pasien_ko_infeksi_hepatitis_b_hiv"
-                                                        id="pasien_ko_infeksi_hepatitis_b_hiv" {{ old('indikasi_inisiasi_art', $hivArt->terapiAntiretroviral->indikasi_inisiasi_art) == 'pasien_ko_infeksi_hepatitis_b_hiv' ? 'checked' : '' }}>
+                                                        id="pasien_ko_infeksi_hepatitis_b_hiv" {{ old('indikasi_inisiasi_art', $hivArt->terapiAntiretroviral->indikasi_inisiasi_art) == 'pasien_ko_infeksi_hepatitis_b_hiv' ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label fw-bold"
                                                         for="pasien_ko_infeksi_hepatitis_b_hiv">
                                                         <i class="fas fa-virus text-warning me-2"></i>
@@ -1905,7 +1856,7 @@
                                                 <div class="form-check p-3 border rounded">
                                                     <input class="form-check-input" type="radio"
                                                         name="indikasi_inisiasi_art" value="odha_dengan_pasangan_negatif"
-                                                        id="odha_dengan_pasangan_negatif" {{ old('indikasi_inisiasi_art', $hivArt->terapiAntiretroviral->indikasi_inisiasi_art) == 'odha_dengan_pasangan_negatif' ? 'checked' : '' }}>
+                                                        id="odha_dengan_pasangan_negatif" {{ old('indikasi_inisiasi_art', $hivArt->terapiAntiretroviral->indikasi_inisiasi_art) == 'odha_dengan_pasangan_negatif' ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label fw-bold"
                                                         for="odha_dengan_pasangan_negatif">
                                                         <i class="fas fa-heart text-danger me-2"></i>
@@ -1916,7 +1867,7 @@
                                             <div class="col-md-4 mb-3">
                                                 <div class="form-check p-3 border rounded">
                                                     <input class="form-check-input" type="radio"
-                                                        name="indikasi_inisiasi_art" value="ibu_hamil" id="ibu_hamil" {{ old('indikasi_inisiasi_art', $hivArt->terapiAntiretroviral->indikasi_inisiasi_art) == 'ibu_hamil' ? 'checked' : '' }}>
+                                                        name="indikasi_inisiasi_art" value="ibu_hamil" id="ibu_hamil" {{ old('indikasi_inisiasi_art', $hivArt->terapiAntiretroviral->indikasi_inisiasi_art) == 'ibu_hamil' ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label fw-bold" for="ibu_hamil">
                                                         <i class="fas fa-baby text-success me-2"></i>
                                                         Ibu Hamil
@@ -1927,7 +1878,7 @@
                                                 <div class="form-check p-3 border rounded">
                                                     <input class="form-check-input" type="radio"
                                                         name="indikasi_inisiasi_art" value="lainnya" id="lainnya_indikasi"
-                                                        {{ old('indikasi_inisiasi_art', $hivArt->terapiAntiretroviral->indikasi_inisiasi_art) == 'lainnya' ? 'checked' : '' }}>
+                                                        {{ old('indikasi_inisiasi_art', $hivArt->terapiAntiretroviral->indikasi_inisiasi_art) == 'lainnya' ? 'checked' : '' }} disabled>
                                                     <label class="form-check-label fw-bold" for="lainnya_indikasi">
                                                         <i class="fas fa-plus-circle text-secondary me-2"></i>
                                                         Lainnya (Stadium Klinis 3 atau 4 / CD4&lt;350)
@@ -1938,22 +1889,14 @@
                                     </div>
                                 </div>
 
-
-
                             </div>
 
-                            <!-- Form Buttons -->
-                            <div class="d-flex justify-content-end mt-4">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save"></i> Simpan
-                                </button>
-                            </div>
                         </div>
                 </form>
             </div>
         </div>
     </div>
 
-    @include('unit-pelayanan.rawat-jalan.pelayanan.hiv_art.edit-alergi')
+    @include('unit-pelayanan.rawat-jalan.pelayanan.hiv_art.show-alergi')
     @include('unit-pelayanan.rawat-jalan.pelayanan.hiv_art.edit-modal-datakeluarga-mitra')
 @endsection

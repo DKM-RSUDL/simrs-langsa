@@ -87,11 +87,9 @@
 
                 artSections.forEach((section, index) => {
                     const sectionNumber = section.getAttribute('data-section') || (index + 1);
-
-                    // Ambil data dari setiap section
                     const namaPaduanArt = document.querySelector(`input[name="nama_paduan_art_${sectionNumber}"]:checked`)?.value;
 
-                    // Hanya tambahkan jika ada data yang diisi
+                    // Only include sections with valid data
                     if (namaPaduanArt) {
                         const artSection = {
                             nama_paduan_art: namaPaduanArt,
@@ -106,17 +104,17 @@
                             nama_paduan_baru: document.querySelector(`input[name="nama_paduan_baru_${sectionNumber}"]`)?.value || ''
                         };
 
-                        artData.push(artSection);
+                        // Only push if the section has meaningful data
+                        if (Object.values(artSection).some(value => value)) {
+                            artData.push(artSection);
+                        }
                     }
                 });
 
-                // **PERBAIKAN: Buat JSON dengan format yang bersih tanpa escape characters**
-                const jsonData = JSON.stringify(artData);
+                const jsonData = JSON.stringify(artData, null, 2); // Pretty print for readability
                 console.log('Clean ART data collected:', jsonData);
 
-                // Update hidden input
-                const hiddenInput = document.getElementById('dataARTInput') ||
-                    document.querySelector('input[name="data_terapi_art"]');
+                const hiddenInput = document.getElementById('dataARTInput') || document.querySelector('input[name="data_terapi_art"]');
                 if (hiddenInput) {
                     hiddenInput.value = jsonData;
                 }
@@ -255,110 +253,110 @@
                 newSection.className = 'art-section mb-4';
                 newSection.setAttribute('data-section', artSectionCounter);
                 newSection.innerHTML = `
-                <div class="card border-start border-${borderColor} border-4">
-                    <div class="card-header bg-body-secondary d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0 text-${borderColor}">
-                            <i class="fas fa-pills me-2"></i>
-                            Terapi ART #${artSectionCounter}
-                        </h6>
-                        <button type="button" class="btn btn-outline-danger btn-sm remove-art-btn" onclick="removeArtSection(${artSectionCounter})">
-                            <i class="fas fa-trash me-1"></i>
-                            Hapus
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label class="form-label fw-bold text-dark">Nama Paduan ART Original</label>
-                                <div class="bg-light-subtle">
-                                    <div class="card-body p-3">
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="radio" name="nama_paduan_art_${artSectionCounter}" value="TDF+3TC+EFV" id="art1_${artSectionCounter}">
-                                            <label class="form-check-label" for="art1_${artSectionCounter}">1. TDF+3TC+EFV</label>
-                                        </div>
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="radio" name="nama_paduan_art_${artSectionCounter}" value="TDF+FTC+EFV" id="art2_${artSectionCounter}">
-                                            <label class="form-check-label" for="art2_${artSectionCounter}">2. TDF+FTC+EFV</label>
-                                        </div>
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="radio" name="nama_paduan_art_${artSectionCounter}" value="TDF+3TC+NVP" id="art3_${artSectionCounter}">
-                                            <label class="form-check-label" for="art3_${artSectionCounter}">3. TDF+3TC+NVP</label>
-                                        </div>
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="radio" name="nama_paduan_art_${artSectionCounter}" value="TDF+FTC+NVP" id="art4_${artSectionCounter}">
-                                            <label class="form-check-label" for="art4_${artSectionCounter}">4. TDF+FTC+NVP</label>
-                                        </div>
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="radio" name="nama_paduan_art_${artSectionCounter}" value="AZT+3TC+EFV" id="art5_${artSectionCounter}">
-                                            <label class="form-check-label" for="art5_${artSectionCounter}">5. AZT+3TC+EFV</label>
-                                        </div>
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="radio" name="nama_paduan_art_${artSectionCounter}" value="AZT+3TC+NVP" id="art6_${artSectionCounter}">
-                                            <label class="form-check-label" for="art6_${artSectionCounter}">6. AZT+3TC+NVP</label>
-                                        </div>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="radio" name="nama_paduan_art_${artSectionCounter}" value="lainnya" id="art7_${artSectionCounter}">
-                                            <label class="form-check-label" for="art7_${artSectionCounter}">7. Lainnya</label>
-                                        </div>
-                                        <div id="lainnya-art-details-${artSectionCounter}" class="d-none">
-                                            <input type="text" name="art_lainnya_${artSectionCounter}" class="form-control form-control-sm" placeholder="Sebutkan nama paduan ART lainnya">
+                    <div class="card border-start border-${borderColor} border-4">
+                        <div class="card-header bg-body-secondary d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0 text-${borderColor}">
+                                <i class="fas fa-pills me-2"></i>
+                                Terapi ART #${artSectionCounter}
+                            </h6>
+                            <button type="button" class="btn btn-outline-danger btn-sm remove-art-btn" onclick="removeArtSection(${artSectionCounter})">
+                                <i class="fas fa-trash me-1"></i>
+                                Hapus
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold text-dark">Nama Paduan ART Original</label>
+                                    <div class="bg-light-subtle">
+                                        <div class="card-body p-3">
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="radio" name="nama_paduan_art_${artSectionCounter}" value="TDF+3TC+EFV" id="art1_${artSectionCounter}">
+                                                <label class="form-check-label" for="art1_${artSectionCounter}">1. TDF+3TC+EFV</label>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="radio" name="nama_paduan_art_${artSectionCounter}" value="TDF+FTC+EFV" id="art2_${artSectionCounter}">
+                                                <label class="form-check-label" for="art2_${artSectionCounter}">2. TDF+FTC+EFV</label>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="radio" name="nama_paduan_art_${artSectionCounter}" value="TDF+3TC+NVP" id="art3_${artSectionCounter}">
+                                                <label class="form-check-label" for="art3_${artSectionCounter}">3. TDF+3TC+NVP</label>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="radio" name="nama_paduan_art_${artSectionCounter}" value="TDF+FTC+NVP" id="art4_${artSectionCounter}">
+                                                <label class="form-check-label" for="art4_${artSectionCounter}">4. TDF+FTC+NVP</label>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="radio" name="nama_paduan_art_${artSectionCounter}" value="AZT+3TC+EFV" id="art5_${artSectionCounter}">
+                                                <label class="form-check-label" for="art5_${artSectionCounter}">5. AZT+3TC+EFV</label>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="radio" name="nama_paduan_art_${artSectionCounter}" value="AZT+3TC+NVP" id="art6_${artSectionCounter}">
+                                                <label class="form-check-label" for="art6_${artSectionCounter}">6. AZT+3TC+NVP</label>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="radio" name="nama_paduan_art_${artSectionCounter}" value="lainnya" id="art7_${artSectionCounter}">
+                                                <label class="form-check-label" for="art7_${artSectionCounter}">7. Lainnya</label>
+                                            </div>
+                                            <div id="lainnya-art-details-${artSectionCounter}" class="d-none">
+                                                <input type="text" name="art_lainnya_${artSectionCounter}" class="form-control form-control-sm" placeholder="Sebutkan nama paduan ART lainnya">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-8">
-                                <label class="form-label fw-bold text-dark">SUBSTITUSI dalam lini-1, SWITCH ke lini-2, STOP</label>
-                                <div class="row g-3">
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">Tanggal</label>
-                                        <input type="date" name="substitusi_tanggal_${artSectionCounter}" class="form-control">
+                                <div class="col-md-8">
+                                    <label class="form-label fw-bold text-dark">SUBSTITUSI dalam lini-1, SWITCH ke lini-2, STOP</label>
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Tanggal</label>
+                                            <input type="date" name="substitusi_tanggal_${artSectionCounter}" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Substitusi</label>
+                                            <input type="text" name="substitusi_${artSectionCounter}" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Switch</label>
+                                            <input type="text" name="switch_${artSectionCounter}" class="form-control">
+                                        </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">Substitusi</label>
-                                        <input type="text" name="substitusi_${artSectionCounter}" class="form-control">
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Stop</label>
+                                            <input type="text" name="stop_${artSectionCounter}" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Restart</label>
+                                            <input type="text" name="restart_${artSectionCounter}" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Alasan</label>
+                                            <select name="alasan_${artSectionCounter}" class="form-select">
+                                                <option value="">Pilih alasan</option>
+                                                <option value="1">1. Toksisitas/efek samping</option>
+                                                <option value="2">2. Hamil</option>
+                                                <option value="3">3. Risiko hamil</option>
+                                                <option value="4">4. TB baru</option>
+                                                <option value="5">5. Ada obat baru</option>
+                                                <option value="6">6. Stok obat habis</option>
+                                                <option value="7">7. Alasan lain</option>
+                                                <option value="8">8. Gagal pengobatan klinis</option>
+                                                <option value="9">9. Gagal imunologis</option>
+                                                <option value="10">10. Gagal virologis</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">Switch</label>
-                                        <input type="text" name="switch_${artSectionCounter}" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="row g-3">
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">Stop</label>
-                                        <input type="text" name="stop_${artSectionCounter}" class="form-control">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">Restart</label>
-                                        <input type="text" name="restart_${artSectionCounter}" class="form-control">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">Alasan</label>
-                                        <select name="alasan_${artSectionCounter}" class="form-select">
-                                            <option value="">Pilih alasan</option>
-                                            <option value="1">1. Toksisitas/efek samping</option>
-                                            <option value="2">2. Hamil</option>
-                                            <option value="3">3. Risiko hamil</option>
-                                            <option value="4">4. TB baru</option>
-                                            <option value="5">5. Ada obat baru</option>
-                                            <option value="6">6. Stok obat habis</option>
-                                            <option value="7">7. Alasan lain</option>
-                                            <option value="8">8. Gagal pengobatan klinis</option>
-                                            <option value="9">9. Gagal imunologis</option>
-                                            <option value="10">10. Gagal virologis</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold">Nama Paduan Baru</label>
-                                        <input type="text" name="nama_paduan_baru_${artSectionCounter}" class="form-control">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold">Nama Paduan Baru</label>
+                                            <input type="text" name="nama_paduan_baru_${artSectionCounter}" class="form-control">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            `;
+                `;
 
                 artSections.appendChild(newSection);
                 setupArtSection(artSectionCounter);
