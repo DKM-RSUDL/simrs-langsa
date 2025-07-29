@@ -232,8 +232,8 @@ Route::middleware('ssoToken')->group(function () {
     Route::get('/logout', [SsoController::class, 'logout'])->name('logout');
 
 
-    Route::get('/login', [SsoController::class, 'redirectToSso'])->name('login');
-    Route::get('/callback', [SsoController::class, 'handleCallback'])->name('callback');
+    // Route::get('/login', [SsoController::class, 'redirectToSso'])->name('login');
+    // Route::get('/callback', [SsoController::class, 'handleCallback'])->name('callback');
 });
 
 
