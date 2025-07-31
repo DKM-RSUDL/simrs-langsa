@@ -152,12 +152,9 @@ Auth::routes(['register' => false]); // Nonaktifkan register
 
 // Auth::routes();
 Route::middleware('guest')->group(function () {
-
-
     Route::get('/', function () {
         return view('auth.login');
     });
-
     Route::get('/login', [SsoController::class, 'redirectToSso'])->name('login');
     Route::get('/callback', [SsoController::class, 'handleCallback'])->name('callback');
 });
@@ -169,7 +166,6 @@ Route::middleware('ssoToken')->group(function () {
 
     Route::get('/user-sso', [SsoController::class, 'getUser']);
     Route::get('/logout', [SsoController::class, 'logout'])->name('logout');
-
 
     Route::get('/login', [SsoController::class, 'redirectToSso'])->name('login');
     Route::get('/callback', [SsoController::class, 'handleCallback'])->name('callback');
