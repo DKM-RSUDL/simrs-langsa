@@ -248,6 +248,16 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+        ],
+        [
+            'icon' => 'verified_badge.png',
+            'label' => 'Surveilans PPI',
+            'link' => route('rawat-inap.surveilans-ppi.a1.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ]
     ];
 

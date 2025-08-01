@@ -153,6 +153,8 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\TindakanController as RawatInap
 use App\Http\Controllers\UnitPelayanan\RawatInap\StatusFungsionalController as RawatInapStatusFungsionalController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PersetujuanTransfusiDarahController as RawatInapPersetujuanTransfusiDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\Covid19Controller as RawatInapCovid19Controller;
+use App\Http\Controllers\UnitPelayanan\RawatInap\SurveilansA1Controller;
+use App\Http\Controllers\UnitPelayanan\RawatInap\SurveilansA2Controller;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\ResikoJatuh\SkalaGeriatriController as RawatJalanSkalaGeriatriController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\ResikoJatuh\SkalaHumptyDumptyController as RawatJalanSkalaHumptyDumptyController;
@@ -2157,6 +2159,42 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::put('/{data}', 'update')->name('.update');
                                         Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                                         Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
+                            //Surveilans ppi
+                            Route::prefix('surveilans-ppi')->group(function () {
+                                Route::name('.surveilans-ppi')->group(function () {
+
+                                    //A1
+                                    Route::prefix('a1')->group(function () {
+                                        Route::name('.a1')->group(function () {
+                                            Route::controller(SurveilansA1Controller::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::get('/{data}', 'show')->name('.show');
+                                                Route::get('/{data}/edit', 'edit')->name('.edit');
+                                                Route::put('/{data}', 'update')->name('.update');
+                                                Route::delete('/{data}', 'destroy')->name('.destroy');
+                                            });
+                                        });
+                                    });
+
+                                    //A2
+                                    Route::prefix('a2')->group(function () {
+                                        Route::name('.a2')->group(function () {
+                                            Route::controller(SurveilansA2Controller::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::get('/{data}', 'show')->name('.show');
+                                                Route::get('/{data}/edit', 'edit')->name('.edit');
+                                                Route::put('/{data}', 'update')->name('.update');
+                                                Route::delete('/{data}', 'destroy')->name('.destroy');
+                                            });
+                                        });
                                     });
                                 });
                             });
