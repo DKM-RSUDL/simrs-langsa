@@ -42,14 +42,27 @@ class RawatInapController extends Controller
 
         if ($request->ajax()) {
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
-                ->where('kd_unit', $kd_unit)
-                ->where(function ($q) {
-                    $q->whereNull('status_inap');
-                    $q->orWhere('status_inap', 1);
+                ->join('nginap', function ($q) {
+                    $q->on('kunjungan.kd_pasien', 'nginap.kd_pasien');
+                    $q->on('kunjungan.kd_unit', 'nginap.kd_unit');
+                    $q->on('kunjungan.tgl_masuk', 'nginap.tgl_masuk');
+                    $q->on('kunjungan.urut_masuk', 'nginap.urut_masuk');
                 })
-                ->whereNull('tgl_pulang')
-                ->whereNull('jam_pulang')
-                ->whereYear('tgl_masuk', '>=', 2024);
+                ->join('transaksi as t', function ($q) {
+                    $q->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $q->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $q->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $q->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('nginap.kd_unit_kamar', $kd_unit)
+                ->where('nginap.akhir', 1)
+                ->where(function ($q) {
+                    $q->whereNull('kunjungan.status_inap');
+                    $q->orWhere('kunjungan.status_inap', 1);
+                })
+                ->whereNull('kunjungan.tgl_pulang')
+                ->whereNull('kunjungan.jam_pulang')
+                ->whereYear('kunjungan.tgl_masuk', '>=', 2024);
 
             return DataTables::of($data)
                 ->filter(function ($query) use ($request) {
@@ -76,8 +89,8 @@ class RawatInapController extends Controller
                 })
 
                 ->order(function ($query) {
-                    $query->orderBy('tgl_masuk', 'desc')
-                        ->orderBy('jam_masuk', 'desc');
+                    $query->orderBy('kunjungan.tgl_masuk', 'desc')
+                        ->orderBy('kunjungan.jam_masuk', 'desc');
                 })
                 ->editColumn('tgl_masuk', fn($row) => date('Y-m-d', strtotime($row->tgl_masuk)) ?: '-')
                 ->addColumn('no_rm', fn($row) => $row->kd_pasien ?: '-')
@@ -133,8 +146,29 @@ class RawatInapController extends Controller
 
         if ($request->ajax()) {
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
-                ->where('kd_unit', $kd_unit)
-                ->where('status_inap', 0);
+                ->join('nginap', function ($q) {
+                    $q->on('kunjungan.kd_pasien', 'nginap.kd_pasien');
+                    $q->on('kunjungan.kd_unit', 'nginap.kd_unit');
+                    $q->on('kunjungan.tgl_masuk', 'nginap.tgl_masuk');
+                    $q->on('kunjungan.urut_masuk', 'nginap.urut_masuk');
+                })
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->join('rme_serah_terima as st', function ($q) {
+                    $q->on('kunjungan.kd_pasien', '=', 'st.kd_pasien');
+                    $q->on('kunjungan.tgl_masuk', '=', 'st.tgl_masuk');
+                    $q->on('kunjungan.urut_masuk', '=', 'st.urut_masuk_tujuan');
+                    $q->on('kunjungan.kd_unit', '=', 'st.kd_unit_tujuan');
+                })
+                // ->whereRaw('nginap.kd_unit = t.kd_unit')
+                ->where('nginap.kd_unit_kamar', $kd_unit)
+                ->where('nginap.akhir', 1)
+                ->where('st.status', 1);
+            // ->where('kunjungan.status_inap', 0);
 
             return DataTables::of($data)
                 ->filter(function ($query) use ($request) {
@@ -160,8 +194,8 @@ class RawatInapController extends Controller
                     }
                 })
                 ->order(function ($query) {
-                    $query->orderBy('tgl_masuk', 'desc')
-                        ->orderBy('jam_masuk', 'desc');
+                    $query->orderBy('kunjungan.tgl_masuk', 'desc')
+                        ->orderBy('kunjungan.jam_masuk', 'desc');
                 })
                 ->editColumn('tgl_masuk', fn($row) => date('Y-m-d', strtotime($row->tgl_masuk)) ?: '-')
                 ->addColumn('no_rm', fn($row) => $row->kd_pasien ?: '-')

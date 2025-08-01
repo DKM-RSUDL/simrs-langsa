@@ -260,7 +260,15 @@ if (!function_exists('countAktivePatientRanap')) {
             $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
             $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
         })
-            ->where('kunjungan.kd_unit', $kd_unit)
+            ->join('nginap', function ($q) {
+                $q->on('kunjungan.kd_pasien', 'nginap.kd_pasien');
+                $q->on('kunjungan.kd_unit', 'nginap.kd_unit');
+                $q->on('kunjungan.tgl_masuk', 'nginap.tgl_masuk');
+                $q->on('kunjungan.urut_masuk', 'nginap.urut_masuk');
+            })
+
+            ->where('nginap.kd_unit_kamar', $kd_unit)
+            ->where('nginap.akhir', 1)
             ->where(function ($q) {
                 $q->whereNull('kunjungan.status_inap');
                 $q->orWhere('kunjungan.status_inap', 1);
@@ -284,7 +292,15 @@ if (!function_exists('countPendingPatientRanap')) {
             $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
             $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
         })
-            ->where('kunjungan.kd_unit', $kd_unit)
+            ->join('nginap', function ($q) {
+                $q->on('kunjungan.kd_pasien', 'nginap.kd_pasien');
+                $q->on('kunjungan.kd_unit', 'nginap.kd_unit');
+                $q->on('kunjungan.tgl_masuk', 'nginap.tgl_masuk');
+                $q->on('kunjungan.urut_masuk', 'nginap.urut_masuk');
+            })
+
+            ->where('nginap.kd_unit_kamar', $kd_unit)
+            ->where('nginap.akhir', 1)
             ->where('kunjungan.status_inap', 0)
             ->count();
 
