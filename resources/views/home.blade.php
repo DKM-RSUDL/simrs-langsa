@@ -6,6 +6,13 @@
         body {
             width: 100%;
         }
+        .table-responsive {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        canvas#visitsChart {
+            max-height: 300px;
+        }
     </style>
 @endpush
 
@@ -21,11 +28,10 @@
                                     class="rounded-circle w-100 avatar-lg img-fluid"
                                     style="max-width: 100px; height: auto;">
                             @else
-                                    <img src="https://e-rsudlangsa.id/hrd/user/images/profil/{{ auth()->user()->karyawan->foto }}" alt="Profile Picture"
+                                <img src="https://e-rsudlangsa.id/hrd/user/images/profil/{{ auth()->user()->karyawan->foto }}" alt="Profile Picture"
                                     class="rounded-circle w-100 avatar-lg img-fluid"
                                     style="max-width: 100px; height: auto;">
                             @endif
-
                         </div>
                         <div class="card-body">
                             <h6 class="card-title mb-2" style="font-size: 1.5rem; font-weight: 800;">
@@ -67,7 +73,7 @@
                 <div class="card text-center mb-4 p-3">
                     <div class="mx-auto">
                         <h5 class="card-title">Tanggal</h5>
-                        <p class="card-text">{{ date('d F Y') }}</p> <!-- Example date -->
+                        <p class="card-text">{{ date('d F Y') }}</p>
                     </div>
                 </div>
             </div>
@@ -99,7 +105,7 @@
                                         </div>
                                         <div>
                                             <div class="fs-6 fw-bold text-primary">Rawat Jalan</div>
-                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">0</span>
+                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">{{ $visits->where('unit.nama_unit', 'Rawat Jalan')->count() }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -116,14 +122,13 @@
                                         </div>
                                         <div>
                                             <div class="fs-6 fw-bold text-primary">Rawat Inap</div>
-                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">0</span>
+                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">{{ $visits->where('unit.nama_unit', 'Rawat Inap')->count() }}</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </a>
                         </div>
-
 
                         <div class="col-md-4 p-2">
                             <a href="{{ route('gawat-darurat.index') }}" class="text-decoration-none card-hover">
@@ -134,7 +139,7 @@
                                         </div>
                                         <div>
                                             <div class="fs-6 fw-bold text-primary">Gawat Darurat</div>
-                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">0</span>
+                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">{{ $visits->where('unit.nama_unit', 'Gawat Darurat')->count() }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -151,7 +156,7 @@
                                         </div>
                                         <div>
                                             <div class="fs-6 fw-bold text-primary">Bedah Sentral</div>
-                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">0</span>
+                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">{{ $visits->where('unit.nama_unit', 'Bedah Sentral')->count() }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -168,7 +173,7 @@
                                         </div>
                                         <div>
                                             <div class="fs-6 fw-bold text-primary">Hemodialisa</div>
-                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">0</span>
+                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">{{ $visits->where('unit.nama_unit', 'Hemodialisa')->count() }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -185,7 +190,7 @@
                                         </div>
                                         <div>
                                             <div class="fs-6 fw-bold text-primary">Cathlab</div>
-                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">0</span>
+                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">{{ $visits->where('unit.nama_unit', 'Cathlab')->count() }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -202,7 +207,7 @@
                                         </div>
                                         <div>
                                             <div class="fs-6 fw-bold text-primary">Forensik</div>
-                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">0</span>
+                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">{{ $visits->where('unit.nama_unit', 'Forensik')->count() }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -219,7 +224,7 @@
                                         </div>
                                         <div>
                                             <div class="fs-6 fw-bold text-primary">Rehab Medik</div>
-                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">0</span>
+                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">{{ $visits->where('unit.nama_unit', 'Rehab Medik')->count() }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -236,44 +241,71 @@
                                         </div>
                                         <div>
                                             <div class="fs-6 fw-bold text-primary">Gizi Klinis</div>
-                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">0</span>
+                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">{{ $visits->where('unit.nama_unit', 'Gizi Klinis')->count() }}</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </a>
                         </div>
-
                     </div>
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="card mb-4 p-4">
-                    <h5 class="card-title">Informasi Sistem RME RSUD Langsa</h5>
-                    <p class="card-text">
-                        Sistem Rekam Medis Elektronik di RSUD Langsa mendukung pengelolaan data pasien secara digital sejak pendaftaran hingga pelaporan.
-                        Dengan teknologi terintegrasi, sistem ini memungkinkan akses cepat, efisiensi administrasi, dan pengurangan penggunaan kertas sesuai
-                        Peraturan Menteri Kesehatan No. 24 Tahun 2022.
-                    </p>
-                    <ul class="list-unstyled">
-                        <li><strong>Lokasi:</strong> Jl. Jend. A. Yani No.1, Langsa, Aceh</li>
-                        <li><strong>Status Akreditasi:</strong> Tingkat Utama (KARS 2017)</li>
-                        <li><strong>Kontak:</strong> (0641) 22800</li>
-                    </ul>
-                    <a href="https://rsud.langsakota.go.id" target="_blank"
-                        class="btn btn-outline-primary btn-sm">Kunjungi Situs Resmi</a>
+                    <h5 class="card-title">Grafik Kunjungan per Layanan</h5>
+                    <canvas id="visitsChart" style="max-height: 350px;"></canvas>
                 </div>
             </div>
-
         </div>
-
 
     </div>
 @endsection
 
 @push('js')
     <script src="{{ asset('vendor/chart.js/Chart.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script src="{{ asset('assets/js/pages/index.min.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('visitsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: @json($chartLabels),
+                    datasets: [{
+                        label: 'Jumlah Kunjungan',
+                        data: @json($chartData),
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Jumlah Kunjungan'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Unit'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 @endpush

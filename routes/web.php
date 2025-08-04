@@ -153,6 +153,8 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\TindakanController as RawatInap
 use App\Http\Controllers\UnitPelayanan\RawatInap\StatusFungsionalController as RawatInapStatusFungsionalController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PersetujuanTransfusiDarahController as RawatInapPersetujuanTransfusiDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\Covid19Controller as RawatInapCovid19Controller;
+use App\Http\Controllers\UnitPelayanan\RawatInap\PneumoniaCurb65Controller;
+use App\Http\Controllers\UnitPelayanan\RawatInap\PneumoniaPsiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SurveilansA1Controller;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SurveilansA2Controller;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
@@ -2196,6 +2198,42 @@ Route::middleware('ssoToken')->group(function () {
                                             });
                                         });
                                     });
+                                });
+                            });
+
+                            //pneumonia
+                            Route::prefix('pneumonia')->group(function () {
+                                Route::name('.pneumonia')->group(function () {
+                                    
+                                    Route::prefix('psi')->group(function () {
+                                        Route::name('.psi')->group(function () {
+                                            Route::controller(PneumoniaPsiController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::get('/{data}', 'show')->name('.show');
+                                                Route::get('/{data}/edit', 'edit')->name('.edit');
+                                                Route::put('/{data}', 'update')->name('.update');
+                                                Route::delete('/{data}', 'destroy')->name('.destroy');
+                                            });
+                                        });
+                                    });
+
+
+                                    Route::prefix('curb-65')->group(function () {
+                                        Route::name('.curb-65')->group(function () {
+                                            Route::controller(PneumoniaCurb65Controller::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::get('/{data}', 'show')->name('.show');
+                                                Route::get('/{data}/edit', 'edit')->name('.edit');
+                                                Route::put('/{data}', 'update')->name('.update');
+                                                Route::delete('/{data}', 'destroy')->name('.destroy');
+                                            });
+                                        });
+                                    });
+
                                 });
                             });
 
