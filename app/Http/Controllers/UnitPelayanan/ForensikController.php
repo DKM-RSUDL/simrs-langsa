@@ -121,6 +121,29 @@ class ForensikController extends Controller
             abort(404, 'Data not found');
         }
 
+        return view('unit-pelayanan.forensik.pelayanan.index', compact('dataMedis'));
+    }
+
+    public function pemeriksaan($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->where('kd_unit', $kd_unit)
+            ->where('kd_pasien', $kd_pasien)
+            ->where('urut_masuk', $urut_masuk)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->first();
+
+        // Menghitung umur berdasarkan tgl_lahir jika ada
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
         $pemeriksaan = RmeForensikPemeriksaan::with(['userCreate'])
             ->where('kd_pasien', $kd_pasien)
             ->where('kd_unit', $kd_unit)
@@ -129,15 +152,16 @@ class ForensikController extends Controller
             ->get();
 
         if ($kd_unit == '228') {
-            return view('unit-pelayanan.forensik.pelayanan.index-klinik', compact(
+            return view('unit-pelayanan.forensik.pelayanan.pemeriksaan-klinik.index-klinik', compact(
                 'dataMedis',
                 'pemeriksaan'
             ));
         } else if ($kd_unit == '76') {
-            return view('unit-pelayanan.forensik.pelayanan.index-patologi', compact(
+            return view('unit-pelayanan.forensik.pelayanan.pemeriksaan-patologi.index-patologi', compact(
                 'dataMedis',
                 'pemeriksaan'
             ));
         }
     }
+
 }

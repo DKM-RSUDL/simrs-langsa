@@ -11,7 +11,7 @@
         </style>
     @endpush
 
-    @include('unit-pelayanan.forensik.pelayanan.include')
+    @include('unit-pelayanan.forensik.pelayanan.pemeriksaan-klinik.include')
     <div class="row">
         <div class="col-md-3">
             @include('components.patient-card')
@@ -31,13 +31,15 @@
                                     <div class="form-group">
                                         <label class="form-label">Tanggal Pemeriksaan</label>
                                         <input type="date" name="tgl_pemeriksaan" id="tgl_pemeriksaan"
-                                            class="form-control" value="{{ date('Y-m-d', strtotime($pemeriksaan->tgl_pemeriksaan)) }}" disabled>
+                                            class="form-control"
+                                            value="{{ date('Y-m-d', strtotime($pemeriksaan->tgl_pemeriksaan)) }}" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
                                         <input type="time" name="jam_pemeriksaan" id="jam_pemeriksaan"
-                                            class="form-control" value="{{ date('H:i', strtotime($pemeriksaan->jam_pemeriksaan)) }}" disabled>
+                                            class="form-control"
+                                            value="{{ date('H:i', strtotime($pemeriksaan->jam_pemeriksaan)) }}" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -91,7 +93,8 @@
                                     <!-- Asal Rujukan -->
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Asal Rujukan</label>
-                                        <input type="text" name="asal_rujukan" id="asal_rujukan" class="form-control" value="{{ $pemeriksaan->asal_rujukan }}" disabled>
+                                        <input type="text" name="asal_rujukan" id="asal_rujukan" class="form-control"
+                                            value="{{ $pemeriksaan->asal_rujukan }}" disabled>
                                     </div>
 
 
@@ -102,33 +105,39 @@
                                             <div class="d-flex gap-3">
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input" id="laka_lantas"
-                                                        name="jenis_kasus" value="1" @checked($pemeriksaan->jenis_kasus == '1') disabled>
+                                                        name="jenis_kasus" value="1" @checked($pemeriksaan->jenis_kasus == '1')
+                                                        disabled>
                                                     <label class="form-check-label" for="laka_lantas">Laka lantas</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input" id="pemukulan"
-                                                        name="jenis_kasus" value="2" @checked($pemeriksaan->jenis_kasus == '2') disabled>
+                                                        name="jenis_kasus" value="2" @checked($pemeriksaan->jenis_kasus == '2')
+                                                        disabled>
                                                     <label class="form-check-label" for="pemukulan">Pemukulan</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input" id="kesusilaan"
-                                                        name="jenis_kasus" value="3" @checked($pemeriksaan->jenis_kasus == '3') disabled>
+                                                        name="jenis_kasus" value="3" @checked($pemeriksaan->jenis_kasus == '3')
+                                                        disabled>
                                                     <label class="form-check-label" for="kesusilaan">Kesusilaan</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input" id="kdrt"
-                                                        name="jenis_kasus" value="4" @checked($pemeriksaan->jenis_kasus == '4') disabled>
+                                                        name="jenis_kasus" value="4" @checked($pemeriksaan->jenis_kasus == '4')
+                                                        disabled>
                                                     <label class="form-check-label" for="kdrt">KDRT</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input" id="keracunan"
-                                                        name="jenis_kasus" value="5" @checked($pemeriksaan->jenis_kasus == '5') disabled>
+                                                        name="jenis_kasus" value="5" @checked($pemeriksaan->jenis_kasus == '5')
+                                                        disabled>
                                                     <label class="form-check-label" for="keracunan">Keracunan</label>
                                                 </div>
                                                 <div class="d-flex gap-2 align-items-center">
                                                     <div class="form-check">
-                                                        <input type="radio" class="form-check-input"
-                                                            id="kasus_lainnya" name="jenis_kasus" value="99" @checked($pemeriksaan->jenis_kasus == '99') disabled>
+                                                        <input type="radio" class="form-check-input" id="kasus_lainnya"
+                                                            name="jenis_kasus" value="99"
+                                                            @checked($pemeriksaan->jenis_kasus == '99') disabled>
                                                         <label class="form-check-label"
                                                             for="kasus_lainnya">Lainnya</label>
                                                     </div>
@@ -144,27 +153,32 @@
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Nomor</label>
-                                        <input type="text" class="form-control" name="nomor_penyidik" value="{{ $pemeriksaan->nomor_penyidik }}" disabled>
+                                        <input type="text" class="form-control" name="nomor_penyidik"
+                                            value="{{ $pemeriksaan->nomor_penyidik }}" disabled>
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Nama</label>
-                                        <input type="text" class="form-control" name="nama_penyidik" value="{{ $pemeriksaan->nama_penyidik }}" disabled>
+                                        <input type="text" class="form-control" name="nama_penyidik"
+                                            value="{{ $pemeriksaan->nama_penyidik }}" disabled>
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">NRP</label>
-                                        <input type="text" class="form-control" name="nrp_penyidik" value="{{ $pemeriksaan->nrp_penyidik }}" disabled>
+                                        <input type="text" class="form-control" name="nrp_penyidik"
+                                            value="{{ $pemeriksaan->nrp_penyidik }}" disabled>
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Tanggal</label>
-                                        <input type="date" class="form-control" name="tgl_penyidik" value="{{ date('Y-m-d', strtotime($pemeriksaan->tgl_penyidik)) }}" disabled>
+                                        <input type="date" class="form-control" name="tgl_penyidik"
+                                            value="{{ date('Y-m-d', strtotime($pemeriksaan->tgl_penyidik)) }}" disabled>
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Instansi</label>
-                                        <input type="text" class="form-control" name="instansi_penyidik" value="{{ $pemeriksaan->instansi_penyidik }}" disabled>
+                                        <input type="text" class="form-control" name="instansi_penyidik"
+                                            value="{{ $pemeriksaan->instansi_penyidik }}" disabled>
                                     </div>
                                 </div>
 
@@ -177,46 +191,54 @@
                                         <div class="d-flex flex-column gap-2">
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input" id="pemeriksaan_umum"
-                                                    name="pemeriksaan[]" value="pemeriksaan_umum" @checked(in_array('pemeriksaan_umum', $pemeriksaan->pemeriksaan)) disabled>
+                                                    name="pemeriksaan[]" value="pemeriksaan_umum"
+                                                    @checked(is_array($pemeriksaan->pemeriksaan) && in_array('pemeriksaan_umum', $pemeriksaan->pemeriksaan)) disabled>
                                                 <label class="form-check-label" for="pemeriksaan_umum">Pemeriksaan</label>
                                             </div>
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input" id="sampel_darah"
-                                                    name="pemeriksaan[]" value="sampel_darah" @checked(in_array('sampel_darah', $pemeriksaan->pemeriksaan)) disabled>
+                                                    name="pemeriksaan[]" value="sampel_darah"
+                                                    @checked(is_array($pemeriksaan->pemeriksaan) && in_array('sampel_darah', $pemeriksaan->pemeriksaan)) disabled>
                                                 <label class="form-check-label" for="sampel_darah">Pemeriksaan sampel
                                                     darah</label>
                                             </div>
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input" id="barang_bukti"
-                                                    name="pemeriksaan[]" value="barang_bukti" @checked(in_array('barang_bukti', $pemeriksaan->pemeriksaan)) disabled>
+                                                    name="pemeriksaan[]" value="barang_bukti"
+                                                    @checked(is_array($pemeriksaan->pemeriksaan) && in_array('barang_bukti', $pemeriksaan->pemeriksaan)) disabled>
                                                 <label class="form-check-label" for="barang_bukti">Pemeriksaan/Pemaketan
                                                     Barang Bukti</label>
                                             </div>
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input" id="toksikologi"
-                                                    name="pemeriksaan[]" value="toksikologi" @checked(in_array('toksikologi', $pemeriksaan->pemeriksaan)) disabled>
+                                                    name="pemeriksaan[]" value="toksikologi" @checked(is_array($pemeriksaan->pemeriksaan) && in_array('toksikologi', $pemeriksaan->pemeriksaan))
+                                                    disabled>
                                                 <label class="form-check-label" for="toksikologi">Pemeriksaan
                                                     toksikologi</label>
                                             </div>
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input" id="molekuler"
-                                                    name="pemeriksaan[]" value="molekuler" @checked(in_array('molekuler', $pemeriksaan->pemeriksaan)) disabled>
+                                                    name="pemeriksaan[]" value="molekuler" @checked(is_array($pemeriksaan->pemeriksaan) && in_array('molekuler', $pemeriksaan->pemeriksaan))
+                                                    disabled>
                                                 <label class="form-check-label" for="molekuler">Pemeriksaan
                                                     molekuler</label>
                                             </div>
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input" id="foto_rontgen"
-                                                    name="pemeriksaan[]" value="foto_rontgen" @checked(in_array('foto_rontgen', $pemeriksaan->pemeriksaan)) disabled>
+                                                    name="pemeriksaan[]" value="foto_rontgen"
+                                                    @checked(is_array($pemeriksaan->pemeriksaan) && in_array('foto_rontgen', $pemeriksaan->pemeriksaan)) disabled>
                                                 <label class="form-check-label" for="foto_rontgen">Foto rontgent</label>
                                             </div>
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input" id="ct_scan"
-                                                    name="pemeriksaan[]" value="ct_scan" @checked(in_array('ct_scan', $pemeriksaan->pemeriksaan)) disabled>
+                                                    name="pemeriksaan[]" value="ct_scan" @checked(is_array($pemeriksaan->pemeriksaan) && in_array('ct_scan', $pemeriksaan->pemeriksaan))
+                                                    disabled>
                                                 <label class="form-check-label" for="ct_scan">Pemeriksaan CT-Scan</label>
                                             </div>
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input" id="pemeriksaan_lainnya"
-                                                    name="pemeriksaan[]" value="lainnya" @checked(in_array('lainnya', $pemeriksaan->pemeriksaan)) disabled>
+                                                    name="pemeriksaan[]" value="lainnya" @checked(is_array($pemeriksaan->pemeriksaan) && in_array('lainnya', $pemeriksaan->pemeriksaan))
+                                                    disabled>
                                                 <label class="form-check-label" for="pemeriksaan_lainnya">Lainnya</label>
                                             </div>
                                         </div>
@@ -230,17 +252,20 @@
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Tingkat kesadaran</label>
-                                        <input type="text" class="form-control" name="kesadaran" value="{{ $pemeriksaan->kesadaran }}" disabled>
+                                        <input type="text" class="form-control" name="kesadaran"
+                                            value="{{ $pemeriksaan->kesadaran }}" disabled>
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Denyut nadi</label>
-                                        <input type="number" class="form-control" name="nadi" value="{{ $pemeriksaan->nadi }}" disabled>
+                                        <input type="number" class="form-control" name="nadi"
+                                            value="{{ $pemeriksaan->nadi }}" disabled>
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Pernafasan</label>
-                                        <input type="number" class="form-control" name="nafas" value="{{ $pemeriksaan->nafas }}" disabled>
+                                        <input type="number" class="form-control" name="nafas"
+                                            value="{{ $pemeriksaan->nafas }}" disabled>
                                     </div>
 
                                     <div class="form-group align-items-center">
@@ -248,18 +273,21 @@
                                         <div class="d-flex align-items-center">
                                             <div class="me-3">
                                                 <label for="sistole" class="form-label">Sistole</label>
-                                                <input type="number" class="form-control" name="sistole" id="sistole" value="{{ $pemeriksaan->sistole }}" disabled>
+                                                <input type="number" class="form-control" name="sistole" id="sistole"
+                                                    value="{{ $pemeriksaan->sistole }}" disabled>
                                             </div>
                                             <div class="">
                                                 <label for="diastole" class="form-label">Diastole</label>
-                                                <input type="number" class="form-control" name="diastole" id="diastole" value="{{ $pemeriksaan->diastole }}" disabled>
+                                                <input type="number" class="form-control" name="diastole"
+                                                    id="diastole" value="{{ $pemeriksaan->diastole }}" disabled>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Suhu badan</label>
-                                        <input type="number" class="form-control" name="suhu" value="{{ $pemeriksaan->suhu }}" disabled>
+                                        <input type="number" class="form-control" name="suhu"
+                                            value="{{ $pemeriksaan->suhu }}" disabled>
                                     </div>
 
                                     <div class="form-group">
@@ -286,25 +314,27 @@
                                                 <div class="d-flex flex-column gap-3">
                                                     @foreach ($chunk as $item)
                                                         @php
-                                                            $pemeriksaanData = $pemeriksaan->fisik->where('id_item_fisik', $item->id)->first();
+                                                            $pemeriksaanData = $pemeriksaan->fisik
+                                                                ->where('id_item_fisik', $item->id)
+                                                                ->first();
                                                             $keterangan = '';
                                                             $isNormal = true;
 
                                                             if (!empty($pemeriksaanData)) {
-                                                            $keterangan = $pemeriksaanData->keterangan;
-                                                            $isNormal = $pemeriksaanData->is_normal;
+                                                                $keterangan = $pemeriksaanData->keterangan;
+                                                                $isNormal = $pemeriksaanData->is_normal;
                                                             }
                                                         @endphp
 
                                                         <div class="pemeriksaan-item">
-                                                            <div
-                                                                class="d-flex align-items-center border-bottom pb-2">
+                                                            <div class="d-flex align-items-center border-bottom pb-2">
                                                                 <div class="flex-grow-1">{{ $item->nama }}
                                                                 </div>
                                                                 <div class="form-check me-3">
                                                                     <input type="checkbox" class="form-check-input"
                                                                         id="{{ $item->id }}-normal"
-                                                                        name="{{ $item->id }}-normal" @checked($isNormal) disabled>
+                                                                        name="{{ $item->id }}-normal"
+                                                                        @checked($isNormal) disabled>
                                                                     <label class="form-check-label"
                                                                         for="{{ $item->id }}-normal">Normal</label>
                                                                 </div>
@@ -320,7 +350,8 @@
                                                                 style="display:{{ $isNormal ? 'none' : 'block' }};">
                                                                 <input type="text" class="form-control"
                                                                     name="{{ $item->id }}_keterangan"
-                                                                    placeholder="Tambah keterangan jika tidak normal..." value="{{ $keterangan }}" disabled>
+                                                                    placeholder="Tambah keterangan jika tidak normal..."
+                                                                    value="{{ $keterangan }}" disabled>
                                                             </div>
                                                         </div>
                                                     @endforeach
@@ -333,30 +364,33 @@
                                 <!-- Penatalaksanaan -->
                                 <div class="section-separator">
                                     <h5 class="section-title">F. Penatalaksanaan</h5>
-
                                     <div class="form-group">
                                         <div class="d-flex flex-column gap-2">
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input" id="visum"
-                                                    name="penatalaksanaan[]" value="visum" @checked(in_array('visum', $pemeriksaan->penatalaksanaan)) disabled>
+                                                    name="penatalaksanaan[]" value="visum" @checked(is_array($pemeriksaan->penatalaksanaan) && in_array('visum', $pemeriksaan->penatalaksanaan))
+                                                    disabled>
                                                 <label class="form-check-label" for="visum">Pembuatan Visum et
                                                     repertum</label>
                                             </div>
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input" id="surat_medik"
-                                                    name="penatalaksanaan[]" value="surat_medik" @checked(in_array('surat_medik', $pemeriksaan->penatalaksanaan)) disabled>
+                                                    name="penatalaksanaan[]" value="surat_medik"
+                                                    @checked(is_array($pemeriksaan->penatalaksanaan) && in_array('surat_medik', $pemeriksaan->penatalaksanaan)) disabled>
                                                 <label class="form-check-label" for="surat_medik">Pembuatan surat
                                                     keterangan medik</label>
                                             </div>
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input" id="surat_asuransi"
-                                                    name="penatalaksanaan[]" value="surat_asuransi" @checked(in_array('surat_asuransi', $pemeriksaan->penatalaksanaan)) disabled>
+                                                    name="penatalaksanaan[]" value="surat_asuransi"
+                                                    @checked(is_array($pemeriksaan->penatalaksanaan) && in_array('surat_asuransi', $pemeriksaan->penatalaksanaan)) disabled>
                                                 <label class="form-check-label" for="surat_asuransi">Pembuatan surat
                                                     keterangan asuransi</label>
                                             </div>
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input" id="toksikologi_penata"
-                                                    name="penatalaksanaan[]" value="toksikologi" @checked(in_array('toksikologi', $pemeriksaan->penatalaksanaan)) disabled>
+                                                    name="penatalaksanaan[]" value="toksikologi"
+                                                    @checked(is_array($pemeriksaan->penatalaksanaan) && in_array('toksikologi', $pemeriksaan->penatalaksanaan)) disabled>
                                                 <label class="form-check-label" for="toksikologi_penata">Pemeriksaan
                                                     Toksikologi</label>
                                             </div>
@@ -364,12 +398,12 @@
                                                 <div class="form-check">
                                                     <input type="checkbox" class="form-check-input"
                                                         id="penatalaksanaan_lainnya" name="penatalaksanaan[]"
-                                                        value="lainnya" @checked(in_array('lainnya', $pemeriksaan->penatalaksanaan)) disabled>
+                                                        value="lainnya" @checked(is_array($pemeriksaan->penatalaksanaan) && in_array('lainnya', $pemeriksaan->penatalaksanaan)) disabled>
                                                     <label class="form-check-label"
                                                         for="penatalaksanaan_lainnya">Pemeriksaan Lainnya:</label>
                                                 </div>
-                                                <input type="text" class="form-control"
-                                                    name="penatalaksanaan_lainnya" value="{{ $pemeriksaan->penatalaksanaan_lainnya }}" disabled>
+                                                <input type="text" class="form-control" name="penatalaksanaan_lainnya"
+                                                    value="{{ $pemeriksaan->penatalaksanaan_lainnya }}" disabled>
                                             </div>
                                         </div>
                                     </div>
@@ -381,7 +415,8 @@
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Diagnosos Ahli Forensik</label>
-                                        <input type="text" class="form-control" name="diagnosos" value="{{ $pemeriksaan->diagnosos }}" disabled>
+                                        <input type="text" class="form-control" name="diagnosos"
+                                            value="{{ $pemeriksaan->diagnosos }}" disabled>
                                     </div>
 
                                     <div class="form-group mt-3">
@@ -389,18 +424,21 @@
                                         <div class="d-flex flex-column gap-2">
                                             <div class="form-check">
                                                 <input type="radio" class="form-check-input" id="dibawa_keluarga"
-                                                    name="dibawa_oleh" value="1" @checked($pemeriksaan->dibawa_oleh == '1') disabled>
+                                                    name="dibawa_oleh" value="1" @checked($pemeriksaan->dibawa_oleh == '1')
+                                                    disabled>
                                                 <label class="form-check-label" for="dibawa_keluarga">Keluarga</label>
                                             </div>
                                             <div class="form-check">
                                                 <input type="radio" class="form-check-input" id="dibawa_kepolisian"
-                                                    name="dibawa_oleh" value="2" @checked($pemeriksaan->dibawa_oleh == '2') disabled>
+                                                    name="dibawa_oleh" value="2" @checked($pemeriksaan->dibawa_oleh == '2')
+                                                    disabled>
                                                 <label class="form-check-label" for="dibawa_kepolisian">Kepolisian</label>
                                             </div>
                                             <div class="d-flex align-items-center gap-2">
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input" id="dibawa_lainnya"
-                                                        name="dibawa_oleh" value="99" @checked($pemeriksaan->dibawa_oleh == '99') disabled>
+                                                        name="dibawa_oleh" value="99" @checked($pemeriksaan->dibawa_oleh == '99')
+                                                        disabled>
                                                     <label class="form-check-label"
                                                         for="dibawa_lainnya">Lain-lain:</label>
                                                 </div>
@@ -410,7 +448,8 @@
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Tanggal</label>
-                                        <input type="date" class="form-control" name="tgl_pulang" value="{{ date('Y-m-d', strtotime($pemeriksaan->tgl_pulang)) }}" disabled>
+                                        <input type="date" class="form-control" name="tgl_pulang"
+                                            value="{{ date('Y-m-d', strtotime($pemeriksaan->tgl_pulang)) }}" disabled>
                                     </div>
 
                                 </div>

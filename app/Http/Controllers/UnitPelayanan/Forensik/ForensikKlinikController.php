@@ -56,7 +56,7 @@ class ForensikKlinikController extends Controller
 
 
         return view(
-            'unit-pelayanan.forensik.pelayanan.create',
+            'unit-pelayanan.forensik.pelayanan.pemeriksaan-klinik.create',
             compact(
                 'dataMedis',
                 'itemFisik'
@@ -119,7 +119,7 @@ class ForensikKlinikController extends Controller
             }
 
             DB::commit();
-            return to_route('forensik.unit.pelayanan', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Pemeriksaan berhasil di tambah !');
+            return to_route('forensik.unit.pelayanan.pemeriksaan-klinik.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Pemeriksaan berhasil di tambah !');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
@@ -155,7 +155,7 @@ class ForensikKlinikController extends Controller
         $pemeriksaan = RmeForensikPemeriksaan::find($id);
         $itemFisik = MrItemFisik::all();
 
-        return view('unit-pelayanan.forensik.pelayanan.edit', compact('dataMedis', 'pemeriksaan', 'itemFisik'));
+        return view('unit-pelayanan.forensik.pelayanan.pemeriksaan-klinik.edit', compact('dataMedis', 'pemeriksaan', 'itemFisik'));
     }
 
     public function update($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id, Request $request)
@@ -209,7 +209,7 @@ class ForensikKlinikController extends Controller
             }
 
             DB::commit();
-            return to_route('forensik.unit.pelayanan', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Pemeriksaan berhasil di ubah !');
+            return to_route('forensik.unit.pelayanan.pemeriksaan-klinik.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Pemeriksaan berhasil di ubah !');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
@@ -245,7 +245,7 @@ class ForensikKlinikController extends Controller
         $pemeriksaan = RmeForensikPemeriksaan::find($id);
         $itemFisik = MrItemFisik::all();
 
-        return view('unit-pelayanan.forensik.pelayanan.show', compact('dataMedis', 'pemeriksaan', 'itemFisik'));
+        return view('unit-pelayanan.forensik.pelayanan.pemeriksaan-klinik.show', compact('dataMedis', 'pemeriksaan', 'itemFisik'));
     }
 
     public function destroy($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)

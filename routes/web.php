@@ -2834,7 +2834,9 @@ Route::middleware('ssoToken')->group(function () {
             });
         });
 
-        // Rute Untuk Forensik
+
+        
+
         Route::prefix('forensik')->group(function () {
             Route::name('forensik')->group(function () {
                 Route::get('/', [ForensikController::class, 'index'])->name('.index');
@@ -2847,19 +2849,29 @@ Route::middleware('ssoToken')->group(function () {
                         Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
                             Route::name('.pelayanan')->group(function () {
                                 Route::get('/', [ForensikController::class, 'pelayanan']);
-                                // klinik
-                                Route::controller(ForensikKlinikController::class)->group(function () {
-                                    Route::get('/create', 'create')->name('.create');
-                                    Route::get('/{data}', 'show')->name('.show');
-                                    Route::get('/edit/{data}', 'edit')->name('.edit');
-                                    Route::post('/', 'store')->name('.store');
-                                    Route::put('/{data}', 'update')->name('.update');
-                                    Route::delete('/', 'destroy')->name('.destroy');
+
+                                //pemeriksaan
+
+                                Route::prefix('pemeriksaan-klinik')->group(function () {
+                                    Route::name('.pemeriksaan-klinik')->group(function () {
+                                        Route::get('/', [ForensikController::class, 'pemeriksaan'])->name('.index');
+
+                                        // pemeriksaan-klinik
+                                        Route::controller(ForensikKlinikController::class)->group(function () {
+                                            Route::get('/create', 'create')->name('.create');
+                                            Route::get('/{data}', 'show')->name('.show');
+                                            Route::get('/edit/{data}', 'edit')->name('.edit');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::put('/{data}', 'update')->name('.update');
+                                            Route::delete('/', 'destroy')->name('.destroy');
+                                        });
+                                    });
                                 });
 
                                 // patologi
-                                Route::prefix('patologi')->group(function () {
-                                    Route::name('.patologi')->group(function () {
+                                Route::prefix('pemeriksaan-patologi')->group(function () {
+                                    Route::name('.pemeriksaan-patologi')->group(function () {
+                                        Route::get('/', [ForensikController::class, 'pemeriksaan'])->name('.index');
                                         Route::controller(ForensikPatologiController::class)->group(function () {
                                             Route::get('/create', 'index')->name('.create');
                                             Route::get('/{data}', 'show')->name('.show');
@@ -2876,6 +2888,51 @@ Route::middleware('ssoToken')->group(function () {
                 });
             });
         });
+
+        
+
+        // // Rute Untuk Forensik
+        // Route::prefix('forensik')->group(function () {
+        //     Route::name('forensik')->group(function () {
+        //         Route::get('/', [ForensikController::class, 'index'])->name('.index');
+
+        //         Route::prefix('unit/{kd_unit}')->group(function () {
+        //             Route::name('.unit')->group(function () {
+        //                 Route::get('/', [ForensikController::class, 'unitPelayanan']);
+
+        //                 //Pelayanan
+        //                 Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
+        //                     Route::name('.pelayanan')->group(function () {
+        //                         Route::get('/', [ForensikController::class, 'pelayanan']);
+        //                         // klinik
+        //                         Route::controller(ForensikKlinikController::class)->group(function () {
+        //                             Route::get('/create', 'create')->name('.create');
+        //                             Route::get('/{data}', 'show')->name('.show');
+        //                             Route::get('/edit/{data}', 'edit')->name('.edit');
+        //                             Route::post('/', 'store')->name('.store');
+        //                             Route::put('/{data}', 'update')->name('.update');
+        //                             Route::delete('/', 'destroy')->name('.destroy');
+        //                         });
+
+        //                         // patologi
+        //                         Route::prefix('patologi')->group(function () {
+        //                             Route::name('.patologi')->group(function () {
+        //                                 Route::controller(ForensikPatologiController::class)->group(function () {
+        //                                     Route::get('/create', 'index')->name('.create');
+        //                                     Route::get('/{data}', 'show')->name('.show');
+        //                                     Route::get('/edit/{data}', 'edit')->name('.edit');
+        //                                     Route::post('/', 'store')->name('.store');
+        //                                     Route::put('/{data}', 'update')->name('.update');
+        //                                     Route::delete('/', 'destroy')->name('.destroy');
+        //                                 });
+        //                             });
+        //                         });
+        //                     });
+        //                 });
+        //             });
+        //         });
+        //     });
+        // });
 
 
         // REHAB MEDIK

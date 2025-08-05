@@ -43,7 +43,7 @@ class ForensikPatologiController extends Controller
 
         $itemFisik = MrItemFisik::orderby('urut')->get();
 
-        return view('unit-pelayanan.forensik.pelayanan.create-patologi', compact('dataMedis', 'itemFisik'));
+        return view('unit-pelayanan.forensik.pelayanan.pemeriksaan-patologi.create-patologi', compact('dataMedis', 'itemFisik'));
     }
 
     public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
@@ -107,7 +107,7 @@ class ForensikPatologiController extends Controller
             }
 
             DB::commit();
-            return to_route('forensik.unit.pelayanan', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Pemeriksaan berhasil di tambah !');
+            return to_route('forensik.unit.pelayanan.pemeriksaan-patologi.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Pemeriksaan berhasil di tambah !');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
@@ -143,7 +143,7 @@ class ForensikPatologiController extends Controller
         $pemeriksaan = RmeForensikPemeriksaan::find($id);
         $itemFisik = MrItemFisik::all();
 
-        return view('unit-pelayanan.forensik.pelayanan.edit-patologi', compact('dataMedis', 'pemeriksaan', 'itemFisik'));
+        return view('unit-pelayanan.forensik.pelayanan.pemeriksaan-patologi.edit-patologi', compact('dataMedis', 'pemeriksaan', 'itemFisik'));
     }
 
     public function update($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id, Request $request)
@@ -208,7 +208,7 @@ class ForensikPatologiController extends Controller
             }
 
             DB::commit();
-            return to_route('forensik.unit.pelayanan', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Pemeriksaan berhasil di ubah !');
+            return to_route('forensik.unit.pelayanan.pemeriksaan-patologi.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Pemeriksaan berhasil di ubah !');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
@@ -244,7 +244,7 @@ class ForensikPatologiController extends Controller
         $pemeriksaan = RmeForensikPemeriksaan::find($id);
         $itemFisik = MrItemFisik::all();
 
-        return view('unit-pelayanan.forensik.pelayanan.show-patologi', compact('dataMedis', 'pemeriksaan', 'itemFisik'));
+        return view('unit-pelayanan.forensik.pelayanan.pemeriksaan-patologi.show-patologi', compact('dataMedis', 'pemeriksaan', 'itemFisik'));
     }
 
     public function destroy($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
