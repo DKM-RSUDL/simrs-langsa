@@ -41,17 +41,54 @@ class HomeController extends Controller
                 ->get();
         }
 
-        // Data untuk grafik dengan fungsi yang sudah ada dan yang baru
-        $dataChart = [
-            'Rawat Inap' => countAktivePatientAllRanap(),
-            'Gawat Darurat' => countActivePatientAllIGD(),
-        ];
+        // Data untuk grafik kunjungan bulanan tahun 2025
+        $monthlyVisits = $this->getMonthlyVisitsData();
+        $chartLabels = $monthlyVisits['labels'];
+        $chartData = $monthlyVisits['data'];
 
-        // Prepare data for chart (visits per unit)
+        // Prepare data for unit counts (existing functionality)
         $unitCounts = $visits->groupBy('unit.bagian.bagian')->map->count()->toArray();
-        $chartLabels = array_keys($dataChart);
-        $chartData = array_values($dataChart);
 
         return view('home', compact('visits', 'chartLabels', 'chartData', 'today', 'unitCounts'));
+    }
+
+    /**
+     * Get monthly visits data for 2025
+     */
+    private function getMonthlyVisitsData()
+    {
+        $year = 2025;
+        $monthNames = [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec'
+        ];
+
+        $monthlyData = [];
+
+        for ($month = 1; $month <= 12; $month++) {
+            $startDate = Carbon::create($year, $month, 1)->startOfMonth();
+            $endDate = Carbon::create($year, $month, 1)->endOfMonth();
+
+            // Count visits for this month
+            $count = Kunjungan::whereBetween('tgl_masuk', [$startDate, $endDate])
+                ->count();
+
+            $monthlyData[] = $count;
+        }
+
+        return [
+            'labels' => $monthNames,
+            'data' => $monthlyData
+        ];
     }
 }

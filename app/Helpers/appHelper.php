@@ -310,7 +310,8 @@ if (!function_exists('countActivePatientAllRajal')) {
             $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
         })
             ->join('unit as u', 'kunjungan.kd_unit', '=', 'u.kd_unit')
-            ->whereYear('kunjungan.tgl_masuk', '>=', 2025)
+            ->whereDate('kunjungan.tgl_masuk', date('Y-m-d'))
+            ->where('u.aktif', 1)
             ->where('u.kd_bagian', 2) 
             ->count();
 
@@ -334,7 +335,7 @@ if (!function_exists('countActivePatientAllIGD')) {
             ->whereNull('kunjungan.tgl_keluar')
             ->whereNull('kunjungan.jam_keluar')
             ->whereDate('kunjungan.tgl_masuk', '>=', $tglBatasData)
-            ->where('u.kd_bagian', 3) // Asumsi kd_bagian 3 untuk IGD/Gawat Darurat
+            ->where('u.kd_bagian', 3) 
             ->count();
 
         return $result;
