@@ -241,56 +241,7 @@
                                                                 <span class="info-label">No Reg Nas:</span>
                                                                 <div class="info-value">{{ $item->no_reg_nas ?: '-' }}</div>
                                                             </div>
-                                                            <div class="col-md-4">
-                                                                <span class="info-label">Status ART:</span>
-                                                                <div class="info-value">
-                                                                    @if($item->menerima_art)
-                                                                        <span class="badge {{ $item->menerima_art == 'Ya' ? 'bg-success' : 'bg-secondary' }}">
-                                                                            {{ $item->menerima_art }}
-                                                                        </span>
-                                                                    @else
-                                                                        <span class="text-muted">-</span>
-                                                                    @endif
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <span class="info-label">Indikasi ART:</span>
-                                                                <div class="info-value">
-                                                                    {{ $item->indikasi_inisiasi_art ? : '-' }}
-                                                                </div>
-                                                            </div>
                                                         </div>
-
-                                                        @if($item->dataPemeriksaanKlinis)
-                                                        <div class="row mt-2">
-                                                            <div class="col-md-6">
-                                                                <span class="info-label">CD4 Terakhir:</span>
-                                                                <div class="info-value">
-                                                                    @php
-                                                                        $lastCd4 = $item->dataPemeriksaanKlinis->setelah_24_bulan_cd4
-                                                                                ?? $item->dataPemeriksaanKlinis->setelah_12_bulan_cd4
-                                                                                ?? $item->dataPemeriksaanKlinis->setelah_6_bulan_cd4
-                                                                                ?? $item->dataPemeriksaanKlinis->saat_mulai_art_cd4
-                                                                                ?? $item->dataPemeriksaanKlinis->kunjungan_pertama_cd4;
-                                                                    @endphp
-                                                                    {{ $lastCd4 ? $lastCd4 . ' cells/μL' : '-' }}
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <span class="info-label">BB Terakhir:</span>
-                                                                <div class="info-value">
-                                                                    @php
-                                                                        $lastBb = $item->dataPemeriksaanKlinis->setelah_24_bulan_bb
-                                                                                ?? $item->dataPemeriksaanKlinis->setelah_12_bulan_bb
-                                                                                ?? $item->dataPemeriksaanKlinis->setelah_6_bulan_bb
-                                                                                ?? $item->dataPemeriksaanKlinis->saat_mulai_art_bb
-                                                                                ?? $item->dataPemeriksaanKlinis->kunjungan_pertama_bb;
-                                                                    @endphp
-                                                                    {{ $lastBb ? $lastBb . ' kg' : '-' }}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        @endif
 
                                                         @if($item->tgl_tes_hiv)
                                                         <div class="row mt-2">

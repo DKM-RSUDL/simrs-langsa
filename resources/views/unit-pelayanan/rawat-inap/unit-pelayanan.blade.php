@@ -224,7 +224,7 @@
                                                     <li class="dropdown-submenu">
                                                         <a class="dropdown-item m-1 dropdown-toggle" href="#">Mutasi Pasien</a>
                                                         <ul class="dropdown-menu shadow-lg">
-                                                            <li><a class="dropdown-item m-1" href="#">Pindah Ruangan / Rawat Inap</a></li>
+                                                            <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/transfer-pasien-antar-ruang'}">Pindah Ruangan / Rawat Inap</a></li>
                                                             <li><a class="dropdown-item m-1" href="#">Pulangkan (Berobat Jalan)</a></li>
                                                             <li><a class="dropdown-item m-1" href="#">Pulangkan (APS)</a></li>
                                                             <li><a class="dropdown-item m-1" href="#">Rujuk Keluar RS</a></li>

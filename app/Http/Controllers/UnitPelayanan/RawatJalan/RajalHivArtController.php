@@ -57,7 +57,7 @@ class RajalHivArtController extends Controller
 
         if (is_array($data)) {
             // Filter data yang tidak kosong
-            $cleanData = array_filter($data, function($item) {
+            $cleanData = array_filter($data, function ($item) {
                 return !empty($item) && $item !== null && $item !== '';
             });
 
@@ -138,12 +138,13 @@ class RajalHivArtController extends Controller
     public function create(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = $this->getDataMedis($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
         if (!$dataMedis) {
             abort(404, 'Data not found');
         }
 
-        return view('unit-pelayanan.rawat-jalan.pelayanan.hiv_art.create', compact('dataMedis'));
+        return view('unit-pelayanan.rawat-jalan.pelayanan.hiv_art.create', compact('dataMedis', 'alergiPasien'));
     }
 
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -245,14 +246,31 @@ class RajalHivArtController extends Controller
             // Create Terapi Antiretroviral records
             $this->storeTerapiAntiretroviral($request, $hivArt->id);
 
-            // Handle allergies
-            $this->handleAllergies($request, $kd_pasien);
+            // Validasi data alergi
+            $alergiData = json_decode($request->alergis, true);
+
+            if (!empty($alergiData)) {
+                // Hapus data alergi lama untuk pasien ini
+                RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
+
+                // Simpan data alergi baru
+                foreach ($alergiData as $alergi) {
+                    // Skip data yang sudah ada di database (is_existing = true)
+                    // kecuali jika ingin update
+                    RmeAlergiPasien::create([
+                        'kd_pasien' => $kd_pasien,
+                        'jenis_alergi' => $alergi['jenis_alergi'],
+                        'nama_alergi' => $alergi['alergen'],
+                        'reaksi' => $alergi['reaksi'],
+                        'tingkat_keparahan' => $alergi['tingkat_keparahan']
+                    ]);
+                }
+            }
 
             DB::commit();
 
             return redirect()->route('rawat-jalan.hiv_art.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])
                 ->with('success', 'Data HIV ART berhasil disimpan.');
-
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()
@@ -266,7 +284,7 @@ class RajalHivArtController extends Controller
         $dataMedis = $this->getDataMedis($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
-        $hivArt = RmeHivArt::with(['dataPemeriksaanKlinis', 'terapiAntiretroviral'])
+        $hivArt = RmeHivArt::with(['dataPemeriksaanKlinis', 'terapiAntiretroviral', 'rmeAlergiPasien'])
             ->findOrFail($id);
 
         return view('unit-pelayanan.rawat-jalan.pelayanan.hiv_art.show', compact(
@@ -281,7 +299,7 @@ class RajalHivArtController extends Controller
         $dataMedis = $this->getDataMedis($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
-        $hivArt = RmeHivArt::with(['dataPemeriksaanKlinis', 'terapiAntiretroviral'])
+        $hivArt = RmeHivArt::with(['dataPemeriksaanKlinis', 'terapiAntiretroviral', 'rmeAlergiPasien'])
             ->findOrFail($id);
 
         return view('unit-pelayanan.rawat-jalan.pelayanan.hiv_art.edit', compact(
@@ -387,13 +405,31 @@ class RajalHivArtController extends Controller
             $this->updateTerapiAntiretroviral($request, $hivArt->id);
 
             // Update data alergi
-            $this->handleAllergies($request, $kd_pasien);
+            $alergiData = json_decode($request->alergis, true);
+
+            if (!empty($alergiData)) {
+                // Hapus data alergi lama untuk pasien ini
+                RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
+
+                // Simpan data alergi baru
+                foreach ($alergiData as $alergi) {
+                    RmeAlergiPasien::create([
+                        'kd_pasien' => $kd_pasien,
+                        'jenis_alergi' => $alergi['jenis_alergi'],
+                        'nama_alergi' => $alergi['alergen'],
+                        'reaksi' => $alergi['reaksi'],
+                        'tingkat_keparahan' => $alergi['tingkat_keparahan']
+                    ]);
+                }
+            } else {
+                // Jika tidak ada data alergi baru, hapus yang lama
+                RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
+            }
 
             DB::commit();
 
             return redirect()->route('rawat-jalan.hiv_art.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])
                 ->with('success', 'Data HIV ART berhasil diperbarui.');
-
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()
@@ -420,7 +456,6 @@ class RajalHivArtController extends Controller
 
             return redirect()->route('rawat-jalan.hiv_art.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])
                 ->with('success', 'Data HIV ART berhasil dihapus.');
-
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()
@@ -505,58 +540,24 @@ class RajalHivArtController extends Controller
             $artData = [[]];
         }
 
-        foreach ($artData as $index => $art) {
-            // **Format JSON yang bersih untuk data ART**
-            $cleanArtData = !empty($art)
-                ? json_encode($art, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
-                : null;
+        // Format JSON yang bersih untuk data ART
+        $cleanArtData = !empty($artData) ? json_encode($artData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : null;
 
-            RmeHivArtTerapiAntiretroviral::create([
-                'id_hiv_art' => $hivArtId,
-                'data_terapi_art' => $cleanArtData,
-                'tgl_mulai_terapi_tb' => $request->tgl_mulai_terapi_tb,
-                'tgl_selesai_terapi_tb' => $request->tgl_selesai_terapi_tb,
-                'klasifikasi_tb' => $request->klasifikasi_tb,
-                'lokasi_tb_ekstra' => $request->lokasi_tb_ekstra,
-                'paduan_tb' => $request->paduan_tb,
-                'tipe_tb' => $request->tipe_tb,
-                'kabupaten_tb' => $request->kabupaten_tb,
-                'nama_sarana_kesehatan' => $request->nama_sarana_kesehatan,
-                'no_reg_tb' => $request->no_reg_tb,
-                'indikasi_inisiasi_art' => $request->indikasi_inisiasi_art,
-            ]);
-        }
-    }
-
-    private function handleAllergies($request, $kd_pasien)
-    {
-        if (empty($request->alergis)) {
-            return;
-        }
-
-        $alergiData = json_decode($request->alergis, true);
-
-        if (!empty($alergiData) && is_array($alergiData)) {
-            // Hapus data alergi lama untuk pasien ini
-            RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
-
-            // Simpan data alergi baru
-            foreach ($alergiData as $alergi) {
-                if (is_array($alergi) && !empty($alergi['alergen'])) {
-                    RmeAlergiPasien::create([
-                        'kd_pasien' => $kd_pasien,
-                        'kd_unit' => request()->route('kd_unit'),
-                        'tgl_masuk' => request()->route('tgl_masuk'),
-                        'urut_masuk' => request()->route('urut_masuk'),
-                        'jenis_alergi' => $alergi['jenis_alergi'] ?? '',
-                        'nama_alergi' => $alergi['alergen'] ?? '',
-                        'reaksi' => $alergi['reaksi'] ?? '',
-                        'tingkat_keparahan' => $alergi['tingkat_keparahan'] ?? '',
-                        'user_create' => Auth::id(),
-                    ]);
-                }
-            }
-        }
+        // Simpan sebagai satu record
+        RmeHivArtTerapiAntiretroviral::create([
+            'id_hiv_art' => $hivArtId,
+            'data_terapi_art' => $cleanArtData,
+            'tgl_mulai_terapi_tb' => $request->tgl_mulai_terapi_tb,
+            'tgl_selesai_terapi_tb' => $request->tgl_selesai_terapi_tb,
+            'klasifikasi_tb' => $request->klasifikasi_tb,
+            'lokasi_tb_ekstra' => $request->lokasi_tb_ekstra,
+            'paduan_tb' => $request->paduan_tb,
+            'tipe_tb' => $request->tipe_tb,
+            'kabupaten_tb' => $request->kabupaten_tb,
+            'nama_sarana_kesehatan' => $request->nama_sarana_kesehatan,
+            'no_reg_tb' => $request->no_reg_tb,
+            'indikasi_inisiasi_art' => $request->indikasi_inisiasi_art,
+        ]);
     }
 
     private function updatePemeriksaanKlinis($request, $hivArtId)
