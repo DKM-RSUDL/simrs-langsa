@@ -130,11 +130,21 @@
 
                                     <div class="row mb-3">
                                         <div class="col-md-3">
-                                            <label class="form-label">Alamat dan No. Telp. Pasien</label>
+                                            <label class="form-label">Alamat</label>
                                         </div>
                                         <div class="col-md-9">
                                             <textarea class="form-control" name="alamat_telp" rows="2"
-                                                placeholder="Alamat dan No. Telp. Pasien"></textarea>
+                                                placeholder="Alamat Pasien"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label">No. Telp. Pasien</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="number" class="form-control" name="no_telp_pasien"
+                                                placeholder="No. Telp. Pasien">
                                         </div>
                                     </div>
 
@@ -160,11 +170,20 @@
 
                                     <div class="row mb-3">
                                         <div class="col-md-3">
-                                            <label class="form-label">Alamat dan No. Telp. PMO</label>
+                                            <label class="form-label">Alamat PMO</label>
                                         </div>
                                         <div class="col-md-9">
                                             <input type="text" class="form-control" name="alamat_no_telp_pmo"
-                                                placeholder="Alamat dan No. Telp. PMO">
+                                                placeholder="Alamat">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label">No. Telp. PMO</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="number" class="form-control" name="no_telp_pmo" placeholder="No telp pmo">
                                         </div>
                                     </div>
 
