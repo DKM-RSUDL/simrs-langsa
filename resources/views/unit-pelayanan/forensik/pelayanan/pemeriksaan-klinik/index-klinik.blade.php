@@ -17,6 +17,7 @@
         </div>
 
         <div class="col-md-9">
+            @include('components.navigation-forensik')
             <div class="d-flex justify-content-between align-items-center m-3">
                 <div class="row">
                     <!-- Filter by Service Type -->
@@ -54,7 +55,7 @@
 
                     <!-- Add Button -->
                     <div class="col-md-2">
-                        <a href="{{ route('forensik.unit.pelayanan.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                        <a href="{{ route('forensik.unit.pelayanan.pemeriksaan-klinik.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                             class="btn btn-primary">
                             <i class="bi bi-plus"></i> Tambah
                         </a>
@@ -81,8 +82,8 @@
                                 <td>{{ $item->asal_rujukan }}</td>
                                 <td>{{ $item->diagnosos }}</td>
                                 <td align="middle">
-                                    <a href="{{ route('forensik.unit.pelayanan.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-sm btn-success"><i class="fas fa-eye"></i></a>
-                                    <a href="{{ route('forensik.unit.pelayanan.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-sm btn-warning mx-2"><i class="bi bi-pencil-square"></i></a>
+                                    <a href="{{ route('forensik.unit.pelayanan.pemeriksaan-klinik.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-sm btn-success"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('forensik.unit.pelayanan.pemeriksaan-klinik.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-sm btn-warning mx-2"><i class="bi bi-pencil-square"></i></a>
                                     <button class="btn btn-sm btn-del-pemeriksaan" data-pemeriksaan="{{ encrypt($item->id) }}"><i class="bi bi-x-circle-fill text-danger"></i></button>
                                 </td>
                             </tr>
@@ -114,7 +115,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: "post",
-                        url: "{{ route('forensik.unit.pelayanan.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}",
+                        url: "{{ route('forensik.unit.pelayanan.pemeriksaan-klinik.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}",
                         data: {
                             _token: "{{ csrf_token() }}",
                             _method: "delete",

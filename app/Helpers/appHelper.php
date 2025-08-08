@@ -260,7 +260,15 @@ if (!function_exists('countAktivePatientRanap')) {
             $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
             $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
         })
-            ->where('kunjungan.kd_unit', $kd_unit)
+            ->join('nginap', function ($q) {
+                $q->on('kunjungan.kd_pasien', 'nginap.kd_pasien');
+                $q->on('kunjungan.kd_unit', 'nginap.kd_unit');
+                $q->on('kunjungan.tgl_masuk', 'nginap.tgl_masuk');
+                $q->on('kunjungan.urut_masuk', 'nginap.urut_masuk');
+            })
+
+            ->where('nginap.kd_unit_kamar', $kd_unit)
+            ->where('nginap.akhir', 1)
             ->where(function ($q) {
                 $q->whereNull('kunjungan.status_inap');
                 $q->orWhere('kunjungan.status_inap', 1);
@@ -275,6 +283,73 @@ if (!function_exists('countAktivePatientRanap')) {
     }
 }
 
+if (!function_exists('countAktivePatientAllRanap')) {
+    function countAktivePatientAllRanap()
+    {
+        $result = Kunjungan::join('transaksi as t', function ($join) {
+            $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+            $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+            $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+            $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+        })
+        ->join('unit as u', 'kunjungan.kd_unit', '=', 'u.kd_unit')
+            ->where(function ($q) {
+                $q->whereNull('kunjungan.status_inap');
+                $q->orWhere('kunjungan.status_inap', 1);
+            })
+            ->whereNull('kunjungan.tgl_pulang')
+            ->whereNull('kunjungan.jam_pulang')
+            ->whereYear('kunjungan.tgl_masuk', '>=', 2024)
+            ->where('u.kd_bagian', 1) 
+            ->count();
+
+
+        return $result;
+    }
+}
+
+if (!function_exists('countActivePatientAllRajal')) {
+    function countActivePatientAllRajal()
+    {
+        $result = Kunjungan::join('transaksi as t', function ($join) {
+            $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+            $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+            $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+            $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+        })
+            ->join('unit as u', 'kunjungan.kd_unit', '=', 'u.kd_unit')
+            ->whereDate('kunjungan.tgl_masuk', date('Y-m-d'))
+            ->where('u.aktif', 1)
+            ->where('u.kd_bagian', 2) 
+            ->count();
+
+        return $result;
+    }
+}
+
+if (!function_exists('countActivePatientAllIGD')) {
+    function countActivePatientAllIGD()
+    {
+        $tglBatasData = date('Y-m-d', strtotime('-2 days', strtotime(date('Y-m-d'))));
+
+        $result = Kunjungan::join('transaksi as t', function ($join) {
+            $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+            $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+            $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+            $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+        })
+            ->join('unit as u', 'kunjungan.kd_unit', '=', 'u.kd_unit')
+            ->where('t.co_status', 0)
+            ->whereNull('kunjungan.tgl_keluar')
+            ->whereNull('kunjungan.jam_keluar')
+            ->whereDate('kunjungan.tgl_masuk', '>=', $tglBatasData)
+            ->where('u.kd_bagian', 3) 
+            ->count();
+
+        return $result;
+    }
+}
+
 if (!function_exists('countPendingPatientRanap')) {
     function countPendingPatientRanap($kd_unit)
     {
@@ -284,7 +359,15 @@ if (!function_exists('countPendingPatientRanap')) {
             $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
             $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
         })
-            ->where('kunjungan.kd_unit', $kd_unit)
+            ->join('nginap', function ($q) {
+                $q->on('kunjungan.kd_pasien', 'nginap.kd_pasien');
+                $q->on('kunjungan.kd_unit', 'nginap.kd_unit');
+                $q->on('kunjungan.tgl_masuk', 'nginap.tgl_masuk');
+                $q->on('kunjungan.urut_masuk', 'nginap.urut_masuk');
+            })
+
+            ->where('nginap.kd_unit_kamar', $kd_unit)
+            ->where('nginap.akhir', 1)
             ->where('kunjungan.status_inap', 0)
             ->count();
 

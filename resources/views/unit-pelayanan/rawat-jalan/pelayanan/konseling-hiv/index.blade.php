@@ -92,7 +92,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
                         <h6 class="mb-0">Data FORMULIR TES DAN KONSELING HIV</h6>
-                        <small class="text-FORMULIR TES DAN KONSELING HIVmuted">Riwayat formulir tes dan konseling HIV</small>
+                        <small class="text-muted">Riwayat formulir tes dan konseling HIV</small>
                     </div>
                     <a href="{{ route('rawat-jalan.konseling-hiv.create', ['kd_unit' => $dataMedis->kd_unit, 'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), 'urut_masuk' => $dataMedis->urut_masuk]) }}"
                         class="btn btn-primary btn-sm">
@@ -105,13 +105,60 @@
                         <thead class="table-primary">
                             <tr align="middle">
                                 <th>Tanggal & Jam</th>
-                                <th>Diagnosis</th>
                                 <th>Petugas</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @if ($dataKonselingHiv)
+                                @foreach ($dataKonselingHiv as $konseling)
+                                    <tr>
+                                        <!-- Tanggal Implementasi -->
+                                        <td>{{ !is_null($konseling->tgl_implementasi) ? \Carbon\Carbon::parse($konseling->tgl_implementasi)->format('d-m-Y') : '-' }}
+                                            {{ !is_null($konseling->jam_implementasi) ? \Carbon\Carbon::parse($konseling->jam_implementasi)->format('H:i') : '-' }}
+                                        </td>
+
+                                        <!-- Nama Petugas -->
+                                        <td>{{ !is_null($konseling->user) && !is_null($konseling->user->name) ? $konseling->user->name : '-' }}
+                                        </td>
+
+                                        <td>
+                                            <!-- Show Button -->
+                                            <a href="{{ route('rawat-jalan.konseling-hiv.show', ['kd_unit' => $konseling->kd_unit, 'kd_pasien' => $konseling->kd_pasien, 'tgl_masuk' => $konseling->tgl_masuk, 'urut_masuk' => $konseling->urut_masuk, 'data' => $konseling->id]) }}"
+                                                class="btn btn-info btn-sm">
+                                                <i class="fas fa-eye"></i> Show
+                                            </a>
+
+
+                                            <!-- Edit Button -->
+                                            <a href="{{ route('rawat-jalan.konseling-hiv.edit', ['kd_unit' => $konseling->kd_unit, 'kd_pasien' => $konseling->kd_pasien, 'tgl_masuk' => $konseling->tgl_masuk, 'urut_masuk' => $konseling->urut_masuk, 'data' => $konseling->id]) }}"
+                                                class="btn btn-warning btn-sm">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+
+
+                                            <!-- Delete Button -->
+                                            <form
+                                                action="{{ route('rawat-jalan.konseling-hiv.destroy', ['kd_unit' => $konseling->kd_unit, 'kd_pasien' => $konseling->kd_pasien, 'tgl_masuk' => $konseling->tgl_masuk, 'urut_masuk' => $konseling->urut_masuk, 'data' => $konseling->id]) }}"
+                                                method="POST" style="display:inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="fas fa-trash"></i> Hapus
+                                                </button>
+                                            </form>
+
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="3" class="text-center">Data tidak ditemukan</td>
+                                </tr>
+                            @endif
                         </tbody>
+
+
                     </table>
                 </div>
             </div>
@@ -121,6 +168,6 @@
 
 @push('js')
     <script>
-       
+        // Custom JS code (if needed) goes here.
     </script>
 @endpush

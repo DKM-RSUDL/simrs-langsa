@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Http\Controllers\Controller;
+use App\Models\AsalIGD;
 use App\Models\DetailComponent;
 use App\Models\DetailPrsh;
 use App\Models\DetailTransaksi;
 use App\Models\Dokter;
+use App\Models\HrdKaryawan;
 use App\Models\KamarInduk;
 use App\Models\Kunjungan;
 use App\Models\Nginap;
@@ -48,7 +50,16 @@ class TransferPasienController extends Controller
 
         $spesialisasi = Spesialisasi::orderBy('spesialisasi')->get();
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.transfer-pasien.index', compact('dataMedis', 'spesialisasi'));
+        $unit = Unit::where('aktif', 1)->get();
+        $unitTujuan = Unit::where('kd_bagian', 1)->where('aktif', 1)->get();
+
+        $petugasIGD = HrdKaryawan::where('kd_jenis_tenaga', 2)
+            ->where('kd_detail_jenis_tenaga', 1)
+            ->where('kd_ruangan', 36)
+            ->where('status_peg',  1)
+            ->get();
+
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.transfer-pasien.index', compact('dataMedis', 'spesialisasi', 'unit', 'unitTujuan', 'petugasIGD'));
     }
 
     public function getDokterBySpesial(Request $request)
@@ -198,6 +209,15 @@ class TransferPasienController extends Controller
             'kd_unit'       => 'required',
             'no_kamar'      => 'required',
             'sisa_bed'      => 'required',
+
+            // HANDOVER
+            'subjective'            => 'required',
+            'background'            => 'required',
+            'assessment'            => 'required',
+            'recomendation'         => 'required',
+            'petugas_menyerahkan'   => 'required',
+            'tanggal_menyerahkan'   => 'required|date_format:Y-m-d',
+            'jam_menyerahkan'       => 'required|date_format:H:i',
         ], $messageErr);
 
         DB::beginTransaction();
@@ -407,7 +427,10 @@ class TransferPasienController extends Controller
 
             // insert tabel nginap
             $getLastUrutNginap = Nginap::select('urut_nginap')
+                ->where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kdUnit)
                 ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $newUrutMasuk)
                 ->orderBy('urut_nginap', 'desc')
                 ->first();
 
@@ -469,7 +492,14 @@ class TransferPasienController extends Controller
                 'urut_masuk_tujuan'     => $newUrutMasuk,
                 'kd_unit_asal'          => 3,
                 'kd_unit_tujuan'        => $kdUnit,
-                'status'                => 0
+                'subjective'            => $request->subjective,
+                'background'            => $request->background,
+                'assessment'            => $request->assessment,
+                'recomendation'         => $request->recomendation,
+                'petugas_menyerahkan'   => $request->petugas_menyerahkan,
+                'tanggal_menyerahkan'   => $request->tanggal_menyerahkan,
+                'jam_menyerahkan'       => $request->jam_menyerahkan,
+                'status'                => 1
             ];
 
             RmeSerahTerima::create($handOverData);
@@ -480,6 +510,17 @@ class TransferPasienController extends Controller
                 ->where('urut_masuk', $urut_masuk)
                 ->whereDate('tgl_masuk', $tgl_masuk)
                 ->update(['status_kunjungan' => 1]);
+
+
+            // CREATE ASAL_IGD
+            $asalIGDData = [
+                'kd_kasir'          => '02',
+                'no_transaksi'      => $formattedTransactionNumber,
+                'kd_kasir_asal'     => $dataMedis->kd_kasir,
+                'no_transaksi_asal' => $dataMedis->no_transaksi
+            ];
+
+            AsalIGD::create($asalIGDData);
 
             DB::commit();
             return to_route('gawat-darurat.index')->with('success', 'Pasien berhasil di transfer !');
