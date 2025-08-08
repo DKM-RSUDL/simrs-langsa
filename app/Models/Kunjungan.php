@@ -96,8 +96,9 @@ class Kunjungan extends Model
             ->latest('tanggal_triase');
     }
 
-    // public function resep()
-    // {
-    //     return $this->hasMany(MrResep::class, 'KD_PASIEN', 'KD_PASIEN');
-    // }
+    public function caraPenerimaan()
+    {
+        return $this->belongsTo(RujukanAsal::class, 'cara_penerimaan', 'cara_penerimaan');
+    }
+
 }

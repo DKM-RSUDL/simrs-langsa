@@ -28,4 +28,14 @@ class Nginap extends Model
         'urut_nginap',
         'alasan_pindah',
     ];
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class, 'kd_unit', 'kd_unit');
+    }
+
+    public function unitKamar()
+    {
+        return $this->belongsTo(Unit::class, 'kd_unit_kamar', 'kd_unit');
+    }
 }
