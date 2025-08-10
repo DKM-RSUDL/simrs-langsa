@@ -7,7 +7,10 @@ use App\Models\Dokter;
 use App\Models\HrdKaryawan;
 use App\Models\KamarInduk;
 use App\Models\Kunjungan;
+use App\Models\Nginap;
+use App\Models\PasienInap;
 use App\Models\RmeAlergiPasien;
+use App\Models\RmeSerahTerima;
 use App\Models\Unit;
 use App\Models\RmeTransferPasienAntarRuang;
 use Exception;
@@ -167,11 +170,49 @@ class TransferPasienAntarRuang extends Controller
 
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
+        DB::beginTransaction();
+
         try {
-            DB::beginTransaction();
 
             // Validasi data
             $validated = $this->validateTransferData($request);
+
+
+            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->where('kunjungan.kd_unit', $kd_unit)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->first();
+
+
+            if (empty($dataMedis)) return back()->with('error', 'Data kunjungan tidak ditemukan !');
+
+
+            // Get Pasien Inap Data
+            $pasienInap = PasienInap::where('kd_kasir', $dataMedis->kd_kasir)
+                ->where('no_transaksi', $dataMedis->no_transaksi)
+                ->first();
+
+            $oldUnitInap = $pasienInap->kd_unit;
+
+            // Get Nginap Data
+            $nginap = Nginap::where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kd_unit)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->where('akhir', 1)
+                ->first();
+
+            $oldUnitNginap = $nginap->kd_unit_kamar;
+            $urutNginap = $nginap->urut_nginap;
+            $newUrutNginap = $urutNginap + 1;
 
             // Cek apakah sudah ada data transfer
             $existingTransfer = RmeTransferPasienAntarRuang::where('kd_pasien', $kd_pasien)
@@ -183,6 +224,7 @@ class TransferPasienAntarRuang extends Controller
             if ($existingTransfer) {
                 return back()->withErrors(['error' => 'Data transfer sudah ada untuk pasien ini.'])->withInput();
             }
+
 
             // Prepare data untuk disimpan
             $transferData = $this->prepareTransferData($validated, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
@@ -210,6 +252,99 @@ class TransferPasienAntarRuang extends Controller
                     ]);
                 }
             }
+
+
+
+            // Update Pasien Inap
+            PasienInap::where('kd_kasir', $dataMedis->kd_kasir)
+                ->where('no_transaksi', $dataMedis->no_transaksi)
+                ->update([
+                    'kd_unit'   => $request->kd_unit_tujuan,
+                    'no_kamar'  => $request->no_kamar,
+                ]);
+
+            // update old nginap
+            Nginap::where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kd_unit)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->where('akhir', 1)
+                ->update([
+                    'tgl_keluar' => date('Y-m-d'),
+                    'jam_keluar' => date('H:i:s'),
+                    'akhir' => 0
+                ]);
+
+            // create new nginap
+            $dataNginap = [
+                'kd_unit_kamar'         => $request->kd_unit_tujuan,
+                'no_kamar'              => $request->no_kamar,
+                'kd_pasien'             => $kd_pasien,
+                'kd_unit'               => $kd_unit,
+                'tgl_masuk'             => $tgl_masuk,
+                'urut_masuk'            => $urut_masuk,
+                'tgl_inap'              => date('Y-m-d'),
+                'jam_inap'              => date('H:i:s'),
+                'kd_spesial'            => $nginap->kd_spesial,
+                'akhir'                 => 1,
+                'urut_nginap'           => $newUrutNginap
+            ];
+
+            Nginap::create($dataNginap);
+
+
+            // update kamar induk
+            $subquery = KamarInduk::query()
+                ->join('pasien_inap as pi', 'kamar_induk.NO_KAMAR', '=', 'pi.NO_KAMAR')
+                ->join('transaksi as t', function ($join) {
+                    $join->on('t.NO_TRANSAKSI', '=', 'pi.NO_TRANSAKSI')
+                        ->on('t.KD_KASIR', '=', 'pi.KD_KASIR');
+                })
+                ->join('nginap as ng', function ($join) {
+                    $join->on('ng.KD_PASIEN', '=', 't.KD_PASIEN')
+                        ->on('ng.TGL_MASUK', '=', 't.TGL_TRANSAKSI')
+                        ->on('ng.URUT_MASUK', '=', 't.URUT_MASUK')
+                        ->on('ng.KD_UNIT', '=', 't.KD_UNIT');
+                })
+                ->join('pasien as p', 'p.KD_PASIEN', '=', 't.KD_PASIEN')
+                ->whereNull('ng.TGL_KELUAR')
+                ->whereNull('t.tgl_dok')
+                ->where('kamar_induk.aktif', 1)
+                ->where('ng.akhir', 1)
+                ->select('ng.NO_KAMAR')
+                ->selectRaw('COUNT(*) as digunakan')
+                ->groupBy('ng.NO_KAMAR');
+
+            // Update
+            KamarInduk::query()
+                ->joinSub($subquery, 'x', function ($join) {
+                    $join->on('kamar_induk.NO_KAMAR', '=', 'x.NO_KAMAR');
+                })
+                ->update(['kamar_induk.digunakan' => DB::raw('x.digunakan')]);
+
+
+            // CREATE DATA SERAH TERIMA
+            $handOverData = [
+                'kd_pasien'             => $kd_pasien,
+                'tgl_masuk'             => $tgl_masuk,
+                'urut_masuk'            => $urut_masuk,
+                'urut_masuk_tujuan'     => $urut_masuk,
+                'kd_unit_asal'          => $oldUnitInap,
+                'kd_unit_tujuan'        => $request->kd_unit_tujuan,
+                'petugas_menyerahkan'   => $request->petugas_menyerahkan,
+                'tanggal_menyerahkan'   => $request->tanggal_menyerahkan,
+                'jam_menyerahkan'       => $request->jam_menyerahkan,
+                'status'                => 1
+            ];
+
+            // update status inap kunjungan = 0
+            Kunjungan::where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kd_unit)
+                ->where('urut_masuk', $urut_masuk)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->update(['status_inap'       => 0]);
+
+            RmeSerahTerima::create($handOverData);
 
             DB::commit();
 

@@ -266,7 +266,6 @@ if (!function_exists('countAktivePatientRanap')) {
                 $q->on('kunjungan.tgl_masuk', 'nginap.tgl_masuk');
                 $q->on('kunjungan.urut_masuk', 'nginap.urut_masuk');
             })
-
             ->where('nginap.kd_unit_kamar', $kd_unit)
             ->where('nginap.akhir', 1)
             ->where(function ($q) {
@@ -292,7 +291,7 @@ if (!function_exists('countAktivePatientAllRanap')) {
             $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
             $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
         })
-        ->join('unit as u', 'kunjungan.kd_unit', '=', 'u.kd_unit')
+            ->join('unit as u', 'kunjungan.kd_unit', '=', 'u.kd_unit')
             ->where(function ($q) {
                 $q->whereNull('kunjungan.status_inap');
                 $q->orWhere('kunjungan.status_inap', 1);
@@ -300,7 +299,7 @@ if (!function_exists('countAktivePatientAllRanap')) {
             ->whereNull('kunjungan.tgl_pulang')
             ->whereNull('kunjungan.jam_pulang')
             ->whereYear('kunjungan.tgl_masuk', '>=', 2024)
-            ->where('u.kd_bagian', 1) 
+            ->where('u.kd_bagian', 1)
             ->count();
 
 
@@ -320,7 +319,7 @@ if (!function_exists('countActivePatientAllRajal')) {
             ->join('unit as u', 'kunjungan.kd_unit', '=', 'u.kd_unit')
             ->whereDate('kunjungan.tgl_masuk', date('Y-m-d'))
             ->where('u.aktif', 1)
-            ->where('u.kd_bagian', 2) 
+            ->where('u.kd_bagian', 2)
             ->count();
 
         return $result;
@@ -343,7 +342,7 @@ if (!function_exists('countActivePatientAllIGD')) {
             ->whereNull('kunjungan.tgl_keluar')
             ->whereNull('kunjungan.jam_keluar')
             ->whereDate('kunjungan.tgl_masuk', '>=', $tglBatasData)
-            ->where('u.kd_bagian', 3) 
+            ->where('u.kd_bagian', 3)
             ->count();
 
         return $result;
@@ -365,10 +364,18 @@ if (!function_exists('countPendingPatientRanap')) {
                 $q->on('kunjungan.tgl_masuk', 'nginap.tgl_masuk');
                 $q->on('kunjungan.urut_masuk', 'nginap.urut_masuk');
             })
+            ->join('rme_serah_terima as st', function ($q) {
+                $q->on('kunjungan.kd_pasien', '=', 'st.kd_pasien');
+                $q->on('kunjungan.tgl_masuk', '=', 'st.tgl_masuk');
+                $q->on('kunjungan.urut_masuk', '=', 'st.urut_masuk_tujuan');
+                $q->on('nginap.kd_unit_kamar', '=', 'st.kd_unit_tujuan');
+            })
 
+            ->whereRaw('nginap.kd_unit = t.kd_unit')
             ->where('nginap.kd_unit_kamar', $kd_unit)
             ->where('nginap.akhir', 1)
-            ->where('kunjungan.status_inap', 0)
+            ->where('st.status', 1)
+            // ->where('kunjungan.status_inap', 0)
             ->count();
 
         return $result;
