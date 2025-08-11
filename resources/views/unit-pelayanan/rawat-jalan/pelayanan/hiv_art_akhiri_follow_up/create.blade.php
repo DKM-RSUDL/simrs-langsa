@@ -12,7 +12,7 @@
             <!-- Main Form -->
             <div class="col-lg-9 col-md-8">
                 <div class="d-flex align-items-center mb-3">
-                    <a href="{{ route('rawat-jalan.hiv_art_akhir_follow_up.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                    <a href="{{ route('rawat-jalan.hiv_art.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
                         class="btn btn-outline-primary btn-sm me-2">
                         <i class="fas fa-arrow-left"></i> Kembali
                     </a>
@@ -147,7 +147,7 @@
                                                 <h6><i class="fas fa-pills me-2"></i>PP INH [Kolom 11]</h6>
                                                 <p>Pengobatan Pencegahan dengan INH (Isoniazid)</p>
                                                 <p><strong>Hasil Akhir PP INH:</strong></p>
-                                                <p>1 = Serobat | 2 = Gagal sedalam PP INH</p>
+                                                <p>1 = Berobat | 2 = Gagal sedalam PP INH</p>
                                                 <p>3 = Pindah | 4 = Meninggal | 5 = Efek samping Berat</p>
                                             </div>
 
@@ -335,7 +335,7 @@
 
                 <div class="four-col">
                     <div class="form-group">
-                        <label class="form-label">Berat Badan <span class="text-danger">*</span></label>
+                        <label class="form-label">Berat Badan</label>
                         <div class="input-group">
                             <input type="number" name="bb_${visitCount}" class="form-control" step="0.1" placeholder="0" required min="0" max="500">
                             <span class="input-group-text">kg</span>
@@ -450,7 +450,7 @@
                         <label class="form-label">Hasil Akhir PP INH</label>
                         <select name="pp_inh_hasil_${visitCount}" class="form-select">
                             <option value="">-- Pilih --</option>
-                            <option value="1">1 - Serobat</option>
+                            <option value="1">1 - Berobat</option>
                             <option value="2">2 - Gagal</option>
                             <option value="3">3 - Pindah</option>
                             <option value="4">4 - Meninggal</option>

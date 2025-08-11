@@ -136,14 +136,25 @@
 
                                         <div class="row mb-3">
                                             <div class="col-md-3">
-                                                <label class="form-label">Alamat dan No. Telp. Pasien</label>
+                                                <label class="form-label">Alamat</label>
                                             </div>
                                             <div class="col-md-9">
                                                 <textarea class="form-control" name="alamat_telp" rows="2"
-                                                    placeholder="Alamat dan No. Telp. Pasien">{{ $hivArt->alamat_telp }}</textarea>
+                                                    placeholder="Alamat Pasien">{{ $hivArt->alamat_telp }}</textarea>
                                                 @error('alamat_telp')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-md-3">
+                                                <label class="form-label">No. Telp. Pasien</label>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <input type="number" class="form-control" name="no_telp_pasien"
+                                                    placeholder="No. Telp. Pasien"
+                                                    value="{{ old('no_telp_pasien', $hivArt->no_telp_pasien) }}">
                                             </div>
                                         </div>
 
@@ -177,7 +188,7 @@
 
                                         <div class="row mb-3">
                                             <div class="col-md-3">
-                                                <label class="form-label">Alamat dan No. Telp. PMO</label>
+                                                <label class="form-label">Alamat PMO</label>
                                             </div>
                                             <div class="col-md-9">
                                                 <input type="text" class="form-control" name="alamat_no_telp_pmo"
@@ -186,6 +197,17 @@
                                                 @error('alamat_no_telp_pmo')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-md-3">
+                                                <label class="form-label">No. Telp. Pasien</label>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <input type="number" class="form-control" name="no_telp_pmo"
+                                                    placeholder="No. Telp. Pasien"
+                                                    value="{{ old('no_telp_pmo', $hivArt->no_telp_pmo) }}">
                                             </div>
                                         </div>
 

@@ -12,7 +12,7 @@
             <!-- Main Form -->
             <div class="col-lg-9 col-md-8">
                 <div class="d-flex align-items-center mb-3">
-                    <a href="{{ route('rawat-jalan.hiv_art_akhir_follow_up.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                    <a href="{{ route('rawat-jalan.hiv_art.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
                         class="btn btn-outline-primary btn-sm me-2">
                         <i class="fas fa-arrow-left"></i> Kembali
                     </a>
@@ -141,7 +141,7 @@
                                                 <h6><i class="fas fa-pills me-2"></i>PP INH [Kolom 11]</h6>
                                                 <p>Pengobatan Pencegahan dengan INH (Isoniazid)</p>
                                                 <p><strong>Hasil Akhir PP INH:</strong></p>
-                                                <p>1 = Serobat | 2 = Gagal sedalam PP INH</p>
+                                                <p>1 = Berobat | 2 = Gagal sedalam PP INH</p>
                                                 <p>3 = Pindah | 4 = Meninggal | 5 = Efek samping Berat</p>
                                             </div>
 

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Kunjungan;
 use App\Models\RmeAlergiPasien;
 use App\Models\RmeHivArt;
+use App\Models\RmeHivArtAkhiriFollowUp;
 use App\Models\RmeHivArtDataPemeriksaanKlinis;
 use App\Models\RmeHivArtTerapiAntiretroviral;
 use Illuminate\Support\Carbon;
@@ -102,6 +103,14 @@ class RajalHivArtController extends Controller
             ->orderBy('tanggal', 'desc')
             ->paginate(10);
 
+        // Get existing HIV ART follow-up data
+        $hivArtData = RmeHivArtAkhiriFollowUp::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->orderBy('tanggal', 'desc')
+            ->paginate(10);
+
         // Handle tabs
         $activeTab = $request->query('tab', 'ikhtisar');
         $allowedTabs = ['ikhtisar', 'followUp'];
@@ -112,7 +121,7 @@ class RajalHivArtController extends Controller
         if ($activeTab == 'ikhtisar') {
             return $this->ikhtisarTab($dataMedis, $activeTab, $hivArtRecords, $alergiPasien);
         } else {
-            return $this->followUpTab($dataMedis, $activeTab, $hivArtRecords);
+            return $this->followUpTab($dataMedis, $activeTab, $hivArtData);
         }
     }
 
@@ -126,12 +135,12 @@ class RajalHivArtController extends Controller
         ));
     }
 
-    private function followUpTab($dataMedis, $activeTab, $hivArtRecords)
+    private function followUpTab($dataMedis, $activeTab, $hivArtData)
     {
         return view('unit-pelayanan.rawat-jalan.pelayanan.hiv_art_akhiri_follow_up.index', compact(
             'dataMedis',
             'activeTab',
-            'hivArtRecords'
+            'hivArtData'
         ));
     }
 
@@ -156,9 +165,11 @@ class RajalHivArtController extends Controller
             'nik' => 'nullable|string|max:20',
             'nama_ibu_kandung' => 'nullable|string|max:255',
             'alamat_telp' => 'nullable|string',
+            'no_telp_pasien' => 'nullable|string',
             'pmo' => 'nullable|string|max:255',
             'hubungan_pasien' => 'nullable|string|max:255',
             'alamat_no_telp_pmo' => 'nullable|string|max:255',
+            'no_telp_pmo' => 'nullable|string|max:255',
             'tgl_tes_hiv' => 'nullable|date',
             'tempat_tes_hiv' => 'nullable|string|max:255',
             'pendidikan' => 'nullable|string|max:255',
@@ -204,9 +215,11 @@ class RajalHivArtController extends Controller
                 'nik' => $request->nik,
                 'nama_ibu_kandung' => $request->nama_ibu_kandung,
                 'alamat_telp' => $request->alamat_telp,
+                'no_telp_pasien' => $request->no_telp_pasien,
                 'pmo' => $request->pmo,
                 'hubungan_pasien' => $request->hubungan_pasien,
                 'alamat_no_telp_pmo' => $request->alamat_no_telp_pmo,
+                'no_telp_pmo' => $request->no_telp_pmo,
                 'tgl_tes_hiv' => $request->tgl_tes_hiv,
                 'tempat_tes_hiv' => $request->tempat_tes_hiv,
 
@@ -318,9 +331,11 @@ class RajalHivArtController extends Controller
             'nik' => 'nullable|string|max:20',
             'nama_ibu_kandung' => 'nullable|string|max:255',
             'alamat_telp' => 'nullable|string',
+            'no_telp_pasien' => 'nullable|string',
             'pmo' => 'nullable|string|max:255',
             'hubungan_pasien' => 'nullable|string|max:255',
             'alamat_no_telp_pmo' => 'nullable|string|max:255',
+            'no_telp_pmo' => 'nullable|string|max:255',
             'tgl_tes_hiv' => 'nullable|date',
             'tempat_tes_hiv' => 'nullable|string|max:255',
             'pendidikan' => 'nullable|string|max:255',
@@ -364,9 +379,11 @@ class RajalHivArtController extends Controller
                 'nik' => $request->nik,
                 'nama_ibu_kandung' => $request->nama_ibu_kandung,
                 'alamat_telp' => $request->alamat_telp,
+                'no_telp_pasien' => $request->no_telp_pasien,
                 'pmo' => $request->pmo,
                 'hubungan_pasien' => $request->hubungan_pasien,
                 'alamat_no_telp_pmo' => $request->alamat_no_telp_pmo,
+                'no_telp_pmo' => $request->no_telp_pmo,
                 'tgl_tes_hiv' => $request->tgl_tes_hiv,
                 'tempat_tes_hiv' => $request->tempat_tes_hiv,
 
