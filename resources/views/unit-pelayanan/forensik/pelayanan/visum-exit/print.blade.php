@@ -66,7 +66,7 @@
         }
 
         .hospital-name {
-            font-size: 14pt;
+            font-size: 12pt;
             font-weight: bold;
             margin: 0 0 8px 0;
             line-height: 1.3;
@@ -107,25 +107,28 @@
 
         /* Title Section */
         .title-section {
-            text-align: center;
+            /* text-align: center; */
             margin: 25px 0;
         }
 
         .pro-justitia {
-            font-size: 14pt;
+            text-align: start;
+            font-size: 12pt;
             font-weight: bold;
             margin-bottom: 10px;
         }
 
         .visum-title {
-            font-size: 16pt;
+            text-align: center;
+            font-size: 12pt;
             font-weight: bold;
             text-decoration: underline;
             margin: 10px 0;
         }
 
         .visum-number {
-            font-size: 14pt;
+            text-align: center;
+            font-size: 12pt;
             font-weight: bold;
             color: #d32f2f;
             margin-bottom: 20px;
@@ -170,10 +173,10 @@
 
         /* Section Headers */
         .section-header {
-            font-size: 14pt;
+            font-size: 12pt;
             font-weight: bold;
             margin: 25px 0 15px 0;
-            text-align: center;
+            text-align: start;
         }
 
         .subsection-header {
@@ -197,7 +200,7 @@
         .content-label {
             font-weight: bold;
             display: inline-block;
-            width: 180px;
+            width: 300px;
         }
 
         .content-value {
@@ -333,18 +336,17 @@
 
         <!-- Opening Statement -->
         <div class="opening-statement no-break">
-            Yang bertanda tangan di bawah ini 
-            <strong>{{ $visumExit->dokter->nama_lengkap ?? $visumExit->dokter_pemeriksa ?? 'Dr.dr.Netty Herawati, M.ked(For), Sp.F.M.,M.H' }}</strong> 
-            dokter pada Rumah Sakit Umum Daerah Langsa, atas permintaan dari 
-            {{ $visumExit->permintaan ?? 'kepolisian Resor langsa' }} nomor 
-            <strong style="color: #d32f2f;">{{ $visumExit->nomor_surat ?? 'B/49/XII/2024/LL' }}</strong>, 
-            tertanggal {{ $visumExit->tanggal ? \Carbon\Carbon::parse($visumExit->tanggal)->format('d F Y') : date('d F Y') }}, 
-            maka dengan ini menerangkan bahwa pada tanggal 
-            <strong>{{ $visumExit->tanggal ? \Carbon\Carbon::createFromFormat('Y-m-d', $visumExit->tanggal->format('Y-m-d'))->locale('id')->translatedFormat('j F Y') : \Carbon\Carbon::now()->locale('id')->translatedFormat('j F Y') }}</strong> 
-            pukul {{ $visumExit->jam ? \Carbon\Carbon::parse($visumExit->jam)->format('H:i') : '07:52' }} 
-            Waktu Indonesia Barat, bertempat di Instalasi Forensik dan Medikolegal RSUD Langsa, telah 
-            melakukan pemeriksaan korban dengan nomor registrasi 
-            <strong>{{ $visumExit->registrasi ?? $dataMedis->kd_pasien }}</strong> yang menurut surat tersebut 
+            Yang bertanda tangan di bawah ini
+            <strong>{{ $visumExit->dokter->nama_lengkap ?? $visumExit->dokter_pemeriksa ?? 'Dr.dr.Netty Herawati, M.ked(For), Sp.F.M.,M.H' }}</strong>
+            dokter pada Rumah Sakit Umum Daerah Langsa, atas permintaan dari
+            {{ $visumExit->permintaan ?? 'kepolisian Resor langsa' }} nomor
+            <strong style="color: #d32f2f;">{{ $visumExit->nomor_surat ?? 'B/49/XII/2024/LL' }}</strong>,
+            tertanggal <strong style="color: #d32f2f;"> {{ $visumExit->tanggal ? \Carbon\Carbon::parse($visumExit->tanggal)->format('d F Y') : date('d F Y') }} </strong>,
+            maka dengan ini menerangkan bahwa pada tanggal
+            <strong style="color: #d32f2f;">{{ $visumExit->menerangkan }}</strong>
+            Waktu Indonesia Barat, bertempat di Instalasi Forensik dan Medikolegal RSUD Langsa, telah
+            melakukan pemeriksaan korban dengan nomor registrasi
+            <strong style="color: #d32f2f;">{{ $visumExit->registrasi ?? $dataMedis->kd_pasien }}</strong> yang menurut surat tersebut
             adalah : <span class="dotted-line"></span>
         </div>
 
@@ -395,21 +397,17 @@
         <div class="section-header">HASIL PEMERIKSAAN</div>
 
         <!-- Interview Section -->
+        @if($visumExit->wawancara)
         <div class="subsection-header">WAWANCARA</div>
         <div class="content-section">
-            @if($visumExit->wawancara && trim(strip_tags($visumExit->wawancara)) != '')
-                @php
-                    // Clean HTML dan convert ke format yang readable
-                    $cleanWawancara = strip_tags($visumExit->wawancara, '<p><br><strong><b><em><i><ul><ol><li>');
-                    $cleanWawancara = str_replace(['<p>', '</p>'], ['', '<br>'], $cleanWawancara);
-                    $cleanWawancara = preg_replace('/\s+/', ' ', $cleanWawancara);
-                    $cleanWawancara = trim($cleanWawancara);
-                @endphp
-                {!! nl2br($cleanWawancara) !!}
-            @else
-                Telah ditemukan jenazah berjenis kelamin {{ $dataMedis->jk == 'L' ? 'laki-laki' : 'perempuan' }} <span class="dotted-line"></span>
-            @endif
+            {!! strip_tags($visumExit->wawancara, '<p><br><strong><b><em><i>') !!}
         </div>
+        @else
+        <div class="subsection-header">WAWANCARA</div>
+        <div class="content-section">
+            Telah ditemukan jenazah berjenis kelamin {{ $dataMedis->jk == 'L' ? 'laki-laki' : 'perempuan' }} <span class="dotted-line"></span>
+        </div>
+        @endif
 
         <!-- External Examination Section -->
         <div class="subsection-header">PEMERIKSAAN LUAR</div>
@@ -418,13 +416,8 @@
             <div class="content-item">
                 <span class="content-label">Label mayat :</span>
                 <span class="content-value">
-                    @if($visumExit->label_mayat && trim(strip_tags($visumExit->label_mayat)) != '')
-                        @php
-                            $cleanContent = strip_tags($visumExit->label_mayat, '<strong><b><em><i>');
-                            $cleanContent = str_replace(['<p>', '</p>'], ['', ' '], $cleanContent);
-                            $cleanContent = preg_replace('/\s+/', ' ', trim($cleanContent));
-                        @endphp
-                        {!! nl2br($cleanContent) !!}
+                    @if($visumExit->label_mayat)
+                        {!! strip_tags($visumExit->label_mayat, '<p><br><strong><b><em><i>') !!}
                     @else
                         Tidak dijumpai label mayat. <span class="dotted-line"></span>
                     @endif
@@ -434,13 +427,8 @@
             <div class="content-item">
                 <span class="content-label">Pembungkus mayat :</span>
                 <span class="content-value">
-                    @if($visumExit->pembungkus_mayat && trim(strip_tags($visumExit->pembungkus_mayat)) != '')
-                        @php
-                            $cleanContent = strip_tags($visumExit->pembungkus_mayat, '<strong><b><em><i>');
-                            $cleanContent = str_replace(['<p>', '</p>'], ['', ' '], $cleanContent);
-                            $cleanContent = preg_replace('/\s+/', ' ', trim($cleanContent));
-                        @endphp
-                        {!! nl2br($cleanContent) !!}
+                    @if($visumExit->pembungkus_mayat)
+                        {!! strip_tags($visumExit->pembungkus_mayat, '<p><br><strong><b><em><i>') !!}
                     @else
                         Tidak ada. <span class="dotted-line"></span>
                     @endif
@@ -450,13 +438,8 @@
             <div class="content-item">
                 <span class="content-label">Benda disamping mayat :</span>
                 <span class="content-value">
-                    @if($visumExit->benda_disamping && trim(strip_tags($visumExit->benda_disamping)) != '')
-                        @php
-                            $cleanContent = strip_tags($visumExit->benda_disamping, '<strong><b><em><i>');
-                            $cleanContent = str_replace(['<p>', '</p>'], ['', ' '], $cleanContent);
-                            $cleanContent = preg_replace('/\s+/', ' ', trim($cleanContent));
-                        @endphp
-                        {!! nl2br($cleanContent) !!}
+                    @if($visumExit->benda_disamping)
+                        {!! strip_tags($visumExit->benda_disamping, '<p><br><strong><b><em><i>') !!}
                     @else
                         Tidak ada. <span class="dotted-line"></span>
                     @endif
@@ -466,13 +449,8 @@
             <div class="content-item">
                 <span class="content-label">Penutup mayat :</span>
                 <span class="content-value">
-                    @if($visumExit->penutup_mayat && trim(strip_tags($visumExit->penutup_mayat)) != '')
-                        @php
-                            $cleanContent = strip_tags($visumExit->penutup_mayat, '<strong><b><em><i>');
-                            $cleanContent = str_replace(['<p>', '</p>'], ['', ' '], $cleanContent);
-                            $cleanContent = preg_replace('/\s+/', ' ', trim($cleanContent));
-                        @endphp
-                        {!! nl2br($cleanContent) !!}
+                    @if($visumExit->penutup_mayat)
+                        {!! strip_tags($visumExit->penutup_mayat, '<p><br><strong><b><em><i>') !!}
                     @else
                         <span class="dotted-line"></span><br>
                         Dijumpai <span class="fill-space"></span>
@@ -483,13 +461,8 @@
             <div class="content-item">
                 <span class="content-label">Pakaian mayat :</span>
                 <span class="content-value">
-                    @if($visumExit->pakaian_mayat && trim(strip_tags($visumExit->pakaian_mayat)) != '')
-                        @php
-                            $cleanContent = strip_tags($visumExit->pakaian_mayat, '<strong><b><em><i>');
-                            $cleanContent = str_replace(['<p>', '</p>'], ['', ' '], $cleanContent);
-                            $cleanContent = preg_replace('/\s+/', ' ', trim($cleanContent));
-                        @endphp
-                        {!! nl2br($cleanContent) !!}
+                    @if($visumExit->pakaian_mayat)
+                        {!! strip_tags($visumExit->pakaian_mayat, '<p><br><strong><b><em><i>') !!}
                     @else
                         <span class="dotted-line"></span><br>
                         Dijumpai pakaian baju <span class="fill-space"></span><br>
@@ -529,7 +502,7 @@
                         {!! strip_tags($visumExit->identifikasi_umum, '<p><br><strong><b><em><i>') !!}
                     @else
                         <span class="dotted-line"></span><br>
-                        Dijumpai mayat yang dikenal, berjenis kelamin {{ $dataMedis->jk == 'L' ? 'laki-laki' : 'perempuan' }} dengan tinggi badan <span class="fill-space"></span>, 
+                        Dijumpai mayat yang dikenal, berjenis kelamin {{ $dataMedis->jk == 'L' ? 'laki-laki' : 'perempuan' }} dengan tinggi badan <span class="fill-space"></span>,
                         berpostur sedang, berambut <span class="fill-space"></span> warna <span class="fill-space"></span>, dengan kulit tubuh berwarna <span class="fill-space"></span>
                     @endif
                 </span>
@@ -558,7 +531,7 @@
                         Dijumpai Bola mata putih ditemukan bintik-bintik merah kanan dan kiri <span class="dotted-line"></span><br>
                         Dijumpai Lebam mayat pada leher belakang (sulit dinilai) <span class="dotted-line"></span><br>
                         Dijumpai Lebam mayat di pinggang kiri (hilang dengan penekanan) <span class="dotted-line"></span><br>
-                        Dijumpai kaku mayat yang sulit dilawan pada rahang, kedua tangan dan kaki dan 
+                        Dijumpai kaku mayat yang sulit dilawan pada rahang, kedua tangan dan kaki dan
                         pada perabaan suhu tubuh teraba dingin. <span class="dotted-line"></span><br>
                         Mata kanan dan kiri tidak dijumpai tanda-tanda kekerasan. <span class="dotted-line"></span>
                     @endif
@@ -603,9 +576,9 @@
         <!-- Conclusion Section -->
         <div class="conclusion-section">
             <div class="conclusion-header">KESIMPULAN :</div>
-            
+
             <div class="conclusion-item">
-                <strong>Pada jenazah {{ $dataMedis->jk == 'L' ? 'Laki-laki' : 'Perempuan' }}, 
+                <strong>Pada jenazah {{ $dataMedis->jk == 'L' ? 'Laki-laki' : 'Perempuan' }},
                 @if($visumExit->pada_jenazah)
                     {!! strip_tags($visumExit->pada_jenazah, '<p><br><strong><b><em><i>') !!}
                 @else
@@ -629,7 +602,7 @@
                 @else
                     Perkiraan lama kematian kurang dari enam jam dari saat pemeriksaan. <span class="dotted-line"></span><br>
                     Cara kematian korban wajar. <span class="dotted-line"></span><br>
-                    Penyebab kematian tidak dapat ditentukan karena tidak dilakukan pemeriksaan dalam 
+                    Penyebab kematian tidak dapat ditentukan karena tidak dilakukan pemeriksaan dalam
                     sesuai dengan permintaan visum nomor <span class="dotted-line"></span>
                 @endif
             </div>
@@ -637,9 +610,9 @@
 
         <!-- Closing Section -->
         <div class="section-header" style="margin-top: 30px;">PENUTUP</div>
-        
+
         <div class="closing-statement">
-            {{ $visumExit->menerangkan ?? 'Demikianlah visum et repertum ini dibuat dengan sebenarnya dengan menggunakan keilmuan yang sebaik-baiknya, mengingat sumpah sesuai dengan Kitab Undang-undang Acara Pidana.' }}
+            Demikianlah visum et repertum ini dibuat dengan sebenarnya dengan menggunakan keilmuan yang sebaik-baiknya, mengingat sumpah sesuai dengan Kitab Undang-undang Acara Pidana
         </div>
 
         <!-- Signature Section -->
@@ -647,7 +620,7 @@
             <div class="doctor-signature">
                 <div class="doctor-title">Dokter Pemeriksa,</div>
                 <div class="doctor-name">{{ $visumExit->dokter->nama_lengkap ?? $visumExit->dokter_pemeriksa ?? 'Dr.dr. Netty Herawati,M.Ked(For),Sp.F.M.,M.H' }}</div>
-                <div class="doctor-nip">NIP.{{ $visumExit->dokter->nip ?? '19750622 2006 04 2 008' }}</div>
+                <div class="doctor-nip">NIP.{{ $visumExit->dokter->nip ?? '' }}</div>
             </div>
         </div>
     </div>
