@@ -2,21 +2,259 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
-        .status-badge {
-            font-size: 0.75rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
+        /* Enhanced completion styling */
+        .completion-container {
+            min-width: 140px;
         }
+
+        .completion-text {
+            font-size: 0.85rem;
+            color: #495057;
+        }
+
         .completion-bar {
-            height: 4px;
+            height: 6px;
             background-color: #e9ecef;
-            border-radius: 2px;
+            border-radius: 3px;
             overflow: hidden;
+            position: relative;
         }
+
         .completion-progress {
             height: 100%;
-            background-color: #28a745;
-            transition: width 0.3s ease;
+            border-radius: 3px;
+            transition: width 0.8s ease-in-out;
+            position: relative;
+        }
+
+        /* Gradient backgrounds for progress bars */
+        .bg-gradient-success {
+            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+        }
+
+        .bg-gradient-info {
+            background: linear-gradient(90deg, #17a2b8 0%, #6f42c1 100%);
+        }
+
+        .bg-gradient-warning {
+            background: linear-gradient(90deg, #ffc107 0%, #fd7e14 100%);
+        }
+
+        .bg-gradient-danger {
+            background: linear-gradient(90deg, #dc3545 0%, #e83e8c 100%);
+        }
+
+        /* Enhanced status badges */
+        .badge {
+            font-size: 0.7rem;
+            padding: 0.35rem 0.6rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            letter-spacing: 0.025em;
+        }
+
+        .status-complete {
+            background: linear-gradient(135deg, #28a745, #20c997) !important;
+            color: white;
+            border: none;
+            box-shadow: 0 2px 4px rgba(40, 167, 69, 0.25);
+        }
+
+        .status-high {
+            background: linear-gradient(135deg, #17a2b8, #6f42c1) !important;
+            color: white;
+            border: none;
+            box-shadow: 0 2px 4px rgba(23, 162, 184, 0.25);
+        }
+
+        .status-medium {
+            background: linear-gradient(135deg, #ffc107, #fd7e14) !important;
+            color: #212529;
+            border: none;
+            box-shadow: 0 2px 4px rgba(255, 193, 7, 0.25);
+        }
+
+        .status-low {
+            background: linear-gradient(135deg, #dc3545, #e83e8c) !important;
+            color: white;
+            border: none;
+            box-shadow: 0 2px 4px rgba(220, 53, 69, 0.25);
+        }
+
+        /* Hover effects */
+        .completion-container:hover .completion-progress {
+            transform: scaleY(1.2);
+            transition: transform 0.3s ease;
+        }
+
+        .badge:hover {
+            transform: translateY(-1px);
+            transition: transform 0.2s ease;
+        }
+
+        /* Progress Bar Loading Animation with 5 stages */
+        @keyframes progressLoad {
+            0% {
+                width: 0%;
+                background: linear-gradient(90deg, #6c757d 0%, #adb5bd 100%);
+                transform: scaleY(1);
+            }
+            25% {
+                width: 25%;
+                background: linear-gradient(90deg, #dc3545 0%, #e83e8c 100%);
+                transform: scaleY(1.1);
+            }
+            50% {
+                width: 50%;
+                background: linear-gradient(90deg, #ffc107 0%, #fd7e14 100%);
+                transform: scaleY(1.2);
+            }
+            75% {
+                width: 75%;
+                background: linear-gradient(90deg, #17a2b8 0%, #6f42c1 100%);
+                transform: scaleY(1.1);
+            }
+            100% {
+                width: var(--progress-width);
+                background: var(--progress-gradient);
+                transform: scaleY(1);
+            }
+        }
+
+        /* Alternative smoother version */
+        @keyframes progressLoadSmooth {
+            0% {
+                width: 0%;
+                opacity: 0.7;
+            }
+            20% {
+                width: 20%;
+                opacity: 0.8;
+            }
+            40% {
+                width: 40%;
+                opacity: 0.85;
+            }
+            60% {
+                width: 60%;
+                opacity: 0.9;
+            }
+            80% {
+                width: 80%;
+                opacity: 0.95;
+            }
+            100% {
+                width: var(--progress-width);
+                opacity: 1;
+            }
+        }
+
+        /* Pulsing effect during animation */
+        @keyframes progressPulse {
+            0% {
+                width: 0%;
+                box-shadow: 0 0 0 rgba(40, 167, 69, 0);
+            }
+            25% {
+                width: 25%;
+                box-shadow: 0 0 5px rgba(220, 53, 69, 0.3);
+            }
+            50% {
+                width: 50%;
+                box-shadow: 0 0 8px rgba(255, 193, 7, 0.4);
+            }
+            75% {
+                width: 75%;
+                box-shadow: 0 0 6px rgba(23, 162, 184, 0.3);
+            }
+            100% {
+                width: var(--progress-width);
+                box-shadow: 0 0 4px var(--progress-shadow);
+            }
+        }
+
+        /* Wave effect animation */
+        @keyframes progressWave {
+            0% {
+                width: 0%;
+                background-position: 0% 50%;
+            }
+            25% {
+                width: 25%;
+                background-position: 25% 50%;
+            }
+            50% {
+                width: 50%;
+                background-position: 50% 50%;
+            }
+            75% {
+                width: 75%;
+                background-position: 75% 50%;
+            }
+            100% {
+                width: var(--progress-width);
+                background-position: 100% 50%;
+            }
+        }
+
+        /* Usage classes */
+        .completion-progress {
+            height: 100%;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+            animation: progressLoad 2s ease-in-out;
+            background-size: 200% 200%;
+        }
+
+        .completion-progress.smooth {
+            animation: progressLoadSmooth 1.5s ease-out;
+        }
+
+        .completion-progress.pulse {
+            animation: progressPulse 2.5s ease-in-out;
+        }
+
+        .completion-progress.wave {
+            animation: progressWave 3s ease-in-out;
+            background-size: 300% 100%;
+        }
+
+        /* Delayed animation for staggered effect */
+        .completion-progress.delay-1 { animation-delay: 0.2s; }
+        .completion-progress.delay-2 { animation-delay: 0.4s; }
+        .completion-progress.delay-3 { animation-delay: 0.6s; }
+        .completion-progress.delay-4 { animation-delay: 0.8s; }
+        .completion-progress.delay-5 { animation-delay: 1s; }
+
+        /* CSS Variables for dynamic values */
+        .completion-progress[data-progress="0"] {
+            --progress-width: 0%;
+            --progress-gradient: linear-gradient(90deg, #6c757d 0%, #adb5bd 100%);
+            --progress-shadow: rgba(108, 117, 125, 0.2);
+        }
+
+        .completion-progress[data-progress="25"] {
+            --progress-width: 25%;
+            --progress-gradient: linear-gradient(90deg, #dc3545 0%, #e83e8c 100%);
+            --progress-shadow: rgba(220, 53, 69, 0.2);
+        }
+
+        .completion-progress[data-progress="50"] {
+            --progress-width: 50%;
+            --progress-gradient: linear-gradient(90deg, #ffc107 0%, #fd7e14 100%);
+            --progress-shadow: rgba(255, 193, 7, 0.2);
+        }
+
+        .completion-progress[data-progress="75"] {
+            --progress-width: 75%;
+            --progress-gradient: linear-gradient(90deg, #17a2b8 0%, #6f42c1 100%);
+            --progress-shadow: rgba(23, 162, 184, 0.2);
+        }
+
+        .completion-progress[data-progress="100"] {
+            --progress-width: 100%;
+            --progress-gradient: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+            --progress-shadow: rgba(40, 167, 69, 0.2);
         }
     </style>
 @endpush
@@ -124,8 +362,7 @@
                                             <tr>
                                                 <th width="5%">No</th>
                                                 <th width="10%">Nomor VeR &Surat</th>
-                                                <th width="12%">Tanggal</th>
-                                                <th width="8%">Jam</th>
+                                                <th width="12%">Tanggal & Jam</th>
                                                 <th width="20%">Dokter Pemeriksa</th>
                                                 <th width="15%">Permintaan Dari</th>
                                                 <th width="10%">Kelengkapan</th>
@@ -143,8 +380,7 @@
                                                             <br><small class="text-muted">{{ $item->nomor_surat }}</small>
                                                         @endif
                                                     </td>
-                                                    <td>{{ $item->tanggal_formatted }}</td>
-                                                    <td>{{ $item->jam_formatted }}</td>
+                                                    <td>{{ $item->tanggal_formatted }} {{ $item->jam_formatted }}</td>
                                                     <td>
                                                         {{ $item->dokter_name }}
                                                         @if($item->dokter && $item->dokter->spesialis)
@@ -158,18 +394,56 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <div class="d-flex align-items-center">
-                                                            <span class="me-2">{{ $item->completion_percentage }}%</span>
-                                                            <div class="completion-bar flex-grow-1">
-                                                                <div class="completion-progress"
-                                                                    style="width: {{ $item->completion_percentage }}%"></div>
+                                                        <div class="completion-container">
+                                                            <!-- Percentage with Icon -->
+                                                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                                                <span class="completion-text fw-bold">{{ $item->completion_percentage }}%</span>
+                                                                @if($item->completion_percentage >= 100)
+                                                                    <i class="ti-check-circle text-success" style="font-size: 0.9rem;"></i>
+                                                                @elseif($item->completion_percentage >= 80)
+                                                                    <i class="ti-clock text-info" style="font-size: 0.9rem;"></i>
+                                                                @elseif($item->completion_percentage >= 50)
+                                                                    <i class="ti-alert-circle text-warning" style="font-size: 0.9rem;"></i>
+                                                                @else
+                                                                    <i class="ti-alert-triangle text-danger" style="font-size: 0.9rem;"></i>
+                                                                @endif
                                                             </div>
+                                                            
+                                                            <!-- Enhanced Progress Bar -->
+                                                            <div class="completion-bar mb-2">
+                                                                <div class="completion-progress 
+                                                                    @if($item->completion_percentage >= 100) 
+                                                                        bg-gradient-success
+                                                                    @elseif($item->completion_percentage >= 80) 
+                                                                        bg-gradient-info
+                                                                    @elseif($item->completion_percentage >= 50) 
+                                                                        bg-gradient-warning
+                                                                    @else 
+                                                                        bg-gradient-danger
+                                                                    @endif"
+                                                                    style="width: {{ $item->completion_percentage }}%">
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <!-- Smart Status Badge -->
+                                                            @if($item->completion_percentage >= 100)
+                                                                <span class="badge status-complete">
+                                                                    <i class="ti-check me-1" style="font-size: 0.7rem;"></i>Lengkap
+                                                                </span>
+                                                            @elseif($item->completion_percentage >= 80)
+                                                                <span class="badge status-high">
+                                                                    <i class="ti-trending-up me-1" style="font-size: 0.7rem;"></i>Hampir Lengkap
+                                                                </span>
+                                                            @elseif($item->completion_percentage >= 50)
+                                                                <span class="badge status-medium">
+                                                                    <i class="ti-edit me-1" style="font-size: 0.7rem;"></i>Perlu Dilengkapi
+                                                                </span>
+                                                            @else
+                                                                <span class="badge status-low">
+                                                                    <i class="ti-alert-triangle me-1" style="font-size: 0.7rem;"></i>Belum Lengkap
+                                                                </span>
+                                                            @endif
                                                         </div>
-                                                        @if($item->is_complete)
-                                                            <span class="badge bg-success status-badge mt-1">Lengkap</span>
-                                                        @else
-                                                            <span class="badge bg-warning status-badge mt-1">Belum Lengkap</span>
-                                                        @endif
                                                     </td>
                                                     <td>
                                                         {{ $item->user_create_name }}
