@@ -383,7 +383,7 @@
                         <!-- Header Section -->
                         <div class="text-center mb-4">
                             <div class="header-asesmen">
-                                <h3 class="font-weight-bold mb-2">VISUM ET REPERTUM</h3>
+                                <h3 class="font-weight-bold mb-2">VISUM EXIT REPERTUM</h3>
                                 <p class="mb-1"><strong>No. VeR:</strong> {{ $visumExit->nomor_ver }}</p>
                             </div>
                         </div>

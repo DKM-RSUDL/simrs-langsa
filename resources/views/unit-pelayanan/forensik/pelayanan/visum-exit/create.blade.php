@@ -332,7 +332,7 @@
                             <!-- Header Section -->
                             <div class="text-center mb-4">
                                 <div class="header-asesmen">
-                                    <h3 class="font-weight-bold mb-2">VISUM ET REPERTUM</h3>
+                                    <h3 class="font-weight-bold mb-2">VISUM EXIT REPERTUM</h3>
                                 </div>
                             </div>
 
@@ -415,7 +415,7 @@
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                         <textarea class="form-control" id="menerangkan" name="menerangkan" rows="2"
-                                            placeholder="Informasi tambahan tentang pemeriksaan...">{{ old('menerangkan') }}</textarea>
+                                            placeholder="Menerangkan pada tanggal...">{{ old('menerangkan') }}</textarea>
                                     </div>
                                 </div>
                             </div>

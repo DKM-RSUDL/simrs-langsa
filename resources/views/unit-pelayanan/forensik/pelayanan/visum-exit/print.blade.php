@@ -312,7 +312,7 @@
                 <img src="{{ public_path('assets/img/Logo-RSUD-Langsa-1.png') }}" alt="Logo RSUD Langsa" class="logo">
             </div>
             <div class="hospital-info">
-                <p class="hospital-name">INSTALASI KEDOKTERAN FORENSIK RUMAH SAKIT<br>UMUM DAERAH LANGSA</p>
+                <p class="hospital-name">INSTALASI KEDOKTERAN FORENSIK RUMAH SAKIT UMUM DAERAH LANGSA</p>
                 <p class="hospital-address">JL.A.Yani No.1 A</p>
                 <p class="hospital-address">Telp.064122051 Fax.064122051 Email: <a href="mailto:rsulangsa@gmail.com">rsulangsa@gmail.com</a></p>
                 <p class="hospital-address">Langsa Kota</p>
