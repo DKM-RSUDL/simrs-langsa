@@ -400,7 +400,7 @@
         @if($visumExit->wawancara)
         <div class="subsection-header">WAWANCARA</div>
         <div class="content-section">
-            {!! strip_tags($visumExit->wawancara, '<p><br><strong><b><em><i>') !!}
+            {!! $visumExit->wawancara !!}
         </div>
         @else
         <div class="subsection-header">WAWANCARA</div>
@@ -417,7 +417,7 @@
                 <span class="content-label">Label mayat :</span>
                 <span class="content-value">
                     @if($visumExit->label_mayat)
-                        {!! strip_tags($visumExit->label_mayat, '<p><br><strong><b><em><i>') !!}
+                        {!! $visumExit->label_mayat!!}
                     @else
                         Tidak dijumpai label mayat. <span class="dotted-line"></span>
                     @endif
@@ -428,7 +428,7 @@
                 <span class="content-label">Pembungkus mayat :</span>
                 <span class="content-value">
                     @if($visumExit->pembungkus_mayat)
-                        {!! strip_tags($visumExit->pembungkus_mayat, '<p><br><strong><b><em><i>') !!}
+                        {!! $visumExit->pembungkus_mayat !!}
                     @else
                         Tidak ada. <span class="dotted-line"></span>
                     @endif
@@ -439,7 +439,7 @@
                 <span class="content-label">Benda disamping mayat :</span>
                 <span class="content-value">
                     @if($visumExit->benda_disamping)
-                        {!! strip_tags($visumExit->benda_disamping, '<p><br><strong><b><em><i>') !!}
+                        {!! $visumExit->benda_disamping !!}
                     @else
                         Tidak ada. <span class="dotted-line"></span>
                     @endif
@@ -450,7 +450,7 @@
                 <span class="content-label">Penutup mayat :</span>
                 <span class="content-value">
                     @if($visumExit->penutup_mayat)
-                        {!! strip_tags($visumExit->penutup_mayat, '<p><br><strong><b><em><i>') !!}
+                        {!! $visumExit->penutup_mayat !!}
                     @else
                         <span class="dotted-line"></span><br>
                         Dijumpai <span class="fill-space"></span>
@@ -460,9 +460,9 @@
 
             <div class="content-item">
                 <span class="content-label">Pakaian mayat :</span>
-                <span class="content-value">
+                <span class="content-value">                    
                     @if($visumExit->pakaian_mayat)
-                        {!! strip_tags($visumExit->pakaian_mayat, '<p><br><strong><b><em><i>') !!}
+                        {!! $visumExit->pakaian_mayat !!}
                     @else
                         <span class="dotted-line"></span><br>
                         Dijumpai pakaian baju <span class="fill-space"></span><br>
@@ -487,7 +487,7 @@
                 <span class="content-label">Perhiasan mayat :</span>
                 <span class="content-value">
                     @if($visumExit->perhiasan_mayat)
-                        {!! strip_tags($visumExit->perhiasan_mayat, '<p><br><strong><b><em><i>') !!}
+                        {!! $visumExit->perhiasan_mayat !!}
                     @else
                         <span class="dotted-line"></span><br>
                         Tidak ada <span class="dotted-line"></span>
@@ -499,7 +499,7 @@
                 <span class="content-label">Identifikasi umum :</span>
                 <span class="content-value">
                     @if($visumExit->identifikasi_umum)
-                        {!! strip_tags($visumExit->identifikasi_umum, '<p><br><strong><b><em><i>') !!}
+                        {!! $visumExit->identifikasi_umum !!}
                     @else
                         <span class="dotted-line"></span><br>
                         Dijumpai mayat yang dikenal, berjenis kelamin {{ $dataMedis->jk == 'L' ? 'laki-laki' : 'perempuan' }} dengan tinggi badan <span class="fill-space"></span>,
@@ -512,7 +512,7 @@
                 <span class="content-label">Identifikasi Khusus :</span>
                 <span class="content-value">
                     @if($visumExit->identifikasi_khusus)
-                        {!! strip_tags($visumExit->identifikasi_khusus, '<p><br><strong><b><em><i>') !!}
+                        {!! $visumExit->identifikasi_khusus !!}
                     @else
                         <span class="dotted-line"></span><br>
                         Dijumpai <span class="fill-space"></span>
@@ -524,7 +524,7 @@
                 <span class="content-label">Tanda-tanda kematian :</span>
                 <span class="content-value">
                     @if($visumExit->tanda_kematian)
-                        {!! strip_tags($visumExit->tanda_kematian, '<p><br><strong><b><em><i>') !!}
+                        {!! $visumExit->tanda_kematian !!}
                     @else
                         <span class="dotted-line"></span><br>
                         Dijumpai Bola mata hitam melebar kanan dan kiri. <span class="dotted-line"></span><br>
@@ -542,7 +542,7 @@
                 <span class="content-label">Gigi-geligi :</span>
                 <span class="content-value">
                     @if($visumExit->gigi_geligi)
-                        {!! strip_tags($visumExit->gigi_geligi, '<p><br><strong><b><em><i>') !!}
+                        {!! $visumExit->gigi_geligi !!}
                     @else
                         <span class="fill-space"></span> <span class="dotted-line"></span>
                     @endif
@@ -553,7 +553,7 @@
                 <span class="content-label">Luka-luka :</span>
                 <span class="content-value">
                     @if($visumExit->luka_luka)
-                        {!! strip_tags($visumExit->luka_luka, '<p><br><strong><b><em><i>') !!}
+                        {!! $visumExit->luka_luka !!}
                     @else
                         <span class="dotted-line"></span><br>
                         a. Dijumpai luka <span class="fill-space"></span><br>
@@ -578,18 +578,18 @@
             <div class="conclusion-header">KESIMPULAN :</div>
 
             <div class="conclusion-item">
-                <strong>Pada jenazah {{ $dataMedis->jk == 'L' ? 'Laki-laki' : 'Perempuan' }},
+                <strong>Pada jenazah {{ $dataMedis->jk == 'L' ? 'Laki-laki' : 'Perempuan' }},</strong>
                 @if($visumExit->pada_jenazah)
-                    {!! strip_tags($visumExit->pada_jenazah, '<p><br><strong><b><em><i>') !!}
+                    {!! $visumExit->pada_jenazah !!}
                 @else
                     <span class="fill-space"></span>
-                @endif</strong>
+                @endif
             </div>
 
             <div class="conclusion-item">
                 <strong>Pada pemeriksaan luar :</strong><br>
                 @if($visumExit->pemeriksaan_luar_kesimpulan)
-                    {!! strip_tags($visumExit->pemeriksaan_luar_kesimpulan, '<p><br><strong><b><em><i>') !!}
+                    {!! $visumExit->pemeriksaan_luar_kesimpulan !!}
                 @else
                     Dijumpai <span class="fill-space"></span> <span class="dotted-line"></span>
                 @endif
@@ -598,7 +598,7 @@
             <div class="conclusion-item">
                 <strong>Dari hasil pemeriksaan luar disimpulkan :</strong><br>
                 @if($visumExit->hasil_kesimpulan)
-                    {!! strip_tags($visumExit->hasil_kesimpulan, '<p><br><strong><b><em><i>') !!}
+                    {!! $visumExit->hasil_kesimpulan !!}
                 @else
                     Perkiraan lama kematian kurang dari enam jam dari saat pemeriksaan. <span class="dotted-line"></span><br>
                     Cara kematian korban wajar. <span class="dotted-line"></span><br>
