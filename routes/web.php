@@ -2907,7 +2907,7 @@ Route::middleware('ssoToken')->group(function () {
                                             Route::get('/{data}', 'show')->name('.show');
                                             Route::get('/{data}/edit', 'edit')->name('.edit');
                                             Route::put('/{data}', 'update')->name('.update');
-                                            Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                            Route::get('/{id}/print', 'print')->name('.print');
                                             Route::delete('/{data}', 'destroy')->name('.destroy');
                                         });
                                     });
