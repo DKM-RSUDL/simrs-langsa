@@ -1,22 +1,34 @@
 @extends('layouts.administrator.master')
 
 @push('css')
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
     <style>
         .header-asesmen {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            border-left: 4px solid #007bff;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px 15px;
+            border-radius: 8px;
+            border-left: 5px solid #007bff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .card {
-            margin-bottom: 15px;
-            border-radius: 5px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border: none;
         }
 
         .card-header {
-            padding: 0.75rem 1.25rem;
-            font-weight: 500;
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 12px 15px;
+            font-weight: 600;
+            border-radius: 8px 8px 0 0 !important;
+            font-size: 0.95rem;
+        }
+
+        .card-body {
+            padding: 15px;
         }
 
         .form-control:focus {
@@ -26,14 +38,287 @@
 
         .form-control-plaintext {
             padding-top: calc(0.375rem + 1px);
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 8px 12px;
         }
 
-        .custom-control-label {
-            cursor: pointer;
+        .section-title {
+            color: #495057;
+            font-weight: 600;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
         }
 
-        .table th {
-            font-size: 0.9rem;
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label,
+        .form-label {
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .mb-3 {
+            margin-bottom: 1.5rem;
+        }
+
+        .required {
+            color: #dc3545;
+        }
+
+        /* Error message styling */
+        .text-danger {
+            color: #dc3545 !important;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        .form-control.is-invalid,
+        .trix-editor.is-invalid {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        }
+
+        .form-control.is-valid,
+        .trix-editor.is-valid {
+            border-color: #28a745;
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+        }
+
+        .patient-info-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+        }
+
+        .patient-info-item {
+            display: flex;
+            margin-bottom: 8px;
+            align-items: flex-start;
+        }
+
+        .patient-info-label {
+            font-weight: 600;
+            min-width: 180px;
+            color: #495057;
+            flex-shrink: 0;
+        }
+
+        .patient-info-value {
+            color: #212529;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            border: none;
+            padding: 10px 25px;
+            font-weight: 500;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid #007bff;
+            color: #007bff;
+            font-weight: 500;
+            padding: 8px 20px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background: #007bff;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #ff9500 100%);
+            border: none;
+            color: #212529;
+            font-weight: 500;
+            padding: 10px 25px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(255, 193, 7, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(255, 193, 7, 0.4);
+        }
+
+        /* Trix Editor Customization */
+        .trix-editor {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            min-height: 120px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .trix-editor:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .trix-editor--focus {
+            border-color: #80bdff !important;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+        }
+
+        .trix-content {
+            padding: 5px 0;
+        }
+
+        .datetime-container {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+
+        .select2-container--default .select2-selection--single {
+            height: 38px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 36px;
+            color: #495057;
+        }
+
+        /* Section Layout */
+        .examination-section {
+            background: #fdfdfd;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .examination-section h5 {
+            color: #495057;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #007bff;
+        }
+
+        /* Two column layout for forms */
+        .form-row-custom {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+
+        .form-col-half {
+            flex: 0 0 50%;
+            max-width: 50%;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .card-body {
+                padding: 10px;
+            }
+
+            .header-asesmen {
+                padding: 15px 10px;
+                text-align: center;
+            }
+
+            .card-header {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
+
+            .datetime-container {
+                padding: 10px;
+                margin-bottom: 15px;
+            }
+
+            .patient-info-item {
+                flex-direction: column;
+                margin-bottom: 12px;
+            }
+
+            .patient-info-label {
+                min-width: unset;
+                margin-bottom: 2px;
+                font-weight: 600;
+            }
+
+            .form-col-half {
+                flex: 0 0 100%;
+                max-width: 100%;
+                margin-bottom: 15px;
+            }
+
+            .trix-editor {
+                min-height: 100px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .header-asesmen h3 {
+                font-size: 1.3rem;
+            }
+
+            .header-asesmen p {
+                font-size: 0.85rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .form-group label {
+                font-size: 0.9rem;
+                font-weight: 600;
+            }
+
+            .form-control {
+                font-size: 0.9rem;
+            }
+
+            .btn {
+                font-size: 0.85rem;
+                padding: 8px 15px;
+            }
+        }
+
+        @media print {
+
+            .btn,
+            .card-header {
+                display: none !important;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
         }
     </style>
 @endpush
@@ -41,425 +326,593 @@
 @section('content')
     @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.edukasi.include')
 
-    <div class="row">
-        <div class="col-md-3">
-            @include('components.patient-card')
-        </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-3 col-lg-4 col-md-12 mb-3">
+                @include('components.patient-card')
+            </div>
 
-        <div class="col-md-9">
-            <a href="{{ url()->previous() }}" class="btn btn-outline-primary mb-3">
-                <i class="ti-arrow-left"></i> Kembali
-            </a>
-            <form id="edukasiForm" method="POST"
-                action="{{ route('rawat-jalan.permintaan-darah.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $permintaanDarah->id]) }}">
-                @csrf
-                @method('PUT')
+            <div class="col-xl-9 col-lg-8 col-md-12">
+                <div class="mb-3">
+                    <a href="{{ route('forensik.unit.pelayanan.visum-exit.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" class="btn btn-outline-primary">
+                        <i class="ti-arrow-left"></i> <span class="d-none d-sm-inline">Kembali</span>
+                    </a>
+                </div>
 
-                <div class="d-flex justify-content-center">
-                    <div class="card w-100 h-100 shadow-sm">
+                <form id="edukasiForm" method="POST"
+                    action="{{ route('forensik.unit.pelayanan.visum-exit.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $visumExit->id]) }}">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="card shadow-sm">
                         <div class="card-body">
-                            <div class="px-3">
-                                <h4 class="header-asesmen text-center font-weight-bold mb-4">PERMINTAAN DARAH/PRODUK DARAH
-                                </h4>
-                                <p>Isikan data permintaan darah pasien dan keluarga terintegrasi</p>
-                            </div>
-
-                            <!-- Petunjuk Permintaan -->
-                            <div class="section-separator mb-3">
-                                <div class="card-header font-weight-bold">PETUNJUK PERMINTAAN:</div>
-                                <div class="card-body">
-                                    <ol class="pl-3 mb-0">
-                                        <li>Satu Formulir untuk Satu kali permintaan</li>
-                                        <li>Setiap permintaan Darah harus disertai sampel Pasien dalam tabung EDTA 3 ml</li>
-                                        <li>Nama dan Identitas Pasien pada Formulir dan Contoh darah harus SAMA</li>
-                                    </ol>
-                                </div>
-                                <div class="card-header font-weight-bold">PETUNJUK TRANSFUSI:</div>
-                                <div class="card-body">
-                                    <p class="mb-0">Pastikan Identitas Pasien dan Cocokkan etiket pada Kantong Darah, Label
-                                        dan Formulir, Segera kembalikan bila tidak Cocok Ke Bank Darah Rumah Sakit (BDRS)
-                                        setempat atau UTD PMI</p>
+                            <!-- Header Section -->
+                            <div class="text-center mb-4">
+                                <div class="header-asesmen">
+                                    <h3 class="font-weight-bold mb-2">EDIT VISUM ET REPERTUM</h3>
+                                    <p class="mb-1"><strong>No. VeR:</strong> {{ $visumExit->nomor_ver }}</p>
                                 </div>
                             </div>
 
-                            <!-- Urgency Section -->
-                            <div class="section-separator mb-3">
-                                <div class="card-header bg-white">
-                                    <p class="font-weight-bold mb-0">Harap Diisi LENGKAP oleh Pihak Rumah Sakit: Untuk
-                                        keamanan Transfusi</p>
+                            <!-- Basic Information Section -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="ti-calendar"></i> Informasi Dasar Pemeriksaan
                                 </div>
-                                <div class="card-body pt-2">
-                                    <div class="form-row ml-auto justify-content-end">
-                                        <div class="form-check form-check-inline mr-4">
-                                            <input class="form-check-input" type="radio" name="TIPE" id="urgensi_biasa"
-                                                value="0" {{ $permintaanDarah->TIPE == 0 ? 'checked' : '' }} required>
-                                            <label class="form-check-label" for="urgensi_biasa">Biasa</label>
+                                <div class="card-body">
+                                    <div class="datetime-container">
+                                        <div class="row">
+                                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                                <div class="mb-3">
+                                                    <label for="tanggal" class="form-label">Tanggal Pemeriksaan</label>
+                                                    @error('tanggal')
+                                                        <p class="text-danger">{{ $message }}</p>
+                                                    @enderror
+                                                    <input type="date" class="form-control" id="tanggal" name="tanggal"
+                                                        value="{{ old('tanggal', $visumExit->tanggal ? $visumExit->tanggal->format('Y-m-d') : '') }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                                <div class="mb-3">
+                                                    <label for="jam" class="form-label">Jam Pemeriksaan</label>
+                                                    @error('jam')
+                                                        <p class="text-danger">{{ $message }}</p>
+                                                    @enderror
+                                                    <input type="time" class="form-control" id="jam" name="jam"
+                                                        value="{{ old('jam', $visumExit->jam ? \Carbon\Carbon::parse($visumExit->jam)->format('H:i') : '') }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-12 col-sm-12">
+                                                <div class="mb-3">
+                                                    <label for="nomor_ver" class="form-label">Nomor VeR</label>
+                                                    @error('nomor_ver')
+                                                        <p class="text-danger">{{ $message }}</p>
+                                                    @enderror
+                                                    <input type="text" class="form-control" id="nomor_ver" name="nomor_ver"
+                                                        placeholder="VeR/003/I/2025" value="{{ old('nomor_ver', $visumExit->nomor_ver) }}"
+                                                        required>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="TIPE" id="urgensi_cito"
-                                                value="1" {{ $permintaanDarah->TIPE == 1 ? 'checked' : '' }} required>
-                                            <label class="form-check-label" for="urgensi_cito">Cito (Harus disertai memo)</label>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-12">
+                                            <div class="mb-3">
+                                                <label for="permintaan" class="form-label">Permintaan Dari</label>
+                                                @error('permintaan')
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                @enderror
+                                                <textarea class="form-control" id="permintaan" name="permintaan" rows="3"
+                                                    placeholder="Kepolisian Resor Langsa">{{ old('permintaan', $visumExit->permintaan) }}</textarea>
+                                            </div>
                                         </div>
+                                        <div class="col-lg-6 col-md-12">
+                                            <div class="mb-3">
+                                                <label for="nomor_surat" class="form-label">Nomor Surat</label>
+                                                @error('nomor_surat')
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                @enderror
+                                                <input type="text" class="form-control" id="nomor_surat" name="nomor_surat"
+                                                    placeholder="B/49/XII/2024/LL" value="{{ old('nomor_surat', $visumExit->nomor_surat) }}">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="registrasi" class="form-label">Nomor Registrasi</label>
+                                                @error('registrasi')
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                @enderror
+                                                <input type="text" class="form-control" id="registrasi" name="registrasi"
+                                                    value="{{ old('registrasi', $visumExit->registrasi ?: $dataMedis->kd_pasien) }}" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="menerangkan" class="form-label">Menerangkan pada tanggal</label>
+                                        @error('menerangkan')
+                                            <p class="text-danger">{{ $message }}</p>
+                                        @enderror
+                                        <textarea class="form-control" id="menerangkan" name="menerangkan" rows="2"
+                                            placeholder="Informasi tambahan tentang pemeriksaan...">{{ old('menerangkan', $visumExit->menerangkan) }}</textarea>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Form Permintaan -->
-                            <div class="section-separator mb-3">
-                                <div class="card-body">
-
-                                    <div class="form-group">
-                                        <label for="kd_dokter" style="min-width: 200px;">Dokter yang meminta</label>
-                                        <select name="KD_DOKTER" id="kd_dokter" class="form-select select2" required>
-                                            <option value="">--Pilih--</option>
-                                            @foreach ($dokter as $dok)
-                                                <option value="{{ $dok->dokter->kd_dokter }}"
-                                                    {{ $permintaanDarah->kd_dokter == $dok->dokter->kd_dokter ? 'selected' : '' }}>
-                                                    {{ $dok->dokter->nama_lengkap }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Tgl Pengiriman</label>
-                                        <input type="date" class="form-control" name="TGL_PENGIRIMAN"
-                                            value="{{ $permintaanDarah->tgl_pengiriman ? \Carbon\Carbon::parse($permintaanDarah->tgl_pengiriman)->format('Y-m-d') : '' }}"
-                                         required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="diperlukan" style="min-width: 200px;">Diperlukan</label>
-                                        <input type="date" class="form-control" name="TGL_DIPERLUKAN"
-                                        value="{{ $permintaanDarah->tgl_diperlukan ? \Carbon\Carbon::parse($permintaanDarah->tgl_diperlukan)->format('Y-m-d') : '' }}" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Diagnosa Kimia</label>
-                                        <input type="text" class="form-control" name="DIAGNOSA_KIMIA"
-                                            value="{{ $permintaanDarah->diagnosa_kimia }}" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Alasan Transfusi</label>
-                                        <input type="text" class="form-control" name="ALASAN_TRANSFUSI"
-                                            value="{{ $permintaanDarah->alasan_transfusi }}" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="golda" style="min-width: 200px;">Golongan Darah</label>
-                                        <select class="form-select" name="KODE_GOLDA" id="golda" required>
-                                            <option value="">-- Pilih --</option>
-                                            @foreach ($gologanDarah as $darah)
-                                                <option value="{{ $darah->kode }}" {{ $permintaanDarah->kode_golda == $darah->kode ? 'selected' : '' }}>
-                                                    {{ $darah->jenis }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-
-                                        <label class="ms-3">HB</label>
-                                        <div class="input-group mb-3">
-                                            <input type="number" name="HB" class="form-control"
-                                                value="{{ $permintaanDarah->hb }}" required>
-                                            <span class="input-group-text" id="basic-addon1">g</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Nama Suami/Istri Pasien</label>
-                                        <input type="text" class="form-control" name="NAMA_SUAMI_ISTRI"
-                                            value="{{ $permintaanDarah->nama_suami_istri }}" required>
-
-                                        <label class="mx-2">Register</label>
-                                        <input type="text" class="form-control" name="KD_PASIEN"
-                                            value="{{ $permintaanDarah->kd_pasien }}" readonly required>
-                                    </div>
-
+                            <!-- Patient Information Section -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="ti-user"></i> Data Pasien/Korban
                                 </div>
-                            </div>
-
-                            <!-- Medical History -->
-                            <div class="section-separator mb-3">
                                 <div class="card-body">
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Transfusi Sebelumnya</label>
-                                        <input type="text" class="form-control" name="TRANFUSI_SEBELUMNYA"
-                                               value="{{ $permintaanDarah->tranfusi_sebelumnya }}">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Gejala Reaksi Transfusi</label>
-                                        <input type="text" class="form-control" name="REAKSI_TRANFUSI"
-                                               value="{{ $permintaanDarah->reaksi_tranfusi }}">
-                                    </div>
-
-                                    <p class="fw-bold">Apakah pernah diperiksa Serologi golongan darah</p>
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Dimana</label>
-                                        <input type="text" class="form-control" name="SEROLOGI_DIMANA"
-                                               value="{{ $permintaanDarah->serologi_dimana }}">
-
-                                        <label class="mx-2">Kapan</label>
-                                        <input type="date" class="form-control" name="SEROLOGI_KAPAN"
-                                               value="{{ $permintaanDarah->serologi_kapan ? \Carbon\Carbon::parse($permintaanDarah->SEROLOGI_KAPAN)->format('Y-m-d') : '' }}">
-
-                                        <label class="mx-2">Hasil</label>
-                                        <input type="text" class="form-control" name="serologi_dimana"
-                                               value="{{ $permintaanDarah->serologi_hasil }}">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;">Khusus Pasien wanita: Pernah hamil?</label>
-                                        <div class="form-check mt-2">
-                                            <input class="form-check-input" type="radio" name="PERNAH_HAMIL"
-                                                   id="radioDefault1Hamil" value="1"
-                                                   {{ is_numeric($permintaanDarah->pernah_hamil) && $permintaanDarah->pernah_hamil > 0 ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="radioDefault1Hamil">
-                                                Ya
-                                            </label>
+                                    <div class="patient-info-card">
+                                        <div class="patient-info-item">
+                                            <span class="patient-info-label">Nama</span>
+                                            <span class="patient-info-value" style="margin-left: 25px">: {{ $dataMedis->pasien->nama ?? '-' }}</span>
                                         </div>
-                                        <div class="form-check mx-2 mt-2">
-                                            <input class="form-check-input" type="radio" name="PERNAH_HAMIL"
-                                                   id="radioDefault2Hamil" value="0"
-                                                   {{ !is_numeric($permintaanDarah->pernah_hamil) || $permintaanDarah->pernah_hamil == 0 ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="radioDefault2Hamil">
-                                                Tidak
-                                            </label>
+                                        <div class="patient-info-item">
+                                            <span class="patient-info-label">Tempat/Tanggal Lahir</span>
+                                            <span class="patient-info-value" style="margin-left: 25px">: {{ $dataMedis->pasien->tempat_lahir ?? '-' }} /
+                                                ({{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') : 'Tidak Diketahui' }})
+                                            </span>
                                         </div>
-
-                                        <label class="mx-3" style="{{ is_numeric($permintaanDarah->pernah_hamil) && $permintaanDarah->pernah_hamil > 0 ? 'display:inline-block' : 'display:none' }}">Jumlah</label>
-                                        <input type="number" class="form-control" id="pernah-hamil-jumlah"
-                                               name="PERNAH_HAMIL_COUNT" value="{{ is_numeric($permintaanDarah->pernah_hamil) ? $permintaanDarah->pernah_hamil : '' }}"
-                                               style="{{ is_numeric($permintaanDarah->pernah_hamil) && $permintaanDarah->pernah_hamil > 0 ? 'display:inline-block' : 'display:none' }}">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;">Pernah Abortus atau Bayi kuning karena hemolisis (HDN)?</label>
-                                        <div class="form-check mt-2">
-                                            <input class="form-check-input" type="radio" name="ABORTUS_HDN"
-                                                   id="radioDefault1Abortur" value="1"
-                                                   {{ $permintaanDarah->abortus_hdn == 1 ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="radioDefault1Abortur">
-                                                Ya
-                                            </label>
+                                        <div class="patient-info-item">
+                                            <span class="patient-info-label">Jenis Kelamin</span>
+                                            <span
+                                                class="patient-info-value" style="margin-left: 25px">: {{ $dataMedis->jk == 'L' ? 'Laki-laki' : 'Perempuan' }}</span>
                                         </div>
-                                        <div class="form-check mx-2 mt-2">
-                                            <input class="form-check-input" type="radio" name="ABORTUS_HDN"
-                                                   id="radioDefault2Abortus" value="0"
-                                                   {{ $permintaanDarah->abortus_hdn != 1 ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="radioDefault2Abortus">
-                                                Tidak
-                                            </label>
+                                        <div class="patient-info-item">
+                                            <span class="patient-info-label">Suku/Agama</span>
+                                            <span class="patient-info-value" style="margin-left: 25px">: {{ $dataMedis->pasien->suku->suku ?? '-' }} /
+                                                {{ $dataMedis->pasien->agama->agama ?? '-' }}</span>
+                                        </div>
+                                        <div class="patient-info-item">
+                                            <span class="patient-info-label">Pekerjaan</span>
+                                            <span class="patient-info-value" style="margin-left: 25px">: {{ $dataMedis->pasien->pekerjaan->pekerjaan ?? '-' }}</span>
+                                        </div>
+                                        <div class="patient-info-item">
+                                            <span class="patient-info-label">Alamat</span>
+                                            <span class="patient-info-value" style="margin-left: 25px">: {{ $dataMedis->pasien->alamat ?? '-' }}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="section-separator mb-3">
+                            <!-- Interview Section -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="ti-comment"></i> WAWANCARA
+                                </div>
                                 <div class="card-body">
-                                    <h5 class="font-weight-bold mb-3">DARAH LENGKAP (WHOLEBLOOD)</h5>
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">WB Segar / Biasa</label>
-                                        <input type="number" class="form-control" name="WB"
-                                               value="{{ $permintaanDarah->wb }}">
-                                        <span class="input-group-text">ml</span>
-                                    </div>
-
-                                    <h5 class="font-weight-bold mt-4 mb-3">DARAH MERAHPEKAT (PACKED RED CELL)</h5>
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">PRC Biasa</label>
-                                        <input type="number" class="form-control" name="PRC"
-                                               value="{{ $permintaanDarah->prc }}">
-                                        <span class="input-group-text">ml</span>
-                                    </div>
-
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">PRC Pediatric <br> Leukodepleted**</label>
-                                        <input type="number" class="form-control" name="PRC_PEDIACTRIC"
-                                               value="{{ $permintaanDarah->prc_pediactric }}">
-                                        <span class="input-group-text">ml</span>
-                                    </div>
-
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">PRC Leukodepleted <br> (dengan filter)**</label>
-                                        <input class="form-control" type="number" name="PRC_LEUKODEPLETED"
-                                               value="{{ $permintaanDarah->prc_leukodepleted }}">
-                                        <span class="input-group-text">ml</span>
-                                    </div>
-
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">Washed Erythrocyte (WE)</label>
-                                        <input type="number" class="form-control" name="WASHED_ERYTHROYTE"
-                                               value="{{ $permintaanDarah->washed_erythroyte }}">
-                                        <span class="input-group-text">ml</span>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Lain-lain</label>
-                                        <input type="text" class="form-control" name="LAINNYA"
-                                               value="{{ $permintaanDarah->lainnya }}">
+                                    <div class="mb-3">
+                                        <label for="wawancara" class="form-label fw-bold">Hasil Wawancara</label>
+                                        @error('wawancara')
+                                            <p class="text-danger">{{ $message }}</p>
+                                        @enderror
+                                        <input id="wawancara" type="hidden" name="wawancara" value="{{ old('wawancara', $visumExit->wawancara) }}">
+                                        <trix-editor input="wawancara"
+                                            placeholder="Masukkan hasil wawancara dengan keluarga/saksi..."></trix-editor>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="section-separator mb-3">
+                            <!-- External Examination Section -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="ti-search"></i> PEMERIKSAAN LUAR
+                                </div>
                                 <div class="card-body">
-                                    <h5 class="font-weight-bold mb-3">THROMBOCYTE CONCENTRATE (TC)</h5>
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">TC Biasa</label>
-                                        <input type="number" class="form-control" name="TC_BIASA"
-                                               value="{{ $permintaanDarah->tc_biasa }}">
-                                        <span class="input-group-text">unit</span>
-                                    </div>
+                                    <!-- Single Column Layout for External Examination -->
+                                    <div class="examination-section">
+                                        <div class="mb-3">
+                                            <label for="label_mayat" class="form-label fw-bold">Label Mayat</label>
+                                            @error('label_mayat')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                            <input id="label_mayat" type="hidden" name="label_mayat"
+                                                value="{{ old('label_mayat', $visumExit->label_mayat) }}">
+                                            <trix-editor input="label_mayat"
+                                                placeholder="Keterangan tentang label mayat..."></trix-editor>
+                                        </div>
 
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">TC Apheresis*</label>
-                                        <input type="number" class="form-control" name="TC_APHERESIS"
-                                               value="{{ $permintaanDarah->tc_apheresis }}">
-                                        <span class="input-group-text">unit</span>
-                                    </div>
+                                        <div class="mb-3">
+                                            <label for="pembungkus_mayat" class="form-label fw-bold">Pembungkus Mayat</label>
+                                            @error('pembungkus_mayat')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                            <input id="pembungkus_mayat" type="hidden" name="pembungkus_mayat"
+                                                value="{{ old('pembungkus_mayat', $visumExit->pembungkus_mayat) }}">
+                                            <trix-editor input="pembungkus_mayat"
+                                                placeholder="Deskripsi pembungkus mayat..."></trix-editor>
+                                        </div>
 
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">TC Pooled (Leukodepleted)**</label>
-                                        <input type="number" class="form-control" name="TC_POOLED"
-                                               value="{{ $permintaanDarah->tc_pooled }}">
-                                        <span class="input-group-text">unit</span>
-                                    </div>
+                                        <div class="mb-3">
+                                            <label for="benda_disamping" class="form-label fw-bold">Benda di Samping Mayat</label>
+                                            @error('benda_disamping')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                            <input id="benda_disamping" type="hidden" name="benda_disamping"
+                                                value="{{ old('benda_disamping', $visumExit->benda_disamping) }}">
+                                            <trix-editor input="benda_disamping"
+                                                placeholder="Benda-benda yang ditemukan di samping mayat..."></trix-editor>
+                                        </div>
 
-                                    <h5 class="font-weight-bold mt-4 mb-3">PLASMA</h5>
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">Plasma Cair (liquid Plasma)</label>
-                                        <input type="number" class="form-control" name="PLASMA_CAIR"
-                                               value="{{ $permintaanDarah->plasma_cair }}">
-                                        <span class="input-group-text">ml</span>
-                                    </div>
+                                        <div class="mb-3">
+                                            <label for="penutup_mayat" class="form-label fw-bold">Penutup Mayat</label>
+                                            @error('penutup_mayat')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                            <input id="penutup_mayat" type="hidden" name="penutup_mayat"
+                                                value="{{ old('penutup_mayat', $visumExit->penutup_mayat) }}">
+                                            <trix-editor input="penutup_mayat"
+                                                placeholder="Keterangan penutup mayat..."></trix-editor>
+                                        </div>
 
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">Plasma Segar Beku (FFP)</label>
-                                        <input type="number" class="form-control" name="PLASMA_SEGAR_BEKU"
-                                               value="{{ $permintaanDarah->plasma_segar_beku }}">
-                                        <span class="input-group-text">ml</span>
-                                    </div>
+                                        <div class="mb-3">
+                                            <label for="pakaian_mayat" class="form-label fw-bold">Pakaian Mayat</label>
+                                            @error('pakaian_mayat')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                            <input id="pakaian_mayat" type="hidden" name="pakaian_mayat"
+                                                value="{{ old('pakaian_mayat', $visumExit->pakaian_mayat) }}">
+                                            <trix-editor input="pakaian_mayat"
+                                                placeholder="Detail pakaian yang dikenakan mayat..."></trix-editor>
+                                        </div>
 
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">Cryoprecipitate AHF</label>
-                                        <input type="number" class="form-control" name="CIYOPRECIPITATE"
-                                               value="{{ $permintaanDarah->ciyoprecipitate }}">
-                                        <span class="input-group-text">unit</span>
+                                        <div class="mb-3">
+                                            <label for="perhiasan_mayat" class="form-label fw-bold">Perhiasan Mayat</label>
+                                            @error('perhiasan_mayat')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                            <input id="perhiasan_mayat" type="hidden" name="perhiasan_mayat"
+                                                value="{{ old('perhiasan_mayat', $visumExit->perhiasan_mayat) }}">
+                                            <trix-editor input="perhiasan_mayat"
+                                                placeholder="Perhiasan yang ditemukan pada mayat..."></trix-editor>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="identifikasi_umum" class="form-label fw-bold">Identifikasi Umum</label>
+                                            @error('identifikasi_umum')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                            <input id="identifikasi_umum" type="hidden" name="identifikasi_umum"
+                                                value="{{ old('identifikasi_umum', $visumExit->identifikasi_umum) }}">
+                                            <trix-editor input="identifikasi_umum"
+                                                placeholder="Deskripsi umum mayat (tinggi, postur, rambut, kulit, dll)..."></trix-editor>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="identifikasi_khusus" class="form-label fw-bold">Identifikasi Khusus</label>
+                                            @error('identifikasi_khusus')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                            <input id="identifikasi_khusus" type="hidden" name="identifikasi_khusus"
+                                                value="{{ old('identifikasi_khusus', $visumExit->identifikasi_khusus) }}">
+                                            <trix-editor input="identifikasi_khusus"
+                                                placeholder="Tanda-tanda khusus (tato, bekas luka, dll)..."></trix-editor>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="tanda_kematian" class="form-label fw-bold">Tanda-tanda Kematian</label>
+                                            @error('tanda_kematian')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                            <input id="tanda_kematian" type="hidden" name="tanda_kematian"
+                                                value="{{ old('tanda_kematian', $visumExit->tanda_kematian) }}">
+                                            <trix-editor input="tanda_kematian"
+                                                placeholder="Lebam mayat, kaku mayat, suhu tubuh, kondisi mata, dll..."></trix-editor>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="gigi_geligi" class="form-label fw-bold">Gigi-geligi</label>
+                                            @error('gigi_geligi')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                            <input id="gigi_geligi" type="hidden" name="gigi_geligi"
+                                                value="{{ old('gigi_geligi', $visumExit->gigi_geligi) }}">
+                                            <trix-editor input="gigi_geligi"
+                                                placeholder="Kondisi gigi dan rongga mulut..."></trix-editor>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="luka_luka" class="form-label fw-bold">Luka-luka</label>
+                                            @error('luka_luka')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                            <input id="luka_luka" type="hidden" name="luka_luka"
+                                                value="{{ old('luka_luka', $visumExit->luka_luka) }}">
+                                            <trix-editor input="luka_luka"
+                                                placeholder="Deskripsi detail luka-luka yang ditemukan..."></trix-editor>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Declaration -->
-                            <div class="section-separator mb-3">
+                            <!-- Conclusion Section -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="ti-clipboard"></i> KESIMPULAN
+                                </div>
                                 <div class="card-body">
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Tanggal Pengambilan Sampel</label>
-                                        @php
-                                            $waktuPengambilanSampel = \Carbon\Carbon::parse($permintaanDarah->tgl_pengambilan_sampel);
-                                            $tanggal = $waktuPengambilanSampel->format('Y-m-d');
-                                            $jam = $waktuPengambilanSampel->format('H:i');
-                                        @endphp
-                                        <input type="date" class="form-control" name="TGL_PENGAMBILAN_SAMPEL"
-                                               value="{{ $tanggal }}">
-
-                                        <label class="mx-2">Jam</label>
-                                        <input type="time" class="form-control" name="WAKTU_PENGAMBILAN_SAMPEL"
-                                               value="{{ $jam }}">
+                                    <div class="mb-3">
+                                        <label for="pada_jenazah" class="form-label fw-bold">Pada Jenazah</label>
+                                        @error('pada_jenazah')
+                                            <p class="text-danger">{{ $message }}</p>
+                                        @enderror
+                                        <input id="pada_jenazah" type="hidden" name="pada_jenazah"
+                                            value="{{ old('pada_jenazah', $visumExit->pada_jenazah) }}">
+                                        <trix-editor input="pada_jenazah"
+                                            placeholder="Kesimpulan umum tentang jenazah..."></trix-editor>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Nama Petugas</label>
-                                        <input type="text" class="form-control" name="PETUGAS_PENGAMBILAN_SAMPEL"
-                                               value="{{ $permintaanDarah->petugas_pengambilan_sampel }}">
+                                    <div class="mb-3">
+                                        <label for="pemeriksaan_luar_kesimpulan" class="form-label fw-bold">Pada Pemeriksaan
+                                            Luar</label>
+                                        @error('pemeriksaan_luar_kesimpulan')
+                                            <p class="text-danger">{{ $message }}</p>
+                                        @enderror
+                                        <input id="pemeriksaan_luar_kesimpulan" type="hidden"
+                                            name="pemeriksaan_luar_kesimpulan"
+                                            value="{{ old('pemeriksaan_luar_kesimpulan', $visumExit->pemeriksaan_luar_kesimpulan) }}">
+                                        <trix-editor input="pemeriksaan_luar_kesimpulan"
+                                            placeholder="Kesimpulan dari pemeriksaan luar..."></trix-editor>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="dijumpai_kesimpulan" class="form-label fw-bold">Dijumpai</label>
+                                        @error('dijumpai_kesimpulan')
+                                            <p class="text-danger">{{ $message }}</p>
+                                        @enderror
+                                        <input id="dijumpai_kesimpulan" type="hidden" name="dijumpai_kesimpulan"
+                                            value="{{ old('dijumpai_kesimpulan', $visumExit->dijumpai_kesimpulan) }}">
+                                        <trix-editor input="dijumpai_kesimpulan"
+                                            placeholder="Temuan-temuan penting..."></trix-editor>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="hasil_kesimpulan" class="form-label fw-bold">Hasil Kesimpulan</label>
+                                        @error('hasil_kesimpulan')
+                                            <p class="text-danger">{{ $message }}</p>
+                                        @enderror
+                                        <input id="hasil_kesimpulan" type="hidden" name="hasil_kesimpulan"
+                                            value="{{ old('hasil_kesimpulan', $visumExit->hasil_kesimpulan) }}">
+                                        <trix-editor input="hasil_kesimpulan"
+                                            placeholder="Kesimpulan akhir mengenai perkiraan lama kematian, cara kematian, dan penyebab kematian..."></trix-editor>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label for="dokter_pemeriksa" class="form-label fw-bold">Dokter Pemeriksa</label>
+                                                @error('dokter_pemeriksa')
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                @enderror
+                                                <select id="dokter_pemeriksa" name="dokter_pemeriksa" class="form-select select2" required>
+                                                    <option value="">--Pilih Dokter Pemeriksa--</option>
+                                                    @foreach ($dokter as $item)
+                                                        <option value="{{ $item->kd_dokter }}"
+                                                            {{ old('dokter_pemeriksa', $visumExit->dokter_pemeriksa) == $item->kd_dokter ? 'selected' : '' }}>
+                                                            {{ $item->nama_lengkap }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- UTD Section (Readonly) -->
-                            <div class="mb-3 section-separator">
-                                    <div class="alert alert-secondary mt-3">
-                                        <p class="mb-1"><b>PEMBERITAHUAN:</b></p>
-                                        <ol class="pl-3 mb-0">
-                                            <li>Darah dari Donor tidak diperjualbelikan namun memerlukan biaya pengolahan
-                                                yang disebut Service Cost atau BPPD (Biaya Pengganti Pengolahan Darah)</li>
-                                            <li>Biaya Pengganti Pengolahan Darah (BPPD) berlaku bagi setiap pemakai Darah
-                                                tanpa terkecuali</li>
-                                            <li>Pembayaran Biaya Pengganti Pengolahan Darah (BPPD) dilakukan di Rumah Sakit
-                                                (Bila ada Kerjasama dengan UTD)</li>
-                                            <li>Darah yang sudah di periksa tetap dikenakan Biaya</li>
-                                        </ol>
-                                    </div>
+                            <!-- Action Buttons -->
+                            <div class="d-flex flex-wrap justify-content-between mt-4">
+                                <div class="mb-2">
+                                    <a href="{{ route('forensik.unit.pelayanan.visum-exit.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $visumExit->id]) }}"
+                                        class="btn btn-outline-primary mb-2">
+                                        <i class="ti-eye"></i> Lihat Detail
+                                    </a>
                                 </div>
-                            </div>
-
-                            <div class="d-flex justify-content-end mt-4">
-                                <button type="submit" class="btn btn-primary" id="simpan">
-                                    <i class="ti-save"></i> Update
-                                </button>
+                                <div class="mb-2">
+                                    <button type="submit" class="btn btn-warning mb-2">
+                                        <i class="ti-save"></i> Update
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 @endsection
 
 @push('js')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Print functionality
-            const printButton = document.getElementById('print_form');
-            if (printButton) {
-                printButton.addEventListener('click', function () {
-                    window.print();
-                });
-            }
+            // Initialize Trix editors
+            document.addEventListener('trix-initialize', function (event) {
+                const editor = event.target;
+                editor.style.minHeight = '120px';
 
-            // Reset confirmation
-            const resetButton = document.getElementById('reset_form');
-            if (resetButton) {
-                resetButton.addEventListener('click', function (e) {
-                    if (!confirm('Apakah Anda yakin ingin mereset form ini?')) {
-                        e.preventDefault();
+                // Load existing content for Trix editors
+                const input = editor.previousElementSibling;
+                if (input && input.value) {
+                    editor.editor.loadHTML(input.value);
+                }
+            });
+
+            // Validation for required fields
+            const requiredFields = document.querySelectorAll('[required]');
+            requiredFields.forEach(field => {
+                field.addEventListener('blur', function () {
+                    if (!this.value.trim()) {
+                        this.classList.add('is-invalid');
+                    } else {
+                        this.classList.remove('is-invalid');
                     }
                 });
+            });
+
+            // Auto-save functionality (optional)
+            let autoSaveTimeout;
+            const formInputs = document.querySelectorAll('input, select, textarea');
+
+            formInputs.forEach(input => {
+                input.addEventListener('input', function () {
+                    clearTimeout(autoSaveTimeout);
+                    autoSaveTimeout = setTimeout(function () {
+                        // Auto-save logic can be implemented here
+                        console.log('Auto-saving draft...');
+                    }, 30000); // Auto-save after 30 seconds of inactivity
+                });
+            });
+
+            // Trix editor event handlers
+            document.addEventListener('trix-change', function () {
+                clearTimeout(autoSaveTimeout);
+                autoSaveTimeout = setTimeout(function () {
+                    console.log('Auto-saving draft...');
+                }, 30000);
+            });
+
+            // Improve Trix editor styling and functionality
+            document.addEventListener('trix-initialize', function (event) {
+                const toolbarElement = event.target.previousElementSibling;
+                if (toolbarElement && toolbarElement.classList.contains('trix-toolbar')) {
+                    toolbarElement.style.border = '1px solid #ced4da';
+                    toolbarElement.style.borderBottom = 'none';
+                    toolbarElement.style.borderRadius = '4px 4px 0 0';
+                    toolbarElement.style.backgroundColor = '#f8f9fa';
+                }
+            });
+
+            // Initialize Select2 for dokter pemeriksa
+            if (typeof $.fn.select2 !== 'undefined') {
+                $('#dokter_pemeriksa').select2({
+                    placeholder: '--Pilih Dokter Pemeriksa--',
+                    allowClear: true,
+                    width: '100%'
+                });
             }
 
-            // Form submission confirmation
-            const form = document.getElementById('edukasiForm');
+            // Confirm before leaving page if form has changes
+            let formChanged = false;
+            const originalFormData = new FormData(document.getElementById('edukasiForm'));
 
+            document.getElementById('edukasiForm').addEventListener('input', function() {
+                formChanged = true;
+            });
+
+            document.addEventListener('trix-change', function() {
+                formChanged = true;
+            });
+
+            window.addEventListener('beforeunload', function (e) {
+                if (formChanged) {
+                    e.preventDefault();
+                    e.returnValue = '';
+                }
+            });
+
+            // Reset formChanged flag when form is submitted
+            document.getElementById('edukasiForm').addEventListener('submit', function() {
+                formChanged = false;
+            });
         });
 
-        // Khusus Pasien wanita: Pernah hamil?
-        document.addEventListener('DOMContentLoaded', function() {
-            // Dapatkan referensi ke elemen-elemen yang diperlukan
-            const radioYa = document.getElementById('radioDefault1Hamil');
-            const radioTidak = document.getElementById('radioDefault2Hamil');
-            const jumlahLabel = document.querySelector('label.mx-3');
-            const jumlahInput = document.getElementById('pernah-hamil-jumlah'); // Gunakan ID yang sudah ada
-
-            // Fungsi untuk menampilkan atau menyembunyikan input jumlah
-            function toggleJumlahInput() {
-                if (radioYa.checked) {
-                    // Jika Ya dipilih, tampilkan jumlah
-                    jumlahLabel.style.display = 'inline-block';
-                    jumlahInput.style.display = 'inline-block';
-                } else {
-                    // Jika Tidak dipilih, sembunyikan jumlah
-                    jumlahLabel.style.display = 'none';
-                    jumlahInput.style.display = 'none';
+        // Custom validation messages
+        document.addEventListener('invalid', function (e) {
+            e.target.setCustomValidity('');
+            if (!e.target.validity.valid) {
+                switch (e.target.type) {
+                    case 'date':
+                        e.target.setCustomValidity('Tanggal harus diisi');
+                        break;
+                    case 'time':
+                        e.target.setCustomValidity('Jam harus diisi');
+                        break;
+                    case 'text':
+                        if (e.target.hasAttribute('required')) {
+                            e.target.setCustomValidity('Field ini wajib diisi');
+                        }
+                        break;
+                    case 'select-one':
+                        e.target.setCustomValidity('Pilih salah satu opsi');
+                        break;
+                    default:
+                        e.target.setCustomValidity('Field ini tidak valid');
                 }
             }
+        }, true);
 
-            // Tambahkan event listener untuk radio button
-            radioYa.addEventListener('change', toggleJumlahInput);
-            radioTidak.addEventListener('change', toggleJumlahInput);
+        // Clear custom validity on input
+        document.addEventListener('input', function (e) {
+            e.target.setCustomValidity('');
+        });
 
-            // Jalankan fungsi saat halaman dimuat untuk mengatur tampilan awal
-            toggleJumlahInput();
+        // Additional functionality for edit mode
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show completion indicator
+            const calculateCompletion = function() {
+                const allFields = document.querySelectorAll('input[type="text"], input[type="date"], input[type="time"], select, textarea, input[type="hidden"]');
+                let filledFields = 0;
+                let totalFields = 0;
+
+                allFields.forEach(field => {
+                    if (field.name && !field.readOnly && field.type !== 'hidden') {
+                        totalFields++;
+                        if (field.value && field.value.trim() !== '') {
+                            filledFields++;
+                        }
+                    }
+                });
+
+                // Check Trix editors
+                document.querySelectorAll('trix-editor').forEach(editor => {
+                    totalFields++;
+                    if (editor.editor && editor.editor.getDocument().toString().trim() !== '') {
+                        filledFields++;
+                    }
+                });
+
+                const percentage = totalFields > 0 ? Math.round((filledFields / totalFields) * 100) : 0;
+
+                // Create or update completion indicator
+                let indicator = document.getElementById('completion-indicator');
+                if (!indicator) {
+                    indicator = document.createElement('div');
+                    indicator.id = 'completion-indicator';
+                    indicator.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: #007bff;
+                        color: white;
+                        padding: 10px 15px;
+                        border-radius: 5px;
+                        font-weight: bold;
+                        z-index: 1000;
+                        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                    `;
+                    document.body.appendChild(indicator);
+                }
+
+                indicator.textContent = `Kelengkapan: ${percentage}%`;
+
+                // Change color based on completion
+                if (percentage < 50) {
+                    indicator.style.background = '#dc3545'; // Red
+                } else if (percentage < 80) {
+                    indicator.style.background = '#ffc107'; // Yellow
+                    indicator.style.color = '#212529';
+                } else {
+                    indicator.style.background = '#28a745'; // Green
+                }
+            };
+
+            // Calculate completion on page load and form changes
+            calculateCompletion();
+
+            document.addEventListener('input', calculateCompletion);
+            document.addEventListener('trix-change', calculateCompletion);
         });
     </script>
 @endpush

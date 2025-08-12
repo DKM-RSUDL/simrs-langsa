@@ -333,7 +333,6 @@
                             <div class="text-center mb-4">
                                 <div class="header-asesmen">
                                     <h3 class="font-weight-bold mb-2">VISUM ET REPERTUM</h3>
-                                    <p class="mb-1 text-muted">INSTALASI KEDOKTERAN FORENSIK</p>
                                 </div>
                             </div>
 
@@ -347,8 +346,7 @@
                                         <div class="row">
                                             <div class="col-lg-4 col-md-6 col-sm-12">
                                                 <div class="mb-3">
-                                                    <label for="tanggal" class="form-label">Tanggal Pemeriksaan <span
-                                                            class="required">*</span></label>
+                                                    <label for="tanggal" class="form-label">Tanggal Pemeriksaan</label>
                                                     @error('tanggal')
                                                         <p class="text-danger">{{ $message }}</p>
                                                     @enderror
@@ -358,8 +356,7 @@
                                             </div>
                                             <div class="col-lg-4 col-md-6 col-sm-12">
                                                 <div class="mb-3">
-                                                    <label for="jam" class="form-label">Jam Pemeriksaan <span
-                                                            class="required">*</span></label>
+                                                    <label for="jam" class="form-label">Jam Pemeriksaan</label>
                                                     @error('jam')
                                                         <p class="text-danger">{{ $message }}</p>
                                                     @enderror
@@ -369,8 +366,7 @@
                                             </div>
                                             <div class="col-lg-4 col-md-12 col-sm-12">
                                                 <div class="mb-3">
-                                                    <label for="nomor_ver" class="form-label">Nomor VeR <span
-                                                            class="required">*</span></label>
+                                                    <label for="nomor_ver" class="form-label">Nomor VeR</label>
                                                     @error('nomor_ver')
                                                         <p class="text-danger">{{ $message }}</p>
                                                     @enderror
@@ -390,7 +386,7 @@
                                                     <p class="text-danger">{{ $message }}</p>
                                                 @enderror
                                                 <textarea class="form-control" id="permintaan" name="permintaan" rows="3"
-                                                    placeholder="Kepolisian Resor Langsa">{{ old('permintaan', 'Kepolisian Resor Langsa') }}</textarea>
+                                                    placeholder="Kepolisian Resor Langsa">{{ old('permintaan') }}</textarea>
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-12">
@@ -414,7 +410,7 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="menerangkan" class="form-label">Keterangan Tambahan</label>
+                                        <label for="menerangkan" class="form-label">Menerangkan pada tanggal</label>
                                         @error('menerangkan')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
@@ -666,19 +662,19 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <div class="mb-3">
-                                                <label for="dokter_pemeriksa" class="form-label fw-bold">Dokter Pemeriksa <span
-                                                        class="required">*</span></label>
+                                                <label for="dokter_pemeriksa" class="form-label fw-bold">Dokter Pemeriksa</label>
                                                 @error('dokter_pemeriksa')
                                                     <p class="text-danger">{{ $message }}</p>
                                                 @enderror
-                                                <select class="form-control" id="dokter_pemeriksa" name="dokter_pemeriksa"
-                                                    required>
-                                                    <option value="">-- Pilih Dokter Pemeriksa --</option>
-                                                    <option value="Dr.dr.Netty Herawati, M.Ked(For), Sp.F.M.,M.H" {{ old('dokter_pemeriksa') == 'Dr.dr.Netty Herawati, M.Ked(For), Sp.F.M.,M.H' ? 'selected' : '' }}>Dr.dr.Netty Herawati, M.Ked(For),
-                                                        Sp.F.M.,M.H</option>
-                                                    <!-- Add more doctors as needed -->
+                                                <select id="dokter_pemeriksa" name="dokter_pemeriksa" class="form-select select2" required>
+                                                    <option value="">--Pilih Dokter Pemeriksa--</option>
+                                                    @foreach ($dokter as $item)
+                                                        <option value="{{ $item->kd_dokter }}">
+                                                            {{ $item->nama_lengkap }}
+                                                        </option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
@@ -720,7 +716,7 @@
                 const romanMonth = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'][today.getMonth()];
 
                 // This should be generated based on your database sequence
-                const sequence = '003'; // This should come from backend
+                const sequence = '000'; // This should come from backend
 
                 const verNumber = `VeR/${sequence}/${romanMonth}/${year}`;
 
