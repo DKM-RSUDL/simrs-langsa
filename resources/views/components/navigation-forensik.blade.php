@@ -69,6 +69,16 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
+        [
+            'icon' => 'verified_badge.png',
+            'label' => 'Visum Otopsi',
+            'link' => route("forensik.unit.pelayanan.visum-otopsi.index", [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
     ];
 
 @endphp

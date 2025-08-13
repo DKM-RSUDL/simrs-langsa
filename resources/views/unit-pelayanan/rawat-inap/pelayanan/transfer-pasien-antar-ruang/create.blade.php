@@ -1,75 +1,76 @@
 @extends('layouts.administrator.master')
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
+    <style>
+        .header-background {
+            height: 100%;
+            background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
+        }
+
+        .form-section {
+            border: 1px solid #dee2e6;
+            margin-bottom: 1rem;
+            border-radius: 0.375rem;
+        }
+
+        .section-header {
+            background-color: #f8f9fa;
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+            font-weight: 600;
+            color: #495057;
+            border-radius: 0.375rem 0.375rem 0 0;
+        }
+
+        .section-content {
+            padding: 15px;
+        }
+
+        .checkbox-group {
+            margin-bottom: 0.75rem;
+        }
+
+        .checkbox-inline {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 20px;
+            margin-bottom: 8px;
+        }
+
+        .vital-signs {
+            background-color: #f8f9fa;
+            border-radius: 0.375rem;
+            padding: 15px;
+            margin-bottom: 1rem;
+        }
+
+        .table-status th {
+            background-color: #e9ecef;
+            font-weight: 600;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .table-status td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .signature-box {
+            border: 1px solid #dee2e6;
+            height: 100px;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            border-radius: 0.375rem;
+        }
+    </style>
+@endpush
+
 @section('content')
-    @push('css')
-        <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
-        <style>
-            .header-background {
-                height: 100%;
-                background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-            }
-
-            .form-section {
-                border: 1px solid #dee2e6;
-                margin-bottom: 1rem;
-                border-radius: 0.375rem;
-            }
-
-            .section-header {
-                background-color: #f8f9fa;
-                padding: 12px 15px;
-                border-bottom: 1px solid #dee2e6;
-                font-weight: 600;
-                color: #495057;
-                border-radius: 0.375rem 0.375rem 0 0;
-            }
-
-            .section-content {
-                padding: 15px;
-            }
-
-            .checkbox-group {
-                margin-bottom: 0.75rem;
-            }
-
-            .checkbox-inline {
-                display: inline-flex;
-                align-items: center;
-                margin-right: 20px;
-                margin-bottom: 8px;
-            }
-
-            .vital-signs {
-                background-color: #f8f9fa;
-                border-radius: 0.375rem;
-                padding: 15px;
-                margin-bottom: 1rem;
-            }
-
-            .table-status th {
-                background-color: #e9ecef;
-                font-weight: 600;
-                text-align: center;
-                vertical-align: middle;
-            }
-
-            .table-status td {
-                text-align: center;
-                vertical-align: middle;
-            }
-
-            .signature-box {
-                border: 1px solid #dee2e6;
-                height: 100px;
-                background-color: #f8f9fa;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: #6c757d;
-                border-radius: 0.375rem;
-            }
-        </style>
-    @endpush
 
     <div class="row">
         <div class="col-md-3">
@@ -78,11 +79,12 @@
 
         <div class="col-md-9">
             <div class="d-flex align-items-center mb-3">
-                <a href="{{ route('rawat-inap.transfer-pasien-antar-ruang.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" class="btn btn-outline-primary btn-sm me-2">
+                <a href="{{ route('rawat-inap.transfer-pasien-antar-ruang.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                    class="btn btn-outline-primary btn-sm me-2">
                     <i class="fas fa-arrow-left"></i> Kembali
                 </a>
             </div>
-                
+
             <div class="text-center mt-1 mb-3">
                 <h4 class="text-primary fw-bold">FORM TRANSFER PASIEN ANTAR RUANG</h4>
             </div>
@@ -97,7 +99,9 @@
                 </div>
             @endif
 
-            <form action="{{ route('rawat-inap.transfer-pasien-antar-ruang.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="post">
+            <form
+                action="{{ route('rawat-inap.transfer-pasien-antar-ruang.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                method="post">
                 @csrf
 
                 <!-- Informasi Dasar Transfer -->
@@ -121,7 +125,8 @@
 
                             <!-- Unit Tujuan -->
                             <div class="mb-3">
-                                <label for="kd_unit_tujuan" class="form-label">Tujuan ke Unit/ Ruang <span class="text-danger">*</span></label>
+                                <label for="kd_unit_tujuan" class="form-label">Tujuan ke Unit/ Ruang <span
+                                        class="text-danger">*</span></label>
                                 <select name="kd_unit_tujuan" id="kd_unit_tujuan" class="form-select select2" required>
                                     <option value="">--Pilih--</option>
                                     @foreach ($unitTujuan as $item)
@@ -156,20 +161,23 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="petugas_menyerahkan" class="form-label">Petugas yang Menyerahkan <span class="text-danger">*</span></label>
-                                <select name="petugas_menyerahkan" id="petugas_menyerahkan" class="form-select select2" required>
+                                <label for="petugas_menyerahkan" class="form-label">Petugas yang Menyerahkan <span
+                                        class="text-danger">*</span></label>
+                                <select name="petugas_menyerahkan" id="petugas_menyerahkan" class="form-select select2"
+                                    required>
                                     <option value="">--Pilih--</option>
                                     <option value="{{ auth()->user()->kd_karyawan }}" selected>
-                                        {{ auth()->user()->karyawan->gelar_depan . ' ' .
-        str()->title(auth()->user()->karyawan->nama) . ' ' .
-        auth()->user()->karyawan->gelar_belakang }}
+                                        {{ auth()->user()->karyawan->gelar_depan .
+                                            ' ' .
+                                            str()->title(auth()->user()->karyawan->nama) .
+                                            ' ' .
+                                            auth()->user()->karyawan->gelar_belakang }}
                                     </option>
 
                                     @foreach ($petugas as $item)
                                         @if ($item->kd_karyawan != auth()->user()->kd_karyawan)
                                             <option value="{{ $item->kd_karyawan }}" @selected(old('petugas_menyerahkan') == $item->kd_karyawan)>
-                                                {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' .
-                                                    $item->gelar_belakang }}
+                                                {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' . $item->gelar_belakang }}
                                             </option>
                                         @endif
                                     @endforeach
@@ -182,15 +190,17 @@
                             <div class="mb-3 row">
                                 <div class="col-md-6">
                                     <label class="form-label">Tanggal <span class="text-danger">*</span></label>
-                                    <input type="date" name="tanggal_menyerahkan" value="{{ old('tanggal_menyerahkan', date('Y-m-d')) }}"
-                                        class="form-control" required>
+                                    <input type="date" name="tanggal_menyerahkan"
+                                        value="{{ old('tanggal_menyerahkan', date('Y-m-d')) }}" class="form-control"
+                                        required>
                                     @error('tanggal_menyerahkan')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Jam <span class="text-danger">*</span></label>
-                                    <input type="time" name="jam_menyerahkan" value="{{ old('jam_menyerahkan', date('H:i')) }}" class="form-control" required>
+                                    <input type="time" name="jam_menyerahkan"
+                                        value="{{ old('jam_menyerahkan', date('H:i')) }}" class="form-control" required>
                                     @error('jam_menyerahkan')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror
@@ -246,8 +256,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Diagnosis Utama</label>
-                                    <textarea name="diagnosis_utama" class="form-control" rows="3"
-                                        placeholder="Tuliskan diagnosis utama pasien">{{ old('diagnosis_utama') }}</textarea>
+                                    <textarea name="diagnosis_utama" class="form-control" rows="3" placeholder="Tuliskan diagnosis utama pasien">{{ old('diagnosis_utama') }}</textarea>
                                     @error('diagnosis_utama')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -280,14 +289,16 @@
                                     <label class="form-label fw-bold">Perlu Menjadi Perhatian:</label>
                                     <div class="mb-3">
                                         <label for="mrsa" class="form-label">MRSA:</label>
-                                        <input type="text" name="mrsa" class="form-control" placeholder="Detail MRSA" value="{{ old('mrsa') }}">
+                                        <input type="text" name="mrsa" class="form-control"
+                                            placeholder="Detail MRSA" value="{{ old('mrsa') }}">
                                         @error('mrsa')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
                                     <div class="mb-3">
                                         <label for="lainnya_perhatian" class="form-label">Lainnya:</label>
-                                        <input type="text" name="lainnya_perhatian" class="form-control" placeholder="Sebutkan lainnya" value="{{ old('lainnya_perhatian') }}">
+                                        <input type="text" name="lainnya_perhatian" class="form-control"
+                                            placeholder="Sebutkan lainnya" value="{{ old('lainnya_perhatian') }}">
                                         @error('lainnya_perhatian')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
@@ -301,7 +312,8 @@
                                     data-bs-toggle="modal" data-bs-target="#alergiModal">
                                     <i class="ti-plus"></i> Tambah Alergi
                                 </button>
-                                <input type="hidden" name="alergis" id="alergisInput" value="{{ old('alergis', '[]') }}">
+                                <input type="hidden" name="alergis" id="alergisInput"
+                                    value="{{ old('alergis', '[]') }}">
                                 <div class="table-responsive mt-2">
                                     <table class="table table-bordered" id="createAlergiTable">
                                         <thead class="table-light">
@@ -315,7 +327,8 @@
                                         </thead>
                                         <tbody>
                                             <tr id="no-alergi-row">
-                                                <td colspan="5" class="text-center text-muted">Tidak ada data alergi</td>
+                                                <td colspan="5" class="text-center text-muted">Tidak ada data alergi
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -332,7 +345,8 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label fw-bold">Pasien/keluarga mengetahui dan menyetujui pemindahan: <span class="text-danger">*</span></label>
+                                    <label class="form-label fw-bold">Pasien/keluarga mengetahui dan menyetujui pemindahan:
+                                        <span class="text-danger">*</span></label>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="persetujuan" value="ya"
                                             id="setuju_ya" @checked(old('persetujuan') == 'ya') required>
@@ -361,7 +375,8 @@
                                         <div class="col-md-6">
                                             <label class="form-label">Hubungan</label>
                                             <input type="text" name="hubungan_keluarga" class="form-control"
-                                                placeholder="Hubungan dengan pasien" value="{{ old('hubungan_keluarga') }}">
+                                                placeholder="Hubungan dengan pasien"
+                                                value="{{ old('hubungan_keluarga') }}">
                                             @error('hubungan_keluarga')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -373,8 +388,8 @@
                                 <label class="form-label fw-bold">Alasan Pemindahan:</label>
                                 <div class="checkbox-group">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="alasan[]" value="kondisi_pasien"
-                                            id="kondisi" @checked(is_array(old('alasan')) && in_array('kondisi_pasien', old('alasan')))>
+                                        <input class="form-check-input" type="checkbox" name="alasan[]"
+                                            value="kondisi_pasien" id="kondisi" @checked(is_array(old('alasan')) && in_array('kondisi_pasien', old('alasan')))>
                                         <label class="form-check-label" for="kondisi">
                                             Kondisi pasien: memburuk/stabil/tidak ada perubahan
                                         </label>
@@ -382,8 +397,8 @@
                                 </div>
                                 <div class="checkbox-group">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="alasan[]" value="fasilitas"
-                                            id="fasilitas" @checked(is_array(old('alasan')) && in_array('fasilitas', old('alasan')))>
+                                        <input class="form-check-input" type="checkbox" name="alasan[]"
+                                            value="fasilitas" id="fasilitas" @checked(is_array(old('alasan')) && in_array('fasilitas', old('alasan')))>
                                         <label class="form-check-label" for="fasilitas">
                                             Fasilitas: kurang memadai/butuh peralatan yang lebih baik
                                         </label>
@@ -404,7 +419,9 @@
                                             value="lainnya_alasan" id="lainnya_alasan" @checked(is_array(old('alasan')) && in_array('lainnya_alasan', old('alasan')))>
                                         <label class="form-check-label" for="lainnya_alasan">Lainnya:</label>
                                         <input type="text" name="lainnya_alasan_detail"
-                                            class="form-control form-control-sm mt-1" placeholder="Sebutkan alasan lainnya" value="{{ old('lainnya_alasan_detail') }}">
+                                            class="form-control form-control-sm mt-1"
+                                            placeholder="Sebutkan alasan lainnya"
+                                            value="{{ old('lainnya_alasan_detail') }}">
                                     </div>
                                 </div>
                             </div>
@@ -441,7 +458,8 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Keadaan Umum</label>
-                                    <input type="text" name="keadaan_umum" class="form-control" value="{{ old('keadaan_umum') }}">
+                                    <input type="text" name="keadaan_umum" class="form-control"
+                                        value="{{ old('keadaan_umum') }}">
                                     @error('keadaan_umum')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -497,8 +515,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label for="suhu" class="form-label">Suhu</label>
-                                            <input type="number" step="0.1" class="form-control" name="suhu" id="suhu"
-                                                placeholder="Suhu (°C)" value="{{ old('suhu') }}">
+                                            <input type="number" step="0.1" class="form-control" name="suhu"
+                                                id="suhu" placeholder="Suhu (°C)" value="{{ old('suhu') }}">
                                             @error('suhu')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -549,8 +567,8 @@
                                         <label class="form-check-label" for="disabilitas">Disabilitas</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="info_medis[]" value="amputasi"
-                                            id="amputasi" @checked(is_array(old('info_medis')) && in_array('amputasi', old('info_medis')))>
+                                        <input class="form-check-input" type="checkbox" name="info_medis[]"
+                                            value="amputasi" id="amputasi" @checked(is_array(old('info_medis')) && in_array('amputasi', old('info_medis')))>
                                         <label class="form-check-label" for="amputasi">Amputasi</label>
                                     </div>
                                     <div class="form-check">
@@ -569,13 +587,14 @@
                                         <label class="form-check-label" for="ulkus_dekubitus">Ulkus Dekubitus</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="info_medis[]" value="lainnya"
-                                            id="lainnya_info_medis" @checked(is_array(old('info_medis')) && in_array('lainnya', old('info_medis')))
+                                        <input class="form-check-input" type="checkbox" name="info_medis[]"
+                                            value="lainnya" id="lainnya_info_medis" @checked(is_array(old('info_medis')) && in_array('lainnya', old('info_medis')))
                                             onchange="toggleOtherInput('lainnya_info_medis', 'info_medis_lainnya_input')">
                                         <label class="form-check-label" for="lainnya_info_medis">Lainnya:</label>
                                         <input type="text" name="info_medis_lainnya" id="info_medis_lainnya_input"
                                             class="form-control form-control-sm mt-1" placeholder="Spesifikasi lainnya"
-                                            value="{{ old('info_medis_lainnya') }}" style="{{ old('info_medis_lainnya') ? 'display: block;' : 'display: none;' }}">
+                                            value="{{ old('info_medis_lainnya') }}"
+                                            style="{{ old('info_medis_lainnya') ? 'display: block;' : 'display: none;' }}">
                                     </div>
                                 </div>
                             </div>
@@ -589,11 +608,12 @@
                                         <label class="form-check-label" for="portable_o2">Portable O2</label>
                                         <input type="text" name="o2_kebutuhan" id="o2_kebutuhan_input"
                                             class="form-control form-control-sm mt-1" placeholder="Kebutuhan (l/menit)"
-                                            value="{{ old('o2_kebutuhan') }}" style="{{ old('o2_kebutuhan') ? 'display: block;' : 'display: none;' }}">
+                                            value="{{ old('o2_kebutuhan') }}"
+                                            style="{{ old('o2_kebutuhan') ? 'display: block;' : 'display: none;' }}">
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="peralatan[]" value="ngt"
-                                            id="ngt" @checked(is_array(old('peralatan')) && in_array('ngt', old('peralatan')))>
+                                        <input class="form-check-input" type="checkbox" name="peralatan[]"
+                                            value="ngt" id="ngt" @checked(is_array(old('peralatan')) && in_array('ngt', old('peralatan')))>
                                         <label class="form-check-label" for="ngt">NGT</label>
                                     </div>
                                     <div class="form-check">
@@ -607,8 +627,8 @@
                                         <label class="form-check-label" for="ventilator">Ventilator</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="peralatan[]" value="bagging"
-                                            id="bagging" @checked(is_array(old('peralatan')) && in_array('bagging', old('peralatan')))>
+                                        <input class="form-check-input" type="checkbox" name="peralatan[]"
+                                            value="bagging" id="bagging" @checked(is_array(old('peralatan')) && in_array('bagging', old('peralatan')))>
                                         <label class="form-check-label" for="bagging">Bagging</label>
                                     </div>
                                     <div class="form-check">
@@ -622,13 +642,14 @@
                                         <label class="form-check-label" for="pompa_infus">Pompa Infus</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="peralatan[]" value="lainnya"
-                                            id="lainnya_peralatan" @checked(is_array(old('peralatan')) && in_array('lainnya', old('peralatan')))
+                                        <input class="form-check-input" type="checkbox" name="peralatan[]"
+                                            value="lainnya" id="lainnya_peralatan" @checked(is_array(old('peralatan')) && in_array('lainnya', old('peralatan')))
                                             onchange="toggleOtherInput('lainnya_peralatan', 'peralatan_lainnya_input')">
                                         <label class="form-check-label" for="lainnya_peralatan">Lainnya:</label>
                                         <input type="text" name="peralatan_lainnya" id="peralatan_lainnya_input"
                                             class="form-control form-control-sm mt-1" placeholder="Spesifikasi lainnya"
-                                            value="{{ old('peralatan_lainnya') }}" style="{{ old('peralatan_lainnya') ? 'display: block;' : 'display: none;' }}">
+                                            value="{{ old('peralatan_lainnya') }}"
+                                            style="{{ old('peralatan_lainnya') ? 'display: block;' : 'display: none;' }}">
                                     </div>
                                 </div>
                             </div>
@@ -646,8 +667,8 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="gangguan[]" value="mental"
-                                                id="mental" @checked(is_array(old('gangguan')) && in_array('mental', old('gangguan')))>
+                                            <input class="form-check-input" type="checkbox" name="gangguan[]"
+                                                value="mental" id="mental" @checked(is_array(old('gangguan')) && in_array('mental', old('gangguan')))>
                                             <label class="form-check-label" for="mental">Mental</label>
                                         </div>
                                         <div class="form-check">
@@ -663,8 +684,8 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="gangguan[]" value="bicara"
-                                                id="bicara" @checked(is_array(old('gangguan')) && in_array('bicara', old('gangguan')))>
+                                            <input class="form-check-input" type="checkbox" name="gangguan[]"
+                                                value="bicara" id="bicara" @checked(is_array(old('gangguan')) && in_array('bicara', old('gangguan')))>
                                             <label class="form-check-label" for="bicara">Bicara</label>
                                         </div>
                                         <div class="form-check">
@@ -678,8 +699,9 @@
                                                 onchange="toggleOtherInput('lainnya_gangguan', 'gangguan_lainnya_input')">
                                             <label class="form-check-label" for="lainnya_gangguan">Lainnya:</label>
                                             <input type="text" name="gangguan_lainnya" id="gangguan_lainnya_input"
-                                                class="form-control form-control-sm mt-1" placeholder="Spesifikasi lainnya"
-                                                value="{{ old('gangguan_lainnya') }}" style="{{ old('gangguan_lainnya') ? 'display: block;' : 'display: none;' }}">
+                                                class="form-control form-control-sm mt-1"
+                                                placeholder="Spesifikasi lainnya" value="{{ old('gangguan_lainnya') }}"
+                                                style="{{ old('gangguan_lainnya') ? 'display: block;' : 'display: none;' }}">
                                         </div>
                                     </div>
                                 </div>
@@ -707,13 +729,17 @@
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" name="inkontinensia[]"
-                                                    value="lainnya" id="lainnya_inkontinensia" @checked(is_array(old('inkontinensia')) && in_array('lainnya', old('inkontinensia')))
+                                                    value="lainnya" id="lainnya_inkontinensia"
+                                                    @checked(is_array(old('inkontinensia')) && in_array('lainnya', old('inkontinensia')))
                                                     onchange="toggleOtherInput('lainnya_inkontinensia', 'inkontinensia_lainnya_input')">
-                                                <label class="form-check-label" for="lainnya_inkontinensia">Lainnya:</label>
+                                                <label class="form-check-label"
+                                                    for="lainnya_inkontinensia">Lainnya:</label>
                                                 <input type="text" name="inkontinensia_lainnya"
                                                     id="inkontinensia_lainnya_input"
                                                     class="form-control form-control-sm mt-1"
-                                                    placeholder="Spesifikasi lainnya" value="{{ old('inkontinensia_lainnya') }}" style="{{ old('inkontinensia_lainnya') ? 'display: block;' : 'display: none;' }}">
+                                                    placeholder="Spesifikasi lainnya"
+                                                    value="{{ old('inkontinensia_lainnya') }}"
+                                                    style="{{ old('inkontinensia_lainnya') ? 'display: block;' : 'display: none;' }}">
                                             </div>
                                         </div>
                                     </div>
@@ -722,28 +748,29 @@
                                 <div class="mt-3">
                                     <label class="form-label fw-bold">Potensi untuk Dilakukan Rehabilitasi:</label>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="rehabilitasi" value="baik"
-                                            id="rehab_baik" @checked(old('rehabilitasi') == 'baik')>
+                                        <input class="form-check-input" type="radio" name="rehabilitasi"
+                                            value="baik" id="rehab_baik" @checked(old('rehabilitasi') == 'baik')>
                                         <label class="form-check-label" for="rehab_baik">Baik</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="rehabilitasi" value="sedang"
-                                            id="rehab_sedang" @checked(old('rehabilitasi') == 'sedang')>
+                                        <input class="form-check-input" type="radio" name="rehabilitasi"
+                                            value="sedang" id="rehab_sedang" @checked(old('rehabilitasi') == 'sedang')>
                                         <label class="form-check-label" for="rehab_sedang">Sedang</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="rehabilitasi" value="buruk"
-                                            id="rehab_buruk" @checked(old('rehabilitasi') == 'buruk')>
+                                        <input class="form-check-input" type="radio" name="rehabilitasi"
+                                            value="buruk" id="rehab_buruk" @checked(old('rehabilitasi') == 'buruk')>
                                         <label class="form-check-label" for="rehab_buruk">Buruk</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="rehabilitasi" value="lainnya"
-                                            id="lainnya_rehabilitasi" @checked(old('rehabilitasi') == 'lainnya')
+                                        <input class="form-check-input" type="radio" name="rehabilitasi"
+                                            value="lainnya" id="lainnya_rehabilitasi" @checked(old('rehabilitasi') == 'lainnya')
                                             onchange="toggleOtherInputRadio('lainnya_rehabilitasi', 'rehabilitasi_lainnya_input', 'rehabilitasi')">
                                         <label class="form-check-label" for="lainnya_rehabilitasi">Lainnya:</label>
                                         <input type="text" name="rehabilitasi_lainnya" id="rehabilitasi_lainnya_input"
                                             class="form-control form-control-sm mt-1" placeholder="Spesifikasi lainnya"
-                                            value="{{ old('rehabilitasi_lainnya') }}" style="{{ old('rehabilitasi_lainnya') ? 'display: block;' : 'display: none;' }}">
+                                            value="{{ old('rehabilitasi_lainnya') }}"
+                                            style="{{ old('rehabilitasi_lainnya') ? 'display: block;' : 'display: none;' }}">
                                     </div>
                                 </div>
                             </div>
@@ -757,9 +784,9 @@
                                             <option value="">--Pilih--</option>
                                             @foreach ($petugas as $item)
                                                 @if ($item->kd_karyawan != auth()->user()->kd_karyawan)
-                                                    <option value="{{ $item->kd_karyawan }}" @selected(old('petugas1') == $item->kd_karyawan)>
-                                                        {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' .
-                                                        $item->gelar_belakang }}
+                                                    <option value="{{ $item->kd_karyawan }}"
+                                                        @selected(old('petugas1') == $item->kd_karyawan)>
+                                                        {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' . $item->gelar_belakang }}
                                                     </option>
                                                 @endif
                                             @endforeach
@@ -771,9 +798,9 @@
                                             <option value="">--Pilih--</option>
                                             @foreach ($petugas as $item)
                                                 @if ($item->kd_karyawan != auth()->user()->kd_karyawan)
-                                                    <option value="{{ $item->kd_karyawan }}" @selected(old('petugas2') == $item->kd_karyawan)>
-                                                        {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' .
-                                                        $item->gelar_belakang }}
+                                                    <option value="{{ $item->kd_karyawan }}"
+                                                        @selected(old('petugas2') == $item->kd_karyawan)>
+                                                        {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' . $item->gelar_belakang }}
                                                     </option>
                                                 @endif
                                             @endforeach
@@ -785,9 +812,9 @@
                                             <option value="">--Pilih--</option>
                                             @foreach ($petugas as $item)
                                                 @if ($item->kd_karyawan != auth()->user()->kd_karyawan)
-                                                    <option value="{{ $item->kd_karyawan }}" @selected(old('petugas3') == $item->kd_karyawan)>
-                                                        {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' .
-                                                        $item->gelar_belakang }}
+                                                    <option value="{{ $item->kd_karyawan }}"
+                                                        @selected(old('petugas3') == $item->kd_karyawan)>
+                                                        {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' . $item->gelar_belakang }}
                                                     </option>
                                                 @endif
                                             @endforeach
@@ -841,8 +868,9 @@
                                                 class="form-check-input" @checked(old('berguling') == 'mandiri')></td>
                                         <td class="text-center"><input type="radio" name="berguling" value="bantuan"
                                                 class="form-check-input" @checked(old('berguling') == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="berguling" value="tidak_bisa"
-                                                class="form-check-input" @checked(old('berguling') == 'tidak_bisa')></td>
+                                        <td class="text-center"><input type="radio" name="berguling"
+                                                value="tidak_bisa" class="form-check-input" @checked(old('berguling') == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Duduk</td>
@@ -861,48 +889,63 @@
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Wajah, rambut, tangan</td>
-                                        <td class="text-center"><input type="radio" name="higiene_wajah" value="mandiri"
-                                                class="form-check-input" @checked(old('higiene_wajah') == 'mandiri')></td>
-                                        <td class="text-center"><input type="radio" name="higiene_wajah" value="bantuan"
-                                                class="form-check-input" @checked(old('higiene_wajah') == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="higiene_wajah" value="tidak_bisa"
-                                                class="form-check-input" @checked(old('higiene_wajah') == 'tidak_bisa')></td>
+                                        <td class="text-center"><input type="radio" name="higiene_wajah"
+                                                value="mandiri" class="form-check-input" @checked(old('higiene_wajah') == 'mandiri')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="higiene_wajah"
+                                                value="bantuan" class="form-check-input" @checked(old('higiene_wajah') == 'bantuan')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="higiene_wajah"
+                                                value="tidak_bisa" class="form-check-input" @checked(old('higiene_wajah') == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Tubuh, perineum</td>
-                                        <td class="text-center"><input type="radio" name="higiene_tubuh" value="mandiri"
-                                                class="form-check-input" @checked(old('higiene_tubuh') == 'mandiri')></td>
-                                        <td class="text-center"><input type="radio" name="higiene_tubuh" value="bantuan"
-                                                class="form-check-input" @checked(old('higiene_tubuh') == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="higiene_tubuh" value="tidak_bisa"
-                                                class="form-check-input" @checked(old('higiene_tubuh') == 'tidak_bisa')></td>
+                                        <td class="text-center"><input type="radio" name="higiene_tubuh"
+                                                value="mandiri" class="form-check-input" @checked(old('higiene_tubuh') == 'mandiri')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="higiene_tubuh"
+                                                value="bantuan" class="form-check-input" @checked(old('higiene_tubuh') == 'bantuan')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="higiene_tubuh"
+                                                value="tidak_bisa" class="form-check-input" @checked(old('higiene_tubuh') == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Ekstremitas bawah</td>
                                         <td class="text-center"><input type="radio" name="higiene_ekstremitas_bawah"
-                                                value="mandiri" class="form-check-input" @checked(old('higiene_ekstremitas_bawah') == 'mandiri')></td>
+                                                value="mandiri" class="form-check-input" @checked(old('higiene_ekstremitas_bawah') == 'mandiri')>
+                                        </td>
                                         <td class="text-center"><input type="radio" name="higiene_ekstremitas_bawah"
-                                                value="bantuan" class="form-check-input" @checked(old('higiene_ekstremitas_bawah') == 'bantuan')></td>
+                                                value="bantuan" class="form-check-input" @checked(old('higiene_ekstremitas_bawah') == 'bantuan')>
+                                        </td>
                                         <td class="text-center"><input type="radio" name="higiene_ekstremitas_bawah"
-                                                value="tidak_bisa" class="form-check-input" @checked(old('higiene_ekstremitas_bawah') == 'tidak_bisa')></td>
+                                                value="tidak_bisa" class="form-check-input" @checked(old('higiene_ekstremitas_bawah') == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Traktus digestivus</td>
                                         <td class="text-center"><input type="radio" name="traktus_digestivus"
-                                                value="mandiri" class="form-check-input" @checked(old('traktus_digestivus') == 'mandiri')></td>
+                                                value="mandiri" class="form-check-input" @checked(old('traktus_digestivus') == 'mandiri')>
+                                        </td>
                                         <td class="text-center"><input type="radio" name="traktus_digestivus"
-                                                value="bantuan" class="form-check-input" @checked(old('traktus_digestivus') == 'bantuan')></td>
+                                                value="bantuan" class="form-check-input" @checked(old('traktus_digestivus') == 'bantuan')>
+                                        </td>
                                         <td class="text-center"><input type="radio" name="traktus_digestivus"
-                                                value="tidak_bisa" class="form-check-input" @checked(old('traktus_digestivus') == 'tidak_bisa')></td>
+                                                value="tidak_bisa" class="form-check-input" @checked(old('traktus_digestivus') == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Traktus urinarius</td>
-                                        <td class="text-center"><input type="radio" name="traktus_urinarius" value="mandiri"
-                                                class="form-check-input" @checked(old('traktus_urinarius') == 'mandiri')></td>
-                                        <td class="text-center"><input type="radio" name="traktus_urinarius" value="bantuan"
-                                                class="form-check-input" @checked(old('traktus_urinarius') == 'bantuan')></td>
                                         <td class="text-center"><input type="radio" name="traktus_urinarius"
-                                                value="tidak_bisa" class="form-check-input" @checked(old('traktus_urinarius') == 'tidak_bisa')></td>
+                                                value="mandiri" class="form-check-input" @checked(old('traktus_urinarius') == 'mandiri')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="traktus_urinarius"
+                                                value="bantuan" class="form-check-input" @checked(old('traktus_urinarius') == 'bantuan')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="traktus_urinarius"
+                                                value="tidak_bisa" class="form-check-input" @checked(old('traktus_urinarius') == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td><strong>Berpakaian</strong></td>
@@ -912,30 +955,39 @@
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Ekstremitas atas</td>
-                                        <td class="text-center"><input type="radio" name="pakaian_atas" value="mandiri"
-                                                class="form-check-input" @checked(old('pakaian_atas') == 'mandiri')></td>
-                                        <td class="text-center"><input type="radio" name="pakaian_atas" value="bantuan"
-                                                class="form-check-input" @checked(old('pakaian_atas') == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="pakaian_atas" value="tidak_bisa"
-                                                class="form-check-input" @checked(old('pakaian_atas') == 'tidak_bisa')></td>
+                                        <td class="text-center"><input type="radio" name="pakaian_atas"
+                                                value="mandiri" class="form-check-input" @checked(old('pakaian_atas') == 'mandiri')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="pakaian_atas"
+                                                value="bantuan" class="form-check-input" @checked(old('pakaian_atas') == 'bantuan')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="pakaian_atas"
+                                                value="tidak_bisa" class="form-check-input" @checked(old('pakaian_atas') == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Batang tubuh</td>
-                                        <td class="text-center"><input type="radio" name="pakaian_tubuh" value="mandiri"
-                                                class="form-check-input" @checked(old('pakaian_tubuh') == 'mandiri')></td>
-                                        <td class="text-center"><input type="radio" name="pakaian_tubuh" value="bantuan"
-                                                class="form-check-input" @checked(old('pakaian_tubuh') == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="pakaian_tubuh" value="tidak_bisa"
-                                                class="form-check-input" @checked(old('pakaian_tubuh') == 'tidak_bisa')></td>
+                                        <td class="text-center"><input type="radio" name="pakaian_tubuh"
+                                                value="mandiri" class="form-check-input" @checked(old('pakaian_tubuh') == 'mandiri')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="pakaian_tubuh"
+                                                value="bantuan" class="form-check-input" @checked(old('pakaian_tubuh') == 'bantuan')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="pakaian_tubuh"
+                                                value="tidak_bisa" class="form-check-input" @checked(old('pakaian_tubuh') == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Ekstremitas bawah</td>
-                                        <td class="text-center"><input type="radio" name="pakaian_bawah" value="mandiri"
-                                                class="form-check-input" @checked(old('pakaian_bawah') == 'mandiri')></td>
-                                        <td class="text-center"><input type="radio" name="pakaian_bawah" value="bantuan"
-                                                class="form-check-input" @checked(old('pakaian_bawah') == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="pakaian_bawah" value="tidak_bisa"
-                                                class="form-check-input" @checked(old('pakaian_bawah') == 'tidak_bisa')></td>
+                                        <td class="text-center"><input type="radio" name="pakaian_bawah"
+                                                value="mandiri" class="form-check-input" @checked(old('pakaian_bawah') == 'mandiri')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="pakaian_bawah"
+                                                value="bantuan" class="form-check-input" @checked(old('pakaian_bawah') == 'bantuan')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="pakaian_bawah"
+                                                value="tidak_bisa" class="form-check-input" @checked(old('pakaian_bawah') == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td><strong>Makan</strong></td>
@@ -958,17 +1010,21 @@
                                                 class="form-check-input" @checked(old('jalan_kaki') == 'mandiri')></td>
                                         <td class="text-center"><input type="radio" name="jalan_kaki" value="bantuan"
                                                 class="form-check-input" @checked(old('jalan_kaki') == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="jalan_kaki" value="tidak_bisa"
-                                                class="form-check-input" @checked(old('jalan_kaki') == 'tidak_bisa')></td>
+                                        <td class="text-center"><input type="radio" name="jalan_kaki"
+                                                value="tidak_bisa" class="form-check-input" @checked(old('jalan_kaki') == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Kursi roda</td>
-                                        <td class="text-center"><input type="radio" name="kursi_roda_kemandirian" value="mandiri"
-                                                class="form-check-input" @checked(old('kursi_roda_kemandirian') == 'mandiri')></td>
-                                        <td class="text-center"><input type="radio" name="kursi_roda_kemandirian" value="bantuan"
-                                                class="form-check-input" @checked(old('kursi_roda_kemandirian') == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="kursi_roda_kemandirian" value="tidak_bisa"
-                                                class="form-check-input" @checked(old('kursi_roda_kemandirian') == 'tidak_bisa')></td>
+                                        <td class="text-center"><input type="radio" name="kursi_roda_kemandirian"
+                                                value="mandiri" class="form-check-input" @checked(old('kursi_roda_kemandirian') == 'mandiri')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="kursi_roda_kemandirian"
+                                                value="bantuan" class="form-check-input" @checked(old('kursi_roda_kemandirian') == 'bantuan')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="kursi_roda_kemandirian"
+                                                value="tidak_bisa" class="form-check-input" @checked(old('kursi_roda_kemandirian') == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -976,7 +1032,8 @@
 
                         <div class="mt-4">
                             <div class="mb-3">
-                                <label class="form-label">Pemeriksaan penunjang diagnostik yang sudah dilakukan (EKG, Lab, dll):</label>
+                                <label class="form-label">Pemeriksaan penunjang diagnostik yang sudah dilakukan (EKG, Lab,
+                                    dll):</label>
                                 <textarea name="pemeriksaan_penunjang" class="form-control" rows="3">{{ old('pemeriksaan_penunjang') }}</textarea>
                             </div>
                             <div class="mb-3">
@@ -1027,7 +1084,8 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <input type="hidden" id="terapiData" name="terapi_data" value="{{ old('terapi_data', '[]') }}">
+                            <input type="hidden" id="terapiData" name="terapi_data"
+                                value="{{ old('terapi_data', '[]') }}">
                         </div>
                     </div>
                 </div>
@@ -1039,10 +1097,15 @@
                             <label for="derajat_pasien" class="form-label">Derajat Pasien</label>
                             <select name="derajat_pasien" id="derajat_pasien" class="form-select">
                                 <option value="">--Pilih--</option>
-                                <option value="Derajat 1" @selected(old('derajat_pasien') == 'Derajat 1')>Derajat 1 - Transporter - Perawat</option>
-                                <option value="Derajat 2" @selected(old('derajat_pasien') == 'Derajat 2')>Derajat 2 - Transporter - Perawat - Dokter</option>
-                                <option value="Derajat 3" @selected(old('derajat_pasien') == 'Derajat 3')>Derajat 3 - Transporter - Perawat - Dokter yang kompeten</option>
-                                <option value="Derajat 4" @selected(old('derajat_pasien') == 'Derajat 4')>Derajat 4 - Transporter - Perawat - Dokter yang kompeten menangani pasien kritis dan berpengalaman minimal 6 bulan bekerja di IGD/ ICU</option>
+                                <option value="Derajat 1" @selected(old('derajat_pasien') == 'Derajat 1')>Derajat 1 - Transporter - Perawat
+                                </option>
+                                <option value="Derajat 2" @selected(old('derajat_pasien') == 'Derajat 2')>Derajat 2 - Transporter - Perawat -
+                                    Dokter</option>
+                                <option value="Derajat 3" @selected(old('derajat_pasien') == 'Derajat 3')>Derajat 3 - Transporter - Perawat -
+                                    Dokter yang kompeten</option>
+                                <option value="Derajat 4" @selected(old('derajat_pasien') == 'Derajat 4')>Derajat 4 - Transporter - Perawat -
+                                    Dokter yang kompeten menangani pasien kritis dan berpengalaman minimal 6 bulan bekerja
+                                    di IGD/ ICU</option>
                             </select>
                             @error('derajat_pasien')
                                 <small class="text-danger">{{ $message }}</small>
@@ -1071,11 +1134,13 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label">Nama Obat</label>
-                            <input type="text" class="form-control" id="namaObat" placeholder="Masukkan nama obat">
+                            <input type="text" class="form-control" id="namaObat"
+                                placeholder="Masukkan nama obat">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Jumlah</label>
-                            <input type="text" class="form-control" id="jumlah" placeholder="Contoh: 10 tablet">
+                            <input type="text" class="form-control" id="jumlah"
+                                placeholder="Contoh: 10 tablet">
                         </div>
                     </div>
 
@@ -1086,7 +1151,8 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Frekuensi</label>
-                            <input type="text" class="form-control" id="frekuensi" placeholder="Contoh: 3x sehari">
+                            <input type="text" class="form-control" id="frekuensi"
+                                placeholder="Contoh: 3x sehari">
                         </div>
                     </div>
 
@@ -1141,9 +1207,9 @@
 @push('js')
     <script>
         @cannot('is-admin')
-        $('#petugas_menyerahkan').on('mousedown focusin touchstart', function (e) {
-            e.preventDefault();
-        });
+            $('#petugas_menyerahkan').on('mousedown focusin touchstart', function(e) {
+                e.preventDefault();
+            });
         @endcannot
 
         // Initialize old values untuk terapi dan alergi
@@ -1173,7 +1239,7 @@
         });
 
         // Persetujuan dan Alasan Pemindahan
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const setujuYa = document.getElementById('setuju_ya');
             const setujuTidak = document.getElementById('setuju_tidak');
             const keluargaSection = document.getElementById('keluarga-section');
@@ -1234,13 +1300,14 @@
         }
 
         // Add event listeners for radio buttons to hide "lainnya" input when other options are selected
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const rehabilitasiRadios = document.querySelectorAll('input[name="rehabilitasi"]');
             rehabilitasiRadios.forEach(radio => {
                 if (radio.id !== 'lainnya_rehabilitasi') {
-                    radio.addEventListener('change', function () {
+                    radio.addEventListener('change', function() {
                         if (this.checked) {
-                            const lainnyaInput = document.getElementById('rehabilitasi_lainnya_input');
+                            const lainnyaInput = document.getElementById(
+                                'rehabilitasi_lainnya_input');
                             lainnyaInput.style.display = 'none';
                             lainnyaInput.value = '';
                         }
@@ -1323,7 +1390,7 @@
 
             // Hapus semua baris kecuali baris kosong
             var rows = tbody.querySelectorAll('tr:not(#barisKosong)');
-            rows.forEach(function (row) {
+            rows.forEach(function(row) {
                 row.remove();
             });
 
@@ -1331,7 +1398,7 @@
             if (dataObat.length > 0) {
                 barisKosong.style.display = 'none';
 
-                dataObat.forEach(function (item, index) {
+                dataObat.forEach(function(item, index) {
                     var baris = document.createElement('tr');
                     baris.innerHTML = `
                         <td><strong>${item.namaObat || '-'}</strong></td>
@@ -1420,7 +1487,7 @@
         }
 
         // Inisialisasi saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Tampilkan tabel kosong
             tampilkanTabel();
         });
@@ -1458,7 +1525,8 @@
 
                         if (res.status == 'error') {
                             $('#no_kamar').html('<option value="">--Pilih Kamar--</option>');
-                            $('#no_kamar').next('.form-text').text('Error: ' + res.message).addClass('text-danger');
+                            $('#no_kamar').next('.form-text').text('Error: ' + res.message)
+                                .addClass('text-danger');
 
                             if (typeof Swal !== 'undefined') {
                                 Swal.fire({
@@ -1473,16 +1541,20 @@
                         $('#no_kamar').html(res.data);
 
                         if (res.count > 0) {
-                            $('#no_kamar').next('.form-text').text('Tersedia ' + res.count + ' kamar').removeClass('text-danger').addClass('text-success');
+                            $('#no_kamar').next('.form-text').text('Tersedia ' + res.count +
+                                ' kamar').removeClass('text-danger').addClass(
+                                'text-success');
                         } else {
-                            $('#no_kamar').next('.form-text').text('Tidak ada kamar tersedia').removeClass('text-success').addClass('text-warning');
+                            $('#no_kamar').next('.form-text').text('Tidak ada kamar tersedia')
+                                .removeClass('text-success').addClass('text-warning');
                         }
                     },
                     error: function(xhr, status, error) {
                         $('#loading-indicator').hide();
                         $('#no_kamar').prop('disabled', false);
                         $('#no_kamar').html('<option value="">--Pilih Kamar--</option>');
-                        $('#no_kamar').next('.form-text').text('Kamar gagal dimuat').addClass('text-danger');
+                        $('#no_kamar').next('.form-text').text('Kamar gagal dimuat').addClass(
+                            'text-danger');
 
                         console.error('AJAX Error:', error);
                         if (typeof Swal !== 'undefined') {

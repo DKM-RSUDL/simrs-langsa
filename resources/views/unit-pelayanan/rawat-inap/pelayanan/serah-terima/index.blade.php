@@ -63,7 +63,7 @@
                                     <select name="kd_unit_asal" id="kd_unit_asal" class="form-select select2" disabled>
                                         <option value="">--Pilih--</option>
                                         @foreach ($unit as $item)
-                                            <option value="{{ $item->kd_unit }}" @selected($item->kd_unit == 3)>
+                                            <option value="{{ $item->kd_unit }}" @selected($item->kd_unit == $serahTerimaData->kd_unit_asal)>
                                                 {{ $item->nama_unit }}</option>
                                         @endforeach
                                     </select>

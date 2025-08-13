@@ -5,6 +5,7 @@ namespace App\Http\Controllers\UnitPelayanan;
 use App\Http\Controllers\Controller;
 use App\Models\HrdKaryawan;
 use App\Models\Kunjungan;
+use App\Models\PasienInap;
 use App\Models\RmeSerahTerima;
 use App\Models\Unit;
 use App\Models\User;
@@ -144,6 +145,7 @@ class RawatInapController extends Controller
             ->where('kd_unit', $kd_unit)
             ->first();
 
+
         if ($request->ajax()) {
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
                 ->join('nginap', function ($q) {
@@ -162,12 +164,13 @@ class RawatInapController extends Controller
                     $q->on('kunjungan.kd_pasien', '=', 'st.kd_pasien');
                     $q->on('kunjungan.tgl_masuk', '=', 'st.tgl_masuk');
                     $q->on('kunjungan.urut_masuk', '=', 'st.urut_masuk_tujuan');
-                    $q->on('kunjungan.kd_unit', '=', 'st.kd_unit_tujuan');
+                    $q->on('nginap.kd_unit_kamar', '=', 'st.kd_unit_tujuan');
                 })
-                // ->whereRaw('nginap.kd_unit = t.kd_unit')
+                ->whereRaw('nginap.kd_unit = t.kd_unit')
                 ->where('nginap.kd_unit_kamar', $kd_unit)
                 ->where('nginap.akhir', 1)
-                ->where('st.status', 1);
+                ->where('st.status', 1)
+                ->select(['kunjungan.*', 't.*']);
             // ->where('kunjungan.status_inap', 0);
 
             return DataTables::of($data)
@@ -235,6 +238,10 @@ class RawatInapController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
         // Menghitung umur berdasarkan tgl_lahir jika ada
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
@@ -242,14 +249,15 @@ class RawatInapController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        if (!$dataMedis) {
-            abort(404, 'Data not found');
-        }
+        // Get Pasien Inap Data
+        $pasienInap = PasienInap::where('kd_kasir', $dataMedis->kd_kasir)
+            ->where('no_transaksi', $dataMedis->no_transaksi)
+            ->first();
 
 
         $serahTerimaData = RmeSerahTerima::with(['unitAsal', 'unitTujuan', 'petugasAsal', 'petugasTerima'])
             ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit_tujuan', $kd_unit)
+            ->where('kd_unit_tujuan', $pasienInap->kd_unit)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk_tujuan', $urut_masuk)
             ->first();
@@ -307,6 +315,7 @@ class RawatInapController extends Controller
             ];
 
             $id = decrypt($idEncrypt);
+            $serahTerima = RmeSerahTerima::find($id);
             RmeSerahTerima::where('id', $id)->update($data);
 
             // update status inap kunjungan jadi aktif
@@ -317,7 +326,7 @@ class RawatInapController extends Controller
                 ->update(['status_inap' => 1]);
 
             DB::commit();
-            return to_route('rawat-inap.unit.pending', [$kd_unit])->with('success', 'Pasien berhasil di terima !');
+            return to_route('rawat-inap.unit.pending', [$serahTerima->kd_unit_tujuan])->with('success', 'Pasien berhasil di terima !');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
