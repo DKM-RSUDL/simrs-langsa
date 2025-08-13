@@ -20,6 +20,7 @@ use App\Http\Controllers\TransfusiDarah\PermintaanController;
 use App\Http\Controllers\UnitPelayanan\Forensik\ForensikKlinikController;
 use App\Http\Controllers\UnitPelayanan\Forensik\ForensikPatologiController;
 use App\Http\Controllers\UnitPelayanan\Forensik\VisumExitController as ForensikVisumExitController;
+use App\Http\Controllers\UnitPelayanan\Forensik\VisumHidupController as ForensikVisumHidupController;
 use App\Http\Controllers\UnitPelayanan\ForensikController;
 // action gawat darurat
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\AsesmenController as GawatDaruratAsesmenController;
@@ -2880,7 +2881,7 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                                 
-                                // patologi
+                                // Visum Exit
                                 Route::prefix('visum-exit')->group(function () {
                                     Route::name('.visum-exit')->group(function () {
                                         Route::controller(ForensikVisumExitController::class)->group(function () {
@@ -2895,6 +2896,23 @@ Route::middleware('ssoToken')->group(function () {
                                         });
                                     });
                                 });
+
+                                // Visum Hidup
+                                Route::prefix('visum-hidup')->group(function () {
+                                    Route::name('.visum-hidup')->group(function () {
+                                        Route::controller(ForensikVisumHidupController::class)->group(function () {
+                                            Route::get('/', 'index')->name('.index');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::get('/create', 'create')->name('.create');
+                                            Route::get('/{data}', 'show')->name('.show');
+                                            Route::get('/{data}/edit', 'edit')->name('.edit');
+                                            Route::put('/{data}', 'update')->name('.update');
+                                            Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                            Route::delete('/{data}', 'destroy')->name('.destroy');
+                                        });
+                                    });
+                                });
+
                             });
                         });
                     });
