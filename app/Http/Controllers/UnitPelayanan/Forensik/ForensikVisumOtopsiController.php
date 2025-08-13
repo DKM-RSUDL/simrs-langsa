@@ -269,4 +269,167 @@ class ForensikVisumOtopsiController extends Controller
         return $pdf->stream('Visum_Otopsi_' . ($dataMedis->pasien->nama ?? 'Unknown') . '_' . date('Y-m-d_H-i-s') . '.pdf');
     }
 
+    public function edit(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->first();
+
+        // Menghitung umur berdasarkan tgl_lahir jika ada
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        $visumOtopsi = RmeVisumOtopsi::with(['userCreated'])
+            ->where('kd_kasir', $dataMedis->kd_kasir)
+            ->where('no_transaksi', $dataMedis->no_transaksi)
+            ->findOrFail($id);
+
+        return view('unit-pelayanan.forensik.pelayanan.visum-otopsi.edit', compact('dataMedis', 'visumOtopsi'));
+    }
+
+    public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        DB::beginTransaction();
+
+        try {
+            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('kunjungan.kd_unit', $kd_unit)
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
+                ->first();
+
+            if (!$dataMedis) {
+                abort(404, 'Data not found');
+            }
+
+            $visumOtopsi = RmeVisumOtopsi::where('kd_kasir', $dataMedis->kd_kasir)
+                ->where('no_transaksi', $dataMedis->no_transaksi)
+                ->findOrFail($id);
+
+            // Update data
+            $visumOtopsi->tanggal = $request->tanggal;
+            $visumOtopsi->jam = $request->jam;
+            $visumOtopsi->nomor = $request->nomor;
+            $visumOtopsi->perihal = $request->perihal;
+            $visumOtopsi->lampiran = $request->lampiran;
+
+            // Visum et repertum
+            $visumOtopsi->visum_et_repertum = $request->visum_et_repertum;
+            $visumOtopsi->wawancara = $request->wawancara;
+
+            // Pemeriksaan luar
+            $visumOtopsi->penutup_mayat = $request->penutup_mayat;
+            $visumOtopsi->label_mayat = $request->label_mayat;
+            $visumOtopsi->pakaian_mayat = $request->pakaian_mayat;
+            $visumOtopsi->benda_disamping = $request->benda_disamping;
+            $visumOtopsi->aksesoris = $request->aksesoris;
+
+            // Identifikasi
+            $visumOtopsi->identifikasi_umum_keterangan = $request->identifikasi_umum_keterangan;
+            $visumOtopsi->tanda_kematian = $request->tanda_kematian;
+            $visumOtopsi->identifikasi_khusus_keterangan = $request->identifikasi_khusus_keterangan;
+
+            // Hasil pemeriksaan luar
+            $visumOtopsi->kepala_luar = $request->kepala_luar;
+            $visumOtopsi->wajah = $request->wajah;
+            $visumOtopsi->mata = $request->mata;
+            $visumOtopsi->mulut = $request->mulut;
+            $visumOtopsi->leher_luar = $request->leher_luar;
+            $visumOtopsi->dada_luar = $request->dada_luar;
+            $visumOtopsi->punggung = $request->punggung;
+            $visumOtopsi->perut_luar = $request->perut_luar;
+            $visumOtopsi->anggota_gerak_atas = $request->anggota_gerak_atas;
+            $visumOtopsi->anggota_gerak_bawah = $request->anggota_gerak_bawah;
+            $visumOtopsi->kemaluan = $request->kemaluan;
+            $visumOtopsi->anus = $request->anus;
+
+            // Hasil pemeriksaan dalam
+            $visumOtopsi->kepala_dalam = $request->kepala_dalam;
+            $visumOtopsi->leher_dalam = $request->leher_dalam;
+            $visumOtopsi->dada_dalam = $request->dada_dalam;
+            $visumOtopsi->perut_dalam = $request->perut_dalam;
+
+            // Kesimpulan
+            $visumOtopsi->kesimpulan = $request->kesimpulan;
+
+            $visumOtopsi->user_updated = Auth::id();
+            $visumOtopsi->save();
+
+            DB::commit();
+            return redirect()->route('forensik.unit.pelayanan.visum-otopsi.index', [
+                'kd_unit' => $kd_unit,
+                'kd_pasien' => $kd_pasien,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk,
+            ])->with('success', 'Data Visum Otopsi berhasil diperbarui.');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function destroy(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        DB::beginTransaction();
+
+        try {
+            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('kunjungan.kd_unit', $kd_unit)
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
+                ->first();
+
+            if (!$dataMedis) {
+                abort(404, 'Data not found');
+            }
+
+            $visumOtopsi = RmeVisumOtopsi::where('kd_kasir', $dataMedis->kd_kasir)
+                ->where('no_transaksi', $dataMedis->no_transaksi)
+                ->findOrFail($id);
+
+            $visumOtopsi->delete();
+
+            DB::commit();
+            return redirect()->route('forensik.unit.pelayanan.visum-otopsi.index', [
+                'kd_unit' => $kd_unit,
+                'kd_pasien' => $kd_pasien,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk,
+            ])->with('success', 'Data Visum Otopsi berhasil dihapus.');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
 }
