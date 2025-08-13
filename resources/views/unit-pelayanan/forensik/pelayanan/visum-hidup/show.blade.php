@@ -52,6 +52,8 @@
                             <div class="text-center mb-4">
                                 <div class="header-asesmen">
                                     <h3 class="font-weight-bold mb-2">DETAIL VISUM HIDUP REPERTUM</h3>
+                                    <p class="mb-1 text-muted">INSTALASI KEDOKTERAN FORENSIK</p>
+                                    <p class="mb-0 text-muted">RUMAH SAKIT UMUM DAERAH LANGSA</p>
                                 </div>
                             </div>
 
