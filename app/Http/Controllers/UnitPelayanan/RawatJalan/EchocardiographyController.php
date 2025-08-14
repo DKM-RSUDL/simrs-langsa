@@ -133,7 +133,7 @@ class EchocardiographyController extends Controller
             'jam' => 'required',
             'dokter_pemeriksa' => 'required|string|max:255',
             'diagnosa_klinik' => 'nullable|string|max:255',
-            
+
             // M-Mode fields
             'ao' => 'nullable|numeric',
             'la' => 'nullable|numeric',
@@ -150,7 +150,7 @@ class EchocardiographyController extends Controller
             'lvmi' => 'nullable|numeric',
             'epss' => 'nullable|numeric',
             'tapse' => 'nullable|numeric',
-            
+
             // 2 Dimensions fields
             'a4ch_edv' => 'nullable|numeric',
             'a4ch_esv' => 'nullable|numeric',
@@ -165,7 +165,7 @@ class EchocardiographyController extends Controller
             'rv_ann_diameter' => 'nullable|numeric',
             'rv_mid_cavity' => 'nullable|numeric',
             'ra_major_axis' => 'nullable|numeric',
-            
+
             // Doppler fields
             'pv_acct' => 'nullable|numeric',
             'rvot_vmax' => 'nullable|numeric',
@@ -176,7 +176,7 @@ class EchocardiographyController extends Controller
             'e_e_prime_ratio' => 'nullable|numeric',
             'e_desc_time' => 'nullable|numeric',
             'lvot_vmax' => 'nullable|numeric',
-            
+
             // Description fields
             'deskripsi' => 'nullable|string',
             'kesimpulan' => 'nullable|string',
@@ -200,7 +200,7 @@ class EchocardiographyController extends Controller
                 'jam' => $request->jam,
                 'diagnosa_klinik' => $request->diagnosa_klinik,
                 'dokter_pemeriksa' => $request->dokter_pemeriksa,
-                
+
                 // M-Mode measurements
                 'ao' => $request->ao,
                 'la' => $request->la,
@@ -217,7 +217,7 @@ class EchocardiographyController extends Controller
                 'lvmi' => $request->lvmi,
                 'epss' => $request->epss,
                 'tapse' => $request->tapse,
-                
+
                 // 2 Dimensions measurements
                 'a4ch_edv' => $request->a4ch_edv,
                 'a4ch_esv' => $request->a4ch_esv,
@@ -232,7 +232,7 @@ class EchocardiographyController extends Controller
                 'rv_ann_diameter' => $request->rv_ann_diameter,
                 'rv_mid_cavity' => $request->rv_mid_cavity,
                 'ra_major_axis' => $request->ra_major_axis,
-                
+
                 // Doppler measurements
                 'pv_acct' => $request->pv_acct,
                 'rvot_vmax' => $request->rvot_vmax,
@@ -243,7 +243,7 @@ class EchocardiographyController extends Controller
                 'e_e_prime_ratio' => $request->e_e_prime_ratio,
                 'e_desc_time' => $request->e_desc_time,
                 'lvot_vmax' => $request->lvot_vmax,
-                
+
                 // Description and conclusion
                 'deskripsi' => $request->deskripsi,
                 'kesimpulan' => $request->kesimpulan,
@@ -267,11 +267,13 @@ class EchocardiographyController extends Controller
     public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         $dataMedis = $this->getDataMedis($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
+        $dokter = Dokter::where('status', 1)->orderBy('nama_lengkap', 'asc')->get();
         $echocardiography = RmeEchocardiography::with(['dokter', 'userCreate'])->findOrFail($id);
 
         return view('unit-pelayanan.rawat-jalan.pelayanan.echocardiography.show', compact(
             'dataMedis',
-            'echocardiography'
+            'echocardiography',
+            'dokter'
         ));
     }
 
@@ -301,7 +303,7 @@ class EchocardiographyController extends Controller
             'jam' => 'required',
             'dokter_pemeriksa' => 'required|string|max:255',
             'diagnosa_klinik' => 'nullable|string|max:255',
-            
+
             // M-Mode fields
             'ao' => 'nullable|numeric',
             'la' => 'nullable|numeric',
@@ -318,7 +320,7 @@ class EchocardiographyController extends Controller
             'lvmi' => 'nullable|numeric',
             'epss' => 'nullable|numeric',
             'tapse' => 'nullable|numeric',
-            
+
             // 2 Dimensions fields
             'a4ch_edv' => 'nullable|numeric',
             'a4ch_esv' => 'nullable|numeric',
@@ -333,7 +335,7 @@ class EchocardiographyController extends Controller
             'rv_ann_diameter' => 'nullable|numeric',
             'rv_mid_cavity' => 'nullable|numeric',
             'ra_major_axis' => 'nullable|numeric',
-            
+
             // Doppler fields
             'pv_acct' => 'nullable|numeric',
             'rvot_vmax' => 'nullable|numeric',
@@ -344,7 +346,7 @@ class EchocardiographyController extends Controller
             'e_e_prime_ratio' => 'nullable|numeric',
             'e_desc_time' => 'nullable|numeric',
             'lvot_vmax' => 'nullable|numeric',
-            
+
             // Description fields
             'deskripsi' => 'nullable|string',
             'kesimpulan' => 'nullable|string',
@@ -361,7 +363,7 @@ class EchocardiographyController extends Controller
                 'jam' => $request->jam,
                 'diagnosa_klinik' => $request->diagnosa_klinik,
                 'dokter_pemeriksa' => $request->dokter_pemeriksa,
-                
+
                 // M-Mode measurements
                 'ao' => $request->ao,
                 'la' => $request->la,
@@ -378,7 +380,7 @@ class EchocardiographyController extends Controller
                 'lvmi' => $request->lvmi,
                 'epss' => $request->epss,
                 'tapse' => $request->tapse,
-                
+
                 // 2 Dimensions measurements
                 'a4ch_edv' => $request->a4ch_edv,
                 'a4ch_esv' => $request->a4ch_esv,
@@ -393,7 +395,7 @@ class EchocardiographyController extends Controller
                 'rv_ann_diameter' => $request->rv_ann_diameter,
                 'rv_mid_cavity' => $request->rv_mid_cavity,
                 'ra_major_axis' => $request->ra_major_axis,
-                
+
                 // Doppler measurements
                 'pv_acct' => $request->pv_acct,
                 'rvot_vmax' => $request->rvot_vmax,
@@ -404,7 +406,7 @@ class EchocardiographyController extends Controller
                 'e_e_prime_ratio' => $request->e_e_prime_ratio,
                 'e_desc_time' => $request->e_desc_time,
                 'lvot_vmax' => $request->lvot_vmax,
-                
+
                 // Description and conclusion
                 'deskripsi' => $request->deskripsi,
                 'kesimpulan' => $request->kesimpulan,

@@ -115,9 +115,8 @@
                                         <th width="10%">Tanggal</th>
                                         <th width="8%">Jam</th>
                                         <th width="15%">Diagnosa Klinik</th>
-                                        <th width="15%">Kesimpulan</th>
                                         <th width="12%">Dokter Pemeriksa</th>
-                                        <th width="10%">User Input</th>
+                                        <th width="10%">Petugas</th>
                                         <th width="10%">Aksi</th>
                                     </tr>
                                 </thead>
@@ -130,11 +129,6 @@
                                             <td>
                                                 <span class="text-truncate-custom" title="{{ $item->diagnosa_klinik }}">
                                                     {{ $item->diagnosa_klinik ?? '-' }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span class="text-truncate-custom" title="{{ $item->kesimpulan }}">
-                                                    {{ Str::limit($item->kesimpulan, 30) ?? '-' }}
                                                 </span>
                                             </td>
                                             <td>{{ $item->dokter->nama_lengkap ?? 'Tidak Diketahui' }}</td>
