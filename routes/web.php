@@ -204,6 +204,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\StatusFungsionalController as 
 use App\Http\Controllers\UnitPelayanan\RawatJalan\StatusNyeri\SkalaNumerikController as StatusNyeriSkalaNumerikController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\PersetujuanTransfusiDarahController as RawatJalanPersetujuanTransfusiDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\Covid19Controller as RawatJalanCovid19Controller;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\EchocardiographyController as RawatJalanEchocardiographyController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
@@ -1020,6 +1021,24 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
+
+                            // Echocardiography
+                            Route::prefix('echocardiography')->group(function () {
+                                Route::name('.echocardiography')->group(function () {
+                                    Route::controller(RawatJalanEchocardiographyController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
                         });
                     });
                 });
@@ -2881,8 +2900,7 @@ Route::middleware('ssoToken')->group(function () {
                                         });
                                     });
                                 });
-                                
-                                // visum exit
+
                                 // Visum Exit
                                 Route::prefix('visum-exit')->group(function () {
                                     Route::name('.visum-exit')->group(function () {
