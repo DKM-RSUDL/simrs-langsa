@@ -157,6 +157,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\StatusFungsionalController as R
 use App\Http\Controllers\UnitPelayanan\RawatInap\PersetujuanTransfusiDarahController as RawatInapPersetujuanTransfusiDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\Covid19Controller as RawatInapCovid19Controller;
 use App\Http\Controllers\UnitPelayanan\RawatInap\TransferPasienAntarRuang as RawatInapTransferPasienAntarRuang;
+use App\Http\Controllers\UnitPelayanan\RawatInap\EchocardiographyController as RawatInapEchocardiographyController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PneumoniaCurb65Controller;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PneumoniaPsiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SurveilansA1Controller;
@@ -2258,6 +2259,24 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
+
+                            // Echocardiography
+                            Route::prefix('echocardiography')->group(function () {
+                                Route::name('.echocardiography')->group(function () {
+                                    Route::controller(RawatInapEchocardiographyController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
                         });
                     });
                 });
