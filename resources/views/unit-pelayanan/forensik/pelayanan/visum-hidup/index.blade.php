@@ -91,171 +91,6 @@
             transform: translateY(-1px);
             transition: transform 0.2s ease;
         }
-
-        /* Progress Bar Loading Animation with 5 stages */
-        @keyframes progressLoad {
-            0% {
-                width: 0%;
-                background: linear-gradient(90deg, #6c757d 0%, #adb5bd 100%);
-                transform: scaleY(1);
-            }
-            25% {
-                width: 25%;
-                background: linear-gradient(90deg, #dc3545 0%, #e83e8c 100%);
-                transform: scaleY(1.1);
-            }
-            50% {
-                width: 50%;
-                background: linear-gradient(90deg, #ffc107 0%, #fd7e14 100%);
-                transform: scaleY(1.2);
-            }
-            75% {
-                width: 75%;
-                background: linear-gradient(90deg, #17a2b8 0%, #6f42c1 100%);
-                transform: scaleY(1.1);
-            }
-            100% {
-                width: var(--progress-width);
-                background: var(--progress-gradient);
-                transform: scaleY(1);
-            }
-        }
-
-        /* Alternative smoother version */
-        @keyframes progressLoadSmooth {
-            0% {
-                width: 0%;
-                opacity: 0.7;
-            }
-            20% {
-                width: 20%;
-                opacity: 0.8;
-            }
-            40% {
-                width: 40%;
-                opacity: 0.85;
-            }
-            60% {
-                width: 60%;
-                opacity: 0.9;
-            }
-            80% {
-                width: 80%;
-                opacity: 0.95;
-            }
-            100% {
-                width: var(--progress-width);
-                opacity: 1;
-            }
-        }
-
-        /* Pulsing effect during animation */
-        @keyframes progressPulse {
-            0% {
-                width: 0%;
-                box-shadow: 0 0 0 rgba(40, 167, 69, 0);
-            }
-            25% {
-                width: 25%;
-                box-shadow: 0 0 5px rgba(220, 53, 69, 0.3);
-            }
-            50% {
-                width: 50%;
-                box-shadow: 0 0 8px rgba(255, 193, 7, 0.4);
-            }
-            75% {
-                width: 75%;
-                box-shadow: 0 0 6px rgba(23, 162, 184, 0.3);
-            }
-            100% {
-                width: var(--progress-width);
-                box-shadow: 0 0 4px var(--progress-shadow);
-            }
-        }
-
-        /* Wave effect animation */
-        @keyframes progressWave {
-            0% {
-                width: 0%;
-                background-position: 0% 50%;
-            }
-            25% {
-                width: 25%;
-                background-position: 25% 50%;
-            }
-            50% {
-                width: 50%;
-                background-position: 50% 50%;
-            }
-            75% {
-                width: 75%;
-                background-position: 75% 50%;
-            }
-            100% {
-                width: var(--progress-width);
-                background-position: 100% 50%;
-            }
-        }
-
-        /* Usage classes */
-        .completion-progress {
-            height: 100%;
-            border-radius: 3px;
-            transition: all 0.3s ease;
-            animation: progressLoad 2s ease-in-out;
-            background-size: 200% 200%;
-        }
-
-        .completion-progress.smooth {
-            animation: progressLoadSmooth 1.5s ease-out;
-        }
-
-        .completion-progress.pulse {
-            animation: progressPulse 2.5s ease-in-out;
-        }
-
-        .completion-progress.wave {
-            animation: progressWave 3s ease-in-out;
-            background-size: 300% 100%;
-        }
-
-        /* Delayed animation for staggered effect */
-        .completion-progress.delay-1 { animation-delay: 0.2s; }
-        .completion-progress.delay-2 { animation-delay: 0.4s; }
-        .completion-progress.delay-3 { animation-delay: 0.6s; }
-        .completion-progress.delay-4 { animation-delay: 0.8s; }
-        .completion-progress.delay-5 { animation-delay: 1s; }
-
-        /* CSS Variables for dynamic values */
-        .completion-progress[data-progress="0"] {
-            --progress-width: 0%;
-            --progress-gradient: linear-gradient(90deg, #6c757d 0%, #adb5bd 100%);
-            --progress-shadow: rgba(108, 117, 125, 0.2);
-        }
-
-        .completion-progress[data-progress="25"] {
-            --progress-width: 25%;
-            --progress-gradient: linear-gradient(90deg, #dc3545 0%, #e83e8c 100%);
-            --progress-shadow: rgba(220, 53, 69, 0.2);
-        }
-
-        .completion-progress[data-progress="50"] {
-            --progress-width: 50%;
-            --progress-gradient: linear-gradient(90deg, #ffc107 0%, #fd7e14 100%);
-            --progress-shadow: rgba(255, 193, 7, 0.2);
-        }
-
-        .completion-progress[data-progress="75"] {
-            --progress-width: 75%;
-            --progress-gradient: linear-gradient(90deg, #17a2b8 0%, #6f42c1 100%);
-            --progress-shadow: rgba(23, 162, 184, 0.2);
-        }
-
-        .completion-progress[data-progress="100"] {
-            --progress-width: 100%;
-            --progress-gradient: linear-gradient(90deg, #28a745 0%, #20c997 100%);
-            --progress-shadow: rgba(40, 167, 69, 0.2);
-        }
     </style>
 @endpush
 
@@ -289,7 +124,6 @@
                                 </a>
                             </li>
                         </ul>
-
 
                         {{-- Tab Content --}}
                         <div class="tab-content" id="myTabContent">
@@ -340,7 +174,7 @@
                                                     <!-- Add Button -->
                                                     <div class="col-md-2">
                                                         <div style="margin-top: 1.5rem;">
-                                                            <a href="{{ route('forensik.unit.pelayanan.visum-exit.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                                            <a href="{{ route('forensik.unit.pelayanan.visum-hidup.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                                                 class="btn btn-primary btn-sm w-100">
                                                                 <i class="ti-plus"></i> Tambah
                                                             </a>
@@ -378,9 +212,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @forelse($visumExitList as $index => $item)
+                                            @forelse($visumHidupList as $index => $item)
                                                 <tr>
-                                                    <td>{{ $visumExitList->firstItem() + $index }}</td>
+                                                    <td>{{ $visumHidupList->firstItem() + $index }}</td>
                                                     <td>
                                                         <strong>{{ $item->nomor_ver }}</strong>
                                                         @if($item->nomor_surat)
@@ -453,25 +287,25 @@
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        {{ $item->user_create_name }}
+                                                        {{ $item->userCreate->name }}
                                                         <br><small class="text-muted">{{ $item->no_transaksi }}</small>
                                                     </td>
                                                     <td>
                                                         <div class="btn-group" role="group">
                                                             <!-- View Button -->
-                                                            <a href="{{ route('forensik.unit.pelayanan.visum-exit.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                            <a href="{{ route('forensik.unit.pelayanan.visum-hidup.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                 class="btn btn-info btn-sm" title="Detail" data-bs-toggle="tooltip">
                                                                 <i class="ti-eye"></i>
                                                             </a>
 
                                                             <!-- Edit Button -->
-                                                            <a href="{{ route('forensik.unit.pelayanan.visum-exit.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                            <a href="{{ route('forensik.unit.pelayanan.visum-hidup.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                 class="btn btn-warning btn-sm ms-1" title="Edit" data-bs-toggle="tooltip">
                                                                 <i class="ti-pencil"></i>
                                                             </a>
 
                                                             <!-- Delete Button -->
-                                                            <form action="{{ route('forensik.unit.pelayanan.visum-exit.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                            <form action="{{ route('forensik.unit.pelayanan.visum-hidup.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                 method="POST" class="delete-form" style="display: inline;">
                                                                 @csrf
                                                                 @method('DELETE')
@@ -485,15 +319,15 @@
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="9" class="text-center py-4">
+                                                    <td colspan="8" class="text-center py-4">
                                                         <div class="d-flex flex-column align-items-center">
                                                             <i class="ti-folder-open text-muted" style="font-size: 3rem;"></i>
-                                                            <h6 class="text-muted mt-2">Tidak ada data Visum et Repertum</h6>
+                                                            <h6 class="text-muted mt-2">Tidak ada data Visum Hidup</h6>
                                                             <p class="text-muted small mb-0">
                                                                 @if(request()->hasAny(['start_date', 'end_date', 'search']))
                                                                     Tidak ditemukan data sesuai filter yang diterapkan
                                                                 @else
-                                                                    Belum ada data Visum et Repertum untuk pasien ini
+                                                                    Belum ada data Visum Hidup untuk pasien ini
                                                                 @endif
                                                             </p>
                                                         </div>
@@ -505,14 +339,14 @@
                                 </div>
 
                                 <!-- Pagination -->
-                                @if($visumExitList->hasPages())
+                                @if($visumHidupList->hasPages())
                                     <div class="d-flex justify-content-between align-items-center mt-3">
                                         <div class="text-muted">
-                                            Menampilkan {{ $visumExitList->firstItem() }} sampai {{ $visumExitList->lastItem() }}
-                                            dari {{ $visumExitList->total() }} data
+                                            Menampilkan {{ $visumHidupList->firstItem() }} sampai {{ $visumHidupList->lastItem() }}
+                                            dari {{ $visumHidupList->total() }} data
                                         </div>
                                         <div>
-                                            {{ $visumExitList->links() }}
+                                            {{ $visumHidupList->links() }}
                                         </div>
                                     </div>
                                 @endif
@@ -540,7 +374,7 @@
                     e.preventDefault();
                     Swal.fire({
                         title: 'Apakah Anda yakin?',
-                        text: 'Data Visum et Repertum ini akan dihapus secara permanen!',
+                        text: 'Data Visum Hidup ini akan dihapus secara permanen!',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33',

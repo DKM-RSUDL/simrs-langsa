@@ -384,6 +384,8 @@
                         <div class="text-center mb-4">
                             <div class="header-asesmen">
                                 <h3 class="font-weight-bold mb-2">VISUM EXIT REPERTUM</h3>
+                                <p class="mb-1 text-muted">INSTALASI KEDOKTERAN FORENSIK</p>
+                                <p class="mb-0 text-muted">RUMAH SAKIT UMUM DAERAH LANGSA</p>
                                 <p class="mb-1"><strong>No. VeR:</strong> {{ $visumExit->nomor_ver }}</p>
                             </div>
                         </div>
