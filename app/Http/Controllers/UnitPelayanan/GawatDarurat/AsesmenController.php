@@ -9,6 +9,7 @@ use App\Models\Dokter;
 use App\Models\Kunjungan;
 use App\Models\ListTindakanPasien;
 use App\Models\MrItemFisik;
+use App\Models\RmeAlergiPasien;
 use App\Models\RmeAsesmen;
 use App\Models\RmeAsesmenDtl;
 use App\Models\RmeAsesmenPemeriksaanFisik;
@@ -16,6 +17,7 @@ use App\Models\RmeEfekNyeri;
 use App\Models\RmeFaktorPemberat;
 use App\Models\RmeFaktorPeringan;
 use App\Models\RmeFrekuensiNyeri;
+use App\Models\RmeJenisNyeri;
 use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMenjalar;
 use App\Models\RmeRekonsiliasiObat;
@@ -32,9 +34,12 @@ use Illuminate\Support\Facades\Validator;
 
 class AsesmenController extends Controller
 {
+    private $kdUnit;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/gawat-darurat');
+        $this->kdUnit = 3; // Gawat Darurat
     }
 
     public function index($kd_pasien, $tgl_masuk)
@@ -120,6 +125,64 @@ class AsesmenController extends Controller
             'asesmen',
             'unitPoli',
             'tindakanData'
+        ));
+    }
+
+
+    public function create(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        // Mengambil data kunjungan dan tanggal triase terkait
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit', 'dataTriase'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_unit', $this->kdUnit)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->first();
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        $dokter = Dokter::where('status', 1)->get();
+        $triageClass = $this->getTriageClass($dataMedis->kd_triase);
+        $menjalar = RmeMenjalar::all();
+        $frekuensinyeri = RmeFrekuensiNyeri::all();
+        $kualitasnyeri = RmeKualitasNyeri::all();
+        $faktorpemberat = RmeFaktorPemberat::all();
+        $faktorperingan = RmeFaktorPeringan::all();
+        $efeknyeri = RmeEfekNyeri::all();
+        $jenisnyeri = RmeJenisNyeri::all();
+        $itemFisik = MrItemFisik::orderby('urut')->get();
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
+        $unitPoli = Unit::where('kd_bagian', '2')->where('aktif', 1)->get();
+
+
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.create', compact(
+            'dataMedis',
+            'triageClass',
+            'dokter',
+            'menjalar',
+            'frekuensinyeri',
+            'kualitasnyeri',
+            'faktorpemberat',
+            'faktorperingan',
+            'efeknyeri',
+            'jenisnyeri',
+            'alergiPasien',
+            'unitPoli',
+            'itemFisik'
         ));
     }
 

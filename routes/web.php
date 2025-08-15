@@ -2374,10 +2374,12 @@ Route::middleware('ssoToken')->group(function () {
                         });
 
 
+                        // Route::prefix('{urut_masuk}/asesmen')->group(function () {
                         Route::prefix('asesmen')->group(function () {
                             Route::name('asesmen')->group(function () {
                                 Route::controller(GawatDaruratAsesmenController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
                                     Route::post('/', 'store')->name('.store');
                                     Route::get('/{id}', 'show')->name('.show');
                                     Route::put('/{id}', 'update')->name('.update');

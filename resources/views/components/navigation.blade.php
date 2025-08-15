@@ -45,7 +45,8 @@
         [
             'icon' => 'verified_badge.png',
             'label' => 'Asesmen',
-            'link' => route('asesmen.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
+            'link' => route('asesmen.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+            // 'link' => route('asesmen.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
         // [
         //     'icon' => 'positive_dynamic.png',
