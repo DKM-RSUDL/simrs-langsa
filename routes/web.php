@@ -61,6 +61,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\StatusNyeri\SkalaNumerikCont
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\StatusFungsionalController as GawatDaruratStatusFungsionalController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\PersetujuanTransfusiDarahController as GawatDaruratPersetujuanTransfusiDarahController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\Covid19Controller as GawatDaruratCovid19Controller;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\EchocardiographyController as GawatDaruratEchocardiographyController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenHemodialisaKeperawatanController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenMedisController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\BeratBadanKeringController;
@@ -2853,6 +2854,23 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
                         });
+
+                        // Echocardiography
+                            Route::prefix('{urut_masuk}/echocardiography')->group(function () {
+                                Route::name('echocardiography')->group(function () {
+                                    Route::controller(GawatDaruratEchocardiographyController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
 
                         Route::resource('/', MedisGawatDaruratController::class);
                         // Route::resource('asesmen', GawatDaruratAsesmenController::class);
