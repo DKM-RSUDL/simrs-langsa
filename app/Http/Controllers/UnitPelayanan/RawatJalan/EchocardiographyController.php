@@ -98,6 +98,9 @@ class EchocardiographyController extends Controller
             }
 
             $echocardiographyData = $query->orderBy('tanggal', 'desc')
+                ->where('kd_kasir', $transaksi->kd_kasir)
+                ->where('no_transaksi', $transaksi->no_transaksi)
+                ->where('registrasi', $kd_pasien)
                 ->orderBy('jam', 'desc')
                 ->paginate(10)
                 ->withQueryString();
