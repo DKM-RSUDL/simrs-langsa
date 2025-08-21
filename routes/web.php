@@ -2451,7 +2451,7 @@ Route::middleware('ssoToken')->group(function () {
 
 
                         // Route::prefix('{urut_masuk}/asesmen')->group(function () {
-                        Route::prefix('asesmen')->group(function () {
+                        Route::prefix('{urut_masuk}/asesmen')->group(function () {
                             Route::name('asesmen')->group(function () {
                                 Route::controller(GawatDaruratAsesmenController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');

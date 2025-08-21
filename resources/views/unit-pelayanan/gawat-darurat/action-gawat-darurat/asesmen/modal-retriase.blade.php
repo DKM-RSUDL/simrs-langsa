@@ -1,737 +1,666 @@
-<button class="btn btn-sm" type="button" id="openReTriaseModal">
-    <i class="bi bi-plus-square"></i> Tambah
-</button>
-
-<div class="modal fade" id="reTriagePatient" tabindex="-1" aria-labelledby="reTriagePatientLabel" aria-hidden="true">
-    <div class="container-fluid">
-        <div class="modal-dialog modal-fullscreen h-auto w-100">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title fw-bold" id="reTriagePatientLabel">
-                        Observarsi Lanjutan/Re-Triase Pasien Gawat Darurat
-                    </h5>
-                    <button type="button" class="btn-close btn-close-modified" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-                </div>
-
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-3">
-
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="form-line">
-                                        <h6>Keluhan/Anamnesis</h6>
-                                        <textarea class="form-control mb-2" rows="3" name="anamnesis_retriage"
-                                            placeholder="Isikan keluhan dan anamnesis pasien, jika terjadi cidera jelaskan mekanisme cideranya"></textarea>
-                                    </div>
-
-                                    <div class="form-line">
-                                        <h6>Vital Sign</h6>
-                                        <div class="row mb-3">
-                                            <div class="col">
-                                                <label>TD (Sistole)</label>
-                                                <input type="number" class="form-control" name="td_sistole_retriage">
-                                            </div>
-                                            <div class="col">
-                                                <label>TD (Diastole)</label>
-                                                <input type="number" class="form-control" name="td_diastole_retriage">
-                                            </div>
-                                            <div class="col">
-                                                <label>Nadi (x/mnt)</label>
-                                                <input type="number" class="form-control" name="nadi_retriage">
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col">
-                                                <label>Resp (x/mnt)</label>
-                                                <input type="number" class="form-control" name="resp_retriage">
-                                            </div>
-                                            <div class="col">
-                                                <label>Suhu (°C)</label>
-                                                <input type="number" class="form-control" name="suhu_retriage">
-                                            </div>
-                                            <div class="col">
-                                                <label>SpO2 (tanpa O2)</label>
-                                                <input type="number" class="form-control"
-                                                    name="spo2_tanpa_o2_retriage">
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-4">
-                                                <label>SpO2 (dengan O2)</label>
-                                                <input type="number" class="form-control"
-                                                    name="spo2_dengan_o2_retriage">
-                                            </div>
-                                            <div class="col-4">
-                                                <label>GCS</label>
-                                                <input type="number" class="form-control"
-                                                    name="gcs_retriage">
-                                            </div>
-                                            <div class="col-4">
-                                                <label>AVPU</label>
-                                                <select class="form-select" name="avpu_retriage">
-                                                    <option selected disabled>Pilih</option>
-                                                    <option>Sadar Baik/Alert : 0</option>
-                                                    <option>Berespon dengan kata-kata/Voice: 1</option>
-                                                    <option>Hanya berespon jika dirangsang nyeri/pain: 2
-                                                    </option>
-                                                    <option>Pasien tidak sadar/unresponsive: 3</option>
-                                                    <option>Gelisah atau bingung: 4</option>
-                                                    <option>Acute Confusional States: 5</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-line">
-                                        <h6>Catatan</h6>
-                                        <textarea class="form-control mb-2" rows="3" name="catatan_retriage" placeholder="Isikan Catatan"></textarea>
-                                    </div>
-                                </div>
+{{-- MODAL RETRIASE/OBSERVASI LANJUTAN --}}
+<div class="modal fade" id="retriaseModal" tabindex="-1" aria-labelledby="retriaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="retriaseModalLabel">Tambah Retriase/Observasi Lanjutan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="retriaseForm">
+                    <div class="row g-3">
+                        {{-- Tanggal dan Jam --}}
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label required">Tanggal</label>
+                                <input type="date" class="form-control" id="retriaseTanggal" value="{{ date('Y-m-d') }}" required>
                             </div>
-
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label required">Jam</label>
+                                <input type="time" class="form-control" id="retriaseJam" value="{{ date('H:i') }}" required>
+                            </div>
                         </div>
 
-                        <div class="col-9">
-
-                            <div class="card">
-                                <div class="card-header bg-primary">
-                                    <h4 class="text-white mb-2">Triase Pasien Gawat Darurat (Skala ATS)</h4>
-                                    <p class="text-white m-0 p-0 fw-light">Isikan triase pada saat pasien masuk
-                                    </p>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row mt-5">
-                                        <div class="col-3">
-
-                                            <div class="card mb-3">
-                                                <div class="card-header border-bottom">
-                                                    <p class="m-0 p-0 fw-bold">Air Way</p>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="form-check mt-3">
-                                                        <input class="form-check-input false-emergency-check"
-                                                            type="checkbox" name="airway[]" value="Bebas"
-                                                            id="airway_bebas">
-                                                        <label class="form-check-label" for="airway_bebas">
-                                                            Bebas
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input emergency-check" type="checkbox"
-                                                            name="airway[]" value="Ancaman" id="airway_ancaman">
-                                                        <label class="form-check-label" for="airway_ancaman">
-                                                            Ancaman
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input resusitasi-check"
-                                                            type="checkbox" name="airway[]" value="Sumbatan"
-                                                            id="airway_sumbatan">
-                                                        <label class="form-check-label" for="airway_sumbatan">
-                                                            Sumbatan
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input doa-check" type="checkbox"
-                                                            name="airway[]" value="Tidak ada tanda-tanda kehidupan"
-                                                            id="airway_mati">
-                                                        <label class="form-check-label" for="airway_mati">
-                                                            Tidak ada tanda-tanda kehidupan
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <div class="col-3">
-
-                                            <div class="card mb-3">
-                                                <div class="card-header border-bottom">
-                                                    <p class="m-0 p-0 fw-bold">Breathing</p>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="form-check mt-3">
-                                                        <input class="form-check-input false-emergency-check"
-                                                            type="checkbox" name="breathing[]" value="Normal"
-                                                            id="breathing_normal">
-                                                        <label class="form-check-label" for="breathing_normal">
-                                                            Normal
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input urgent-check" type="checkbox"
-                                                            name="breathing[]" value="Mengi" id="breathing_Mengi">
-                                                        <label class="form-check-label" for="breathing_Mengi">
-                                                            Mengi
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input emergency-check"
-                                                            type="checkbox" name="breathing[]" value="Takipnoe"
-                                                            id="breathing_takipnoe">
-                                                        <label class="form-check-label" for="breathing_takipnoe">
-                                                            Takipnoe
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input emergency-check"
-                                                            type="checkbox" name="breathing[]" value="RR > 20 X/mnt"
-                                                            id="breathing_rr">
-                                                        <label class="form-check-label" for="breathing_rr">
-                                                            RR > 20 X/mnt
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input resusitasi-check"
-                                                            type="checkbox" name="breathing[]" value="Henti Nafas"
-                                                            id="breathing_henti_nafas">
-                                                        <label class="form-check-label" for="breathing_henti_nafas">
-                                                            Henti Nafas
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input resusitasi-check"
-                                                            type="checkbox" name="breathing[]" value="Bradipnoe"
-                                                            id="breathing_bradipnoe">
-                                                        <label class="form-check-label" for="breathing_bradipnoe">
-                                                            Bradipnoe
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <div class="col-3">
-
-                                            <div class="card mb-3">
-                                                <div class="card-header border-bottom">
-                                                    <p class="m-0 p-0 fw-bold">Circulation</p>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="form-check mt-3">
-                                                        <input class="form-check-input false-emergency-check"
-                                                            type="checkbox" name="circulation[]" value="Nadi Kuat"
-                                                            id="circulation_nadi_kuat">
-                                                        <label class="form-check-label" for="circulation_nadi_kuat">
-                                                            Nadi Kuat
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input false-emergency-check"
-                                                            type="checkbox" name="circulation[]"
-                                                            value="Frekuensi Normal"
-                                                            id="circulation_frekuensi_normal">
-                                                        <label class="form-check-label"
-                                                            for="circulation_frekuensi_normal">
-                                                            Frekuensi Normal
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input false-emergency-check"
-                                                            type="checkbox" name="circulation[]"
-                                                            value="TD sistole 90-159 mmHg"
-                                                            id="circulation_sistole_90_159">
-                                                        <label class="form-check-label"
-                                                            for="circulation_sistole_90_159">
-                                                            TD sistole 90-159 mmHg
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input urgent-check" type="checkbox"
-                                                            name="circulation[]" value="TD sistole >= 160 atau <= 90"
-                                                            id="circulation_sistole_160_90">
-                                                        <label class="form-check-label"
-                                                            for="circulation_sistole_160_90">
-                                                            TD sistole >= 160 atau <= 90 </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input emergency-check"
-                                                            type="checkbox" name="circulation[]" value="Nadi Lemah"
-                                                            id="circulation_nadi_lemah">
-                                                        <label class="form-check-label" for="circulation_nadi_lemah">
-                                                            Nadi Lemah
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input emergency-check"
-                                                            type="checkbox" name="circulation[]" value="Bradikardia"
-                                                            id="circulation_bradikardia">
-                                                        <label class="form-check-label" for="circulation_bradikardia">
-                                                            Bradikardia
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input emergency-check"
-                                                            type="checkbox" name="circulation[]" value="Takikardi"
-                                                            id="circulation_takikardi">
-                                                        <label class="form-check-label" for="circulation_takikardi">
-                                                            Takikardi
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input emergency-check"
-                                                            type="checkbox" name="circulation[]" value="Pucat"
-                                                            id="circulation_pucat">
-                                                        <label class="form-check-label" for="circulation_pucat">
-                                                            Pucat
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input emergency-check"
-                                                            type="checkbox" name="circulation[]"
-                                                            value="CRT > 2 detik" id="circulation_crt">
-                                                        <label class="form-check-label" for="circulation_crt">
-                                                            CRT > 2 detik
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input emergency-check"
-                                                            type="checkbox" name="circulation[]"
-                                                            value="Tanda-tanda dehidrasi sedang-berat"
-                                                            id="circulation_dehidrasi">
-                                                        <label class="form-check-label" for="circulation_dehidrasi">
-                                                            Tanda-tanda dehidrasi sedang-berat
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input emergency-check"
-                                                            type="checkbox" name="circulation[]" value="Suhu > 40 C"
-                                                            id="circulation_suhu">
-                                                        <label class="form-check-label" for="circulation_suhu">
-                                                            Suhu > 40 C
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input resusitasi-check"
-                                                            type="checkbox" name="circulation[]"
-                                                            value="Henti Jantung / Ketiadaan Sirkulasi"
-                                                            id="circulation_henti_jantung">
-                                                        <label class="form-check-label"
-                                                            for="circulation_henti_jantung">
-                                                            Henti Jantung / Ketiadaan Sirkulasi
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input resusitasi-check"
-                                                            type="checkbox" name="circulation[]"
-                                                            value="Nadi tak teraba" id="circulation_nadi_tak_teraba">
-                                                        <label class="form-check-label"
-                                                            for="circulation_nadi_tak_teraba">
-                                                            Nadi tak teraba
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input resusitasi-check"
-                                                            type="checkbox" name="circulation[]" value="Cianosis"
-                                                            id="circulation_cianosis">
-                                                        <label class="form-check-label" for="circulation_cianosis">
-                                                            Cianosis
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input doa-check" type="checkbox"
-                                                            name="circulation[]" value="R/C (-/-)"
-                                                            id="breathing_mati">
-                                                        <label class="form-check-label" for="breathing_mati">
-                                                            R/C (-/-)
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input doa-check" type="checkbox"
-                                                            name="circulation[]" value="EKG Flat"
-                                                            id="breathing_mati">
-                                                        <label class="form-check-label" for="breathing_mati">
-                                                            EKG Flat
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input doa-check" type="checkbox"
-                                                            name="circulation[]" value="Tidak ada denyut nadi"
-                                                            id="breathing_mati">
-                                                        <label class="form-check-label" for="breathing_mati">
-                                                            Tidak ada denyut nadi
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <div class="col-3">
-
-                                            <div class="card mb-3">
-                                                <div class="card-header border-bottom">
-                                                    <p class="m-0 p-0 fw-bold">Disability</p>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="form-check mt-3">
-                                                        <input class="form-check-input false-emergency-check"
-                                                            type="checkbox" name="disability[]" value="Sadar"
-                                                            id="disability_sadar">
-                                                        <label class="form-check-label" for="disability_sadar">
-                                                            Sadar
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input false-emergency-check"
-                                                            type="checkbox" name="disability[]" value="GCS 15"
-                                                            id="disability_gcs_15">
-                                                        <label class="form-check-label" for="disability_gcs_15">GCS 15
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input urgent-check" type="checkbox"
-                                                            name="disability[]" value="GCS >= 12"
-                                                            id="disability_gcs_12">
-                                                        <label class="form-check-label" for="disability_gcs_12">
-                                                            GCS >= 12
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input emergency-check"
-                                                            type="checkbox" name="disability[]" value="GCS 9-12"
-                                                            id="disability_gcs_9_12">
-                                                        <label class="form-check-label" for="disability_gcs_9_12">
-                                                            GCS 9-12
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input emergency-check"
-                                                            type="checkbox" name="disability[]" value="Gelisah"
-                                                            id="disability_gelisah">
-                                                        <label class="form-check-label" for="disability_gelisah">
-                                                            Gelisah
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input emergency-check"
-                                                            type="checkbox" name="disability[]" value="Nyeri Dada"
-                                                            id="disability_nyeri_dada">
-                                                        <label class="form-check-label" for="disability_nyeri_dada">
-                                                            Nyeri Dada
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input emergency-check"
-                                                            type="checkbox" name="disability[]"
-                                                            value="Hemiparese Akut" id="disability_hemiparese_akut">
-                                                        <label class="form-check-label"
-                                                            for="disability_hemiparese_akut">
-                                                            Hemiparese Akut
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input resusitasi-check"
-                                                            type="checkbox" name="disability[]" value="GCS < 9"
-                                                            id="disability_gcs_under_9">
-                                                        <label class="form-check-label" for="disability_gcs_under_9">
-                                                            GCS < 9 </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input resusitasi-check"
-                                                            type="checkbox" name="disability[]"
-                                                            value="Tidak ada respon" id="disability_no_respon">
-                                                        <label class="form-check-label" for="disability_no_respon">
-                                                            Tidak ada respon
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input resusitasi-check"
-                                                            type="checkbox" name="disability[]" value="Kejang"
-                                                            id="disability_kejang">
-                                                        <label class="form-check-label" for="disability_kejang">
-                                                            Kejang
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="row mt-5">
-                                        <div class="col-12">
-                                            <div class="d-flex align-items-center w-100">
-                                                <p class="fw-medium text-primary m-0 p-0">Kesimpulan Triase :
-                                                </p>
-                                                <button type="button" id="triaseStatusLabel"
-                                                    class="btn btn-block ms-3 w-100"></button>
-                                                <input type="hidden" name="kode_triase" id="kode_triase">
-                                                <input type="hidden" name="ket_triase" id="ket_triase">
-                                            </div>
-                                        </div>
-                                    </div>
+                        {{-- GCS --}}
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">GCS</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="retriaseGCS" 
+                                           placeholder="Contoh: 15 E4 V5 M6" readonly>
+                                    <button type="button" class="btn btn-outline-primary" 
+                                            onclick="openGCSModalForRetriase()" title="Buka Kalkulator GCS">
+                                        <i class="ti-calculator"></i> Hitung GCS
+                                    </button>
                                 </div>
                             </div>
-
                         </div>
+
+                        {{-- Suhu --}}
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Suhu (°C)</label>
+                                <input type="number" step="0.1" class="form-control" id="retriaseTemp" 
+                                       placeholder="36.5" min="20" max="50">
+                            </div>
+                        </div>
+
+                        {{-- Respirasi --}}
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">RR (x/menit)</label>
+                                <input type="number" class="form-control" id="retriaseRR" 
+                                       placeholder="20" min="0" max="100">
+                            </div>
+                        </div>
+
+                        {{-- SpO2 tanpa O2 --}}
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">SpO2 tanpa O2 (%)</label>
+                                <input type="number" class="form-control" id="retriaseSpo2TanpaO2" 
+                                       placeholder="98" min="0" max="150">
+                            </div>
+                        </div>
+
+                        {{-- SpO2 dengan O2 --}}
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">SpO2 dengan O2 (%)</label>
+                                <input type="number" class="form-control" id="retriaseSpo2DenganO2" 
+                                       placeholder="100" min="0" max="150">
+                            </div>
+                        </div>
+
+                        {{-- TD Sistole --}}
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">TD Sistole (mmHg)</label>
+                                <input type="number" class="form-control" id="retriaseTdSistole" 
+                                       placeholder="120" min="0" max="400">
+                            </div>
+                        </div>
+
+                        {{-- TD Diastole --}}
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">TD Diastole (mmHg)</label>
+                                <input type="number" class="form-control" id="retriaseTdDiastole" 
+                                       placeholder="80" min="0" max="300">
+                            </div>
+                        </div>
+
+                        {{-- Keluhan --}}
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="form-label">Keluhan</label>
+                                <textarea class="form-control" id="retriaseKeluhan" rows="3" 
+                                          placeholder="Deskripsikan keluhan pasien saat observasi..."></textarea>
+                            </div>
+                        </div>
+
+                        {{-- Kesimpulan Triase --}}
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="form-label">Kesimpulan Triase</label>
+                                <select class="form-select" id="retriaseKesimpulanTriase" name="kesimpulan_triase">
+                                    <option value="">--Pilih Kesimpulan Triase--</option>
+                                    <option value="1">FALSE EMERGENCY (60 menit)</option>
+                                    <option value="2">URGENT (30 menit)</option>
+                                    <option value="3">EMERGENCY (10 menit)</option>
+                                    <option value="4">RESUSITASI (segera)</option>
+                                    <option value="5">DOA</option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
-                </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary" id="simpanReTriase">Simpan</button>
-                </div>
+                    {{-- Alert untuk validasi vital sign --}}
+                    <div class="alert alert-info mt-3">
+                        <i class="ti-info-alt"></i>
+                        <small>Pastikan nilai vital sign dalam rentang normal. Sistem akan memberikan peringatan jika ada nilai yang tidak normal.</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary" id="btnSimpanRetriase">
+                    <i class="ti-check"></i> Simpan
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-@push('js')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var reTriaseModal = new bootstrap.Modal(document.getElementById('reTriagePatient'));
-            var reTriaseTable = document.querySelector('#reTriaseTable tbody');
-            var reTriaseData = [];
+{{-- GCS Modal untuk Retriase --}}
+<div class="modal fade" id="gcsRetriaseModal" tabindex="-1" aria-labelledby="gcsRetriaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="gcsRetriaseModalLabel">Kalkulator GCS - Retriase</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="gcs-calculator">
+                    {{-- Eye Opening (E) --}}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Eye Opening (E)</label>
+                        <div class="gcs-options">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gcsEyeRetriase" value="4" id="eyeRetriase4">
+                                <label class="form-check-label" for="eyeRetriase4">
+                                    4 - Spontan
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gcsEyeRetriase" value="3" id="eyeRetriase3">
+                                <label class="form-check-label" for="eyeRetriase3">
+                                    3 - Terhadap suara
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gcsEyeRetriase" value="2" id="eyeRetriase2">
+                                <label class="form-check-label" for="eyeRetriase2">
+                                    2 - Terhadap nyeri
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gcsEyeRetriase" value="1" id="eyeRetriase1">
+                                <label class="form-check-label" for="eyeRetriase1">
+                                    1 - Tidak ada respon
+                                </label>
+                            </div>
+                        </div>
+                    </div>
 
-            // Fungsi untuk mengumpulkan data form secara manual
-            function getFormData(container) {
-                const data = {};
-                container.querySelectorAll('input, textarea, select').forEach((input) => {
-                    if (input.type === 'checkbox') {
-                        if (input.checked) {
-                            if (!data[input.name]) {
-                                data[input.name] = [];
-                            }
-                            data[input.name].push(input.value);
-                        }
-                    } else {
-                        data[input.name] = input.value;
-                    }
-                });
+                    {{-- Verbal Response (V) --}}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Verbal Response (V)</label>
+                        <div class="gcs-options">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gcsVerbalRetriase" value="5" id="verbalRetriase5">
+                                <label class="form-check-label" for="verbalRetriase5">
+                                    5 - Orientasi baik
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gcsVerbalRetriase" value="4" id="verbalRetriase4">
+                                <label class="form-check-label" for="verbalRetriase4">
+                                    4 - Bingung
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gcsVerbalRetriase" value="3" id="verbalRetriase3">
+                                <label class="form-check-label" for="verbalRetriase3">
+                                    3 - Kata-kata tidak tepat
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gcsVerbalRetriase" value="2" id="verbalRetriase2">
+                                <label class="form-check-label" for="verbalRetriase2">
+                                    2 - Suara tidak jelas
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gcsVerbalRetriase" value="1" id="verbalRetriase1">
+                                <label class="form-check-label" for="verbalRetriase1">
+                                    1 - Tidak ada respon
+                                </label>
+                            </div>
+                        </div>
+                    </div>
 
-                // Organisasi ulang data triase sesuai dengan format JSON yang diperlukan
-                const triaseData = {
-                    hasil_triase: data.ket_triase || '',
-                    kode_triase: data.kode_triase || '',
-                    air_way: data['airway[]'] || [],
-                    breathing: data['breathing[]'] || [],
-                    circulation: data['circulation[]'] || [],
-                    disability: data['disability[]'] || []
-                };
+                    {{-- Motor Response (M) --}}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Motor Response (M)</label>
+                        <div class="gcs-options">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gcsMotorRetriase" value="6" id="motorRetriase6">
+                                <label class="form-check-label" for="motorRetriase6">
+                                    6 - Mengikuti perintah
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gcsMotorRetriase" value="5" id="motorRetriase5">
+                                <label class="form-check-label" for="motorRetriase5">
+                                    5 - Melokalisir nyeri
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gcsMotorRetriase" value="4" id="motorRetriase4">
+                                <label class="form-check-label" for="motorRetriase4">
+                                    4 - Menghindari nyeri
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gcsMotorRetriase" value="3" id="motorRetriase3">
+                                <label class="form-check-label" for="motorRetriase3">
+                                    3 - Fleksi abnormal
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gcsMotorRetriase" value="2" id="motorRetriase2">
+                                <label class="form-check-label" for="motorRetriase2">
+                                    2 - Ekstensi abnormal
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gcsMotorRetriase" value="1" id="motorRetriase1">
+                                <label class="form-check-label" for="motorRetriase1">
+                                    1 - Tidak ada respon
+                                </label>
+                            </div>
+                        </div>
+                    </div>
 
-                data['triase'] = triaseData;
-                return data;
-            }
+                    {{-- Hasil GCS --}}
+                    <div class="gcs-result">
+                        <div class="alert alert-primary text-center">
+                            <h5 class="mb-0">Total GCS: <span id="gcsRetriaseTotal">0</span></h5>
+                            <small id="gcsRetriaseDetail">E0 V0 M0</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary" id="btnSimpanGCSRetriase">
+                    <i class="ti-check"></i> Gunakan GCS
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    initRetriase();
+});
 
-            // Event listener untuk membuka modal re-triase
-            document.getElementById('openReTriaseModal').addEventListener('click', function(event) {
-                event.preventDefault();
-                reTriaseModal.show();
-            });
+function initRetriase() {
+    let retriaseArray = [];
+    let editRetriaseIndex = -1;
 
-            // Perubahan pada checkbox DOA
-            document.querySelectorAll('#reTriagePatient .doa-check').forEach(function(checkbox) {
-                checkbox.addEventListener('change', function() {
-                    let doaChecked = document.querySelectorAll(
-                        '#reTriagePatient .doa-check:checked').length > 0;
-                    document.querySelectorAll(
-                        '#reTriagePatient input[type="checkbox"]:not(.doa-check)').forEach(
-                        function(cb) {
-                            cb.disabled = doaChecked;
-                        });
-                    updateTriaseStatus();
-                });
-            });
+    // Event listeners
+    const btnSimpanRetriase = document.getElementById('btnSimpanRetriase');
+    const retriaseModal = document.getElementById('retriaseModal');
+    const btnSimpanGCSRetriase = document.getElementById('btnSimpanGCSRetriase');
 
-            // Perubahan pada checkbox non-DOA
-            document.querySelectorAll('#reTriagePatient input[type="checkbox"]:not(.doa-check)').forEach(function(
-                checkbox) {
-                checkbox.addEventListener('change', function() {
-                    let nonDoaChecked = document.querySelectorAll(
-                            '#reTriagePatient input[type="checkbox"]:checked:not(.doa-check)')
-                        .length > 0;
-                    document.querySelectorAll('#reTriagePatient input[type="checkbox"].doa-check')
-                        .forEach(function(cb) {
-                            cb.disabled = nonDoaChecked;
-                        });
-                    updateTriaseStatus();
-                });
-            });
-
-            // Fungsi untuk memperbarui status triase dan kode triase
-            function updateTriaseStatus() {
-                var status = '';
-                var kode_triase = '';
-
-                if (document.querySelectorAll('#reTriagePatient .doa-check:checked').length > 0) {
-                    status = 'DOA';
-                    kode_triase = 5;
-                } else if (document.querySelectorAll('#reTriagePatient .resusitasi-check:checked').length > 0) {
-                    status = 'RESUSITASI (segera)';
-                    kode_triase = 4;
-                } else if (document.querySelectorAll('#reTriagePatient .emergency-check:checked').length > 0) {
-                    status = 'EMERGENCY (10 menit)';
-                    kode_triase = 3;
-                } else if (document.querySelectorAll('#reTriagePatient .urgent-check:checked').length > 0) {
-                    status = 'URGENT (30 menit)';
-                    kode_triase = 2;
-                } else if (document.querySelectorAll('#reTriagePatient .false-emergency-check:checked').length >
-                    0) {
-                    status = 'FALSE EMERGENCY (60 menit)';
-                    kode_triase = 1;
-                }
-
-                document.getElementById('triaseStatusLabel').textContent = status;
-                document.getElementById('triaseStatusLabel').className = determineClass(status);
-                document.getElementById('kode_triase').value = kode_triase;
-                document.getElementById('ket_triase').value = status;
-            }
-
-            // Fungsi untuk menentukan kelas berdasarkan status triase (dengan warna)
-            function determineClass(status) {
-                switch (status) {
-                    case 'RESUSITASI (segera)':
-                    case 'EMERGENCY (10 menit)':
-                        return 'btn btn-block btn-danger ms-3 w-100';
-                    case 'URGENT (30 menit)':
-                        return 'btn btn-block btn-warning ms-3 w-100';
-                    case 'FALSE EMERGENCY (60 menit)':
-                        return 'btn btn-block btn-success ms-3 w-100';
-                    case 'DOA':
-                        return 'btn btn-block btn-dark ms-3 w-100';
-                    default:
-                        return 'btn btn-block ms-3 w-100';
-                }
-            }
-
-            function resetReTriaseForm() {
-                var modalBody = document.getElementById('reTriagePatient').querySelector('.modal-body');
-                modalBody.querySelectorAll('input, textarea, select').forEach(function(input) {
-                    if (input.type === 'checkbox' || input.type === 'radio') {
-                        input.checked = false; // Untuk checkbox dan radio
-                    } else if (input.tagName === 'SELECT') {
-                        input.selectedIndex = 0; // Untuk select box
-                    } else {
-                        input.value = ''; // Untuk input teks, number, textarea
-                    }
-                });
-            }
-
-            // Fungsi untuk menyimpan data re-triase dan menambahkan ke tabel
-            document.getElementById('simpanReTriase').addEventListener('click', function() {
-                updateTriaseStatus(); // Pastikan status triase diperbarui sebelum data disimpan
-
-                var modalBody = document.getElementById('reTriagePatient').querySelector('.modal-body');
-                var formData = getFormData(modalBody);
-                console.log(formData); // Debugging untuk melihat formData yang dikumpulkan
-
-                var emptyFields = [];
-                var requiredFields = [
-                    'td_sistole_retriage', 'td_diastole_retriage', 'nadi_retriage',
-                    'resp_retriage', 'suhu_retriage', 'spo2_tanpa_o2_retriage',
-                    'spo2_dengan_o2_retriage', 'gcs_retriage', 'avpu_retriage'
-                ];
-
-                // Validasi input yang diperlukan
-                requiredFields.forEach(function(field) {
-                    if (!formData[field]) {
-                        emptyFields.push(field);
-                    }
-                });
-
-                if (emptyFields.length > 0) {
-                    iziToast.error({
-                        title: 'Error',
-                        message: 'Field berikut masih kosong: ' + emptyFields.join(', '),
-                        position: 'topRight'
-                    });
-                    return;
-                }
-
-                var newData = {
-                    tanggalJam: new Date().toLocaleString(),
-                    keluhan: formData.anamnesis_retriage || 'Tidak ada keluhan',
-                    vitalSigns: {
-                        td_sistole: formData.td_sistole_retriage,
-                        td_diastole: formData.td_diastole_retriage,
-                        nadi: formData.nadi_retriage,
-                        resp: formData.resp_retriage,
-                        suhu: formData.suhu_retriage,
-                        spo2_tanpa_o2: formData.spo2_tanpa_o2_retriage,
-                        spo2_dengan_o2: formData.spo2_dengan_o2_retriage,
-                        gcs: formData.gcs_retriage,
-                        avpu: formData.avpu_retriage,
-                    },
-                    triase: {
-                        kode_triase: document.getElementById('kode_triase')
-                        .value, // Ambil nilai kode triase terbaru
-                        ket_triase: document.getElementById('ket_triase')
-                        .value, // Ambil nilai ket triase terbaru
-                        air_way: formData.triase.air_way,
-                        breathing: formData.triase.breathing,
-                        circulation: formData.triase.circulation,
-                        disability: formData.triase.disability
-                    },
-                    catatan: formData.catatan_retriage || 'Tidak ada catatan'
-                };
-
-                // Tambahkan data ke array reTriaseData
-                reTriaseData.push(newData);
-                updateReTriaseTable();
-                resetReTriaseForm();
-                reTriaseModal.hide();
-            });
-
-
-            // Fungsi untuk memperbarui tabel re-triase
-            function updateReTriaseTable() {
-                var tbody = document.querySelector('#reTriaseTable tbody');
-                tbody.innerHTML = ''; // Kosongkan tabel sebelum menambahkan data baru
-
-                reTriaseData.forEach(function(data, index) {
-                    var row = `
-                    <tr>
-                        <td>${data.tanggalJam}</td>
-                        <td>${data.keluhan}</td>
-                        <td>
-                            <ul>
-                                <li>TD Sistole: ${data.vitalSigns.td_sistole}</li>
-                                <li>TD Diastole: ${data.vitalSigns.td_diastole}</li>
-                                <li>Nadi: ${data.vitalSigns.nadi}</li>
-                                <li>Resp: ${data.vitalSigns.resp}</li>
-                                <li>Suhu: ${data.vitalSigns.suhu}</li>
-                                <li>SpO2 (tanpa O2): ${data.vitalSigns.spo2_tanpa_o2}</li>
-                                <li>SpO2 (dengan O2): ${data.vitalSigns.spo2_dengan_o2}</li>
-                                <li>GCS: ${data.vitalSigns.gcs}</li>
-                                <li>AVPU: ${data.vitalSigns.avpu}</li>
-                            </ul>
-                        </td>
-                        <td>
-                            <div class="triase-circle ${getTriaseClass(data.triase.kode_triase)}"></div>
-                            <div class="triase-label">${data.triase.ket_triase}</div>
-                        </td>
-                    </tr>
-                `;
-                    tbody.innerHTML += row;
-                });
-            }
-
-
-            // Fungsi untuk memberikan kelas warna berdasarkan kode triase
-            function getTriaseClass(kode_triase) {
-                switch (parseInt(kode_triase)) {
-                    case 5:
-                        return 'triase-doa';
-                    case 4:
-                        return 'triase-resusitasi';
-                    case 3:
-                        return 'triase-emergency';
-                    case 2:
-                        return 'triase-urgent';
-                    case 1:
-                        return 'triase-false-emergency';
-                    default:
-                        return '';
-                }
-            }
-
-            // Fungsi untuk mengirim data re-triase dalam bentuk JSON ke server
-            window.getReTriageData = function() {
-                return JSON.stringify(reTriaseData);
-            };
+    if (btnSimpanRetriase) {
+        btnSimpanRetriase.addEventListener('click', function() {
+            saveRetriase();
         });
-    </script>
-@endpush
+    }
+
+    if (retriaseModal) {
+        retriaseModal.addEventListener('hidden.bs.modal', function() {
+            resetRetriaseModal();
+            editRetriaseIndex = -1;
+        });
+    }
+
+    if (btnSimpanGCSRetriase) {
+        btnSimpanGCSRetriase.addEventListener('click', function() {
+            applyGCSToRetriase();
+        });
+    }
+
+    // GCS Calculator untuk Retriase
+    initGCSRetriaseCalculator();
+
+    function getKesimpulanTriaseText(kode) {
+        const mapping = {
+            '1': 'FALSE EMERGENCY (60 menit)',
+            '2': 'URGENT (30 menit)',
+            '3': 'EMERGENCY (10 menit)',
+            '4': 'RESUSITASI (segera)',
+            '5': 'DOA'
+        };
+        return mapping[kode] || '-';
+    }
+
+    function getTriaseBadgeClass(kode) {
+        const mapping = {
+            '1': 'bg-success',      // FALSE EMERGENCY - hijau
+            '2': 'bg-warning',      // URGENT - kuning
+            '3': 'bg-danger',       // EMERGENCY - merah
+            '4': 'bg-dark',         // RESUSITASI - hitam
+            '5': 'bg-secondary'     // DOA - abu-abu
+        };
+        return mapping[kode] || 'bg-light';
+    }
+
+    function saveRetriase() {
+        const tanggal = document.getElementById('retriaseTanggal').value;
+        const jam = document.getElementById('retriaseJam').value;
+        const gcs = document.getElementById('retriaseGCS').value;
+        const temp = document.getElementById('retriaseTemp').value;
+        const rr = document.getElementById('retriaseRR').value;
+        const spo2TanpaO2 = document.getElementById('retriaseSpo2TanpaO2').value;
+        const spo2DenganO2 = document.getElementById('retriaseSpo2DenganO2').value;
+        const tdSistole = document.getElementById('retriaseTdSistole').value;
+        const tdDiastole = document.getElementById('retriaseTdDiastole').value;
+        const keluhan = document.getElementById('retriaseKeluhan').value.trim();
+        const kesimpulanTriase = document.getElementById('retriaseKesimpulanTriase').value;
+
+        if (!tanggal || !jam) {
+            showAlert('Tanggal dan jam harus diisi');
+            return;
+        }
+
+        // Validasi vital sign
+        const validationResult = validateVitalSigns({
+            temp: parseFloat(temp),
+            rr: parseInt(rr),
+            spo2TanpaO2: parseInt(spo2TanpaO2),
+            spo2DenganO2: parseInt(spo2DenganO2),
+            tdSistole: parseInt(tdSistole),
+            tdDiastole: parseInt(tdDiastole)
+        });
+
+        if (!validationResult.isValid) {
+            if (confirm(`Terdapat nilai vital sign yang abnormal:\n${validationResult.warnings.join('\n')}\n\nLanjutkan menyimpan?`)) {
+                // Continue saving
+            } else {
+                return;
+            }
+        }
+
+        const retriaseData = {
+            tanggal: tanggal,
+            jam: jam,
+            tanggal_jam: `${tanggal} ${jam}`,
+            gcs: gcs || '-',
+            temp: temp || '-',
+            rr: rr || '-',
+            spo2_tanpa_o2: spo2TanpaO2 || '-',
+            spo2_dengan_o2: spo2DenganO2 || '-',
+            td_sistole: tdSistole || '-',
+            td_diastole: tdDiastole || '-',
+            keluhan: keluhan || '-',
+            kesimpulan_triase: kesimpulanTriase || '-',
+            kesimpulan_triase_text: getKesimpulanTriaseText(kesimpulanTriase)
+        };
+
+        if (editRetriaseIndex === -1) {
+            // Add new
+            retriaseArray.push(retriaseData);
+        } else {
+            // Edit existing
+            retriaseArray[editRetriaseIndex] = retriaseData;
+        }
+
+        renderRetriaseTable();
+        updateRetriaseJson();
+        closeModal('retriaseModal');
+        editRetriaseIndex = -1;
+    }
+
+    function validateVitalSigns(vitals) {
+        const warnings = [];
+        let isValid = true;
+
+        // Validasi suhu
+        if (vitals.temp && (vitals.temp < 28.0 || vitals.temp > 45.0)) {
+            warnings.push(`Suhu ${vitals.temp}°C (Normal: 36.0-37.5°C)`);
+            isValid = false;
+        }
+
+        // Validasi respirasi
+        if (vitals.rr && (vitals.rr < 10 || vitals.rr > 30)) {
+            warnings.push(`Respirasi ${vitals.rr}x/menit (Normal: 16-24x/menit)`);
+            isValid = false;
+        }
+
+        // Validasi SpO2
+        if (vitals.spo2TanpaO2 && vitals.spo2TanpaO2 < 95) {
+            warnings.push(`SpO2 tanpa O2 ${vitals.spo2TanpaO2}% (Normal: ≥95%)`);
+            isValid = false;
+        }
+
+        // Validasi tekanan darah
+        if (vitals.tdSistole && (vitals.tdSistole < 90 || vitals.tdSistole > 140)) {
+            warnings.push(`TD Sistole ${vitals.tdSistole}mmHg (Normal: 90-140mmHg)`);
+            isValid = false;
+        }
+
+        if (vitals.tdDiastole && (vitals.tdDiastole < 60 || vitals.tdDiastole > 90)) {
+            warnings.push(`TD Diastole ${vitals.tdDiastole}mmHg (Normal: 60-90mmHg)`);
+            isValid = false;
+        }
+
+        return { isValid, warnings };
+    }
+
+    function renderRetriaseTable() {
+        const tbody = document.querySelector('#retriaseTable tbody');
+        const noAlatRow = tbody.querySelector('tr');
+
+        if (retriaseArray.length === 0) {
+            noAlatRow.style.display = 'table-row';
+            const existingRows = tbody.querySelectorAll('tr:not(:first-child)');
+            existingRows.forEach(row => row.remove());
+            return;
+        }
+
+        noAlatRow.style.display = 'none';
+
+        // Clear existing rows except no-data row
+        const existingRows = tbody.querySelectorAll('tr:not(:first-child)');
+        existingRows.forEach(row => row.remove());
+
+        // Add new rows
+        retriaseArray.forEach((retriase, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${retriase.tanggal_jam}</td>
+                <td>${retriase.gcs}</td>
+                <td>${retriase.temp}${retriase.temp !== '-' ? '°C' : ''}</td>
+                <td>${retriase.rr}${retriase.rr !== '-' ? 'x/mnt' : ''}</td>
+                <td>${retriase.spo2_tanpa_o2}${retriase.spo2_tanpa_o2 !== '-' ? '%' : ''}</td>
+                <td>${retriase.spo2_dengan_o2}${retriase.spo2_dengan_o2 !== '-' ? '%' : ''}</td>
+                <td>${retriase.td_sistole}${retriase.td_sistole !== '-' ? 'mmHg' : ''}</td>
+                <td>${retriase.td_diastole}${retriase.td_diastole !== '-' ? 'mmHg' : ''}</td>
+                <td style="max-width: 200px;">
+                    <div class="text-truncate" title="${retriase.keluhan}">
+                        ${retriase.keluhan}
+                    </div>
+                </td>
+                <td>
+                    <span class="badge ${getTriaseBadgeClass(retriase.kesimpulan_triase)}">
+                        ${retriase.kesimpulan_triase_text}
+                    </span>
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-outline-primary edit-retriase" 
+                                data-index="${index}" title="Edit">
+                            <i class="ti-pencil"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger delete-retriase" 
+                                data-index="${index}" title="Hapus">
+                            <i class="ti-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            `;
+
+            tbody.appendChild(row);
+        });
+
+        // Add event listeners for new buttons
+        tbody.querySelectorAll('.edit-retriase').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const index = parseInt(this.dataset.index);
+                openRetriaseModal('edit', index);
+            });
+        });
+
+        tbody.querySelectorAll('.delete-retriase').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const index = parseInt(this.dataset.index);
+                deleteRetriase(index);
+            });
+        });
+    }
+
+    function openRetriaseModal(mode, index = -1) {
+        const modalLabel = document.getElementById('retriaseModalLabel');
+        
+        if (mode === 'add') {
+            modalLabel.textContent = 'Tambah Retriase/Observasi Lanjutan';
+            resetRetriaseModal();
+            editRetriaseIndex = -1;
+        } else if (mode === 'edit' && index !== -1) {
+            modalLabel.textContent = 'Edit Retriase/Observasi Lanjutan';
+            const retriase = retriaseArray[index];
+            
+            document.getElementById('retriaseTanggal').value = retriase.tanggal;
+            document.getElementById('retriaseJam').value = retriase.jam;
+            document.getElementById('retriaseGCS').value = retriase.gcs === '-' ? '' : retriase.gcs;
+            document.getElementById('retriaseTemp').value = retriase.temp === '-' ? '' : retriase.temp;
+            document.getElementById('retriaseRR').value = retriase.rr === '-' ? '' : retriase.rr;
+            document.getElementById('retriaseSpo2TanpaO2').value = retriase.spo2_tanpa_o2 === '-' ? '' : retriase.spo2_tanpa_o2;
+            document.getElementById('retriaseSpo2DenganO2').value = retriase.spo2_dengan_o2 === '-' ? '' : retriase.spo2_dengan_o2;
+            document.getElementById('retriaseTdSistole').value = retriase.td_sistole === '-' ? '' : retriase.td_sistole;
+            document.getElementById('retriaseTdDiastole').value = retriase.td_diastole === '-' ? '' : retriase.td_diastole;
+            document.getElementById('retriaseKeluhan').value = retriase.keluhan === '-' ? '' : retriase.keluhan;
+            document.getElementById('retriaseKesimpulanTriase').value = retriase.kesimpulan_triase === '-' ? '' : retriase.kesimpulan_triase;
+            
+            editRetriaseIndex = index;
+        }
+
+        const modal = new bootstrap.Modal(document.getElementById('retriaseModal'));
+        modal.show();
+    }
+
+    function deleteRetriase(index) {
+        if (confirm('Apakah Anda yakin ingin menghapus data retriase ini?')) {
+            retriaseArray.splice(index, 1);
+            renderRetriaseTable();
+            updateRetriaseJson();
+        }
+    }
+
+    function updateRetriaseJson() {
+        const retriaseDataInput = document.getElementById('retriaseData');
+        if (retriaseDataInput) {
+            retriaseDataInput.value = JSON.stringify(retriaseArray);
+        }
+    }
+
+    function resetRetriaseModal() {
+        document.getElementById('retriaseTanggal').value = new Date().toISOString().split('T')[0];
+        document.getElementById('retriaseJam').value = new Date().toTimeString().slice(0, 5);
+        document.getElementById('retriaseGCS').value = '';
+        document.getElementById('retriaseTemp').value = '';
+        document.getElementById('retriaseRR').value = '';
+        document.getElementById('retriaseSpo2TanpaO2').value = '';
+        document.getElementById('retriaseSpo2DenganO2').value = '';
+        document.getElementById('retriaseTdSistole').value = '';
+        document.getElementById('retriaseTdDiastole').value = '';
+        document.getElementById('retriaseKeluhan').value = '';
+        document.getElementById('retriaseKesimpulanTriase').value = '';
+
+    }
+
+    // Expose functions globally
+    window.openRetriaseModal = openRetriaseModal;
+    window.saveRetriase = saveRetriase;
+    window.deleteRetriase = deleteRetriase;
+}
+
+function initGCSRetriaseCalculator() {
+    const eyeInputs = document.querySelectorAll('input[name="gcsEyeRetriase"]');
+    const verbalInputs = document.querySelectorAll('input[name="gcsVerbalRetriase"]');
+    const motorInputs = document.querySelectorAll('input[name="gcsMotorRetriase"]');
+
+    function calculateGCSRetriase() {
+        const eyeScore = parseInt(document.querySelector('input[name="gcsEyeRetriase"]:checked')?.value || 0);
+        const verbalScore = parseInt(document.querySelector('input[name="gcsVerbalRetriase"]:checked')?.value || 0);
+        const motorScore = parseInt(document.querySelector('input[name="gcsMotorRetriase"]:checked')?.value || 0);
+
+        const total = eyeScore + verbalScore + motorScore;
+        
+        document.getElementById('gcsRetriaseTotal').textContent = total;
+        document.getElementById('gcsRetriaseDetail').textContent = `E${eyeScore} V${verbalScore} M${motorScore}`;
+    }
+
+    // Add event listeners
+    [...eyeInputs, ...verbalInputs, ...motorInputs].forEach(input => {
+        input.addEventListener('change', calculateGCSRetriase);
+    });
+}
+
+function openGCSModalForRetriase() {
+    const modal = new bootstrap.Modal(document.getElementById('gcsRetriaseModal'));
+    modal.show();
+}
+
+function applyGCSToRetriase() {
+    const total = document.getElementById('gcsRetriaseTotal').textContent;
+    const detail = document.getElementById('gcsRetriaseDetail').textContent;
+    
+    if (total && total !== '0') {
+        document.getElementById('retriaseGCS').value = `${total} ${detail}`;
+        closeModal('gcsRetriaseModal');
+    } else {
+        showAlert('Mohon pilih nilai untuk semua komponen GCS');
+    }
+}
+
+function showAlert(message) {
+    alert(message);
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal && window.bootstrap) {
+        const modalInstance = bootstrap.Modal.getInstance(modal);
+        if (modalInstance) {
+            modalInstance.hide();
+        }
+    }
+}
+</script>
+
+<style>
+.gcs-options {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    border: 1px solid #e9ecef;
+}
+
+.gcs-options .form-check {
+    margin-bottom: 0.5rem;
+}
+
+.gcs-options .form-check:last-child {
+    margin-bottom: 0;
+}
+
+.gcs-result {
+    margin-top: 1rem;
+}
+
+.text-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#retriaseTable td {
+    vertical-align: middle;
+}
+
+.alert-info {
+    background-color: #e7f3ff;
+    border-color: #b8daff;
+    color: #0c5460;
+}
+</style>

@@ -251,15 +251,12 @@
 
                                             <div class="form-group mb-3">
                                                 <label class="form-label">TB (cm)</label>
-                                                <input type="number" class="form-control" name="vital_sign[tb]"
-                                                    id="tbInput" onchange="hitungIMT()">
+                                                <input type="number" class="form-control" name="antropometri[tb]" id="tbInput" onchange="hitungIMT()">
                                             </div>
 
                                             <div class="form-group mb-3">
                                                 <label class="form-label">BB (kg)</label>
-                                                <input type="number" step="0.1" class="form-control"
-                                                    name="vital_sign[bb]" id="bbInput"
-                                                    onchange="hitungIMT()">
+                                                <input type="number" step="0.1" class="form-control" name="antropometri[bb]" id="bbInput" onchange="hitungIMT()">
                                             </div>
                                         </div>
                                     </div>
@@ -298,16 +295,13 @@
 
                                             <div class="form-group mb-3">
                                                 <label class="form-label">Lingkar Kepala (cm)</label>
-                                                <input type="number" step="0.1" class="form-control"
-                                                    name="vital_sign[lingkar_kepala]">
+                                                <input type="number" step="0.1" class="form-control" name="antropometri[lpt]">
                                             </div>
 
                                             <div class="form-group mb-3">
                                                 <label class="form-label">IMT (kg/m²)</label>
                                                 <div class="input-group">
-                                                    <input type="number" step="0.01" class="form-control"
-                                                        name="vital_sign[imt]" id="imtInput"
-                                                        readonly>
+                                                    <input type="number" step="0.01" class="form-control" name="antropometri[imt]" id="imtInput" readonly>
                                                     <span class="input-group-text" id="imtKategori">Normal</span>
                                                 </div>
                                             </div>
@@ -366,13 +360,13 @@
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
                                             <label class="form-label">Lokasi</label>
-                                            <input type="text" class="form-control" name="skala_nyeri_lokasi"
+                                            <input type="text" class="form-control" name="lokasi"
                                                 placeholder="Contoh: Kepala, Dada">
                                         </div>
 
                                         <div class="form-group mb-3">
                                             <label class="form-label">Pemberat</label>
-                                            <select class="form-select" name="skala_nyeri_pemberat_id">
+                                            <select class="form-select" name="faktor_pemberat">
                                                 <option value="">--Pilih--</option>
                                                 @foreach ($faktorpemberat as $pemberat)
                                                     <option value="{{ $pemberat->id }}">{{ $pemberat->name }}</option>
@@ -382,7 +376,7 @@
 
                                         <div class="form-group mb-3">
                                             <label class="form-label">Kualitas</label>
-                                            <select class="form-select" name="skala_nyeri_kualitas_id">
+                                            <select class="form-select" name="kualitas">
                                                 <option value="">--Pilih--</option>
                                                 @foreach ($kualitasnyeri as $kualitas)
                                                     <option value="{{ $kualitas->id }}">{{ $kualitas->name }}</option>
@@ -392,25 +386,36 @@
 
                                         <div class="form-group mb-3">
                                             <label class="form-label">Menjalar</label>
-                                            <select class="form-select" name="skala_nyeri_menjalar_id">
+                                            <select class="form-select" name="menjalar">
                                                 <option value="">--Pilih--</option>
                                                 @foreach ($menjalar as $menj)
                                                     <option value="{{ $menj->id }}">{{ $menj->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
+
+                                        <div class="form-group mb-3">
+                                            <label class="form-label">Efek Nyeri</label>
+                                            <select class="form-select" name="efek_nyeri">
+                                                <option value="">--Pilih--</option>
+                                                @foreach ($efeknyeri as $efek)
+                                                    <option value="{{ $efek->id }}">{{ $efek->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
                                             <label class="form-label">Durasi</label>
-                                            <input type="text" class="form-control" name="skala_nyeri_durasi"
+                                            <input type="text" class="form-control" name="durasi"
                                                 placeholder="Contoh: 2 jam, 30 menit">
                                         </div>
 
                                         <div class="form-group mb-3">
                                             <label class="form-label">Peringan</label>
-                                            <select class="form-select" name="skala_nyeri_peringan_id">
+                                            <select class="form-select" name="faktor_peringan">
                                                 <option value="">--Pilih--</option>
                                                 @foreach ($faktorperingan as $peringan)
                                                     <option value="{{ $peringan->id }}">{{ $peringan->name }}</option>
@@ -420,7 +425,7 @@
 
                                         <div class="form-group mb-3">
                                             <label class="form-label">Frekuensi</label>
-                                            <select class="form-select" name="skala_nyeri_frekuensi_id">
+                                            <select class="form-select" name="frekuensi">
                                                 <option value="">--Pilih--</option>
                                                 @foreach ($frekuensinyeri as $frekuensi)
                                                     <option value="{{ $frekuensi->id }}">{{ $frekuensi->name }}</option>
@@ -430,7 +435,7 @@
 
                                         <div class="form-group mb-3">
                                             <label class="form-label">Jenis</label>
-                                            <select class="form-select" name="skala_nyeri_jenis_id">
+                                            <select class="form-select" name="skala_nyeri">
                                                 <option value="">--Pilih--</option>
                                                 @foreach ($jenisnyeri as $jenis)
                                                     <option value="{{ $jenis->id }}">{{ $jenis->name }}</option>
@@ -628,7 +633,7 @@
                                     </button>
                                 </div>
 
-                                <input type="hidden" name="diagnosis_data" id="diagnosisData" value="[]">
+                                <input type="hidden" name="diagnosa_data" id="diagnosisData" value="[]">
 
                                 <div id="diagnosisList" class="diagnosis-list">
                                     <!-- Diagnosis items will be added here dynamically -->
@@ -671,7 +676,44 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.modal-alatyangterpasang-new')
+                            </div>
+
+                            {{-- RETRIASE/OBSERVASI LANJUTAN --}}
+                            <div class="section-separator" id="retriase">
+                                <h5 class="section-title">7. Retriase/Observasi Lanjutan</h5>
+
+                                <div class="mb-3">
+                                    <button type="button" class="btn btn-outline-primary" id="btnTambahRetriase" data-bs-toggle="modal" data-bs-target="#retriaseModal">
+                                        <i class="ti-plus"></i> Tambah Retriase
+                                    </button>
+                                </div>
+
+                                <input type="hidden" name="retriase_data" id="retriaseData" value="[]">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="retriaseTable">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Waktu</th>
+                                                <th>GCS</th>
+                                                <th>Temp</th>
+                                                <th>RR</th>
+                                                <th>SpO2 (tanpa O2)</th>
+                                                <th>SpO2 (dengan O2)</th>
+                                                <th>TD (Sistole)</th>
+                                                <th>TD (Diastole)</th>
+                                                <th>Keluhan</th>
+                                                <th>Retriase</th>
+                                                <th>Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr id="no-alat-row">
+                                                <td colspan="12" class="text-center text-muted">Tidak ada retriase</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
 
                             {{-- KONDISI PASIEN MENINGGALKAN IGD --}}
@@ -1085,6 +1127,8 @@
     </div>
 @endsection
 
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.modal-alatyangterpasang-new')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.include')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.modal-create-alergi')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.gcs-modal')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.modal-retriase')

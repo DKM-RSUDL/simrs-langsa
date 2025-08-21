@@ -36,17 +36,17 @@
         <!-- Button "Tambah" di sebelah kanan -->
         <div class="col-md-4 text-end ms-auto">
             
-            @canany(['is-admin', 'is-dokter-umum', 'is-dokter-spesialis'])
+            {{-- @canany(['is-admin', 'is-dokter-umum', 'is-dokter-spesialis'])
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailPasienModal" type="button">
                     <i class="ti-plus"></i> Tambah
                 </button>
-            @endcanany
+            @endcanany --}}
 
-            {{-- @canany(['is-admin', 'is-dokter-umum', 'is-dokter-spesialis'])
+            @canany(['is-admin', 'is-dokter-umum', 'is-dokter-spesialis'])
                 <a class="btn btn-primary" href="{{ route('asesmen.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
                     <i class="ti-plus"></i> Tambah
                 </a>
-            @endcanany --}}
+            @endcanany
 
             @canany(['is-admin', 'is-perawat', 'is-bidan'])
                 <a href="{{ route('asesmen-keperawatan.index', ['kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk')]) }}"
