@@ -39,7 +39,8 @@ class RmeAsesmen extends Model
         'waktu_asesmen',
         'durasi',
         'kategori',
-        'sub_kategori'
+        'sub_kategori',
+        'user_id'
     ];
 
     public function user()

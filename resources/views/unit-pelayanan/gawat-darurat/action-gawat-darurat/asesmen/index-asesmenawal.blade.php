@@ -96,9 +96,10 @@
             <!-- Action Buttons -->
             <div class="d-flex gap-2">
                 @if ($item->kategori == 1)
-                    <button type="button" onclick="showAsesmen('{{ $item->id }}')"
-                        data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/asesmen/' . $item->id) }}"
-                        class="btn btn-info btn-sm px-3">
+                    <button type="button" 
+                            onclick="showAsesmen('{{ $item->id }}')"
+                            data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/' . $item->id) }}"
+                            class="btn btn-info btn-sm px-3">
                         <i class="fas fa-eye me-1"></i> Lihat
                     </button>
                     <button type="button" onclick="editAsesmen('{{ $item->id }}')"
@@ -126,9 +127,7 @@
     @endforeach
 </ul>
 
-
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.show')
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.create-asesmen')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show')
 
 <style>

@@ -208,7 +208,6 @@
                             </div>
                             <div class="tab-pane fade" id="skrining" role="tabpanel" aria-labelledby="skrining-tab">
                                 {{-- TAB 2. buatlah list disini --}}
-                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.index-skriningkhusus')
                             </div>
                         </div>
                     </div>

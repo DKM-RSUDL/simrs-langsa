@@ -222,41 +222,53 @@
                             <div class="section-separator" id="vital-sign">
                                 <h5 class="section-title">2. Vital Sign</h5>
 
+                                @if ($triaseVitalSign)
+                                    <div class="alert alert-info mb-3">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        <strong>Data dari Triase Terakhir:</strong> Form telah diisi otomatis dengan data
+                                        vital sign dari triase terakhir. Anda dapat mengubah nilai sesuai kebutuhan.
+                                    </div>
+                                @endif
+
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <div class="vital-sign-group">
                                             <div class="form-group mb-3">
                                                 <label class="form-label">TD Sistole (mmHg)</label>
                                                 <input type="number" class="form-control" name="vital_sign[td_sistole]"
-                                                >
+                                                    value="{{ $triaseVitalSign['sistole'] ?? '' }}">
                                             </div>
 
                                             <div class="form-group mb-3">
                                                 <label class="form-label">TD Diastole (mmHg)</label>
                                                 <input type="number" class="form-control" name="vital_sign[td_diastole]"
-                                                >
+                                                    value="{{ $triaseVitalSign['diastole'] ?? '' }}">
                                             </div>
 
                                             <div class="form-group mb-3">
                                                 <label class="form-label">Nadi (x/menit)</label>
                                                 <input type="number" class="form-control" name="vital_sign[nadi]"
-                                                >
+                                                    value="{{ $triaseVitalSign['nadi'] ?? '' }}">
                                             </div>
 
                                             <div class="form-group mb-3">
                                                 <label class="form-label">Suhu (°C)</label>
                                                 <input type="number" step="0.1" class="form-control"
-                                                    name="vital_sign[suhu]">
+                                                    name="vital_sign[suhu]" value="{{ $triaseVitalSign['suhu'] ?? '' }}">
                                             </div>
 
                                             <div class="form-group mb-3">
                                                 <label class="form-label">TB (cm)</label>
-                                                <input type="number" class="form-control" name="antropometri[tb]" id="tbInput" onchange="hitungIMT()">
+                                                <input type="number" class="form-control" name="antropometri[tb]"
+                                                    id="tbInput" onchange="hitungIMT()"
+                                                    value="{{ $triaseVitalSign['tinggi_badan'] ?? '' }}">
                                             </div>
 
                                             <div class="form-group mb-3">
                                                 <label class="form-label">BB (kg)</label>
-                                                <input type="number" step="0.1" class="form-control" name="antropometri[bb]" id="bbInput" onchange="hitungIMT()">
+                                                <input type="number" step="0.1" class="form-control"
+                                                    name="antropometri[bb]" id="bbInput" onchange="hitungIMT()"
+                                                    value="{{ $triaseVitalSign['berat_badan'] ?? '' }}">
                                             </div>
                                         </div>
                                     </div>
@@ -266,19 +278,21 @@
                                             <div class="form-group mb-3">
                                                 <label class="form-label">Respirasi (x/menit)</label>
                                                 <input type="number" class="form-control" name="vital_sign[respirasi]"
-                                                >
+                                                    value="{{ $triaseVitalSign['respiration'] ?? '' }}">
                                             </div>
 
                                             <div class="form-group mb-3">
                                                 <label class="form-label">SpO2 tanpa O2 (%)</label>
                                                 <input type="number" class="form-control"
-                                                    name="vital_sign[spo2_tanpa_o2]">
+                                                    name="vital_sign[spo2_tanpa_o2]"
+                                                    value="{{ $triaseVitalSign['spo2_tanpa_o2'] ?? '' }}">
                                             </div>
 
                                             <div class="form-group mb-3">
                                                 <label class="form-label">SpO2 dengan O2 (%)</label>
                                                 <input type="number" class="form-control"
-                                                    name="vital_sign[spo2_dengan_o2]">
+                                                    name="vital_sign[spo2_dengan_o2]"
+                                                    value="{{ $triaseVitalSign['spo2_dengan_o2'] ?? '' }}">
                                             </div>
 
                                             <div class="form-group mb-3">
@@ -295,13 +309,15 @@
 
                                             <div class="form-group mb-3">
                                                 <label class="form-label">Lingkar Kepala (cm)</label>
-                                                <input type="number" step="0.1" class="form-control" name="antropometri[lpt]">
+                                                <input type="number" step="0.1" class="form-control"
+                                                    name="antropometri[lpt]">
                                             </div>
 
                                             <div class="form-group mb-3">
                                                 <label class="form-label">IMT (kg/m²)</label>
                                                 <div class="input-group">
-                                                    <input type="number" step="0.01" class="form-control" name="antropometri[imt]" id="imtInput" readonly>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="antropometri[imt]" id="imtInput" readonly>
                                                     <span class="input-group-text" id="imtKategori">Normal</span>
                                                 </div>
                                             </div>
@@ -502,7 +518,7 @@
                             {{-- PEMERIKSAAN PENUNJANG KLINIS --}}
                             <div class="section-separator" id="pemeriksaan-penunjang">
                                 <h5 class="section-title">3. Pemeriksaan Penunjang Klinis</h5>
-                                
+
                                 {{-- LABORATORIUM --}}
                                 <h6 class="mb-3">Laboratorium</h6>
                                 <div class="table-responsive mb-4">
@@ -523,7 +539,8 @@
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="3" class="text-center text-muted">Tidak ada data laboratorium</td>
+                                                    <td colspan="3" class="text-center text-muted">Tidak ada data
+                                                        laboratorium</td>
                                                 </tr>
                                             @endforelse
                                         </tbody>
@@ -550,7 +567,8 @@
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="3" class="text-center text-muted">Tidak ada data radiologi</td>
+                                                    <td colspan="3" class="text-center text-muted">Tidak ada data
+                                                        radiologi</td>
                                                 </tr>
                                             @endforelse
                                         </tbody>
@@ -579,7 +597,8 @@
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="4" class="text-center text-muted">Tidak ada data tindakan</td>
+                                                    <td colspan="4" class="text-center text-muted">Tidak ada data
+                                                        tindakan</td>
                                                 </tr>
                                             @endforelse
                                         </tbody>
@@ -607,15 +626,19 @@
                                                     $keterangan = trim($cara_pakai_parts[1] ?? '');
                                                 @endphp
                                                 <tr>
-                                                    <td>{{ isset($resep->tgl_order) ? \Carbon\Carbon::parse($resep->tgl_order)->format('d M Y H:i') : '-' }}</td>
+                                                    <td>{{ isset($resep->tgl_order) ? \Carbon\Carbon::parse($resep->tgl_order)->format('d M Y H:i') : '-' }}
+                                                    </td>
                                                     <td>{{ $resep->nama_obat ?? 'Tidak ada informasi' }}</td>
-                                                    <td>{{ ($resep->jumlah_takaran ?? '') }} {{ isset($resep->satuan_takaran) ? Str::title($resep->satuan_takaran) : '' }}</td>
+                                                    <td>{{ $resep->jumlah_takaran ?? '' }}
+                                                        {{ isset($resep->satuan_takaran) ? Str::title($resep->satuan_takaran) : '' }}
+                                                    </td>
                                                     <td>{{ $keterangan ?: '-' }}</td>
                                                     <td>{{ $resep->nama_dokter ?? '-' }}</td>
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="5" class="text-center text-muted">Tidak ada resep obat</td>
+                                                    <td colspan="5" class="text-center text-muted">Tidak ada resep obat
+                                                    </td>
                                                 </tr>
                                             @endforelse
                                         </tbody>
@@ -639,7 +662,8 @@
                                     <!-- Diagnosis items will be added here dynamically -->
                                 </div>
 
-                                <div id="noDiagnosisMessage" class="text-center text-muted py-2" style="border: 2px dashed #dee2e6; border-radius: 0.5rem;">
+                                <div id="noDiagnosisMessage" class="text-center text-muted py-2"
+                                    style="border: 2px dashed #dee2e6; border-radius: 0.5rem;">
                                     <i class="ti-file-text" style="font-size: 2rem; opacity: 0.5;"></i>
                                     <p class="mb-0 mt-2">Belum ada diagnosis yang ditambahkan</p>
                                     <small>Klik tombol "Tambah Diagnosis" untuk menambah diagnosis</small>
@@ -651,7 +675,8 @@
                                 <h5 class="section-title">6. Alat yang Terpasang</h5>
 
                                 <div class="mb-3">
-                                    <button type="button" class="btn btn-outline-primary" id="btnTambahAlat" data-bs-toggle="modal" data-bs-target="#alatModal">
+                                    <button type="button" class="btn btn-outline-primary" id="btnTambahAlat"
+                                        data-bs-toggle="modal" data-bs-target="#alatModal">
                                         <i class="ti-plus"></i> Tambah Alat
                                     </button>
                                 </div>
@@ -671,7 +696,8 @@
                                         </thead>
                                         <tbody>
                                             <tr id="no-alat-row">
-                                                <td colspan="5" class="text-center text-muted">Tidak ada alat yang terpasang</td>
+                                                <td colspan="5" class="text-center text-muted">Tidak ada alat yang
+                                                    terpasang</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -683,7 +709,8 @@
                                 <h5 class="section-title">7. Retriase/Observasi Lanjutan</h5>
 
                                 <div class="mb-3">
-                                    <button type="button" class="btn btn-outline-primary" id="btnTambahRetriase" data-bs-toggle="modal" data-bs-target="#retriaseModal">
+                                    <button type="button" class="btn btn-outline-primary" id="btnTambahRetriase"
+                                        data-bs-toggle="modal" data-bs-target="#retriaseModal">
                                         <i class="ti-plus"></i> Tambah Retriase
                                     </button>
                                 </div>
@@ -734,7 +761,8 @@
                                 <div class="mb-3">
                                     <div class="alert alert-info">
                                         <i class="ti-info-alt"></i>
-                                        <span class="text-muted">Pilih salah satu tindak lanjut pelayanan yang sesuai dengan kondisi pasien saat meninggalkan IGD.</span>
+                                        <span class="text-muted">Pilih salah satu tindak lanjut pelayanan yang sesuai
+                                            dengan kondisi pasien saat meninggalkan IGD.</span>
                                     </div>
                                 </div>
 
@@ -743,7 +771,8 @@
                                         <div class="col-md-6">
                                             <div class="radio-option" data-target="formRawatInap">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" name="tindakLanjut" value="rawatInap" id="rawatInap">
+                                                    <input type="radio" class="form-check-input" name="tindakLanjut"
+                                                        value="rawatInap" id="rawatInap">
                                                     <label class="form-check-label" for="rawatInap">
                                                         <i class="ti-home me-2"></i>Rawat Inap
                                                     </label>
@@ -754,7 +783,8 @@
                                         <div class="col-md-6">
                                             <div class="radio-option" data-target="formRujukKeluar">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" name="tindakLanjut" value="rujukKeluar" id="rujukKeluar">
+                                                    <input type="radio" class="form-check-input" name="tindakLanjut"
+                                                        value="rujukKeluar" id="rujukKeluar">
                                                     <label class="form-check-label" for="rujukKeluar">
                                                         <i class="ti-export me-2"></i>Rujuk Keluar RS Lain
                                                     </label>
@@ -765,7 +795,8 @@
                                         <div class="col-md-6">
                                             <div class="radio-option" data-target="formpulangSembuh">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" name="tindakLanjut" value="pulangSembuh" id="pulangSembuh">
+                                                    <input type="radio" class="form-check-input" name="tindakLanjut"
+                                                        value="pulangSembuh" id="pulangSembuh">
                                                     <label class="form-check-label" for="pulangSembuh">
                                                         <i class="ti-check me-2"></i>Pulang
                                                     </label>
@@ -776,7 +807,8 @@
                                         <div class="col-md-6">
                                             <div class="radio-option" data-target="formberobatJalan">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" name="tindakLanjut" value="berobatJalan" id="berobatJalan">
+                                                    <input type="radio" class="form-check-input" name="tindakLanjut"
+                                                        value="berobatJalan" id="berobatJalan">
                                                     <label class="form-check-label" for="berobatJalan">
                                                         <i class="ti-calendar me-2"></i>Berobat Jalan Ke Poli
                                                     </label>
@@ -787,7 +819,8 @@
                                         <div class="col-md-6">
                                             <div class="radio-option" data-target="formMenolakRawatInap">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" name="tindakLanjut" value="menolakRawatInap" id="menolakRawatInap">
+                                                    <input type="radio" class="form-check-input" name="tindakLanjut"
+                                                        value="menolakRawatInap" id="menolakRawatInap">
                                                     <label class="form-check-label" for="menolakRawatInap">
                                                         <i class="ti-close me-2"></i>Menolak Rawat Inap
                                                     </label>
@@ -798,7 +831,8 @@
                                         <div class="col-md-6">
                                             <div class="radio-option" data-target="formmeninggalDunia">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" name="tindakLanjut" value="meninggalDunia" id="meninggalDunia">
+                                                    <input type="radio" class="form-check-input" name="tindakLanjut"
+                                                        value="meninggalDunia" id="meninggalDunia">
                                                     <label class="form-check-label" for="meninggalDunia">
                                                         <i class="ti-heart-broken me-2"></i>Meninggal Dunia
                                                     </label>
@@ -809,7 +843,8 @@
                                         <div class="col-md-6">
                                             <div class="radio-option" data-target="formDOA">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" name="tindakLanjut" value="deathoffarrival" id="deathoffarrival">
+                                                    <input type="radio" class="form-check-input" name="tindakLanjut"
+                                                        value="deathoffarrival" id="deathoffarrival">
                                                     <label class="form-check-label" for="deathoffarrival">
                                                         <i class="ti-pulse me-2"></i>DOA (Death on Arrival)
                                                     </label>
@@ -830,45 +865,53 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label class="form-label required">Tanggal</label>
-                                                        <input type="date" class="form-control" name="tanggalRawatInap" value="{{ date('Y-m-d') }}">
+                                                        <input type="date" class="form-control"
+                                                            name="tanggalRawatInap" value="{{ date('Y-m-d') }}">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label class="form-label required">Jam</label>
-                                                        <input type="time" class="form-control" name="jamRawatInap" value="{{ date('H:i') }}">
+                                                        <input type="time" class="form-control" name="jamRawatInap"
+                                                            value="{{ date('H:i') }}">
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
                                                 <label class="form-label">Keluhan Utama & Riwayat Penyakit</label>
-                                                <textarea class="form-control" name="keluhanUtama_ranap" rows="3" placeholder="Deskripsikan keluhan utama dan riwayat penyakit pasien..."></textarea>
+                                                <textarea class="form-control" name="keluhanUtama_ranap" rows="3"
+                                                    placeholder="Deskripsikan keluhan utama dan riwayat penyakit pasien..."></textarea>
                                             </div>
 
                                             <div class="form-group">
                                                 <label class="form-label">Hasil Pemeriksaan Penunjang Klinis</label>
-                                                <textarea class="form-control" name="hasilPemeriksaan_ranap" rows="3" placeholder="Hasil laboratorium, radiologi, dan pemeriksaan penunjang lainnya..."></textarea>
+                                                <textarea class="form-control" name="hasilPemeriksaan_ranap" rows="3"
+                                                    placeholder="Hasil laboratorium, radiologi, dan pemeriksaan penunjang lainnya..."></textarea>
                                             </div>
 
                                             <div class="form-group">
                                                 <label class="form-label">Jalannya Penyakit & Hasil Konsultasi</label>
-                                                <textarea class="form-control" name="jalannyaPenyakit_ranap" rows="3" placeholder="Perjalanan penyakit dan hasil konsultasi dengan dokter spesialis..."></textarea>
+                                                <textarea class="form-control" name="jalannyaPenyakit_ranap" rows="3"
+                                                    placeholder="Perjalanan penyakit dan hasil konsultasi dengan dokter spesialis..."></textarea>
                                             </div>
 
                                             <div class="form-group">
                                                 <label class="form-label">Diagnosis</label>
-                                                <textarea class="form-control" name="diagnosis_ranap" rows="3" placeholder="Diagnosis utama dan diagnosis sekunder..."></textarea>
+                                                <textarea class="form-control" name="diagnosis_ranap" rows="3"
+                                                    placeholder="Diagnosis utama dan diagnosis sekunder..."></textarea>
                                             </div>
 
                                             <div class="form-group">
                                                 <label class="form-label">Tindakan yang Telah Dilakukan</label>
-                                                <textarea class="form-control" name="tindakan_ranap" rows="3" placeholder="Tindakan medis yang telah dilakukan di IGD..."></textarea>
+                                                <textarea class="form-control" name="tindakan_ranap" rows="3"
+                                                    placeholder="Tindakan medis yang telah dilakukan di IGD..."></textarea>
                                             </div>
 
                                             <div class="form-group mb-0">
                                                 <label class="form-label">Anjuran</label>
-                                                <textarea class="form-control" name="anjuran_ranap" rows="3" placeholder="Anjuran untuk perawatan selanjutnya..."></textarea>
+                                                <textarea class="form-control" name="anjuran_ranap" rows="3"
+                                                    placeholder="Anjuran untuk perawatan selanjutnya..."></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -883,7 +926,8 @@
                                         <div class="card-body">
                                             <div class="form-group">
                                                 <label class="form-label required">Tujuan Rujuk</label>
-                                                <input type="text" class="form-control" name="tujuan_rujuk" placeholder="Nama rumah sakit/fasilitas kesehatan tujuan">
+                                                <input type="text" class="form-control" name="tujuan_rujuk"
+                                                    placeholder="Nama rumah sakit/fasilitas kesehatan tujuan">
                                             </div>
 
                                             <div class="row g-3">
@@ -891,7 +935,8 @@
                                                     <div class="form-group">
                                                         <label class="form-label required">Alasan Rujuk</label>
                                                         <select class="form-select" name="alasan_rujuk">
-                                                            <option value="" selected disabled>Pilih Alasan Rujuk</option>
+                                                            <option value="" selected disabled>Pilih Alasan Rujuk
+                                                            </option>
                                                             <option value="1">Indikasi Medis</option>
                                                             <option value="2">Kamar Penuh</option>
                                                             <option value="3">Permintaan Pasien</option>
@@ -904,7 +949,8 @@
                                                     <div class="form-group">
                                                         <label class="form-label required">Transportasi Rujuk</label>
                                                         <select class="form-select" name="transportasi_rujuk">
-                                                            <option value="" selected disabled>Pilih Transportasi Rujuk</option>
+                                                            <option value="" selected disabled>Pilih Transportasi
+                                                                Rujuk</option>
                                                             <option value="1">Ambulance</option>
                                                             <option value="2">Kendaraan Pribadi</option>
                                                             <option value="3">Kendaraan Umum</option>
@@ -916,7 +962,8 @@
 
                                             <div class="form-group mb-0">
                                                 <label class="form-label">Keterangan Tambahan</label>
-                                                <textarea class="form-control" name="keterangan_rujuk" rows="3" placeholder="Keterangan tambahan mengenai rujukan..."></textarea>
+                                                <textarea class="form-control" name="keterangan_rujuk" rows="3"
+                                                    placeholder="Keterangan tambahan mengenai rujukan..."></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -933,13 +980,15 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label class="form-label required">Tanggal Pulang</label>
-                                                        <input type="date" class="form-control" name="tanggalPulang" value="{{ date('Y-m-d') }}">
+                                                        <input type="date" class="form-control" name="tanggalPulang"
+                                                            value="{{ date('Y-m-d') }}">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label class="form-label required">Jam Pulang</label>
-                                                        <input type="time" class="form-control" name="jamPulang" value="{{ date('H:i') }}">
+                                                        <input type="time" class="form-control" name="jamPulang"
+                                                            value="{{ date('H:i') }}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -949,7 +998,8 @@
                                                     <div class="form-group">
                                                         <label class="form-label required">Alasan Pulang</label>
                                                         <select class="form-select" name="alasan_pulang">
-                                                            <option value="" selected disabled>Pilih Alasan Pulang</option>
+                                                            <option value="" selected disabled>Pilih Alasan Pulang
+                                                            </option>
                                                             <option value="1">Sembuh</option>
                                                             <option value="2">Indikasi Medis</option>
                                                             <option value="3">Permintaan Pasien</option>
@@ -961,7 +1011,8 @@
                                                     <div class="form-group">
                                                         <label class="form-label required">Kondisi Pulang</label>
                                                         <select class="form-select" name="kondisi_pulang">
-                                                            <option value="" selected disabled>Pilih Kondisi Pulang</option>
+                                                            <option value="" selected disabled>Pilih Kondisi Pulang
+                                                            </option>
                                                             <option value="1">Mandiri</option>
                                                             <option value="2">Tidak Mandiri</option>
                                                             <option value="3">Dengan Bantuan</option>
@@ -992,8 +1043,9 @@
                                                         <label class="form-label required">Poli Tujuan</label>
                                                         <select class="form-select" name="poli_unit_tujuan">
                                                             <option value="" selected disabled>Pilih Poli</option>
-                                                            @foreach($unitPoli as $poli)
-                                                                <option value="{{ $poli->kd_unit }}">{{ $poli->nama_unit }}</option>
+                                                            @foreach ($unitPoli as $poli)
+                                                                <option value="{{ $poli->kd_unit }}">
+                                                                    {{ $poli->nama_unit }}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -1002,7 +1054,8 @@
 
                                             <div class="form-group mb-0">
                                                 <label class="form-label">Catatan untuk Poli</label>
-                                                <textarea class="form-control" name="catatan_rajal" rows="3" placeholder="Catatan khusus untuk poli tujuan..."></textarea>
+                                                <textarea class="form-control" name="catatan_rajal" rows="3"
+                                                    placeholder="Catatan khusus untuk poli tujuan..."></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -1012,12 +1065,14 @@
                                 <div class="conditional-form" id="formMenolakRawatInap" style="display: none;">
                                     <div class="">
                                         <div class="card-header">
-                                            <h6 class="mb-0"><i class="ti-close me-2"></i>Detail Penolakan Rawat Inap</h6>
+                                            <h6 class="mb-0"><i class="ti-close me-2"></i>Detail Penolakan Rawat Inap
+                                            </h6>
                                         </div>
                                         <div class="card-body">
                                             <div class="form-group">
                                                 <label class="form-label required">Alasan Menolak</label>
-                                                <textarea class="form-control" name="alasanMenolak" rows="3" placeholder="Jelaskan alasan pasien/keluarga menolak rawat inap..."></textarea>
+                                                <textarea class="form-control" name="alasanMenolak" rows="3"
+                                                    placeholder="Jelaskan alasan pasien/keluarga menolak rawat inap..."></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -1034,20 +1089,23 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label class="form-label required">Tanggal Meninggal</label>
-                                                        <input type="date" class="form-control" name="tanggalMeninggal" value="{{ date('Y-m-d') }}">
+                                                        <input type="date" class="form-control"
+                                                            name="tanggalMeninggal" value="{{ date('Y-m-d') }}">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label class="form-label required">Jam Meninggal</label>
-                                                        <input type="time" class="form-control" name="jamMeninggal" value="{{ date('H:i') }}">
+                                                        <input type="time" class="form-control" name="jamMeninggal"
+                                                            value="{{ date('H:i') }}">
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
                                                 <label class="form-label">Keterangan Kematian</label>
-                                                <textarea class="form-control" name="penyebab_kematian" rows="3" placeholder="Jelaskan penyebab kematian berdasarkan kondisi klinis..."></textarea>
+                                                <textarea class="form-control" name="penyebab_kematian" rows="3"
+                                                    placeholder="Jelaskan penyebab kematian berdasarkan kondisi klinis..."></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -1057,31 +1115,38 @@
                                 <div class="conditional-form" id="formDOA" style="display: none;">
                                     <div class="">
                                         <div class="card-header">
-                                            <h6 class="mb-0"><i class="ti-pulse me-2"></i>Detail DOA (Death on Arrival)</h6>
+                                            <h6 class="mb-0"><i class="ti-pulse me-2"></i>Detail DOA (Death on Arrival)
+                                            </h6>
                                         </div>
                                         <div class="card-body">
                                             <div class="row g-3">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label class="form-label required">Tanggal Tiba</label>
-                                                        <input type="date" class="form-control" name="tanggalDoa" value="{{ date('Y-m-d') }}">
+                                                        <input type="date" class="form-control" name="tanggalDoa"
+                                                            value="{{ date('Y-m-d') }}">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label class="form-label required">Jam Tiba</label>
-                                                        <input type="time" class="form-control" name="jamDoa" value="{{ date('H:i') }}">
+                                                        <input type="time" class="form-control" name="jamDoa"
+                                                            value="{{ date('H:i') }}">
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="form-group mb-0">
                                                 <label class="form-label">Keterangan</label>
-                                                <textarea class="form-control" name="keterangan_doa" rows="3" placeholder="Tindakan yang telah dilakukan (jika ada)..."></textarea>
+                                                <textarea class="form-control" name="keterangan_doa" rows="3"
+                                                    placeholder="Tindakan yang telah dilakukan (jika ada)..."></textarea>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
+                                <input type="hidden" name="tindak_lanjut_data" id="tindakLanjutData" value="">
+
                             </div>
 
 
@@ -1098,19 +1163,19 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="diagnosisModalTitle">Tambah Diagnosis</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <form id="diagnosisForm">
-                                                <div class="form-group">
-                                                    <label class="form-label required">Nama Diagnosis</label>
-                                                    <input class="form-control" id="namaDiagnosis"
-                                                        placeholder="Masukkan nama diagnosis..." required></input>
-                                                </div>
-                                            </form>
+                                            <div class="form-group">
+                                                <label class="form-label required">Nama Diagnosis</label>
+                                                <input class="form-control" id="namaDiagnosis" name="namaDiagnosis"
+                                                    placeholder="Masukkan nama diagnosis...">
+                                            </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Batal</button>
                                             <button type="button" class="btn btn-primary" id="btnSimpanDiagnosis">
                                                 <i class="ti-check"></i> Simpan
                                             </button>

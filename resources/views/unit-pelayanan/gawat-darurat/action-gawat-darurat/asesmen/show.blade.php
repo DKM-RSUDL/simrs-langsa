@@ -137,10 +137,10 @@
                                 <table class="table table-hover mb-0" id="showAlergiTable">
                                     <thead class="bg-light">
                                         <tr>
-                                            <th class="py-3">Jenis</th>
-                                            <th class="py-3">Alergen</th>
+                                            <th class="py-3">Jenis Alergi</th>
+                                            <th class="py-3">Nama Alergi</th>
                                             <th class="py-3">Reaksi</th>
-                                            <th class="py-3">Serve</th>
+                                            <th class="py-3">Tingkat Keparahan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -186,13 +186,12 @@
                                             </div>
                                         </div>
 
-                                        <!-- Respirasi -->
+                                        <!-- GCS -->
                                         <div class="col-md-6">
-                                            <label class="form-label small fw-semibold">Respirasi</label>
+                                            <label class="form-label small fw-semibold">GCS</label>
                                             <div class="input-group">
-                                                <input type="text" class="form-control bg-light text-center"
-                                                    name="show_vital_sign_resp" readonly>
-                                                <span class="input-group-text">x/mnt</span>
+                                                <input type="text" class="form-control bg-light text-center" name="show_vital_sign_gcs" readonly>
+                                                <span class="input-group-text">Total</span>
                                             </div>
                                         </div>
 
@@ -204,20 +203,6 @@
                                                     name="show_vital_sign_suhu" readonly>
                                                 <span class="input-group-text">°C</span>
                                             </div>
-                                        </div>
-
-                                        <!-- GCS -->
-                                        <div class="col-md-6">
-                                            <label class="form-label small fw-semibold">GCS</label>
-                                            <input type="text" class="form-control bg-light text-center"
-                                                name="show_vital_sign_gcs" readonly>
-                                        </div>
-
-                                        <!-- AVPU -->
-                                        <div class="col-md-6">
-                                            <label class="form-label small fw-semibold">AVPU</label>
-                                            <input type="text" class="form-control bg-light"
-                                                name="show_vital_sign_avpu" readonly>
                                         </div>
 
                                         <!-- SpO2 -->
@@ -391,7 +376,7 @@
                             </h6>
                         </div>
                         <div class="card-body">
-                            <div class="row g-4" id="show_pemeriksaan_fisik_container">
+                            <div class="row g-3" id="show_pemeriksaan_fisik_container">
                                 <!-- Will be populated by JavaScript -->
                             </div>
                         </div>
@@ -541,7 +526,7 @@
                         </div>
                         <div class="card-body">
                             <div class="diagnosis-list">
-                                <!-- Diagnosis akan dirender di sini -->
+                                <!-- Diagnosis akan dirender di sini oleh JavaScript -->
                             </div>
                         </div>
                     </div>
@@ -558,10 +543,10 @@
                                 <table class="table table-hover mb-0" id="ShowreTriaseTable">
                                     <thead class="bg-light">
                                         <tr>
-                                            <th>Tanggal dan Jam</th>
-                                            <th>Keluhan</th>
-                                            <th>Vital Sign</th>
-                                            <th>Re-Triase/EWS</th>
+                                            <th style="width: 20%">Tanggal dan Jam</th>
+                                            <th style="width: 25%">Keluhan</th>
+                                            <th style="width: 35%">Vital Sign</th>
+                                            <th style="width: 20%">Re-Triase/EWS</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -753,6 +738,7 @@
 @push('js')
     <script>
         window.unitPoli = {!! json_encode($unitPoli) !!};
+        window.itemFisik = {!! json_encode($itemFisik) !!};
 
         function showAsesmen(id) {
             const button = event.target.closest('button');
@@ -784,10 +770,9 @@
                         handleTindakLanjut(response.data.asesmen.tindaklanjut);
                         handlePemeriksaanFisik(response.data.asesmen.pemeriksaan_fisik);
 
-                        // **Perbaikan: Pastikan tombol print mengambil ID asesmen yang benar**
+                        // Set URL print button
                         let btnPrint = document.getElementById('btnPrintAsesmen');
-                        btnPrint.href =
-                            `/unit-pelayanan/gawat-darurat/pelayanan/${response.data.dataMedis.kd_pasien}/${response.data.dataMedis.tgl_masuk.split(' ')[0]}/asesmen/${id}/print`;
+                        btnPrint.href = `/unit-pelayanan/gawat-darurat/pelayanan/${response.data.dataMedis.kd_pasien}/${response.data.dataMedis.tgl_masuk.split(' ')[0]}/asesmen/${id}/print`;
 
                         modal.show();
                     } else {
@@ -797,8 +782,7 @@
                 error: function(xhr, status, error) {
                     console.log('Error Response:', xhr.responseJSON);
                     Swal.close();
-                    Swal.fire('Error', xhr.responseJSON?.message || 'Terjadi kesalahan saat memuat data',
-                        'error');
+                    Swal.fire('Error', xhr.responseJSON?.message || 'Terjadi kesalahan saat memuat data', 'error');
                 }
             });
         }
@@ -819,17 +803,51 @@
             $('input[name="show_efek_nyeri"]').val(asesmen.show_efek_nyeri || '-');
             $('textarea[name="show_kondisi_pasien"]').val(asesmen.show_kondisi_pasien || '-');
 
-            // Handle diagnosis format for array data
+            // Handle diagnosis dengan parsing yang benar
             const diagnosisContainer = document.querySelector('.diagnosis-list');
-            if (Array.isArray(asesmen.show_diagnosis) && asesmen.show_diagnosis.length > 0) {
-                const diagnosisList = asesmen.show_diagnosis.map((diagnosis, index) => `
-                    <div class="diagnosis-item p-2 mb-2 bg-light rounded">
-                        <div class="d-flex align-items-start">
-                            <span class="badge bg-primary me-2">${index + 1}</span>
-                            <span>${diagnosis}</span>
+            let diagnosisData = [];
+
+            // Parse diagnosis data
+            if (asesmen.show_diagnosis) {
+                try {
+                    // Jika data sudah berupa array
+                    if (Array.isArray(asesmen.show_diagnosis)) {
+                        diagnosisData = asesmen.show_diagnosis;
+                    } 
+                    // Jika data berupa string JSON
+                    else if (typeof asesmen.show_diagnosis === 'string') {
+                        diagnosisData = JSON.parse(asesmen.show_diagnosis);
+                    }
+                } catch (e) {
+                    console.error('Error parsing diagnosis data:', e);
+                    diagnosisData = [];
+                }
+            }
+
+            // Tampilkan diagnosis
+            if (Array.isArray(diagnosisData) && diagnosisData.length > 0) {
+                const diagnosisList = diagnosisData.map((diagnosis, index) => {
+                    // Handle berbagai format data diagnosis
+                    let diagnosisText = '';
+                    if (typeof diagnosis === 'string') {
+                        diagnosisText = diagnosis;
+                    } else if (diagnosis && diagnosis.nama) {
+                        diagnosisText = diagnosis.nama;
+                    } else if (diagnosis && diagnosis.text) {
+                        diagnosisText = diagnosis.text;
+                    } else {
+                        diagnosisText = 'Diagnosis tidak valid';
+                    }
+
+                    return `
+                        <div class="diagnosis-item p-2 mb-2 bg-light rounded">
+                            <div class="d-flex align-items-start">
+                                <span class="badge bg-primary me-2">${index + 1}</span>
+                                <span>${diagnosisText}</span>
+                            </div>
                         </div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
                 diagnosisContainer.innerHTML = diagnosisList;
             } else {
                 diagnosisContainer.innerHTML = '<div class="text-center text-muted"><em>Tidak ada diagnosis</em></div>';
@@ -842,25 +860,24 @@
                 return;
             }
 
-            const createItemElement = (text) =>
-                `<div class="selected-item"><i class="fas fa-check text-success"></i> ${text}</div>`;
+            const createItemElement = (text) => `<div class="selected-item mb-1"><i class="bi bi-check text-success me-2"></i> ${text}</div>`;
 
             // Air Way
-            if (tindakanData.air_way?.length > 0) {
+            if (Array.isArray(tindakanData.air_way) && tindakanData.air_way.length > 0) {
                 $('.show-air-way').html(tindakanData.air_way.map(createItemElement).join(''));
             } else {
                 $('.show-air-way').html('<em>Tidak ada tindakan</em>');
             }
 
             // Breathing
-            if (tindakanData.breathing?.length > 0) {
+            if (Array.isArray(tindakanData.breathing) && tindakanData.breathing.length > 0) {
                 $('.show-breathing').html(tindakanData.breathing.map(createItemElement).join(''));
             } else {
                 $('.show-breathing').html('<em>Tidak ada tindakan</em>');
             }
 
             // Circulation
-            if (tindakanData.circulation?.length > 0) {
+            if (Array.isArray(tindakanData.circulation) && tindakanData.circulation.length > 0) {
                 $('.show-circulation').html(tindakanData.circulation.map(createItemElement).join(''));
             } else {
                 $('.show-circulation').html('<em>Tidak ada tindakan</em>');
@@ -871,15 +888,7 @@
             const tbody = $('#showAlergiTable tbody');
             tbody.empty();
 
-            if (typeof alergiData === 'string') {
-                try {
-                    alergiData = JSON.parse(alergiData);
-                } catch (e) {
-                    console.error('Error parsing alergi data:', e);
-                    alergiData = null;
-                }
-            }
-
+            // Data alergi sudah berupa array dari controller (dari tabel RmeAlergiPasien)
             if (!alergiData || alergiData.length === 0) {
                 tbody.html(`
                     <tr>
@@ -894,10 +903,10 @@
             alergiData.forEach(function(alergi) {
                 const row = `
                     <tr>
-                        <td>${alergi.jenis || '-'}</td>
-                        <td>${alergi.alergen || '-'}</td>
+                        <td>${alergi.jenis_alergi || '-'}</td>
+                        <td>${alergi.nama_alergi || '-'}</td>
                         <td>${alergi.reaksi || '-'}</td>
-                        <td>${alergi.keparahan || '-'}</td>
+                        <td>${alergi.tingkat_keparahan || '-'}</td>
                     </tr>
                 `;
                 tbody.append(row);
@@ -908,19 +917,10 @@
             const tbody = $('#showAlatTable tbody');
             tbody.empty();
 
-            if (typeof alatTerpasang === 'string') {
-                try {
-                    alatTerpasang = JSON.parse(alatTerpasang);
-                } catch (e) {
-                    console.error('Error data:', e);
-                    alatTerpasang = null;
-                }
-            }
-
             if (!alatTerpasang || alatTerpasang.length === 0) {
                 tbody.html(`
                     <tr>
-                        <td colspan="4" class="text-center">
+                        <td colspan="3" class="text-center">
                             <em>Tidak ada data Alat Terpasang</em>
                         </td>
                     </tr>
@@ -941,14 +941,8 @@
         }
 
         function handleVitalSign(vitalSignData) {
-
-            if (typeof vitalSignData === 'string') {
-                try {
-                    vitalSignData = JSON.parse(vitalSignData);
-                } catch (e) {
-                    console.error('Error parsing vital sign data:', e);
-                    return;
-                }
+            if (!vitalSignData) {
+                return;
             }
 
             // Set nilai untuk setiap input
@@ -957,33 +951,36 @@
             $('input[name="show_vital_sign_nadi"]').val(vitalSignData.nadi || '-');
             $('input[name="show_vital_sign_resp"]').val(vitalSignData.resp || '-');
             $('input[name="show_vital_sign_suhu"]').val(vitalSignData.suhu || '-');
-            $('input[name="show_vital_sign_gcs"]').val(vitalSignData.gcs.total || '-');
+            
+            // Handle GCS dengan aman
+            let gcsValue = '-';
+            if (vitalSignData.gcs) {
+                if (typeof vitalSignData.gcs === 'object' && vitalSignData.gcs.total) {
+                    gcsValue = vitalSignData.gcs.total;
+                } else if (typeof vitalSignData.gcs === 'string' || typeof vitalSignData.gcs === 'number') {
+                    gcsValue = vitalSignData.gcs;
+                }
+            }
+            $('input[name="show_vital_sign_gcs"]').val(gcsValue);
+            
             $('input[name="show_vital_sign_avpu"]').val(vitalSignData.avpu || '-');
             $('input[name="show_vital_sign_spo2_tanpa_o2"]').val(vitalSignData.spo2_tanpa_o2 || '-');
             $('input[name="show_vital_sign_spo2_dengan_o2"]').val(vitalSignData.spo2_dengan_o2 || '-');
         }
 
-        function handleAntropometri(AntropometriData) {
-            if (typeof AntropometriData === 'string') {
-                try {
-                    AntropometriData = JSON.parse(AntropometriData);
-                } catch (e) {
-                    console.error('Error Antropometri data:', e);
-                    return;
-                }
+        function handleAntropometri(antropometriData) {
+            if (!antropometriData) {
+                return;
             }
 
-            $('input[name="show_antropometri_tb"]').val(AntropometriData.tb || '-');
-            $('input[name="show_antropometri_bb"]').val(AntropometriData.bb || '-');
-            $('input[name="show_antropometri_ling_kepala"]').val(AntropometriData.ling_kepala || '-');
-            $('input[name="show_antropometri_lpt"]').val(AntropometriData.lpt || '-');
-            $('input[name="show_antropometri_imt"]').val(AntropometriData.imt || '-');
-
+            $('input[name="show_antropometri_tb"]').val(antropometriData.tb || '-');
+            $('input[name="show_antropometri_bb"]').val(antropometriData.bb || '-');
+            $('input[name="show_antropometri_ling_kepala"]').val(antropometriData.ling_kepala || '-');
+            $('input[name="show_antropometri_lpt"]').val(antropometriData.lpt || '-');
+            $('input[name="show_antropometri_imt"]').val(antropometriData.imt || '-');
         }
 
         function handleReTriase(retriaseData) {
-            console.log(retriaseData);
-
             const tbody = $('#ShowreTriaseTable tbody');
             tbody.empty();
 
@@ -999,47 +996,52 @@
             }
 
             retriaseData.forEach(function(triase) {
-                // Parse triase JSON if needed
-                const vitalSignData = typeof triase.vitalsign_retriase === 'string' ?
-                    JSON.parse(triase.vitalsign_retriase) : triase.vitalsign_retriase;
+                // Parse vital sign JSON
+                let vitalSignData = {};
+                if (triase.vitalsign_retriase) {
+                    try {
+                        vitalSignData = typeof triase.vitalsign_retriase === 'string' 
+                            ? JSON.parse(triase.vitalsign_retriase) 
+                            : triase.vitalsign_retriase;
+                    } catch (e) {
+                        console.error('Error parsing vital sign:', e);
+                        vitalSignData = {};
+                    }
+                }
 
                 // Format vital signs
-                const formattedVitalSigns = `
-                    <ul class="list-unstyled mb-0">
-                        ${vitalSignData.td_sistole ? `<li>TD: ${vitalSignData.td_sistole}/${vitalSignData.td_diastole} mmHg</li>` : ''}
-                        ${vitalSignData.nadi ? `<li>Nadi: ${vitalSignData.nadi} x/mnt</li>` : ''}
-                        ${vitalSignData.resp ? `<li>Resp: ${vitalSignData.resp} x/mnt</li>` : ''}
-                        ${vitalSignData.suhu ? `<li>Suhu: ${vitalSignData.suhu}°C</li>` : ''}
-                        ${vitalSignData.spo2_tanpa_o2 ? `<li>SpO2 (tanpa O2): ${vitalSignData.spo2_tanpa_o2}%</li>` : ''}
-                        ${vitalSignData.spo2_dengan_o2 ? `<li>SpO2 (dengan O2): ${vitalSignData.spo2_dengan_o2}%</li>` : ''}
-                        ${vitalSignData.gcs ? `<li>GCS: ${vitalSignData.gcs}</li>` : ''}
-                        ${vitalSignData.avpu ? `<li>AVPU: ${vitalSignData.avpu}</li>` : ''}
-                    </ul>
-                `;
+                const formatVitalSigns = (data) => {
+                    const items = [];
+                    if (data.td_sistole && data.td_diastole) items.push(`TD: ${data.td_sistole}/${data.td_diastole} mmHg`);
+                    if (data.nadi) items.push(`Nadi: ${data.nadi} x/mnt`);
+                    if (data.rr) items.push(`RR: ${data.rr} x/mnt`);
+                    if (data.temp) items.push(`Suhu: ${data.temp}°C`);
+                    if (data.spo2_tanpa_o2) items.push(`SpO2 (tanpa O2): ${data.spo2_tanpa_o2}%`);
+                    if (data.spo2_dengan_o2) items.push(`SpO2 (dengan O2): ${data.spo2_dengan_o2}%`);
+                    if (data.gcs) items.push(`GCS: ${data.gcs}`);
+                    
+                    return items.length > 0 
+                        ? `<ul class="list-unstyled mb-0">${items.map(item => `<li>${item}</li>`).join('')}</ul>`
+                        : '-';
+                };
 
                 // Get triase status style
                 const getTriaseClass = (kodeTriase) => {
                     switch (parseInt(kodeTriase)) {
-                        case 5:
-                            return 'bg-dark text-white';
-                        case 4:
-                            return 'bg-danger text-white';
-                        case 3:
-                            return 'bg-danger text-white';
-                        case 2:
-                            return 'bg-warning text-dark';
-                        case 1:
-                            return 'bg-success text-white';
-                        default:
-                            return 'bg-secondary text-white';
+                        case 5: return 'bg-dark text-white';
+                        case 4: return 'bg-danger text-white';
+                        case 3: return 'bg-danger text-white';
+                        case 2: return 'bg-warning text-dark';
+                        case 1: return 'bg-success text-white';
+                        default: return 'bg-secondary text-white';
                     }
                 };
 
                 const row = `
                     <tr>
-                        <td>${triase.tanggal_triase}</td>
-                        <td>${triase.anamnesis_retriase  || '-'}</td>
-                        <td>${formattedVitalSigns}</td>
+                        <td>${triase.tanggal_triase || '-'}</td>
+                        <td>${triase.anamnesis_retriase || '-'}</td>
+                        <td>${formatVitalSigns(vitalSignData)}</td>
                         <td>
                             <span class="badge ${getTriaseClass(triase.kode_triase)}">
                                 ${triase.hasil_triase || '-'}
@@ -1055,7 +1057,7 @@
             const container = $('#showTindakLanjutInfo');
             container.empty();
 
-            // Check if tindakLanjutData exists
+            // Check if tindakLanjutData exists and is an array
             if (!tindakLanjutData || !Array.isArray(tindakLanjutData) || tindakLanjutData.length === 0) {
                 container.html(`
                     <div class="alert alert-info">
@@ -1067,51 +1069,41 @@
 
             // Get the first tindak lanjut data
             const data = tindakLanjutData[0];
-
-            // Siapkan content berdasarkan tindak lanjut code
             let additionalInfo = '';
 
             switch (parseInt(data.tindak_lanjut_code)) {
                 case 1: // Rawat Inap
-                    // Destructure spri data from data object, ensuring we have access to it
                     const spriData = data.spri || {};
-                    
-                    let formattedTanggalRanap = '-';
-                    let formattedJamRanap = '-';
-
-                    if (spriData.tanggal_ranap) {
+                    const formatDate = (dateStr) => {
+                        if (!dateStr) return '-';
                         try {
-                            formattedTanggalRanap = new Date(spriData.tanggal_ranap).toLocaleDateString('id-ID', {
-                                day: '2-digit',
-                                month: '2-digit',
-                                year: 'numeric'
+                            return new Date(dateStr).toLocaleDateString('id-ID', {
+                                day: '2-digit', month: '2-digit', year: 'numeric'
                             });
                         } catch (e) {
-                            console.error('Error formatting tanggal_ranap:', e);
-                            formattedTanggalRanap = spriData.tanggal_ranap;
+                            return dateStr;
                         }
-                    }
+                    };
 
-                    if (spriData.jam_ranap) {
+                    const formatTime = (timeStr) => {
+                        if (!timeStr) return '-';
                         try {
-                            formattedJamRanap = new Date(spriData.jam_ranap).toLocaleTimeString('id-ID', {
-                                hour: '2-digit',
-                                minute: '2-digit'
+                            return new Date(timeStr).toLocaleTimeString('id-ID', {
+                                hour: '2-digit', minute: '2-digit'
                             });
                         } catch (e) {
-                            console.error('Error formatting jam_ranap:', e);
-                            formattedJamRanap = spriData.jam_ranap;
+                            return timeStr;
                         }
-                    }
+                    };
 
                     additionalInfo = `
                         <div class="col-md-6 mt-2">
                             <label class="fw-bold">Tanggal Rawat Inap:</label>
-                            <p class="mb-0">${formattedTanggalRanap}</p>
+                            <p class="mb-0">${formatDate(spriData.tanggal_ranap)}</p>
                         </div>
                         <div class="col-md-6 mt-2">
                             <label class="fw-bold">Jam Rawat Inap:</label>
-                            <p class="mb-0">${formattedJamRanap}</p>
+                            <p class="mb-0">${formatTime(spriData.jam_ranap)}</p>
                         </div>
                         <div class="col-12 mt-2">
                             <label class="fw-bold">Keluhan Utama:</label>
@@ -1139,28 +1131,8 @@
                         </div>`;
                     break;
 
-                case 7: // Kamar Operasi
-                    additionalInfo = `
-                        <div class="col-12 mt-2">
-                            <label class="fw-bold">Kamar Operasi:</label>
-                            <p class="mb-0">${data.keterangan || '-'}</p>
-                        </div>`;
-                    break;
-
                 case 5: // Rujuk RS Lain
-                    let transportasiText = '-';
-                    switch (data.transportasi_rujuk) {
-                        case '1':
-                            transportasiText = 'Ambulance';
-                            break;
-                        case '2':
-                            transportasiText = 'Kendaraan Pribadi';
-                            break;
-                        case '3':
-                            transportasiText = 'Lainnya';
-                            break;
-                    }
-
+                    const transportasiOptions = {'1': 'Ambulance', '2': 'Kendaraan Pribadi', '3': 'Lainnya'};
                     additionalInfo = `
                         <div class="col-md-4 mt-2">
                             <label class="fw-bold">Tujuan Rujuk:</label>
@@ -1168,97 +1140,54 @@
                         </div>
                         <div class="col-md-4 mt-2">
                             <label class="fw-bold">Alasan Rujuk:</label>
-                            <p class="mb-0">${data.alasan_rujuk ? 'Indikasi Medis' : '-'}</p>
+                            <p class="mb-0">${data.alasan_rujuk || '-'}</p>
                         </div>
                         <div class="col-md-4 mt-2">
                             <label class="fw-bold">Transportasi:</label>
-                            <p class="mb-0">${transportasiText}</p>
+                            <p class="mb-0">${transportasiOptions[data.transportasi_rujuk] || '-'}</p>
                         </div>`;
                     break;
 
                 case 6: // Pulang
-                    // Format tanggal pulang
-                    let formattedTanggal = '-';
-                    if (data.tanggal_pulang) {
-                        formattedTanggal = new Date(data.tanggal_pulang).toLocaleDateString('id-ID', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric'
-                        });
-                    }
+                    const formatDateSimple = (dateStr) => {
+                        if (!dateStr) return '-';
+                        try {
+                            return new Date(dateStr).toLocaleDateString('id-ID');
+                        } catch (e) {
+                            return dateStr;
+                        }
+                    };
 
-                    // Format jam pulang
-                    let formattedJam = '-';
-                    if (data.jam_pulang) {
-                        formattedJam = new Date(data.jam_pulang).toLocaleTimeString('id-ID', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        });
-                    }
-
-                    // Format alasan pulang
-                    let alasanPulangText = '-';
-                    switch (data.alasan_pulang) {
-                        case '1':
-                            alasanPulangText = 'Sembuh';
-                            break;
-                        case '2':
-                            alasanPulangText = 'Indikasi Medis';
-                            break;
-                        case '3':
-                            alasanPulangText = 'Permintaan Pasien';
-                            break;
-                    }
-
-                    // Format kondisi pulang
-                    let kondisiPulangText = '-';
-                    switch (data.kondisi_pulang) {
-                        case '1':
-                            kondisiPulangText = 'Mandiri';
-                            break;
-                        case '2':
-                            kondisiPulangText = 'Tidak Mandiri';
-                            break;
-                    }
+                    const alasanPulangOptions = {'1': 'Sembuh', '2': 'Indikasi Medis', '3': 'Permintaan Pasien'};
+                    const kondisiPulangOptions = {'1': 'Mandiri', '2': 'Tidak Mandiri'};
 
                     additionalInfo = `
                         <div class="col-md-3 mt-2">
                             <label class="fw-bold">Tanggal Pulang:</label>
-                            <p class="mb-0">${formattedTanggal}</p>
+                            <p class="mb-0">${formatDateSimple(data.tanggal_pulang)}</p>
                         </div>
                         <div class="col-md-3 mt-2">
                             <label class="fw-bold">Jam Pulang:</label>
-                            <p class="mb-0">${formattedJam}</p>
+                            <p class="mb-0">${data.jam_pulang || '-'}</p>
                         </div>
                         <div class="col-md-3 mt-2">
                             <label class="fw-bold">Alasan Pulang:</label>
-                            <p class="mb-0">${alasanPulangText}</p>
+                            <p class="mb-0">${alasanPulangOptions[data.alasan_pulang] || '-'}</p>
                         </div>
                         <div class="col-md-3 mt-2">
                             <label class="fw-bold">Kondisi Pulang:</label>
-                            <p class="mb-0">${kondisiPulangText}</p>
+                            <p class="mb-0">${kondisiPulangOptions[data.kondisi_pulang] || '-'}</p>
                         </div>`;
                     break;
 
                 case 8: // Berobat Jalan
-
-                    let tanggalRajal = '-';
-                    if (data.tanggal_rajal) {
-                        tanggalRajal = new Date(data.tanggal_rajal).toLocaleDateString('id-ID', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric'
-                        });
-                    }
-
-                    const selectedPoli = window.unitPoli ? window.unitPoli.find(poli => poli.kd_unit === data
-                        .poli_unit_tujuan) : null;
+                    const selectedPoli = window.unitPoli ? window.unitPoli.find(poli => poli.kd_unit === data.poli_unit_tujuan) : null;
                     const poliName = selectedPoli ? selectedPoli.nama_unit : data.poli_unit_tujuan;
 
                     additionalInfo = `
                         <div class="col-md-6 mt-2">
                             <label class="fw-bold">Tanggal Berobat:</label>
-                            <p class="mb-0">${tanggalRajal}</p>
+                            <p class="mb-0">${data.tanggal_rajal ? new Date(data.tanggal_rajal).toLocaleDateString('id-ID') : '-'}</p>
                         </div>
                         <div class="col-md-6 mt-2">
                             <label class="fw-bold">Poli Tujuan:</label>
@@ -1275,70 +1204,24 @@
                     break;
 
                 case 10: // Meninggal Dunia
-                    let formattedTanggalMeninggal = '-';
-                    if (data.tanggal_meninggal) {
-                        formattedTanggalMeninggal = new Date(data.tanggal_meninggal).toLocaleDateString('id-ID', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric'
-                        });
-                    }
-
-                    // Format jam meninggal
-                    let formattedJamMeninggal = '-';
-                    if (data.jam_meninggal) {
-                        if (data.jam_meninggal.includes(':')) {
-                            formattedJamMeninggal = data.jam_meninggal;
-                        } else {
-                            formattedJamMeninggal = new Date(data.jam_meninggal).toLocaleTimeString('id-ID', {
-                                hour: '2-digit',
-                                minute: '2-digit'
-                            });
-                        }
-                    }
-
+                case 11: // DOA
+                    const label = parseInt(data.tindak_lanjut_code) === 10 ? 'Meninggal' : 'DOA';
                     additionalInfo = `
                         <div class="col-md-6 mt-2">
-                            <label class="fw-bold">Tanggal Meninggal:</label>
-                            <p class="mb-0">${formattedTanggalMeninggal}</p>
+                            <label class="fw-bold">Tanggal ${label}:</label>
+                            <p class="mb-0">${data.tanggal_meninggal ? new Date(data.tanggal_meninggal).toLocaleDateString('id-ID') : '-'}</p>
                         </div>
                         <div class="col-md-6 mt-2">
-                            <label class="fw-bold">Jam Meninggal:</label>
-                            <p class="mb-0">${formattedJamMeninggal}</p>
+                            <label class="fw-bold">Jam ${label}:</label>
+                            <p class="mb-0">${data.jam_meninggal || '-'}</p>
                         </div>`;
                     break;
 
-                case 11: // DOA 
-                    let formattedTanggalDOA = '-';
-                    if (data.tanggal_meninggal) {
-                        formattedTanggalDOA = new Date(data.tanggal_meninggal).toLocaleDateString('id-ID', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric'
-                        });
-                    }
-
-                    // Format jam DOA
-                    let formattedJamDOA = '-';
-                    if (data.jam_meninggal) {
-                        if (data.jam_meninggal.includes(':')) {
-                            formattedJamDOA = data.jam_meninggal;
-                        } else {
-                            formattedJamDOA = new Date(data.jam_meninggal).toLocaleTimeString('id-ID', {
-                                hour: '2-digit',
-                                minute: '2-digit'
-                            });
-                        }
-                    }
-
+                default:
                     additionalInfo = `
-                        <div class="col-md-6 mt-2">
-                            <label class="fw-bold">Tanggal DOA:</label>
-                            <p class="mb-0">${formattedTanggalDOA}</p>
-                        </div>
-                        <div class="col-md-6 mt-2">
-                            <label class="fw-bold">Jam DOA:</label>
-                            <p class="mb-0">${formattedJamDOA}</p>
+                        <div class="col-12 mt-2">
+                            <label class="fw-bold">Keterangan:</label>
+                            <p class="mb-0">${data.keterangan || '-'}</p>
                         </div>`;
                     break;
             }
@@ -1364,31 +1247,73 @@
         }
 
         function handlePemeriksaanFisik(pemeriksaanFisik) {
-            const container = $('#show_pemeriksaan_fisik_container'); // Updated container ID for 'show'
-
+            const container = $('#show_pemeriksaan_fisik_container');
             container.empty();
 
-            pemeriksaanFisik.forEach(function(item) {
-                // Determine checked status based on is_normal value
-                const isChecked = item.is_normal === '1' ? 'checked' : '';
-                const keterangan = item.keterangan || '';
+            // Ambil data item fisik dari window global yang sudah di-set dari controller
+            const allItemsFisik = window.itemFisik || [];
 
-                // Append item to the pemeriksaan fisik section
+            if (allItemsFisik.length === 0) {
+                container.html('<div class="col-12 text-center text-muted"><em>Data item fisik tidak tersedia</em></div>');
+                return;
+            }
+
+            // Buat map dari data pemeriksaan yang ada
+            const pemeriksaanMap = {};
+            if (pemeriksaanFisik && pemeriksaanFisik.length > 0) {
+                pemeriksaanFisik.forEach(function(item) {
+                    pemeriksaanMap[item.id_item_fisik] = item;
+                });
+            }
+
+            // Tampilkan semua item fisik dalam layout yang lebih compact
+            allItemsFisik.forEach(function(itemFisik) {
+                // Cek apakah item ini ada di data pemeriksaan
+                const pemeriksaanData = pemeriksaanMap[itemFisik.id];
+                
+                // Default nilai
+                let isNormal = '1'; // Default normal
+                let statusText = 'Normal';
+                let statusIcon = 'bi-check-circle';
+                let statusClass = 'text-success';
+                let keterangan = '';
+
+                // Jika ada data pemeriksaan, gunakan data tersebut
+                if (pemeriksaanData) {
+                    isNormal = pemeriksaanData.is_normal;
+                    statusText = pemeriksaanData.is_normal === '1' ? 'Normal' : 'Tidak Normal';
+                    statusIcon = pemeriksaanData.is_normal === '1' ? 'bi-check-circle' : 'bi-exclamation-triangle';
+                    statusClass = pemeriksaanData.is_normal === '1' ? 'text-success' : 'text-danger';
+                    keterangan = pemeriksaanData.keterangan || '';
+                }
+
+                // Create compact item HTML
                 const itemHtml = `
-                    <div class="col-md-6 pemeriksaan-item mb-3">
-                        <div class="d-flex align-items-center">
-                            <div class="flex-grow-1">${item.nama_item}</div>
-                            <div class="form-check me-2">
-                                <input type="checkbox" class="form-check-input" id="show_${item.id_item_fisik}_normal" ${isChecked} disabled>
-                                <label class="form-check-label" for="show_${item.id_item_fisik}_normal">${isChecked ? 'Normal' : 'Tidak Normal'}</label>
+                    <div class="col-md-4 mb-2">
+                        <div class="d-flex align-items-center justify-content-between p-2 border rounded bg-light">
+                            <div class="d-flex align-items-center">
+                                <i class="bi ${statusIcon} ${statusClass} me-2"></i>
+                                <span class="small fw-medium">${itemFisik.nama}</span>
                             </div>
-                            ${keterangan ? `<button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#show_keterangan_${item.id_item_fisik}">Lihat Keterangan</button>` : ''}
+                            <div class="d-flex align-items-center gap-1">
+                                <span class="badge badge-sm ${isNormal === '1' ? 'bg-success' : 'bg-danger'}">${statusText}</span>
+                                ${keterangan ? `<button class="btn btn-sm btn-link p-0 text-muted" type="button" data-bs-toggle="collapse" data-bs-target="#show_keterangan_${itemFisik.id}" title="Lihat keterangan">
+                                    <i class="bi bi-info-circle" style="font-size: 0.875rem;"></i>
+                                </button>` : ''}
+                            </div>
                         </div>
-                        ${keterangan ? `<div id="show_keterangan_${item.id_item_fisik}" class="collapse mt-2"><input type="text" class="form-control" value="${keterangan}" readonly></div>` : ''}
+                        ${keterangan ? `
+                            <div id="show_keterangan_${itemFisik.id}" class="collapse mt-1">
+                                <div class="alert alert-warning py-2 px-3 mb-0 small">
+                                    <strong>Keterangan:</strong> ${keterangan}
+                                </div>
+                            </div>
+                        ` : ''}
                     </div>
                 `;
                 container.append(itemHtml);
             });
         }
+
     </script>
 @endpush

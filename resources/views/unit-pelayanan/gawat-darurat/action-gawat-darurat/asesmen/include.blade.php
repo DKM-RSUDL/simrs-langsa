@@ -1298,6 +1298,8 @@
 
                 // Set default values
                 setDefaultValues(value);
+
+                updateTindakLanjutData();
             }
 
             function updateRadioOptionStates() {
@@ -1342,6 +1344,78 @@
                         break;
                 }
             }
+
+            document.addEventListener('input', function(e) {
+                if (e.target.closest('.conditional-form')) {
+                    updateTindakLanjutData();
+                }
+            });
+
+            document.addEventListener('change', function(e) {
+                if (e.target.closest('.conditional-form')) {
+                    updateTindakLanjutData();
+                }
+            });
+
+        }
+
+        function updateTindakLanjutData() {
+            const checkedRadio = document.querySelector('input[name="tindakLanjut"]:checked');
+            
+            if (!checkedRadio) {
+                document.getElementById('tindakLanjutData').value = '';
+                return;
+            }
+
+            const selectedOption = checkedRadio.value;
+            const tindakLanjutData = { option: selectedOption };
+
+            // Kumpulkan data berdasarkan option yang dipilih
+            switch(selectedOption) {
+                case 'rawatInap':
+                    tindakLanjutData.tanggalRawatInap = document.querySelector('input[name="tanggalRawatInap"]')?.value || '';
+                    tindakLanjutData.jamRawatInap = document.querySelector('input[name="jamRawatInap"]')?.value || '';
+                    tindakLanjutData.keluhanUtama_ranap = document.querySelector('textarea[name="keluhanUtama_ranap"]')?.value || '';
+                    tindakLanjutData.hasilPemeriksaan_ranap = document.querySelector('textarea[name="hasilPemeriksaan_ranap"]')?.value || '';
+                    tindakLanjutData.jalannyaPenyakit_ranap = document.querySelector('textarea[name="jalannyaPenyakit_ranap"]')?.value || '';
+                    tindakLanjutData.diagnosis_ranap = document.querySelector('textarea[name="diagnosis_ranap"]')?.value || '';
+                    tindakLanjutData.tindakan_ranap = document.querySelector('textarea[name="tindakan_ranap"]')?.value || '';
+                    tindakLanjutData.anjuran_ranap = document.querySelector('textarea[name="anjuran_ranap"]')?.value || '';
+                    break;
+                case 'rujukKeluar':
+                    tindakLanjutData.tujuan_rujuk = document.querySelector('input[name="tujuan_rujuk"]')?.value || '';
+                    tindakLanjutData.alasan_rujuk = document.querySelector('select[name="alasan_rujuk"]')?.value || '';
+                    tindakLanjutData.transportasi_rujuk = document.querySelector('select[name="transportasi_rujuk"]')?.value || '';
+                    tindakLanjutData.keterangan_rujuk = document.querySelector('textarea[name="keterangan_rujuk"]')?.value || '';
+                    break;
+                case 'pulangSembuh':
+                    tindakLanjutData.tanggalPulang = document.querySelector('input[name="tanggalPulang"]')?.value || '';
+                    tindakLanjutData.jamPulang = document.querySelector('input[name="jamPulang"]')?.value || '';
+                    tindakLanjutData.alasan_pulang = document.querySelector('select[name="alasan_pulang"]')?.value || '';
+                    tindakLanjutData.kondisi_pulang = document.querySelector('select[name="kondisi_pulang"]')?.value || '';
+                    break;
+                case 'berobatJalan':
+                    tindakLanjutData.tanggal_rajal = document.querySelector('input[name="tanggal_rajal"]')?.value || '';
+                    tindakLanjutData.poli_unit_tujuan = document.querySelector('select[name="poli_unit_tujuan"]')?.value || '';
+                    tindakLanjutData.catatan_rajal = document.querySelector('textarea[name="catatan_rajal"]')?.value || '';
+                    break;
+                case 'menolakRawatInap':
+                    tindakLanjutData.alasanMenolak = document.querySelector('textarea[name="alasanMenolak"]')?.value || '';
+                    break;
+                case 'meninggalDunia':
+                    tindakLanjutData.tanggalMeninggal = document.querySelector('input[name="tanggalMeninggal"]')?.value || '';
+                    tindakLanjutData.jamMeninggal = document.querySelector('input[name="jamMeninggal"]')?.value || '';
+                    tindakLanjutData.penyebab_kematian = document.querySelector('textarea[name="penyebab_kematian"]')?.value || '';
+                    break;
+                case 'deathoffarrival':
+                    tindakLanjutData.tanggalDoa = document.querySelector('input[name="tanggalDoa"]')?.value || '';
+                    tindakLanjutData.jamDoa = document.querySelector('input[name="jamDoa"]')?.value || '';
+                    tindakLanjutData.keterangan_doa = document.querySelector('textarea[name="keterangan_doa"]')?.value || '';
+                    break;
+            }
+
+            // Update hidden input
+            document.getElementById('tindakLanjutData').value = JSON.stringify(tindakLanjutData);
         }
 
 
