@@ -656,7 +656,7 @@
                                     </button>
                                 </div>
 
-                                <input type="hidden" name="diagnosa_data" id="diagnosisData" value="[]">
+                                <div id="diagnosisInputContainer"></div>
 
                                 <div id="diagnosisList" class="diagnosis-list">
                                     <!-- Diagnosis items will be added here dynamically -->

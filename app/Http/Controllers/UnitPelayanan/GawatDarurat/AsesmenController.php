@@ -738,7 +738,7 @@ class AsesmenController extends Controller
 
             $vitalSign = $request->vital_sign; 
             $antropometri = $request->antropometri;
-            $diagnosa = json_decode($request->diagnosa_data, true);
+            $diagnosa = $request->diagnosa_data;
 
             // create resume
             $resumeData = [

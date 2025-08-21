@@ -971,9 +971,20 @@
             }
 
             function updateDiagnosisJson(diagnosisArray) {
-                const diagnosisDataInput = document.getElementById('diagnosisData');
-                if (diagnosisDataInput) {
-                    diagnosisDataInput.value = JSON.stringify(diagnosisArray);
+                const container = document.getElementById('diagnosisInputContainer') || document.createElement('div');
+                container.innerHTML = ''; // Clear existing inputs
+                container.id = 'diagnosisInputContainer';
+                
+                diagnosisArray.forEach((diagnosis, index) => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'diagnosa_data[]'; 
+                    input.value = diagnosis.nama;
+                    container.appendChild(input);
+                });
+                
+                if (!document.getElementById('diagnosisInputContainer')) {
+                    document.querySelector('form').appendChild(container);
                 }
             }
 

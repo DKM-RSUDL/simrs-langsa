@@ -43,6 +43,14 @@ class RmeAsesmen extends Model
         'user_id'
     ];
 
+    protected $casts = [
+        'tindakan_resusitasi' => 'array',
+        'vital_sign' => 'array',
+        'antropometri' => 'array',
+        'diagnosis' => 'array',
+        'alat_terpasang' => 'array'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
