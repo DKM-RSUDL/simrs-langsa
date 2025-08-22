@@ -100,11 +100,14 @@
                         <i class="fas fa-edit me-1"></i> Edit
                     </button>
                 @elseif($item->kategori == 2)
-                    <button type="button"
-                        onclick="showAsesmenKeperawatan('{{ $item->id }}', '{{ $dataMedis->kd_pasien }}', '{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') }}')"
-                        class="btn btn-info btn-sm px-3">
+
+                    <a href="{{ route('asesmen-keperawatan.show', [
+                        'kd_pasien' => $dataMedis->kd_pasien,
+                        'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
+                        'id' => $item->id
+                    ]) }}" class="btn btn-sm btn-info">
                         <i class="fas fa-eye me-1"></i> Lihat
-                    </button>
+                    </a>
 
                     <a href="{{ route('asesmen-keperawatan.edit', [
                         'kd_pasien' => $dataMedis->kd_pasien,
@@ -122,7 +125,7 @@
 
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.show')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit')
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show')
+{{-- @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show') --}}
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.create-asesmen')
 
 <style>

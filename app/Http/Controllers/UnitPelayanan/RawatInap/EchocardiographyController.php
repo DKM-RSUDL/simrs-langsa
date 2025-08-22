@@ -89,11 +89,11 @@ class EchocardiographyController extends Controller
                 $search = $request->search;
                 $query->where(function ($q) use ($search) {
                     $q->where('diagnosa_klinik', 'like', "%{$search}%")
-                      ->orWhere('deskripsi', 'like', "%{$search}%")
-                      ->orWhere('kesimpulan', 'like', "%{$search}%")
-                      ->orWhereHas('dokter', function ($dq) use ($search) {
-                          $dq->where('nama_lengkap', 'like', "%{$search}%");
-                      });
+                        ->orWhere('deskripsi', 'like', "%{$search}%")
+                        ->orWhere('kesimpulan', 'like', "%{$search}%")
+                        ->orWhereHas('dokter', function ($dq) use ($search) {
+                            $dq->where('nama_lengkap', 'like', "%{$search}%");
+                        });
                 });
             }
 
