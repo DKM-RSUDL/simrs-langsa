@@ -127,6 +127,16 @@ class GawatDaruratController extends Controller
         return view('unit-pelayanan.gawat-darurat.index', compact('dokter',));
     }
 
+    public function triaseIndex()
+    {
+        $dokter = DokterKlinik::with(['dokter', 'unit'])
+            ->where('kd_unit', 3)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
+
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.triase.index', compact('dokter'));
+    }
+
     public function storeTriase(Request $request)
     {
         DB::beginTransaction();
@@ -478,8 +488,40 @@ class GawatDaruratController extends Controller
     public function getPatientByNikAjax(Request $request)
     {
         try {
-            $pasien = Pasien::where('no_pengenal', $request->nik)
+            $pasien = Pasien::where(function ($q) use ($request) {
+                $q->where('no_pengenal', $request->nik)
+                    ->orWhere('kd_pasien', $request->nik);
+            })
                 ->first();
+
+            if (empty($pasien)) {
+                return response()->json([
+                    'status'    => 'error',
+                    'message'   => 'Data tidak ditemukan',
+                    'data'      => []
+                ], 200);
+            } else {
+                return response()->json([
+                    'status'    => 'success',
+                    'message'   => 'Data ditemukan',
+                    'data'      => $pasien
+                ], 200);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'status'    => 'error',
+                'message'   => $e->getMessage(),
+                'data'      => []
+            ] . 500);
+        }
+    }
+
+    public function getPatientByNamaAjax(Request $request)
+    {
+
+        try {
+            $pasien = Pasien::where('nama', 'LIKE', "%$request->nama%")
+                ->get();
 
             if (empty($pasien)) {
                 return response()->json([

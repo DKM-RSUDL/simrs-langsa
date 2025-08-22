@@ -1,181 +1,181 @@
 @extends('layouts.administrator.master')
 
+@push('css')
+    <style>
+        .badge {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+
+        .badge-triage-yellow {
+            background-color: #ffeb3b;
+        }
+
+        .badge-triage-red {
+            background-color: #f44336;
+        }
+
+        .badge-triage-green {
+            background-color: #4caf50;
+        }
+
+        /* Custom CSS for profile */
+        .profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile img {
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+
+        .profile .info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile .info strong {
+            font-size: 14px;
+        }
+
+        .profile .info span {
+            font-size: 12px;
+            color: #777;
+        }
+
+        .select2-container {
+            z-index: 9999;
+        }
+
+        .modal-dialog {
+            z-index: 1050 !important;
+        }
+
+        .modal-content {
+            overflow: visible !important;
+        }
+
+        .select2-dropdown {
+            z-index: 99999 !important;
+        }
+
+        /* Menghilangkan elemen Select2 yang tidak diinginkan */
+        .select2-container+.select2-container {
+            display: none;
+        }
+
+        /* Menyamakan tampilan Select2 dengan Bootstrap */
+        .select2-container--default .select2-selection--single {
+            height: calc(1.5em + 0.75rem + 2px);
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 1.5;
+            padding-left: 0;
+            padding-right: 0;
+            color: #495057;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: calc(1.5em + 0.75rem);
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            width: 20px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow b {
+            border-color: #6c757d transparent transparent transparent;
+        }
+
+        .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+            border-color: transparent transparent #6c757d transparent;
+        }
+
+        .select2-container--default .select2-dropdown {
+            border-color: #80bdff;
+            border-radius: 0.25rem;
+        }
+
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: #007bff;
+        }
+
+        /* Fokus */
+        .select2-container--default.select2-container--focus .select2-selection--single {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .emergency__container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .custom__card {
+            background: linear-gradient(to bottom, #e0f7ff, #a5d8ff);
+            border: 2px solid #a100c9;
+            border-radius: 15px;
+            padding: 8px 15px;
+            width: fit-content;
+            min-width: 150px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user__icon {
+            width: 40px;
+            height: 40px;
+        }
+
+        .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-submenu>.dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-top: -6px;
+            margin-left: -1px;
+        }
+
+        .dropdown-submenu:hover>.dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-submenu>a.dropdown-toggle {
+            position: relative;
+            padding-right: 30px;
+        }
+
+        .dropdown-submenu>a.dropdown-toggle::after {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .dropdown-submenu:hover>a.dropdown-toggle::after {
+            transform: translateY(-50%) rotate(-90deg);
+        }
+    </style>
+@endpush
+
 @section('content')
-    @push('css')
-        <style>
-            .badge {
-                width: 30px;
-                height: 30px;
-                border-radius: 50%;
-            }
-
-            .badge-triage-yellow {
-                background-color: #ffeb3b;
-            }
-
-            .badge-triage-red {
-                background-color: #f44336;
-            }
-
-            .badge-triage-green {
-                background-color: #4caf50;
-            }
-
-            /* Custom CSS for profile */
-            .profile {
-                display: flex;
-                align-items: center;
-            }
-
-            .profile img {
-                margin-right: 10px;
-                border-radius: 50%;
-            }
-
-            .profile .info {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .profile .info strong {
-                font-size: 14px;
-            }
-
-            .profile .info span {
-                font-size: 12px;
-                color: #777;
-            }
-
-            .select2-container {
-                z-index: 9999;
-            }
-
-            .modal-dialog {
-                z-index: 1050 !important;
-            }
-
-            .modal-content {
-                overflow: visible !important;
-            }
-
-            .select2-dropdown {
-                z-index: 99999 !important;
-            }
-
-            /* Menghilangkan elemen Select2 yang tidak diinginkan */
-            .select2-container+.select2-container {
-                display: none;
-            }
-
-            /* Menyamakan tampilan Select2 dengan Bootstrap */
-            .select2-container--default .select2-selection--single {
-                height: calc(1.5em + 0.75rem + 2px);
-                padding: 0.375rem 0.75rem;
-                font-size: 1rem;
-                font-weight: 400;
-                line-height: 1.5;
-                color: #495057;
-                background-color: #fff;
-                border: 1px solid #ced4da;
-                border-radius: 0.25rem;
-                transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-            }
-
-            .select2-container--default .select2-selection--single .select2-selection__rendered {
-                line-height: 1.5;
-                padding-left: 0;
-                padding-right: 0;
-                color: #495057;
-            }
-
-            .select2-container--default .select2-selection--single .select2-selection__arrow {
-                height: calc(1.5em + 0.75rem);
-                position: absolute;
-                top: 1px;
-                right: 1px;
-                width: 20px;
-            }
-
-            .select2-container--default .select2-selection--single .select2-selection__arrow b {
-                border-color: #6c757d transparent transparent transparent;
-            }
-
-            .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
-                border-color: transparent transparent #6c757d transparent;
-            }
-
-            .select2-container--default .select2-dropdown {
-                border-color: #80bdff;
-                border-radius: 0.25rem;
-            }
-
-            .select2-container--default .select2-results__option--highlighted[aria-selected] {
-                background-color: #007bff;
-            }
-
-            /* Fokus */
-            .select2-container--default.select2-container--focus .select2-selection--single {
-                border-color: #80bdff;
-                outline: 0;
-                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-            }
-
-            .emergency__container {
-                display: flex;
-                align-items: center;
-                gap: 20px;
-            }
-
-            .custom__card {
-                background: linear-gradient(to bottom, #e0f7ff, #a5d8ff);
-                border: 2px solid #a100c9;
-                border-radius: 15px;
-                padding: 8px 15px;
-                width: fit-content;
-                min-width: 150px;
-                display: flex;
-                align-items: center;
-                gap: 20px;
-            }
-
-            .user__icon {
-                width: 40px;
-                height: 40px;
-            }
-
-            .dropdown-submenu {
-                position: relative;
-            }
-
-            .dropdown-submenu>.dropdown-menu {
-                top: 0;
-                left: 100%;
-                margin-top: -6px;
-                margin-left: -1px;
-            }
-
-            .dropdown-submenu:hover>.dropdown-menu {
-                display: block;
-            }
-
-            .dropdown-submenu>a.dropdown-toggle {
-                position: relative;
-                padding-right: 30px;
-            }
-
-            .dropdown-submenu>a.dropdown-toggle::after {
-                position: absolute;
-                right: 10px;
-                top: 50%;
-                transform: translateY(-50%);
-            }
-
-            .dropdown-submenu:hover>a.dropdown-toggle::after {
-                transform: translateY(-50%) rotate(-90deg);
-            }
-        </style>
-    @endpush
-
     <div class="row">
         <div class="col-md-12">
             <div class="emergency__container">
@@ -201,10 +201,13 @@
                 </div>
 
                 @canany(['is-admin', 'is-dokter-umum'])
-                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                    {{-- <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                         data-bs-target="#addPatientTriage">
                         <i class="ti-plus"></i> Tambah Data
-                    </button>
+                    </button> --}}
+                    <a href="{{ route('gawat-darurat.triase') }}" class="btn btn-primary btn-sm">
+                        <i class="ti-plus"></i> Tambah Data
+                    </a>
                 @endcanany
             </div>
         </div>
@@ -253,7 +256,7 @@
 
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-3">
+                                <div class="col-md-3">
 
                                     <div class="card">
                                         <div class="card-body">
@@ -334,8 +337,7 @@
                                                         <div class="input-group mb-3">
                                                             <input type="text" name="nik_pasien" id="nik_pasien"
                                                                 class="form-control" placeholder="Nik Pasien"
-                                                                aria-label="Nik Pasien"
-                                                                aria-describedby="button-nik-pasien"
+                                                                aria-label="Nik Pasien" aria-describedby="button-nik-pasien"
                                                                 value="{{ old('nik_pasien') }}">
                                                             <button class="btn btn-outline-secondary" type="button"
                                                                 id="button-nik-pasien">
@@ -479,7 +481,7 @@
 
                                 </div>
 
-                                <div class="col-9">
+                                <div class="col-md-9">
 
                                     <div class="card">
                                         <div class="card-header bg-primary">
@@ -569,7 +571,7 @@
                                             </div>
 
                                             <div class="row mt-5">
-                                                <div class="col-3">
+                                                <div class="col-md-3">
 
                                                     <div class="card mb-3">
                                                         <div class="card-header border-bottom">
@@ -613,7 +615,7 @@
                                                     </div>
 
                                                 </div>
-                                                <div class="col-3">
+                                                <div class="col-md-3">
 
                                                     <div class="card mb-3">
                                                         <div class="card-header border-bottom">
@@ -681,7 +683,7 @@
                                                     </div>
 
                                                 </div>
-                                                <div class="col-3">
+                                                <div class="col-md-3">
 
                                                     <div class="card mb-3">
                                                         <div class="card-header border-bottom">
@@ -820,7 +822,7 @@
                                                     </div>
 
                                                 </div>
-                                                <div class="col-3">
+                                                <div class="col-md-3">
 
                                                     <div class="card mb-3">
                                                         <div class="card-header border-bottom">

@@ -2247,8 +2247,10 @@ Route::middleware('ssoToken')->group(function () {
 
             Route::prefix('gawat-darurat')->group(function () {
                 Route::get('/', [GawatDaruratController::class, 'index'])->name('gawat-darurat.index');
+                Route::get('/triase', [GawatDaruratController::class, 'triaseIndex'])->name('gawat-darurat.triase');
                 Route::post('/store-triase', [GawatDaruratController::class, 'storeTriase'])->name('gawat-darurat.store-triase');
                 Route::post('/get-patient-bynik-ajax', [GawatDaruratController::class, 'getPatientByNikAjax'])->name('gawat-darurat.get-patient-bynik-ajax');
+                Route::post('/get-patient-bynama-ajax', [GawatDaruratController::class, 'getPatientByNamaAjax'])->name('gawat-darurat.get-patient-bynama-ajax');
 
                 Route::prefix('pelayanan')->group(function () {
                     Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {
