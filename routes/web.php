@@ -159,6 +159,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\PersetujuanTransfusiDarahContro
 use App\Http\Controllers\UnitPelayanan\RawatInap\Covid19Controller as RawatInapCovid19Controller;
 use App\Http\Controllers\UnitPelayanan\RawatInap\TransferPasienAntarRuang as RawatInapTransferPasienAntarRuang;
 use App\Http\Controllers\UnitPelayanan\RawatInap\EchocardiographyController as RawatInapEchocardiographyController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenPengkajianAwalMedis as RawatInapAsesmenPengkajianAwalMedis;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PneumoniaCurb65Controller;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PneumoniaPsiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SurveilansA1Controller;
@@ -1474,6 +1475,21 @@ Route::middleware('ssoToken')->group(function () {
                                                     });
                                                 });
                                             });
+
+                                            // Pengkajian Awal Medis
+                                            Route::prefix('pengkajian-awal-medis')->group(function () {
+                                                Route::name('.pengkajian-awal-medis')->group(function () {
+                                                    Route::controller(RawatInapAsesmenPengkajianAwalMedis::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
+                                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                        Route::put('/{id}', 'update')->name('.update');
+                                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                                    });
+                                                });
+                                            });
+
                                         });
                                     });
 
