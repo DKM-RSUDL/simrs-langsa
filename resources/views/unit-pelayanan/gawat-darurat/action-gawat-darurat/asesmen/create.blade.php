@@ -45,17 +45,33 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>{{ date('d-m-Y H:i', strtotime($dataMedis->dataTriase->tanggal_triase)) }}
-                                                </td>
-                                                <td>{{ $dataMedis->dataTriase->dokter->nama_lengkap ?? 'Tidak Ada Dokter' }}
-                                                </td>
-                                                <td>
-                                                    <div class="rounded-circle {{ $triageClass }}"
-                                                        style="width: 35px; height: 35px;"></div>
-                                                </td>
-                                                <td><a href="#" class="btn btn-sm btn-outline-primary">Detail</a></td>
-                                            </tr>
+                                            @if ($dataMedis->dataTriase)
+                                                <tr>
+                                                    <td>{{ date('d-m-Y H:i', strtotime($dataMedis->dataTriase->tanggal_triase)) }}
+                                                    </td>
+                                                    <td>
+                                                        @if ($dataMedis->dataTriase->dokter)
+                                                            {{ $dataMedis->dataTriase->dokter->nama_lengkap }}
+                                                        @else
+                                                            Tidak Ada Dokter
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        <div class="rounded-circle {{ $triageClass ?? 'bg-secondary' }}"
+                                                            style="width: 35px; height: 35px;"></div>
+                                                    </td>
+                                                    <td>
+                                                        <a href="#" class="btn btn-sm btn-outline-primary">Detail</a>
+                                                    </td>
+                                                </tr>
+                                            @else
+                                                <tr>
+                                                    <td colspan="4" class="text-center text-muted py-3">
+                                                        <i class="bi bi-info-circle me-2"></i>
+                                                        Tidak ada data triase untuk pasien ini
+                                                    </td>
+                                                </tr>
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
@@ -451,7 +467,7 @@
 
                                         <div class="form-group mb-3">
                                             <label class="form-label">Jenis</label>
-                                            <select class="form-select" name="skala_nyeri">
+                                            <select class="form-select" name="jenis_nyeri">
                                                 <option value="">--Pilih--</option>
                                                 @foreach ($jenisnyeri as $jenis)
                                                     <option value="{{ $jenis->id }}">{{ $jenis->name }}</option>

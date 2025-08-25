@@ -186,11 +186,22 @@
                                             </div>
                                         </div>
 
+                                        <!-- RR (Respiratory Rate) - ADDED -->
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-semibold">RR</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control bg-light text-center"
+                                                    name="show_vital_sign_rr" readonly>
+                                                <span class="input-group-text">x/mnt</span>
+                                            </div>
+                                        </div>
+
                                         <!-- GCS -->
                                         <div class="col-md-6">
                                             <label class="form-label small fw-semibold">GCS</label>
                                             <div class="input-group">
-                                                <input type="text" class="form-control bg-light text-center" name="show_vital_sign_gcs" readonly>
+                                                <input type="text" class="form-control bg-light text-center"
+                                                    name="show_vital_sign_gcs" readonly>
                                                 <span class="input-group-text">Total</span>
                                             </div>
                                         </div>
@@ -772,7 +783,8 @@
 
                         // Set URL print button
                         let btnPrint = document.getElementById('btnPrintAsesmen');
-                        btnPrint.href = `/unit-pelayanan/gawat-darurat/pelayanan/${response.data.dataMedis.kd_pasien}/${response.data.dataMedis.tgl_masuk.split(' ')[0]}/asesmen/${id}/print`;
+                        btnPrint.href =
+                            `/unit-pelayanan/gawat-darurat/pelayanan/${response.data.dataMedis.kd_pasien}/${response.data.dataMedis.tgl_masuk.split(' ')[0]}/asesmen/${id}/print`;
 
                         modal.show();
                     } else {
@@ -782,7 +794,8 @@
                 error: function(xhr, status, error) {
                     console.log('Error Response:', xhr.responseJSON);
                     Swal.close();
-                    Swal.fire('Error', xhr.responseJSON?.message || 'Terjadi kesalahan saat memuat data', 'error');
+                    Swal.fire('Error', xhr.responseJSON?.message || 'Terjadi kesalahan saat memuat data',
+                        'error');
                 }
             });
         }
@@ -813,7 +826,7 @@
                     // Jika data sudah berupa array
                     if (Array.isArray(asesmen.show_diagnosis)) {
                         diagnosisData = asesmen.show_diagnosis;
-                    } 
+                    }
                     // Jika data berupa string JSON
                     else if (typeof asesmen.show_diagnosis === 'string') {
                         diagnosisData = JSON.parse(asesmen.show_diagnosis);
@@ -860,7 +873,8 @@
                 return;
             }
 
-            const createItemElement = (text) => `<div class="selected-item mb-1"><i class="bi bi-check text-success me-2"></i> ${text}</div>`;
+            const createItemElement = (text) =>
+                `<div class="selected-item mb-1"><i class="bi bi-check text-success me-2"></i> ${text}</div>`;
 
             // Air Way
             if (Array.isArray(tindakanData.air_way) && tindakanData.air_way.length > 0) {
@@ -949,9 +963,13 @@
             $('input[name="show_vital_sign_td_sistole"]').val(vitalSignData.td_sistole || '-');
             $('input[name="show_vital_sign_td_diastole"]').val(vitalSignData.td_diastole || '-');
             $('input[name="show_vital_sign_nadi"]').val(vitalSignData.nadi || '-');
-            $('input[name="show_vital_sign_resp"]').val(vitalSignData.resp || '-');
-            $('input[name="show_vital_sign_suhu"]').val(vitalSignData.suhu || '-');
-            
+
+            // Add RR field (missing in original)
+            $('input[name="show_vital_sign_rr"]').val(vitalSignData.rr || '-');
+
+            // Fix temperature field - use 'temp' instead of 'suhu'
+            $('input[name="show_vital_sign_suhu"]').val(vitalSignData.temp || vitalSignData.suhu || '-');
+
             // Handle GCS dengan aman
             let gcsValue = '-';
             if (vitalSignData.gcs) {
@@ -962,7 +980,7 @@
                 }
             }
             $('input[name="show_vital_sign_gcs"]').val(gcsValue);
-            
+
             $('input[name="show_vital_sign_avpu"]').val(vitalSignData.avpu || '-');
             $('input[name="show_vital_sign_spo2_tanpa_o2"]').val(vitalSignData.spo2_tanpa_o2 || '-');
             $('input[name="show_vital_sign_spo2_dengan_o2"]').val(vitalSignData.spo2_dengan_o2 || '-');
@@ -1000,9 +1018,9 @@
                 let vitalSignData = {};
                 if (triase.vitalsign_retriase) {
                     try {
-                        vitalSignData = typeof triase.vitalsign_retriase === 'string' 
-                            ? JSON.parse(triase.vitalsign_retriase) 
-                            : triase.vitalsign_retriase;
+                        vitalSignData = typeof triase.vitalsign_retriase === 'string' ?
+                            JSON.parse(triase.vitalsign_retriase) :
+                            triase.vitalsign_retriase;
                     } catch (e) {
                         console.error('Error parsing vital sign:', e);
                         vitalSignData = {};
@@ -1012,28 +1030,35 @@
                 // Format vital signs
                 const formatVitalSigns = (data) => {
                     const items = [];
-                    if (data.td_sistole && data.td_diastole) items.push(`TD: ${data.td_sistole}/${data.td_diastole} mmHg`);
+                    if (data.td_sistole && data.td_diastole) items.push(
+                        `TD: ${data.td_sistole}/${data.td_diastole} mmHg`);
                     if (data.nadi) items.push(`Nadi: ${data.nadi} x/mnt`);
                     if (data.rr) items.push(`RR: ${data.rr} x/mnt`);
                     if (data.temp) items.push(`Suhu: ${data.temp}°C`);
                     if (data.spo2_tanpa_o2) items.push(`SpO2 (tanpa O2): ${data.spo2_tanpa_o2}%`);
                     if (data.spo2_dengan_o2) items.push(`SpO2 (dengan O2): ${data.spo2_dengan_o2}%`);
                     if (data.gcs) items.push(`GCS: ${data.gcs}`);
-                    
-                    return items.length > 0 
-                        ? `<ul class="list-unstyled mb-0">${items.map(item => `<li>${item}</li>`).join('')}</ul>`
-                        : '-';
+
+                    return items.length > 0 ?
+                        `<ul class="list-unstyled mb-0">${items.map(item => `<li>${item}</li>`).join('')}</ul>` :
+                        '-';
                 };
 
                 // Get triase status style
                 const getTriaseClass = (kodeTriase) => {
                     switch (parseInt(kodeTriase)) {
-                        case 5: return 'bg-dark text-white';
-                        case 4: return 'bg-danger text-white';
-                        case 3: return 'bg-danger text-white';
-                        case 2: return 'bg-warning text-dark';
-                        case 1: return 'bg-success text-white';
-                        default: return 'bg-secondary text-white';
+                        case 5:
+                            return 'bg-dark text-white';
+                        case 4:
+                            return 'bg-danger text-white';
+                        case 3:
+                            return 'bg-danger text-white';
+                        case 2:
+                            return 'bg-warning text-dark';
+                        case 1:
+                            return 'bg-success text-white';
+                        default:
+                            return 'bg-secondary text-white';
                     }
                 };
 
@@ -1078,7 +1103,9 @@
                         if (!dateStr) return '-';
                         try {
                             return new Date(dateStr).toLocaleDateString('id-ID', {
-                                day: '2-digit', month: '2-digit', year: 'numeric'
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric'
                             });
                         } catch (e) {
                             return dateStr;
@@ -1089,7 +1116,8 @@
                         if (!timeStr) return '-';
                         try {
                             return new Date(timeStr).toLocaleTimeString('id-ID', {
-                                hour: '2-digit', minute: '2-digit'
+                                hour: '2-digit',
+                                minute: '2-digit'
                             });
                         } catch (e) {
                             return timeStr;
@@ -1132,7 +1160,11 @@
                     break;
 
                 case 5: // Rujuk RS Lain
-                    const transportasiOptions = {'1': 'Ambulance', '2': 'Kendaraan Pribadi', '3': 'Lainnya'};
+                    const transportasiOptions = {
+                        '1': 'Ambulance',
+                        '2': 'Kendaraan Pribadi',
+                        '3': 'Lainnya'
+                    };
                     additionalInfo = `
                         <div class="col-md-4 mt-2">
                             <label class="fw-bold">Tujuan Rujuk:</label>
@@ -1158,8 +1190,15 @@
                         }
                     };
 
-                    const alasanPulangOptions = {'1': 'Sembuh', '2': 'Indikasi Medis', '3': 'Permintaan Pasien'};
-                    const kondisiPulangOptions = {'1': 'Mandiri', '2': 'Tidak Mandiri'};
+                    const alasanPulangOptions = {
+                        '1': 'Sembuh',
+                        '2': 'Indikasi Medis',
+                        '3': 'Permintaan Pasien'
+                    };
+                    const kondisiPulangOptions = {
+                        '1': 'Mandiri',
+                        '2': 'Tidak Mandiri'
+                    };
 
                     additionalInfo = `
                         <div class="col-md-3 mt-2">
@@ -1181,7 +1220,8 @@
                     break;
 
                 case 8: // Berobat Jalan
-                    const selectedPoli = window.unitPoli ? window.unitPoli.find(poli => poli.kd_unit === data.poli_unit_tujuan) : null;
+                    const selectedPoli = window.unitPoli ? window.unitPoli.find(poli => poli.kd_unit === data
+                        .poli_unit_tujuan) : null;
                     const poliName = selectedPoli ? selectedPoli.nama_unit : data.poli_unit_tujuan;
 
                     additionalInfo = `
@@ -1270,7 +1310,7 @@
             allItemsFisik.forEach(function(itemFisik) {
                 // Cek apakah item ini ada di data pemeriksaan
                 const pemeriksaanData = pemeriksaanMap[itemFisik.id];
-                
+
                 // Default nilai
                 let isNormal = '1'; // Default normal
                 let statusText = 'Normal';
@@ -1298,22 +1338,21 @@
                             <div class="d-flex align-items-center gap-1">
                                 <span class="badge badge-sm ${isNormal === '1' ? 'bg-success' : 'bg-danger'}">${statusText}</span>
                                 ${keterangan ? `<button class="btn btn-sm btn-link p-0 text-muted" type="button" data-bs-toggle="collapse" data-bs-target="#show_keterangan_${itemFisik.id}" title="Lihat keterangan">
-                                    <i class="bi bi-info-circle" style="font-size: 0.875rem;"></i>
-                                </button>` : ''}
+                                        <i class="bi bi-info-circle" style="font-size: 0.875rem;"></i>
+                                    </button>` : ''}
                             </div>
                         </div>
                         ${keterangan ? `
-                            <div id="show_keterangan_${itemFisik.id}" class="collapse mt-1">
-                                <div class="alert alert-warning py-2 px-3 mb-0 small">
-                                    <strong>Keterangan:</strong> ${keterangan}
+                                <div id="show_keterangan_${itemFisik.id}" class="collapse mt-1">
+                                    <div class="alert alert-warning py-2 px-3 mb-0 small">
+                                        <strong>Keterangan:</strong> ${keterangan}
+                                    </div>
                                 </div>
-                            </div>
-                        ` : ''}
+                            ` : ''}
                     </div>
                 `;
                 container.append(itemHtml);
             });
         }
-
     </script>
 @endpush
