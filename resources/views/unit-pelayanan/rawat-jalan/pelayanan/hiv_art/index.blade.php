@@ -122,6 +122,32 @@
             color: #34495e;
             font-size: 14px;
         }
+
+        .tabs-container {
+            background: white;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-tabs {
+            border-bottom: none;
+            padding: 10px 20px 0;
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            color: #7f8c8d;
+            padding: 12px 20px;
+            margin-right: 10px;
+            border-radius: 8px 8px 0 0;
+            background: #ecf0f1;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: #3498db;
+            color: white;
+        }
     </style>
 @endpush
 
@@ -136,7 +162,7 @@
 
             <div class="row">
                 {{-- Tabs --}}
-                <ul class="nav nav-tabs" id="ikhtisarTab" role="tablist">
+                {{-- <ul class="nav nav-tabs" id="ikhtisarTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <a href="{{ request()->fullUrlWithQuery(['tab' => 'ikhtisar']) }}"
                             class="nav-link {{ ($activeTab ?? 'ikhtisar') == 'ikhtisar' ? 'active' : '' }}"
@@ -153,7 +179,28 @@
                             Akhir Follow-Up
                         </a>
                     </li>
-                </ul>
+                </ul> --}}
+
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs" id="ikhtisarTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a href="{{ request()->fullUrlWithQuery(['tab' => 'ikhtisar']) }}"
+                                class="nav-link {{ ($activeTab ?? 'ikhtisar') == 'ikhtisar' ? 'active' : '' }}"
+                                aria-selected="{{ ($activeTab ?? 'ikhtisar') == 'ikhtisar' ? 'true' : 'false' }}">
+                                <i class="bi bi-clipboard-data me-2"></i>
+                                Ikhtisar HIV ART
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a href="{{ request()->fullUrlWithQuery(['tab' => 'followUp']) }}"
+                                class="nav-link {{ ($activeTab ?? 'ikhtisar') == 'followUp' ? 'active' : '' }}"
+                                aria-selected="{{ ($activeTab ?? 'ikhtisar') == 'followUp' ? 'true' : 'false' }}">
+                                <i class="bi bi-calendar-check me-2"></i>
+                                Akhir Follow-Up
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
                 <div class="d-flex justify-content-between align-items-center m-3">
                     <div class="row w-100">

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\UnitPelayanan\RawatJalan;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Kunjungan;
+use App\Models\RmeAlergiPasien;
+use App\Models\RmeHivArt;
 use App\Models\RmeHivArtAkhiriFollowUp;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +23,7 @@ class RajalHivArtAkhirFollowUpController extends Controller
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
         if (!$dataMedis) {
             abort(404, 'Data not found');
@@ -34,6 +37,29 @@ class RajalHivArtAkhirFollowUpController extends Controller
             ->orderBy('tanggal', 'desc')
             ->paginate(10);
 
+        // Get existing HIV ART records
+        $hivArtRecords = RmeHivArt::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->with(['dataPemeriksaanKlinis', 'terapiAntiretroviral'])
+            ->orderBy('tanggal', 'desc')
+            ->paginate(10);
+
+
+        // Handle tabs
+        // $activeTab = $request->query('tab', 'ikhtisar');
+        // $allowedTabs = ['ikhtisar', 'followUp'];
+        // if (!in_array($activeTab, $allowedTabs)) {
+        //     $activeTab = 'ikhtisar';
+        // }
+
+        // if ($activeTab == 'ikhtisar') {
+        //     return $this->ikhtisarTab($dataMedis, $activeTab, $hivArtRecords, $alergiPasien);
+        // } else {
+        //     return $this->followUpTab($dataMedis, $activeTab, $hivArtRecords);
+        // }
+
         // start fungsi Tabs
         $activeTab = $request->query('tab', 'ikhtisar');
         $allowedTabs = ['ikhtisar', 'followUp'];
@@ -43,9 +69,9 @@ class RajalHivArtAkhirFollowUpController extends Controller
         }
 
         if ($activeTab == 'ikhtisar') {
-            return $this->ikhtisarTab($dataMedis, $activeTab, $hivArtData);
+            return $this->ikhtisarTab($dataMedis, $activeTab, $hivArtData, $alergiPasien);
         } else {
-            return $this->followUpTab($dataMedis, $activeTab, $hivArtData);
+            return $this->followUpTab($dataMedis, $activeTab, $hivArtRecords);
         }
     }
 
@@ -73,21 +99,22 @@ class RajalHivArtAkhirFollowUpController extends Controller
         return $dataMedis;
     }
 
-    private function ikhtisarTab($dataMedis, $activeTab, $hivArtData)
+    private function ikhtisarTab($dataMedis, $activeTab, $hivArtData, $alergiPasien)
     {
         return view('unit-pelayanan.rawat-jalan.pelayanan.hiv_art.index', compact(
             'dataMedis',
             'activeTab',
-            'hivArtData'
+            'hivArtData',
+            'alergiPasien',
         ));
     }
 
-    private function followUpTab($dataMedis, $activeTab, $hivArtData)
+    private function followUpTab($dataMedis, $activeTab, $hivArtRecords)
     {
         return view('unit-pelayanan.rawat-jalan.pelayanan.hiv_art_akhiri_follow_up.index', compact(
             'dataMedis',
             'activeTab',
-            'hivArtData'
+            'hivArtRecords'
         ));
     }
 

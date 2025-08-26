@@ -122,6 +122,11 @@
             'label' => 'Status Fungsional',
             'link' => route('status-fungsional.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
+        [
+            'icon' => 'verified_badge.png',
+            'label' => 'Echocardiography',
+            'link' => route('echocardiography.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+        ],
     ];
 @endphp
 

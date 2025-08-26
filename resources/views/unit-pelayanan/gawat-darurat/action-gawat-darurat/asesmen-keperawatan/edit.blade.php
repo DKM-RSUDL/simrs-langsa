@@ -14,10 +14,10 @@
                 <i class="ti-arrow-left"></i> Kembali
             </a>
             <form id="asesmenForm" method="POST" action="{{ route('asesmen-keperawatan.update', [
-                'kd_pasien' => $dataMedis->kd_pasien,
-                'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
-                'id' => $asesmen->id
-            ]) }}">
+        'kd_pasien' => $dataMedis->kd_pasien,
+        'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
+        'id' => $asesmen->id
+    ]) }}">
                 @csrf
                 @method('PUT')
 
@@ -75,26 +75,19 @@
                                             <label style="min-width: 200px;">Status Airway</label>
                                             <select class="form-select" name="airway_status">
                                                 <option value="">--Pilih--</option>
-                                                <option value="bebas"
-                                                    {{ $asesmen->asesmenKepUmum->airway_status == 'bebas' ? 'selected' : '' }}>
+                                                <option value="bebas" {{ $asesmen->asesmenKepUmum->airway_status == 'bebas' ? 'selected' : '' }}>
                                                     Bebas</option>
-                                                <option value="pangkal lidah jatuh"
-                                                    {{ $asesmen->asesmenKepUmum->airway_status == 'pangkal lidah jatuh' ? 'selected' : '' }}>
+                                                <option value="pangkal lidah jatuh" {{ $asesmen->asesmenKepUmum->airway_status == 'pangkal lidah jatuh' ? 'selected' : '' }}>
                                                     Tidak Bebas (Pangkal Lidah Jatuh)</option>
-                                                <option value="sputum"
-                                                    {{ $asesmen->asesmenKepUmum->airway_status == 'sputum' ? 'selected' : '' }}>
+                                                <option value="sputum" {{ $asesmen->asesmenKepUmum->airway_status == 'sputum' ? 'selected' : '' }}>
                                                     Tidak Bebas (Sputum)</option>
-                                                <option value="darah"
-                                                    {{ $asesmen->asesmenKepUmum->airway_status == 'darah' ? 'selected' : '' }}>
+                                                <option value="darah" {{ $asesmen->asesmenKepUmum->airway_status == 'darah' ? 'selected' : '' }}>
                                                     Tidak Bebas (darah)</option>
-                                                <option value="spasm"
-                                                    {{ $asesmen->asesmenKepUmum->airway_status == 'spasm' ? 'selected' : '' }}>
+                                                <option value="spasm" {{ $asesmen->asesmenKepUmum->airway_status == 'spasm' ? 'selected' : '' }}>
                                                     Tidak Bebas (Spasm)</option>
-                                                <option value="benda asing"
-                                                    {{ $asesmen->asesmenKepUmum->airway_status == 'benda asing' ? 'selected' : '' }}>
+                                                <option value="benda asing" {{ $asesmen->asesmenKepUmum->airway_status == 'benda asing' ? 'selected' : '' }}>
                                                     Tidak Bebas (Benda Asing)</option>
-                                                <option value="lainnya"
-                                                    {{ $asesmen->asesmenKepUmum->airway_status == 'lainnya' ? 'selected' : '' }}>
+                                                <option value="lainnya" {{ $asesmen->asesmenKepUmum->airway_status == 'lainnya' ? 'selected' : '' }}>
                                                     Lainnya</option>
                                             </select>
                                         </div>
@@ -102,20 +95,15 @@
                                             <label style="min-width: 200px;">Suara Nafas</label>
                                             <select class="form-select" name="airway_suara_nafas">
                                                 <option value="">--Pilih--</option>
-                                                <option value="normal"
-                                                    {{ $asesmen->asesmenKepUmum->airway_suara_nafas == 'normal' ? 'selected' : '' }}>
+                                                <option value="normal" {{ $asesmen->asesmenKepUmum->airway_suara_nafas == 'normal' ? 'selected' : '' }}>
                                                     Normal</option>
-                                                <option value="whezing"
-                                                    {{ $asesmen->asesmenKepUmum->airway_suara_nafas == 'whezing' ? 'selected' : '' }}>
+                                                <option value="whezing" {{ $asesmen->asesmenKepUmum->airway_suara_nafas == 'whezing' ? 'selected' : '' }}>
                                                     Whezing</option>
-                                                <option value="ronchi"
-                                                    {{ $asesmen->asesmenKepUmum->airway_suara_nafas == 'ronchi' ? 'selected' : '' }}>
+                                                <option value="ronchi" {{ $asesmen->asesmenKepUmum->airway_suara_nafas == 'ronchi' ? 'selected' : '' }}>
                                                     Ronchi</option>
-                                                <option value="crackles"
-                                                    {{ $asesmen->asesmenKepUmum->airway_suara_nafas == 'crackles' ? 'selected' : '' }}>
+                                                <option value="crackles" {{ $asesmen->asesmenKepUmum->airway_suara_nafas == 'crackles' ? 'selected' : '' }}>
                                                     Crackles</option>
-                                                <option value="stridor"
-                                                    {{ $asesmen->asesmenKepUmum->airway_suara_nafas == 'stridor' ? 'selected' : '' }}>
+                                                <option value="stridor" {{ $asesmen->asesmenKepUmum->airway_suara_nafas == 'stridor' ? 'selected' : '' }}>
                                                     Stridor</option>
                                             </select>
                                         </div>
@@ -129,36 +117,30 @@
                                                             <div class="form-check">
                                                                 <input type="checkbox"
                                                                     class="form-check-input diagnosis-radio diagnose-prwt-checkbox"
-                                                                    id="jalan_nafas_tidak_efektif"
-                                                                    name="airway_diagnosis"
-                                                                    value="1"
-                                                                    {{ $asesmen->asesmenKepUmum && !is_null($asesmen->asesmenKepUmum->airway_diagnosis) ? 'checked' : '' }}>
+                                                                    id="jalan_nafas_tidak_efektif" name="airway_diagnosis"
+                                                                    value="1" {{ $asesmen->asesmenKepUmum && !is_null($asesmen->asesmenKepUmum->airway_diagnosis) ? 'checked' : '' }}>
                                                                 <!-- Tambahkan hidden input untuk memastikan field selalu dikirim -->
-                                                                <input type="hidden" name="current_airway_diagnosis" value="{{ $asesmen->asesmenKepUmum->airway_diagnosis ?? '' }}">
-                                                                <label class="form-check-label" for="jalan_nafas_tidak_efektif">
+                                                                <input type="hidden" name="current_airway_diagnosis"
+                                                                    value="{{ $asesmen->asesmenKepUmum->airway_diagnosis ?? '' }}">
+                                                                <label class="form-check-label"
+                                                                    for="jalan_nafas_tidak_efektif">
                                                                     Jalan nafas tidak efektif
                                                                 </label>
                                                             </div>
                                                             <div class="d-flex gap-4">
                                                                 <div class="form-check">
-                                                                    <input type="radio"
-                                                                        class="form-check-input"
-                                                                        id="airway_aktual"
-                                                                        name="airway_diagnosis_type"
-                                                                        value="1"
-                                                                        {{ $asesmen->asesmenKepUmum && $asesmen->asesmenKepUmum->airway_diagnosis == '1' ? 'checked' : '' }}
-                                                                        {{ !$asesmen->asesmenKepUmum || is_null($asesmen->asesmenKepUmum->airway_diagnosis) ? 'disabled' : '' }}>
-                                                                    <label class="form-check-label" for="airway_aktual">Aktual</label>
+                                                                    <input type="radio" class="form-check-input"
+                                                                        id="airway_aktual" name="airway_diagnosis_type"
+                                                                        value="1" {{ $asesmen->asesmenKepUmum && $asesmen->asesmenKepUmum->airway_diagnosis == '1' ? 'checked' : '' }} {{ !$asesmen->asesmenKepUmum || is_null($asesmen->asesmenKepUmum->airway_diagnosis) ? 'disabled' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="airway_aktual">Aktual</label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input type="radio"
-                                                                        class="form-check-input"
-                                                                        id="airway_risiko"
-                                                                        name="airway_diagnosis_type"
-                                                                        value="2"
-                                                                        {{ $asesmen->asesmenKepUmum && $asesmen->asesmenKepUmum->airway_diagnosis == '2' ? 'checked' : '' }}
-                                                                        {{ !$asesmen->asesmenKepUmum || is_null($asesmen->asesmenKepUmum->airway_diagnosis) ? 'disabled' : '' }}>
-                                                                    <label class="form-check-label" for="airway_risiko">Risiko</label>
+                                                                    <input type="radio" class="form-check-input"
+                                                                        id="airway_risiko" name="airway_diagnosis_type"
+                                                                        value="2" {{ $asesmen->asesmenKepUmum && $asesmen->asesmenKepUmum->airway_diagnosis == '2' ? 'checked' : '' }} {{ !$asesmen->asesmenKepUmum || is_null($asesmen->asesmenKepUmum->airway_diagnosis) ? 'disabled' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="airway_risiko">Risiko</label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -170,18 +152,16 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tindakan Keperawatan</label>
                                             <div class="w-100">
-                                                <input type="hidden"
-                                                       id="existingTindakan-airway"
-                                                       value="{{ optional($asesmen->asesmenKepUmum)->airway_tindakan }}">
+                                                <input type="hidden" id="existingTindakan-airway"
+                                                    value="{{ optional($asesmen->asesmenKepUmum)->airway_tindakan }}">
 
                                                 <button type="button"
-                                                        class="btn btn-sm btn-outline-secondary btn-tindakan-airway mb-3"
-                                                        data-bs-target="#tindakanKeperawatanAirwayModal">
+                                                    class="btn btn-sm btn-outline-secondary btn-tindakan-airway mb-3"
+                                                    data-bs-target="#tindakanKeperawatanAirwayModal">
                                                     <i class="ti-plus"></i> Tambah
                                                 </button>
 
-                                                <div id="selectedTindakanList-airway"
-                                                     class="d-flex flex-column gap-2">
+                                                <div id="selectedTindakanList-airway" class="d-flex flex-column gap-2">
                                                     <!-- Airway tindakan list will be populated by JavaScript -->
                                                 </div>
                                             </div>
@@ -191,32 +171,27 @@
                                     <div class="section-separator" id="status-breathing">
                                         <h5 class="section-title">2. Status Breathing</h5>
 
-                                        {{-- <div class="form-group">
+                                        <div class="form-group">
                                             <label style="min-width: 200px;">Frekuensi nafas/menit</label>
-                                            <input type="text" class="form-control" name="breathing_frekuensi_nafas">
-                                        </div> --}}
+                                            <input type="text" class="form-control" name="breathing_frekuensi_nafas"
+                                                value="{{ optional($asesmen->asesmenKepUmumBreathing)->breathing_frekuensi_nafas }}">
+                                        </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Pola nafas</label>
                                             <select class="form-select" name="breathing_pola_nafas">
                                                 <option value="">--Pilih--</option>
-                                                <option value="Normal"
-                                                    {{ old('breathing_pola_nafas', $asesmen->asesmenKepUmumBreathing->breathing_pola_nafas ?? '') == 'Normal' ? 'selected' : '' }}>
+                                                <option value="Normal" {{ old('breathing_pola_nafas', $asesmen->asesmenKepUmumBreathing->breathing_pola_nafas ?? '') == 'Normal' ? 'selected' : '' }}>
                                                     Normal</option>
-                                                <option value="Apnea"
-                                                    {{ old('breathing_pola_nafas', $asesmen->asesmenKepUmumBreathing->breathing_pola_nafas ?? '') == 'Apnea' ? 'selected' : '' }}>
+                                                <option value="Apnea" {{ old('breathing_pola_nafas', $asesmen->asesmenKepUmumBreathing->breathing_pola_nafas ?? '') == 'Apnea' ? 'selected' : '' }}>
                                                     Apnea</option>
-                                                <option value="Sesak"
-                                                    {{ old('breathing_pola_nafas', $asesmen->asesmenKepUmumBreathing->breathing_pola_nafas ?? '') == 'Sesak' ? 'selected' : '' }}>
+                                                <option value="Sesak" {{ old('breathing_pola_nafas', $asesmen->asesmenKepUmumBreathing->breathing_pola_nafas ?? '') == 'Sesak' ? 'selected' : '' }}>
                                                     Sesak</option>
-                                                <option value="Bradipnea"
-                                                    {{ old('breathing_pola_nafas', $asesmen->asesmenKepUmumBreathing->breathing_pola_nafas ?? '') == 'Bradipnea' ? 'selected' : '' }}>
+                                                <option value="Bradipnea" {{ old('breathing_pola_nafas', $asesmen->asesmenKepUmumBreathing->breathing_pola_nafas ?? '') == 'Bradipnea' ? 'selected' : '' }}>
                                                     Bradipnea</option>
-                                                <option value="Takipnea"
-                                                    {{ old('breathing_pola_nafas', $asesmen->asesmenKepUmumBreathing->breathing_pola_nafas ?? '') == 'Takipnea' ? 'selected' : '' }}>
+                                                <option value="Takipnea" {{ old('breathing_pola_nafas', $asesmen->asesmenKepUmumBreathing->breathing_pola_nafas ?? '') == 'Takipnea' ? 'selected' : '' }}>
                                                     Takipnea</option>
-                                                <option value="Othopnea"
-                                                    {{ old('breathing_pola_nafas', $asesmen->asesmenKepUmumBreathing->breathing_pola_nafas ?? '') == 'Othopnea' ? 'selected' : '' }}>
+                                                <option value="Othopnea" {{ old('breathing_pola_nafas', $asesmen->asesmenKepUmumBreathing->breathing_pola_nafas ?? '') == 'Othopnea' ? 'selected' : '' }}>
                                                     Othopnea</option>
                                             </select>
                                         </div>
@@ -225,20 +200,15 @@
                                             <label style="min-width: 200px;">Bunyi nafas</label>
                                             <select class="form-select" name="breathing_bunyi_nafas">
                                                 <option value="">--Pilih--</option>
-                                                <option value="Normal"
-                                                    {{ old('breathing_bunyi_nafas', $asesmen->asesmenKepUmumBreathing->breathing_bunyi_nafas ?? '') == 'Normal' ? 'selected' : '' }}>
+                                                <option value="Normal" {{ old('breathing_bunyi_nafas', $asesmen->asesmenKepUmumBreathing->breathing_bunyi_nafas ?? '') == 'Normal' ? 'selected' : '' }}>
                                                     Normal</option>
-                                                <option value="Veskuler"
-                                                    {{ old('breathing_bunyi_nafas', $asesmen->asesmenKepUmumBreathing->breathing_bunyi_nafas ?? '') == 'Veskuler' ? 'selected' : '' }}>
+                                                <option value="Veskuler" {{ old('breathing_bunyi_nafas', $asesmen->asesmenKepUmumBreathing->breathing_bunyi_nafas ?? '') == 'Veskuler' ? 'selected' : '' }}>
                                                     Veskuler</option>
-                                                <option value="Wheezing"
-                                                    {{ old('breathing_bunyi_nafas', $asesmen->asesmenKepUmumBreathing->breathing_bunyi_nafas ?? '') == 'Wheezing' ? 'selected' : '' }}>
+                                                <option value="Wheezing" {{ old('breathing_bunyi_nafas', $asesmen->asesmenKepUmumBreathing->breathing_bunyi_nafas ?? '') == 'Wheezing' ? 'selected' : '' }}>
                                                     Whezing</option>
-                                                <option value="Stridor"
-                                                    {{ old('breathing_bunyi_nafas', $asesmen->asesmenKepUmumBreathing->breathing_bunyi_nafas ?? '') == 'Stridor' ? 'selected' : '' }}>
+                                                <option value="Stridor" {{ old('breathing_bunyi_nafas', $asesmen->asesmenKepUmumBreathing->breathing_bunyi_nafas ?? '') == 'Stridor' ? 'selected' : '' }}>
                                                     Stridor</option>
-                                                <option value="Ronchi"
-                                                    {{ old('breathing_bunyi_nafas', $asesmen->asesmenKepUmumBreathing->breathing_bunyi_nafas ?? '') == 'Ronchi' ? 'selected' : '' }}>
+                                                <option value="Ronchi" {{ old('breathing_bunyi_nafas', $asesmen->asesmenKepUmumBreathing->breathing_bunyi_nafas ?? '') == 'Ronchi' ? 'selected' : '' }}>
                                                     Ronchi</option>
                                             </select>
                                         </div>
@@ -247,11 +217,9 @@
                                             <label style="min-width: 200px;">Irama Nafas</label>
                                             <select class="form-select" name="breathing_irama_nafas">
                                                 <option value="">--Pilih--</option>
-                                                <option value="1"
-                                                    {{ old('breathing_irama_nafas', $asesmen->asesmenKepUmumBreathing->breathing_irama_nafas ?? '') == '1' ? 'selected' : '' }}>
+                                                <option value="1" {{ old('breathing_irama_nafas', $asesmen->asesmenKepUmumBreathing->breathing_irama_nafas ?? '') == '1' ? 'selected' : '' }}>
                                                     Teratur</option>
-                                                <option value="0"
-                                                    {{ old('breathing_irama_nafas', $asesmen->asesmenKepUmumBreathing->breathing_irama_nafas ?? '') == '0' ? 'selected' : '' }}>
+                                                <option value="0" {{ old('breathing_irama_nafas', $asesmen->asesmenKepUmumBreathing->breathing_irama_nafas ?? '') == '0' ? 'selected' : '' }}>
                                                     Tidak Teratur</option>
                                             </select>
                                         </div>
@@ -259,17 +227,13 @@
                                             <label style="min-width: 200px;">Tanda Distress Nafas</label>
                                             <select class="form-select" name="breathing_tanda_distress">
                                                 <option value="">--Pilih--</option>
-                                                <option value="Tidak Ada Tanda Distress"
-                                                    {{ old('breathing_tanda_distress', $asesmen->asesmenKepUmumBreathing->breathing_tanda_distress ?? '') == 'Tidak Ada Tanda Distress' ? 'selected' : '' }}>
+                                                <option value="Tidak Ada Tanda Distress" {{ old('breathing_tanda_distress', $asesmen->asesmenKepUmumBreathing->breathing_tanda_distress ?? '') == 'Tidak Ada Tanda Distress' ? 'selected' : '' }}>
                                                     Tidak Ada Tanda Distress</option>
-                                                <option value="Penggunaan Otot Bantu"
-                                                    {{ old('breathing_tanda_distress', $asesmen->asesmenKepUmumBreathing->breathing_tanda_distress ?? '') == 'Penggunaan Otot Bantu' ? 'selected' : '' }}>
+                                                <option value="Penggunaan Otot Bantu" {{ old('breathing_tanda_distress', $asesmen->asesmenKepUmumBreathing->breathing_tanda_distress ?? '') == 'Penggunaan Otot Bantu' ? 'selected' : '' }}>
                                                     Penggunaan Otot Bantu</option>
-                                                <option value="Retraksi Dada/Intercosta"
-                                                    {{ old('breathing_tanda_distress', $asesmen->asesmenKepUmumBreathing->breathing_tanda_distress ?? '') == 'Retraksi Dada/Intercosta' ? 'selected' : '' }}>
+                                                <option value="Retraksi Dada/Intercosta" {{ old('breathing_tanda_distress', $asesmen->asesmenKepUmumBreathing->breathing_tanda_distress ?? '') == 'Retraksi Dada/Intercosta' ? 'selected' : '' }}>
                                                     Retraksi Dada/Intercosta</option>
-                                                <option value="Cupling Hidung"
-                                                    {{ old('breathing_tanda_distress', $asesmen->asesmenKepUmumBreathing->breathing_tanda_distress ?? '') == 'Cupling Hidung' ? 'selected' : '' }}>
+                                                <option value="Cupling Hidung" {{ old('breathing_tanda_distress', $asesmen->asesmenKepUmumBreathing->breathing_tanda_distress ?? '') == 'Cupling Hidung' ? 'selected' : '' }}>
                                                     Cupling Hidung</option>
                                             </select>
                                         </div>
@@ -277,11 +241,9 @@
                                             <label style="min-width: 200px;">Jalan Pernafasan</label>
                                             <select class="form-select" name="breathing_jalan_nafas">
                                                 <option value="">Pilih</option>
-                                                <option value="1"
-                                                    {{ old('breathing_jalan_nafas', $asesmen->asesmenKepUmumBreathing->breathing_jalan_nafas ?? '') == '1' ? 'selected' : '' }}>
+                                                <option value="1" {{ old('breathing_jalan_nafas', $asesmen->asesmenKepUmumBreathing->breathing_jalan_nafas ?? '') == '1' ? 'selected' : '' }}>
                                                     Pernafasan Dada</option>
-                                                <option value="2"
-                                                    {{ old('breathing_jalan_nafas', $asesmen->asesmenKepUmumBreathing->breathing_jalan_nafas ?? '') == '2' ? 'selected' : '' }}>
+                                                <option value="2" {{ old('breathing_jalan_nafas', $asesmen->asesmenKepUmumBreathing->breathing_jalan_nafas ?? '') == '2' ? 'selected' : '' }}>
                                                     Pernafasan Perut</option>
                                             </select>
                                         </div>
@@ -301,37 +263,30 @@
                                                                 <input type="checkbox"
                                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
                                                                     id="pola_nafas_tidak_efektif"
-                                                                    name="breathing_diagnosis_nafas[]"
-                                                                    value="pola_nafas"
-                                                                    {{ !empty($asesmen->asesmenKepUmumBreathing->breathing_diagnosis_nafas) ? 'checked' : '' }}>
+                                                                    name="breathing_diagnosis_nafas[]" value="pola_nafas" {{ !empty($asesmen->asesmenKepUmumBreathing->breathing_diagnosis_nafas) ? 'checked' : '' }}>
                                                                 <!-- Hidden input untuk menjaga nilai saat ini -->
                                                                 <input type="hidden"
                                                                     name="current_breathing_diagnosis_nafas"
                                                                     value="{{ $asesmen->asesmenKepUmumBreathing->breathing_diagnosis_nafas ?? '' }}">
-                                                                <label class="form-check-label" for="pola_nafas_tidak_efektif">
+                                                                <label class="form-check-label"
+                                                                    for="pola_nafas_tidak_efektif">
                                                                     Pola Nafas Tidak Efektif
                                                                 </label>
                                                             </div>
                                                             <div class="d-flex gap-4">
                                                                 <div class="form-check">
-                                                                    <input type="radio"
-                                                                        class="form-check-input"
+                                                                    <input type="radio" class="form-check-input"
                                                                         id="breathing_aktual"
-                                                                        name="breathing_diagnosis_type"
-                                                                        value="1"
-                                                                        {{ $asesmen->asesmenKepUmumBreathing && $asesmen->asesmenKepUmumBreathing->breathing_diagnosis_nafas == '1' ? 'checked' : '' }}
-                                                                        {{ empty($asesmen->asesmenKepUmumBreathing->breathing_diagnosis_nafas) ? 'disabled' : '' }}>
-                                                                    <label class="form-check-label" for="breathing_aktual">Aktual</label>
+                                                                        name="breathing_diagnosis_type" value="1" {{ $asesmen->asesmenKepUmumBreathing && $asesmen->asesmenKepUmumBreathing->breathing_diagnosis_nafas == '1' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumBreathing->breathing_diagnosis_nafas) ? 'disabled' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="breathing_aktual">Aktual</label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input type="radio"
-                                                                        class="form-check-input"
+                                                                    <input type="radio" class="form-check-input"
                                                                         id="breathing_risiko"
-                                                                        name="breathing_diagnosis_type"
-                                                                        value="2"
-                                                                        {{ $asesmen->asesmenKepUmumBreathing && $asesmen->asesmenKepUmumBreathing->breathing_diagnosis_nafas == '2' ? 'checked' : '' }}
-                                                                        {{ empty($asesmen->asesmenKepUmumBreathing->breathing_diagnosis_nafas) ? 'disabled' : '' }}>
-                                                                    <label class="form-check-label" for="breathing_risiko">Risiko</label>
+                                                                        name="breathing_diagnosis_type" value="2" {{ $asesmen->asesmenKepUmumBreathing && $asesmen->asesmenKepUmumBreathing->breathing_diagnosis_nafas == '2' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumBreathing->breathing_diagnosis_nafas) ? 'disabled' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="breathing_risiko">Risiko</label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -343,38 +298,30 @@
                                                             <div class="form-check">
                                                                 <input type="checkbox"
                                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
-                                                                    id="gangguan_pertukaran_gas"
-                                                                    name="breathing_gangguan[]"
-                                                                    value="gangguan"
-                                                                    {{ !empty($asesmen->asesmenKepUmumBreathing->breathing_gangguan) ? 'checked' : '' }}>
+                                                                    id="gangguan_pertukaran_gas" name="breathing_gangguan[]"
+                                                                    value="gangguan" {{ !empty($asesmen->asesmenKepUmumBreathing->breathing_gangguan) ? 'checked' : '' }}>
                                                                 <!-- Hidden input untuk menjaga nilai saat ini -->
-                                                                <input type="hidden"
-                                                                    name="current_breathing_gangguan"
+                                                                <input type="hidden" name="current_breathing_gangguan"
                                                                     value="{{ $asesmen->asesmenKepUmumBreathing->breathing_gangguan ?? '' }}">
-                                                                <label class="form-check-label" for="gangguan_pertukaran_gas">
+                                                                <label class="form-check-label"
+                                                                    for="gangguan_pertukaran_gas">
                                                                     Gangguan Pertukaran Gas
                                                                 </label>
                                                             </div>
                                                             <div class="d-flex gap-4">
                                                                 <div class="form-check">
-                                                                    <input type="radio"
-                                                                        class="form-check-input"
+                                                                    <input type="radio" class="form-check-input"
                                                                         id="breathing_aktual_1"
-                                                                        name="breathing_gangguan_type"
-                                                                        value="1"
-                                                                        {{ $asesmen->asesmenKepUmumBreathing && $asesmen->asesmenKepUmumBreathing->breathing_gangguan == '1' ? 'checked' : '' }}
-                                                                        {{ empty($asesmen->asesmenKepUmumBreathing->breathing_gangguan) ? 'disabled' : '' }}>
-                                                                    <label class="form-check-label" for="breathing_aktual_1">Aktual</label>
+                                                                        name="breathing_gangguan_type" value="1" {{ $asesmen->asesmenKepUmumBreathing && $asesmen->asesmenKepUmumBreathing->breathing_gangguan == '1' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumBreathing->breathing_gangguan) ? 'disabled' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="breathing_aktual_1">Aktual</label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input type="radio"
-                                                                        class="form-check-input"
+                                                                    <input type="radio" class="form-check-input"
                                                                         id="breathing_risiko_1"
-                                                                        name="breathing_gangguan_type"
-                                                                        value="2"
-                                                                        {{ $asesmen->asesmenKepUmumBreathing && $asesmen->asesmenKepUmumBreathing->breathing_gangguan == '2' ? 'checked' : '' }}
-                                                                        {{ empty($asesmen->asesmenKepUmumBreathing->breathing_gangguan) ? 'disabled' : '' }}>
-                                                                    <label class="form-check-label" for="breathing_risiko_1">Risiko</label>
+                                                                        name="breathing_gangguan_type" value="2" {{ $asesmen->asesmenKepUmumBreathing && $asesmen->asesmenKepUmumBreathing->breathing_gangguan == '2' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumBreathing->breathing_gangguan) ? 'disabled' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="breathing_risiko_1">Risiko</label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -386,18 +333,16 @@
                                         <div class="form-group">
                                             <label class="form-label" style="min-width: 200px;">Tindakan Keperawatan</label>
                                             <div class="w-100">
-                                                <input type="hidden"
-                                                       id="existingTindakan-breathing"
-                                                       value="{{ optional($asesmen->asesmenKepUmumBreathing)->breathing_tindakan }}">
+                                                <input type="hidden" id="existingTindakan-breathing"
+                                                    value="{{ optional($asesmen->asesmenKepUmumBreathing)->breathing_tindakan }}">
 
                                                 <button type="button"
-                                                        class="btn btn-sm btn-outline-secondary btn-tindakan-breathing mb-3"
-                                                        data-bs-target="#tindakanKeperawatanBreathingModal">
+                                                    class="btn btn-sm btn-outline-secondary btn-tindakan-breathing mb-3"
+                                                    data-bs-target="#tindakanKeperawatanBreathingModal">
                                                     <i class="ti-plus"></i> Tambah
                                                 </button>
 
-                                                <div id="selectedTindakanList-breathing"
-                                                     class="d-flex flex-column gap-2">
+                                                <div id="selectedTindakanList-breathing" class="d-flex flex-column gap-2">
                                                     <!-- Tindakan list will be populated by JavaScript -->
                                                 </div>
                                             </div>
@@ -420,15 +365,13 @@
                                                     <div class="mb-1">
                                                         <small class="text-muted">Sistole</small>
                                                     </div>
-                                                    <input class="form-control" type="text"
-                                                        name="circulation_sistole">
+                                                    <input class="form-control" type="text" name="circulation_sistole">
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <div class="mb-1">
                                                         <small class="text-muted">Diastole</small>
                                                     </div>
-                                                    <input class="form-control" type="text"
-                                                        name="circulation_diastole">
+                                                    <input class="form-control" type="text" name="circulation_diastole">
                                                 </div>
                                             </div>
                                         </div> --}}
@@ -437,11 +380,9 @@
                                             <label style="min-width: 200px;">Akral</label>
                                             <select class="form-select" name="circulation_akral">
                                                 <option value="">--Pilih--</option>
-                                                <option value="1"
-                                                    {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_akral == '1' ? 'selected' : '' }}>
+                                                <option value="1" {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_akral == '1' ? 'selected' : '' }}>
                                                     Hangat</option>
-                                                <option value="2"
-                                                    {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_akral == '2' ? 'selected' : '' }}>
+                                                <option value="2" {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_akral == '2' ? 'selected' : '' }}>
                                                     Dingin</option>
                                             </select>
                                         </div>
@@ -449,23 +390,19 @@
                                             <label style="min-width: 200px;">Pucat</label>
                                             <select class="form-select" name="circulation_pucat">
                                                 <option value="">--Pilih--</option>
-                                                <option value="1"
-                                                    {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_pucat == '1' ? 'selected' : '' }}>
+                                                <option value="1" {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_pucat == '1' ? 'selected' : '' }}>
                                                     Ya</option>
-                                                <option value="0"
-                                                    {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_pucat == '0' ? 'selected' : '' }}>
+                                                <option value="0" {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_pucat == '0' ? 'selected' : '' }}>
                                                     Tidak</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label style="min-width: 200px;">Cianoisis</label>
+                                            <label style="min-width: 200px;">Sianosis</label>
                                             <select class="form-select" name="circulation_cianosis">
                                                 <option value="">--Pilih--</option>
-                                                <option value="1"
-                                                    {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_cianosis == '1' ? 'selected' : '' }}>
+                                                <option value="1" {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_cianosis == '1' ? 'selected' : '' }}>
                                                     Ya</option>
-                                                <option value="0"
-                                                    {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_cianosis == '0' ? 'selected' : '' }}>
+                                                <option value="0" {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_cianosis == '0' ? 'selected' : '' }}>
                                                     Tidak</option>
                                             </select>
                                         </div>
@@ -473,23 +410,59 @@
                                             <label style="min-width: 200px;">Pengisian Kapiler</label>
                                             <select class="form-select" name="circulation_kapiler">
                                                 <option value="">--Pilih--</option>
-                                                <option value="1"
-                                                    {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_kapiler == '1' ? 'selected' : '' }}>
+                                                <option value="1" {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_kapiler == '1' ? 'selected' : '' }}>
                                                     < 2 Detik</option>
-                                                <option value="2"
-                                                    {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_kapiler == '2' ? 'selected' : '' }}>
+                                                <option value="2" {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_kapiler == '2' ? 'selected' : '' }}>
                                                     > 2 Detik</option>
+                                            </select>
+                                        </div>
+                                        <label style="min-width: 200px;" class="fw-bold">Nadi</label>
+                                        <div class="form-group">
+                                            <label style="min-width: 200px;">Frekuensi</label>
+                                            <div class="d-flex gap-3" style="width: 100%;">
+                                                <div class="flex-grow-1">
+                                                    <div class="mb-1">
+                                                        <small class="text-muted">Diberikan?</small>
+                                                    </div>
+                                                    <select class="form-select" name="circulation_transfusi">
+                                                        <option value="">--Pilih--</option>
+                                                        <option value="1" {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_transfusi == '1' ? 'selected' : '' }}>Ya</option>
+                                                        <option value="0" {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_transfusi == '0' ? 'selected' : '' }}>Tidak</option>
+                                                    </select>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <div class="mb-1">
+                                                        <small class="text-muted">Jumlah Frekuensi (x/mnt)</small>
+                                                    </div>
+                                                    <input class="form-control" type="number"
+                                                        name="circulation_transfusi_jumlah"
+                                                        value="{{ optional($asesmen->asesmenKepUmumCirculation)->circulation_transfusi_jumlah }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label style="min-width: 200px;">Nadi Irama</label>
+                                            <select class="form-select" name="circulation_nadi_irama">
+                                                <option value="">--Pilih--</option>
+                                                <option value="reguler" {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_nadi_irama == 'reguler' ? 'selected' : '' }}>Reguler</option>
+                                                <option value="irreguler" {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_nadi_irama == 'irreguler' ? 'selected' : '' }}>Irreguler</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label style="min-width: 200px;">Nadi Kekuatan</label>
+                                            <select class="form-select" name="circulation_nadi_kekuatan">
+                                                <option value="">--Pilih--</option>
+                                                <option value="kuat" {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_nadi_kekuatan == 'kuat' ? 'selected' : '' }}>Kuat</option>
+                                                <option value="lemah" {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_nadi_kekuatan == 'lemah' ? 'selected' : '' }}>Lemah</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Kelembapan Kulit</label>
                                             <select class="form-select" name="circulation_kelembapan_kulit">
                                                 <option value="">--Pilih--</option>
-                                                <option value="1"
-                                                    {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_kelembapan_kulit == '1' ? 'selected' : '' }}>
+                                                <option value="1" {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_kelembapan_kulit == '1' ? 'selected' : '' }}>
                                                     Lembab</option>
-                                                <option value="2"
-                                                    {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_kelembapan_kulit == '2' ? 'selected' : '' }}>
+                                                <option value="2" {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_kelembapan_kulit == '2' ? 'selected' : '' }}>
                                                     Kering</option>
                                             </select>
                                         </div>
@@ -497,11 +470,9 @@
                                             <label style="min-width: 200px;">Tugor</label>
                                             <select class="form-select" name="circulation_turgor">
                                                 <option value="">--Pilih--</option>
-                                                <option value="1"
-                                                    {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_turgor == '1' ? 'selected' : '' }}>
+                                                <option value="1" {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_turgor == '1' ? 'selected' : '' }}>
                                                     Normal</option>
-                                                <option value="0"
-                                                    {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_turgor == '0' ? 'selected' : '' }}>
+                                                <option value="0" {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_turgor == '0' ? 'selected' : '' }}>
                                                     Kurang</option>
                                             </select>
                                         </div>
@@ -514,11 +485,9 @@
                                                     </div>
                                                     <select class="form-select" name="circulation_transfusi">
                                                         <option value="">--Pilih--</option>
-                                                        <option value="1"
-                                                            {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_transfusi == '1' ? 'selected' : '' }}>
+                                                        <option value="1" {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_transfusi == '1' ? 'selected' : '' }}>
                                                             Ya</option>
-                                                        <option value="0"
-                                                            {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_transfusi == '0' ? 'selected' : '' }}>
+                                                        <option value="0" {{ optional($asesmen->asesmenKepUmumCirculation)->circulation_transfusi == '0' ? 'selected' : '' }}>
                                                             Tidak</option>
                                                     </select>
                                                 </div>
@@ -535,8 +504,7 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Lainnya</label>
                                             <input class="form-control" type="text"
-                                                placeholder="isikan jika ada keluhan nafas lainnya"
-                                                name="circulation_lain"
+                                                placeholder="isikan jika ada keluhan nafas lainnya" name="circulation_lain"
                                                 value="{{ optional($asesmen->asesmenKepUmumCirculation)->circulation_lain }}">
                                         </div>
 
@@ -549,40 +517,35 @@
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <div class="form-check">
                                                                 <input type="checkbox"
-                                                                       class="form-check-input diagnose-prwt-checkbox"
-                                                                       id="circulation_diagnosis_perfusi"
-                                                                       name="circulation_diagnosis_perfusi"
-                                                                       value="1" {{ !empty($asesmen->asesmenKepUmumCirculation->circulation_diagnosis_perfusi) ? 'checked' : '' }}>
+                                                                    class="form-check-input diagnose-prwt-checkbox"
+                                                                    id="circulation_diagnosis_perfusi"
+                                                                    name="circulation_diagnosis_perfusi" value="1" {{ !empty($asesmen->asesmenKepUmumCirculation->circulation_diagnosis_perfusi) ? 'checked' : '' }}>
                                                                 <!-- Hidden input untuk menjaga nilai saat ini -->
-                                                                <input type="hidden"
-                                                                    name="circulation_diagnosis_perfusi"
+                                                                <input type="hidden" name="circulation_diagnosis_perfusi"
                                                                     value="{{ $asesmen->asesmenKepUmumCirculation->circulation_diagnosis_perfusi ?? '' }}">
-                                                                <label class="form-check-label" for="circulation_diagnosis_perfusi">
+                                                                <label class="form-check-label"
+                                                                    for="circulation_diagnosis_perfusi">
                                                                     Perfusi Jaringan Perifer Tidak Efektif
                                                                 </label>
                                                             </div>
                                                             <div class="d-flex gap-4">
                                                                 <div class="form-check">
-                                                                    <input type="radio"
-                                                                           class="form-check-input"
-                                                                           id="circulation_perfusi_aktual"
-                                                                           name="circulation_diagnosis_perfusi_type"
-                                                                           value="1"
-                                                                            {{ $asesmen->asesmenKepUmumCirculation && $asesmen->asesmenKepUmumCirculation->circulation_diagnosis_perfusi == '1' ? 'checked' : '' }}
-                                                                            {{ empty($asesmen->asesmenKepUmumCirculation->circulation_diagnosis_perfusi) ? 'disabled' : '' }}>
-                                                                    <label class="form-check-label" for="circulation_perfusi_aktual">
+                                                                    <input type="radio" class="form-check-input"
+                                                                        id="circulation_perfusi_aktual"
+                                                                        name="circulation_diagnosis_perfusi_type" value="1"
+                                                                        {{ $asesmen->asesmenKepUmumCirculation && $asesmen->asesmenKepUmumCirculation->circulation_diagnosis_perfusi == '1' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumCirculation->circulation_diagnosis_perfusi) ? 'disabled' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="circulation_perfusi_aktual">
                                                                         Aktual
                                                                     </label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input type="radio"
-                                                                           class="form-check-input"
-                                                                           id="circulation_perfusi_risiko"
-                                                                           name="circulation_diagnosis_perfusi_type"
-                                                                           value="2"
-                                                                            {{ $asesmen->asesmenKepUmumCirculation && $asesmen->asesmenKepUmumCirculation->circulation_diagnosis_perfusi == '2' ? 'checked' : '' }}
-                                                                            {{ empty($asesmen->asesmenKepUmumCirculation->circulation_diagnosis_perfusi) ? 'disabled' : '' }}>
-                                                                    <label class="form-check-label" for="circulation_perfusi_risiko">
+                                                                    <input type="radio" class="form-check-input"
+                                                                        id="circulation_perfusi_risiko"
+                                                                        name="circulation_diagnosis_perfusi_type" value="2"
+                                                                        {{ $asesmen->asesmenKepUmumCirculation && $asesmen->asesmenKepUmumCirculation->circulation_diagnosis_perfusi == '2' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumCirculation->circulation_diagnosis_perfusi) ? 'disabled' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="circulation_perfusi_risiko">
                                                                         Risiko
                                                                     </label>
                                                                 </div>
@@ -595,41 +558,35 @@
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <div class="form-check">
                                                                 <input type="checkbox"
-                                                                       class="form-check-input diagnose-prwt-checkbox"
-                                                                       id="circulation_diagnosis_defisit"
-                                                                       name="circulation_diagnosis_defisit"
-                                                                       value="1"
-                                                                       {{ !empty($asesmen->asesmenKepUmumCirculation->circulation_diagnosis_defisit) ? 'checked' : '' }}>
+                                                                    class="form-check-input diagnose-prwt-checkbox"
+                                                                    id="circulation_diagnosis_defisit"
+                                                                    name="circulation_diagnosis_defisit" value="1" {{ !empty($asesmen->asesmenKepUmumCirculation->circulation_diagnosis_defisit) ? 'checked' : '' }}>
                                                                 <!-- Hidden input untuk menjaga nilai saat ini -->
-                                                                <input type="hidden"
-                                                                    name="circulation_diagnosis_defisit"
+                                                                <input type="hidden" name="circulation_diagnosis_defisit"
                                                                     value="{{ $asesmen->asesmenKepUmumCirculation->circulation_diagnosis_defisit ?? '' }}">
-                                                                <label class="form-check-label" for="circulation_diagnosis_defisit">
+                                                                <label class="form-check-label"
+                                                                    for="circulation_diagnosis_defisit">
                                                                     Defisit Volume Cairan
                                                                 </label>
                                                             </div>
                                                             <div class="d-flex gap-4">
                                                                 <div class="form-check">
-                                                                    <input type="radio"
-                                                                           class="form-check-input"
-                                                                           id="circulation_defisit_aktual"
-                                                                           name="circulation_diagnosis_defisit_type"
-                                                                           value="1"
-                                                                            {{ $asesmen->asesmenKepUmumCirculation && $asesmen->asesmenKepUmumCirculation->circulation_diagnosis_defisit == '1' ? 'checked' : '' }}
-                                                                            {{ empty($asesmen->asesmenKepUmumCirculation->circulation_diagnosis_defisit) ? 'disabled' : '' }}>
-                                                                    <label class="form-check-label" for="circulation_defisit_aktual">
+                                                                    <input type="radio" class="form-check-input"
+                                                                        id="circulation_defisit_aktual"
+                                                                        name="circulation_diagnosis_defisit_type" value="1"
+                                                                        {{ $asesmen->asesmenKepUmumCirculation && $asesmen->asesmenKepUmumCirculation->circulation_diagnosis_defisit == '1' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumCirculation->circulation_diagnosis_defisit) ? 'disabled' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="circulation_defisit_aktual">
                                                                         Aktual
                                                                     </label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input type="radio"
-                                                                           class="form-check-input"
-                                                                           id="circulation_defisit_risiko"
-                                                                           name="circulation_diagnosis_defisit_type"
-                                                                           value="2"
-                                                                            {{ $asesmen->asesmenKepUmumCirculation && $asesmen->asesmenKepUmumCirculation->circulation_diagnosis_defisit == '2' ? 'checked' : '' }}
-                                                                            {{ empty($asesmen->asesmenKepUmumCirculation->circulation_diagnosis_defisit) ? 'disabled' : '' }}>
-                                                                    <label class="form-check-label" for="circulation_defisit_risiko">
+                                                                    <input type="radio" class="form-check-input"
+                                                                        id="circulation_defisit_risiko"
+                                                                        name="circulation_diagnosis_defisit_type" value="2"
+                                                                        {{ $asesmen->asesmenKepUmumCirculation && $asesmen->asesmenKepUmumCirculation->circulation_diagnosis_defisit == '2' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumCirculation->circulation_diagnosis_defisit) ? 'disabled' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="circulation_defisit_risiko">
                                                                         Risiko
                                                                     </label>
                                                                 </div>
@@ -643,17 +600,15 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tindakan Keperawatan</label>
                                             <div class="w-100">
-                                                <input type="hidden"
-                                                       id="existingTindakan-circulation"
-                                                       value='{{ optional($asesmen->asesmenKepUmumCirculation)->circulation_tindakan ?? '[]' }}'>
+                                                <input type="hidden" id="existingTindakan-circulation"
+                                                    value='{{ optional($asesmen->asesmenKepUmumCirculation)->circulation_tindakan ?? '[]' }}'>
                                                 <button type="button"
-                                                        class="btn btn-sm btn-outline-secondary btn-tindakan-circulation mb-3"
-                                                        data-bs-target="#tindakanKeperawatanCirculationModal">
+                                                    class="btn btn-sm btn-outline-secondary btn-tindakan-circulation mb-3"
+                                                    data-bs-target="#tindakanKeperawatanCirculationModal">
                                                     <i class="ti-plus"></i> Tambah
                                                 </button>
 
-                                                <div id="selectedTindakanList-circulation"
-                                                     class="d-flex flex-column gap-2">
+                                                <div id="selectedTindakanList-circulation" class="d-flex flex-column gap-2">
                                                 </div>
                                             </div>
                                         </div>
@@ -662,24 +617,46 @@
                                     <div class="section-separator">
                                         <h5 class="section-title">4. Status Disability</h5>
 
+                                        <div class="form-group mb-3">
+                                            <label class="form-label">GCS</label>
+                                            <div class="input-group">
+                                                @php
+                                                    // Ambil data GCS dari database
+                                                    $gcsValue = '';
+                                                    if (isset($asesmen) && $asesmen->asesmenKepUmumDisability) {
+                                                        $vitalSigns = json_decode($asesmen->asesmenKepUmumDisability->vital_sign, true);
+                                                        $gcsValue = $vitalSigns['gcs'] ?? '';
+                                                    }
+                                                @endphp
+
+                                                <input type="text" class="form-control" name="vital_sign[gcs]" id="gcsInput"
+                                                    value="{{ old('vital_sign.gcs', $gcsValue) }}"
+                                                    placeholder="Contoh: 15 E4 V5 M6" readonly>
+
+                                                <button type="button" class="btn btn-outline-primary"
+                                                    onclick="openGCSModal()" title="Buka Kalkulator GCS">
+                                                    <i class="ti-calculator"></i> Hitung GCS
+                                                </button>
+                                            </div>
+
+                                            @push('modals')
+                                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.edit-gcs-modal')
+                                            @endpush
+                                        </div>
+
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Kesadaran</label>
                                             <select class="form-select" name="disability_kesadaran">
                                                 <option value="">--Pilih--</option>
-                                                <option value="Compos Mentis"
-                                                    {{ optional($asesmen->asesmenKepUmumDisability)->disability_kesadaran == 'Compos Mentis' ? 'selected' : '' }}>
+                                                <option value="Compos Mentis" {{ optional($asesmen->asesmenKepUmumDisability)->disability_kesadaran == 'Compos Mentis' ? 'selected' : '' }}>
                                                     Compos Mentis</option>
-                                                <option value="Apatis"
-                                                    {{ optional($asesmen->asesmenKepUmumDisability)->disability_kesadaran == 'Apatis' ? 'selected' : '' }}>
+                                                <option value="Apatis" {{ optional($asesmen->asesmenKepUmumDisability)->disability_kesadaran == 'Apatis' ? 'selected' : '' }}>
                                                     Apatis</option>
-                                                <option value="Somnolen"
-                                                    {{ optional($asesmen->asesmenKepUmumDisability)->disability_kesadaran == 'Somnolen' ? 'selected' : '' }}>
+                                                <option value="Somnolen" {{ optional($asesmen->asesmenKepUmumDisability)->disability_kesadaran == 'Somnolen' ? 'selected' : '' }}>
                                                     Somnolen</option>
-                                                <option value="Sopor"
-                                                    {{ optional($asesmen->asesmenKepUmumDisability)->disability_kesadaran == 'Sopor' ? 'selected' : '' }}>
+                                                <option value="Sopor" {{ optional($asesmen->asesmenKepUmumDisability)->disability_kesadaran == 'Sopor' ? 'selected' : '' }}>
                                                     Sopor</option>
-                                                <option value="Coma"
-                                                    {{ optional($asesmen->asesmenKepUmumDisability)->disability_kesadaran == 'Coma' ? 'selected' : '' }}>
+                                                <option value="Coma" {{ optional($asesmen->asesmenKepUmumDisability)->disability_kesadaran == 'Coma' ? 'selected' : '' }}>
                                                     Coma</option>
                                             </select>
                                         </div>
@@ -692,11 +669,9 @@
                                                     </div>
                                                     <select class="form-select" name="disability_isokor">
                                                         <option value="">--Pilih--</option>
-                                                        <option value="1"
-                                                            {{ optional($asesmen->asesmenKepUmumDisability)->disability_isokor == '1' ? 'selected' : '' }}>
+                                                        <option value="1" {{ optional($asesmen->asesmenKepUmumDisability)->disability_isokor == '1' ? 'selected' : '' }}>
                                                             Isokor</option>
-                                                        <option value="2"
-                                                            {{ optional($asesmen->asesmenKepUmumDisability)->disability_isokor == '2' ? 'selected' : '' }}>
+                                                        <option value="2" {{ optional($asesmen->asesmenKepUmumDisability)->disability_isokor == '2' ? 'selected' : '' }}>
                                                             Anisokor</option>
                                                     </select>
                                                 </div>
@@ -706,11 +681,9 @@
                                                     </div>
                                                     <select class="form-select" name="disability_respon_cahaya">
                                                         <option value="">--Pilih--</option>
-                                                        <option value="1"
-                                                            {{ optional($asesmen->asesmenKepUmumDisability)->disability_respon_cahaya == '1' ? 'selected' : '' }}>
+                                                        <option value="1" {{ optional($asesmen->asesmenKepUmumDisability)->disability_respon_cahaya == '1' ? 'selected' : '' }}>
                                                             Ya</option>
-                                                        <option value="0"
-                                                            {{ optional($asesmen->asesmenKepUmumDisability)->disability_respon_cahaya == '0' ? 'selected' : '' }}>
+                                                        <option value="0" {{ optional($asesmen->asesmenKepUmumDisability)->disability_respon_cahaya == '0' ? 'selected' : '' }}>
                                                             Tidak</option>
                                                     </select>
                                                 </div>
@@ -730,11 +703,9 @@
                                                     </div>
                                                     <select class="form-select" name="disability_motorik">
                                                         <option value="">--Pilih--</option>
-                                                        <option value="1"
-                                                            {{ optional($asesmen->asesmenKepUmumDisability)->disability_motorik == '1' ? 'selected' : '' }}>
+                                                        <option value="1" {{ optional($asesmen->asesmenKepUmumDisability)->disability_motorik == '1' ? 'selected' : '' }}>
                                                             Ya</option>
-                                                        <option value="0"
-                                                            {{ optional($asesmen->asesmenKepUmumDisability)->disability_motorik == '0' ? 'selected' : '' }}>
+                                                        <option value="0" {{ optional($asesmen->asesmenKepUmumDisability)->disability_motorik == '0' ? 'selected' : '' }}>
                                                             Tidak</option>
                                                     </select>
                                                 </div>
@@ -744,11 +715,9 @@
                                                     </div>
                                                     <select class="form-select" name="disability_sensorik">
                                                         <option value="">--Pilih--</option>
-                                                        <option value="1"
-                                                            {{ optional($asesmen->asesmenKepUmumDisability)->disability_sensorik == '1' ? 'selected' : '' }}>
+                                                        <option value="1" {{ optional($asesmen->asesmenKepUmumDisability)->disability_sensorik == '1' ? 'selected' : '' }}>
                                                             Ya</option>
-                                                        <option value="0"
-                                                            {{ optional($asesmen->asesmenKepUmumDisability)->disability_sensorik == '0' ? 'selected' : '' }}>
+                                                        <option value="0" {{ optional($asesmen->asesmenKepUmumDisability)->disability_sensorik == '0' ? 'selected' : '' }}>
                                                             Tidak</option>
                                                     </select>
                                                 </div>
@@ -771,11 +740,9 @@
                                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
                                                                     id="perfusi_jaringan_cereberal_tidak_efektif"
                                                                     name="disability_diagnosis_perfusi[]"
-                                                                    value="perfusi_jaringan_cereberal_tidak_efektif"
-                                                                    {{ !empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_perfusi) ? 'checked' : '' }}>
+                                                                    value="perfusi_jaringan_cereberal_tidak_efektif" {{ !empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_perfusi) ? 'checked' : '' }}>
                                                                 <!-- Hidden input untuk menjaga nilai saat ini -->
-                                                                <input type="hidden"
-                                                                    name="disability_diagnosis_perfusi"
+                                                                <input type="hidden" name="disability_diagnosis_perfusi"
                                                                     value="{{ $asesmen->asesmenKepUmumDisability->disability_diagnosis_perfusi ?? '' }}">
 
                                                                 <label class="form-check-label"
@@ -787,20 +754,16 @@
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_aktual"
-                                                                        name="disability_diagnosis_perfusi_type"
-                                                                        value="1"
-                                                                            {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_perfusi == '1' ? 'checked' : '' }}
-                                                                            {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_perfusi) ? 'disabled' : '' }}>
+                                                                        name="disability_diagnosis_perfusi_type" value="1"
+                                                                        {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_perfusi == '1' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_perfusi) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="disability_aktual">Aktual</label>
                                                                 </div>
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_risiko"
-                                                                        name="disability_diagnosis_perfusi_type"
-                                                                        value="2"
-                                                                        {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_perfusi == '2' ? 'checked' : '' }}
-                                                                        {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_perfusi) ? 'disabled' : '' }}>
+                                                                        name="disability_diagnosis_perfusi_type" value="2"
+                                                                        {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_perfusi == '2' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_perfusi) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="disability_risiko">Risiko</label>
                                                                 </div>
@@ -816,14 +779,11 @@
                                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
                                                                     id="intoleransi_aktivitas"
                                                                     name="disability_diagnosis_intoleransi[]"
-                                                                    value="intoleransi_aktivitas"
-                                                                    {{ !empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_intoleransi) ? 'checked' : '' }}>
+                                                                    value="intoleransi_aktivitas" {{ !empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_intoleransi) ? 'checked' : '' }}>
                                                                 <!-- Hidden input untuk menjaga nilai saat ini -->
-                                                                <input type="hidden"
-                                                                    name="disability_diagnosis_intoleransi"
+                                                                <input type="hidden" name="disability_diagnosis_intoleransi"
                                                                     value="{{ $asesmen->asesmenKepUmumDisability->disability_diagnosis_intoleransi ?? '' }}">
-                                                                <label class="form-check-label"
-                                                                    for="intoleransi_aktivitas">
+                                                                <label class="form-check-label" for="intoleransi_aktivitas">
                                                                     Intoleransi aktivitas
                                                                 </label>
                                                             </div>
@@ -832,9 +792,7 @@
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_aktual_1"
                                                                         name="disability_diagnosis_intoleransi_type"
-                                                                        value="1"
-                                                                            {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_intoleransi == '1' ? 'checked' : '' }}
-                                                                            {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_intoleransi) ? 'disabled' : '' }}>
+                                                                        value="1" {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_intoleransi == '1' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_intoleransi) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="disability_aktual_1">Aktual</label>
                                                                 </div>
@@ -842,9 +800,7 @@
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_risiko_1"
                                                                         name="disability_diagnosis_intoleransi_type"
-                                                                        value="2"
-                                                                        {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_intoleransi == '2' ? 'checked' : '' }}
-                                                                            {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_intoleransi) ? 'disabled' : '' }}>
+                                                                        value="2" {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_intoleransi == '2' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_intoleransi) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="disability_risiko_1">Risiko</label>
                                                                 </div>
@@ -860,11 +816,9 @@
                                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
                                                                     id="kendala_komunikasi_verbal"
                                                                     name="disability_diagnosis_komunikasi[]"
-                                                                    value="kendala_komunikasi_verbal"
-                                                                    {{ !empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_komunikasi) ? 'checked' : '' }}>
+                                                                    value="kendala_komunikasi_verbal" {{ !empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_komunikasi) ? 'checked' : '' }}>
                                                                 <!-- Hidden input untuk menjaga nilai saat ini -->
-                                                                <input type="hidden"
-                                                                    name="disability_diagnosis_komunikasi"
+                                                                <input type="hidden" name="disability_diagnosis_komunikasi"
                                                                     value="{{ $asesmen->asesmenKepUmumDisability->disability_diagnosis_komunikasi ?? '' }}">
                                                                 <label class="form-check-label"
                                                                     for="kendala_komunikasi_verbal">
@@ -876,9 +830,7 @@
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_aktual_2"
                                                                         name="disability_diagnosis_komunikasi_type"
-                                                                        value="1"
-                                                                            {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_komunikasi == '1' ? 'checked' : '' }}
-                                                                            {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_komunikasi) ? 'disabled' : '' }}>
+                                                                        value="1" {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_komunikasi == '1' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_komunikasi) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="disability_aktual_2">Aktual</label>
                                                                 </div>
@@ -886,9 +838,7 @@
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_risiko_2"
                                                                         name="disability_diagnosis_komunikasi_type"
-                                                                        value="2"
-                                                                        {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_komunikasi == '2' ? 'checked' : '' }}
-                                                                        {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_komunikasi) ? 'disabled' : '' }}>
+                                                                        value="2" {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_komunikasi == '2' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_komunikasi) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="disability_risiko_2">Risiko</label>
                                                                 </div>
@@ -903,11 +853,9 @@
                                                                 <input type="checkbox"
                                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
                                                                     id="kejang_ulang" name="disability_diagnosis_kejang[]"
-                                                                    value="kejang_ulang"
-                                                                    {{ !empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_kejang) ? 'checked' : '' }}>
+                                                                    value="kejang_ulang" {{ !empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_kejang) ? 'checked' : '' }}>
                                                                 <!-- Hidden input untuk menjaga nilai saat ini -->
-                                                                <input type="hidden"
-                                                                    name="disability_diagnosis_perfusi"
+                                                                <input type="hidden" name="disability_diagnosis_perfusi"
                                                                     value="{{ $asesmen->asesmenKepUmumDisability->disability_diagnosis_kejang ?? '' }}">
                                                                 <label class="form-check-label" for="kejang_ulang">
                                                                     Kejang ulang
@@ -917,20 +865,14 @@
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_aktual_3"
-                                                                        name="disability_diagnosis_kejang_type"
-                                                                        value="1"
-                                                                        {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_kejang == '1' ? 'checked' : '' }}
-                                                                        {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_kejang) ? 'disabled' : '' }}>
+                                                                        name="disability_diagnosis_kejang_type" value="1" {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_kejang == '1' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_kejang) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="disability_aktual_3">Aktual</label>
                                                                 </div>
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_risiko_3"
-                                                                        name="disability_diagnosis_kejang_type"
-                                                                        value="2"
-                                                                        {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_kejang == '2' ? 'checked' : '' }}
-                                                                        {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_kejang) ? 'disabled' : '' }}>
+                                                                        name="disability_diagnosis_kejang_type" value="2" {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_kejang == '2' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_kejang) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="disability_risiko_3">Risiko</label>
                                                                 </div>
@@ -946,11 +888,9 @@
                                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
                                                                     id="penurunan_kesadaran"
                                                                     name="disability_diagnosis_kesadaran[]"
-                                                                    value="penurunan_kesadaran"
-                                                                    {{ !empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_kesadaran) ? 'checked' : '' }}>
+                                                                    value="penurunan_kesadaran" {{ !empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_kesadaran) ? 'checked' : '' }}>
                                                                 <!-- Hidden input untuk menjaga nilai saat ini -->
-                                                                <input type="hidden"
-                                                                    name="disability_diagnosis_kesadaran"
+                                                                <input type="hidden" name="disability_diagnosis_kesadaran"
                                                                     value="{{ $asesmen->asesmenKepUmumDisability->disability_diagnosis_kesadaran ?? '' }}">
                                                                 <label class="form-check-label" for="penurunan_kesadaran">
                                                                     Penurunan kesadaran
@@ -960,20 +900,16 @@
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_aktual_4"
-                                                                        name="disability_diagnosis_kesadaran_type"
-                                                                        value="1"
-                                                                        {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_kesadaran == '1' ? 'checked' : '' }}
-                                                                        {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_kesadaran) ? 'disabled' : '' }}>
+                                                                        name="disability_diagnosis_kesadaran_type" value="1"
+                                                                        {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_kesadaran == '1' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_kesadaran) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="disability_aktual_4">Aktual</label>
                                                                 </div>
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_risiko_4"
-                                                                        name="disability_diagnosis_kesadaran_type"
-                                                                        value="2"
-                                                                        {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_kesadaran == '2' ? 'checked' : '' }}
-                                                                        {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_kesadaran) ? 'disabled' : '' }}>
+                                                                        name="disability_diagnosis_kesadaran_type" value="2"
+                                                                        {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_kesadaran == '2' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_kesadaran) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="disability_risiko_4">Risiko</label>
                                                                 </div>
@@ -995,17 +931,15 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tindakan Keperawatan</label>
                                             <div class="w-100">
-                                                <input type="hidden"
-                                                       id="existingTindakan-disability"
-                                                       value='{{ optional($asesmen->asesmenKepUmumDisability)->disability_tindakan ?? '[]' }}'>
+                                                <input type="hidden" id="existingTindakan-disability"
+                                                    value='{{ optional($asesmen->asesmenKepUmumDisability)->disability_tindakan ?? '[]' }}'>
                                                 <button type="button"
-                                                        class="btn btn-sm btn-outline-secondary btn-tindakan-disability mb-3"
-                                                        data-bs-target="#tindakanKeperawatanDisabilityModal">
+                                                    class="btn btn-sm btn-outline-secondary btn-tindakan-disability mb-3"
+                                                    data-bs-target="#tindakanKeperawatanDisabilityModal">
                                                     <i class="ti-plus"></i> Tambah
                                                 </button>
 
-                                                <div id="selectedTindakanList-disability"
-                                                     class="d-flex flex-column gap-2">
+                                                <div id="selectedTindakanList-disability" class="d-flex flex-column gap-2">
                                                 </div>
                                             </div>
                                         </div>
@@ -1019,17 +953,13 @@
                                             <div class="d-flex align-items-center gap-4" style="width: 100%;">
                                                 <div class="d-flex gap-4">
                                                     <div class="form-check">
-                                                        <input type="radio" class="form-check-input"
-                                                            id="deformitas_tidak" name="exposure_deformitas"
-                                                            value="0"
-                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_deformitas == '0' ? 'checked' : '' }}>
-                                                        <label class="form-check-label"
-                                                            for="deformitas_tidak">Tidak</label>
+                                                        <input type="radio" class="form-check-input" id="deformitas_tidak"
+                                                            name="exposure_deformitas" value="0" {{ optional($asesmen->asesmenKepUmumExposure)->exposure_deformitas == '0' ? 'checked' : '' }}>
+                                                        <label class="form-check-label" for="deformitas_tidak">Tidak</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input type="radio" class="form-check-input" id="deformitas_ya"
-                                                            name="exposure_deformitas" value="1"
-                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_deformitas == '1' ? 'checked' : '' }}>
+                                                            name="exposure_deformitas" value="1" {{ optional($asesmen->asesmenKepUmumExposure)->exposure_deformitas == '1' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="deformitas_ya">Ya</label>
                                                     </div>
                                                 </div>
@@ -1046,22 +976,19 @@
                                             <div class="d-flex align-items-center gap-4" style="width: 100%;">
                                                 <div class="d-flex gap-4">
                                                     <div class="form-check">
-                                                        <input type="radio" class="form-check-input"
-                                                            id="kontusion_tidak" name="exposure_kontusion" value="0"
-                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_kontusion == '0' ? 'checked' : '' }}>
-                                                        <label class="form-check-label"
-                                                            for="kontusion_tidak">Tidak</label>
+                                                        <input type="radio" class="form-check-input" id="kontusion_tidak"
+                                                            name="exposure_kontusion" value="0" {{ optional($asesmen->asesmenKepUmumExposure)->exposure_kontusion == '0' ? 'checked' : '' }}>
+                                                        <label class="form-check-label" for="kontusion_tidak">Tidak</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input type="radio" class="form-check-input" id="kontusion_ya"
-                                                            name="exposure_kontusion" value="1"
-                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_kontusion == '1' ? 'checked' : '' }}>
+                                                            name="exposure_kontusion" value="1" {{ optional($asesmen->asesmenKepUmumExposure)->exposure_kontusion == '1' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="kontusion_ya">Ya</label>
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <input type="text" class="form-control"
-                                                        name="exposure_kontusion_daerah" placeholder="Daerah"
+                                                    <input type="text" class="form-control" name="exposure_kontusion_daerah"
+                                                        placeholder="Daerah"
                                                         value="{{ optional($asesmen->asesmenKepUmumExposure)->exposure_kontusion_daerah }}">
                                                 </div>
                                             </div>
@@ -1073,20 +1000,18 @@
                                                 <div class="d-flex gap-4">
                                                     <div class="form-check">
                                                         <input type="radio" class="form-check-input" id="abrasi_tidak"
-                                                            name="exposure_abrasi" value="0"
-                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_abrasi == '0' ? 'checked' : '' }}>
+                                                            name="exposure_abrasi" value="0" {{ optional($asesmen->asesmenKepUmumExposure)->exposure_abrasi == '0' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="abrasi_tidak">Tidak</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input type="radio" class="form-check-input" id="abrasi_ya"
-                                                            name="exposure_abrasi" value="1"
-                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_abrasi == '1' ? 'checked' : '' }}>
+                                                            name="exposure_abrasi" value="1" {{ optional($asesmen->asesmenKepUmumExposure)->exposure_abrasi == '1' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="abrasi_ya">Ya</label>
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <input type="text" class="form-control"
-                                                        name="exposure_abrasi_daerah" placeholder="Daerah"
+                                                    <input type="text" class="form-control" name="exposure_abrasi_daerah"
+                                                        placeholder="Daerah"
                                                         value="{{ optional($asesmen->asesmenKepUmumExposure)->exposure_abrasi_daerah }}">
                                                 </div>
                                             </div>
@@ -1097,22 +1022,19 @@
                                             <div class="d-flex align-items-center gap-4" style="width: 100%;">
                                                 <div class="d-flex gap-4">
                                                     <div class="form-check">
-                                                        <input type="radio" class="form-check-input"
-                                                            id="penetrasi_tidak" name="exposure_penetrasi" value="0"
-                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_penetrasi == '0' ? 'checked' : '' }}>
-                                                        <label class="form-check-label"
-                                                            for="penetrasi_tidak">Tidak</label>
+                                                        <input type="radio" class="form-check-input" id="penetrasi_tidak"
+                                                            name="exposure_penetrasi" value="0" {{ optional($asesmen->asesmenKepUmumExposure)->exposure_penetrasi == '0' ? 'checked' : '' }}>
+                                                        <label class="form-check-label" for="penetrasi_tidak">Tidak</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input type="radio" class="form-check-input" id="penetrasi_ya"
-                                                            name="exposure_penetrasi" value="1"
-                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_penetrasi == '1' ? 'checked' : '' }}>
+                                                            name="exposure_penetrasi" value="1" {{ optional($asesmen->asesmenKepUmumExposure)->exposure_penetrasi == '1' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="penetrasi_ya">Ya</label>
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <input type="text" class="form-control"
-                                                        name="exposure_penetrasi_daerah" placeholder="Daerah"
+                                                    <input type="text" class="form-control" name="exposure_penetrasi_daerah"
+                                                        placeholder="Daerah"
                                                         value="{{ optional($asesmen->asesmenKepUmumExposure)->exposure_abrasi_daerah }}">
                                                 </div>
                                             </div>
@@ -1123,21 +1045,19 @@
                                             <div class="d-flex align-items-center gap-4" style="width: 100%;">
                                                 <div class="d-flex gap-4">
                                                     <div class="form-check">
-                                                        <input type="radio" class="form-check-input"
-                                                            id="laserasi_tidak" name="exposure_laserasi" value="0"
-                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_laserasi == '0' ? 'checked' : '' }}>
+                                                        <input type="radio" class="form-check-input" id="laserasi_tidak"
+                                                            name="exposure_laserasi" value="0" {{ optional($asesmen->asesmenKepUmumExposure)->exposure_laserasi == '0' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="laserasi_tidak">Tidak</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input type="radio" class="form-check-input" id="laserasi_ya"
-                                                            name="exposure_laserasi" value="1"
-                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_laserasi == '1' ? 'checked' : '' }}>
+                                                            name="exposure_laserasi" value="1" {{ optional($asesmen->asesmenKepUmumExposure)->exposure_laserasi == '1' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="laserasi_ya">Ya</label>
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <input type="text" class="form-control"
-                                                        name="exposure_laserasi_daerah" placeholder="Daerah"
+                                                    <input type="text" class="form-control" name="exposure_laserasi_daerah"
+                                                        placeholder="Daerah"
                                                         value="{{ optional($asesmen->asesmenKepUmumExposure)->exposure_laserasi_daerah }}">
                                                 </div>
                                             </div>
@@ -1149,20 +1069,18 @@
                                                 <div class="d-flex gap-4">
                                                     <div class="form-check">
                                                         <input type="radio" class="form-check-input" id="edema_tidak"
-                                                            name="exposure_edema" value="0"
-                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_edema == '0' ? 'checked' : '' }}>
+                                                            name="exposure_edema" value="0" {{ optional($asesmen->asesmenKepUmumExposure)->exposure_edema == '0' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="edema_tidak">Tidak</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input type="radio" class="form-check-input" id="edema_ya"
-                                                            name="exposure_edema" value="1"
-                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_edema == '1' ? 'checked' : '' }}>
+                                                            name="exposure_edema" value="1" {{ optional($asesmen->asesmenKepUmumExposure)->exposure_edema == '1' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="edema_ya">Ya</label>
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <input type="text" class="form-control"
-                                                        name="exposure_edema_daerah" placeholder="Daerah"
+                                                    <input type="text" class="form-control" name="exposure_edema_daerah"
+                                                        placeholder="Daerah"
                                                         value="{{ optional($asesmen->asesmenKepUmumExposure)->exposure_edema_daerah }}">
                                                 </div>
                                             </div>
@@ -1192,11 +1110,9 @@
                                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
                                                                     id="kerusakan_mobilitas_fisik"
                                                                     name="exposure_diagnosis_mobilitasi[]"
-                                                                    value="mobilitasi_type"
-                                                                    {{ !empty($asesmen->asesmenKepUmumExposure->exposure_diagnosis_mobilitasi) ? 'checked' : '' }}>
+                                                                    value="mobilitasi_type" {{ !empty($asesmen->asesmenKepUmumExposure->exposure_diagnosis_mobilitasi) ? 'checked' : '' }}>
                                                                 <!-- Hidden input untuk menjaga nilai saat ini -->
-                                                                <input type="hidden"
-                                                                    name="exposure_diagnosis_mobilitasi"
+                                                                <input type="hidden" name="exposure_diagnosis_mobilitasi"
                                                                     value="{{ $asesmen->asesmenKepUmumExposure->exposure_diagnosis_mobilitasi ?? '' }}">
                                                                 <label class="form-check-label"
                                                                     for="kerusakan_mobilitas_fisik">
@@ -1207,20 +1123,16 @@
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="exposure_aktual"
-                                                                        name="exposure_diagnosis_mobilitasi_type"
-                                                                        value="1"
-                                                                            {{ $asesmen->asesmenKepUmumExposure && $asesmen->asesmenKepUmumExposure->exposure_diagnosis_mobilitasi == '1' ? 'checked' : '' }}
-                                                                            {{ empty($asesmen->asesmenKepUmumExposure->exposure_diagnosis_mobilitasi) ? 'disabled' : '' }}>
+                                                                        name="exposure_diagnosis_mobilitasi_type" value="1"
+                                                                        {{ $asesmen->asesmenKepUmumExposure && $asesmen->asesmenKepUmumExposure->exposure_diagnosis_mobilitasi == '1' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumExposure->exposure_diagnosis_mobilitasi) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="exposure_aktual">Aktual</label>
                                                                 </div>
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="exposure_risiko"
-                                                                        name="exposure_diagnosis_mobilitasi_type"
-                                                                        value="2"
-                                                                        {{ $asesmen->asesmenKepUmumExposure && $asesmen->asesmenKepUmumExposure->exposure_diagnosis_mobilitasi == '2' ? 'checked' : '' }}
-                                                                        {{ empty($asesmen->asesmenKepUmumExposure->exposure_diagnosis_mobilitasi) ? 'disabled' : '' }}>
+                                                                        name="exposure_diagnosis_mobilitasi_type" value="2"
+                                                                        {{ $asesmen->asesmenKepUmumExposure && $asesmen->asesmenKepUmumExposure->exposure_diagnosis_mobilitasi == '2' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumExposure->exposure_diagnosis_mobilitasi) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="exposure_risiko">Risiko</label>
                                                                 </div>
@@ -1236,11 +1148,9 @@
                                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
                                                                     id="kerusakan_integritas_jaringan"
                                                                     name="exposure_diagosis_integritas[]"
-                                                                    value="integritas_type"
-                                                                    {{ !empty($asesmen->asesmenKepUmumExposure->exposure_diagosis_integritas) ? 'checked' : '' }}>
+                                                                    value="integritas_type" {{ !empty($asesmen->asesmenKepUmumExposure->exposure_diagosis_integritas) ? 'checked' : '' }}>
                                                                 <!-- Hidden input untuk menjaga nilai saat ini -->
-                                                                <input type="hidden"
-                                                                    name="exposure_diagosis_integritas"
+                                                                <input type="hidden" name="exposure_diagosis_integritas"
                                                                     value="{{ $asesmen->asesmenKepUmumExposure->exposure_diagosis_integritas ?? '' }}">
                                                                 <label class="form-check-label"
                                                                     for="kerusakan_integritas_jaringan">
@@ -1251,20 +1161,16 @@
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="exposure_aktual_1"
-                                                                        name="exposure_diagosis_integritas_type"
-                                                                        value="1"
-                                                                        {{ $asesmen->asesmenKepUmumExposure && $asesmen->asesmenKepUmumExposure->exposure_diagosis_integritas == '1' ? 'checked' : '' }}
-                                                                        {{ empty($asesmen->asesmenKepUmumExposure->exposure_diagosis_integritas) ? 'disabled' : '' }}>
+                                                                        name="exposure_diagosis_integritas_type" value="1"
+                                                                        {{ $asesmen->asesmenKepUmumExposure && $asesmen->asesmenKepUmumExposure->exposure_diagosis_integritas == '1' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumExposure->exposure_diagosis_integritas) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="exposure_aktual_1">Aktual</label>
                                                                 </div>
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="exposure_risiko_1"
-                                                                        name="exposure_diagosis_integritas_type"
-                                                                        value="2"
-                                                                        {{ $asesmen->asesmenKepUmumExposure && $asesmen->asesmenKepUmumExposure->exposure_diagosis_integritas == '2' ? 'checked' : '' }}
-                                                                        {{ empty($asesmen->asesmenKepUmumExposure->exposure_diagosis_integritas) ? 'disabled' : '' }}>
+                                                                        name="exposure_diagosis_integritas_type" value="2"
+                                                                        {{ $asesmen->asesmenKepUmumExposure && $asesmen->asesmenKepUmumExposure->exposure_diagosis_integritas == '2' ? 'checked' : '' }} {{ empty($asesmen->asesmenKepUmumExposure->exposure_diagosis_integritas) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="exposure_risiko_1">Risiko</label>
                                                                 </div>
@@ -1286,17 +1192,15 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tindakan Keperawatan</label>
                                             <div class="w-100">
-                                                <input type="hidden"
-                                                       id="existingTindakan-exposure"
-                                                       value='{{ optional($asesmen->asesmenKepUmumExposure)->exposure_tindakan ?? '[]' }}'>
+                                                <input type="hidden" id="existingTindakan-exposure"
+                                                    value='{{ optional($asesmen->asesmenKepUmumExposure)->exposure_tindakan ?? '[]' }}'>
                                                 <button type="button"
-                                                        class="btn btn-sm btn-outline-secondary btn-tindakan-exposure mb-3"
-                                                        data-bs-target="#tindakanKeperawatanExposureModal">
+                                                    class="btn btn-sm btn-outline-secondary btn-tindakan-exposure mb-3"
+                                                    data-bs-target="#tindakanKeperawatanExposureModal">
                                                     <i class="ti-plus"></i> Tambah
                                                 </button>
 
-                                                <div id="selectedTindakanList-exposure"
-                                                     class="d-flex flex-column gap-2">
+                                                <div id="selectedTindakanList-exposure" class="d-flex flex-column gap-2">
                                                 </div>
                                             </div>
                                         </div>
@@ -1308,8 +1212,7 @@
                                         <div class="row mb-4">
                                             <div class="col-md-6">
                                                 <div class="d-flex align-items-start gap-4">
-                                                    <div class="d-flex align-items-center gap-3"
-                                                        style="min-width: 350px;">
+                                                    <div class="d-flex align-items-center gap-3" style="min-width: 350px;">
                                                         <input type="number"
                                                             class="form-control flex-grow-1 @error('skala_nyeri') is-invalid @enderror"
                                                             name="skala_nyeri" style="width: 100px;"
@@ -1372,8 +1275,7 @@
                                                     <select class="form-select" name="skala_nyeri_pemberat_id">
                                                         <option value="">--Pilih--</option>
                                                         @foreach ($faktorPemberat as $pemberat)
-                                                            <option value="{{ $pemberat->id }}"
-                                                                {{ old('skala_nyeri_pemberat_id', $asesmen->asesmenKepUmumSkalaNyeri->skala_nyeri_pemberat_id ?? '') == $pemberat->id ? 'selected' : '' }}>
+                                                            <option value="{{ $pemberat->id }}" {{ old('skala_nyeri_pemberat_id', $asesmen->asesmenKepUmumSkalaNyeri->skala_nyeri_pemberat_id ?? '') == $pemberat->id ? 'selected' : '' }}>
                                                                 {{ $pemberat->name }}
                                                             </option>
                                                         @endforeach
@@ -1385,8 +1287,7 @@
                                                     <select class="form-select" name="skala_nyeri_kualitas_id">
                                                         <option value="">--Pilih--</option>
                                                         @foreach ($kualitasNyeri as $kualitas)
-                                                            <option value="{{ $kualitas->id }}"
-                                                                {{ old('skala_nyeri_kualitas_id', $asesmen->asesmenKepUmumSkalaNyeri->skala_nyeri_kualitas_id ?? '') == $kualitas->id ? 'selected' : '' }}>
+                                                            <option value="{{ $kualitas->id }}" {{ old('skala_nyeri_kualitas_id', $asesmen->asesmenKepUmumSkalaNyeri->skala_nyeri_kualitas_id ?? '') == $kualitas->id ? 'selected' : '' }}>
                                                                 {{ $kualitas->name }}
                                                             </option>
                                                         @endforeach
@@ -1398,8 +1299,7 @@
                                                     <select class="form-select" name="skala_nyeri_menjalar_id">
                                                         <option value="">--Pilih--</option>
                                                         @foreach ($menjalar as $menj)
-                                                            <option value="{{ $menj->id }}"
-                                                                {{ old('skala_nyeri_menjalar_id', $asesmen->asesmenKepUmumSkalaNyeri->skala_nyeri_menjalar_id ?? '') == $menj->id ? 'selected' : '' }}>
+                                                            <option value="{{ $menj->id }}" {{ old('skala_nyeri_menjalar_id', $asesmen->asesmenKepUmumSkalaNyeri->skala_nyeri_menjalar_id ?? '') == $menj->id ? 'selected' : '' }}>
                                                                 {{ $menj->name }}
                                                             </option>
                                                         @endforeach
@@ -1419,8 +1319,7 @@
                                                     <select class="form-select" name="skala_nyeri_peringan_id">
                                                         <option value="">--Pilih--</option>
                                                         @foreach ($faktorPeringan as $peringan)
-                                                            <option value="{{ $peringan->id }}"
-                                                                {{ old('skala_nyeri_peringan_id', $asesmen->asesmenKepUmumSkalaNyeri->skala_nyeri_peringan_id ?? '') == $peringan->id ? 'selected' : '' }}>
+                                                            <option value="{{ $peringan->id }}" {{ old('skala_nyeri_peringan_id', $asesmen->asesmenKepUmumSkalaNyeri->skala_nyeri_peringan_id ?? '') == $peringan->id ? 'selected' : '' }}>
                                                                 {{ $peringan->name }}
                                                             </option>
                                                         @endforeach
@@ -1432,8 +1331,7 @@
                                                     <select class="form-select" name="skala_nyeri_frekuensi_id">
                                                         <option value="">--Pilih--</option>
                                                         @foreach ($frekuensiNyeri as $frekuensi)
-                                                            <option value="{{ $frekuensi->id }}"
-                                                                {{ old('skala_nyeri_frekuensi_id', $asesmen->asesmenKepUmumSkalaNyeri->skala_nyeri_frekuensi_id ?? '') == $frekuensi->id ? 'selected' : '' }}>
+                                                            <option value="{{ $frekuensi->id }}" {{ old('skala_nyeri_frekuensi_id', $asesmen->asesmenKepUmumSkalaNyeri->skala_nyeri_frekuensi_id ?? '') == $frekuensi->id ? 'selected' : '' }}>
                                                                 {{ $frekuensi->name }}
                                                             </option>
                                                         @endforeach
@@ -1445,8 +1343,7 @@
                                                     <select class="form-select" name="skala_nyeri_jenis_id">
                                                         <option value="">--Pilih--</option>
                                                         @foreach ($jenisNyeri as $jenis)
-                                                            <option value="{{ $jenis->id }}"
-                                                                {{ old('skala_nyeri_jenis_id', $asesmen->asesmenKepUmumSkalaNyeri->skala_nyeri_jenis_id ?? '') == $jenis->id ? 'selected' : '' }}>
+                                                            <option value="{{ $jenis->id }}" {{ old('skala_nyeri_jenis_id', $asesmen->asesmenKepUmumSkalaNyeri->skala_nyeri_jenis_id ?? '') == $jenis->id ? 'selected' : '' }}>
                                                                 {{ $jenis->name }}
                                                             </option>
                                                         @endforeach
@@ -1465,20 +1362,15 @@
                                             <select class="form-select" id="risikoJatuhSkala" name="resiko_jatuh_jenis"
                                                 onchange="showForm(this.value)">
                                                 <option value="">--Pilih Skala--</option>
-                                                <option value="1"
-                                                    {{ old('resiko_jatuh_jenis', $asesmen->asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis ?? '') == '1' ? 'selected' : '' }}>
+                                                <option value="1" {{ old('resiko_jatuh_jenis', $asesmen->asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis ?? '') == '1' ? 'selected' : '' }}>
                                                     Skala Umum</option>
-                                                <option value="2"
-                                                    {{ old('resiko_jatuh_jenis', $asesmen->asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis ?? '') == '2' ? 'selected' : '' }}>
+                                                <option value="2" {{ old('resiko_jatuh_jenis', $asesmen->asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis ?? '') == '2' ? 'selected' : '' }}>
                                                     Skala Morse</option>
-                                                <option value="3"
-                                                    {{ old('resiko_jatuh_jenis', $asesmen->asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis ?? '') == '3' ? 'selected' : '' }}>
+                                                <option value="3" {{ old('resiko_jatuh_jenis', $asesmen->asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis ?? '') == '3' ? 'selected' : '' }}>
                                                     Skala Humpty-Dumpty / Pediatrik</option>
-                                                <option value="4"
-                                                    {{ old('resiko_jatuh_jenis', $asesmen->asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis ?? '') == '4' ? 'selected' : '' }}>
+                                                <option value="4" {{ old('resiko_jatuh_jenis', $asesmen->asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis ?? '') == '4' ? 'selected' : '' }}>
                                                     Skala Ontario Modified Stratify Sydney / Lansia</option>
-                                                <option value="5"
-                                                    {{ old('resiko_jatuh_jenis', $asesmen->asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis ?? '') == '5' ? 'selected' : '' }}>
+                                                <option value="5" {{ old('resiko_jatuh_jenis', $asesmen->asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis ?? '') == '5' ? 'selected' : '' }}>
                                                     Lainnya</option>
                                             </select>
                                         </div>
@@ -1494,11 +1386,9 @@
                                                         <select class="form-select" name="risiko_jatuh_umum_usia"
                                                             onchange="updateConclusion('umum')">
                                                             <option value="">pilih</option>
-                                                            <option value="1"
-                                                                {{ old('risiko_jatuh_umum_usia', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_usia ?? '') == '1' ? 'selected' : '' }}>
+                                                            <option value="1" {{ old('risiko_jatuh_umum_usia', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_usia ?? '') == '1' ? 'selected' : '' }}>
                                                                 Ya</option>
-                                                            <option value="0"
-                                                                {{ old('risiko_jatuh_umum_usia', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_usia ?? '') == '0' ? 'selected' : '' }}>
+                                                            <option value="0" {{ old('risiko_jatuh_umum_usia', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_usia ?? '') == '0' ? 'selected' : '' }}>
                                                                 Tidak</option>
                                                         </select>
                                             </div>
@@ -1512,11 +1402,9 @@
                                                 <select class="form-select" name="risiko_jatuh_umum_kondisi_khusus"
                                                     onchange="updateConclusion('umum')">
                                                     <option value="">pilih</option>
-                                                    <option value="1"
-                                                        {{ old('risiko_jatuh_umum_kondisi_khusus', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_kondisi_khusus ?? '') == '1' ? 'selected' : '' }}>
+                                                    <option value="1" {{ old('risiko_jatuh_umum_kondisi_khusus', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_kondisi_khusus ?? '') == '1' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_umum_kondisi_khusus', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_kondisi_khusus ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_umum_kondisi_khusus', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_kondisi_khusus ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
@@ -1528,11 +1416,9 @@
                                                 <select class="form-select" name="risiko_jatuh_umum_diagnosis_parkinson"
                                                     onchange="updateConclusion('umum')">
                                                     <option value="">pilih</option>
-                                                    <option value="1"
-                                                        {{ old('risiko_jatuh_umum_diagnosis_parkinson', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_diagnosis_parkinson ?? '') == '1' ? 'selected' : '' }}>
+                                                    <option value="1" {{ old('risiko_jatuh_umum_diagnosis_parkinson', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_diagnosis_parkinson ?? '') == '1' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_umum_diagnosis_parkinson', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_diagnosis_parkinson ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_umum_diagnosis_parkinson', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_diagnosis_parkinson ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
@@ -1545,11 +1431,9 @@
                                                 <select class="form-select" name="risiko_jatuh_umum_pengobatan_berisiko"
                                                     onchange="updateConclusion('umum')">
                                                     <option value="">pilih</option>
-                                                    <option value="1"
-                                                        {{ old('risiko_jatuh_umum_pengobatan_berisiko', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_pengobatan_berisiko ?? '') == '1' ? 'selected' : '' }}>
+                                                    <option value="1" {{ old('risiko_jatuh_umum_pengobatan_berisiko', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_pengobatan_berisiko ?? '') == '1' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_umum_pengobatan_berisiko', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_pengobatan_berisiko ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_umum_pengobatan_berisiko', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_pengobatan_berisiko ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
@@ -1562,11 +1446,9 @@
                                                 <select class="form-select" name="risiko_jatuh_umum_lokasi_berisiko"
                                                     onchange="updateConclusion('umum')">
                                                     <option value="">pilih</option>
-                                                    <option value="1"
-                                                        {{ old('risiko_jatuh_umum_lokasi_berisiko', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_lokasi_berisiko ?? '') == '1' ? 'selected' : '' }}>
+                                                    <option value="1" {{ old('risiko_jatuh_umum_lokasi_berisiko', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_lokasi_berisiko ?? '') == '1' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_umum_lokasi_berisiko', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_lokasi_berisiko ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_umum_lokasi_berisiko', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_lokasi_berisiko ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
@@ -1593,11 +1475,9 @@
                                                 <select class="form-select" name="risiko_jatuh_morse_riwayat_jatuh"
                                                     onchange="updateConclusion('morse')">
                                                     <option value="">pilih</option>
-                                                    <option value="25"
-                                                        {{ old('risiko_jatuh_morse_riwayat_jatuh', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_riwayat_jatuh ?? '') == '25' ? 'selected' : '' }}>
+                                                    <option value="25" {{ old('risiko_jatuh_morse_riwayat_jatuh', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_riwayat_jatuh ?? '') == '25' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_morse_riwayat_jatuh', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_riwayat_jatuh ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_morse_riwayat_jatuh', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_riwayat_jatuh ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
@@ -1608,11 +1488,9 @@
                                                 <select class="form-select" name="risiko_jatuh_morse_diagnosis_sekunder"
                                                     onchange="updateConclusion('morse')">
                                                     <option value="">pilih</option>
-                                                    <option value="15"
-                                                        {{ old('risiko_jatuh_morse_diagnosis_sekunder', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_diagnosis_sekunder ?? '') == '15' ? 'selected' : '' }}>
+                                                    <option value="15" {{ old('risiko_jatuh_morse_diagnosis_sekunder', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_diagnosis_sekunder ?? '') == '15' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_morse_diagnosis_sekunder', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_diagnosis_sekunder ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_morse_diagnosis_sekunder', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_diagnosis_sekunder ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
@@ -1623,14 +1501,11 @@
                                                 <select class="form-select" name="risiko_jatuh_morse_bantuan_ambulasi"
                                                     onchange="updateConclusion('morse')">
                                                     <option value="">pilih</option>
-                                                    <option value="30"
-                                                        {{ old('risiko_jatuh_morse_bantuan_ambulasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_bantuan_ambulasi ?? '') == '30' ? 'selected' : '' }}>
+                                                    <option value="30" {{ old('risiko_jatuh_morse_bantuan_ambulasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_bantuan_ambulasi ?? '') == '30' ? 'selected' : '' }}>
                                                         Meja/ kursi</option>
-                                                    <option value="15"
-                                                        {{ old('risiko_jatuh_morse_bantuan_ambulasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_bantuan_ambulasi ?? '') == '15' ? 'selected' : '' }}>
+                                                    <option value="15" {{ old('risiko_jatuh_morse_bantuan_ambulasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_bantuan_ambulasi ?? '') == '15' ? 'selected' : '' }}>
                                                         Kruk/ tongkat/ alat bantu berjalan</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_morse_bantuan_ambulasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_bantuan_ambulasi ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_morse_bantuan_ambulasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_bantuan_ambulasi ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak ada/ bed rest/ bantuan perawat</option>
                                                 </select>
                                             </div>
@@ -1641,11 +1516,9 @@
                                                 <select class="form-select" name="risiko_jatuh_morse_terpasang_infus"
                                                     onchange="updateConclusion('morse')">
                                                     <option value="">pilih</option>
-                                                    <option value="20"
-                                                        {{ old('risiko_jatuh_morse_terpasang_infus', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_terpasang_infus ?? '') == '20' ? 'selected' : '' }}>
+                                                    <option value="20" {{ old('risiko_jatuh_morse_terpasang_infus', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_terpasang_infus ?? '') == '20' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_morse_terpasang_infus', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_terpasang_infus ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_morse_terpasang_infus', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_terpasang_infus ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
@@ -1656,14 +1529,11 @@
                                                 <select class="form-select" name="risiko_jatuh_morse_cara_berjalan"
                                                     onchange="updateConclusion('morse')">
                                                     <option value="">pilih</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_morse_cara_berjalan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_cara_berjalan ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_morse_cara_berjalan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_cara_berjalan ?? '') == '0' ? 'selected' : '' }}>
                                                         Normal/ bed rest/ kursi roda</option>
-                                                    <option value="20"
-                                                        {{ old('risiko_jatuh_morse_cara_berjalan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_cara_berjalan ?? '') == '20' ? 'selected' : '' }}>
+                                                    <option value="20" {{ old('risiko_jatuh_morse_cara_berjalan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_cara_berjalan ?? '') == '20' ? 'selected' : '' }}>
                                                         Terganggu</option>
-                                                    <option value="10"
-                                                        {{ old('risiko_jatuh_morse_cara_berjalan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_cara_berjalan ?? '') == '10' ? 'selected' : '' }}>
+                                                    <option value="10" {{ old('risiko_jatuh_morse_cara_berjalan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_cara_berjalan ?? '') == '10' ? 'selected' : '' }}>
                                                         Lemah</option>
                                                 </select>
                                             </div>
@@ -1674,11 +1544,9 @@
                                                 <select class="form-select" name="risiko_jatuh_morse_status_mental"
                                                     onchange="updateConclusion('morse')">
                                                     <option value="">pilih</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_morse_status_mental', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_status_mental ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_morse_status_mental', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_status_mental ?? '') == '0' ? 'selected' : '' }}>
                                                         Beroroentasi pada kemampuannya</option>
-                                                    <option value="15"
-                                                        {{ old('risiko_jatuh_morse_status_mental', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_status_mental ?? '') == '15' ? 'selected' : '' }}>
+                                                    <option value="15" {{ old('risiko_jatuh_morse_status_mental', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_status_mental ?? '') == '15' ? 'selected' : '' }}>
                                                         Lupa akan keterbatasannya</option>
                                                 </select>
                                             </div>
@@ -1705,17 +1573,13 @@
                                                 <select class="form-select" name="risiko_jatuh_pediatrik_usia_anak"
                                                     onchange="updateConclusion('humpty')">
                                                     <option value="">pilih</option>
-                                                    <option value="4"
-                                                        {{ old('risiko_jatuh_pediatrik_usia_anak', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_usia_anak ?? '') == '4' ? 'selected' : '' }}>
+                                                    <option value="4" {{ old('risiko_jatuh_pediatrik_usia_anak', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_usia_anak ?? '') == '4' ? 'selected' : '' }}>
                                                         Dibawah 3 tahun</option>
-                                                    <option value="3"
-                                                        {{ old('risiko_jatuh_pediatrik_usia_anak', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_usia_anak ?? '') == '3' ? 'selected' : '' }}>
+                                                    <option value="3" {{ old('risiko_jatuh_pediatrik_usia_anak', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_usia_anak ?? '') == '3' ? 'selected' : '' }}>
                                                         3-7 tahun</option>
-                                                    <option value="2"
-                                                        {{ old('risiko_jatuh_pediatrik_usia_anak', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_usia_anak ?? '') == '2' ? 'selected' : '' }}>
+                                                    <option value="2" {{ old('risiko_jatuh_pediatrik_usia_anak', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_usia_anak ?? '') == '2' ? 'selected' : '' }}>
                                                         7-13 tahun</option>
-                                                    <option value="1"
-                                                        {{ old('risiko_jatuh_pediatrik_usia_anak', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_usia_anak ?? '') == '1' ? 'selected' : '' }}>
+                                                    <option value="1" {{ old('risiko_jatuh_pediatrik_usia_anak', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_usia_anak ?? '') == '1' ? 'selected' : '' }}>
                                                         Diatas 13 tahun</option>
                                                 </select>
                                             </div>
@@ -1726,11 +1590,9 @@
                                                 <select class="form-select" name="risiko_jatuh_pediatrik_jenis_kelamin"
                                                     onchange="updateConclusion('humpty')">
                                                     <option value="">pilih</option>
-                                                    <option value="2"
-                                                        {{ old('risiko_jatuh_pediatrik_jenis_kelamin', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_jenis_kelamin ?? '') == '2' ? 'selected' : '' }}>
+                                                    <option value="2" {{ old('risiko_jatuh_pediatrik_jenis_kelamin', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_jenis_kelamin ?? '') == '2' ? 'selected' : '' }}>
                                                         Laki-laki</option>
-                                                    <option value="1"
-                                                        {{ old('risiko_jatuh_pediatrik_jenis_kelamin', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_jenis_kelamin ?? '') == '1' ? 'selected' : '' }}>
+                                                    <option value="1" {{ old('risiko_jatuh_pediatrik_jenis_kelamin', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_jenis_kelamin ?? '') == '1' ? 'selected' : '' }}>
                                                         Perempuan</option>
                                                 </select>
                                             </div>
@@ -1741,18 +1603,14 @@
                                                 <select class="form-select" name="risiko_jatuh_pediatrik_diagnosis"
                                                     onchange="updateConclusion('humpty')">
                                                     <option value="">pilih</option>
-                                                    <option value="4"
-                                                        {{ old('risiko_jatuh_pediatrik_diagnosis', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_diagnosis ?? '') == '4' ? 'selected' : '' }}>
+                                                    <option value="4" {{ old('risiko_jatuh_pediatrik_diagnosis', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_diagnosis ?? '') == '4' ? 'selected' : '' }}>
                                                         Diagnosis Neurologis</option>
-                                                    <option value="3"
-                                                        {{ old('risiko_jatuh_pediatrik_diagnosis', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_diagnosis ?? '') == '3' ? 'selected' : '' }}>
+                                                    <option value="3" {{ old('risiko_jatuh_pediatrik_diagnosis', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_diagnosis ?? '') == '3' ? 'selected' : '' }}>
                                                         Perubahan oksigennasi (diangnosis respiratorik, dehidrasi, anemia,
                                                         syncope, pusing, dsb)</option>
-                                                    <option value="2"
-                                                        {{ old('risiko_jatuh_pediatrik_diagnosis', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_diagnosis ?? '') == '2' ? 'selected' : '' }}>
+                                                    <option value="2" {{ old('risiko_jatuh_pediatrik_diagnosis', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_diagnosis ?? '') == '2' ? 'selected' : '' }}>
                                                         Gangguan perilaku /psikiatri</option>
-                                                    <option value="1"
-                                                        {{ old('risiko_jatuh_pediatrik_diagnosis', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_diagnosis ?? '') == '1' ? 'selected' : '' }}>
+                                                    <option value="1" {{ old('risiko_jatuh_pediatrik_diagnosis', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_diagnosis ?? '') == '1' ? 'selected' : '' }}>
                                                         Diagnosis lainnya</option>
                                                 </select>
                                             </div>
@@ -1760,18 +1618,14 @@
                                             <!-- Gangguan Kognitif -->
                                             <div class="mb-3">
                                                 <label class="form-label">Gangguan Kognitif</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_pediatrik_gangguan_kognitif"
+                                                <select class="form-select" name="risiko_jatuh_pediatrik_gangguan_kognitif"
                                                     onchange="updateConclusion('humpty')">
                                                     <option value="">pilih</option>
-                                                    <option value="3"
-                                                        {{ old('risiko_jatuh_pediatrik_gangguan_kognitif', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_gangguan_kognitif ?? '') == '3' ? 'selected' : '' }}>
+                                                    <option value="3" {{ old('risiko_jatuh_pediatrik_gangguan_kognitif', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_gangguan_kognitif ?? '') == '3' ? 'selected' : '' }}>
                                                         Tidak menyadari keterbatasan dirinya</option>
-                                                    <option value="2"
-                                                        {{ old('risiko_jatuh_pediatrik_gangguan_kognitif', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_gangguan_kognitif ?? '') == '2' ? 'selected' : '' }}>
+                                                    <option value="2" {{ old('risiko_jatuh_pediatrik_gangguan_kognitif', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_gangguan_kognitif ?? '') == '2' ? 'selected' : '' }}>
                                                         Lupa akan adanya keterbatasan</option>
-                                                    <option value="1"
-                                                        {{ old('risiko_jatuh_pediatrik_gangguan_kognitif', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_gangguan_kognitif ?? '') == '1' ? 'selected' : '' }}>
+                                                    <option value="1" {{ old('risiko_jatuh_pediatrik_gangguan_kognitif', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_gangguan_kognitif ?? '') == '1' ? 'selected' : '' }}>
                                                         Orientasi baik terhadap dari sendiri</option>
                                                 </select>
                                             </div>
@@ -1779,22 +1633,17 @@
                                             <!-- Faktor Lingkungan -->
                                             <div class="mb-3">
                                                 <label class="form-label">Faktor Lingkungan</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_pediatrik_faktor_lingkungan"
+                                                <select class="form-select" name="risiko_jatuh_pediatrik_faktor_lingkungan"
                                                     onchange="updateConclusion('humpty')">
                                                     <option value="">pilih</option>
-                                                    <option value="4"
-                                                        {{ old('risiko_jatuh_pediatrik_faktor_lingkungan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_faktor_lingkungan ?? '') == '4' ? 'selected' : '' }}>
+                                                    <option value="4" {{ old('risiko_jatuh_pediatrik_faktor_lingkungan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_faktor_lingkungan ?? '') == '4' ? 'selected' : '' }}>
                                                         Riwayat jatuh /bayi diletakkan di tempat tidur dewasa</option>
-                                                    <option value="3"
-                                                        {{ old('risiko_jatuh_pediatrik_faktor_lingkungan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_faktor_lingkungan ?? '') == '3' ? 'selected' : '' }}>
+                                                    <option value="3" {{ old('risiko_jatuh_pediatrik_faktor_lingkungan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_faktor_lingkungan ?? '') == '3' ? 'selected' : '' }}>
                                                         Pasien menggunakan alat bantu /bayi diletakkan di tempat tidur bayi
                                                         / perabot rumah</option>
-                                                    <option value="2"
-                                                        {{ old('risiko_jatuh_pediatrik_faktor_lingkungan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_faktor_lingkungan ?? '') == '2' ? 'selected' : '' }}>
+                                                    <option value="2" {{ old('risiko_jatuh_pediatrik_faktor_lingkungan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_faktor_lingkungan ?? '') == '2' ? 'selected' : '' }}>
                                                         Pasien diletakkan di tempat tidur</option>
-                                                    <option value="1"
-                                                        {{ old('risiko_jatuh_pediatrik_faktor_lingkungan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_faktor_lingkungan ?? '') == '1' ? 'selected' : '' }}>
+                                                    <option value="1" {{ old('risiko_jatuh_pediatrik_faktor_lingkungan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_faktor_lingkungan ?? '') == '1' ? 'selected' : '' }}>
                                                         Area di luar rumah sakit</option>
                                                 </select>
                                             </div>
@@ -1805,14 +1654,11 @@
                                                 <select class="form-select" name="risiko_jatuh_pediatrik_pembedahan"
                                                     onchange="updateConclusion('humpty')">
                                                     <option value="">pilih</option>
-                                                    <option value="3"
-                                                        {{ old('risiko_jatuh_pediatrik_pembedahan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_pembedahan ?? '') == '3' ? 'selected' : '' }}>
+                                                    <option value="3" {{ old('risiko_jatuh_pediatrik_pembedahan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_pembedahan ?? '') == '3' ? 'selected' : '' }}>
                                                         Dalam 24 jam</option>
-                                                    <option value="2"
-                                                        {{ old('risiko_jatuh_pediatrik_pembedahan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_pembedahan ?? '') == '2' ? 'selected' : '' }}>
+                                                    <option value="2" {{ old('risiko_jatuh_pediatrik_pembedahan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_pembedahan ?? '') == '2' ? 'selected' : '' }}>
                                                         Dalam 48 jam</option>
-                                                    <option value="1"
-                                                        {{ old('risiko_jatuh_pediatrik_pembedahan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_pembedahan ?? '') == '1' ? 'selected' : '' }}>
+                                                    <option value="1" {{ old('risiko_jatuh_pediatrik_pembedahan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_pembedahan ?? '') == '1' ? 'selected' : '' }}>
                                                         > 48 jam atau tidak menjalani pembedahan/sedasi/anestesi</option>
                                                 </select>
                                             </div>
@@ -1820,19 +1666,15 @@
                                             <!-- Penggunaan Medika Mentosa -->
                                             <div class="mb-3">
                                                 <label class="form-label">Penggunaan Medika mentosa</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_pediatrik_penggunaan_mentosa"
+                                                <select class="form-select" name="risiko_jatuh_pediatrik_penggunaan_mentosa"
                                                     onchange="updateConclusion('humpty')">
                                                     <option value="">pilih</option>
-                                                    <option value="3"
-                                                        {{ old('risiko_jatuh_pediatrik_penggunaan_mentosa', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_penggunaan_mentosa ?? '') == '3' ? 'selected' : '' }}>
+                                                    <option value="3" {{ old('risiko_jatuh_pediatrik_penggunaan_mentosa', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_penggunaan_mentosa ?? '') == '3' ? 'selected' : '' }}>
                                                         Penggunaan multiple: sedative, obat hipnosis, barbiturate,
                                                         fenotiazi, antidepresan, pencahar, diuretik, narkose</option>
-                                                    <option value="2"
-                                                        {{ old('risiko_jatuh_pediatrik_penggunaan_mentosa', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_penggunaan_mentosa ?? '') == '2' ? 'selected' : '' }}>
+                                                    <option value="2" {{ old('risiko_jatuh_pediatrik_penggunaan_mentosa', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_penggunaan_mentosa ?? '') == '2' ? 'selected' : '' }}>
                                                         Penggunaan salah satu obat diatas</option>
-                                                    <option value="1"
-                                                        {{ old('risiko_jatuh_pediatrik_penggunaan_mentosa', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_penggunaan_mentosa ?? '') == '1' ? 'selected' : '' }}>
+                                                    <option value="1" {{ old('risiko_jatuh_pediatrik_penggunaan_mentosa', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_penggunaan_mentosa ?? '') == '1' ? 'selected' : '' }}>
                                                         Penggunaan medikasi lainnya/tidak ada mediksi</option>
                                                 </select>
                                             </div>
@@ -1858,30 +1700,24 @@
                                             <div class="mb-3">
                                                 <label class="form-label">Apakah pasien datang kerumah sakit karena
                                                     jatuh?</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_lansia_jatuh_saat_masuk_rs"
+                                                <select class="form-select" name="risiko_jatuh_lansia_jatuh_saat_masuk_rs"
                                                     onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="6"
-                                                        {{ old('risiko_jatuh_lansia_jatuh_saat_masuk_rs', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_jatuh_saat_masuk_rs ?? '') == '6' ? 'selected' : '' }}>
+                                                    <option value="6" {{ old('risiko_jatuh_lansia_jatuh_saat_masuk_rs', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_jatuh_saat_masuk_rs ?? '') == '6' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_lansia_jatuh_saat_masuk_rs', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_jatuh_saat_masuk_rs ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_jatuh_saat_masuk_rs', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_jatuh_saat_masuk_rs ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Pasien memiliki 2 kali atau apakah pasien
                                                     mengalami jatuh dalam 2 bulan terakhir ini/ diagnosis multiple?</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_lansia_riwayat_jatuh_2_bulan"
+                                                <select class="form-select" name="risiko_jatuh_lansia_riwayat_jatuh_2_bulan"
                                                     onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="6"
-                                                        {{ old('risiko_jatuh_lansia_riwayat_jatuh_2_bulan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_riwayat_jatuh_2_bulan ?? '') == '6' ? 'selected' : '' }}>
+                                                    <option value="6" {{ old('risiko_jatuh_lansia_riwayat_jatuh_2_bulan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_riwayat_jatuh_2_bulan ?? '') == '6' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_lansia_riwayat_jatuh_2_bulan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_riwayat_jatuh_2_bulan ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_riwayat_jatuh_2_bulan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_riwayat_jatuh_2_bulan ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
@@ -1894,26 +1730,21 @@
                                                 <select class="form-select" name="risiko_jatuh_lansia_status_bingung"
                                                     onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="14"
-                                                        {{ old('risiko_jatuh_lansia_status_bingung', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_bingung ?? '') == '14' ? 'selected' : '' }}>
+                                                    <option value="14" {{ old('risiko_jatuh_lansia_status_bingung', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_bingung ?? '') == '14' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_lansia_status_bingung', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_bingung ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_status_bingung', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_bingung ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Apakah pasien disorientasi? (tidak menyadarkan
                                                     waktu, tempat atau orang)</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_lansia_status_disorientasi"
+                                                <select class="form-select" name="risiko_jatuh_lansia_status_disorientasi"
                                                     onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="14"
-                                                        {{ old('risiko_jatuh_lansia_status_disorientasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_disorientasi ?? '') == '14' ? 'selected' : '' }}>
+                                                    <option value="14" {{ old('risiko_jatuh_lansia_status_disorientasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_disorientasi ?? '') == '14' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_lansia_status_disorientasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_disorientasi ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_status_disorientasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_disorientasi ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
@@ -1923,11 +1754,9 @@
                                                 <select class="form-select" name="risiko_jatuh_lansia_status_agitasi"
                                                     onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="14"
-                                                        {{ old('risiko_jatuh_lansia_status_agitasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_agitasi ?? '') == '14' ? 'selected' : '' }}>
+                                                    <option value="14" {{ old('risiko_jatuh_lansia_status_agitasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_agitasi ?? '') == '14' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_lansia_status_agitasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_agitasi ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_status_agitasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_agitasi ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
@@ -1939,26 +1768,21 @@
                                                 <select class="form-select" name="risiko_jatuh_lansia_kacamata"
                                                     onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="1"
-                                                        {{ old('risiko_jatuh_lansia_kacamata', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_kacamata ?? '') == '1' ? 'selected' : '' }}>
+                                                    <option value="1" {{ old('risiko_jatuh_lansia_kacamata', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_kacamata ?? '') == '1' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_lansia_kacamata', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_kacamata ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_kacamata', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_kacamata ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Apakah pasien mengalami kelainan
                                                     penglihatan/buram?</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_lansia_kelainan_penglihatan"
+                                                <select class="form-select" name="risiko_jatuh_lansia_kelainan_penglihatan"
                                                     onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="1"
-                                                        {{ old('risiko_jatuh_lansia_kelainan_penglihatan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_kelainan_penglihatan ?? '') == '1' ? 'selected' : '' }}>
+                                                    <option value="1" {{ old('risiko_jatuh_lansia_kelainan_penglihatan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_kelainan_penglihatan ?? '') == '1' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_lansia_kelainan_penglihatan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_kelainan_penglihatan ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_kelainan_penglihatan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_kelainan_penglihatan ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
@@ -1968,11 +1792,9 @@
                                                 <select class="form-select" name="risiko_jatuh_lansia_glukoma"
                                                     onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="1"
-                                                        {{ old('risiko_jatuh_lansia_glukoma', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_glukoma ?? '') == '1' ? 'selected' : '' }}>
+                                                    <option value="1" {{ old('risiko_jatuh_lansia_glukoma', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_glukoma ?? '') == '1' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_lansia_glukoma', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_glukoma ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_glukoma', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_glukoma ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
@@ -1982,15 +1804,12 @@
                                             <div class="mb-3">
                                                 <label class="form-label">Apakah terdapat perubahan perilaku berkemih?
                                                     (frekuensi, urgensi, inkontinensia, noktura)</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_lansia_perubahan_berkemih"
+                                                <select class="form-select" name="risiko_jatuh_lansia_perubahan_berkemih"
                                                     onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="2"
-                                                        {{ old('risiko_jatuh_lansia_perubahan_berkemih', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_perubahan_berkemih ?? '') == '2' ? 'selected' : '' }}>
+                                                    <option value="2" {{ old('risiko_jatuh_lansia_perubahan_berkemih', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_perubahan_berkemih ?? '') == '2' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_lansia_perubahan_berkemih', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_perubahan_berkemih ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_perubahan_berkemih', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_perubahan_berkemih ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
@@ -2003,11 +1822,9 @@
                                                 <select class="form-select" name="risiko_jatuh_lansia_transfer_mandiri"
                                                     onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_lansia_transfer_mandiri', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_mandiri ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_transfer_mandiri', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_mandiri ?? '') == '0' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_lansia_transfer_mandiri', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_mandiri ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_transfer_mandiri', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_mandiri ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
@@ -2018,11 +1835,9 @@
                                                     name="risiko_jatuh_lansia_transfer_bantuan_sedikit"
                                                     onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="1"
-                                                        {{ old('risiko_jatuh_lansia_transfer_bantuan_sedikit', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_sedikit ?? '') == '1' ? 'selected' : '' }}>
+                                                    <option value="1" {{ old('risiko_jatuh_lansia_transfer_bantuan_sedikit', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_sedikit ?? '') == '1' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_lansia_transfer_bantuan_sedikit', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_sedikit ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_transfer_bantuan_sedikit', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_sedikit ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
@@ -2032,11 +1847,9 @@
                                                     name="risiko_jatuh_lansia_transfer_bantuan_nyata"
                                                     onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="2"
-                                                        {{ old('risiko_jatuh_lansia_transfer_bantuan_nyata', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_nyata ?? '') == '2' ? 'selected' : '' }}>
+                                                    <option value="2" {{ old('risiko_jatuh_lansia_transfer_bantuan_nyata', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_nyata ?? '') == '2' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_lansia_transfer_bantuan_nyata', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_nyata ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_transfer_bantuan_nyata', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_nyata ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
@@ -2047,11 +1860,9 @@
                                                     name="risiko_jatuh_lansia_transfer_bantuan_total"
                                                     onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="3"
-                                                        {{ old('risiko_jatuh_lansia_transfer_bantuan_total', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_total ?? '') == '3' ? 'selected' : '' }}>
+                                                    <option value="3" {{ old('risiko_jatuh_lansia_transfer_bantuan_total', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_total ?? '') == '3' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_lansia_transfer_bantuan_total', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_total ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_transfer_bantuan_total', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_total ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
@@ -2064,11 +1875,9 @@
                                                 <select class="form-select" name="risiko_jatuh_lansia_mobilitas_mandiri"
                                                     onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_lansia_mobilitas_mandiri', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_mandiri ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_mobilitas_mandiri', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_mandiri ?? '') == '0' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_lansia_mobilitas_mandiri', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_mandiri ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_mobilitas_mandiri', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_mandiri ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
@@ -2079,39 +1888,31 @@
                                                     name="risiko_jatuh_lansia_mobilitas_bantuan_1_orang"
                                                     onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="1"
-                                                        {{ old('risiko_jatuh_lansia_mobilitas_bantuan_1_orang', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_bantuan_1_orang ?? '') == '1' ? 'selected' : '' }}>
+                                                    <option value="1" {{ old('risiko_jatuh_lansia_mobilitas_bantuan_1_orang', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_bantuan_1_orang ?? '') == '1' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_lansia_mobilitas_bantuan_1_orang', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_bantuan_1_orang ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_mobilitas_bantuan_1_orang', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_bantuan_1_orang ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Menggunakan kursi roda</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_lansia_mobilitas_kursi_roda"
+                                                <select class="form-select" name="risiko_jatuh_lansia_mobilitas_kursi_roda"
                                                     onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="2"
-                                                        {{ old('risiko_jatuh_lansia_mobilitas_kursi_roda', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_kursi_roda ?? '') == '2' ? 'selected' : '' }}>
+                                                    <option value="2" {{ old('risiko_jatuh_lansia_mobilitas_kursi_roda', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_kursi_roda ?? '') == '2' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_lansia_mobilitas_kursi_roda', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_kursi_roda ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_mobilitas_kursi_roda', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_kursi_roda ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Imobilisasi</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_lansia_mobilitas_imobilisasi"
+                                                <select class="form-select" name="risiko_jatuh_lansia_mobilitas_imobilisasi"
                                                     onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="3"
-                                                        {{ old('risiko_jatuh_lansia_mobilitas_imobilisasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_imobilisasi ?? '') == '3' ? 'selected' : '' }}>
+                                                    <option value="3" {{ old('risiko_jatuh_lansia_mobilitas_imobilisasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_imobilisasi ?? '') == '3' ? 'selected' : '' }}>
                                                         Ya</option>
-                                                    <option value="0"
-                                                        {{ old('risiko_jatuh_lansia_mobilitas_imobilisasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_imobilisasi ?? '') == '0' ? 'selected' : '' }}>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_mobilitas_imobilisasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_imobilisasi ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak</option>
                                                 </select>
                                             </div>
@@ -2154,35 +1955,25 @@
                                         <label style="min-width: 300px;">Kondisi psikologis</label>
                                         <select class="form-select" name="psikologis_kondisi">
                                             <option value="">--Pilih--</option>
-                                            <option value="Tidak Ada Kelainan"
-                                                {{ old('psikologis_kondisi', $asesmen->asesmenKepUmum->psikologis_kondisi ?? '') == 'Tidak Ada Kelainan' ? 'selected' : '' }}>
+                                            <option value="Tidak Ada Kelainan" {{ old('psikologis_kondisi', $asesmen->asesmenKepUmum->psikologis_kondisi ?? '') == 'Tidak Ada Kelainan' ? 'selected' : '' }}>
                                                 Tidak Ada Kelainan</option>
-                                            <option value="Cemas"
-                                                {{ old('psikologis_kondisi', $asesmen->asesmenKepUmum->psikologis_kondisi ?? '') == 'Cemas' ? 'selected' : '' }}>
+                                            <option value="Cemas" {{ old('psikologis_kondisi', $asesmen->asesmenKepUmum->psikologis_kondisi ?? '') == 'Cemas' ? 'selected' : '' }}>
                                                 Cemas</option>
-                                            <option value="Takut"
-                                                {{ old('psikologis_kondisi', $asesmen->asesmenKepUmum->psikologis_kondisi ?? '') == 'Takut' ? 'selected' : '' }}>
+                                            <option value="Takut" {{ old('psikologis_kondisi', $asesmen->asesmenKepUmum->psikologis_kondisi ?? '') == 'Takut' ? 'selected' : '' }}>
                                                 Takut</option>
-                                            <option value="Marah"
-                                                {{ old('psikologis_kondisi', $asesmen->asesmenKepUmum->psikologis_kondisi ?? '') == 'Marah' ? 'selected' : '' }}>
+                                            <option value="Marah" {{ old('psikologis_kondisi', $asesmen->asesmenKepUmum->psikologis_kondisi ?? '') == 'Marah' ? 'selected' : '' }}>
                                                 Marah</option>
-                                            <option value="Sedih"
-                                                {{ old('psikologis_kondisi', $asesmen->asesmenKepUmum->psikologis_kondisi ?? '') == 'Sedih' ? 'selected' : '' }}>
+                                            <option value="Sedih" {{ old('psikologis_kondisi', $asesmen->asesmenKepUmum->psikologis_kondisi ?? '') == 'Sedih' ? 'selected' : '' }}>
                                                 Sedih</option>
-                                            <option value="Tenang"
-                                                {{ old('psikologis_kondisi', $asesmen->asesmenKepUmum->psikologis_kondisi ?? '') == 'Tenang' ? 'selected' : '' }}>
+                                            <option value="Tenang" {{ old('psikologis_kondisi', $asesmen->asesmenKepUmum->psikologis_kondisi ?? '') == 'Tenang' ? 'selected' : '' }}>
                                                 Tenang</option>
-                                            <option value="Tidak Semangat"
-                                                {{ old('psikologis_kondisi', $asesmen->asesmenKepUmum->psikologis_kondisi ?? '') == 'Tidak Semangat' ? 'selected' : '' }}>
+                                            <option value="Tidak Semangat" {{ old('psikologis_kondisi', $asesmen->asesmenKepUmum->psikologis_kondisi ?? '') == 'Tidak Semangat' ? 'selected' : '' }}>
                                                 Tidak Semangat</option>
-                                            <option value="Tertekan"
-                                                {{ old('psikologis_kondisi', $asesmen->asesmenKepUmum->psikologis_kondisi ?? '') == 'Tertekan' ? 'selected' : '' }}>
+                                            <option value="Tertekan" {{ old('psikologis_kondisi', $asesmen->asesmenKepUmum->psikologis_kondisi ?? '') == 'Tertekan' ? 'selected' : '' }}>
                                                 Tertekan</option>
-                                            <option value="Depresi"
-                                                {{ old('psikologis_kondisi', $asesmen->asesmenKepUmum->psikologis_kondisi ?? '') == 'Depresi' ? 'selected' : '' }}>
+                                            <option value="Depresi" {{ old('psikologis_kondisi', $asesmen->asesmenKepUmum->psikologis_kondisi ?? '') == 'Depresi' ? 'selected' : '' }}>
                                                 Depresi</option>
-                                            <option value="Sulit Tidur"
-                                                {{ old('psikologis_kondisi', $asesmen->asesmenKepUmum->psikologis_kondisi ?? '') == 'Sulit Tidur' ? 'selected' : '' }}>
+                                            <option value="Sulit Tidur" {{ old('psikologis_kondisi', $asesmen->asesmenKepUmum->psikologis_kondisi ?? '') == 'Sulit Tidur' ? 'selected' : '' }}>
                                                 Sulit Tidur</option>
                                         </select>
                                         @error('psikologis_kondisi')
@@ -2197,11 +1988,9 @@
                                             lain</label>
                                         <select class="form-select" name="psikologis_potensi_menyakiti">
                                             <option value="">--Pilih--</option>
-                                            <option value="0"
-                                                {{ old('psikologis_potensi_menyakiti', $asesmen->asesmenKepUmum->psikologis_potensi_menyakiti ?? '') == '0' ? 'selected' : '' }}>
+                                            <option value="0" {{ old('psikologis_potensi_menyakiti', $asesmen->asesmenKepUmum->psikologis_potensi_menyakiti ?? '') == '0' ? 'selected' : '' }}>
                                                 Tidak</option>
-                                            <option value="1"
-                                                {{ old('psikologis_potensi_menyakiti', $asesmen->asesmenKepUmum->psikologis_potensi_menyakiti ?? '') == '1' ? 'selected' : '' }}>
+                                            <option value="1" {{ old('psikologis_potensi_menyakiti', $asesmen->asesmenKepUmum->psikologis_potensi_menyakiti ?? '') == '1' ? 'selected' : '' }}>
                                                 Ya</option>
                                         </select>
                                         @error('psikologis_potensi_menyakiti')
@@ -2213,7 +2002,8 @@
 
                                     <div class="form-group">
                                         <label style="min-width: 300px;">Lainnya</label>
-                                        <textarea class="form-control @error('psikologis_lainnya') is-invalid @enderror" name="psikologis_lainnya"
+                                        <textarea class="form-control @error('psikologis_lainnya') is-invalid @enderror"
+                                            name="psikologis_lainnya"
                                             rows="3">{{ old('psikologis_lainnya', $asesmen->asesmenKepUmum->psikologis_lainnya ?? '') }}</textarea>
                                         @error('psikologis_lainnya')
                                             <div class="invalid-feedback">
@@ -2231,9 +2021,8 @@
                                         <select class="form-select" name="spiritual_agama">
                                             <option value="">--Pilih--</option>
                                             @foreach ($agama as $agam)
-                                                <option value="{{ $agam->kd_agama }}"
-                                                                {{ old('spiritual_agama', $asesmen->asesmenKepUmum->spiritual_agama ?? '') == $agam->kd_agama ? 'selected' : '' }}>
-                                                                {{ $agam->agama }}
+                                                <option value="{{ $agam->kd_agama }}" {{ old('spiritual_agama', $asesmen->asesmenKepUmum->spiritual_agama ?? '') == $agam->kd_agama ? 'selected' : '' }}>
+                                                    {{ $agam->agama }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -2241,7 +2030,8 @@
 
                                     <div class="form-group">
                                         <label style="min-width: 300px;">Nilai Nilai Spritiual Pasien</label>
-                                        <textarea class="form-control" name="spiritual_nilai" rows="3">{{ old('spiritual_nilai', $asesmen->asesmenKepUmum->spiritual_nilai ?? '') }}</textarea>
+                                        <textarea class="form-control" name="spiritual_nilai"
+                                            rows="3">{{ old('spiritual_nilai', $asesmen->asesmenKepUmum->spiritual_nilai ?? '') }}</textarea>
                                     </div>
                                 </div>
 
@@ -2255,8 +2045,7 @@
                                             name="sosial_ekonomi_pekerjaan" id="sosial_pekerjaan">
                                             <option value="">--Pilih Pekerjaan--</option>
                                             @foreach ($pekerjaan as $kerjaan)
-                                                <option value="{{ $kerjaan->kd_pekerjaan }}"
-                                                    {{ old('sosial_ekonomi_pekerjaan', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_pekerjaan ?? '') == $kerjaan->kd_pekerjaan ? 'selected' : '' }}>
+                                                <option value="{{ $kerjaan->kd_pekerjaan }}" {{ old('sosial_ekonomi_pekerjaan', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_pekerjaan ?? '') == $kerjaan->kd_pekerjaan ? 'selected' : '' }}>
                                                     {{ $kerjaan->pekerjaan }}
                                                 </option>
                                             @endforeach
@@ -2281,8 +2070,7 @@
                                                 ];
                                             @endphp
                                             @foreach ($penghasilanOptions as $option)
-                                                <option value="{{ $option }}"
-                                                    {{ old('sosial_ekonomi_tingkat_penghasilan', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_tingkat_penghasilan ?? '') == $option ? 'selected' : '' }}>
+                                                <option value="{{ $option }}" {{ old('sosial_ekonomi_tingkat_penghasilan', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_tingkat_penghasilan ?? '') == $option ? 'selected' : '' }}>
                                                     {{ $option }}
                                                 </option>
                                             @endforeach
@@ -2307,8 +2095,7 @@
                                                 ];
                                             @endphp
                                             @foreach ($pernikahanOptions as $value => $label)
-                                                <option value="{{ $value }}"
-                                                    {{ old('sosial_ekonomi_status_pernikahan', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_status_pernikahan ?? '') == $value ? 'selected' : '' }}>
+                                                <option value="{{ $value }}" {{ old('sosial_ekonomi_status_pernikahan', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_status_pernikahan ?? '') == $value ? 'selected' : '' }}>
                                                     {{ $label }}
                                                 </option>
                                             @endforeach
@@ -2325,9 +2112,8 @@
                                             name="sosial_ekonomi_status_pendidikan">
                                             <option value="">--Pilih--</option>
                                             @foreach ($pendidikan as $pendidik)
-                                                <option value="{{ $pendidik->kd_pendidikan }}"
-                                                                {{ old('sosial_ekonomi_status_pendidikan', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_status_pendidikan ?? '') == $pendidik->kd_pendidikan ? 'selected' : '' }}>
-                                                                {{ $pendidik->pendidikan }}
+                                                <option value="{{ $pendidik->kd_pendidikan }}" {{ old('sosial_ekonomi_status_pendidikan', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_status_pendidikan ?? '') == $pendidik->kd_pendidikan ? 'selected' : '' }}>
+                                                    {{ $pendidik->pendidikan }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -2351,8 +2137,7 @@
                                                 ];
                                             @endphp
                                             @foreach ($tempatTinggalOptions as $option)
-                                                <option value="{{ $option }}"
-                                                    {{ old('sosial_ekonomi_tempat_tinggal', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_tempat_tinggal ?? '') == $option ? 'selected' : '' }}>
+                                                <option value="{{ $option }}" {{ old('sosial_ekonomi_tempat_tinggal', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_tempat_tinggal ?? '') == $option ? 'selected' : '' }}>
                                                     {{ $option }}
                                                 </option>
                                             @endforeach
@@ -2375,8 +2160,7 @@
                                                 ];
                                             @endphp
                                             @foreach ($tinggalDenganKeluargaOptions as $option)
-                                                <option value="{{ $option }}"
-                                                    {{ old('sosial_ekonomi_tinggal_dengan_keluarga', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_tinggal_dengan_keluarga ?? '') == $option ? 'selected' : '' }}>
+                                                <option value="{{ $option }}" {{ old('sosial_ekonomi_tinggal_dengan_keluarga', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_tinggal_dengan_keluarga ?? '') == $option ? 'selected' : '' }}>
                                                     {{ $option }}
                                                 </option>
                                             @endforeach
@@ -2392,11 +2176,9 @@
                                             class="form-select @error('sosial_ekonomi_curiga_penganiayaan') is-invalid @enderror"
                                             name="sosial_ekonomi_curiga_penganiayaan">
                                             <option value="">--Pilih--</option>
-                                            <option value="1"
-                                                {{ old('sosial_ekonomi_curiga_penganiayaan', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_curiga_penganiayaan ?? '') == '1' ? 'selected' : '' }}>
+                                            <option value="1" {{ old('sosial_ekonomi_curiga_penganiayaan', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_curiga_penganiayaan ?? '') == '1' ? 'selected' : '' }}>
                                                 Ada</option>
-                                            <option value="0"
-                                                {{ old('sosial_ekonomi_curiga_penganiayaan', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_curiga_penganiayaan ?? '') == '0' ? 'selected' : '' }}>
+                                            <option value="0" {{ old('sosial_ekonomi_curiga_penganiayaan', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_curiga_penganiayaan ?? '') == '0' ? 'selected' : '' }}>
                                                 Tidak Ada</option>
                                         </select>
                                         @error('sosial_ekonomi_curiga_penganiayaan')
@@ -2405,9 +2187,38 @@
                                     </div>
 
                                     <div class="form-group">
+                                        <label style="min-width: 200px;">Ada kesulitan memenuhi kebutuhan dasar</label>
+                                        <select class="form-select" name="sosial_ekonomi_curiga_kesulitan">
+                                            <option value="">--Pilih--</option>
+                                            <option value="1" {{ old('sosial_ekonomi_curiga_kesulitan', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_curiga_kesulitan ?? '') == '1' ? 'selected' : '' }}>Ya</option>
+                                            <option value="0" {{ old('sosial_ekonomi_curiga_kesulitan', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_curiga_kesulitan ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Hubungan dengan anggota keluarga</label>
+                                        <select class="form-select" name="sosial_ekonomi_curiga_hubungan_keluarga">
+                                            <option value="">--Pilih--</option>
+                                            <option value="1" {{ old('sosial_ekonomi_curiga_hubungan_keluarga', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_curiga_hubungan_keluarga ?? '') == '1' ? 'selected' : '' }}>Baik</option>
+                                            <option value="0" {{ old('sosial_ekonomi_curiga_hubungan_keluarga', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_curiga_hubungan_keluarga ?? '') == '0' ? 'selected' : '' }}>Tidak Baik</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Suku</label>
+                                        <input type="text" class="form-control" name="sosial_ekonomi_curiga_suku"
+                                            value="{{ old('sosial_ekonomi_curiga_suku', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_curiga_suku ?? '') }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Budaya</label>
+                                        <input type="text" class="form-control" name="sosial_ekonomi_curiga_budaya"
+                                            value="{{ old('sosial_ekonomi_curiga_budaya', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_curiga_budaya ?? '') }}">
+                                    </div>
+
+                                    <div class="form-group">
                                         <label style="min-width: 200px;">Lainnya</label>
-                                        <textarea class="form-control @error('sosial_ekonomi_keterangan_lain') is-invalid @enderror"
-                                            name="sosial_ekonomi_keterangan_lain" rows="3">{{ old('sosial_ekonomi_keterangan_lain', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_keterangan_lain ?? '') }}</textarea>
+                                        <textarea
+                                            class="form-control @error('sosial_ekonomi_keterangan_lain') is-invalid @enderror"
+                                            name="sosial_ekonomi_keterangan_lain"
+                                            rows="3">{{ old('sosial_ekonomi_keterangan_lain', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_keterangan_lain ?? '') }}</textarea>
                                         @error('sosial_ekonomi_keterangan_lain')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -2420,20 +2231,16 @@
                                         <select class="form-select @error('gizi_jenis') is-invalid @enderror"
                                             name="gizi_jenis" id="nutritionAssessment">
                                             <option value="">--Pilih--</option>
-                                            <option value="1"
-                                                {{ old('gizi_jenis', $asesmen->asesmenKepUmumGizi->gizi_jenis ?? '') == '1' ? 'selected' : '' }}>
+                                            <option value="1" {{ old('gizi_jenis', $asesmen->asesmenKepUmumGizi->gizi_jenis ?? '') == '1' ? 'selected' : '' }}>
                                                 Malnutrition Screening Tool (MST)
                                             </option>
-                                            <option value="2"
-                                                {{ old('gizi_jenis', $asesmen->asesmenKepUmumGizi->gizi_jenis ?? '') == '2' ? 'selected' : '' }}>
+                                            <option value="2" {{ old('gizi_jenis', $asesmen->asesmenKepUmumGizi->gizi_jenis ?? '') == '2' ? 'selected' : '' }}>
                                                 The Mini Nutritional Assessment (MNA)
                                             </option>
-                                            <option value="3"
-                                                {{ old('gizi_jenis', $asesmen->asesmenKepUmumGizi->gizi_jenis ?? '') == '3' ? 'selected' : '' }}>
+                                            <option value="3" {{ old('gizi_jenis', $asesmen->asesmenKepUmumGizi->gizi_jenis ?? '') == '3' ? 'selected' : '' }}>
                                                 Strong Kids (1 bln - 18 Tahun)
                                             </option>
-                                            <option value="5"
-                                                {{ old('gizi_jenis', $asesmen->asesmenKepUmumGizi->gizi_jenis ?? '') == '5' ? 'selected' : '' }}>
+                                            <option value="5" {{ old('gizi_jenis', $asesmen->asesmenKepUmumGizi->gizi_jenis ?? '') == '5' ? 'selected' : '' }}>
                                                 Tidak Dapat Dinilai
                                             </option>
                                         </select>
@@ -2451,20 +2258,16 @@
                                         <div class="mb-3">
                                             <label class="form-label">Apakah pasien mengalami penurunan BB yang tidak
                                                 diinginkan dalam 6 bulan terakhir?</label>
-                                            <select
-                                                class="form-select @error('gizi_mst_penurunan_bb') is-invalid @enderror"
+                                            <select class="form-select @error('gizi_mst_penurunan_bb') is-invalid @enderror"
                                                 name="gizi_mst_penurunan_bb">
                                                 <option value="">pilih</option>
-                                                <option value="0"
-                                                    {{ old('gizi_mst_penurunan_bb', $asesmen->asesmenKepUmumGizi->gizi_mst_penurunan_bb ?? '') == '0' ? 'selected' : '' }}>
+                                                <option value="0" {{ old('gizi_mst_penurunan_bb', $asesmen->asesmenKepUmumGizi->gizi_mst_penurunan_bb ?? '') == '0' ? 'selected' : '' }}>
                                                     Tidak ada penurunan Berat Badan (BB)
                                                 </option>
-                                                <option value="2"
-                                                    {{ old('gizi_mst_penurunan_bb', $asesmen->asesmenKepUmumGizi->gizi_mst_penurunan_bb ?? '') == '2' ? 'selected' : '' }}>
+                                                <option value="2" {{ old('gizi_mst_penurunan_bb', $asesmen->asesmenKepUmumGizi->gizi_mst_penurunan_bb ?? '') == '2' ? 'selected' : '' }}>
                                                     Tidak yakin/ tidak tahu/ terasa baju lebih longgar
                                                 </option>
-                                                <option value="3"
-                                                    {{ old('gizi_mst_penurunan_bb', $asesmen->asesmenKepUmumGizi->gizi_mst_penurunan_bb ?? '') == '3' ? 'selected' : '' }}>
+                                                <option value="3" {{ old('gizi_mst_penurunan_bb', $asesmen->asesmenKepUmumGizi->gizi_mst_penurunan_bb ?? '') == '3' ? 'selected' : '' }}>
                                                     Ya ada penurunan BB
                                                 </option>
                                             </select>
@@ -2492,8 +2295,7 @@
                                                     ];
                                                 @endphp
                                                 @foreach ($penurunanBBOptions as $value => $label)
-                                                    <option value="{{ $value }}"
-                                                        {{ old('gizi_mst_jumlah_penurunan_bb', $asesmen->asesmenKepUmumGizi->gizi_mst_jumlah_penurunan_bb ?? '') == $value ? 'selected' : '' }}>
+                                                    <option value="{{ $value }}" {{ old('gizi_mst_jumlah_penurunan_bb', $asesmen->asesmenKepUmumGizi->gizi_mst_jumlah_penurunan_bb ?? '') == $value ? 'selected' : '' }}>
                                                         {{ $label }}
                                                     </option>
                                                 @endforeach
@@ -2511,11 +2313,9 @@
                                                 class="form-select @error('gizi_mst_nafsu_makan_berkurang') is-invalid @enderror"
                                                 name="gizi_mst_nafsu_makan_berkurang">
                                                 <option value="">pilih</option>
-                                                <option value="1"
-                                                    {{ old('gizi_mst_nafsu_makan_berkurang', $asesmen->asesmenKepUmumGizi->gizi_mst_nafsu_makan_berkurang ?? '') == '1' ? 'selected' : '' }}>
+                                                <option value="1" {{ old('gizi_mst_nafsu_makan_berkurang', $asesmen->asesmenKepUmumGizi->gizi_mst_nafsu_makan_berkurang ?? '') == '1' ? 'selected' : '' }}>
                                                     Ya</option>
-                                                <option value="0"
-                                                    {{ old('gizi_mst_nafsu_makan_berkurang', $asesmen->asesmenKepUmumGizi->gizi_mst_nafsu_makan_berkurang ?? '') == '0' ? 'selected' : '' }}>
+                                                <option value="0" {{ old('gizi_mst_nafsu_makan_berkurang', $asesmen->asesmenKepUmumGizi->gizi_mst_nafsu_makan_berkurang ?? '') == '0' ? 'selected' : '' }}>
                                                     Tidak</option>
                                             </select>
                                             @error('gizi_mst_nafsu_makan_berkurang')
@@ -2531,11 +2331,9 @@
                                                 class="form-select @error('gizi_mst_diagnosis_khusus') is-invalid @enderror"
                                                 name="gizi_mst_diagnosis_khusus">
                                                 <option value="">pilih</option>
-                                                <option value="1"
-                                                    {{ old('gizi_mst_diagnosis_khusus', $asesmen->asesmenKepUmumGizi->gizi_mst_diagnosis_khusus ?? '') == '1' ? 'selected' : '' }}>
+                                                <option value="1" {{ old('gizi_mst_diagnosis_khusus', $asesmen->asesmenKepUmumGizi->gizi_mst_diagnosis_khusus ?? '') == '1' ? 'selected' : '' }}>
                                                     Ya</option>
-                                                <option value="0"
-                                                    {{ old('gizi_mst_diagnosis_khusus', $asesmen->asesmenKepUmumGizi->gizi_mst_diagnosis_khusus ?? '') == '0' ? 'selected' : '' }}>
+                                                <option value="0" {{ old('gizi_mst_diagnosis_khusus', $asesmen->asesmenKepUmumGizi->gizi_mst_diagnosis_khusus ?? '') == '0' ? 'selected' : '' }}>
                                                     Tidak</option>
                                             </select>
                                             @error('gizi_mst_diagnosis_khusus')
@@ -2553,7 +2351,7 @@
                                                 Kesimpulan: ≥ 2 berisiko malnutrisi
                                             </div>
                                             <input type="hidden" name="gizi_mst_kesimpulan" id="gizi_mst_kesimpulan"
-                                                   value="{{ old('gizi_mst_kesimpulan', $asesmen->asesmenKepUmumGizi->gizi_mst_kesimpulan ?? '') }}">
+                                                value="{{ old('gizi_mst_kesimpulan', $asesmen->asesmenKepUmumGizi->gizi_mst_kesimpulan ?? '') }}">
                                         </div>
                                     </div>
 
@@ -2573,16 +2371,13 @@
                                                 class="form-select @error('gizi_mna_penurunan_asupan_3_bulan') is-invalid @enderror"
                                                 name="gizi_mna_penurunan_asupan_3_bulan">
                                                 <option value="">--Pilih--</option>
-                                                <option value="0"
-                                                    {{ old('gizi_mna_penurunan_asupan_3_bulan', $asesmen->asesmenKepUmumGizi->gizi_mna_penurunan_asupan_3_bulan ?? '') == '0' ? 'selected' : '' }}>
+                                                <option value="0" {{ old('gizi_mna_penurunan_asupan_3_bulan', $asesmen->asesmenKepUmumGizi->gizi_mna_penurunan_asupan_3_bulan ?? '') == '0' ? 'selected' : '' }}>
                                                     Mengalami penurunan asupan makanan yang parah
                                                 </option>
-                                                <option value="1"
-                                                    {{ old('gizi_mna_penurunan_asupan_3_bulan', $asesmen->asesmenKepUmumGizi->gizi_mna_penurunan_asupan_3_bulan ?? '') == '1' ? 'selected' : '' }}>
+                                                <option value="1" {{ old('gizi_mna_penurunan_asupan_3_bulan', $asesmen->asesmenKepUmumGizi->gizi_mna_penurunan_asupan_3_bulan ?? '') == '1' ? 'selected' : '' }}>
                                                     Mengalami penurunan asupan makanan sedang
                                                 </option>
-                                                <option value="2"
-                                                    {{ old('gizi_mna_penurunan_asupan_3_bulan', $asesmen->asesmenKepUmumGizi->gizi_mna_penurunan_asupan_3_bulan ?? '') == '2' ? 'selected' : '' }}>
+                                                <option value="2" {{ old('gizi_mna_penurunan_asupan_3_bulan', $asesmen->asesmenKepUmumGizi->gizi_mna_penurunan_asupan_3_bulan ?? '') == '2' ? 'selected' : '' }}>
                                                     Tidak mengalami penurunan asupan makanan
                                                 </option>
                                             </select>
@@ -2599,20 +2394,16 @@
                                                 class="form-select @error('gizi_mna_kehilangan_bb_3_bulan') is-invalid @enderror"
                                                 name="gizi_mna_kehilangan_bb_3_bulan">
                                                 <option value="">-- Pilih --</option>
-                                                <option value="0"
-                                                    {{ old('gizi_mna_kehilangan_bb_3_bulan', $asesmen->asesmenKepUmumGizi->gizi_mna_kehilangan_bb_3_bulan ?? '') == '0' ? 'selected' : '' }}>
+                                                <option value="0" {{ old('gizi_mna_kehilangan_bb_3_bulan', $asesmen->asesmenKepUmumGizi->gizi_mna_kehilangan_bb_3_bulan ?? '') == '0' ? 'selected' : '' }}>
                                                     Kehilangan BB lebih dari 3 Kg
                                                 </option>
-                                                <option value="1"
-                                                    {{ old('gizi_mna_kehilangan_bb_3_bulan', $asesmen->asesmenKepUmumGizi->gizi_mna_kehilangan_bb_3_bulan ?? '') == '1' ? 'selected' : '' }}>
+                                                <option value="1" {{ old('gizi_mna_kehilangan_bb_3_bulan', $asesmen->asesmenKepUmumGizi->gizi_mna_kehilangan_bb_3_bulan ?? '') == '1' ? 'selected' : '' }}>
                                                     Tidak tahu
                                                 </option>
-                                                <option value="2"
-                                                    {{ old('gizi_mna_kehilangan_bb_3_bulan', $asesmen->asesmenKepUmumGizi->gizi_mna_kehilangan_bb_3_bulan ?? '') == '2' ? 'selected' : '' }}>
+                                                <option value="2" {{ old('gizi_mna_kehilangan_bb_3_bulan', $asesmen->asesmenKepUmumGizi->gizi_mna_kehilangan_bb_3_bulan ?? '') == '2' ? 'selected' : '' }}>
                                                     Kehilangan BB antara 1 s.d 3 Kg
                                                 </option>
-                                                <option value="3"
-                                                    {{ old('gizi_mna_kehilangan_bb_3_bulan', $asesmen->asesmenKepUmumGizi->gizi_mna_kehilangan_bb_3_bulan ?? '') == '3' ? 'selected' : '' }}>
+                                                <option value="3" {{ old('gizi_mna_kehilangan_bb_3_bulan', $asesmen->asesmenKepUmumGizi->gizi_mna_kehilangan_bb_3_bulan ?? '') == '3' ? 'selected' : '' }}>
                                                     Tidak ada kehilangan BB
                                                 </option>
                                             </select>
@@ -2623,20 +2414,16 @@
 
                                         <div class="mb-3">
                                             <label class="form-label">Bagaimana mobilisasi atau pergerakan pasien?</label>
-                                            <select
-                                                class="form-select @error('gizi_mna_mobilisasi') is-invalid @enderror"
+                                            <select class="form-select @error('gizi_mna_mobilisasi') is-invalid @enderror"
                                                 name="gizi_mna_mobilisasi">
                                                 <option value="">-- Pilih --</option>
-                                                <option value="0"
-                                                    {{ old('gizi_mna_mobilisasi', $asesmen->asesmenKepUmumGizi->gizi_mna_mobilisasi ?? '') == '0' ? 'selected' : '' }}>
+                                                <option value="0" {{ old('gizi_mna_mobilisasi', $asesmen->asesmenKepUmumGizi->gizi_mna_mobilisasi ?? '') == '0' ? 'selected' : '' }}>
                                                     Hanya di tempat tidur atau kursi roda
                                                 </option>
-                                                <option value="1"
-                                                    {{ old('gizi_mna_mobilisasi', $asesmen->asesmenKepUmumGizi->gizi_mna_mobilisasi ?? '') == '1' ? 'selected' : '' }}>
+                                                <option value="1" {{ old('gizi_mna_mobilisasi', $asesmen->asesmenKepUmumGizi->gizi_mna_mobilisasi ?? '') == '1' ? 'selected' : '' }}>
                                                     Dapat turun dari tempat tidur tapi tidak dapat jalan-jalan
                                                 </option>
-                                                <option value="2"
-                                                    {{ old('gizi_mna_mobilisasi', $asesmen->asesmenKepUmumGizi->gizi_mna_mobilisasi ?? '') == '2' ? 'selected' : '' }}>
+                                                <option value="2" {{ old('gizi_mna_mobilisasi', $asesmen->asesmenKepUmumGizi->gizi_mna_mobilisasi ?? '') == '2' ? 'selected' : '' }}>
                                                     Dapat jalan-jalan
                                                 </option>
                                             </select>
@@ -2654,12 +2441,10 @@
                                                 class="form-select @error('gizi_mna_stress_penyakit_akut') is-invalid @enderror"
                                                 name="gizi_mna_stress_penyakit_akut">
                                                 <option value="">-- Pilih --</option>
-                                                <option value="1"
-                                                    {{ old('gizi_mna_stress_penyakit_akut', $asesmen->asesmenKepUmumGizi->gizi_mna_stress_penyakit_akut ?? '') == '1' ? 'selected' : '' }}>
+                                                <option value="1" {{ old('gizi_mna_stress_penyakit_akut', $asesmen->asesmenKepUmumGizi->gizi_mna_stress_penyakit_akut ?? '') == '1' ? 'selected' : '' }}>
                                                     Tidak
                                                 </option>
-                                                <option value="0"
-                                                    {{ old('gizi_mna_stress_penyakit_akut', $asesmen->asesmenKepUmumGizi->gizi_mna_stress_penyakit_akut ?? '') == '0' ? 'selected' : '' }}>
+                                                <option value="0" {{ old('gizi_mna_stress_penyakit_akut', $asesmen->asesmenKepUmumGizi->gizi_mna_stress_penyakit_akut ?? '') == '0' ? 'selected' : '' }}>
                                                     Ya
                                                 </option>
                                             </select>
@@ -2675,16 +2460,13 @@
                                                 class="form-select @error('gizi_mna_status_neuropsikologi') is-invalid @enderror"
                                                 name="gizi_mna_status_neuropsikologi">
                                                 <option value="">-- Pilih --</option>
-                                                <option value="0"
-                                                    {{ old('gizi_mna_status_neuropsikologi', $asesmen->asesmenKepUmumGizi->gizi_mna_status_neuropsikologi ?? '') == '0' ? 'selected' : '' }}>
+                                                <option value="0" {{ old('gizi_mna_status_neuropsikologi', $asesmen->asesmenKepUmumGizi->gizi_mna_status_neuropsikologi ?? '') == '0' ? 'selected' : '' }}>
                                                     Demensia atau depresi berat
                                                 </option>
-                                                <option value="1"
-                                                    {{ old('gizi_mna_status_neuropsikologi', $asesmen->asesmenKepUmumGizi->gizi_mna_status_neuropsikologi ?? '') == '1' ? 'selected' : '' }}>
+                                                <option value="1" {{ old('gizi_mna_status_neuropsikologi', $asesmen->asesmenKepUmumGizi->gizi_mna_status_neuropsikologi ?? '') == '1' ? 'selected' : '' }}>
                                                     Demensia ringan
                                                 </option>
-                                                <option value="2"
-                                                    {{ old('gizi_mna_status_neuropsikologi', $asesmen->asesmenKepUmumGizi->gizi_mna_status_neuropsikologi ?? '') == '2' ? 'selected' : '' }}>
+                                                <option value="2" {{ old('gizi_mna_status_neuropsikologi', $asesmen->asesmenKepUmumGizi->gizi_mna_status_neuropsikologi ?? '') == '2' ? 'selected' : '' }}>
                                                     Tidak mengalami masalah neuropsikologi
                                                 </option>
                                             </select>
@@ -2741,7 +2523,7 @@
                                                 Kesimpulan: Total Skor ≤ 11 (Beresiko Malnutrisi)
                                             </div>
                                             <input type="hidden" name="gizi_mna_kesimpulan" id="gizi_mna_kesimpulan"
-                                                   value="{{ old('gizi_mna_kesimpulan', $asesmen->asesmenKepUmumGizi->gizi_mna_kesimpulan ?? '') }}">
+                                                value="{{ old('gizi_mna_kesimpulan', $asesmen->asesmenKepUmumGizi->gizi_mna_kesimpulan ?? '') }}">
                                         </div>
                                     </div>
 
@@ -2757,11 +2539,9 @@
                                                 class="form-select @error('gizi_strong_status_kurus') is-invalid @enderror"
                                                 name="gizi_strong_status_kurus">
                                                 <option value="">pilih</option>
-                                                <option value="1"
-                                                    {{ old('gizi_strong_status_kurus', $asesmen->asesmenKepUmumGizi->gizi_strong_status_kurus ?? '') == '1' ? 'selected' : '' }}>
+                                                <option value="1" {{ old('gizi_strong_status_kurus', $asesmen->asesmenKepUmumGizi->gizi_strong_status_kurus ?? '') == '1' ? 'selected' : '' }}>
                                                     Ya</option>
-                                                <option value="0"
-                                                    {{ old('gizi_strong_status_kurus', $asesmen->asesmenKepUmumGizi->gizi_strong_status_kurus ?? '') == '0' ? 'selected' : '' }}>
+                                                <option value="0" {{ old('gizi_strong_status_kurus', $asesmen->asesmenKepUmumGizi->gizi_strong_status_kurus ?? '') == '0' ? 'selected' : '' }}>
                                                     Tidak</option>
                                             </select>
                                             @error('gizi_strong_status_kurus')
@@ -2780,11 +2560,9 @@
                                                         class="form-select @error('gizi_strong_penurunan_bb') is-invalid @enderror"
                                                         name="gizi_strong_penurunan_bb">
                                                         <option value="">pilih</option>
-                                                        <option value="1"
-                                                            {{ old('gizi_strong_penurunan_bb', $asesmen->asesmenKepUmumGizi->gizi_strong_penurunan_bb ?? '') == '1' ? 'selected' : '' }}>
+                                                        <option value="1" {{ old('gizi_strong_penurunan_bb', $asesmen->asesmenKepUmumGizi->gizi_strong_penurunan_bb ?? '') == '1' ? 'selected' : '' }}>
                                                             Ya</option>
-                                                        <option value="0"
-                                                            {{ old('gizi_strong_penurunan_bb', $asesmen->asesmenKepUmumGizi->gizi_strong_penurunan_bb ?? '') == '0' ? 'selected' : '' }}>
+                                                        <option value="0" {{ old('gizi_strong_penurunan_bb', $asesmen->asesmenKepUmumGizi->gizi_strong_penurunan_bb ?? '') == '0' ? 'selected' : '' }}>
                                                             Tidak</option>
                                                     </select>
                                                     @error('gizi_strong_penurunan_bb')
@@ -2803,11 +2581,9 @@
                                                 class="form-select @error('gizi_strong_gangguan_pencernaan') is-invalid @enderror"
                                                 name="gizi_strong_gangguan_pencernaan">
                                                 <option value="">pilih</option>
-                                                <option value="1"
-                                                    {{ old('gizi_strong_gangguan_pencernaan', $asesmen->asesmenKepUmumGizi->gizi_strong_gangguan_pencernaan ?? '') == '1' ? 'selected' : '' }}>
+                                                <option value="1" {{ old('gizi_strong_gangguan_pencernaan', $asesmen->asesmenKepUmumGizi->gizi_strong_gangguan_pencernaan ?? '') == '1' ? 'selected' : '' }}>
                                                     Ya</option>
-                                                <option value="0"
-                                                    {{ old('gizi_strong_gangguan_pencernaan', $asesmen->asesmenKepUmumGizi->gizi_strong_gangguan_pencernaan ?? '') == '0' ? 'selected' : '' }}>
+                                                <option value="0" {{ old('gizi_strong_gangguan_pencernaan', $asesmen->asesmenKepUmumGizi->gizi_strong_gangguan_pencernaan ?? '') == '0' ? 'selected' : '' }}>
                                                     Tidak</option>
                                             </select>
                                             @error('gizi_strong_gangguan_pencernaan')
@@ -2824,11 +2600,9 @@
                                                 class="form-select @error('gizi_strong_penyakit_berisiko') is-invalid @enderror"
                                                 name="gizi_strong_penyakit_berisiko">
                                                 <option value="">pilih</option>
-                                                <option value="2"
-                                                    {{ old('gizi_strong_penyakit_berisiko', $asesmen->asesmenKepUmumGizi->gizi_strong_penyakit_berisiko ?? '') == '2' ? 'selected' : '' }}>
+                                                <option value="2" {{ old('gizi_strong_penyakit_berisiko', $asesmen->asesmenKepUmumGizi->gizi_strong_penyakit_berisiko ?? '') == '2' ? 'selected' : '' }}>
                                                     Ya</option>
-                                                <option value="0"
-                                                    {{ old('gizi_strong_penyakit_berisiko', $asesmen->asesmenKepUmumGizi->gizi_strong_penyakit_berisiko ?? '') == '0' ? 'selected' : '' }}>
+                                                <option value="0" {{ old('gizi_strong_penyakit_berisiko', $asesmen->asesmenKepUmumGizi->gizi_strong_penyakit_berisiko ?? '') == '0' ? 'selected' : '' }}>
                                                     Tidak</option>
                                             </select>
                                             @error('gizi_strong_penyakit_berisiko')
@@ -2848,7 +2622,7 @@
                                                 Kesimpulan: 4-5 (Beresiko Tinggi)
                                             </div>
                                             <input type="hidden" name="gizi_strong_kesimpulan" id="gizi_strong_kesimpulan"
-                                                   value="{{ old('gizi_strong_kesimpulan', $asesmen->asesmenKepUmumGizi->gizi_strong_kesimpulan ?? '') }}">
+                                                value="{{ old('gizi_strong_kesimpulan', $asesmen->asesmenKepUmumGizi->gizi_strong_kesimpulan ?? '') }}">
                                         </div>
                                     </div>
 
@@ -3080,8 +2854,7 @@
                                                 ];
                                             @endphp
                                             @foreach ($statusFungsionalOptions as $option)
-                                                <option value="{{ $option }}"
-                                                    {{ old('status_fungsional', $asesmen->asesmenKepUmum->status_fungsional ?? '') == $option ? 'selected' : '' }}>
+                                                <option value="{{ $option }}" {{ old('status_fungsional', $asesmen->asesmenKepUmum->status_fungsional ?? '') == $option ? 'selected' : '' }}>
                                                     {{ $option }}
                                                 </option>
                                             @endforeach
@@ -3111,8 +2884,7 @@
                                                 ];
                                             @endphp
                                             @foreach ($gayaBicaraOptions as $value => $label)
-                                                <option value="{{ $value }}"
-                                                    {{ old('kebutuhan_edukasi_gaya_bicara', $asesmen->asesmenKepUmum->kebutuhan_edukasi_gaya_bicara ?? '') == $value ? 'selected' : '' }}>
+                                                <option value="{{ $value }}" {{ old('kebutuhan_edukasi_gaya_bicara', $asesmen->asesmenKepUmum->kebutuhan_edukasi_gaya_bicara ?? '') == $value ? 'selected' : '' }}>
                                                     {{ $label }}
                                                 </option>
                                             @endforeach
@@ -3153,8 +2925,7 @@
                                                 ];
                                             @endphp
                                             @foreach ($bahasaOptions as $value => $label)
-                                                <option value="{{ $value }}"
-                                                    {{ old('kebutuhan_edukasi_bahasa_sehari_hari', $asesmen->asesmenKepUmum->kebutuhan_edukasi_bahasa_sehari_hari ?? '') == $value ? 'selected' : '' }}>
+                                                <option value="{{ $value }}" {{ old('kebutuhan_edukasi_bahasa_sehari_hari', $asesmen->asesmenKepUmum->kebutuhan_edukasi_bahasa_sehari_hari ?? '') == $value ? 'selected' : '' }}>
                                                     {{ $label }}
                                                 </option>
                                             @endforeach
@@ -3170,11 +2941,9 @@
                                             class="form-select @error('kebutuhan_edukasi_perlu_penerjemah') is-invalid @enderror"
                                             name="kebutuhan_edukasi_perlu_penerjemah">
                                             <option value="">--Pilih--</option>
-                                            <option value="0"
-                                                {{ old('kebutuhan_edukasi_perlu_penerjemah', $asesmen->asesmenKepUmum->kebutuhan_edukasi_perlu_penerjemah ?? '') == '0' ? 'selected' : '' }}>
+                                            <option value="0" {{ old('kebutuhan_edukasi_perlu_penerjemah', $asesmen->asesmenKepUmum->kebutuhan_edukasi_perlu_penerjemah ?? '') == '0' ? 'selected' : '' }}>
                                                 Tidak</option>
-                                            <option value="1"
-                                                {{ old('kebutuhan_edukasi_perlu_penerjemah', $asesmen->asesmenKepUmum->kebutuhan_edukasi_perlu_penerjemah ?? '') == '1' ? 'selected' : '' }}>
+                                            <option value="1" {{ old('kebutuhan_edukasi_perlu_penerjemah', $asesmen->asesmenKepUmum->kebutuhan_edukasi_perlu_penerjemah ?? '') == '1' ? 'selected' : '' }}>
                                                 Ya</option>
                                         </select>
                                         @error('kebutuhan_edukasi_perlu_penerjemah')
@@ -3197,8 +2966,7 @@
                                                 ];
                                             @endphp
                                             @foreach ($hambatanOptions as $value => $label)
-                                                <option value="{{ $value }}"
-                                                    {{ old('kebutuhan_edukasi_hambatan_komunikasi', $asesmen->asesmenKepUmum->kebutuhan_edukasi_hambatan_komunikasi ?? '') == $value ? 'selected' : '' }}>
+                                                <option value="{{ $value }}" {{ old('kebutuhan_edukasi_hambatan_komunikasi', $asesmen->asesmenKepUmum->kebutuhan_edukasi_hambatan_komunikasi ?? '') == $value ? 'selected' : '' }}>
                                                     {{ $label }}
                                                 </option>
                                             @endforeach
@@ -3223,8 +2991,7 @@
                                                 ];
                                             @endphp
                                             @foreach ($mediaBelajarOptions as $value => $label)
-                                                <option value="{{ $value }}"
-                                                    {{ old('kebutuhan_edukasi_media_belajar', $asesmen->asesmenKepUmum->kebutuhan_edukasi_media_belajar ?? '') == $value ? 'selected' : '' }}>
+                                                <option value="{{ $value }}" {{ old('kebutuhan_edukasi_media_belajar', $asesmen->asesmenKepUmum->kebutuhan_edukasi_media_belajar ?? '') == $value ? 'selected' : '' }}>
                                                     {{ $label }}
                                                 </option>
                                             @endforeach
@@ -3250,8 +3017,7 @@
                                                 ];
                                             @endphp
                                             @foreach ($pendidikanOptions as $value => $label)
-                                                <option value="{{ $value }}"
-                                                    {{ old('kebutuhan_edukasi_tingkat_pendidikan', $asesmen->asesmenKepUmum->kebutuhan_edukasi_tingkat_pendidikan ?? '') == $value ? 'selected' : '' }}>
+                                                <option value="{{ $value }}" {{ old('kebutuhan_edukasi_tingkat_pendidikan', $asesmen->asesmenKepUmum->kebutuhan_edukasi_tingkat_pendidikan ?? '') == $value ? 'selected' : '' }}>
                                                     {{ $label }}
                                                 </option>
                                             @endforeach
@@ -3277,8 +3043,7 @@
                                                 ];
                                             @endphp
                                             @foreach ($edukasiOptions as $value => $label)
-                                                <option value="{{ $value }}"
-                                                    {{ old('kebutuhan_edukasi_edukasi_dibutuhkan', $asesmen->asesmenKepUmum->kebutuhan_edukasi_edukasi_dibutuhkan ?? '') == $value ? 'selected' : '' }}>
+                                                <option value="{{ $value }}" {{ old('kebutuhan_edukasi_edukasi_dibutuhkan', $asesmen->asesmenKepUmum->kebutuhan_edukasi_edukasi_dibutuhkan ?? '') == $value ? 'selected' : '' }}>
                                                     {{ $label }}
                                                 </option>
                                             @endforeach
@@ -3290,8 +3055,10 @@
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Lainnya</label>
-                                        <textarea class="form-control @error('kebutuhan_edukasi_keterangan_lain') is-invalid @enderror"
-                                            name="kebutuhan_edukasi_keterangan_lain" rows="3">{{ old('kebutuhan_edukasi_keterangan_lain', $asesmen->asesmenKepUmum->kebutuhan_edukasi_keterangan_lain ?? '') }}</textarea>
+                                        <textarea
+                                            class="form-control @error('kebutuhan_edukasi_keterangan_lain') is-invalid @enderror"
+                                            name="kebutuhan_edukasi_keterangan_lain"
+                                            rows="3">{{ old('kebutuhan_edukasi_keterangan_lain', $asesmen->asesmenKepUmum->kebutuhan_edukasi_keterangan_lain ?? '') }}</textarea>
                                         @error('kebutuhan_edukasi_keterangan_lain')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -3318,11 +3085,9 @@
                                             class="form-select discharge-select @error('discharge_planning_usia_lanjut') is-invalid @enderror"
                                             name="discharge_planning_usia_lanjut" id="usia_lanjut">
                                             <option value="">pilih</option>
-                                            <option value="ya"
-                                                {{ old('discharge_planning_usia_lanjut', $asesmen->asesmenKepUmum->discharge_planning_usia_lanjut ?? '') == 'ya' ? 'selected' : '' }}>
+                                            <option value="ya" {{ old('discharge_planning_usia_lanjut', $asesmen->asesmenKepUmum->discharge_planning_usia_lanjut ?? '') == 'ya' ? 'selected' : '' }}>
                                                 Ya</option>
-                                            <option value="tidak"
-                                                {{ old('discharge_planning_usia_lanjut', $asesmen->asesmenKepUmum->discharge_planning_usia_lanjut ?? '') == 'tidak' ? 'selected' : '' }}>
+                                            <option value="tidak" {{ old('discharge_planning_usia_lanjut', $asesmen->asesmenKepUmum->discharge_planning_usia_lanjut ?? '') == 'tidak' ? 'selected' : '' }}>
                                                 Tidak</option>
                                         </select>
                                         @error('discharge_planning_usia_lanjut')
@@ -3336,11 +3101,9 @@
                                             class="form-select discharge-select @error('discharge_planning_hambatan_mobilisasi') is-invalid @enderror"
                                             name="discharge_planning_hambatan_mobilisasi" id="hambatan_mobilisasi">
                                             <option value="">pilih</option>
-                                            <option value="ya"
-                                                {{ old('discharge_planning_hambatan_mobilisasi', $asesmen->asesmenKepUmum->discharge_planning_hambatan_mobilisasi ?? '') == 'ya' ? 'selected' : '' }}>
+                                            <option value="ya" {{ old('discharge_planning_hambatan_mobilisasi', $asesmen->asesmenKepUmum->discharge_planning_hambatan_mobilisasi ?? '') == 'ya' ? 'selected' : '' }}>
                                                 Ya</option>
-                                            <option value="tidak"
-                                                {{ old('discharge_planning_hambatan_mobilisasi', $asesmen->asesmenKepUmum->discharge_planning_hambatan_mobilisasi ?? '') == 'tidak' ? 'selected' : '' }}>
+                                            <option value="tidak" {{ old('discharge_planning_hambatan_mobilisasi', $asesmen->asesmenKepUmum->discharge_planning_hambatan_mobilisasi ?? '') == 'tidak' ? 'selected' : '' }}>
                                                 Tidak</option>
                                         </select>
                                         @error('discharge_planning_hambatan_mobilisasi')
@@ -3352,14 +3115,11 @@
                                         <label style="min-width: 200px;">Membutuhkan pelayanan medis berkelanjutan</label>
                                         <select
                                             class="form-select discharge-select @error('discharge_planning_pelayanan_medis') is-invalid @enderror"
-                                            name="discharge_planning_pelayanan_medis"
-                                            id="pelayanan_medis_berkelanjutan">
+                                            name="discharge_planning_pelayanan_medis" id="pelayanan_medis_berkelanjutan">
                                             <option value="">pilih</option>
-                                            <option value="ya"
-                                                {{ old('discharge_planning_pelayanan_medis', $asesmen->asesmenKepUmum->discharge_planning_pelayanan_medis ?? '') == 'ya' ? 'selected' : '' }}>
+                                            <option value="ya" {{ old('discharge_planning_pelayanan_medis', $asesmen->asesmenKepUmum->discharge_planning_pelayanan_medis ?? '') == 'ya' ? 'selected' : '' }}>
                                                 Ya</option>
-                                            <option value="tidak"
-                                                {{ old('discharge_planning_pelayanan_medis', $asesmen->asesmenKepUmum->discharge_planning_pelayanan_medis ?? '') == 'tidak' ? 'selected' : '' }}>
+                                            <option value="tidak" {{ old('discharge_planning_pelayanan_medis', $asesmen->asesmenKepUmum->discharge_planning_pelayanan_medis ?? '') == 'tidak' ? 'selected' : '' }}>
                                                 Tidak</option>
                                         </select>
                                         @error('discharge_planning_pelayanan_medis')
@@ -3375,11 +3135,9 @@
                                             name="discharge_planning_ketergantungan_aktivitas"
                                             id="ketergantungan_aktivitas">
                                             <option value="">pilih</option>
-                                            <option value="ya"
-                                                {{ old('discharge_planning_ketergantungan_aktivitas', $asesmen->asesmenKepUmum->discharge_planning_ketergantungan_aktivitas ?? '') == 'ya' ? 'selected' : '' }}>
+                                            <option value="ya" {{ old('discharge_planning_ketergantungan_aktivitas', $asesmen->asesmenKepUmum->discharge_planning_ketergantungan_aktivitas ?? '') == 'ya' ? 'selected' : '' }}>
                                                 Ya</option>
-                                            <option value="tidak"
-                                                {{ old('discharge_planning_ketergantungan_aktivitas', $asesmen->asesmenKepUmum->discharge_planning_ketergantungan_aktivitas ?? '') == 'tidak' ? 'selected' : '' }}>
+                                            <option value="tidak" {{ old('discharge_planning_ketergantungan_aktivitas', $asesmen->asesmenKepUmum->discharge_planning_ketergantungan_aktivitas ?? '') == 'tidak' ? 'selected' : '' }}>
                                                 Tidak</option>
                                         </select>
                                         @error('discharge_planning_ketergantungan_aktivitas')
@@ -3390,8 +3148,7 @@
                                     <div class="form-group mt-4">
                                         <label style="min-width: 200px;">KESIMPULAN</label>
                                         <div class="d-flex flex-column gap-2">
-                                            <div class="alert alert-warning" id="kesimpulan_khusus"
-                                                style="display: none;">
+                                            <div class="alert alert-warning" id="kesimpulan_khusus" style="display: none;">
                                                 Membutuhkan rencana pulang khusus
                                             </div>
                                             <div class="alert alert-success" id="kesimpulan_tidak_khusus"
@@ -3399,56 +3156,135 @@
                                                 Tidak membutuhkan rencana pulang khusus
                                             </div>
                                         </div>
-                                        <input type="hidden" name="discharge_planning_kesimpulan"
-                                            id="kesimpulan_value"
+                                        <input type="hidden" name="discharge_planning_kesimpulan" id="kesimpulan_value"
                                             value="{{ old('discharge_planning_kesimpulan', $asesmen->asesmenKepUmum->discharge_planning_kesimpulan ?? '') }}">
                                     </div>
                                 </div>
 
                                 {{-- <div class="section-separator">
-                                        <h5 class="section-title">15. Masalah Keperawatan</h5>
-                                        <div class="form-group">
-                                            <div class="w-100">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" id="inputMasalah"
-                                                        placeholder="Ketik masalah keperawatan...">
-                                                </div>
-                                                <div id="masalahSuggestions" class="suggestions-list"></div>
-                                                <div id="selectedMasalahList" class="selected-items mt-3"></div>
-                                                <input type="hidden" name="masalah_keperawatan"
-                                                    id="masalahKeperawatanValue">
+                                    <h5 class="section-title">15. Masalah Keperawatan</h5>
+                                    <div class="form-group">
+                                        <div class="w-100">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="inputMasalah"
+                                                    placeholder="Ketik masalah keperawatan...">
                                             </div>
+                                            <div id="masalahSuggestions" class="suggestions-list"></div>
+                                            <div id="selectedMasalahList" class="selected-items mt-3"></div>
+                                            <input type="hidden" name="masalah_keperawatan" id="masalahKeperawatanValue">
                                         </div>
-                                    </div> --}}
+                                    </div>
+                                </div> --}}
 
                                 {{-- <div class="section-separator">
-                                        <h5 class="section-title">16. Implementasi</h5>
-                                        <div class="form-group">
-                                            <div class="w-100">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" id="inputImplementasi"
-                                                        placeholder="Ketik implementasi...">
-                                                </div>
-                                                <div id="implementasiSuggestions" class="suggestions-list"></div>
-                                                <div id="selectedImplementasiList" class="selected-items mt-3"></div>
-                                                <input type="hidden" name="implementasi" id="implementasiValue">
+                                    <h5 class="section-title">16. Implementasi</h5>
+                                    <div class="form-group">
+                                        <div class="w-100">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="inputImplementasi"
+                                                    placeholder="Ketik implementasi...">
                                             </div>
+                                            <div id="implementasiSuggestions" class="suggestions-list"></div>
+                                            <div id="selectedImplementasiList" class="selected-items mt-3"></div>
+                                            <input type="hidden" name="implementasi" id="implementasiValue">
                                         </div>
-                                    </div> --}}
+                                    </div>
+                                </div> --}}
 
-                                <div class="section-separator">
+                                <div class="">
+                                    @php
+                                        // Ambil data dari database untuk edit mode
+                                        $implementasiData = '';
+                                        $evaluasiData = '';
+
+                                        if (isset($asesmen) && $asesmen->asesmenKepUmum) {
+                                            $implementasiData = $asesmen->asesmenKepUmum->implementasi_keperawatan ?? '';
+                                            $evaluasiData = $asesmen->asesmenKepUmum->evaluasi_keperawatan ?? '';
+                                        }
+                                    @endphp
+
+                                    <!-- Hidden inputs untuk menyimpan data JSON -->
+                                    <input type="hidden" id="implementationDataInput" name="implementasi_keperawatan"
+                                        value="{{ old('implementasi_keperawatan', $implementasiData) }}">
+                                    <input type="hidden" id="evaluationDataInput" name="evaluasi_keperawatan"
+                                        value="{{ old('evaluasi_keperawatan', $evaluasiData) }}">
+
+                                    <!-- Implementasi Section -->
+                                    <div class="section-separator">
+                                        <h5 class="section-title">15. Implementasi</h5>
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <span>Daftar Tindakan Keperawatan</span>
+                                            <button type="button" class="btn btn-primary btn-sm"
+                                                onclick="openImplementationModal()">
+                                                <i class="bi bi-plus-circle"></i> Tambah Tindakan
+                                            </button>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-sm" id="implementationTable">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th width="15%">Tanggal</th>
+                                                        <th width="10%">Jam</th>
+                                                        <th width="60%">Tindakan Keperawatan</th>
+                                                        <th width="15%">Aksi</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="text-center text-muted">
+                                                        <td colspan="4">Belum ada data tindakan</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <!-- Evaluasi Keperawatan Section -->
+                                    <div class="section-separator">
+                                        <h5 class="section-title">16. Evaluasi Keperawatan (SOAP)</h5>
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <span>Daftar Evaluasi Keperawatan</span>
+                                            <button type="button" class="btn btn-success btn-sm"
+                                                onclick="openEvaluationModal()">
+                                                <i class="bi bi-plus-circle"></i> Tambah Evaluasi
+                                            </button>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-sm" id="evaluationTable">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th width="15%">Tanggal</th>
+                                                        <th width="10%">Jam</th>
+                                                        <th width="60%">Evaluasi SOAP</th>
+                                                        <th width="15%">Aksi</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="text-center text-muted">
+                                                        <td colspan="4">Belum ada data evaluasi</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- <div class="section-separator">
                                     <h5 class="section-title">15. Evaluasi</h5>
 
                                     <div class="form-group">
                                         <label>Evaluasi</label>
-                                        <textarea class="form-control @error('evaluasi') is-invalid @enderror" name="evaluasi" rows="3">{{ old('evaluasi', $asesmen->asesmenKepUmum->evaluasi ?? '') }}</textarea>
+                                        <textarea class="form-control @error('evaluasi') is-invalid @enderror"
+                                            name="evaluasi"
+                                            rows="3">{{ old('evaluasi', $asesmen->asesmenKepUmum->evaluasi ?? '') }}</textarea>
                                         @error('evaluasi')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
                                         @enderror
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="d-flex justify-content-end">
                                     <button type="submit" class="btn btn-primary" id="simpan">Simpan</button>
@@ -3462,7 +3298,414 @@
 
         </form>
     </div>
+
+    <!-- Modal Implementasi -->
+    <div class="modal fade" id="implementationModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="implementationModalTitle">Tambah Tindakan Keperawatan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="implementationForm">
+                        <div class="mb-3">
+                            <label class="form-label">Tanggal Tindakan</label>
+                            <input type="date" class="form-control" id="impl_date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Jam Tindakan</label>
+                            <input type="time" class="form-control" id="impl_time" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tindakan Keperawatan</label>
+                            <textarea class="form-control" id="impl_action" rows="4" required
+                                placeholder="Masukkan detail tindakan keperawatan yang dilakukan..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary"
+                        onclick="saveImplementation(); return false;">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Evaluasi -->
+    <div class="modal fade" id="evaluationModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="evaluationModalTitle">Tambah Evaluasi Keperawatan (SOAP)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="soap-guide">
+                        <strong>Format SOAP:</strong><br>
+                        <strong>S (Subjective):</strong> Keluhan pasien, apa yang dirasakan<br>
+                        <strong>O (Objective):</strong> Data yang dapat diobservasi (vital sign, pemeriksaan fisik)<br>
+                        <strong>A (Assessment):</strong> Analisa masalah keperawatan<br>
+                        <strong>P (Planning):</strong> Rencana tindakan selanjutnya
+                    </div>
+
+                    <form id="evaluationForm">
+                        <div class="mb-3">
+                            <label class="form-label">Tanggal Evaluasi</label>
+                            <input type="date" class="form-control" id="eval_date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Jam Evaluasi</label>
+                            <input type="time" class="form-control" id="eval_time" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">S (Subjective) - Keluhan Pasien</label>
+                            <textarea class="form-control soap-format" id="eval_subjective" rows="2"
+                                placeholder="S: Pasien mengeluh..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">O (Objective) - Data Objektif</label>
+                            <textarea class="form-control soap-format" id="eval_objective" rows="2"
+                                placeholder="O: TD: 120/80 mmHg, N: 80x/menit, RR: 20x/menit, S: 36.5°C..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">A (Assessment) - Analisa</label>
+                            <textarea class="form-control soap-format" id="eval_assessment" rows="2"
+                                placeholder="A: Masalah keperawatan..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">P (Planning) - Rencana</label>
+                            <textarea class="form-control soap-format" id="eval_planning" rows="2"
+                                placeholder="P: Lanjutkan terapi, observasi..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-success" onclick="saveEvaluation(); return false;">Simpan</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.modal-tindakankeperawatan-edit')
 @endsection
+
+@push('js')
+    <script>
+        // Data storage
+        let implementationData = [];
+        let evaluationData = [];
+        let editingIndex = -1;
+        let editingType = '';
+
+        // Initialize current date and time
+        document.addEventListener('DOMContentLoaded', function () {
+            const now = new Date();
+            const currentDate = now.toISOString().split('T')[0];
+            const currentTime = now.toTimeString().slice(0, 5);
+
+            document.getElementById('impl_date').value = currentDate;
+            document.getElementById('impl_time').value = currentTime;
+            document.getElementById('eval_date').value = currentDate;
+            document.getElementById('eval_time').value = currentTime;
+
+            // Load existing data dari hidden inputs - PERBAIKAN UTAMA
+            loadExistingDataFromDatabase();
+        });
+
+        /**
+         * FUNGSI BARU: Load data existing dari database
+         */
+        function loadExistingDataFromDatabase() {
+            // Load Implementation Data
+            const implInput = document.getElementById('implementationDataInput');
+            if (implInput && implInput.value && implInput.value.trim()) {
+                try {
+                    const parsedImplData = JSON.parse(implInput.value);
+                    if (Array.isArray(parsedImplData) && parsedImplData.length > 0) {
+                        implementationData = parsedImplData;
+                        updateImplementationTable();
+                        console.log('Loaded implementation data:', implementationData);
+                    }
+                } catch (e) {
+                    console.error('Error parsing existing implementation data:', e);
+                    console.log('Raw implementation data:', implInput.value);
+                }
+            }
+
+            // Load Evaluation Data
+            const evalInput = document.getElementById('evaluationDataInput');
+            if (evalInput && evalInput.value && evalInput.value.trim()) {
+                try {
+                    const parsedEvalData = JSON.parse(evalInput.value);
+                    if (Array.isArray(parsedEvalData) && parsedEvalData.length > 0) {
+                        evaluationData = parsedEvalData;
+                        updateEvaluationTable();
+                        console.log('Loaded evaluation data:', evaluationData);
+                    }
+                } catch (e) {
+                    console.error('Error parsing existing evaluation data:', e);
+                    console.log('Raw evaluation data:', evalInput.value);
+                }
+            }
+        }
+
+        // Implementation Modal Functions
+        function openImplementationModal(index = -1) {
+            // Prevent any default behavior
+            event?.preventDefault();
+
+            editingIndex = index;
+            editingType = 'implementation';
+
+            const modal = new bootstrap.Modal(document.getElementById('implementationModal'));
+            const title = document.getElementById('implementationModalTitle');
+
+            if (index >= 0) {
+                // Edit mode
+                title.textContent = 'Edit Tindakan Keperawatan';
+                const data = implementationData[index];
+                document.getElementById('impl_date').value = data.date;
+                document.getElementById('impl_time').value = data.time;
+                document.getElementById('impl_action').value = data.action;
+            } else {
+                // Add mode
+                title.textContent = 'Tambah Tindakan Keperawatan';
+                document.getElementById('implementationForm').reset();
+
+                // Set current date/time
+                const now = new Date();
+                document.getElementById('impl_date').value = now.toISOString().split('T')[0];
+                document.getElementById('impl_time').value = now.toTimeString().slice(0, 5);
+            }
+
+            modal.show();
+            return false;
+        }
+
+        function saveImplementation(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            const date = document.getElementById('impl_date').value;
+            const time = document.getElementById('impl_time').value;
+            const action = document.getElementById('impl_action').value;
+
+            if (!date || !time || !action.trim()) {
+                alert('Harap lengkapi semua field!');
+                return false;
+            }
+
+            const data = {
+                date: date,
+                time: time,
+                action: action.trim()
+            };
+
+            if (editingIndex >= 0) {
+                implementationData[editingIndex] = data;
+            } else {
+                implementationData.push(data);
+            }
+
+            updateImplementationTable();
+            updateHiddenInputs();
+
+            // Close modal manually
+            const modalElement = document.getElementById('implementationModal');
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            if (modal) {
+                modal.hide();
+            }
+
+            return false;
+        }
+
+        function updateImplementationTable() {
+            const tbody = document.querySelector('#implementationTable tbody');
+
+            if (implementationData.length === 0) {
+                tbody.innerHTML = '<tr class="text-center text-muted"><td colspan="4">Belum ada data tindakan</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = implementationData.map((item, index) => `
+                    <tr>
+                        <td>${formatDate(item.date)}</td>
+                        <td>${item.time}</td>
+                        <td>${item.action}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning btn-action" onclick="event.preventDefault(); openImplementationModal(${index}); return false;">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger btn-action" onclick="event.preventDefault(); removeImplementation(${index}); return false;">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+        }
+
+        function removeImplementation(index) {
+            if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                implementationData.splice(index, 1);
+                updateImplementationTable();
+                updateHiddenInputs();
+            }
+        }
+
+        // Evaluation Modal Functions
+        function openEvaluationModal(index = -1) {
+            // Prevent any default behavior
+            event?.preventDefault();
+
+            editingIndex = index;
+            editingType = 'evaluation';
+
+            const modal = new bootstrap.Modal(document.getElementById('evaluationModal'));
+            const title = document.getElementById('evaluationModalTitle');
+
+            if (index >= 0) {
+                // Edit mode
+                title.textContent = 'Edit Evaluasi Keperawatan (SOAP)';
+                const data = evaluationData[index];
+                document.getElementById('eval_date').value = data.date;
+                document.getElementById('eval_time').value = data.time;
+                document.getElementById('eval_subjective').value = data.subjective || '';
+                document.getElementById('eval_objective').value = data.objective || '';
+                document.getElementById('eval_assessment').value = data.assessment || '';
+                document.getElementById('eval_planning').value = data.planning || '';
+            } else {
+                // Add mode
+                title.textContent = 'Tambah Evaluasi Keperawatan (SOAP)';
+                document.getElementById('evaluationForm').reset();
+
+                // Set current date/time
+                const now = new Date();
+                document.getElementById('eval_date').value = now.toISOString().split('T')[0];
+                document.getElementById('eval_time').value = now.toTimeString().slice(0, 5);
+            }
+
+            modal.show();
+            return false;
+        }
+
+        function saveEvaluation(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            const date = document.getElementById('eval_date').value;
+            const time = document.getElementById('eval_time').value;
+            const subjective = document.getElementById('eval_subjective').value;
+            const objective = document.getElementById('eval_objective').value;
+            const assessment = document.getElementById('eval_assessment').value;
+            const planning = document.getElementById('eval_planning').value;
+
+            if (!date || !time) {
+                alert('Harap isi tanggal dan jam!');
+                return false;
+            }
+
+            const data = {
+                date: date,
+                time: time,
+                subjective: subjective.trim(),
+                objective: objective.trim(),
+                assessment: assessment.trim(),
+                planning: planning.trim()
+            };
+
+            if (editingIndex >= 0) {
+                evaluationData[editingIndex] = data;
+            } else {
+                evaluationData.push(data);
+            }
+
+            updateEvaluationTable();
+            updateHiddenInputs();
+
+            // Close modal manually
+            const modalElement = document.getElementById('evaluationModal');
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            if (modal) {
+                modal.hide();
+            }
+
+            return false;
+        }
+
+        function updateEvaluationTable() {
+            const tbody = document.querySelector('#evaluationTable tbody');
+
+            if (evaluationData.length === 0) {
+                tbody.innerHTML = '<tr class="text-center text-muted"><td colspan="4">Belum ada data evaluasi</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = evaluationData.map((item, index) => {
+                let soapText = '';
+                if (item.subjective) soapText += `S: ${item.subjective}\n`;
+                if (item.objective) soapText += `O: ${item.objective}\n`;
+                if (item.assessment) soapText += `A: ${item.assessment}\n`;
+                if (item.planning) soapText += `P: ${item.planning}`;
+
+                return `
+                        <tr>
+                            <td>${formatDate(item.date)}</td>
+                            <td>${item.time}</td>
+                            <td style="white-space: pre-line; font-family: monospace; font-size: 0.9rem;">${soapText}</td>
+                            <td>
+                                <button class="btn btn-sm btn-warning btn-action" onclick="event.preventDefault(); openEvaluationModal(${index}); return false;">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger btn-action" onclick="event.preventDefault(); removeEvaluation(${index}); return false;">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+            }).join('');
+        }
+
+        function removeEvaluation(index) {
+            if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                evaluationData.splice(index, 1);
+                updateEvaluationTable();
+                updateHiddenInputs();
+            }
+        }
+
+        // Update hidden inputs dengan data JSON
+        function updateHiddenInputs() {
+            document.getElementById('implementationDataInput').value = JSON.stringify(implementationData);
+            document.getElementById('evaluationDataInput').value = JSON.stringify(evaluationData);
+        }
+
+        // Utility function
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('id-ID');
+        }
+
+        // Function to get data for form submission
+        function getImplementationData() {
+            return implementationData;
+        }
+
+        function getEvaluationData() {
+            return evaluationData;
+        }
+
+        // Function untuk debugging - cek isi hidden inputs
+        function checkHiddenInputs() {
+            console.log('Implementation Data:', document.getElementById('implementationDataInput').value);
+            console.log('Evaluation Data:', document.getElementById('evaluationDataInput').value);
+        }
+    </script>
+@endpush

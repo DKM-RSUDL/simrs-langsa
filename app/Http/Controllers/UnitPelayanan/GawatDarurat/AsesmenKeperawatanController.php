@@ -162,6 +162,8 @@ class AsesmenKeperawatanController extends Controller
             $asesmenKepUmum->evaluasi = $request->evaluasi;
             $asesmenKepUmum->masalah_keperawatan = $request->masalah_keperawatan;
             $asesmenKepUmum->implementasi = $request->implementasi;
+            $asesmenKepUmum->implementasi_keperawatan = $request->implementasi_keperawatan;
+            $asesmenKepUmum->evaluasi_keperawatan = $request->evaluasi_keperawatan;
             $asesmenKepUmum->save();
 
             $asesmenKepUmumBreathing = new RmeAsesmenKepUmumBreathing();
@@ -205,6 +207,8 @@ class AsesmenKeperawatanController extends Controller
             $asesmenKepUmumCirculation->circulation_turgor = $request->circulation_turgor;
             $asesmenKepUmumCirculation->circulation_transfusi = $request->circulation_transfusi;
             $asesmenKepUmumCirculation->circulation_transfusi_jumlah = $request->circulation_transfusi_jumlah;
+            $asesmenKepUmumCirculation->circulation_nadi_irama = $request->circulation_nadi_irama;
+            $asesmenKepUmumCirculation->circulation_nadi_kekuatan = $request->circulation_nadi_kekuatan;
 
             if ($request->has('circulation_diagnosis_perfusi')) {
                 $perfusi_selected = $request->circulation_diagnosis_perfusi;
@@ -291,6 +295,7 @@ class AsesmenKeperawatanController extends Controller
             // Konversi tindakan ke JSON
             $asesmenKepUmumDisability->disability_lainnya = $request->disability_lainnya;
             $asesmenKepUmumDisability->disability_tindakan = $request->disability_tindakan_keperawatan ? json_encode($request->disability_tindakan_keperawatan) : null;
+            $asesmenKepUmumDisability->vital_sign = $request->vital_sign ? json_encode($request->vital_sign) : null;
             $asesmenKepUmumDisability->save();
 
             $asesmenKepUmumExposure = new RmeAsesmenKepUmumExposure();
@@ -346,6 +351,10 @@ class AsesmenKeperawatanController extends Controller
             $asesmenKepUmumExposure->sosial_ekonomi_tempat_tinggal = $request->sosial_ekonomi_tempat_tinggal;
             $asesmenKepUmumExposure->sosial_ekonomi_tinggal_dengan_keluarga = $request->sosial_ekonomi_tinggal_dengan_keluarga;
             $asesmenKepUmumExposure->sosial_ekonomi_curiga_penganiayaan = $request->sosial_ekonomi_curiga_penganiayaan;
+            $asesmenKepUmumExposure->sosial_ekonomi_curiga_kesulitan = $request->sosial_ekonomi_curiga_kesulitan;
+            $asesmenKepUmumExposure->sosial_ekonomi_curiga_hubungan_keluarga = $request->sosial_ekonomi_curiga_hubungan_keluarga;
+            $asesmenKepUmumExposure->sosial_ekonomi_curiga_suku = $request->sosial_ekonomi_curiga_suku;
+            $asesmenKepUmumExposure->sosial_ekonomi_curiga_budaya = $request->sosial_ekonomi_curiga_budaya;
             $asesmenKepUmumExposure->sosial_ekonomi_keterangan_lain = $request->sosial_ekonomi_keterangan_lain;
             $asesmenKepUmumExposure->save();
 
@@ -505,73 +514,142 @@ class AsesmenKeperawatanController extends Controller
         }
     }
 
+    // public function show($kd_pasien, $tgl_masuk, $id)
+    // {
+    //     try {
+    //         // Ambil data asesmen beserta relasinya
+    //         $asesmen = RmeAsesmen::with([
+    //             'user',
+    //             'asesmenKepUmum',
+    //             'asesmenKepUmumBreathing',
+    //             'asesmenKepUmumCirculation',
+    //             'asesmenKepUmumDisability',
+    //             'asesmenKepUmumExposure',
+    //             'asesmenKepUmumSkalaNyeri',
+    //             'asesmenKepUmumRisikoJatuh',
+    //             'asesmenKepUmumSosialEkonomi',
+    //             'asesmenKepUmumGizi'
+    //         ])
+    //             ->findOrFail($id);
+
+    //         // Ambil data medis pasien
+    //         $dataMedis = Kunjungan::with('pasien')
+    //             ->where('kd_pasien', $kd_pasien)
+    //             ->whereDate('tgl_masuk', $tgl_masuk)
+    //             ->first();
+    //         $pekerjaan = Pekerjaan::all();
+    //         $faktorPemberat = RmeFaktorPemberat::all();
+    //         $faktorPeringan = RmeFaktorPeringan::all();
+    //         $kualitasNyeri = RmeKualitasNyeri::all();
+    //         $frekuensiNyeri = RmeFrekuensiNyeri::all();
+    //         $jenisNyeri = RmeJenisNyeri::all();
+    //         $agama = Agama::all();
+    //         $pendidikan = Pendidikan::all();
+
+    //         if (!$dataMedis) {
+    //             return response()->json([
+    //                 'status' => 'error',
+    //                 'message' => 'Data medis tidak ditemukan untuk pasien ini.'
+    //             ], 404);
+    //         }
+
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'data' => [
+    //                 'asesmen' => $asesmen,
+    //                 'pasien' => $dataMedis->pasien ?? null,
+    //                 'medis' => $dataMedis ?? null,
+    //                 'pekerjaan' => $pekerjaan ?? null,
+    //                 'faktorPemberat' => $faktorPemberat ?? null,
+    //                 'faktorPeringan' => $faktorPeringan ?? null,
+    //                 'kualitasNyeri' => $kualitasNyeri ?? null,
+    //                 'frekuensiNyeri' => $frekuensiNyeri ?? null,
+    //                 'jenisNyeri' => $jenisNyeri ?? null,
+    //                 'agama' => $agama ?? null,
+    //                 'pendidikan' => $pendidikan ?? null,
+    //             ]
+    //         ]);
+    //     } catch (ModelNotFoundException $e) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Data asesmen tidak ditemukan.'
+    //         ], 404);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
+
     public function show($kd_pasien, $tgl_masuk, $id)
-    {
-        try {
-            // Ambil data asesmen beserta relasinya
-            $asesmen = RmeAsesmen::with([
-                'user',
-                'asesmenKepUmum',
-                'asesmenKepUmumBreathing',
-                'asesmenKepUmumCirculation',
-                'asesmenKepUmumDisability',
-                'asesmenKepUmumExposure',
-                'asesmenKepUmumSkalaNyeri',
-                'asesmenKepUmumRisikoJatuh',
-                'asesmenKepUmumSosialEkonomi',
-                'asesmenKepUmumGizi'
-            ])
-                ->findOrFail($id);
+{
+    try {
+        // Ambil data asesmen beserta relasinya
+        $asesmen = RmeAsesmen::with([
+            'user',
+            'asesmenKepUmum',
+            'asesmenKepUmumBreathing',
+            'asesmenKepUmumCirculation',
+            'asesmenKepUmumDisability',
+            'asesmenKepUmumExposure',
+            'asesmenKepUmumSkalaNyeri',
+            'asesmenKepUmumRisikoJatuh',
+            'asesmenKepUmumSosialEkonomi',
+            'asesmenKepUmumGizi'
+        ])
+        ->where('id', $id)
+        ->where('kd_pasien', $kd_pasien)
+        ->whereDate('tgl_masuk', $tgl_masuk)
+        ->firstOrFail();
 
-            // Ambil data medis pasien
-            $dataMedis = Kunjungan::with('pasien')
-                ->where('kd_pasien', $kd_pasien)
-                ->whereDate('tgl_masuk', $tgl_masuk)
-                ->first();
-            $pekerjaan = Pekerjaan::all();
-            $faktorPemberat = RmeFaktorPemberat::all();
-            $faktorPeringan = RmeFaktorPeringan::all();
-            $kualitasNyeri = RmeKualitasNyeri::all();
-            $frekuensiNyeri = RmeFrekuensiNyeri::all();
-            $jenisNyeri = RmeJenisNyeri::all();
-            $agama = Agama::all();
-            $pendidikan = Pendidikan::all();
+        // Ambil data medis pasien
+        $dataMedis = Kunjungan::with('pasien')
+            ->where('kd_pasien', $kd_pasien)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->first();
 
-            if (!$dataMedis) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Data medis tidak ditemukan untuk pasien ini.'
-                ], 404);
-            }
-
-            return response()->json([
-                'status' => 'success',
-                'data' => [
-                    'asesmen' => $asesmen,
-                    'pasien' => $dataMedis->pasien ?? null,
-                    'medis' => $dataMedis ?? null,
-                    'pekerjaan' => $pekerjaan ?? null,
-                    'faktorPemberat' => $faktorPemberat ?? null,
-                    'faktorPeringan' => $faktorPeringan ?? null,
-                    'kualitasNyeri' => $kualitasNyeri ?? null,
-                    'frekuensiNyeri' => $frekuensiNyeri ?? null,
-                    'jenisNyeri' => $jenisNyeri ?? null,
-                    'agama' => $agama ?? null,
-                    'pendidikan' => $pendidikan ?? null,
-                ]
-            ]);
-        } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Data asesmen tidak ditemukan.'
-            ], 404);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-            ], 500);
+        if (!$dataMedis) {
+            return back()->with('error', 'Data medis tidak ditemukan untuk pasien ini.');
         }
+
+        // Ambil data master yang diperlukan
+        $pekerjaan = Pekerjaan::all();
+        $faktorPemberat = RmeFaktorPemberat::all();
+        $faktorPeringan = RmeFaktorPeringan::all();
+        $kualitasNyeri = RmeKualitasNyeri::all();
+        $frekuensiNyeri = RmeFrekuensiNyeri::all();
+        $menjalar = RmeMenjalar::all();
+        $jenisNyeri = RmeJenisNyeri::all();
+        $agama = Agama::all();
+        $pendidikan = Pendidikan::all();
+
+        // Siapkan data untuk view
+        $data = [
+            'asesmen' => $asesmen,
+            'pasien' => $dataMedis->pasien ?? null,
+            'dataMedis' => $dataMedis ?? null,
+            'pekerjaan' => $pekerjaan,
+            'faktorPemberat' => $faktorPemberat,
+            'faktorPeringan' => $faktorPeringan,
+            'kualitasNyeri' => $kualitasNyeri,
+            'frekuensiNyeri' => $frekuensiNyeri,
+            'menjalar' => $menjalar,
+            'jenisNyeri' => $jenisNyeri,
+            'agama' => $agama,
+            'pendidikan' => $pendidikan,
+        ];
+
+        // Return ke view
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show', $data);
+
+    } catch (ModelNotFoundException $e) {
+        return back()->with('error', 'Data asesmen tidak ditemukan.');
+    } catch (\Exception $e) {
+
+        return back()->with('error', 'Terjadi kesalahan saat memuat data asesmen.');
     }
+}
 
     public function edit($kd_pasien, $tgl_masuk, $id)
     {
@@ -698,6 +776,8 @@ class AsesmenKeperawatanController extends Controller
             $asesmenKepUmum->evaluasi = $request->evaluasi;
             $asesmenKepUmum->masalah_keperawatan = $request->masalah_keperawatan;
             $asesmenKepUmum->implementasi = $request->implementasi;
+            $asesmenKepUmum->implementasi_keperawatan = $request->implementasi_keperawatan;
+            $asesmenKepUmum->evaluasi_keperawatan = $request->evaluasi_keperawatan;
             $asesmenKepUmum->save();
 
             // Update atau create breathing
@@ -751,6 +831,8 @@ class AsesmenKeperawatanController extends Controller
             $asesmenKepUmumCirculation->circulation_turgor = $request->circulation_turgor;
             $asesmenKepUmumCirculation->circulation_transfusi = $request->circulation_transfusi;
             $asesmenKepUmumCirculation->circulation_transfusi_jumlah = $request->circulation_transfusi_jumlah;
+            $asesmenKepUmumCirculation->circulation_nadi_irama = $request->circulation_nadi_irama;
+            $asesmenKepUmumCirculation->circulation_nadi_kekuatan = $request->circulation_nadi_kekuatan;
 
             // Handle circulation_diagnosis_perfusi
             if ($request->has('circulation_diagnosis_perfusi')) {
@@ -831,6 +913,18 @@ class AsesmenKeperawatanController extends Controller
             } else {
                 $asesmenKepUmumDisability->disability_tindakan = null;
             }
+            if ($request->has('vital_sign')) {
+                try {
+                    $vitalSign = $request->vital_sign;
+                    $asesmenKepUmumDisability->vital_sign = is_string($vitalSign)
+                        ? $vitalSign
+                        : json_encode($vitalSign, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    $asesmenKepUmumDisability->vital_sign = null;
+                }
+            } else {
+                $asesmenKepUmumDisability->vital_sign = null;
+            }
             $asesmenKepUmumDisability->save();
 
             // Update atau create exposure
@@ -885,6 +979,10 @@ class AsesmenKeperawatanController extends Controller
             $asesmenKepUmumSosialEkonomi->sosial_ekonomi_tempat_tinggal = $request->sosial_ekonomi_tempat_tinggal;
             $asesmenKepUmumSosialEkonomi->sosial_ekonomi_tinggal_dengan_keluarga = $request->sosial_ekonomi_tinggal_dengan_keluarga;
             $asesmenKepUmumSosialEkonomi->sosial_ekonomi_curiga_penganiayaan = $request->sosial_ekonomi_curiga_penganiayaan;
+            $asesmenKepUmumExposure->sosial_ekonomi_curiga_kesulitan = $request->sosial_ekonomi_curiga_kesulitan;
+            $asesmenKepUmumExposure->sosial_ekonomi_curiga_hubungan_keluarga = $request->sosial_ekonomi_curiga_hubungan_keluarga;
+            $asesmenKepUmumExposure->sosial_ekonomi_curiga_suku = $request->sosial_ekonomi_curiga_suku;
+            $asesmenKepUmumExposure->sosial_ekonomi_curiga_budaya = $request->sosial_ekonomi_curiga_budaya;
             $asesmenKepUmumSosialEkonomi->sosial_ekonomi_keterangan_lain = $request->sosial_ekonomi_keterangan_lain;
             $asesmenKepUmumSosialEkonomi->save();
 
