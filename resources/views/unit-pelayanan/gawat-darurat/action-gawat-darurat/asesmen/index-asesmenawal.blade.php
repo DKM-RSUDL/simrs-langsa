@@ -131,153 +131,155 @@
 </ul>
 
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.show')
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit')
 {{-- @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show') --}}
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.create-asesmen')
 
-<style>
-    #asesmenList .list-group-item:nth-child(even) {
-        background-color: #edf7ff;
-    }
-
-    /* Background putih untuk item ganjil */
-    #asesmenList .list-group-item:nth-child(odd) {
-        background-color: #ffffff;
-    }
-
-    /* Efek hover tetap sama untuk konsistensi */
-    #asesmenList .list-group-item:hover {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-
-    .list-group-item {
-        margin-bottom: 0.2rem;
-        border-radius: 0.5rem !important;
-        padding: 0.5rem;
-        border: 1px solid #dee2e6;
-        background: white;
-        transition: all 0.2s;
-    }
-
-    .list-group-item:hover {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-
-    .gap-2 {
-        gap: 0.5rem !important;
-    }
-
-    .gap-3 {
-        gap: 1rem !important;
-    }
-
-    .gap-4 {
-        gap: 1.5rem !important;
-    }
-
-    .btn-sm {
-        padding: 0.4rem 1rem;
-        font-size: 0.875rem;
-    }
-
-    .btn i {
-        font-size: 0.875rem;
-    }
-</style>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Get elements
-        const selectEpisode = document.getElementById('SelectEpisode');
-        const startDateInput = document.getElementById('start_date');
-        const endDateInput = document.getElementById('end_date');
-        const searchInput = document.getElementById('searchInput');
-        const asesmenList = document.getElementById('asesmenList');
-
-        function filterList() {
-
-            const startDate = startDateInput.value;
-            const endDate = endDateInput.value;
-            const search = searchInput.value.toLowerCase().trim();
-            const episodeValue = selectEpisode.value;
-
-            // Debug values
-            console.log({
-                startDate,
-                endDate,
-                search,
-                episodeValue
-            });
-
-            const items = asesmenList.getElementsByTagName('li');
-            console.log('Total items:', items.length);
-
-            Array.from(items).forEach(item => {
-                const itemDate = item.getAttribute('data-date');
-                const itemName = item.getAttribute('data-name').toLowerCase();
-
-                let show = true;
-
-                // Date filter
-                if (startDate && itemDate) {
-                    show = show && (itemDate >= startDate);
-                }
-
-                if (endDate && itemDate) {
-                    show = show && (itemDate <= endDate);
-                }
-
-                // Search filter
-                if (search) {
-                    show = show && itemName.includes(search);
-                }
-
-                // Episode filter
-                if (episodeValue !== 'semua' && itemDate) {
-                    const currentDate = new Date();
-                    const itemDateTime = new Date(itemDate);
-                    const monthDiff = Math.floor(
-                        (currentDate - itemDateTime) / (1000 * 60 * 60 * 24 * 30)
-                    );
-
-
-                    switch (episodeValue) {
-                        case 'Episode1': // Bulan ini
-                            show = show && (monthDiff === 0);
-                            break;
-                        case 'Episode2': // 1 bulan
-                            show = show && (monthDiff <= 1);
-                            break;
-                        case 'Episode3': // 3 bulan
-                            show = show && (monthDiff <= 3);
-                            break;
-                        case 'Episode4': // 6 bulan
-                            show = show && (monthDiff <= 6);
-                            break;
-                        case 'Episode5': // 9 bulan
-                            show = show && (monthDiff <= 9);
-                            break;
-                    }
-                }
-
-                // Menggunakan d-flex untuk menampilkan dan d-none untuk menyembunyikan
-                if (show) {
-                    item.classList.remove('d-none');
-                    item.classList.add('d-flex');
-                } else {
-                    item.classList.remove('d-flex');
-                    item.classList.add('d-none');
-                }
-            });
+@push('css')
+    <style>
+        #asesmenList .list-group-item:nth-child(even) {
+            background-color: #edf7ff;
         }
 
-        // Add event listeners
-        selectEpisode.addEventListener('change', filterList);
-        startDateInput.addEventListener('input', filterList);
-        endDateInput.addEventListener('input', filterList);
-        searchInput.addEventListener('input', filterList);
+        /* Background putih untuk item ganjil */
+        #asesmenList .list-group-item:nth-child(odd) {
+            background-color: #ffffff;
+        }
 
-        // Run initial filter
-        filterList();
-    });
-</script>
+        /* Efek hover tetap sama untuk konsistensi */
+        #asesmenList .list-group-item:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .list-group-item {
+            margin-bottom: 0.2rem;
+            border-radius: 0.5rem !important;
+            padding: 0.5rem;
+            border: 1px solid #dee2e6;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .list-group-item:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .gap-2 {
+            gap: 0.5rem !important;
+        }
+
+        .gap-3 {
+            gap: 1rem !important;
+        }
+
+        .gap-4 {
+            gap: 1.5rem !important;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .btn i {
+            font-size: 0.875rem;
+        }
+    </style>
+@endpush
+
+@push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get elements
+            const selectEpisode = document.getElementById('SelectEpisode');
+            const startDateInput = document.getElementById('start_date');
+            const endDateInput = document.getElementById('end_date');
+            const searchInput = document.getElementById('searchInput');
+            const asesmenList = document.getElementById('asesmenList');
+
+            function filterList() {
+
+                const startDate = startDateInput.value;
+                const endDate = endDateInput.value;
+                const search = searchInput.value.toLowerCase().trim();
+                const episodeValue = selectEpisode.value;
+
+                // Debug values
+                console.log({
+                    startDate,
+                    endDate,
+                    search,
+                    episodeValue
+                });
+
+                const items = asesmenList.getElementsByTagName('li');
+                console.log('Total items:', items.length);
+
+                Array.from(items).forEach(item => {
+                    const itemDate = item.getAttribute('data-date');
+                    const itemName = item.getAttribute('data-name').toLowerCase();
+
+                    let show = true;
+
+                    // Date filter
+                    if (startDate && itemDate) {
+                        show = show && (itemDate >= startDate);
+                    }
+
+                    if (endDate && itemDate) {
+                        show = show && (itemDate <= endDate);
+                    }
+
+                    // Search filter
+                    if (search) {
+                        show = show && itemName.includes(search);
+                    }
+
+                    // Episode filter
+                    if (episodeValue !== 'semua' && itemDate) {
+                        const currentDate = new Date();
+                        const itemDateTime = new Date(itemDate);
+                        const monthDiff = Math.floor(
+                            (currentDate - itemDateTime) / (1000 * 60 * 60 * 24 * 30)
+                        );
+
+
+                        switch (episodeValue) {
+                            case 'Episode1': // Bulan ini
+                                show = show && (monthDiff === 0);
+                                break;
+                            case 'Episode2': // 1 bulan
+                                show = show && (monthDiff <= 1);
+                                break;
+                            case 'Episode3': // 3 bulan
+                                show = show && (monthDiff <= 3);
+                                break;
+                            case 'Episode4': // 6 bulan
+                                show = show && (monthDiff <= 6);
+                                break;
+                            case 'Episode5': // 9 bulan
+                                show = show && (monthDiff <= 9);
+                                break;
+                        }
+                    }
+
+                    // Menggunakan d-flex untuk menampilkan dan d-none untuk menyembunyikan
+                    if (show) {
+                        item.classList.remove('d-none');
+                        item.classList.add('d-flex');
+                    } else {
+                        item.classList.remove('d-flex');
+                        item.classList.add('d-none');
+                    }
+                });
+            }
+
+            // Add event listeners
+            selectEpisode.addEventListener('change', filterList);
+            startDateInput.addEventListener('input', filterList);
+            endDateInput.addEventListener('input', filterList);
+            searchInput.addEventListener('input', filterList);
+
+            // Run initial filter
+            filterList();
+        });
+    </script>
+@endpush

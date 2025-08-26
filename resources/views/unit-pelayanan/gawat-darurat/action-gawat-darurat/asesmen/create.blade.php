@@ -344,7 +344,7 @@
 
                             {{-- PENGKAJIAN STATUS NYERI --}}
                             <div class="section-separator" id="status-nyeri">
-                                <h5 class="section-title">4. Pengkajian Status Nyeri</h5>
+                                <h5 class="section-title">3. Pengkajian Status Nyeri</h5>
 
                                 <div class="row mb-4">
                                     <div class="col-md-6">
@@ -480,7 +480,7 @@
 
                             {{-- PEMERIKSAAN FISIK --}}
                             <div class="section-separator" id="pemeriksaan-fisik">
-                                <h5 class="section-title">7. Pemeriksaan Fisik</h5>
+                                <h5 class="section-title">4. Pemeriksaan Fisik</h5>
                                 <div class="pemeriksaan-fisik-info mb-4">
                                     <p class="text-muted small">
                                         Centang "Normal" jika pemeriksaan fisik normal. Klik tombol "+" untuk menambah
@@ -533,7 +533,7 @@
 
                             {{-- PEMERIKSAAN PENUNJANG KLINIS --}}
                             <div class="section-separator" id="pemeriksaan-penunjang">
-                                <h5 class="section-title">3. Pemeriksaan Penunjang Klinis</h5>
+                                <h5 class="section-title">5. Pemeriksaan Penunjang Klinis</h5>
 
                                 {{-- LABORATORIUM --}}
                                 <h6 class="mb-3">Laboratorium</h6>
@@ -664,7 +664,7 @@
 
                             {{-- DIAGNOSIS --}}
                             <div class="section-separator" id="diagnosis">
-                                <h5 class="section-title">5. Diagnosis</h5>
+                                <h5 class="section-title">6. Diagnosis</h5>
 
                                 <div class="mb-3">
                                     <button type="button" class="btn btn-outline-primary" id="btnTambahDiagnosis">
@@ -688,7 +688,7 @@
 
                             {{-- ALAT YANG TERPASANG --}}
                             <div class="section-separator" id="alat-terpasang">
-                                <h5 class="section-title">6. Alat yang Terpasang</h5>
+                                <h5 class="section-title">7. Alat yang Terpasang</h5>
 
                                 <div class="mb-3">
                                     <button type="button" class="btn btn-outline-primary" id="btnTambahAlat"
@@ -722,7 +722,7 @@
 
                             {{-- RETRIASE/OBSERVASI LANJUTAN --}}
                             <div class="section-separator" id="retriase">
-                                <h5 class="section-title">7. Retriase/Observasi Lanjutan</h5>
+                                <h5 class="section-title">8. Retriase/Observasi Lanjutan</h5>
 
                                 <div class="mb-3">
                                     <button type="button" class="btn btn-outline-primary" id="btnTambahRetriase"
@@ -761,7 +761,7 @@
 
                             {{-- KONDISI PASIEN MENINGGALKAN IGD --}}
                             <div class="section-separator" id="kondisi-pasien">
-                                <h5 class="section-title">8. Kondisi Pasien Meninggalkan IGD</h5>
+                                <h5 class="section-title">9. Kondisi Pasien Meninggalkan IGD</h5>
 
                                 <div class="form-group mb-3">
                                     <label class="form-label">Kondisi Pasien</label>
@@ -772,7 +772,7 @@
 
                             {{-- TINDAK LANJUT PELAYANAN --}}
                             <div class="section-separator" id="tindak-lanjut">
-                                <h5 class="section-title">9. Tindak Lanjut Pelayanan</h5>
+                                <h5 class="section-title">10. Tindak Lanjut Pelayanan</h5>
 
                                 <div class="mb-3">
                                     <div class="alert alert-info">

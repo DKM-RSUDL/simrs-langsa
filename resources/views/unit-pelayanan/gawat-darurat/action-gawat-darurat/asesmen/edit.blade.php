@@ -969,7 +969,7 @@
 
                                 {{-- PENGKAJIAN STATUS NYERI --}}
                                 <div class="section-separator" id="status-nyeri">
-                                    <h5 class="section-title">4. Pengkajian Status Nyeri</h5>
+                                    <h5 class="section-title">3. Pengkajian Status Nyeri</h5>
 
                                     <div class="row mb-4">
                                         <div class="col-md-6">
@@ -1141,7 +1141,7 @@
 
                                 {{-- PEMERIKSAAN FISIK --}}
                                 <div class="section-separator" id="pemeriksaan-fisik">
-                                    <h5 class="section-title">7. Pemeriksaan Fisik</h5>
+                                    <h5 class="section-title">4. Pemeriksaan Fisik</h5>
                                     <div class="pemeriksaan-fisik-info mb-4">
                                         <p class="text-muted small">
                                             Centang "Normal" jika pemeriksaan fisik normal. Klik tombol "+" untuk menambah
@@ -1207,7 +1207,7 @@
 
                                 {{-- PEMERIKSAAN PENUNJANG KLINIS --}}
                                 <div class="section-separator" id="pemeriksaan-penunjang">
-                                    <h5 class="section-title">3. Pemeriksaan Penunjang Klinis</h5>
+                                    <h5 class="section-title">5. Pemeriksaan Penunjang Klinis</h5>
 
                                     {{-- LABORATORIUM --}}
                                     <h6 class="mb-3">Laboratorium</h6>
@@ -1339,7 +1339,7 @@
 
                                 {{-- DIAGNOSIS --}}
                                 <div class="section-separator" id="diagnosis">
-                                    <h5 class="section-title">5. Diagnosis</h5>
+                                    <h5 class="section-title">6. Diagnosis</h5>
 
                                     <div class="mb-3">
                                         <button type="button" class="btn btn-outline-primary" id="btnTambahDiagnosis">
@@ -1348,16 +1348,17 @@
                                     </div>
 
                                     <div id="diagnosisInputContainer">
-                                        @if(isset($diagnosis) && is_array($diagnosis) && count($diagnosis) > 0)
-                                            @foreach($diagnosis as $index => $diag)
-                                                <input type="hidden" name="diagnosa_data[]" value="{{ is_array($diag) ? $diag['nama'] ?? '' : $diag }}">
+                                        @if (isset($diagnosis) && is_array($diagnosis) && count($diagnosis) > 0)
+                                            @foreach ($diagnosis as $index => $diag)
+                                                <input type="hidden" name="diagnosa_data[]"
+                                                    value="{{ is_array($diag) ? $diag['nama'] ?? '' : $diag }}">
                                             @endforeach
                                         @endif
                                     </div>
 
                                     <div id="diagnosisList" class="diagnosis-list">
-                                        @if(isset($diagnosis) && is_array($diagnosis) && count($diagnosis) > 0)
-                                            @foreach($diagnosis as $index => $diag)
+                                        @if (isset($diagnosis) && is_array($diagnosis) && count($diagnosis) > 0)
+                                            @foreach ($diagnosis as $index => $diag)
                                                 @php
                                                     $diagnosisName = is_array($diag) ? $diag['nama'] ?? '' : $diag;
                                                 @endphp
@@ -1373,12 +1374,14 @@
                                                             <div class="fw-medium text-dark">{{ $diagnosisName }}</div>
                                                         </div>
                                                         <div class="btn-group">
-                                                            <button type="button" class="btn btn-sm btn-outline-primary edit-diagnosis" 
-                                                                    data-index="{{ $index }}" title="Edit">
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-outline-primary edit-diagnosis"
+                                                                data-index="{{ $index }}" title="Edit">
                                                                 <i class="ti-pencil"></i>
                                                             </button>
-                                                            <button type="button" class="btn btn-sm btn-outline-danger delete-diagnosis" 
-                                                                    data-index="{{ $index }}" title="Hapus">
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-outline-danger delete-diagnosis"
+                                                                data-index="{{ $index }}" title="Hapus">
                                                                 <i class="ti-trash"></i>
                                                             </button>
                                                         </div>
@@ -1388,8 +1391,8 @@
                                         @endif
                                     </div>
 
-                                    <div id="noDiagnosisMessage" class="text-center text-muted py-2" 
-                                        style="border: 2px dashed #dee2e6; border-radius: 0.5rem; {{ (isset($diagnosis) && is_array($diagnosis) && count($diagnosis) > 0) ? 'display: none;' : '' }}">
+                                    <div id="noDiagnosisMessage" class="text-center text-muted py-2"
+                                        style="border: 2px dashed #dee2e6; border-radius: 0.5rem; {{ isset($diagnosis) && is_array($diagnosis) && count($diagnosis) > 0 ? 'display: none;' : '' }}">
                                         <i class="ti-file-text" style="font-size: 2rem; opacity: 0.5;"></i>
                                         <p class="mb-0 mt-2">Belum ada diagnosis yang ditambahkan</p>
                                         <small>Klik tombol "Tambah Diagnosis" untuk menambah diagnosis</small>
@@ -1402,7 +1405,8 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="diagnosisModalTitle">Tambah Diagnosis</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <div class="form-group">
@@ -1412,7 +1416,8 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Batal</button>
                                                 <button type="button" class="btn btn-primary" id="btnSimpanDiagnosis">
                                                     <i class="ti-check"></i> Simpan
                                                 </button>
@@ -1423,8 +1428,8 @@
 
                                 {{-- ALAT YANG TERPASANG --}}
                                 <div class="section-separator" id="alat-terpasang">
-                                    <h5 class="section-title">6. Alat yang Terpasang</h5>
-                                    
+                                    <h5 class="section-title">7. Alat yang Terpasang</h5>
+
                                     <div class="mb-3">
                                         <button type="button" class="btn btn-outline-primary" id="btnTambahAlat"
                                             data-bs-toggle="modal" data-bs-target="#alatModal">
@@ -1432,7 +1437,7 @@
                                         </button>
                                     </div>
 
-                                    <input type="hidden" name="alat_terpasang_data" id="alatTerpasangData" 
+                                    <input type="hidden" name="alat_terpasang_data" id="alatTerpasangData"
                                         value="{{ isset($alatTerpasang) ? json_encode($alatTerpasang) : '[]' }}">
 
                                     <div class="table-responsive">
@@ -1447,21 +1452,23 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @if(isset($alatTerpasang) && is_array($alatTerpasang) && count($alatTerpasang) > 0)
-                                                    @foreach($alatTerpasang as $index => $alat)
+                                                @if (isset($alatTerpasang) && is_array($alatTerpasang) && count($alatTerpasang) > 0)
+                                                    @foreach ($alatTerpasang as $index => $alat)
                                                         <tr class="alat-item">
                                                             <td>{{ $index + 1 }}</td>
-                                                            <td>{{ $alat['nama_display'] ?? $alat['nama'] ?? '-' }}</td>
+                                                            <td>{{ $alat['nama_display'] ?? ($alat['nama'] ?? '-') }}</td>
                                                             <td>{{ $alat['lokasi'] ?? '-' }}</td>
                                                             <td>{{ $alat['keterangan'] ?? '-' }}</td>
                                                             <td>
                                                                 <div class="btn-group">
-                                                                    <button type="button" class="btn btn-sm btn-outline-primary edit-alat" 
-                                                                            data-index="{{ $index }}" title="Edit">
+                                                                    <button type="button"
+                                                                        class="btn btn-sm btn-outline-primary edit-alat"
+                                                                        data-index="{{ $index }}" title="Edit">
                                                                         <i class="ti-pencil"></i>
                                                                     </button>
-                                                                    <button type="button" class="btn btn-sm btn-outline-danger delete-alat" 
-                                                                            data-index="{{ $index }}" title="Hapus">
+                                                                    <button type="button"
+                                                                        class="btn btn-sm btn-outline-danger delete-alat"
+                                                                        data-index="{{ $index }}" title="Hapus">
                                                                         <i class="ti-trash"></i>
                                                                     </button>
                                                                 </div>
@@ -1470,7 +1477,8 @@
                                                     @endforeach
                                                 @else
                                                     <tr id="no-alat-row">
-                                                        <td colspan="5" class="text-center text-muted">Tidak ada alat yang terpasang</td>
+                                                        <td colspan="5" class="text-center text-muted">Tidak ada alat
+                                                            yang terpasang</td>
                                                     </tr>
                                                 @endif
                                             </tbody>
@@ -1480,8 +1488,8 @@
 
                                 {{-- RETRIASE/OBSERVASI LANJUTAN --}}
                                 <div class="section-separator" id="retriase">
-                                    <h5 class="section-title">7. Retriase/Observasi Lanjutan</h5>
-                                    
+                                    <h5 class="section-title">8. Retriase/Observasi Lanjutan</h5>
+
                                     <div class="mb-3">
                                         <button type="button" class="btn btn-outline-primary" id="btnTambahRetriase"
                                             data-bs-toggle="modal" data-bs-target="#retriaseModal">
@@ -1489,24 +1497,36 @@
                                         </button>
                                     </div>
 
-                                    <input type="hidden" name="retriase_data" id="retriaseData" 
-                                        value="{{ isset($retriaseData) ? json_encode($retriaseData->map(function($item) {
-                                            return [
-                                                'tanggal' => date('Y-m-d', strtotime($item->tanggal_triase)),
-                                                'jam' => date('H:i', strtotime($item->tanggal_triase)),
-                                                'tanggal_jam' => date('d/m/Y H:i', strtotime($item->tanggal_triase)),
-                                                'gcs' => $item->vitalsign_retriase ? (json_decode($item->vitalsign_retriase, true)['gcs'] ?? '-') : '-',
-                                                'temp' => $item->vitalsign_retriase ? (json_decode($item->vitalsign_retriase, true)['temp'] ?? '-') : '-',
-                                                'rr' => $item->vitalsign_retriase ? (json_decode($item->vitalsign_retriase, true)['rr'] ?? '-') : '-',
-                                                'spo2_tanpa_o2' => $item->vitalsign_retriase ? (json_decode($item->vitalsign_retriase, true)['spo2_tanpa_o2'] ?? '-') : '-',
-                                                'spo2_dengan_o2' => $item->vitalsign_retriase ? (json_decode($item->vitalsign_retriase, true)['spo2_dengan_o2'] ?? '-') : '-',
-                                                'td_sistole' => $item->vitalsign_retriase ? (json_decode($item->vitalsign_retriase, true)['td_sistole'] ?? '-') : '-',
-                                                'td_diastole' => $item->vitalsign_retriase ? (json_decode($item->vitalsign_retriase, true)['td_diastole'] ?? '-') : '-',
-                                                'keluhan' => $item->anamnesis_retriase ?? '-',
-                                                'kesimpulan_triase' => $item->kode_triase ?? '-',
-                                                'kesimpulan_triase_text' => $item->hasil_triase ?? '-'
-                                            ];
-                                        })) : '[]' }}">
+                                    <input type="hidden" name="retriase_data" id="retriaseData"
+                                        value="{{ isset($retriaseData)
+                                            ? json_encode(
+                                                $retriaseData->map(function ($item) {
+                                                    return [
+                                                        'tanggal' => date('Y-m-d', strtotime($item->tanggal_triase)),
+                                                        'jam' => date('H:i', strtotime($item->tanggal_triase)),
+                                                        'tanggal_jam' => date('d/m/Y H:i', strtotime($item->tanggal_triase)),
+                                                        'gcs' => $item->vitalsign_retriase ? json_decode($item->vitalsign_retriase, true)['gcs'] ?? '-' : '-',
+                                                        'temp' => $item->vitalsign_retriase ? json_decode($item->vitalsign_retriase, true)['temp'] ?? '-' : '-',
+                                                        'rr' => $item->vitalsign_retriase ? json_decode($item->vitalsign_retriase, true)['rr'] ?? '-' : '-',
+                                                        'spo2_tanpa_o2' => $item->vitalsign_retriase
+                                                            ? json_decode($item->vitalsign_retriase, true)['spo2_tanpa_o2'] ?? '-'
+                                                            : '-',
+                                                        'spo2_dengan_o2' => $item->vitalsign_retriase
+                                                            ? json_decode($item->vitalsign_retriase, true)['spo2_dengan_o2'] ?? '-'
+                                                            : '-',
+                                                        'td_sistole' => $item->vitalsign_retriase
+                                                            ? json_decode($item->vitalsign_retriase, true)['td_sistole'] ?? '-'
+                                                            : '-',
+                                                        'td_diastole' => $item->vitalsign_retriase
+                                                            ? json_decode($item->vitalsign_retriase, true)['td_diastole'] ?? '-'
+                                                            : '-',
+                                                        'keluhan' => $item->anamnesis_retriase ?? '-',
+                                                        'kesimpulan_triase' => $item->kode_triase ?? '-',
+                                                        'kesimpulan_triase_text' => $item->hasil_triase ?? '-',
+                                                    ];
+                                                }),
+                                            )
+                                            : '[]' }}">
 
                                     <div class="table-responsive">
                                         <table class="table table-bordered" id="retriaseTable">
@@ -1527,36 +1547,58 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @if(isset($retriaseData) && $retriaseData->count() > 0)
-                                                    @foreach($retriaseData as $index => $retriase)
+                                                @if (isset($retriaseData) && $retriaseData->count() > 0)
+                                                    @foreach ($retriaseData as $index => $retriase)
                                                         @php
-                                                            $vitalSigns = $retriase->vitalsign_retriase ? json_decode($retriase->vitalsign_retriase, true) : [];
+                                                            $vitalSigns = $retriase->vitalsign_retriase
+                                                                ? json_decode($retriase->vitalsign_retriase, true)
+                                                                : [];
                                                         @endphp
                                                         <tr>
                                                             <td>{{ $index + 1 }}</td>
-                                                            <td>{{ date('d/m/Y H:i', strtotime($retriase->tanggal_triase)) }}</td>
+                                                            <td>{{ date('d/m/Y H:i', strtotime($retriase->tanggal_triase)) }}
+                                                            </td>
                                                             <td>{{ $vitalSigns['gcs'] ?? '-' }}</td>
-                                                            <td>{{ ($vitalSigns['temp'] ?? '-') !== '-' ? $vitalSigns['temp'] . '°C' : '-' }}</td>
-                                                            <td>{{ ($vitalSigns['rr'] ?? '-') !== '-' ? $vitalSigns['rr'] . 'x/mnt' : '-' }}</td>
-                                                            <td>{{ ($vitalSigns['spo2_tanpa_o2'] ?? '-') !== '-' ? $vitalSigns['spo2_tanpa_o2'] . '%' : '-' }}</td>
-                                                            <td>{{ ($vitalSigns['spo2_dengan_o2'] ?? '-') !== '-' ? $vitalSigns['spo2_dengan_o2'] . '%' : '-' }}</td>
-                                                            <td>{{ ($vitalSigns['td_sistole'] ?? '-') !== '-' ? $vitalSigns['td_sistole'] . 'mmHg' : '-' }}</td>
-                                                            <td>{{ ($vitalSigns['td_diastole'] ?? '-') !== '-' ? $vitalSigns['td_diastole'] . 'mmHg' : '-' }}</td>
+                                                            <td>{{ ($vitalSigns['temp'] ?? '-') !== '-' ? $vitalSigns['temp'] . '°C' : '-' }}
+                                                            </td>
+                                                            <td>{{ ($vitalSigns['rr'] ?? '-') !== '-' ? $vitalSigns['rr'] . 'x/mnt' : '-' }}
+                                                            </td>
+                                                            <td>{{ ($vitalSigns['spo2_tanpa_o2'] ?? '-') !== '-' ? $vitalSigns['spo2_tanpa_o2'] . '%' : '-' }}
+                                                            </td>
+                                                            <td>{{ ($vitalSigns['spo2_dengan_o2'] ?? '-') !== '-' ? $vitalSigns['spo2_dengan_o2'] . '%' : '-' }}
+                                                            </td>
+                                                            <td>{{ ($vitalSigns['td_sistole'] ?? '-') !== '-' ? $vitalSigns['td_sistole'] . 'mmHg' : '-' }}
+                                                            </td>
+                                                            <td>{{ ($vitalSigns['td_diastole'] ?? '-') !== '-' ? $vitalSigns['td_diastole'] . 'mmHg' : '-' }}
+                                                            </td>
                                                             <td style="max-width: 200px;">
-                                                                <div class="text-truncate" title="{{ $retriase->anamnesis_retriase ?? '-' }}">
+                                                                <div class="text-truncate"
+                                                                    title="{{ $retriase->anamnesis_retriase ?? '-' }}">
                                                                     {{ $retriase->anamnesis_retriase ?? '-' }}
                                                                 </div>
                                                             </td>
                                                             <td>
                                                                 @php
                                                                     $badgeClass = '';
-                                                                    switch($retriase->kode_triase) {
-                                                                        case '1': $badgeClass = 'bg-success'; break;
-                                                                        case '2': $badgeClass = 'bg-warning'; break;
-                                                                        case '3': $badgeClass = 'bg-danger'; break;
-                                                                        case '4': $badgeClass = 'bg-dark'; break;
-                                                                        case '5': $badgeClass = 'bg-secondary'; break;
-                                                                        default: $badgeClass = 'bg-light'; break;
+                                                                    switch ($retriase->kode_triase) {
+                                                                        case '1':
+                                                                            $badgeClass = 'bg-success';
+                                                                            break;
+                                                                        case '2':
+                                                                            $badgeClass = 'bg-warning';
+                                                                            break;
+                                                                        case '3':
+                                                                            $badgeClass = 'bg-danger';
+                                                                            break;
+                                                                        case '4':
+                                                                            $badgeClass = 'bg-dark';
+                                                                            break;
+                                                                        case '5':
+                                                                            $badgeClass = 'bg-secondary';
+                                                                            break;
+                                                                        default:
+                                                                            $badgeClass = 'bg-light';
+                                                                            break;
                                                                     }
                                                                 @endphp
                                                                 <span class="badge {{ $badgeClass }}">
@@ -1565,12 +1607,14 @@
                                                             </td>
                                                             <td>
                                                                 <div class="btn-group">
-                                                                    <button type="button" class="btn btn-sm btn-outline-primary edit-retriase" 
-                                                                            data-index="{{ $index }}" title="Edit">
+                                                                    <button type="button"
+                                                                        class="btn btn-sm btn-outline-primary edit-retriase"
+                                                                        data-index="{{ $index }}" title="Edit">
                                                                         <i class="ti-pencil"></i>
                                                                     </button>
-                                                                    <button type="button" class="btn btn-sm btn-outline-danger delete-retriase" 
-                                                                            data-index="{{ $index }}" title="Hapus">
+                                                                    <button type="button"
+                                                                        class="btn btn-sm btn-outline-danger delete-retriase"
+                                                                        data-index="{{ $index }}" title="Hapus">
                                                                         <i class="ti-trash"></i>
                                                                     </button>
                                                                 </div>
@@ -1579,7 +1623,8 @@
                                                     @endforeach
                                                 @else
                                                     <tr id="no-alat-row">
-                                                        <td colspan="12" class="text-center text-muted">Tidak ada retriase</td>
+                                                        <td colspan="12" class="text-center text-muted">Tidak ada
+                                                            retriase</td>
                                                     </tr>
                                                 @endif
                                             </tbody>
@@ -1589,7 +1634,7 @@
 
                                 {{-- KONDISI PASIEN MENINGGALKAN IGD --}}
                                 <div class="section-separator" id="kondisi-pasien">
-                                    <h5 class="section-title">8. Kondisi Pasien Meninggalkan IGD</h5>
+                                    <h5 class="section-title">9. Kondisi Pasien Meninggalkan IGD</h5>
                                     <div class="form-group mb-3">
                                         <label class="form-label">Kondisi Pasien</label>
                                         <textarea class="form-control" name="kondisi_pasien" rows="3"
@@ -1599,7 +1644,7 @@
 
                                 {{-- TINDAK LANJUT PELAYANAN --}}
                                 <div class="section-separator" id="tindak-lanjut">
-                                    <h5 class="section-title">9. Tindak Lanjut Pelayanan</h5>
+                                    <h5 class="section-title">10. Tindak Lanjut Pelayanan</h5>
 
                                     <div class="mb-3">
                                         <div class="alert alert-info">
@@ -1613,17 +1658,31 @@
                                         // Get existing tindak lanjut data
                                         $tindakLanjutData = $asesmen->tindaklanjut ?? null;
                                         $selectedOption = '';
-                                        
+
                                         // Determine selected option based on tindak_lanjut_code
                                         if ($tindakLanjutData) {
                                             switch ($tindakLanjutData->tindak_lanjut_code) {
-                                                case 1: $selectedOption = 'rawatInap'; break;
-                                                case 5: $selectedOption = 'rujukKeluar'; break;
-                                                case 6: $selectedOption = 'pulangSembuh'; break;
-                                                case 8: $selectedOption = 'berobatJalan'; break;
-                                                case 9: $selectedOption = 'menolakRawatInap'; break;
-                                                case 10: $selectedOption = 'meninggalDunia'; break;
-                                                case 11: $selectedOption = 'deathoffarrival'; break;
+                                                case 1:
+                                                    $selectedOption = 'rawatInap';
+                                                    break;
+                                                case 5:
+                                                    $selectedOption = 'rujukKeluar';
+                                                    break;
+                                                case 6:
+                                                    $selectedOption = 'pulangSembuh';
+                                                    break;
+                                                case 8:
+                                                    $selectedOption = 'berobatJalan';
+                                                    break;
+                                                case 9:
+                                                    $selectedOption = 'menolakRawatInap';
+                                                    break;
+                                                case 10:
+                                                    $selectedOption = 'meninggalDunia';
+                                                    break;
+                                                case 11:
+                                                    $selectedOption = 'deathoffarrival';
+                                                    break;
                                             }
                                         }
                                     @endphp
@@ -1631,10 +1690,12 @@
                                     <div class="tindak-lanjut-options mb-4">
                                         <div class="row g-3">
                                             <div class="col-md-6">
-                                                <div class="radio-option {{ $selectedOption == 'rawatInap' ? 'selected' : '' }}" data-target="formRawatInap">
+                                                <div class="radio-option {{ $selectedOption == 'rawatInap' ? 'selected' : '' }}"
+                                                    data-target="formRawatInap">
                                                     <div class="form-check">
-                                                        <input type="radio" class="form-check-input" name="tindakLanjut"
-                                                            value="rawatInap" id="rawatInap" {{ $selectedOption == 'rawatInap' ? 'checked' : '' }}>
+                                                        <input type="radio" class="form-check-input"
+                                                            name="tindakLanjut" value="rawatInap" id="rawatInap"
+                                                            {{ $selectedOption == 'rawatInap' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="rawatInap">
                                                             <i class="ti-home me-2"></i>Rawat Inap
                                                         </label>
@@ -1643,10 +1704,12 @@
                                             </div>
 
                                             <div class="col-md-6">
-                                                <div class="radio-option {{ $selectedOption == 'rujukKeluar' ? 'selected' : '' }}" data-target="formRujukKeluar">
+                                                <div class="radio-option {{ $selectedOption == 'rujukKeluar' ? 'selected' : '' }}"
+                                                    data-target="formRujukKeluar">
                                                     <div class="form-check">
-                                                        <input type="radio" class="form-check-input" name="tindakLanjut"
-                                                            value="rujukKeluar" id="rujukKeluar" {{ $selectedOption == 'rujukKeluar' ? 'checked' : '' }}>
+                                                        <input type="radio" class="form-check-input"
+                                                            name="tindakLanjut" value="rujukKeluar" id="rujukKeluar"
+                                                            {{ $selectedOption == 'rujukKeluar' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="rujukKeluar">
                                                             <i class="ti-export me-2"></i>Rujuk Keluar RS Lain
                                                         </label>
@@ -1655,10 +1718,12 @@
                                             </div>
 
                                             <div class="col-md-6">
-                                                <div class="radio-option {{ $selectedOption == 'pulangSembuh' ? 'selected' : '' }}" data-target="formpulangSembuh">
+                                                <div class="radio-option {{ $selectedOption == 'pulangSembuh' ? 'selected' : '' }}"
+                                                    data-target="formpulangSembuh">
                                                     <div class="form-check">
-                                                        <input type="radio" class="form-check-input" name="tindakLanjut"
-                                                            value="pulangSembuh" id="pulangSembuh" {{ $selectedOption == 'pulangSembuh' ? 'checked' : '' }}>
+                                                        <input type="radio" class="form-check-input"
+                                                            name="tindakLanjut" value="pulangSembuh" id="pulangSembuh"
+                                                            {{ $selectedOption == 'pulangSembuh' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="pulangSembuh">
                                                             <i class="ti-check me-2"></i>Pulang
                                                         </label>
@@ -1667,10 +1732,12 @@
                                             </div>
 
                                             <div class="col-md-6">
-                                                <div class="radio-option {{ $selectedOption == 'berobatJalan' ? 'selected' : '' }}" data-target="formberobatJalan">
+                                                <div class="radio-option {{ $selectedOption == 'berobatJalan' ? 'selected' : '' }}"
+                                                    data-target="formberobatJalan">
                                                     <div class="form-check">
-                                                        <input type="radio" class="form-check-input" name="tindakLanjut"
-                                                            value="berobatJalan" id="berobatJalan" {{ $selectedOption == 'berobatJalan' ? 'checked' : '' }}>
+                                                        <input type="radio" class="form-check-input"
+                                                            name="tindakLanjut" value="berobatJalan" id="berobatJalan"
+                                                            {{ $selectedOption == 'berobatJalan' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="berobatJalan">
                                                             <i class="ti-calendar me-2"></i>Berobat Jalan Ke Poli
                                                         </label>
@@ -1679,10 +1746,13 @@
                                             </div>
 
                                             <div class="col-md-6">
-                                                <div class="radio-option {{ $selectedOption == 'menolakRawatInap' ? 'selected' : '' }}" data-target="formMenolakRawatInap">
+                                                <div class="radio-option {{ $selectedOption == 'menolakRawatInap' ? 'selected' : '' }}"
+                                                    data-target="formMenolakRawatInap">
                                                     <div class="form-check">
-                                                        <input type="radio" class="form-check-input" name="tindakLanjut"
-                                                            value="menolakRawatInap" id="menolakRawatInap" {{ $selectedOption == 'menolakRawatInap' ? 'checked' : '' }}>
+                                                        <input type="radio" class="form-check-input"
+                                                            name="tindakLanjut" value="menolakRawatInap"
+                                                            id="menolakRawatInap"
+                                                            {{ $selectedOption == 'menolakRawatInap' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="menolakRawatInap">
                                                             <i class="ti-close me-2"></i>Menolak Rawat Inap
                                                         </label>
@@ -1691,10 +1761,13 @@
                                             </div>
 
                                             <div class="col-md-6">
-                                                <div class="radio-option {{ $selectedOption == 'meninggalDunia' ? 'selected' : '' }}" data-target="formmeninggalDunia">
+                                                <div class="radio-option {{ $selectedOption == 'meninggalDunia' ? 'selected' : '' }}"
+                                                    data-target="formmeninggalDunia">
                                                     <div class="form-check">
-                                                        <input type="radio" class="form-check-input" name="tindakLanjut"
-                                                            value="meninggalDunia" id="meninggalDunia" {{ $selectedOption == 'meninggalDunia' ? 'checked' : '' }}>
+                                                        <input type="radio" class="form-check-input"
+                                                            name="tindakLanjut" value="meninggalDunia"
+                                                            id="meninggalDunia"
+                                                            {{ $selectedOption == 'meninggalDunia' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="meninggalDunia">
                                                             <i class="ti-heart-broken me-2"></i>Meninggal Dunia
                                                         </label>
@@ -1703,10 +1776,13 @@
                                             </div>
 
                                             <div class="col-md-6">
-                                                <div class="radio-option {{ $selectedOption == 'deathoffarrival' ? 'selected' : '' }}" data-target="formDOA">
+                                                <div class="radio-option {{ $selectedOption == 'deathoffarrival' ? 'selected' : '' }}"
+                                                    data-target="formDOA">
                                                     <div class="form-check">
-                                                        <input type="radio" class="form-check-input" name="tindakLanjut"
-                                                            value="deathoffarrival" id="deathoffarrival" {{ $selectedOption == 'deathoffarrival' ? 'checked' : '' }}>
+                                                        <input type="radio" class="form-check-input"
+                                                            name="tindakLanjut" value="deathoffarrival"
+                                                            id="deathoffarrival"
+                                                            {{ $selectedOption == 'deathoffarrival' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="deathoffarrival">
                                                             <i class="ti-pulse me-2"></i>DOA (Death on Arrival)
                                                         </label>
@@ -1717,26 +1793,29 @@
                                     </div>
 
                                     {{-- FORM RAWAT INAP --}}
-                                    <div class="conditional-form" id="formRawatInap" style="display: {{ $selectedOption == 'rawatInap' ? 'block' : 'none' }};">
+                                    <div class="conditional-form" id="formRawatInap"
+                                        style="display: {{ $selectedOption == 'rawatInap' ? 'block' : 'none' }};">
                                         <div class="">
                                             <div class="card-header">
                                                 <h6 class="mb-0"><i class="ti-home me-2"></i>Detail Rawat Inap</h6>
                                             </div>
                                             <div class="card-body">
-                                                @if($selectedOption == 'rawatInap' && $asesmen->tindaklanjut && $asesmen->tindaklanjut->spri)
+                                                @if ($selectedOption == 'rawatInap' && $asesmen->tindaklanjut && $asesmen->tindaklanjut->spri)
                                                     @php $spriData = $asesmen->tindaklanjut->spri; @endphp
                                                     <div class="row g-3">
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label class="form-label required">Tanggal</label>
-                                                                <input type="date" class="form-control" name="tanggalRawatInap" 
+                                                                <input type="date" class="form-control"
+                                                                    name="tanggalRawatInap"
                                                                     value="{{ $spriData->tanggal_ranap ?? date('Y-m-d') }}">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label class="form-label required">Jam</label>
-                                                                <input type="time" class="form-control" name="jamRawatInap"
+                                                                <input type="time" class="form-control"
+                                                                    name="jamRawatInap"
                                                                     value="{{ $spriData->jam_ranap ?? date('H:i') }}">
                                                             </div>
                                                         </div>
@@ -1749,13 +1828,15 @@
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label class="form-label">Hasil Pemeriksaan Penunjang Klinis</label>
+                                                        <label class="form-label">Hasil Pemeriksaan Penunjang
+                                                            Klinis</label>
                                                         <textarea class="form-control" name="hasilPemeriksaan_ranap" rows="3"
                                                             placeholder="Hasil laboratorium, radiologi, dan pemeriksaan penunjang lainnya...">{{ $spriData->hasil_pemeriksaan ?? '' }}</textarea>
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label class="form-label">Jalannya Penyakit & Hasil Konsultasi</label>
+                                                        <label class="form-label">Jalannya Penyakit & Hasil
+                                                            Konsultasi</label>
                                                         <textarea class="form-control" name="jalannyaPenyakit_ranap" rows="3"
                                                             placeholder="Perjalanan penyakit dan hasil konsultasi dengan dokter spesialis...">{{ $spriData->jalannya_penyakit ?? '' }}</textarea>
                                                     </div>
@@ -1783,13 +1864,15 @@
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label class="form-label required">Tanggal</label>
-                                                                <input type="date" class="form-control" name="tanggalRawatInap" value="{{ date('Y-m-d') }}">
+                                                                <input type="date" class="form-control"
+                                                                    name="tanggalRawatInap" value="{{ date('Y-m-d') }}">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label class="form-label required">Jam</label>
-                                                                <input type="time" class="form-control" name="jamRawatInap" value="{{ date('H:i') }}">
+                                                                <input type="time" class="form-control"
+                                                                    name="jamRawatInap" value="{{ date('H:i') }}">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1801,13 +1884,15 @@
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label class="form-label">Hasil Pemeriksaan Penunjang Klinis</label>
+                                                        <label class="form-label">Hasil Pemeriksaan Penunjang
+                                                            Klinis</label>
                                                         <textarea class="form-control" name="hasilPemeriksaan_ranap" rows="3"
                                                             placeholder="Hasil laboratorium, radiologi, dan pemeriksaan penunjang lainnya..."></textarea>
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label class="form-label">Jalannya Penyakit & Hasil Konsultasi</label>
+                                                        <label class="form-label">Jalannya Penyakit & Hasil
+                                                            Konsultasi</label>
                                                         <textarea class="form-control" name="jalannyaPenyakit_ranap" rows="3"
                                                             placeholder="Perjalanan penyakit dan hasil konsultasi dengan dokter spesialis..."></textarea>
                                                     </div>
@@ -1835,7 +1920,8 @@
                                     </div>
 
                                     {{-- FORM RUJUK KELUAR --}}
-                                    <div class="conditional-form" id="formRujukKeluar" style="display: {{ $selectedOption == 'rujukKeluar' ? 'block' : 'none' }};">
+                                    <div class="conditional-form" id="formRujukKeluar"
+                                        style="display: {{ $selectedOption == 'rujukKeluar' ? 'block' : 'none' }};">
                                         <div class="">
                                             <div class="card-header">
                                                 <h6 class="mb-0"><i class="ti-export me-2"></i>Detail Rujukan</h6>
@@ -1845,7 +1931,7 @@
                                                     <label class="form-label required">Tujuan Rujuk</label>
                                                     <input type="text" class="form-control" name="tujuan_rujuk"
                                                         placeholder="Nama rumah sakit/fasilitas kesehatan tujuan"
-                                                        value="{{ $selectedOption == 'rujukKeluar' ? ($tindakLanjutData->tujuan_rujuk ?? '') : '' }}">
+                                                        value="{{ $selectedOption == 'rujukKeluar' ? $tindakLanjutData->tujuan_rujuk ?? '' : '' }}">
                                                 </div>
 
                                                 <div class="row g-3">
@@ -1854,11 +1940,21 @@
                                                             <label class="form-label required">Alasan Rujuk</label>
                                                             <select class="form-select" name="alasan_rujuk">
                                                                 <option value="">Pilih Alasan Rujuk</option>
-                                                                <option value="1" {{ ($selectedOption == 'rujukKeluar' && $tindakLanjutData->alasan_rujuk == '1') ? 'selected' : '' }}>Indikasi Medis</option>
-                                                                <option value="2" {{ ($selectedOption == 'rujukKeluar' && $tindakLanjutData->alasan_rujuk == '2') ? 'selected' : '' }}>Kamar Penuh</option>
-                                                                <option value="3" {{ ($selectedOption == 'rujukKeluar' && $tindakLanjutData->alasan_rujuk == '3') ? 'selected' : '' }}>Permintaan Pasien</option>
-                                                                <option value="4" {{ ($selectedOption == 'rujukKeluar' && $tindakLanjutData->alasan_rujuk == '4') ? 'selected' : '' }}>Keterbatasan Fasilitas</option>
-                                                                <option value="5" {{ ($selectedOption == 'rujukKeluar' && $tindakLanjutData->alasan_rujuk == '5') ? 'selected' : '' }}>Lainnya</option>
+                                                                <option value="1"
+                                                                    {{ $selectedOption == 'rujukKeluar' && $tindakLanjutData->alasan_rujuk == '1' ? 'selected' : '' }}>
+                                                                    Indikasi Medis</option>
+                                                                <option value="2"
+                                                                    {{ $selectedOption == 'rujukKeluar' && $tindakLanjutData->alasan_rujuk == '2' ? 'selected' : '' }}>
+                                                                    Kamar Penuh</option>
+                                                                <option value="3"
+                                                                    {{ $selectedOption == 'rujukKeluar' && $tindakLanjutData->alasan_rujuk == '3' ? 'selected' : '' }}>
+                                                                    Permintaan Pasien</option>
+                                                                <option value="4"
+                                                                    {{ $selectedOption == 'rujukKeluar' && $tindakLanjutData->alasan_rujuk == '4' ? 'selected' : '' }}>
+                                                                    Keterbatasan Fasilitas</option>
+                                                                <option value="5"
+                                                                    {{ $selectedOption == 'rujukKeluar' && $tindakLanjutData->alasan_rujuk == '5' ? 'selected' : '' }}>
+                                                                    Lainnya</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -1867,10 +1963,18 @@
                                                             <label class="form-label required">Transportasi Rujuk</label>
                                                             <select class="form-select" name="transportasi_rujuk">
                                                                 <option value="">Pilih Transportasi Rujuk</option>
-                                                                <option value="1" {{ ($selectedOption == 'rujukKeluar' && $tindakLanjutData->transportasi_rujuk == '1') ? 'selected' : '' }}>Ambulance</option>
-                                                                <option value="2" {{ ($selectedOption == 'rujukKeluar' && $tindakLanjutData->transportasi_rujuk == '2') ? 'selected' : '' }}>Kendaraan Pribadi</option>
-                                                                <option value="3" {{ ($selectedOption == 'rujukKeluar' && $tindakLanjutData->transportasi_rujuk == '3') ? 'selected' : '' }}>Kendaraan Umum</option>
-                                                                <option value="4" {{ ($selectedOption == 'rujukKeluar' && $tindakLanjutData->transportasi_rujuk == '4') ? 'selected' : '' }}>Lainnya</option>
+                                                                <option value="1"
+                                                                    {{ $selectedOption == 'rujukKeluar' && $tindakLanjutData->transportasi_rujuk == '1' ? 'selected' : '' }}>
+                                                                    Ambulance</option>
+                                                                <option value="2"
+                                                                    {{ $selectedOption == 'rujukKeluar' && $tindakLanjutData->transportasi_rujuk == '2' ? 'selected' : '' }}>
+                                                                    Kendaraan Pribadi</option>
+                                                                <option value="3"
+                                                                    {{ $selectedOption == 'rujukKeluar' && $tindakLanjutData->transportasi_rujuk == '3' ? 'selected' : '' }}>
+                                                                    Kendaraan Umum</option>
+                                                                <option value="4"
+                                                                    {{ $selectedOption == 'rujukKeluar' && $tindakLanjutData->transportasi_rujuk == '4' ? 'selected' : '' }}>
+                                                                    Lainnya</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -1879,14 +1983,15 @@
                                                 <div class="form-group mb-0">
                                                     <label class="form-label">Keterangan Tambahan</label>
                                                     <textarea class="form-control" name="keterangan_rujuk" rows="3"
-                                                        placeholder="Keterangan tambahan mengenai rujukan...">{{ $selectedOption == 'rujukKeluar' ? ($tindakLanjutData->keterangan ?? '') : '' }}</textarea>
+                                                        placeholder="Keterangan tambahan mengenai rujukan...">{{ $selectedOption == 'rujukKeluar' ? $tindakLanjutData->keterangan ?? '' : '' }}</textarea>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
                                     {{-- FORM PULANG --}}
-                                    <div class="conditional-form" id="formpulangSembuh" style="display: {{ $selectedOption == 'pulangSembuh' ? 'block' : 'none' }};">
+                                    <div class="conditional-form" id="formpulangSembuh"
+                                        style="display: {{ $selectedOption == 'pulangSembuh' ? 'block' : 'none' }};">
                                         <div class="">
                                             <div class="card-header">
                                                 <h6 class="mb-0"><i class="ti-check me-2"></i>Detail Kepulangan</h6>
@@ -1896,15 +2001,16 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label class="form-label required">Tanggal Pulang</label>
-                                                            <input type="date" class="form-control" name="tanggalPulang"
-                                                                value="{{ $selectedOption == 'pulangSembuh' ? ($tindakLanjutData->tanggal_pulang ?? date('Y-m-d')) : date('Y-m-d') }}">
+                                                            <input type="date" class="form-control"
+                                                                name="tanggalPulang"
+                                                                value="{{ $selectedOption == 'pulangSembuh' ? $tindakLanjutData->tanggal_pulang ?? date('Y-m-d') : date('Y-m-d') }}">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label class="form-label required">Jam Pulang</label>
                                                             <input type="time" class="form-control" name="jamPulang"
-                                                                value="{{ $selectedOption == 'pulangSembuh' ? ($tindakLanjutData->jam_pulang ?? date('H:i')) : date('H:i') }}">
+                                                                value="{{ $selectedOption == 'pulangSembuh' ? $tindakLanjutData->jam_pulang ?? date('H:i') : date('H:i') }}">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1915,10 +2021,18 @@
                                                             <label class="form-label required">Alasan Pulang</label>
                                                             <select class="form-select" name="alasan_pulang">
                                                                 <option value="">Pilih Alasan Pulang</option>
-                                                                <option value="1" {{ ($selectedOption == 'pulangSembuh' && $tindakLanjutData->alasan_pulang == '1') ? 'selected' : '' }}>Sembuh</option>
-                                                                <option value="2" {{ ($selectedOption == 'pulangSembuh' && $tindakLanjutData->alasan_pulang == '2') ? 'selected' : '' }}>Indikasi Medis</option>
-                                                                <option value="3" {{ ($selectedOption == 'pulangSembuh' && $tindakLanjutData->alasan_pulang == '3') ? 'selected' : '' }}>Permintaan Pasien</option>
-                                                                <option value="4" {{ ($selectedOption == 'pulangSembuh' && $tindakLanjutData->alasan_pulang == '4') ? 'selected' : '' }}>Pulang Paksa</option>
+                                                                <option value="1"
+                                                                    {{ $selectedOption == 'pulangSembuh' && $tindakLanjutData->alasan_pulang == '1' ? 'selected' : '' }}>
+                                                                    Sembuh</option>
+                                                                <option value="2"
+                                                                    {{ $selectedOption == 'pulangSembuh' && $tindakLanjutData->alasan_pulang == '2' ? 'selected' : '' }}>
+                                                                    Indikasi Medis</option>
+                                                                <option value="3"
+                                                                    {{ $selectedOption == 'pulangSembuh' && $tindakLanjutData->alasan_pulang == '3' ? 'selected' : '' }}>
+                                                                    Permintaan Pasien</option>
+                                                                <option value="4"
+                                                                    {{ $selectedOption == 'pulangSembuh' && $tindakLanjutData->alasan_pulang == '4' ? 'selected' : '' }}>
+                                                                    Pulang Paksa</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -1927,9 +2041,15 @@
                                                             <label class="form-label required">Kondisi Pulang</label>
                                                             <select class="form-select" name="kondisi_pulang">
                                                                 <option value="">Pilih Kondisi Pulang</option>
-                                                                <option value="1" {{ ($selectedOption == 'pulangSembuh' && $tindakLanjutData->kondisi_pulang == '1') ? 'selected' : '' }}>Mandiri</option>
-                                                                <option value="2" {{ ($selectedOption == 'pulangSembuh' && $tindakLanjutData->kondisi_pulang == '2') ? 'selected' : '' }}>Tidak Mandiri</option>
-                                                                <option value="3" {{ ($selectedOption == 'pulangSembuh' && $tindakLanjutData->kondisi_pulang == '3') ? 'selected' : '' }}>Dengan Bantuan</option>
+                                                                <option value="1"
+                                                                    {{ $selectedOption == 'pulangSembuh' && $tindakLanjutData->kondisi_pulang == '1' ? 'selected' : '' }}>
+                                                                    Mandiri</option>
+                                                                <option value="2"
+                                                                    {{ $selectedOption == 'pulangSembuh' && $tindakLanjutData->kondisi_pulang == '2' ? 'selected' : '' }}>
+                                                                    Tidak Mandiri</option>
+                                                                <option value="3"
+                                                                    {{ $selectedOption == 'pulangSembuh' && $tindakLanjutData->kondisi_pulang == '3' ? 'selected' : '' }}>
+                                                                    Dengan Bantuan</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -1939,18 +2059,21 @@
                                     </div>
 
                                     {{-- FORM BEROBAT JALAN --}}
-                                    <div class="conditional-form" id="formberobatJalan" style="display: {{ $selectedOption == 'berobatJalan' ? 'block' : 'none' }};">
+                                    <div class="conditional-form" id="formberobatJalan"
+                                        style="display: {{ $selectedOption == 'berobatJalan' ? 'block' : 'none' }};">
                                         <div class="">
                                             <div class="card-header">
-                                                <h6 class="mb-0"><i class="ti-calendar me-2"></i>Detail Berobat Jalan</h6>
+                                                <h6 class="mb-0"><i class="ti-calendar me-2"></i>Detail Berobat Jalan
+                                                </h6>
                                             </div>
                                             <div class="card-body">
                                                 <div class="row g-3">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label class="form-label required">Tanggal Berobat</label>
-                                                            <input type="date" class="form-control" name="tanggal_rajal"
-                                                                value="{{ $selectedOption == 'berobatJalan' ? ($tindakLanjutData->tanggal_rajal ?? '') : '' }}">
+                                                            <input type="date" class="form-control"
+                                                                name="tanggal_rajal"
+                                                                value="{{ $selectedOption == 'berobatJalan' ? $tindakLanjutData->tanggal_rajal ?? '' : '' }}">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
@@ -1959,8 +2082,8 @@
                                                             <select class="form-select" name="poli_unit_tujuan">
                                                                 <option value="">Pilih Poli</option>
                                                                 @foreach ($unitPoli as $poli)
-                                                                    <option value="{{ $poli->kd_unit }}" 
-                                                                        {{ ($selectedOption == 'berobatJalan' && $tindakLanjutData->poli_unit_tujuan == $poli->kd_unit) ? 'selected' : '' }}>
+                                                                    <option value="{{ $poli->kd_unit }}"
+                                                                        {{ $selectedOption == 'berobatJalan' && $tindakLanjutData->poli_unit_tujuan == $poli->kd_unit ? 'selected' : '' }}>
                                                                         {{ $poli->nama_unit }}
                                                                     </option>
                                                                 @endforeach
@@ -1972,48 +2095,54 @@
                                                 <div class="form-group mb-0">
                                                     <label class="form-label">Catatan untuk Poli</label>
                                                     <textarea class="form-control" name="catatan_rajal" rows="3"
-                                                        placeholder="Catatan khusus untuk poli tujuan...">{{ $selectedOption == 'berobatJalan' ? ($tindakLanjutData->keterangan ?? '') : '' }}</textarea>
+                                                        placeholder="Catatan khusus untuk poli tujuan...">{{ $selectedOption == 'berobatJalan' ? $tindakLanjutData->keterangan ?? '' : '' }}</textarea>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
                                     {{-- FORM MENOLAK RAWAT INAP --}}
-                                    <div class="conditional-form" id="formMenolakRawatInap" style="display: {{ $selectedOption == 'menolakRawatInap' ? 'block' : 'none' }};">
+                                    <div class="conditional-form" id="formMenolakRawatInap"
+                                        style="display: {{ $selectedOption == 'menolakRawatInap' ? 'block' : 'none' }};">
                                         <div class="">
                                             <div class="card-header">
-                                                <h6 class="mb-0"><i class="ti-close me-2"></i>Detail Penolakan Rawat Inap</h6>
+                                                <h6 class="mb-0"><i class="ti-close me-2"></i>Detail Penolakan Rawat
+                                                    Inap</h6>
                                             </div>
                                             <div class="card-body">
                                                 <div class="form-group">
                                                     <label class="form-label required">Alasan Menolak</label>
                                                     <textarea class="form-control" name="alasanMenolak" rows="3"
-                                                        placeholder="Jelaskan alasan pasien/keluarga menolak rawat inap...">{{ $selectedOption == 'menolakRawatInap' ? ($tindakLanjutData->keterangan ?? '') : '' }}</textarea>
+                                                        placeholder="Jelaskan alasan pasien/keluarga menolak rawat inap...">{{ $selectedOption == 'menolakRawatInap' ? $tindakLanjutData->keterangan ?? '' : '' }}</textarea>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
                                     {{-- FORM MENINGGAL DUNIA --}}
-                                    <div class="conditional-form" id="formmeninggalDunia" style="display: {{ $selectedOption == 'meninggalDunia' ? 'block' : 'none' }};">
+                                    <div class="conditional-form" id="formmeninggalDunia"
+                                        style="display: {{ $selectedOption == 'meninggalDunia' ? 'block' : 'none' }};">
                                         <div class="">
                                             <div class="card-header">
-                                                <h6 class="mb-0"><i class="ti-heart-broken me-2"></i>Detail Kematian</h6>
+                                                <h6 class="mb-0"><i class="ti-heart-broken me-2"></i>Detail Kematian
+                                                </h6>
                                             </div>
                                             <div class="card-body">
                                                 <div class="row g-3">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label class="form-label required">Tanggal Meninggal</label>
-                                                            <input type="date" class="form-control" name="tanggalMeninggal"
-                                                                value="{{ $selectedOption == 'meninggalDunia' ? ($tindakLanjutData->tanggal_meninggal ?? date('Y-m-d')) : date('Y-m-d') }}">
+                                                            <input type="date" class="form-control"
+                                                                name="tanggalMeninggal"
+                                                                value="{{ $selectedOption == 'meninggalDunia' ? $tindakLanjutData->tanggal_meninggal ?? date('Y-m-d') : date('Y-m-d') }}">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label class="form-label required">Jam Meninggal</label>
-                                                            <input type="time" class="form-control" name="jamMeninggal"
-                                                                value="{{ $selectedOption == 'meninggalDunia' ? ($tindakLanjutData->jam_meninggal ?? date('H:i')) : date('H:i') }}">
+                                                            <input type="time" class="form-control"
+                                                                name="jamMeninggal"
+                                                                value="{{ $selectedOption == 'meninggalDunia' ? $tindakLanjutData->jam_meninggal ?? date('H:i') : date('H:i') }}">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2021,17 +2150,19 @@
                                                 <div class="form-group">
                                                     <label class="form-label">Keterangan Kematian</label>
                                                     <textarea class="form-control" name="penyebab_kematian" rows="3"
-                                                        placeholder="Jelaskan penyebab kematian berdasarkan kondisi klinis...">{{ $selectedOption == 'meninggalDunia' ? ($tindakLanjutData->keterangan ?? '') : '' }}</textarea>
+                                                        placeholder="Jelaskan penyebab kematian berdasarkan kondisi klinis...">{{ $selectedOption == 'meninggalDunia' ? $tindakLanjutData->keterangan ?? '' : '' }}</textarea>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
                                     {{-- FORM DOA --}}
-                                    <div class="conditional-form" id="formDOA" style="display: {{ $selectedOption == 'deathoffarrival' ? 'block' : 'none' }};">
+                                    <div class="conditional-form" id="formDOA"
+                                        style="display: {{ $selectedOption == 'deathoffarrival' ? 'block' : 'none' }};">
                                         <div class="">
                                             <div class="card-header">
-                                                <h6 class="mb-0"><i class="ti-pulse me-2"></i>Detail DOA (Death on Arrival)</h6>
+                                                <h6 class="mb-0"><i class="ti-pulse me-2"></i>Detail DOA (Death on
+                                                    Arrival)</h6>
                                             </div>
                                             <div class="card-body">
                                                 <div class="row g-3">
@@ -2039,14 +2170,14 @@
                                                         <div class="form-group">
                                                             <label class="form-label required">Tanggal Tiba</label>
                                                             <input type="date" class="form-control" name="tanggalDoa"
-                                                                value="{{ $selectedOption == 'deathoffarrival' ? ($tindakLanjutData->tanggal_meninggal ?? date('Y-m-d')) : date('Y-m-d') }}">
+                                                                value="{{ $selectedOption == 'deathoffarrival' ? $tindakLanjutData->tanggal_meninggal ?? date('Y-m-d') : date('Y-m-d') }}">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label class="form-label required">Jam Tiba</label>
                                                             <input type="time" class="form-control" name="jamDoa"
-                                                                value="{{ $selectedOption == 'deathoffarrival' ? ($tindakLanjutData->jam_meninggal ?? date('H:i')) : date('H:i') }}">
+                                                                value="{{ $selectedOption == 'deathoffarrival' ? $tindakLanjutData->jam_meninggal ?? date('H:i') : date('H:i') }}">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2054,13 +2185,14 @@
                                                 <div class="form-group mb-0">
                                                     <label class="form-label">Keterangan</label>
                                                     <textarea class="form-control" name="keterangan_doa" rows="3"
-                                                        placeholder="Tindakan yang telah dilakukan (jika ada)...">{{ $selectedOption == 'deathoffarrival' ? ($tindakLanjutData->keterangan ?? '') : '' }}</textarea>
+                                                        placeholder="Tindakan yang telah dilakukan (jika ada)...">{{ $selectedOption == 'deathoffarrival' ? $tindakLanjutData->keterangan ?? '' : '' }}</textarea>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <input type="hidden" name="tindak_lanjut_data" id="tindakLanjutData" value="">
+                                    <input type="hidden" name="tindak_lanjut_data" id="tindakLanjutData"
+                                        value="">
                                 </div>
 
                                 {{-- SUBMIT BUTTON --}}
@@ -2342,13 +2474,15 @@
         function initDiagnosis() {
             // Parse existing diagnosis data from PHP
             let diagnosisArray = [];
-            
+
             // Get existing diagnosis data from the rendered HTML
             const existingItems = document.querySelectorAll('.diagnosis-item');
             existingItems.forEach(item => {
                 const diagnosisText = item.querySelector('.diagnosis-content .fw-medium').textContent.trim();
                 if (diagnosisText) {
-                    diagnosisArray.push({ nama: diagnosisText });
+                    diagnosisArray.push({
+                        nama: diagnosisText
+                    });
                 }
             });
 
@@ -2480,11 +2614,11 @@
                                 <div class="fw-medium text-dark">${diagnosis.nama}</div>
                             </div>
                             <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-outline-primary edit-diagnosis" 
+                                <button type="button" class="btn btn-sm btn-outline-primary edit-diagnosis"
                                         data-index="${index}" title="Edit">
                                     <i class="ti-pencil"></i>
                                 </button>
-                                <button type="button" class="btn btn-sm btn-outline-danger delete-diagnosis" 
+                                <button type="button" class="btn btn-sm btn-outline-danger delete-diagnosis"
                                         data-index="${index}" title="Hapus">
                                     <i class="ti-trash"></i>
                                 </button>
@@ -2624,7 +2758,7 @@
                 } else if (mode === 'edit' && index !== -1) {
                     modalLabel.textContent = 'Edit Alat yang Terpasang';
                     const alat = alatArray[index];
-                    
+
                     namaAlatSelect.value = alat.nama || '';
                     if (alat.nama === 'Lainnya' && alat.nama_lainnya) {
                         alatLainnyaGroup.style.display = 'block';
@@ -2721,11 +2855,11 @@
                         <td>${alat.keterangan || '-'}</td>
                         <td>
                             <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-outline-primary edit-alat" 
+                                <button type="button" class="btn btn-sm btn-outline-primary edit-alat"
                                         data-index="${index}" title="Edit">
                                     <i class="ti-pencil"></i>
                                 </button>
-                                <button type="button" class="btn btn-sm btn-outline-danger delete-alat" 
+                                <button type="button" class="btn btn-sm btn-outline-danger delete-alat"
                                         data-index="${index}" title="Hapus">
                                     <i class="ti-trash"></i>
                                 </button>
@@ -2760,12 +2894,12 @@
                 const alatLainnya = document.getElementById('alatLainnya');
                 const lokasiAlat = document.getElementById('lokasiAlat');
                 const keteranganAlat = document.getElementById('keteranganAlat');
-                
+
                 if (namaAlat) namaAlat.value = '';
                 if (alatLainnya) alatLainnya.value = '';
                 if (lokasiAlat) lokasiAlat.value = '';
                 if (keteranganAlat) keteranganAlat.value = '';
-                
+
                 const alatLainnyaGroup = document.getElementById('alatLainnyaGroup');
                 if (alatLainnyaGroup) {
                     alatLainnyaGroup.style.display = 'none';
@@ -2775,7 +2909,7 @@
             function toggleAlatLainnya() {
                 const namaAlatValue = document.getElementById('namaAlat').value;
                 const alatLainnyaGroup = document.getElementById('alatLainnyaGroup');
-                
+
                 if (namaAlatValue === 'Lainnya') {
                     alatLainnyaGroup.style.display = 'block';
                     document.getElementById('alatLainnya').focus();
@@ -2792,7 +2926,7 @@
         }
 
 
-        // =================== IMT FUNCTIONS =================== 
+        // =================== IMT FUNCTIONS ===================
         function hitungIMT() {
             const tbInput = document.getElementById('tbInput');
             const bbInput = document.getElementById('bbInput');
@@ -2846,7 +2980,7 @@
         function initTindakLanjut() {
             const radioOptions = document.querySelectorAll('.radio-option');
             const radioInputs = document.querySelectorAll('input[name="tindakLanjut"]');
-            
+
             // Check pre-selected option pada page load (untuk edit mode)
             const preSelectedRadio = document.querySelector('input[name="tindakLanjut"]:checked');
             if (preSelectedRadio) {
@@ -2858,7 +2992,7 @@
                     setTimeout(updateTindakLanjutData, 100);
                 }
             }
-            
+
             // Event listener untuk radio options (div click)
             radioOptions.forEach(option => {
                 option.addEventListener('click', function() {
@@ -2866,7 +3000,7 @@
                     if (radioInput && !radioInput.disabled) {
                         radioInputs.forEach(r => r.checked = false);
                         radioInput.checked = true;
-                        
+
                         const targetForm = this.dataset.target;
                         handleTindakLanjutChange(radioInput.value, targetForm);
                     }
@@ -2899,7 +3033,7 @@
             function handleTindakLanjutChange(value, targetForm) {
                 updateRadioOptionStates();
                 hideAllConditionalForms();
-                
+
                 if (targetForm) {
                     showConditionalForm(targetForm);
                 }
@@ -2916,7 +3050,7 @@
             function updateRadioOptionStates() {
                 radioOptions.forEach(option => {
                     const radioInput = option.querySelector('input[type="radio"]');
-                    
+
                     if (radioInput && radioInput.checked) {
                         option.classList.add('selected');
                         option.style.backgroundColor = '#e3f2fd';
@@ -2946,7 +3080,7 @@
                 const currentDate = new Date().toISOString().split('T')[0];
                 const currentTime = new Date().toTimeString().slice(0, 5);
 
-                switch(tindakLanjut) {
+                switch (tindakLanjut) {
                     case 'rawatInap':
                         const tanggalRawatInput = document.querySelector('input[name="tanggalRawatInap"]');
                         const jamRawatInput = document.querySelector('input[name="jamRawatInap"]');
@@ -2957,7 +3091,7 @@
                             jamRawatInput.value = currentTime;
                         }
                         break;
-                        
+
                     case 'pulangSembuh':
                         const tanggalPulangInput = document.querySelector('input[name="tanggalPulang"]');
                         const jamPulangInput = document.querySelector('input[name="jamPulang"]');
@@ -2968,7 +3102,7 @@
                             jamPulangInput.value = currentTime;
                         }
                         break;
-                        
+
                     case 'meninggalDunia':
                         const tanggalMeninggalInput = document.querySelector('input[name="tanggalMeninggal"]');
                         const jamMeninggalInput = document.querySelector('input[name="jamMeninggal"]');
@@ -2979,7 +3113,7 @@
                             jamMeninggalInput.value = currentTime;
                         }
                         break;
-                        
+
                     case 'deathoffarrival':
                         const tanggalDoaInput = document.querySelector('input[name="tanggalDoa"]');
                         const jamDoaInput = document.querySelector('input[name="jamDoa"]');
@@ -3022,7 +3156,7 @@
                     tindakLanjutData.diagnosis_ranap = document.querySelector('textarea[name="diagnosis_ranap"]')?.value ||
                         '';
                     tindakLanjutData.tindakan_ranap = document.querySelector('textarea[name="tindakan_ranap"]')?.value ||
-                    '';
+                        '';
                     tindakLanjutData.anjuran_ranap = document.querySelector('textarea[name="anjuran_ranap"]')?.value || '';
                     break;
                 case 'rujukKeluar':
@@ -3059,7 +3193,7 @@
                     tindakLanjutData.tanggalDoa = document.querySelector('input[name="tanggalDoa"]')?.value || '';
                     tindakLanjutData.jamDoa = document.querySelector('input[name="jamDoa"]')?.value || '';
                     tindakLanjutData.keterangan_doa = document.querySelector('textarea[name="keterangan_doa"]')?.value ||
-                    '';
+                        '';
                     break;
             }
 

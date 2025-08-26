@@ -1,4 +1,5 @@
 @extends('layouts.administrator.master')
+
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
@@ -144,7 +145,7 @@
                 var queryString = '?start_date=' + startDate + '&end_date=' + endDate;
 
                 window.location.href =
-                    "{{ route('konsultasi.index', [$dataMedis->kd_pasien,$dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" +
+                    "{{ route('konsultasi.index', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" +
                     queryString;
             });
         });
@@ -187,13 +188,14 @@
             let $this = $(this);
             let btnSubmit = $this.find('button[type="submit"]');
 
-            $(btnSubmit).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+            $(btnSubmit).html(
+                '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
             $(btnSubmit).prop('disabled', true);
 
         });
 
         // mencegah menekan enter agar tidak mengirim data form
-        $('#addKonsulModal form').keypress(function (e) {
+        $('#addKonsulModal form').keypress(function(e) {
             if (e.key === "Enter") {
                 e.preventDefault();
             }
@@ -267,7 +269,8 @@
                         $modal.find('#dokter_pengirim').val(konsultasi.kd_dokter).trigger('change');
                         $modal.find('#tgl_konsul').val(konsultasi.tgl_konsul);
                         $modal.find('#jam_konsul').val(konsultasi.jam_konsul.split('.')[0]);
-                        $modal.find('#dokter_tujuan').val(konsultasi.kd_dokter_tujuan).trigger('change');
+                        $modal.find('#dokter_tujuan').val(konsultasi.kd_dokter_tujuan).trigger(
+                            'change');
                         $modal.find('#konsultasi').val(konsultasi.konsultasi);
                         $modal.find('#instruksi').val(konsultasi.instruksi);
 
@@ -289,13 +292,14 @@
             let $this = $(this);
             let btnSubmit = $this.find('button[type="submit"]');
 
-            $(btnSubmit).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+            $(btnSubmit).html(
+                '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
             $(btnSubmit).prop('disabled', true);
 
         });
 
         // mencegah menekan enter agar tidak mengirim data form
-        $('#editKonsulModal form').keypress(function (e) {
+        $('#editKonsulModal form').keypress(function(e) {
             if (e.key === "Enter") {
                 e.preventDefault();
             }
