@@ -145,11 +145,21 @@ class RadiologiController extends Controller
             ->orderBy('kd_order', 'desc')
             ->get();
 
+        // ambil Diagnosis dari emr_resume
+        $resumeData = RMEResume::with(['kunjungan'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kd_unit', 3)
+            ->orderBy('tgl_masuk', 'desc')
+            ->first();
+
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.radiologi.index', [
             'dataMedis'     => $dataMedis,
             'dokter'        => $dokter,
             'produk'        => $produk,
-            'radList'       => $radList
+            'radList'       => $radList,
+            'resumeData'    => $resumeData
         ]);
     }
 
@@ -246,7 +256,7 @@ class RadiologiController extends Controller
                 'tgl_order'     => 'required',
                 'jam_order'     => 'required',
                 'cyto'          => 'required',
-                // 'puasa'         => 'required',
+                'indikasi_klinis'         => 'nullable',
             ], $valMessage);
 
             // check produk
@@ -299,7 +309,8 @@ class RadiologiController extends Controller
                 'puasa'                 => 0,
                 'jadwal_pemeriksaan'    => $jadwalPemeriksaan,
                 'diagnosis'             => $request->diagnosis,
-                'user_create' => Auth::id()
+                'user_create' => Auth::id(),
+                'indikasi_klinis'       => $request->indikasi_klinis
             ];
 
             SegalaOrder::create($segalaOrderData);
@@ -389,7 +400,7 @@ class RadiologiController extends Controller
                 'tgl_order'     => 'required',
                 'jam_order'     => 'required',
                 'cyto'          => 'required',
-                // 'puasa'         => 'required',
+                'indikasi_klinis'         => 'nullable',
             ], $valMessage);
 
             // check produk
@@ -425,6 +436,7 @@ class RadiologiController extends Controller
             $order->diagnosis = $request->diagnosis;
             $order->jadwal_pemeriksaan = $jadwalPemeriksaan;
             $order->user_edit = Auth::id();
+            $order->indikasi_klinis       = $request->indikasi_klinis;
             $order->save();
 
             // update order detail

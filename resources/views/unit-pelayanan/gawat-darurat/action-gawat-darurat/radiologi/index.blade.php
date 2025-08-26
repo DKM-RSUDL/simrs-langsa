@@ -3,8 +3,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
         /* .header-background {
-                                                                                            background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                                                                                        } */
+                                                                                                    background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
+                                                                                                } */
     </style>
 @endpush
 
@@ -282,6 +282,7 @@
                             $modal.find('#jam_pemeriksaan').val(jamPemeriksaan);
                         }
                         $modal.find('#diagnosis').val(orderData.diagnosis);
+                        $modal.find('#indikasi_klinis').val(orderData.indikasi_klinis);
 
                         let listProduk = '';
 
@@ -464,6 +465,7 @@
                         $modal.find('#puasa').text(puasaLabel);
                         if (tglPemeriksaan) $modal.find('#jadwal_pemeriksaan').text(jadwalPemeriksaan);
                         $modal.find('#diagnosis').text(orderData.diagnosis);
+                        $modal.find('#indikasi_klinis').text(orderData.indikasi_klinis);
 
                         let listProduk = '';
 
