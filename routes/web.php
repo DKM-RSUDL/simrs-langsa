@@ -1040,7 +1040,6 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
-
                         });
                     });
                 });
@@ -2277,7 +2276,6 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
-
                         });
                     });
                 });
@@ -2293,6 +2291,9 @@ Route::middleware('ssoToken')->group(function () {
                 Route::post('/store-triase', [GawatDaruratController::class, 'storeTriase'])->name('gawat-darurat.store-triase');
                 Route::post('/get-patient-bynik-ajax', [GawatDaruratController::class, 'getPatientByNikAjax'])->name('gawat-darurat.get-patient-bynik-ajax');
                 Route::post('/get-patient-bynama-ajax', [GawatDaruratController::class, 'getPatientByNamaAjax'])->name('gawat-darurat.get-patient-bynama-ajax');
+                Route::post('/get-patient-byalamat-ajax', [GawatDaruratController::class, 'getPatientByAlamatAjax'])->name('gawat-darurat.get-patient-byalamat-ajax');
+                Route::post('/get-triase-data', [GawatDaruratController::class, 'getTriaseData'])->name('gawat-darurat.get-triase-data');
+                Route::put('/ubah-foto-triase/{kdKasir}/{noTrx}', [GawatDaruratController::class, 'updateFotoTriase'])->name('gawat-darurat.ubah-foto-triase');
 
                 Route::prefix('pelayanan')->group(function () {
                     Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {
@@ -2858,21 +2859,21 @@ Route::middleware('ssoToken')->group(function () {
                         });
 
                         // Echocardiography
-                            Route::prefix('{urut_masuk}/echocardiography')->group(function () {
-                                Route::name('echocardiography')->group(function () {
-                                    Route::controller(GawatDaruratEchocardiographyController::class)->group(function () {
-                                        Route::get('/', 'index')->name('.index');
-                                        Route::post('/', 'store')->name('.store');
-                                        Route::get('/create', 'create')->name('.create');
-                                        Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
-                                        Route::get('/{data}', 'show')->name('.show');
-                                        Route::get('/{data}/edit', 'edit')->name('.edit');
-                                        Route::put('/{data}', 'update')->name('.update');
-                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
-                                        Route::delete('/{data}', 'destroy')->name('.destroy');
-                                    });
+                        Route::prefix('{urut_masuk}/echocardiography')->group(function () {
+                            Route::name('echocardiography')->group(function () {
+                                Route::controller(GawatDaruratEchocardiographyController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
                                 });
                             });
+                        });
 
                         Route::resource('/', MedisGawatDaruratController::class);
                         // Route::resource('asesmen', GawatDaruratAsesmenController::class);
@@ -2988,7 +2989,6 @@ Route::middleware('ssoToken')->group(function () {
                                         });
                                     });
                                 });
-
                             });
                         });
                     });

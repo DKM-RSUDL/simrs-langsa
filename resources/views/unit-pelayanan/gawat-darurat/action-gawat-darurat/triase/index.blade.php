@@ -490,7 +490,7 @@
                                                             <div class="col-md-3">
                                                                 <div class="form-group">
                                                                     <label for="suhu">Suhu &deg;C</label>
-                                                                    <input type="number" name="suhu" id="suhu"
+                                                                    <input type="text" name="suhu" id="suhu"
                                                                         class="form-control">
                                                                 </div>
                                                             </div>
@@ -871,7 +871,8 @@
                                                 <div class="d-flex align-items-center w-100">
                                                     <p class="fw-medium text-primary m-0 p-0">Kesimpulan Triase :</p>
                                                     <button type="button" id="triaseStatusLabel"
-                                                        class="btn btn-block ms-3 w-100"></button>
+                                                        class="btn btn-block ms-3 w-100" data-bs-toggle="modal"
+                                                        data-bs-target="#kodeTriaseModal"></button>
                                                     <input type="hidden" name="kd_triase" id="kd_triase">
                                                     <input type="hidden" name="ket_triase" id="ket_triase">
                                                 </div>
@@ -884,18 +885,12 @@
                         </div>
                     </div>
                     <div class="card-footer text-end">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#daftarPasienTriaseModal">
-        Launch demo modal
-    </button>
 
     <!-- Modal -->
     <div class="modal fade" id="daftarPasienTriaseModal" data-bs-backdrop="static" data-bs-keyboard="false"
@@ -910,7 +905,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-hover table-striped">
+                                <table class="table table-bordered table-hover table-striped" id="list-pasien-triase">
                                     <thead>
                                         <tr align="middle">
                                             <th>NO</th>
@@ -927,6 +922,46 @@
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal Kode Triase -->
+    <div class="modal fade" id="kodeTriaseModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="kodeTriaseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="kodeTriaseModalLabel">Kode Triase</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <button class="btn btn-success d-block w-100 mb-3 btn-triase-label"
+                                data-triase="FALSE EMERGENCY (60 menit)" data-kode="1">
+                                FALSE EMERGENCY (60 menit)
+                            </button>
+                            <button class="btn btn-warning d-block w-100 mb-3 btn-triase-label"
+                                data-triase="URGENT (30 menit)" data-kode="2">
+                                URGENT (30 menit)
+                            </button>
+                            <button class="btn btn-danger d-block w-100 mb-3 btn-triase-label"
+                                data-triase="EMERGENCY (10 menit)" data-kode="3">
+                                EMERGENCY (10 menit)
+                            </button>
+                            <button class="btn btn-danger d-block w-100 mb-3 btn-triase-label"
+                                data-triase="RESUSITASI (segera)" data-kode="4">
+                                RESUSITASI (segera)
+                            </button>
+                            <button class="btn btn-dark d-block w-100 mb-3 btn-triase-label" data-triase="DOA"
+                                data-kode="5">
+                                DOA
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1020,6 +1055,18 @@
                     return 'btn btn-block ms-3 w-100';
             }
         }
+
+        $('#kodeTriaseModal .btn-triase-label').click(function() {
+            let $this = $(this);
+            let triaseLabel = $this.attr('data-triase');
+            let kdTriase = $this.attr('data-kode');
+
+            $('#triaseStatusLabel').text(triaseLabel).attr('class', determineClass(triaseLabel));
+            $('#kd_triase').val(kdTriase);
+            $('#ket_triase').val(triaseLabel);
+
+            $('#kodeTriaseModal').modal('hide');
+        });
 
         // Input Rujukan Change
         $('input[name="rujukan"]').change(function(e) {
@@ -1245,7 +1292,7 @@
                                         <td align="middle">${e.kd_pasien}</td>
                                         <td>${e.nama}</td>
                                         <td align="middle">${e.no_pengenal != null ? e.no_pengenal : '-'}</td>
-                                        <td align="middle">${e.no_pengenal}</td>
+                                        <td align="middle">${hitungUmur(e.tgl_lahir).tahun}</td>
                                         <td>${e.alamat}</td>
                                         <td align="middle">
                                             <button class="btn btn-sm btn-success btn-select-pasien" data-rm="${e.kd_pasien}" data-nama="${e.nama}" data-lahir="${e.tgl_lahir}" data-alamat="${e.alamat}" data-nik="${e.no_pengenal == null ? '' : e.no_pengenal}" data-gender="${e.jenis_kelamin}">
@@ -1257,6 +1304,94 @@
                         });
 
                         $('#daftarPasienTriaseModal table tbody').html(html);
+                        $('#list-pasien-triase').dataTable();
+                        $('#daftarPasienTriaseModal').modal('show');
+
+                        // let umur = hitungUmur(data.tgl_lahir);
+                        // $('#usia_tahun').val(umur.tahun);
+                        // $('#usia_bulan').val(umur.bulan);
+                        // $('#usia_tahun').prop('readonly', true);
+                        // $('#usia_bulan').prop('readonly', true);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    showToast('error', 'Internal server error');
+                }
+            });
+        });
+
+        // Search name
+        $('#button-alamat-pasien').click(function(e) {
+
+            let $this = $(this);
+            let $alamatEl = $('#alamat_pasien');
+            let alamatPasien = $alamatEl.val();
+
+            if (alamatPasien.length > 0) {
+                let nowDate = getWaktuSekarang();
+                $('#tgl_masuk').val(nowDate.formatTanggal);
+                $('#jam_masuk').val(nowDate.formatWaktu);
+
+            } else {
+                showToast('error', 'Alamat Pasien tidak boleh kosong!');
+
+                $('#no_rm_label').text('');
+                $('input, select').not('input[name="rujukan"], input[type="checkbox"]').val('');
+                $('input, select').prop('readonly', false);
+
+                return false;
+            }
+
+
+            $.ajax({
+                type: "post",
+                url: "{{ route('gawat-darurat.get-patient-byalamat-ajax') }}",
+                data: {
+                    '_token': "{{ csrf_token() }}",
+                    'alamat': alamatPasien
+                },
+                dataType: "json",
+                beforeSend: function() {
+                    // Ubah teks tombol dan tambahkan spinner
+                    $alamatEl.prop('disabled', true);
+                    $this.html(
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
+                    );
+                    $this.prop('disabled', true); // Nonaktifkan tombol selama proses berlangsung
+                },
+                complete: function() {
+                    // Ubah teks tombol jadi icon search dan disable nonaktif
+                    $alamatEl.prop('disabled', false);
+                    $this.html('<i class="ti ti-search"></i>');
+                    $this.prop('disabled', false);
+                },
+                success: function(res) {
+                    showToast(res.status, res.message);
+
+
+                    if (res.status == 'success') {
+                        let data = res.data;
+
+                        let html = '';
+                        $.each(data, function(i, e) {
+                            html += `<tr>
+                                        <td align="middle">${i+1}</td>
+                                        <td align="middle">${e.kd_pasien}</td>
+                                        <td>${e.nama}</td>
+                                        <td align="middle">${e.no_pengenal != null ? e.no_pengenal : '-'}</td>
+                                        <td align="middle">${hitungUmur(e.tgl_lahir).tahun}</td>
+                                        <td>${e.alamat}</td>
+                                        <td align="middle">
+                                            <button class="btn btn-sm btn-success btn-select-pasien" data-rm="${e.kd_pasien}" data-nama="${e.nama}" data-lahir="${e.tgl_lahir}" data-alamat="${e.alamat}" data-nik="${e.no_pengenal == null ? '' : e.no_pengenal}" data-gender="${e.jenis_kelamin}">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                        </td>
+                                    </tr>`;
+
+                        });
+
+                        $('#daftarPasienTriaseModal table tbody').html(html);
+                        $('#list-pasien-triase').dataTable();
                         $('#daftarPasienTriaseModal').modal('show');
 
                         // let umur = hitungUmur(data.tgl_lahir);
