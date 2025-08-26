@@ -206,9 +206,7 @@
                                 </span>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-danger btn-sm" onclick="removeAlergiFromModal(${index})">
-                                    <i class="bi bi-trash"></i>
-                                </button>
+                                
                                 ${item.is_existing ? '<small class="text-muted d-block">Dari DB</small>' : '<small class="text-success d-block">Baru</small>'}
                             </td>
                         `;

@@ -175,7 +175,7 @@
     @foreach ($asesmen as $item)
     <li class="list-group-item d-flex justify-content-between align-items-center" data-id="{{ $item->id }}"
         data-date="{{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('Y-m-d') }}"
-        data-name="{{ $item->user->name }}">
+        data-name="{{ $item->user->name ?? '' }}">
 
         <div class="d-flex align-items-center gap-4">
 
@@ -199,7 +199,7 @@
                         Asesmen {{ getKategoriAsesmen($item->kategori, $item->sub_kategori) }}
                     </div>
                     <div class="text-muted">
-                        By: <span class="fw-semibold">{{ $item->user->name }}</span>
+                        By: <span class="fw-semibold">{{ $item->user->name ?? '' }}</span>
                     </div>
                 </div>
             </div>
@@ -339,6 +339,28 @@
             </a>
             @endif
 
+            @if ($item->kategori == 1 && $item->sub_kategori == 1)
+                <a href="{{ route('rawat-inap.asesmen.medis.pengkajian-awal-medis.show', [
+                    'kd_unit' => $dataMedis->kd_unit,
+                    'kd_pasien' => $dataMedis->kd_pasien,
+                    'tgl_masuk' => date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
+                    'urut_masuk' => $dataMedis->urut_masuk,
+                    'id' => $item->asesmenMedisRanap->id ?? $item->id
+                ]) }}" class="btn btn-sm btn-info">
+                    <i class="fas fa-eye me-1"></i> Lihat
+                </a>
+
+                <a href="{{ route('rawat-inap.asesmen.medis.pengkajian-awal-medis.edit', [
+                    'kd_unit' => $dataMedis->kd_unit,
+                    'kd_pasien' => $dataMedis->kd_pasien,
+                    'tgl_masuk' => date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
+                    'urut_masuk' => $dataMedis->urut_masuk,
+                    'id' => $item->asesmenMedisRanap->id ?? $item->id
+                ]) }}" class="btn btn-sm btn-secondary">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+            @endif
+
             @if ($item->kategori == 1 && $item->sub_kategori == 4)
             <a href="{{ route('rawat-inap.asesmen.medis.obstetri-maternitas.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                 class="btn btn-sm btn-info">
@@ -349,6 +371,7 @@
                 class="btn btn-sm btn-secondary">
                 <i class="fas fa-edit"></i> Edit
             </a>
+
             @elseif($item->kategori == 1 && $item->sub_kategori == 3)
             <a href="{{ route('rawat-inap.asesmen.medis.neurologi.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                 class="btn btn-sm btn-info">

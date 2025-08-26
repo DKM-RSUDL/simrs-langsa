@@ -440,7 +440,7 @@ class RmeAsesmen extends Model
     {
         return $this->hasOne(RmeAsesmenGinekologikPemeriksaanFisik::class, 'id_asesmen', 'id');
     }
-    
+
     // Asesmen Terminal
     public function rmeAsesmenTerminal()
     {
@@ -457,5 +457,23 @@ class RmeAsesmen extends Model
     public function rmeAsesmenTerminalAf()
     {
         return $this->hasOne(RmeAsesmenTerminalAf::class, 'id_asesmen', 'id');
+    }
+
+    // asesmen pengkajian awal medis
+    public function asesmenMedisRanap()
+    {
+        return $this->hasOne(RmeAsesmenMedisRanap::class, 'id_asesmen', 'id');
+    }
+
+    // Scope untuk filter berdasarkan kategori
+    public function scopeByKategori($query, $kategori)
+    {
+        return $query->where('kategori', $kategori);
+    }
+
+    // Scope untuk filter berdasarkan sub kategori
+    public function scopeBySubKategori($query, $sub_kategori)
+    {
+        return $query->where('sub_kategori', $sub_kategori);
     }
 }

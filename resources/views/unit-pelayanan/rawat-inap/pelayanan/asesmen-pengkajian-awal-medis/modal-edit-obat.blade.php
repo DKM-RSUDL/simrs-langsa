@@ -17,15 +17,15 @@
                         <form id="formRiwayatObat">
                             <input type="hidden" id="editIndex" value="-1">
                             <div class="mb-3">
-                                <label class="form-label">Nama Obat <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="namaObat" placeholder="Masukkan nama obat" required>
+                                <label class="form-label">Nama Obat</label>
+                                <input type="text" class="form-control" id="namaObat" placeholder="Nama obat" required>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Aturan Pakai</label>
                                 <div class="row g-2">
                                     <div class="col-md-6">
-                                        <label class="form-label small">Frekuensi/interval <span class="text-danger">*</span></label>
+                                        <label class="form-label small">Frekuensi/interval</label>
                                         <input type="text" class="form-control" id="frekuensi" placeholder="3x sehari" required>
                                     </div>
                                     <div class="col-md-6">
@@ -41,13 +41,13 @@
 
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label class="form-label">Dosis sekali minum <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="dosis" placeholder="500" required>
+                                    <label class="form-label">Dosis sekali minum</label>
+                                    <input type="text" class="form-control" id="dosis" placeholder="1 tablet" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Satuan</label>
                                     <select class="form-select" id="satuan">
-                                        <option value="Tablet" selected>Tablet</option>
+                                        <option value="Tablet">Tablet</option>
                                         <option value="Kapsul">Kapsul</option>
                                         <option value="ml">ml</option>
                                         <option value="mg">mg</option>
@@ -114,23 +114,33 @@ document.addEventListener('DOMContentLoaded', function() {
     const obatTable = document.querySelector('#createRiwayatObatTable tbody');
     const modalObatBody = document.getElementById('modalObatBody');
     const riwayatObatDataInput = document.getElementById('riwayatObatData');
+    const isReadonly = {{ ($readonly ?? false) ? 'true' : 'false' }};
 
     let riwayatObat = [];
     let editingIndex = -1;
 
-    // Initialize empty array
-    function initializeObatData() {
-        riwayatObat = [];
-        updateMainObatTable();
-        updateModalObatTable();
+    // Load existing data saat pertama kali
+    function loadExistingObatData() {
+        try {
+            const existingData = riwayatObatDataInput.value;
+            if (existingData && existingData !== '[]') {
+                riwayatObat = JSON.parse(existingData);
+                updateMainObatTable();
+            }
+        } catch (e) {
+            console.error('Error parsing existing obat data:', e);
+            riwayatObat = [];
+        }
     }
 
     // Update main table (di form utama)
     function updateMainObatTable() {
+        const colSpan = isReadonly ? '3' : '4';
+
         if (riwayatObat.length === 0) {
             obatTable.innerHTML = `
                 <tr>
-                    <td colspan="4" class="text-center py-3">
+                    <td colspan="${colSpan}" class="text-center py-3">
                         <div class="text-muted">
                             <i class="bi bi-exclamation-circle mb-2" style="font-size: 1.5rem;"></i>
                             <p class="mb-0">Belum ada data riwayat obat</p>
@@ -149,11 +159,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span class="badge bg-primary">${obat.frekuensi}</span>
                         <br><small class="text-muted">${obat.keterangan}</small>
                     </td>
+                    ${!isReadonly ? `
                     <td>
                         <button type="button" class="btn btn-sm btn-outline-danger delete-obat" data-index="${index}" title="Hapus">
                             <i class="fas fa-trash"></i>
                         </button>
                     </td>
+                    ` : ''}
                 </tr>
             `).join('');
         }
@@ -172,7 +184,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td colspan="4" class="text-center py-3 text-muted">
                         <i class="fas fa-pills mb-2" style="font-size: 2rem;"></i>
                         <p class="mb-0">Belum ada obat yang ditambahkan</p>
-                        <small>Isi form di atas untuk menambah obat</small>
                     </td>
                 </tr>
             `;
@@ -213,51 +224,6 @@ document.addEventListener('DOMContentLoaded', function() {
         editingIndex = -1;
     }
 
-    // Validate form
-    function validateObatForm() {
-        const namaObat = document.getElementById('namaObat').value.trim();
-        const frekuensi = document.getElementById('frekuensi').value.trim();
-        const dosis = document.getElementById('dosis').value.trim();
-
-        if (!namaObat) {
-            alert('Nama obat harus diisi');
-            document.getElementById('namaObat').focus();
-            return false;
-        }
-
-        if (!frekuensi) {
-            alert('Frekuensi harus diisi');
-            document.getElementById('frekuensi').focus();
-            return false;
-        }
-
-        if (!dosis) {
-            alert('Dosis harus diisi');
-            document.getElementById('dosis').focus();
-            return false;
-        }
-
-        return true;
-    }
-
-    // Show toast notification
-    function showToast(message, type = 'success') {
-        const toast = document.createElement('div');
-        toast.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 300px;';
-        toast.innerHTML = `
-            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i>
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        `;
-        document.body.appendChild(toast);
-        setTimeout(() => {
-            if (toast.parentNode) {
-                toast.remove();
-            }
-        }, 4000);
-    }
-
     // Open modal
     document.getElementById('openObatModal').addEventListener('click', function() {
         updateModalObatTable();
@@ -267,13 +233,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add obat
     document.getElementById('btnTambahObat').addEventListener('click', function() {
-        if (!validateObatForm()) return;
-
         const namaObat = document.getElementById('namaObat').value.trim();
         const frekuensi = document.getElementById('frekuensi').value.trim();
         const keterangan = document.getElementById('keterangan').value;
         const dosis = document.getElementById('dosis').value.trim();
         const satuan = document.getElementById('satuan').value;
+
+        if (!namaObat || !frekuensi || !dosis) {
+            alert('Harap isi semua field yang wajib diisi');
+            return;
+        }
 
         // Check for duplicate
         const isDuplicate = riwayatObat.some(obat =>
@@ -282,7 +251,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (isDuplicate) {
             alert('Obat dengan nama tersebut sudah ada');
-            document.getElementById('namaObat').focus();
             return;
         }
 
@@ -296,10 +264,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         updateModalObatTable();
         resetObatForm();
-        showToast(`${namaObat} berhasil ditambahkan`);
 
-        // Focus ke input nama obat untuk input berikutnya
-        document.getElementById('namaObat').focus();
+        // Show success message
+        const toast = document.createElement('div');
+        toast.className = 'alert alert-success alert-dismissible fade show position-fixed';
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999;';
+        toast.innerHTML = `
+            ${namaObat} berhasil ditambahkan
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
     });
 
     // Edit obat
@@ -315,15 +290,12 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('satuan').value = obat.satuan;
             document.getElementById('editIndex').value = index;
 
-            document.getElementById('formTitle').textContent = `Edit Obat: ${obat.namaObat}`;
+            document.getElementById('formTitle').textContent = 'Edit Obat';
             document.getElementById('btnTambahObat').classList.add('d-none');
             document.getElementById('btnUpdateObat').classList.remove('d-none');
             document.getElementById('btnCancelEdit').classList.remove('d-none');
 
             editingIndex = index;
-
-            // Focus ke input nama obat
-            document.getElementById('namaObat').focus();
         }
 
         if (e.target.closest('.delete-modal-obat')) {
@@ -334,21 +306,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 riwayatObat.splice(index, 1);
                 updateModalObatTable();
                 resetObatForm();
-                showToast(`${obatName} berhasil dihapus`, 'warning');
             }
         }
     });
 
     // Update obat
     document.getElementById('btnUpdateObat').addEventListener('click', function() {
-        if (!validateObatForm()) return;
-
         const index = parseInt(document.getElementById('editIndex').value);
         const namaObat = document.getElementById('namaObat').value.trim();
         const frekuensi = document.getElementById('frekuensi').value.trim();
         const keterangan = document.getElementById('keterangan').value;
         const dosis = document.getElementById('dosis').value.trim();
         const satuan = document.getElementById('satuan').value;
+
+        if (!namaObat || !frekuensi || !dosis) {
+            alert('Harap isi semua field yang wajib diisi');
+            return;
+        }
 
         // Check for duplicate (except current item)
         const isDuplicate = riwayatObat.some((obat, idx) =>
@@ -357,7 +331,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (isDuplicate) {
             alert('Obat dengan nama tersebut sudah ada');
-            document.getElementById('namaObat').focus();
             return;
         }
 
@@ -371,7 +344,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         updateModalObatTable();
         resetObatForm();
-        showToast(`${namaObat} berhasil diperbarui`, 'info');
+
+        // Show success message
+        const toast = document.createElement('div');
+        toast.className = 'alert alert-info alert-dismissible fade show position-fixed';
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999;';
+        toast.innerHTML = `
+            ${namaObat} berhasil diperbarui
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
     });
 
     // Cancel edit
@@ -383,7 +366,17 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('btnSaveAllObat').addEventListener('click', function() {
         updateMainObatTable();
         obatModal.hide();
-        showToast(`${riwayatObat.length} data riwayat obat berhasil disimpan`);
+
+        // Show success message
+        const toast = document.createElement('div');
+        toast.className = 'alert alert-success alert-dismissible fade show position-fixed';
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999;';
+        toast.innerHTML = `
+            <i class="fas fa-check-circle"></i> Data riwayat obat berhasil disimpan
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
     });
 
     // Delete from main table
@@ -395,23 +388,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (confirm(`Apakah Anda yakin ingin menghapus obat "${obatName}"?`)) {
                 riwayatObat.splice(index, 1);
                 updateMainObatTable();
-                showToast(`${obatName} berhasil dihapus`, 'warning');
             }
         }
     });
 
-    // Form submit dengan Enter
-    document.getElementById('formRiwayatObat').addEventListener('submit', function(e) {
-        e.preventDefault();
-        if (editingIndex >= 0) {
-            document.getElementById('btnUpdateObat').click();
-        } else {
-            document.getElementById('btnTambahObat').click();
-        }
-    });
-
-    // Initialize
-    initializeObatData();
+    // Initialize with existing data
+    loadExistingObatData();
 });
 </script>
 @endpush

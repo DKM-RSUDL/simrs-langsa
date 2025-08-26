@@ -52,20 +52,14 @@
                                 <h5 class="section-title">2. Anamnesis</h5>
 
                                 <div class="form-group">
-                                    <label style="min-width: 200px;">Anamnesis</label>
-                                    <textarea class="form-control" name="anamnesis" rows="3"
-                                        placeholder="anamnesis"></textarea>
-                                </div>
-
-                                <div class="form-group">
-                                    <label style="min-width: 200px;">Keluhan Utama/ <br> Alasan masuk RS mulai, lama, pencetus</label>
+                                    <label style="min-width: 200px;">Keluhan Utama</label>
                                     <textarea class="form-control" name="keluhan_utama" rows="3"
                                         placeholder="Keluhan utama pasien"></textarea>
                                 </div>
 
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Riwayat penyakit sekarang</label>
-                                    <textarea class="form-control" name="riwayat_penyakit" rows="4"
+                                    <textarea class="form-control" name="riwayat_penyakit_sekarang" rows="4"
                                         placeholder="Riwayat penyakit sekarang"></textarea>
                                 </div>
 
@@ -168,12 +162,12 @@
                                 </div>
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Suhu (C)</label>
-                                    <input type="number" class="form-control" name="suhu"
+                                    <input type="text" class="form-control" name="suhu"
                                         placeholder="Suhu">
                                 </div>
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Nadi (x/menit)</label>
-                                    <input type="number" class="form-control" name="Nadi"
+                                    <input type="number" class="form-control" name="nadi"
                                         placeholder="Nadi">
                                 </div>
                                 
@@ -182,7 +176,6 @@
                             <!-- 6. Pemeriksaan Fisik -->
                             <div class="section-separator" id="pemeriksaan-fisik">
                                 <h5 class="section-title">6. Pemeriksaan Fisik</h5>
-                                {{-- baru --}}
                                 <div class="" id="pemeriksaan-fisik-paru">
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-asesmen">
@@ -292,7 +285,7 @@
                                                     <td>
                                                         <div class="row">
                                                             <div class="col-md-2">
-                                                                <label class="fw-semibold">e. Mulu:</label>
+                                                                <label class="fw-semibold">e. Mulut:</label>
                                                             </div>
                                                             <div class="col-md-10">
                                                                 <div class="d-flex align-items-center gap-3">
@@ -442,7 +435,7 @@
                                                     <td>
                                                         <div class="row">
                                                             <div class="col-md-2">
-                                                                <label class="fw-semibold">K. Genetalia:</label>
+                                                                <label class="fw-semibold">k. Genetalia:</label>
                                                             </div>
                                                             <div class="col-md-10">
                                                                 <div class="d-flex align-items-center gap-3">
@@ -467,7 +460,7 @@
                                                     <td>
                                                         <div class="row">
                                                             <div class="col-md-2">
-                                                                <label class="fw-semibold">L. Status Lokasi:</label>
+                                                                <label class="fw-semibold">l. Status Lokasi:</label>
                                                             </div>
                                                             <div class="col-md-10">
                                                                 <div class="d-flex align-items-center gap-3">
@@ -816,52 +809,7 @@
     });
 
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // Toggle 'lainnya' input based on checkbox
-        const lainnyaCheck = document.getElementById('lainnya_check');
-        const lainnyaInput = document.getElementById('lainnya');
-
-        // Initialize state
-        lainnyaInput.disabled = !lainnyaCheck.checked;
-        if (!lainnyaCheck.checked) {
-            lainnyaInput.value = '';
-        }
-
-        // Add event listener to checkbox
-        lainnyaCheck.addEventListener('change', function () {
-            lainnyaInput.disabled = !this.checked;
-            if (!this.checked) {
-                lainnyaInput.value = '';
-                lainnyaInput.classList.remove('is-invalid');
-            }
-        });
-
-        // Client-side validation on form submission
-        document.querySelector('form').addEventListener('submit', function (event) {
-            let errors = [];
-
-            // Validate 'lainnya' field
-            if (lainnyaCheck.checked && !lainnyaInput.value.trim()) {
-                errors.push('Rencana lainnya wajib diisi jika dicentang.');
-                lainnyaInput.classList.add('is-invalid');
-            } else {
-                lainnyaInput.classList.remove('is-invalid');
-            }
-
-            // If there are errors, prevent submission and show alert
-            if (errors.length > 0) {
-                event.preventDefault();
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Data Belum Lengkap',
-                    html: errors.join('<br>'),
-                    confirmButtonColor: '#3085d6',
-                });
-            }
-        });
-    });
-
-    // pemeriksaan fisik baru
+    // Pemeriksaan Fisik - JavaScript
     document.addEventListener('DOMContentLoaded', function() {
         // Function to toggle keterangan input based on radio selection
         function toggleKeteranganInput(radioName, keteranganId) {
@@ -875,29 +823,45 @@
                         keteranganInput.focus();
                     } else { // Normal
                         keteranganInput.disabled = true;
-                        keteranganInput.value = '';
+                        keteranganInput.value = null;
                     }
                 });
             });
 
-            // Initialize state
+            // Initialize state saat pertama kali load
             const selectedRadio = Array.from(radios).find(radio => radio.checked);
             if (selectedRadio) {
-                keteranganInput.disabled = selectedRadio.value !== '0';
+                if (selectedRadio.value === '0') {
+                    keteranganInput.disabled = false;
+                } else {
+                    keteranganInput.disabled = true;
+                    keteranganInput.value = null;
+                }
             }
         }
 
-        // Apply toggle functionality to all pemeriksaan fisik items
-        toggleKeteranganInput('paru_kepala', 'paru_kepala_keterangan');
-        toggleKeteranganInput('paru_mata', 'paru_mata_keterangan');
-        toggleKeteranganInput('paru_tht', 'paru_tht_keterangan');
-        toggleKeteranganInput('paru_leher', 'paru_leher_keterangan');
-        toggleKeteranganInput('paru_jantung', 'paru_jantung_keterangan');
+        // Apply toggle functionality ke semua item pemeriksaan fisik
+        // Sesuaikan dengan name yang ada di HTML
+        toggleKeteranganInput('pengkajian_kepala', 'pengkajian_kepala_keterangan');
+        toggleKeteranganInput('pengkajian_mata', 'pengkajian_mata_keterangan');
+        toggleKeteranganInput('pengkajian_tht', 'pengkajian_tht_keterangan');
+        toggleKeteranganInput('pengkajian_leher', 'pengkajian_leher_keterangan');
+        toggleKeteranganInput('pengkajian_mulut', 'pengkajian_mulut_keterangan');
+        toggleKeteranganInput('pengkajian_jantung', 'pengkajian_jantung_keterangan');
+        toggleKeteranganInput('pengkajian_thorax', 'pengkajian_thorax_keterangan');
+        toggleKeteranganInput('pengkajian_abdomen', 'pengkajian_abdomen_keterangan');
+        toggleKeteranganInput('pengkajian_tulang_belakang', 'pengkajian_tulang_belakang_keterangan');
+        toggleKeteranganInput('pengkajian_sistem_syaraf', 'pengkajian_sistem_syaraf_keterangan');
+        toggleKeteranganInput('pengkajian_genetalia', 'pengkajian_genetalia_keterangan');
+        toggleKeteranganInput('pengkajian_status_lokasi', 'pengkajian_status_lokasi_keterangan');
 
-        // Function to update JSON hidden input based on checkbox selections
+        // Function untuk update JSON hidden input based on checkbox selections (jika ada)
         function updateCheckboxJSON(checkboxClass, hiddenInputId) {
             const checkboxes = document.querySelectorAll('.' + checkboxClass);
             const hiddenInput = document.getElementById(hiddenInputId);
+            
+            // Cek apakah element ada sebelum diproses
+            if (!hiddenInput || checkboxes.length === 0) return;
 
             function updateJSON() {
                 const selectedValues = [];
@@ -907,419 +871,30 @@
                     }
                 });
 
-                // Update hidden input dengan format JSON yang diinginkan: ["vesikuler","wheezing"]
                 hiddenInput.value = selectedValues.length > 0 ? JSON.stringify(selectedValues) : '';
-
-                // Debug log untuk melihat hasil
                 console.log(`${hiddenInputId}:`, hiddenInput.value);
             }
 
-            // Add event listeners to all checkboxes
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', updateJSON);
             });
 
-            // Initialize on page load
             updateJSON();
         }
 
-        // Apply checkbox JSON functionality
+        // Apply checkbox JSON functionality (jika diperlukan)
         updateCheckboxJSON('paru-suara-pernafasan', 'paru_suara_pernafasan_json');
         updateCheckboxJSON('paru-suara-tambahan', 'paru_suara_tambahan_json');
 
-        // Form validation before submit
-        document.querySelector('form').addEventListener('submit', function(e) {
-            // Update JSON values one more time before submit
-            const paruSuaraPernafasanCheckboxes = document.querySelectorAll('.paru-suara-pernafasan:checked');
-            const paruSuaraTambahanCheckboxes = document.querySelectorAll('.paru-suara-tambahan:checked');
-
-            const suaraPernafasanValues = Array.from(paruSuaraPernafasanCheckboxes).map(cb => cb.value);
-            const suaraTambahanValues = Array.from(paruSuaraTambahanCheckboxes).map(cb => cb.value);
-
-            document.getElementById('paru_suara_pernafasan_json').value = suaraPernafasanValues.length > 0 ? JSON.stringify(suaraPernafasanValues) : '';
-            document.getElementById('paru_suara_tambahan_json').value = suaraTambahanValues.length > 0 ? JSON.stringify(suaraTambahanValues) : '';
-
-            console.log('Final Suara Pernafasan:', document.getElementById('paru_suara_pernafasan_json').value);
-            console.log('Final Suara Tambahan:', document.getElementById('paru_suara_tambahan_json').value);
-        });
+        // Form validation sebelum submit
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                // Validasi tambahan jika diperlukan
+                console.log('Form submitted with pemeriksaan fisik data');
+            });
+        }
     });
-
-    // Inisialisasi Site Marking Paru - letakkan di bagian akhir JavaScript
-    document.addEventListener('DOMContentLoaded', function() {
-        initParuSiteMarking();
-    });
-
-    function initParuSiteMarking() {
-        const image = document.getElementById('paruAnatomyImage');
-        const canvas = document.getElementById('paruMarkingCanvas');
-
-        // Check if elements exist
-        if (!image || !canvas) {
-            console.error('Paru site marking elements not found');
-            return;
-        }
-
-        const ctx = canvas.getContext('2d');
-        const markingsList = document.getElementById('paruMarkingsList');
-        const siteMarkingData = document.getElementById('siteMarkingParuData');
-        const markingNote = document.getElementById('paruMarkingNote');
-        const clearAllBtn = document.getElementById('paruClearAll');
-        const undoBtn = document.getElementById('paruUndoLast');
-        const saveBtn = document.getElementById('paruSaveMarking');
-        const markingCount = document.getElementById('paruMarkingCount');
-        const emptyState = document.getElementById('paruEmptyState');
-        const brushSizeSlider = document.getElementById('paruBrushSize');
-        const brushSizeValue = document.getElementById('paruBrushSizeValue');
-
-        let savedMarkings = []; // Array untuk menyimpan penandaan yang sudah disimpan
-        let currentStroke = []; // Array untuk stroke yang sedang digambar
-        let allStrokes = []; // Array untuk semua stroke (termasuk yang belum disimpan)
-        let markingCounter = 1;
-        let currentColor = '#dc3545';
-        let currentBrushSize = 2;
-        let isDrawing = false;
-        let lastX = 0;
-        let lastY = 0;
-
-        // Initialize
-        initParuColorSelection();
-        setupParuCanvas();
-        loadParuExistingData();
-
-        function setupParuCanvas() {
-            function updateCanvasSize() {
-                const rect = image.getBoundingClientRect();
-                canvas.width = image.offsetWidth;
-                canvas.height = image.offsetHeight;
-                canvas.style.width = image.offsetWidth + 'px';
-                canvas.style.height = image.offsetHeight + 'px';
-
-                // Redraw all strokes
-                redrawParuCanvas();
-            }
-
-            // Update canvas size when image loads
-            image.onload = updateCanvasSize;
-
-            // Update canvas size when window resizes
-            window.addEventListener('resize', updateCanvasSize);
-
-            // Initial setup
-            if (image.complete) {
-                updateCanvasSize();
-            }
-        }
-
-        function initParuColorSelection() {
-            document.querySelectorAll('.paru-color-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    currentColor = this.getAttribute('data-color');
-                    updateParuColorSelection();
-                });
-            });
-        }
-
-        function updateParuColorSelection() {
-            document.querySelectorAll('.paru-color-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-
-            const selectedBtn = document.querySelector(`.paru-color-btn[data-color="${currentColor}"]`);
-            if (selectedBtn) {
-                selectedBtn.classList.add('active');
-            }
-        }
-
-        // Brush size slider
-        brushSizeSlider.addEventListener('input', function() {
-            currentBrushSize = parseFloat(this.value);
-            brushSizeValue.textContent = currentBrushSize;
-        });
-
-        // Mouse events for drawing
-        canvas.addEventListener('mousedown', function(e) {
-            isDrawing = true;
-            const rect = canvas.getBoundingClientRect();
-            lastX = e.clientX - rect.left;
-            lastY = e.clientY - rect.top;
-
-            // Start new stroke
-            currentStroke = [{
-                x: (lastX / canvas.width) * 100,
-                y: (lastY / canvas.height) * 100,
-                color: currentColor,
-                size: currentBrushSize
-            }];
-        });
-
-        canvas.addEventListener('mousemove', function(e) {
-            if (!isDrawing) return;
-
-            const rect = canvas.getBoundingClientRect();
-            const currentX = e.clientX - rect.left;
-            const currentY = e.clientY - rect.top;
-
-            // Add point to current stroke dengan interpolasi untuk smooth line
-            const distance = Math.sqrt(Math.pow(currentX - lastX, 2) + Math.pow(currentY - lastY, 2));
-
-            // Hanya tambah point jika jarak cukup untuk menghindari point yang terlalu rapat
-            if (distance > 1) {
-                currentStroke.push({
-                    x: (currentX / canvas.width) * 100,
-                    y: (currentY / canvas.height) * 100,
-                    color: currentColor,
-                    size: currentBrushSize
-                });
-
-                // Draw smooth line dengan quadratic curve
-                ctx.globalCompositeOperation = 'source-over';
-                ctx.strokeStyle = currentColor;
-                ctx.lineWidth = currentBrushSize;
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
-                ctx.globalAlpha = 0.8; // Sedikit transparansi untuk efek natural
-
-                // Menggunakan quadratic curve untuk smooth line
-                const midX = (lastX + currentX) / 2;
-                const midY = (lastY + currentY) / 2;
-
-                ctx.beginPath();
-                ctx.moveTo(lastX, lastY);
-                ctx.quadraticCurveTo(lastX, lastY, midX, midY);
-                ctx.stroke();
-
-                lastX = currentX;
-                lastY = currentY;
-            }
-        });
-
-        canvas.addEventListener('mouseup', function(e) {
-            if (!isDrawing) return;
-            isDrawing = false;
-
-            // Add current stroke to all strokes if it has points
-            if (currentStroke.length > 1) {
-                allStrokes.push([...currentStroke]);
-            }
-        });
-
-        // Save current drawing as a marking
-        saveBtn.addEventListener('click', function() {
-            if (allStrokes.length === 0) {
-                alert('Tidak ada penandaan untuk disimpan. Silakan gambar terlebih dahulu.');
-                return;
-            }
-
-            const note = markingNote.value.trim() || `Penandaan Paru ${markingCounter}`;
-
-            const marking = {
-                id: `paru_mark_${Date.now()}`,
-                strokes: JSON.parse(JSON.stringify(allStrokes)), // Deep copy
-                note: note,
-                timestamp: new Date().toISOString()
-            };
-
-            savedMarkings.push(marking);
-
-            // Add to list
-            addToParuMarkingsList(marking);
-
-            // Update hidden input and counter
-            updateParuHiddenInput();
-            updateParuMarkingCount();
-
-            // Clear note input and current drawing
-            markingNote.value = '';
-            allStrokes = [];
-            currentStroke = [];
-            markingCounter++;
-
-            // Clear canvas and redraw only saved markings
-            redrawParuCanvas();
-
-            alert('Penandaan berhasil disimpan!');
-        });
-
-        // Undo last stroke
-        undoBtn.addEventListener('click', function() {
-            if (allStrokes.length === 0) {
-                alert('Tidak ada stroke untuk di-undo.');
-                return;
-            }
-
-            allStrokes.pop();
-            redrawParuCanvas();
-        });
-
-        // Clear all markings
-        clearAllBtn.addEventListener('click', function() {
-            if (savedMarkings.length === 0 && allStrokes.length === 0) {
-                alert('Tidak ada penandaan untuk dihapus.');
-                return;
-            }
-
-            if (confirm('Hapus semua penandaan? Tindakan ini tidak dapat dibatalkan.')) {
-                savedMarkings = [];
-                allStrokes = [];
-                currentStroke = [];
-                markingsList.innerHTML = '<div class="text-muted text-center py-3" id="paruEmptyState"><i class="ti-info-alt"></i> Belum ada penandaan</div>';
-                updateParuHiddenInput();
-                updateParuMarkingCount();
-                redrawParuCanvas();
-                markingCounter = 1;
-            }
-        });
-
-        function redrawParuCanvas() {
-            // Clear canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Draw all saved markings
-            savedMarkings.forEach(marking => {
-                drawStrokesOnCanvas(marking.strokes);
-            });
-
-            // Draw current unsaved strokes
-            drawStrokesOnCanvas(allStrokes);
-        }
-
-        function drawStrokesOnCanvas(strokesArray) {
-            strokesArray.forEach(stroke => {
-                if (stroke.length < 2) return;
-
-                ctx.strokeStyle = stroke[0].color;
-                ctx.lineWidth = stroke[0].size;
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
-                ctx.globalAlpha = 0.8; // Transparansi untuk efek natural
-
-                ctx.beginPath();
-                const firstPoint = stroke[0];
-                ctx.moveTo(
-                    (firstPoint.x / 100) * canvas.width,
-                    (firstPoint.y / 100) * canvas.height
-                );
-
-                // Menggunakan smooth curve untuk redraw
-                for (let i = 1; i < stroke.length - 1; i++) {
-                    const currentPoint = stroke[i];
-                    const nextPoint = stroke[i + 1];
-
-                    const currentX = (currentPoint.x / 100) * canvas.width;
-                    const currentY = (currentPoint.y / 100) * canvas.height;
-                    const nextX = (nextPoint.x / 100) * canvas.width;
-                    const nextY = (nextPoint.y / 100) * canvas.height;
-
-                    const midX = (currentX + nextX) / 2;
-                    const midY = (currentY + nextY) / 2;
-
-                    ctx.quadraticCurveTo(currentX, currentY, midX, midY);
-                }
-
-                // Terakhir, gambar ke point terakhir
-                if (stroke.length > 1) {
-                    const lastPoint = stroke[stroke.length - 1];
-                    ctx.lineTo(
-                        (lastPoint.x / 100) * canvas.width,
-                        (lastPoint.y / 100) * canvas.height
-                    );
-                }
-
-                ctx.stroke();
-                ctx.globalAlpha = 1; // Reset alpha
-            });
-        }
-
-        function addToParuMarkingsList(marking) {
-            // Hide empty state
-            const emptyStateEl = document.getElementById('paruEmptyState');
-            if (emptyStateEl) {
-                emptyStateEl.style.display = 'none';
-            }
-
-            const listItem = document.createElement('div');
-            listItem.className = 'paru-marking-list-item';
-            listItem.setAttribute('data-marking-id', marking.id);
-
-            listItem.innerHTML = `
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="fw-semibold">${marking.note}</div>
-                        <div class="d-flex align-items-center gap-2 mt-1">
-                            <span class="badge bg-secondary" style="font-size: 10px;">CORET</span>
-                            <small class="text-muted">${new Date(marking.timestamp).toLocaleTimeString('id-ID')}</small>
-                        </div>
-                    </div>
-                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteParuMarking('${marking.id}')">
-                        <i class="ti-trash"></i>
-                    </button>
-                </div>
-            `;
-
-            markingsList.appendChild(listItem);
-        }
-
-        function updateParuMarkingCount() {
-            markingCount.textContent = savedMarkings.length;
-
-            // Show/hide empty state
-            const emptyStateEl = document.getElementById('paruEmptyState');
-            if (emptyStateEl) {
-                if (savedMarkings.length === 0) {
-                    emptyStateEl.style.display = 'block';
-                } else {
-                    emptyStateEl.style.display = 'none';
-                }
-            }
-        }
-
-        function updateParuHiddenInput() {
-            siteMarkingData.value = JSON.stringify(savedMarkings);
-        }
-
-        function loadParuExistingData() {
-            try {
-                const existingData = JSON.parse(siteMarkingData.value || '[]');
-                if (existingData.length > 0) {
-                    savedMarkings = existingData;
-                    markingCounter = savedMarkings.length + 1;
-
-                    // Rebuild list
-                    markingsList.innerHTML = '<div class="text-muted text-center py-3" id="paruEmptyState"><i class="ti-info-alt"></i> Belum ada penandaan</div>';
-                    savedMarkings.forEach(marking => {
-                        addToParuMarkingsList(marking);
-                    });
-
-                    updateParuMarkingCount();
-
-                    // Redraw canvas after a short delay
-                    setTimeout(() => {
-                        redrawParuCanvas();
-                    }, 100);
-                }
-            } catch (e) {
-                console.error('Error loading existing paru marking data:', e);
-            }
-        }
-
-        // Global function for delete
-        window.deleteParuMarking = function(markingId) {
-            if (confirm('Hapus penandaan ini?')) {
-                // Remove from array
-                savedMarkings = savedMarkings.filter(m => m.id !== markingId);
-
-                // Remove from list
-                const listElement = markingsList.querySelector(`[data-marking-id="${markingId}"]`);
-                if (listElement) {
-                    markingsList.removeChild(listElement);
-                }
-
-                updateParuHiddenInput();
-                updateParuMarkingCount();
-                redrawParuCanvas();
-            }
-        };
-    }
 
     // Skala Nyeri - JavaScript yang disederhanakan
     function initSkalaNyeri() {
