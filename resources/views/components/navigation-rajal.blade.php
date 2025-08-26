@@ -259,6 +259,16 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
+        [
+            'icon' => 'verified_badge.png',
+            'label' => 'Audiometri',
+            'link' => route('rawat-jalan.audiometri.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
     ];
 
 @endphp

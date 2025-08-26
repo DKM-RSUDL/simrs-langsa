@@ -35,10 +35,18 @@
 
         <!-- Button "Tambah" di sebelah kanan -->
         <div class="col-md-4 text-end ms-auto">
-            @canany(['is-admin', 'is-dokter-umum', 'is-dokter-spesialis'])
+
+            {{-- @canany(['is-admin', 'is-dokter-umum', 'is-dokter-spesialis'])
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailPasienModal" type="button">
                     <i class="ti-plus"></i> Tambah
                 </button>
+            @endcanany --}}
+
+            @canany(['is-admin', 'is-dokter-umum', 'is-dokter-spesialis'])
+                <a class="btn btn-primary"
+                    href="{{ route('asesmen.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                    <i class="ti-plus"></i> Tambah
+                </a>
             @endcanany
 
             @canany(['is-admin', 'is-perawat', 'is-bidan'])
@@ -46,7 +54,7 @@
                     class="btn btn-primary">
                     <i class="ti-plus"></i> Keperawatan
                 </a>
-                @endcanany
+            @endcanany
         </div>
     </div>
 </div>
@@ -90,30 +98,30 @@
             <div class="d-flex gap-2">
                 @if ($item->kategori == 1)
                     <button type="button" onclick="showAsesmen('{{ $item->id }}')"
-                        data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/asesmen/' . $item->id) }}"
+                        data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/' . $item->id) }}"
                         class="btn btn-info btn-sm px-3">
                         <i class="fas fa-eye me-1"></i> Lihat
                     </button>
-                    <button type="button" onclick="editAsesmen('{{ $item->id }}')"
-                        data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/asesmen/' . $item->id) }}"
-                        class="btn btn-secondary btn-sm px-3">
+                    <a class="btn btn-secondary btn-sm px-3"
+                        href="{{ route('asesmen.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}">
                         <i class="fas fa-edit me-1"></i> Edit
-                    </button>
+                    </a>
                 @elseif($item->kategori == 2)
-
                     <a href="{{ route('asesmen-keperawatan.show', [
                         'kd_pasien' => $dataMedis->kd_pasien,
                         'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
-                        'id' => $item->id
-                    ]) }}" class="btn btn-sm btn-info">
+                        'id' => $item->id,
+                    ]) }}"
+                        class="btn btn-sm btn-info">
                         <i class="fas fa-eye me-1"></i> Lihat
                     </a>
 
                     <a href="{{ route('asesmen-keperawatan.edit', [
                         'kd_pasien' => $dataMedis->kd_pasien,
                         'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
-                        'id' => $item->id
-                    ]) }}" class="btn btn-sm btn-secondary">
+                        'id' => $item->id,
+                    ]) }}"
+                        class="btn btn-sm btn-secondary">
                         <i class="fas fa-edit"></i> Edit
                     </a>
                 @endif
@@ -121,7 +129,6 @@
         </li>
     @endforeach
 </ul>
-
 
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.show')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit')

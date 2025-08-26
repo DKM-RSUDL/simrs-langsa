@@ -26,6 +26,7 @@ use App\Http\Controllers\UnitPelayanan\ForensikController;
 // action gawat darurat
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\AsesmenController as GawatDaruratAsesmenController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\AsesmenKeperawatanController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\AudiometriController as GawatDaruratAudiometriController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\CarePlanController as GawatDaruratCarePlanController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\CpptController as GawatDaruratCpptController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\EdukasiController as GawatDaruratEdukasiController;
@@ -137,6 +138,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\PersetujuanAnestesiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PermintaanSecondOpinionController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PengawasanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenPraAnestesiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AudiometriController as RawatInapAudiometriController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPengawasanDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPermintaanDarahController;
@@ -191,6 +193,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalHivArtAkhirFollowUpContro
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalPernyataandpjpController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenParuController as RajalAsesmenParuController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenGinekologikController as RajalAsesmenGinekologikController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\AudiometriController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\GiziAnakController as RawatJalanGiziAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\GiziDewasaController as RawatJalanGiziDewasaController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\GiziMonitoringController as RawatJalanGiziMonitoringController;
@@ -1032,6 +1035,23 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/create', 'create')->name('.create');
                                         Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
+
+                            //Audiometri
+                            Route::prefix('audiometri')->group(function () {
+                                Route::name('.audiometri')->group(function () {
+                                    Route::controller(AudiometriController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
                                         Route::get('/{data}', 'show')->name('.show');
                                         Route::get('/{data}/edit', 'edit')->name('.edit');
                                         Route::put('/{data}', 'update')->name('.update');
@@ -2276,6 +2296,23 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
+
+                            //Audiometri
+                            Route::prefix('audiometri')->group(function () {
+                                Route::name('.audiometri')->group(function () {
+                                    Route::controller(RawatInapAudiometriController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
                         });
                     });
                 });
@@ -2417,12 +2454,15 @@ Route::middleware('ssoToken')->group(function () {
                         });
 
 
-                        Route::prefix('asesmen')->group(function () {
+                        // Route::prefix('{urut_masuk}/asesmen')->group(function () {
+                        Route::prefix('{urut_masuk}/asesmen')->group(function () {
                             Route::name('asesmen')->group(function () {
                                 Route::controller(GawatDaruratAsesmenController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
                                     Route::post('/', 'store')->name('.store');
                                     Route::get('/{id}', 'show')->name('.show');
+                                    Route::get('/{id}/edit', 'edit')->name('.edit');
                                     Route::put('/{id}', 'update')->name('.update');
                                     Route::get('/{id}/print', 'print')->name('.print');
                                 });
@@ -2866,6 +2906,22 @@ Route::middleware('ssoToken')->group(function () {
                                     Route::post('/', 'store')->name('.store');
                                     Route::get('/create', 'create')->name('.create');
                                     Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
+                                });
+                            });
+                        });
+
+                        //Audiometri
+                        Route::prefix('{urut_masuk}/audiometri')->group(function () {
+                            Route::name('audiometri')->group(function () {
+                                Route::controller(GawatDaruratAudiometriController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/create', 'create')->name('.create');
                                     Route::get('/{data}', 'show')->name('.show');
                                     Route::get('/{data}/edit', 'edit')->name('.edit');
                                     Route::put('/{data}', 'update')->name('.update');
