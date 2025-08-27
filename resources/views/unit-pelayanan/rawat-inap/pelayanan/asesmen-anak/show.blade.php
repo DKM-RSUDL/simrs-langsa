@@ -21,7 +21,7 @@
             <div class="card">
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">Data Asesmen Keperawatan Anak</h5>
-                    <p>Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan</p>
+                    <p class="mb-0">Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan</p>
                 </div>
                 <div class="card-body">
                     <!-- Informasi Dasar -->
@@ -79,6 +79,18 @@
                                                     {{ $asesmen->rmeAsesmenKepAnak->anamnesis ?? '-' }}
                                                 </p>
                                             </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Keluhan Utama :</label>
+                                                <p class="form-control-plaintext border-bottom">
+                                                    {{ $asesmen->rmeAsesmenKepAnak->keluhan_utama ?? '-' }}
+                                                </p>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Riwayat Kesehatan Sekarang :</label>
+                                                <p class="form-control-plaintext border-bottom">
+                                                    {{ $asesmen->rmeAsesmenKepAnak->riwayat_kesehatan_sekarang ?? '-' }}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -103,6 +115,12 @@
                                                 <label class="form-label fw-bold">Nadi (Per Menit) :</label>
                                                 <p class="form-control-plaintext border-bottom">
                                                     {{ $asesmen->rmeAsesmenKepAnakFisik->nadi ?? '-' }} x/menit
+                                                </p>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Nafas (Per Menit) :</label>
+                                                <p class="form-control-plaintext border-bottom">
+                                                    {{ $asesmen->rmeAsesmenKepAnakFisik->nafas ?? '-' }} x/menit
                                                 </p>
                                             </div>
                                         </div>
@@ -135,20 +153,9 @@
                                                 </p>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">AVPU :</label>
+                                                <label class="form-label fw-bold">GCS :</label>
                                                 <p class="form-control-plaintext border-bottom">
-                                                    @php
-                                                        $avpu = $asesmen->rmeAsesmenKepAnakFisik->avpu ?? null;
-                                                        $avpuOptions = [
-                                                            '0' => 'Sadar Baik/Alert',
-                                                            '1' => 'Berespon dengan kata-kata/Voice',
-                                                            '2' => 'Hanya berespon jika dirangsang nyeri/pain',
-                                                            '3' => 'Pasien tidak sadar/unresponsive',
-                                                            '4' => 'Gelisah atau bingung',
-                                                            '5' => 'Acute Confusional States',
-                                                        ];
-                                                    @endphp
-                                                    {{ $avpuOptions[$avpu] ?? '-' }}
+                                                    {{ $asesmen->rmeAsesmenKepAnak->gcs ?? '-' }}
                                                 </p>
                                             </div>
                                         </div>
@@ -207,7 +214,7 @@
                                                 <p class="form-control-plaintext border-bottom">
                                                     @php
                                                         $refleksMenelan =
-                                                            $asesmen->rmeAsesmenKepAnakFisik->refleks_menelan ?? null;
+                                                            $asesmen->rmeAsesmenKepAnakFisik->refleksi_menelan ?? null;
                                                         $refleksMenelanOptions = [
                                                             '1' => 'Normal',
                                                             '2' => 'Sulit',
@@ -289,7 +296,7 @@
                                                 <p class="form-control-plaintext border-bottom">
                                                     @php
                                                         $gastro =
-                                                            $asesmen->rmeAsesmenKepAnakFisik->gastrointestinal ?? null;
+                                                            $asesmen->rmeAsesmenKepAnakFisik->gastroentestinal ?? null;
                                                         $gastroOptions = [
                                                             '1' => 'Normal',
                                                             '2' => 'Nausea',
@@ -378,6 +385,12 @@
                                                 <label class="form-label fw-bold">Berat Badan :</label>
                                                 <p class="form-control-plaintext border-bottom">
                                                     {{ $asesmen->rmeAsesmenKepAnakFisik->berat_badan ?? '-' }} kg
+                                                </p>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Lingkar Kepala :</label>
+                                                <p class="form-control-plaintext border-bottom">
+                                                    {{ $asesmen->rmeAsesmenKepAnakFisik->lingkar_kepala ?? '-' }} cm
                                                 </p>
                                             </div>
                                         </div>
@@ -623,26 +636,6 @@
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">Jenis Nyeri :</label>
-                                                <p class="form-control-plaintext border-bottom">
-                                                    @php
-                                                        $statusNyeri = $asesmen->rmeAsesmenKepAnakStatusNyeri;
-                                                        $jenisNyeriId = $statusNyeri ? $statusNyeri->jenis_nyeri : null;
-                                                    @endphp
-
-                                                    @if ($jenisNyeriId)
-                                                        @foreach ($jenisnyeri as $jenis)
-                                                            @if ($jenis->id == $jenisNyeriId)
-                                                                {{ $jenis->name }}
-                                                            @endif
-                                                        @endforeach
-                                                    @else
-                                                        -
-                                                    @endif
-                                                </p>
-                                            </div>
-
-                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">Faktor Pemberat :</label>
                                                 <p class="form-control-plaintext border-bottom">
                                                     @php
@@ -755,29 +748,56 @@
 
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Riwayat Kecelakaan :</label>
-                                                <p class="form-control-plaintext border-bottom">
-                                                    {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_kecelakaan ?? '-' }}
-                                                </p>
+                                                @php
+                                                    $riwayatKecelakaan = json_decode(
+                                                        $asesmen->rmeAsesmenKepAnakRiwayatKesehatan
+                                                            ->riwayat_kecelakaan_lalu ?? '[]',
+                                                        true,
+                                                    );
+                                                @endphp
+                                                @if (!empty($riwayatKecelakaan))
+                                                    <div class="d-flex gap-2 flex-wrap">
+                                                        @foreach ($riwayatKecelakaan as $kecelakaan)
+                                                            <span class="badge bg-warning">{{ $kecelakaan }}</span>
+                                                        @endforeach
+                                                    </div>
+                                                @else
+                                                    <p class="form-control-plaintext border-bottom">
+                                                        <span class="text-muted">Tidak ada</span>
+                                                    </p>
+                                                @endif
                                             </div>
 
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Riwayat Rawat Inap :</label>
                                                 <p class="form-control-plaintext border-bottom">
                                                     @php
-                                                        $riwayatKesehatan = optional($asesmen->rmeAsesmenKepAnakRiwayatKesehatan);
-                                                        $riwayatRawatInap = $riwayatKesehatan->riwayat_rawat_inap ?? null;
-                                                        $tanggalRawatInap = $riwayatKesehatan->tanggal_riwayat_rawat_inap ?? null;
+                                                        $riwayatKesehatan = optional(
+                                                            $asesmen->rmeAsesmenKepAnakRiwayatKesehatan,
+                                                        );
+                                                        $riwayatRawatInap =
+                                                            $riwayatKesehatan->riwayat_rawat_inap ?? null;
+                                                        $tanggalRawatInap =
+                                                            $riwayatKesehatan->tanggal_riwayat_rawat_inap ?? null;
                                                     @endphp
 
                                                     {{ $riwayatRawatInap ? 'Ya' : 'Tidak' }}
-                                                    
-                                                    @if($tanggalRawatInap)
+
+                                                    @if ($tanggalRawatInap)
                                                         <br>
                                                         <small class="text-muted">
                                                             Tanggal:
                                                             {{ \Carbon\Carbon::parse($tanggalRawatInap)->format('d/m/Y') }}
                                                         </small>
                                                     @endif
+                                                </p>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Tumbuh Kembang Dibanding
+                                                    Saudara-Saudaranya :</label>
+                                                <p class="form-control-plaintext border-bottom">
+                                                    {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->tumbuh_kembang ?? '-' }}
                                                 </p>
                                             </div>
                                         </div>
@@ -859,21 +879,11 @@
                                                     </p>
                                                 @endif
                                             </div>
-                                        </div>
 
-                                        <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Konsumsi Obat-Obatan :</label>
                                                 <p class="form-control-plaintext border-bottom">
                                                     {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->konsumsi_obat ?? '-' }}
-                                                </p>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Tumbuh Kembang Dibanding
-                                                    Saudara-Saudaranya :</label>
-                                                <p class="form-control-plaintext border-bottom">
-                                                    {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->tumbuh_kembang ?? '-' }}
                                                 </p>
                                             </div>
                                         </div>
@@ -892,13 +902,14 @@
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Riwayat Alergi :</label>
                                                 @php
-                                                    $alergis = json_decode(
-                                                        $asesmen->rmeAsesmenKepAnak->alergi ?? '[]',
-                                                        true,
-                                                    );
+                                                    // Ambil data alergi langsung dari database berdasarkan kd_pasien
+                                                    $alergiPasienData = \App\Models\RmeAlergiPasien::where(
+                                                        'kd_pasien',
+                                                        $dataMedis->kd_pasien,
+                                                    )->get();
                                                 @endphp
 
-                                                @if (!empty($alergis))
+                                                @if ($alergiPasienData->count() > 0)
                                                     <div class="table-responsive">
                                                         <table class="table table-bordered table-sm">
                                                             <thead class="table-light">
@@ -910,12 +921,12 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                @foreach ($alergis as $alergi)
+                                                                @foreach ($alergiPasienData as $alergi)
                                                                     <tr>
-                                                                        <td>{{ $alergi['jenis'] ?? '-' }}</td>
-                                                                        <td>{{ $alergi['alergen'] ?? '-' }}</td>
-                                                                        <td>{{ $alergi['reaksi'] ?? '-' }}</td>
-                                                                        <td>{{ $alergi['severe'] ?? '-' }}</td>
+                                                                        <td>{{ $alergi->jenis_alergi ?? '-' }}</td>
+                                                                        <td>{{ $alergi->nama_alergi ?? '-' }}</td>
+                                                                        <td>{{ $alergi->reaksi ?? '-' }}</td>
+                                                                        <td>{{ $alergi->tingkat_keparahan ?? '-' }}</td>
                                                                     </tr>
                                                                 @endforeach
                                                             </tbody>
@@ -959,31 +970,40 @@
                                                 </p>
                                             </div>
 
-                                            @if($jenisSkala == 1)
+                                            @if ($jenisSkala == 1)
                                                 <!-- Skala Umum -->
                                                 <div class="mb-4">
                                                     <h6 class="fw-bold">Penilaian Risiko Jatuh Skala Umum</h6>
                                                     <div class="table-responsive">
                                                         <table class="table table-bordered table-sm">
                                                             <tr>
-                                                                <th width="60%">Apakah pasien berusia < dari 2 tahun?</th>
-                                                                <td>{{ $risikoJatuh->risiko_jatuh_umum_usia ? 'Ya' : 'Tidak' }}</td>
+                                                                <th width="60%">Apakah pasien berusia < dari 2
+                                                                        tahun?</th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_umum_usia ? 'Ya' : 'Tidak' }}
+                                                                </td>
                                                             </tr>
                                                             <tr>
-                                                                <th>Apakah pasien dalam kondisi sebagai geriatri, dizzines, vertigo, gangguan keseimbangan?</th>
-                                                                <td>{{ $risikoJatuh->risiko_jatuh_umum_kondisi_khusus ? 'Ya' : 'Tidak' }}</td>
+                                                                <th>Apakah pasien dalam kondisi sebagai geriatri, dizzines,
+                                                                    vertigo, gangguan keseimbangan?</th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_umum_kondisi_khusus ? 'Ya' : 'Tidak' }}
+                                                                </td>
                                                             </tr>
                                                             <tr>
-                                                                <th>Apakah pasien didiagnosis sebagai pasien dengan penyakit parkinson?</th>
-                                                                <td>{{ $risikoJatuh->risiko_jatuh_umum_diagnosis_parkinson ? 'Ya' : 'Tidak' }}</td>
+                                                                <th>Apakah pasien didiagnosis sebagai pasien dengan penyakit
+                                                                    parkinson?</th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_umum_diagnosis_parkinson ? 'Ya' : 'Tidak' }}
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <th>Apakah pasien sedang mendapatkan obat sedasi?</th>
-                                                                <td>{{ $risikoJatuh->risiko_jatuh_umum_pengobatan_berisiko ? 'Ya' : 'Tidak' }}</td>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_umum_pengobatan_berisiko ? 'Ya' : 'Tidak' }}
+                                                                </td>
                                                             </tr>
                                                             <tr>
-                                                                <th>Apakah pasien saat ini sedang berada pada lokasi berisiko?</th>
-                                                                <td>{{ $risikoJatuh->risiko_jatuh_umum_lokasi_berisiko ? 'Ya' : 'Tidak' }}</td>
+                                                                <th>Apakah pasien saat ini sedang berada pada lokasi
+                                                                    berisiko?</th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_umum_lokasi_berisiko ? 'Ya' : 'Tidak' }}
+                                                                </td>
                                                             </tr>
                                                         </table>
                                                     </div>
@@ -1000,21 +1020,24 @@
                                                         <table class="table table-bordered table-sm">
                                                             <tr>
                                                                 <th width="60%">Riwayat Jatuh</th>
-                                                                <td>{{ $risikoJatuh->risiko_jatuh_morse_riwayat_jatuh == 25 ? 'Ya' : 'Tidak' }}</td>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_morse_riwayat_jatuh == 25 ? 'Ya' : 'Tidak' }}
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <th>Diagnosis Sekunder</th>
-                                                                <td>{{ $risikoJatuh->risiko_jatuh_morse_diagnosis_sekunder == 15 ? 'Ya' : 'Tidak' }}</td>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_morse_diagnosis_sekunder == 15 ? 'Ya' : 'Tidak' }}
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <th>Alat Bantu</th>
                                                                 <td>
                                                                     @php
-                                                                        $bantuanAmbulasi = $risikoJatuh->risiko_jatuh_morse_bantuan_ambulasi;
+                                                                        $bantuanAmbulasi =
+                                                                            $risikoJatuh->risiko_jatuh_morse_bantuan_ambulasi;
                                                                         $bantuanOptions = [
                                                                             30 => 'Meja/kursi',
                                                                             15 => 'Kruk/tongkat/alat bantu berjalan',
-                                                                            0 => 'Tidak ada/bed rest/bantuan perawat'
+                                                                            0 => 'Tidak ada/bed rest/bantuan perawat',
                                                                         ];
                                                                     @endphp
                                                                     {{ $bantuanOptions[$bantuanAmbulasi] ?? '-' }}
@@ -1022,17 +1045,19 @@
                                                             </tr>
                                                             <tr>
                                                                 <th>Terpasang Infus</th>
-                                                                <td>{{ $risikoJatuh->risiko_jatuh_morse_terpasang_infus == 20 ? 'Ya' : 'Tidak' }}</td>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_morse_terpasang_infus == 20 ? 'Ya' : 'Tidak' }}
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <th>Cara Berjalan</th>
                                                                 <td>
                                                                     @php
-                                                                        $caraBerjalan = $risikoJatuh->risiko_jatuh_morse_cara_berjalan;
+                                                                        $caraBerjalan =
+                                                                            $risikoJatuh->risiko_jatuh_morse_cara_berjalan;
                                                                         $caraBerjalanOptions = [
                                                                             0 => 'Normal/bed rest/kursi roda',
                                                                             20 => 'Terganggu',
-                                                                            10 => 'Lemah'
+                                                                            10 => 'Lemah',
                                                                         ];
                                                                     @endphp
                                                                     {{ $caraBerjalanOptions[$caraBerjalan] ?? '-' }}
@@ -1041,8 +1066,8 @@
                                                             <tr>
                                                                 <th>Status Mental</th>
                                                                 <td>
-                                                                    {{ $risikoJatuh->risiko_jatuh_morse_status_mental == 15 
-                                                                        ? 'Lupa akan keterbatasannya' 
+                                                                    {{ $risikoJatuh->risiko_jatuh_morse_status_mental == 15
+                                                                        ? 'Lupa akan keterbatasannya'
                                                                         : 'Berorientasi pada kemampuannya' }}
                                                                 </td>
                                                             </tr>
@@ -1056,19 +1081,21 @@
                                             @elseif($jenisSkala == 3)
                                                 <!-- Skala Humpty Dumpty -->
                                                 <div class="mb-4">
-                                                    <h6 class="fw-bold">Penilaian Risiko Skala Humpty Dumpty/ Pediatrik</h6>
+                                                    <h6 class="fw-bold">Penilaian Risiko Skala Humpty Dumpty/ Pediatrik
+                                                    </h6>
                                                     <div class="table-responsive">
                                                         <table class="table table-bordered table-sm">
                                                             <tr>
                                                                 <th width="60%">Usia Anak</th>
                                                                 <td>
                                                                     @php
-                                                                        $usia = $risikoJatuh->risiko_jatuh_pediatrik_usia_anak;
+                                                                        $usia =
+                                                                            $risikoJatuh->risiko_jatuh_pediatrik_usia_anak;
                                                                         $usiaOptions = [
                                                                             4 => 'Dibawah 3 tahun',
                                                                             3 => '3-7 tahun',
                                                                             2 => '7-13 tahun',
-                                                                            1 => 'Diatas 13 tahun'
+                                                                            1 => 'Diatas 13 tahun',
                                                                         ];
                                                                     @endphp
                                                                     {{ $usiaOptions[$usia] ?? '-' }}
@@ -1076,18 +1103,20 @@
                                                             </tr>
                                                             <tr>
                                                                 <th>Jenis Kelamin</th>
-                                                                <td>{{ $risikoJatuh->risiko_jatuh_pediatrik_jenis_kelamin == 2 ? 'Laki-laki' : 'Perempuan' }}</td>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_pediatrik_jenis_kelamin == 2 ? 'Laki-laki' : 'Perempuan' }}
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <th>Diagnosis</th>
                                                                 <td>
                                                                     @php
-                                                                        $diagnosis = $risikoJatuh->risiko_jatuh_pediatrik_diagnosis;
+                                                                        $diagnosis =
+                                                                            $risikoJatuh->risiko_jatuh_pediatrik_diagnosis;
                                                                         $diagnosisOptions = [
                                                                             4 => 'Diagnosis Neurologis',
                                                                             3 => 'Perubahan oksigennasi (diagnosis respiratorik, dehidrasi, anemia, syncope, pusing, dsb)',
                                                                             2 => 'Gangguan perilaku /psikiatri',
-                                                                            1 => 'Diagnosis lainnya'
+                                                                            1 => 'Diagnosis lainnya',
                                                                         ];
                                                                     @endphp
                                                                     {{ $diagnosisOptions[$diagnosis] ?? '-' }}
@@ -1097,11 +1126,12 @@
                                                                 <th>Gangguan Kognitif</th>
                                                                 <td>
                                                                     @php
-                                                                        $kognitif = $risikoJatuh->risiko_jatuh_pediatrik_gangguan_kognitif;
+                                                                        $kognitif =
+                                                                            $risikoJatuh->risiko_jatuh_pediatrik_gangguan_kognitif;
                                                                         $kognitifOptions = [
                                                                             3 => 'Tidak menyadari keterbatasan dirinya',
                                                                             2 => 'Lupa akan adanya keterbatasan',
-                                                                            1 => 'Orientasi baik terhadap dari sendiri'
+                                                                            1 => 'Orientasi baik terhadap dari sendiri',
                                                                         ];
                                                                     @endphp
                                                                     {{ $kognitifOptions[$kognitif] ?? '-' }}
@@ -1111,12 +1141,13 @@
                                                                 <th>Faktor Lingkungan</th>
                                                                 <td>
                                                                     @php
-                                                                        $lingkungan = $risikoJatuh->risiko_jatuh_pediatrik_faktor_lingkungan;
+                                                                        $lingkungan =
+                                                                            $risikoJatuh->risiko_jatuh_pediatrik_faktor_lingkungan;
                                                                         $lingkunganOptions = [
                                                                             4 => 'Riwayat jatuh /bayi diletakkan di tempat tidur dewasa',
                                                                             3 => 'Pasien menggunakan alat bantu /bayi diletakkan di tempat tidur bayi / perabot rumah',
                                                                             2 => 'Pasien diletakkan di tempat tidur',
-                                                                            1 => 'Area di luar rumah sakit'
+                                                                            1 => 'Area di luar rumah sakit',
                                                                         ];
                                                                     @endphp
                                                                     {{ $lingkunganOptions[$lingkungan] ?? '-' }}
@@ -1126,11 +1157,12 @@
                                                                 <th>Pembedahan/Sedasi/Anestesi</th>
                                                                 <td>
                                                                     @php
-                                                                        $pembedahan = $risikoJatuh->risiko_jatuh_pediatrik_pembedahan;
+                                                                        $pembedahan =
+                                                                            $risikoJatuh->risiko_jatuh_pediatrik_pembedahan;
                                                                         $pembedahanOptions = [
                                                                             3 => 'Dalam 24 jam',
                                                                             2 => 'Dalam 48 jam',
-                                                                            1 => '> 48 jam atau tidak menjalani pembedahan/sedasi/anestesi'
+                                                                            1 => '> 48 jam atau tidak menjalani pembedahan/sedasi/anestesi',
                                                                         ];
                                                                     @endphp
                                                                     {{ $pembedahanOptions[$pembedahan] ?? '-' }}
@@ -1140,11 +1172,12 @@
                                                                 <th>Penggunaan Medika mentosa</th>
                                                                 <td>
                                                                     @php
-                                                                        $medika = $risikoJatuh->risiko_jatuh_pediatrik_penggunaan_mentosa;
+                                                                        $medika =
+                                                                            $risikoJatuh->risiko_jatuh_pediatrik_penggunaan_mentosa;
                                                                         $medikaOptions = [
                                                                             3 => 'Penggunaan multiple: sedative, obat hipnosis, barbiturate, fenotiazi, antidepresan, pencahar, diuretik, narkose',
                                                                             2 => 'Penggunaan salah satu obat diatas',
-                                                                            1 => 'Penggunaan medikasi lainnya/tidak ada mediksi'
+                                                                            1 => 'Penggunaan medikasi lainnya/tidak ada mediksi',
                                                                         ];
                                                                     @endphp
                                                                     {{ $medikaOptions[$medika] ?? '-' }}
@@ -1154,35 +1187,149 @@
                                                     </div>
                                                     <div class="alert alert-info mt-3">
                                                         <strong>Kesimpulan:</strong>
-                                                        {{ $risikoJatuh->risiko_jatuh_pediatrik_kesimpulan ?? '-' }}
+                                                        {{ $risikoJatuh->kesimpulan_skala_pediatrik ?? '-' }}
                                                     </div>
                                                 </div>
                                             @elseif($jenisSkala == 4)
                                                 <!-- Skala Ontario -->
                                                 <div class="mb-4">
-                                                    <h6 class="fw-bold">Penilaian Risiko Jatuh Skala Ontario Modified Stratify Sydney/ Lansia</h6>
+                                                    <h6 class="fw-bold">Penilaian Risiko Jatuh Skala Ontario Modified
+                                                        Stratify Sydney/ Lansia</h6>
 
                                                     <h6 class="mt-4 mb-3">1. Riwayat Jatuh</h6>
                                                     <div class="table-responsive">
                                                         <table class="table table-bordered table-sm">
                                                             <tr>
-                                                                <th width="60%">Apakah pasien datang kerumah sakit karena jatuh?</th>
-                                                                <td>{{ $risikoJatuh->risiko_jatuh_lansia_jatuh_saat_masuk_rs == 6 ? 'Ya' : 'Tidak' }}</td>
+                                                                <th width="60%">Apakah pasien datang kerumah sakit
+                                                                    karena jatuh?</th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_lansia_jatuh_saat_masuk_rs == 6 ? 'Ya' : 'Tidak' }}
+                                                                </td>
                                                             </tr>
                                                             <tr>
-                                                                <th>Apakah pasien mengalami jatuh dalam 2 bulan terakhir?</th>
-                                                                <td>{{ $risikoJatuh->risiko_jatuh_lansia_riwayat_jatuh_2_bulan == 6 ? 'Ya' : 'Tidak' }}</td>
+                                                                <th>Apakah pasien mengalami jatuh dalam 2 bulan terakhir?
+                                                                </th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_lansia_riwayat_jatuh_2_bulan == 6 ? 'Ya' : 'Tidak' }}
+                                                                </td>
                                                             </tr>
                                                         </table>
                                                     </div>
 
-                                                    <!-- Tambahkan bagian-bagian lain dari Skala Ontario dengan pola yang sama -->
-                                                    <!-- Status Mental, Penglihatan, dll. -->
+                                                    <h6 class="mt-4 mb-3">2. Status Mental</h6>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-sm">
+                                                            <tr>
+                                                                <th width="60%">Apakah pasien bingung?</th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_lansia_status_bingung == 14 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Apakah pasien disorientasi?</th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_lansia_status_disorientasi == 14 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Apakah pasien mengalami agitasi?</th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_lansia_status_agitasi == 14 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+
+                                                    <h6 class="mt-4 mb-3">3. Penglihatan</h6>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-sm">
+                                                            <tr>
+                                                                <th width="60%">Apakah pasien memakai kacamata?</th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_lansia_kacamata == 1 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Apakah pasien mengalami kelainan penglihatan?</th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_lansia_kelainan_penglihatan == 1 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Apakah pasien mempunyai glukoma/katarak/degenerasi
+                                                                    makula?</th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_lansia_glukoma == 1 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+
+                                                    <h6 class="mt-4 mb-3">4. Kebiasaan Berkemih</h6>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-sm">
+                                                            <tr>
+                                                                <th width="60%">Apakah terdapat perubahan perilaku
+                                                                    berkemih?</th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_lansia_perubahan_berkemih == 2 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+
+                                                    <h6 class="mt-4 mb-3">5. Transfer</h6>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-sm">
+                                                            <tr>
+                                                                <th width="60%">Mandiri</th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_lansia_transfer_mandiri == 0 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Memerlukan sedikit bantuan (1 orang)</th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_lansia_transfer_bantuan_sedikit == 1 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Memerlukan bantuan yang nyata (2 orang)</th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_lansia_transfer_bantuan_nyata == 2 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Tidak dapat duduk dengan seimbang</th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_lansia_transfer_bantuan_total == 3 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+
+                                                    <h6 class="mt-4 mb-3">6. Mobilitas Pasien</h6>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-sm">
+                                                            <tr>
+                                                                <th width="60%">Mandiri</th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_lansia_mobilitas_mandiri == 0 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Berjalan dengan bantuan 1 orang</th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_lansia_mobilitas_bantuan_1_orang == 1 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Menggunakan kursi roda</th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_lansia_mobilitas_kursi_roda == 2 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Imobilisasi</th>
+                                                                <td>{{ $risikoJatuh->risiko_jatuh_lansia_mobilitas_imobilisasi == 3 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
 
                                                     <div class="alert alert-info mt-3">
                                                         <strong>Kesimpulan:</strong>
-                                                        {{ $risikoJatuh->risiko_jatuh_lansia_kesimpulan ?? '-' }}
+                                                        {{ $risikoJatuh->kesimpulan_skala_lansia ?? '-' }}
                                                     </div>
+                                                </div>
+                                            @elseif($jenisSkala == 5)
+                                                <div class="alert alert-warning">
+                                                    <strong>Catatan:</strong> Pasien tidak dapat dinilai status risiko jatuh
+                                                    (Lainnya)
                                                 </div>
                                             @endif
 
@@ -1190,11 +1337,13 @@
                                             <div class="mb-4">
                                                 <h6 class="fw-bold">Intervensi Risiko Jatuh</h6>
                                                 @php
-                                                    $intervensi = json_decode($risikoJatuh->intervensi_risiko_jatuh ?? '[]', true);
+                                                    $intervensi = json_decode(
+                                                        $risikoJatuh->intervensi_risiko_jatuh ?? '[]',
+                                                        true,
+                                                    );
                                                 @endphp
                                                 @if (!empty($intervensi))
                                                     <ul class="list-group">
-                                
                                                         @foreach ($intervensi as $item)
                                                             <li class="list-group-item">{{ $item }}</li>
                                                         @endforeach
@@ -1217,8 +1366,7 @@
                                         <h5>8. Risiko Dekubitus</h5>
                                         <div class="col-md-12">
 
-                                            {{-- Cek dulu apakah relasi ada / tidak null --}}
-                                            @if($asesmen->rmeAsesmenKepAnakResikoDekubitus)
+                                            @if ($asesmen->rmeAsesmenKepAnakResikoDekubitus)
                                                 <div class="mb-3">
                                                     <label class="form-label fw-bold">Jenis Skala Dekubitus :</label>
                                                     <p class="form-control-plaintext border-bottom">
@@ -1242,19 +1390,22 @@
                                                                     <th width="200">Kondisi Fisik</th>
                                                                     <td>
                                                                         @php
-                                                                            $fisik = $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_fisik;
+                                                                            $fisik =
+                                                                                $asesmen
+                                                                                    ->rmeAsesmenKepAnakResikoDekubitus
+                                                                                    ->norton_kondisi_fisik;
                                                                             switch ($fisik) {
                                                                                 case 4:
-                                                                                    echo 'Baik';
+                                                                                    echo 'Baik (4)';
                                                                                     break;
                                                                                 case 3:
-                                                                                    echo 'Sedang';
+                                                                                    echo 'Sedang (3)';
                                                                                     break;
                                                                                 case 2:
-                                                                                    echo 'Buruk';
+                                                                                    echo 'Buruk (2)';
                                                                                     break;
                                                                                 case 1:
-                                                                                    echo 'Sangat Buruk';
+                                                                                    echo 'Sangat Buruk (1)';
                                                                                     break;
                                                                                 default:
                                                                                     echo '-';
@@ -1266,19 +1417,22 @@
                                                                     <th>Kondisi Mental</th>
                                                                     <td>
                                                                         @php
-                                                                            $mental = $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_mental;
+                                                                            $mental =
+                                                                                $asesmen
+                                                                                    ->rmeAsesmenKepAnakResikoDekubitus
+                                                                                    ->norton_kondisi_mental;
                                                                             switch ($mental) {
                                                                                 case 4:
-                                                                                    echo 'Sadar';
+                                                                                    echo 'Sadar (4)';
                                                                                     break;
                                                                                 case 3:
-                                                                                    echo 'Apatis';
+                                                                                    echo 'Apatis (3)';
                                                                                     break;
                                                                                 case 2:
-                                                                                    echo 'Bingung';
+                                                                                    echo 'Bingung (2)';
                                                                                     break;
                                                                                 case 1:
-                                                                                    echo 'Stupor';
+                                                                                    echo 'Stupor (1)';
                                                                                     break;
                                                                                 default:
                                                                                     echo '-';
@@ -1290,19 +1444,22 @@
                                                                     <th>Aktivitas</th>
                                                                     <td>
                                                                         @php
-                                                                            $aktivitas = $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_aktivitas;
+                                                                            $aktivitas =
+                                                                                $asesmen
+                                                                                    ->rmeAsesmenKepAnakResikoDekubitus
+                                                                                    ->norton_aktivitas;
                                                                             switch ($aktivitas) {
                                                                                 case 4:
-                                                                                    echo 'Aktif';
+                                                                                    echo 'Aktif (4)';
                                                                                     break;
                                                                                 case 3:
-                                                                                    echo 'Jalan dengan bantuan';
+                                                                                    echo 'Jalan dengan bantuan (3)';
                                                                                     break;
                                                                                 case 2:
-                                                                                    echo 'Terbatas di kursi';
+                                                                                    echo 'Terbatas di kursi (2)';
                                                                                     break;
                                                                                 case 1:
-                                                                                    echo 'Terbatas di tempat tidur';
+                                                                                    echo 'Terbatas di tempat tidur (1)';
                                                                                     break;
                                                                                 default:
                                                                                     echo '-';
@@ -1314,19 +1471,22 @@
                                                                     <th>Mobilitas</th>
                                                                     <td>
                                                                         @php
-                                                                            $mobilitas = $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_mobilitas;
+                                                                            $mobilitas =
+                                                                                $asesmen
+                                                                                    ->rmeAsesmenKepAnakResikoDekubitus
+                                                                                    ->norton_mobilitas;
                                                                             switch ($mobilitas) {
                                                                                 case 4:
-                                                                                    echo 'Bebas bergerak';
+                                                                                    echo 'Bebas bergerak (4)';
                                                                                     break;
                                                                                 case 3:
-                                                                                    echo 'Agak terbatas';
+                                                                                    echo 'Agak terbatas (3)';
                                                                                     break;
                                                                                 case 2:
-                                                                                    echo 'Sangat terbatas';
+                                                                                    echo 'Sangat terbatas (2)';
                                                                                     break;
                                                                                 case 1:
-                                                                                    echo 'Tidak dapat bergerak';
+                                                                                    echo 'Tidak dapat bergerak (1)';
                                                                                     break;
                                                                                 default:
                                                                                     echo '-';
@@ -1338,19 +1498,22 @@
                                                                     <th>Inkontinensia</th>
                                                                     <td>
                                                                         @php
-                                                                            $inkontinensia = $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_inkontenesia;
+                                                                            $inkontinensia =
+                                                                                $asesmen
+                                                                                    ->rmeAsesmenKepAnakResikoDekubitus
+                                                                                    ->norton_inkontenesia;
                                                                             switch ($inkontinensia) {
                                                                                 case 4:
-                                                                                    echo 'Tidak ada';
+                                                                                    echo 'Tidak ada (4)';
                                                                                     break;
                                                                                 case 3:
-                                                                                    echo 'Kadang-kadang';
+                                                                                    echo 'Kadang-kadang (3)';
                                                                                     break;
                                                                                 case 2:
-                                                                                    echo 'Biasanya urin';
+                                                                                    echo 'Biasanya urin (2)';
                                                                                     break;
                                                                                 case 1:
-                                                                                    echo 'Urin dan feses';
+                                                                                    echo 'Urin dan feses (1)';
                                                                                     break;
                                                                                 default:
                                                                                     echo '-';
@@ -1361,6 +1524,13 @@
                                                             </table>
                                                         </div>
                                                         <div class="alert alert-info mt-3">
+                                                            <strong>Total Skor:</strong>
+                                                            {{ ($asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_fisik ?? 0) +
+                                                                ($asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_mental ?? 0) +
+                                                                ($asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_aktivitas ?? 0) +
+                                                                ($asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_mobilitas ?? 0) +
+                                                                ($asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_inkontenesia ?? 0) }}
+                                                            <br>
                                                             <strong>Kesimpulan:</strong>
                                                             {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->decubitus_kesimpulan ?? '-' }}
                                                         </div>
@@ -1375,19 +1545,22 @@
                                                                     <th width="200">Persepsi Sensori</th>
                                                                     <td>
                                                                         @php
-                                                                            $sensori = $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_persepsi;
+                                                                            $sensori =
+                                                                                $asesmen
+                                                                                    ->rmeAsesmenKepAnakResikoDekubitus
+                                                                                    ->braden_persepsi;
                                                                             switch ($sensori) {
                                                                                 case 1:
-                                                                                    echo 'Keterbatasan Penuh';
+                                                                                    echo 'Keterbatasan Penuh (1)';
                                                                                     break;
                                                                                 case 2:
-                                                                                    echo 'Sangat Terbatas';
+                                                                                    echo 'Sangat Terbatas (2)';
                                                                                     break;
                                                                                 case 3:
-                                                                                    echo 'Keterbatasan Ringan';
+                                                                                    echo 'Keterbatasan Ringan (3)';
                                                                                     break;
                                                                                 case 4:
-                                                                                    echo 'Tidak Ada Gangguan';
+                                                                                    echo 'Tidak Ada Gangguan (4)';
                                                                                     break;
                                                                                 default:
                                                                                     echo '-';
@@ -1399,19 +1572,22 @@
                                                                     <th>Kelembapan</th>
                                                                     <td>
                                                                         @php
-                                                                            $kelembapan = $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_kelembapan;
+                                                                            $kelembapan =
+                                                                                $asesmen
+                                                                                    ->rmeAsesmenKepAnakResikoDekubitus
+                                                                                    ->braden_kelembapan;
                                                                             switch ($kelembapan) {
                                                                                 case 1:
-                                                                                    echo 'Selalu Lembap';
+                                                                                    echo 'Selalu Lembap (1)';
                                                                                     break;
                                                                                 case 2:
-                                                                                    echo 'Umumnya Lembap';
+                                                                                    echo 'Umumnya Lembap (2)';
                                                                                     break;
                                                                                 case 3:
-                                                                                    echo 'Kadang-Kadang Lembap';
+                                                                                    echo 'Kadang-Kadang Lembap (3)';
                                                                                     break;
                                                                                 case 4:
-                                                                                    echo 'Jarang Lembap';
+                                                                                    echo 'Jarang Lembap (4)';
                                                                                     break;
                                                                                 default:
                                                                                     echo '-';
@@ -1423,19 +1599,22 @@
                                                                     <th>Aktivitas</th>
                                                                     <td>
                                                                         @php
-                                                                            $aktivitas = $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_aktivitas;
+                                                                            $aktivitas =
+                                                                                $asesmen
+                                                                                    ->rmeAsesmenKepAnakResikoDekubitus
+                                                                                    ->braden_aktivitas;
                                                                             switch ($aktivitas) {
                                                                                 case 1:
-                                                                                    echo 'Total di Tempat Tidur';
+                                                                                    echo 'Total di Tempat Tidur (1)';
                                                                                     break;
                                                                                 case 2:
-                                                                                    echo 'Dapat Duduk';
+                                                                                    echo 'Dapat Duduk (2)';
                                                                                     break;
                                                                                 case 3:
-                                                                                    echo 'Berjalan Kadang-kadang';
+                                                                                    echo 'Berjalan Kadang-kadang (3)';
                                                                                     break;
                                                                                 case 4:
-                                                                                    echo 'Dapat Berjalan-jalan';
+                                                                                    echo 'Dapat Berjalan-jalan (4)';
                                                                                     break;
                                                                                 default:
                                                                                     echo '-';
@@ -1447,19 +1626,22 @@
                                                                     <th>Mobilitas</th>
                                                                     <td>
                                                                         @php
-                                                                            $mobilitas = $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_mobilitas;
+                                                                            $mobilitas =
+                                                                                $asesmen
+                                                                                    ->rmeAsesmenKepAnakResikoDekubitus
+                                                                                    ->braden_mobilitas;
                                                                             switch ($mobilitas) {
                                                                                 case 1:
-                                                                                    echo 'Tidak Mampu Bergerak Sama sekali';
+                                                                                    echo 'Tidak Mampu Bergerak Sama sekali (1)';
                                                                                     break;
                                                                                 case 2:
-                                                                                    echo 'Sangat Terbatas';
+                                                                                    echo 'Sangat Terbatas (2)';
                                                                                     break;
                                                                                 case 3:
-                                                                                    echo 'Tidak Ada Masalah';
+                                                                                    echo 'Tidak Ada Masalah (3)';
                                                                                     break;
                                                                                 case 4:
-                                                                                    echo 'Tanpa Keterbatasan';
+                                                                                    echo 'Tanpa Keterbatasan (4)';
                                                                                     break;
                                                                                 default:
                                                                                     echo '-';
@@ -1471,19 +1653,22 @@
                                                                     <th>Nutrisi</th>
                                                                     <td>
                                                                         @php
-                                                                            $nutrisi = $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_nutrisi;
+                                                                            $nutrisi =
+                                                                                $asesmen
+                                                                                    ->rmeAsesmenKepAnakResikoDekubitus
+                                                                                    ->braden_nutrisi;
                                                                             switch ($nutrisi) {
                                                                                 case 1:
-                                                                                    echo 'Sangat Buruk';
+                                                                                    echo 'Sangat Buruk (1)';
                                                                                     break;
                                                                                 case 2:
-                                                                                    echo 'Kurang Mencukupi';
+                                                                                    echo 'Kurang Mencukupi (2)';
                                                                                     break;
                                                                                 case 3:
-                                                                                    echo 'Mencukupi';
+                                                                                    echo 'Mencukupi (3)';
                                                                                     break;
                                                                                 case 4:
-                                                                                    echo 'Sangat Baik';
+                                                                                    echo 'Sangat Baik (4)';
                                                                                     break;
                                                                                 default:
                                                                                     echo '-';
@@ -1495,16 +1680,19 @@
                                                                     <th>Pergesekan dan Pergeseran</th>
                                                                     <td>
                                                                         @php
-                                                                            $pergesekan = $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_pergesekan;
+                                                                            $pergesekan =
+                                                                                $asesmen
+                                                                                    ->rmeAsesmenKepAnakResikoDekubitus
+                                                                                    ->braden_pergesekan;
                                                                             switch ($pergesekan) {
                                                                                 case 1:
-                                                                                    echo 'Bermasalah';
+                                                                                    echo 'Bermasalah (1)';
                                                                                     break;
                                                                                 case 2:
-                                                                                    echo 'Potensial Bermasalah';
+                                                                                    echo 'Potensial Bermasalah (2)';
                                                                                     break;
                                                                                 case 3:
-                                                                                    echo 'Keterbatasan Ringan';
+                                                                                    echo 'Keterbatasan Ringan (3)';
                                                                                     break;
                                                                                 default:
                                                                                     echo '-';
@@ -1515,14 +1703,20 @@
                                                             </table>
                                                         </div>
                                                         <div class="alert alert-info mt-3">
+                                                            <strong>Total Skor:</strong>
+                                                            {{ ($asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_persepsi ?? 0) +
+                                                                ($asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_kelembapan ?? 0) +
+                                                                ($asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_aktivitas ?? 0) +
+                                                                ($asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_mobilitas ?? 0) +
+                                                                ($asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_nutrisi ?? 0) +
+                                                                ($asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_pergesekan ?? 0) }}
+                                                            <br>
                                                             <strong>Kesimpulan:</strong>
                                                             {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->decubitus_kesimpulan ?? '-' }}
                                                         </div>
                                                     </div>
                                                 @endif
-
                                             @else
-                                                {{-- Jika tidak ada data rmeAsesmenKepAnakResikoDekubitus --}}
                                                 <div class="mb-3">
                                                     <label class="form-label fw-bold">Jenis Skala Dekubitus :</label>
                                                     <p class="form-control-plaintext border-bottom">-</p>
@@ -1534,7 +1728,6 @@
                                 </div>
                             </div>
                         </div>
-
 
                         <!-- 9. Status Psikologis -->
                         <div class="tab-pane fade show">
@@ -1590,9 +1783,8 @@
                                             </div>
 
                                             <div class="mb-4">
-                                                <label class="form-label fw-bold">
-                                                    Potensi Menyakiti Diri Sendiri/Orang Lain:
-                                                </label>
+                                                <label class="form-label fw-bold">Potensi Menyakiti Diri Sendiri/Orang
+                                                    Lain:</label>
                                                 <p class="form-control-plaintext border-bottom">
                                                     @if ($asesmen->rmeAsesmenKepAnakStatusPsikologis)
                                                         @if ($asesmen->rmeAsesmenKepAnakStatusPsikologis->potensi_menyakiti === 0)
@@ -1603,19 +1795,18 @@
                                                             -
                                                         @endif
                                                     @else
-                                                        - 
+                                                        -
                                                     @endif
                                                 </p>
                                             </div>
 
-
                                             <div class="mb-4">
-                                                <label class="form-label fw-bold">
-                                                    Anggota Keluarga Gangguan Jiwa:
-                                                </label>
+                                                <label class="form-label fw-bold">Anggota Keluarga Gangguan Jiwa:</label>
                                                 <p class="form-control-plaintext border-bottom">
                                                     @php
-                                                        $gangguanJiwa = $asesmen->rmeAsesmenKepAnakStatusPsikologis?->keluarga_gangguan_jiwa;
+                                                        $gangguanJiwa =
+                                                            $asesmen->rmeAsesmenKepAnakStatusPsikologis
+                                                                ?->keluarga_gangguan_jiwa;
                                                     @endphp
 
                                                     @if ($gangguanJiwa === 0)
@@ -1627,7 +1818,6 @@
                                                     @endif
                                                 </p>
                                             </div>
-
 
                                             <div class="mb-4">
                                                 <label class="form-label fw-bold">Lainnya :</label>
@@ -1678,35 +1868,35 @@
                                             <div class="mb-4">
                                                 <label class="form-label fw-bold">Pekerjaan :</label>
                                                 <p class="form-control-plaintext border-bottom">
-                                                    {{ $asesmen->rmeAsesmenKepAnak->pekerjaan_pasien ?? '-' }}
+                                                    {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi->sosial_ekonomi_pekerjaan ?? '-' }}
                                                 </p>
                                             </div>
 
                                             <div class="mb-4">
                                                 <label class="form-label fw-bold">Status Pernikahan :</label>
                                                 <p class="form-control-plaintext border-bottom">
-                                                    {{ $asesmen->rmeAsesmenKepAnak->status_pernikahan ?? '-' }}
+                                                    {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi->sosial_ekonomi_status_pernikahan ?? '-' }}
                                                 </p>
                                             </div>
 
                                             <div class="mb-4">
                                                 <label class="form-label fw-bold">Tempat Tinggal :</label>
                                                 <p class="form-control-plaintext border-bottom">
-                                                    {{ $asesmen->rmeAsesmenKepAnak->tempat_tinggal ?? '-' }}
+                                                    {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi->sosial_ekonomi_tempat_tinggal ?? '-' }}
                                                 </p>
                                             </div>
 
                                             <div class="mb-4">
                                                 <label class="form-label fw-bold">Curiga Penganiayaan :</label>
                                                 <p class="form-control-plaintext border-bottom">
-                                                    {{ $asesmen->rmeAsesmenKepAnak->curiga_penganiayaan ?? '-' }}
+                                                    {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi->sosial_ekonomi_curiga_penganiayaan ?? '-' }}
                                                 </p>
                                             </div>
 
                                             <div class="mb-4">
                                                 <label class="form-label fw-bold">Status Tinggal dengan Keluarga :</label>
                                                 <p class="form-control-plaintext border-bottom">
-                                                    {{ $asesmen->rmeAsesmenKepAnak->status_tinggal ?? '-' }}
+                                                    {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi->sosial_ekonomi_tinggal_dengan_keluarga ?? '-' }}
                                                 </p>
                                             </div>
                                         </div>
@@ -1732,6 +1922,7 @@
                                                             1 => 'Malnutrition Screening Tool (MST)',
                                                             2 => 'The Mini Nutritional Assessment (MNA)',
                                                             3 => 'Strong Kids (1 bln - 18 Tahun)',
+                                                            4 => 'NRS (Nutritional Risk Screening)',
                                                             5 => 'Tidak Dapat Dinilai',
                                                         ];
                                                     @endphp
@@ -1743,12 +1934,12 @@
                                                 <!-- MST Detail -->
                                                 <div class="mb-4">
                                                     <h6 class="fw-bold">Detail Malnutrition Screening Tool (MST)</h6>
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">Penurunan Berat Badan
-                                                                    :</label>
-                                                                <p class="form-control-plaintext border-bottom">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-sm">
+                                                            <tr>
+                                                                <th width="60%">Penurunan Berat Badan dalam 6 bulan
+                                                                    terakhir</th>
+                                                                <td>
                                                                     @php
                                                                         $penurunanBB =
                                                                             $asesmen->rmeAsesmenKepAnakGizi
@@ -1760,18 +1951,17 @@
                                                                         ];
                                                                     @endphp
                                                                     {{ $penurunanBBOptions[$penurunanBB] ?? '-' }}
-                                                                </p>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">Jumlah Penurunan Berat
-                                                                    Badan :</label>
-                                                                <p class="form-control-plaintext border-bottom">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Jumlah Penurunan Berat Badan</th>
+                                                                <td>
                                                                     @php
                                                                         $jumlahPenurunanBB =
                                                                             $asesmen->rmeAsesmenKepAnakGizi
                                                                                 ->gizi_mst_jumlah_penurunan_bb ?? null;
                                                                         $jumlahPenurunanBBOptions = [
-                                                                            0 => 'Pilih',
+                                                                            0 => 'Tidak ada',
                                                                             1 => '1-5 kg',
                                                                             2 => '6-10 kg',
                                                                             3 => '11-15 kg',
@@ -1779,24 +1969,19 @@
                                                                         ];
                                                                     @endphp
                                                                     {{ $jumlahPenurunanBBOptions[$jumlahPenurunanBB] ?? '-' }}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">Nafsu Makan :</label>
-                                                                <p class="form-control-plaintext border-bottom">
-                                                                    {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_nafsu_makan_berkurang == 1 ? 'Berkurang' : 'Tidak Berkurang' }}
-                                                                </p>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">Diagnosis Khusus
-                                                                    :</label>
-                                                                <p class="form-control-plaintext border-bottom">
-                                                                    {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_diagnosis_khusus == 1 ? 'Ya' : 'Tidak' }}
-                                                                </p>
-                                                            </div>
-                                                        </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Nafsu Makan Berkurang</th>
+                                                                <td>{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_nafsu_makan_berkurang == 1 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Diagnosis Khusus (DM, Cancer, Geriatri, GGK, dll)</th>
+                                                                <td>{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_diagnosis_khusus == 1 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                        </table>
                                                     </div>
                                                     <div class="alert alert-info">
                                                         <strong>Kesimpulan:</strong>
@@ -1807,12 +1992,12 @@
                                                 <!-- MNA Detail -->
                                                 <div class="mb-4">
                                                     <h6 class="fw-bold">Detail Mini Nutritional Assessment (MNA)</h6>
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">Penurunan Asupan Makanan
-                                                                    :</label>
-                                                                <p class="form-control-plaintext border-bottom">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-sm">
+                                                            <tr>
+                                                                <th width="60%">Penurunan Asupan Makanan 3 bulan
+                                                                    terakhir</th>
+                                                                <td>
                                                                     @php
                                                                         $penurunanAsupan =
                                                                             $asesmen->rmeAsesmenKepAnakGizi
@@ -1825,12 +2010,11 @@
                                                                         ];
                                                                     @endphp
                                                                     {{ $penurunanAsupanOptions[$penurunanAsupan] ?? '-' }}
-                                                                </p>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">Penurunan Berat Badan
-                                                                    :</label>
-                                                                <p class="form-control-plaintext border-bottom">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Kehilangan Berat Badan 3 bulan terakhir</th>
+                                                                <td>
                                                                     @php
                                                                         $penurunanBB =
                                                                             $asesmen->rmeAsesmenKepAnakGizi
@@ -1844,11 +2028,11 @@
                                                                         ];
                                                                     @endphp
                                                                     {{ $penurunanBBOptions[$penurunanBB] ?? '-' }}
-                                                                </p>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">Mobilitas :</label>
-                                                                <p class="form-control-plaintext border-bottom">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Mobilitas</th>
+                                                                <td>
                                                                     @php
                                                                         $mobilitas =
                                                                             $asesmen->rmeAsesmenKepAnakGizi
@@ -1860,21 +2044,16 @@
                                                                         ];
                                                                     @endphp
                                                                     {{ $mobilitasOptions[$mobilitas] ?? '-' }}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">Stres Psikologi/Penyakit
-                                                                    Akut :</label>
-                                                                <p class="form-control-plaintext border-bottom">
-                                                                    {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_stress_penyakit_akut == 1 ? 'Tidak' : 'Ya' }}
-                                                                </p>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">Status Neuropsikologi
-                                                                    :</label>
-                                                                <p class="form-control-plaintext border-bottom">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Stres Psikologi/Penyakit Akut</th>
+                                                                <td>{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_stress_penyakit_akut == 1 ? 'Tidak' : 'Ya' }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Status Neuropsikologi</th>
+                                                                <td>
                                                                     @php
                                                                         $neuropsikologi =
                                                                             $asesmen->rmeAsesmenKepAnakGizi
@@ -1887,29 +2066,24 @@
                                                                         ];
                                                                     @endphp
                                                                     {{ $neuropsikologiOptions[$neuropsikologi] ?? '-' }}
-                                                                </p>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">Berat Badan :</label>
-                                                                <p class="form-control-plaintext border-bottom">
-                                                                    {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_berat_badan ?? '-' }}
-                                                                    kg
-                                                                </p>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">Tinggi Badan :</label>
-                                                                <p class="form-control-plaintext border-bottom">
-                                                                    {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_tinggi_badan ?? '-' }}
-                                                                    cm
-                                                                </p>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">IMT :</label>
-                                                                <p class="form-control-plaintext border-bottom">
-                                                                    {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_imt ?? '-' }}
-                                                                </p>
-                                                            </div>
-                                                        </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Berat Badan</th>
+                                                                <td>{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_berat_badan ?? '-' }}
+                                                                    kg</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Tinggi Badan</th>
+                                                                <td>{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_tinggi_badan ?? '-' }}
+                                                                    cm</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>IMT</th>
+                                                                <td>{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_imt ?? '-' }}
+                                                                </td>
+                                                            </tr>
+                                                        </table>
                                                     </div>
                                                     <div class="alert alert-info">
                                                         <strong>Kesimpulan:</strong>
@@ -1920,43 +2094,40 @@
                                                 <!-- Strong Kids Detail -->
                                                 <div class="mb-4">
                                                     <h6 class="fw-bold">Detail Strong Kids</h6>
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">Status Kurus :</label>
-                                                                <p class="form-control-plaintext border-bottom">
-                                                                    {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_status_kurus == 1 ? 'Ya' : 'Tidak' }}
-                                                                </p>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">Penurunan Berat Badan
-                                                                    :</label>
-                                                                <p class="form-control-plaintext border-bottom">
-                                                                    {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_penurunan_bb == 1 ? 'Ya' : 'Tidak' }}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">Gangguan Pencernaan
-                                                                    :</label>
-                                                                <p class="form-control-plaintext border-bottom">
-                                                                    {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_gangguan_pencernaan == 1 ? 'Ya' : 'Tidak' }}
-                                                                </p>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">Penyakit Berisiko
-                                                                    :</label>
-                                                                <p class="form-control-plaintext border-bottom">
-                                                                    {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_penyakit_berisiko == 2 ? 'Ya' : 'Tidak' }}
-                                                                </p>
-                                                            </div>
-                                                        </div>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-sm">
+                                                            <tr>
+                                                                <th width="60%">Anak tampak kurus (kehilangan lemak
+                                                                    subkutan, massa otot, wajah cekung)</th>
+                                                                <td>{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_status_kurus == 1 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Penurunan Berat Badan selama 1 bulan terakhir</th>
+                                                                <td>{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_penurunan_bb == 1 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Gangguan Pencernaan (diare ≥5x/hari, muntah >3x/hari,
+                                                                    penurunan asupan)</th>
+                                                                <td>{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_gangguan_pencernaan == 1 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Penyakit/keadaan yang berisiko malnutrisi</th>
+                                                                <td>{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_penyakit_berisiko == 2 ? 'Ya' : 'Tidak' }}
+                                                                </td>
+                                                            </tr>
+                                                        </table>
                                                     </div>
                                                     <div class="alert alert-info">
                                                         <strong>Kesimpulan:</strong>
                                                         {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_kesimpulan ?? '-' }}
                                                     </div>
+                                                </div>
+                                            @elseif($jenisGizi == 5)
+                                                <div class="alert alert-warning">
+                                                    <strong>Catatan:</strong> Pasien tidak dapat dinilai status gizinya
                                                 </div>
                                             @endif
                                         </div>
@@ -1996,41 +2167,6 @@
                                                         <div class="col-md-4">
                                                             <div class="mb-3">
                                                                 <label class="form-label fw-bold">Makan :</label>
-                                                                <p class="form-control-plaintext border-bottom">
-                                                                    {{ $asesmen->rmeAsesmenKepAnakStatusFungsional->makan ?? '-' }}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">Berjalan :</label>
-                                                                <p class="form-control-plaintext border-bottom">
-                                                                    {{ $asesmen->rmeAsesmenKepAnakStatusFungsional->berjalan ?? '-' }}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">Mandi :</label>
-                                                                <p class="form-control-plaintext border-bottom">
-                                                                    {{ $asesmen->rmeAsesmenKepAnakStatusFungsional->mandi ?? '-' }}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="row mt-3">
-                                                        <div class="col-md-6">
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">Total Skala :</label>
-                                                                <p class="form-control-plaintext border-bottom">
-                                                                    {{ $asesmen->rmeAsesmenKepAnakStatusFungsional->jumlah_skala ?? '-' }}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold">Kesimpulan :</label>
                                                                 <p class="form-control-plaintext border-bottom">
                                                                     {{ $asesmen->rmeAsesmenKepAnakStatusFungsional->kesimpulan ?? '-' }}
                                                                 </p>
@@ -2116,10 +2252,8 @@
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Usia Lanjut</label>
                                                 <p class="form-control-plaintext border-bottom">
-                                                    @if(
-                                                        isset($asesmen->rmeAsesmenKepAnakRencanaPulang->usia_lanjut) 
-                                                        && $asesmen->rmeAsesmenKepAnakRencanaPulang->usia_lanjut !== null
-                                                    )
+                                                    @if (isset($asesmen->rmeAsesmenKepAnakRencanaPulang->usia_lanjut) &&
+                                                            $asesmen->rmeAsesmenKepAnakRencanaPulang->usia_lanjut !== null)
                                                         {{ $asesmen->rmeAsesmenKepAnakRencanaPulang->usia_lanjut == 0 ? 'Ya' : 'Tidak' }}
                                                     @else
                                                         -
@@ -2127,94 +2261,95 @@
                                                 </p>
                                             </div>
 
-
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Hambatan Mobilisasi</label>
                                                 <p class="form-control-plaintext border-bottom">
-                                                    @if (isset($asesmen->rmeAsesmenKepAnakRencanaPulang->hambatan_mobilisasi) && $asesmen->rmeAsesmenKepAnakRencanaPulang->hambatan_mobilisasi !== null)
-                                                    {{ $asesmen->rmeAsesmenKepAnakRencanaPulang->hambatan_mobilisasi == 0 ? 'Ya' : 'Tidak' }}
+                                                    @if (isset($asesmen->rmeAsesmenKepAnakRencanaPulang->hambatan_mobilisasi) &&
+                                                            $asesmen->rmeAsesmenKepAnakRencanaPulang->hambatan_mobilisasi !== null)
+                                                        {{ $asesmen->rmeAsesmenKepAnakRencanaPulang->hambatan_mobilisasi == 0 ? 'Ya' : 'Tidak' }}
                                                     @else
-                                                    -
+                                                        -
                                                     @endif
                                                 </p>
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">Penggunaan Media Berkelanjutan</label>
+                                                <label class="form-label fw-bold">Membutuhkan Pelayanan Medis
+                                                    Berkelanjutan</label>
                                                 <p class="form-control-plaintext border-bottom">
-                                                    @if (isset($asesmen->rmeAsesmenKepAnakRencanaPulang->penggunaan_media_berkelanjutan) && $asesmen->rmeAsesmenKepAnakRencanaPulang->penggunaan_media_berkelanjutan !== null)
                                                     {{ $asesmen->rmeAsesmenKepAnakRencanaPulang->membutuhkan_pelayanan_medis ?? '-' }}
-                                                    @else
-                                                    -
-                                                    @endif
                                                 </p>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">Keterampilan Khusus</label>
+                                                <label class="form-label fw-bold">Memerlukan Keterampilan Khusus</label>
                                                 <p class="form-control-plaintext border-bottom">
-                                                    @if (isset($asesmen->rmeAsesmenKepAnakRencanaPulang->memerlukan_keterampilan_khusus) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memerlukan_keterampilan_khusus !== null)
                                                     {{ $asesmen->rmeAsesmenKepAnakRencanaPulang->memerlukan_keterampilan_khusus ?? '-' }}
-                                                    @else
-                                                    -
-                                                    @endif
                                                 </p>
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">Alat Bantu</label>
+                                                <label class="form-label fw-bold">Memerlukan Alat Bantu</label>
                                                 <p class="form-control-plaintext border-bottom">
-                                                    @if (isset($asesmen->rmeAsesmenKepAnakRencanaPulang->memerlukan_alat_bantu) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memerlukan_alat_bantu !== null)
                                                     {{ $asesmen->rmeAsesmenKepAnakRencanaPulang->memerlukan_alat_bantu ?? '-' }}
-                                                    @else
-                                                    -
-                                                    @endif
                                                 </p>
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">Nyeri Kronis</label>
+                                                <label class="form-label fw-bold">Memiliki Nyeri Kronis</label>
                                                 <p class="form-control-plaintext border-bottom">
-                                                    @if (isset($asesmen->rmeAsesmenKepAnakRencanaPulang->memiliki_nyeri_kronis) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memiliki_nyeri_kronis !== null)
                                                     {{ $asesmen->rmeAsesmenKepAnakRencanaPulang->memiliki_nyeri_kronis ?? '-' }}
-                                                    @else
-                                                    -
-                                                    @endif
                                                 </p>
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">Perkiraan Lama Dirawat</label>
+                                                <label class="form-label fw-bold">Ketergantungan Aktivitas</label>
                                                 <p class="form-control-plaintext border-bottom">
-                                                    @if (isset($asesmen->rmeAsesmenKepAnakRencanaPulang->perkiraan_lama_dirawat) && $asesmen->rmeAsesmenKepAnakRencanaPulang->perkiraan_lama_dirawat !== null)
-                                                        {{ $asesmen->rmeAsesmenKepAnakRencanaPulang->perkiraan_lama_dirawat ?? '-' }}
-                                                    Hari
-                                                    @else
-                                                    -
-                                                    @endif                                           
+                                                    {{ $asesmen->rmeAsesmenKepAnakRencanaPulang->ketergantungan_aktivitas ?? '-' }}
                                                 </p>
                                             </div>
                                         </div>
 
                                         <div class="col-12">
                                             <div class="mb-3">
+                                                <label class="form-label fw-bold">Perkiraan Lama Dirawat</label>
+                                                <p class="form-control-plaintext border-bottom">
+                                                    @if (isset($asesmen->rmeAsesmenKepAnakRencanaPulang->perkiraan_lama_dirawat) &&
+                                                            $asesmen->rmeAsesmenKepAnakRencanaPulang->perkiraan_lama_dirawat !== null)
+                                                        {{ $asesmen->rmeAsesmenKepAnakRencanaPulang->perkiraan_lama_dirawat }}
+                                                        Hari
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </p>
+                                            </div>
+
+                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">Rencana Tanggal Pulang</label>
                                                 <p class="form-control-plaintext border-bottom">
-                                                    @if (isset($asesmen->rmeAsesmenKepAnakRencanaPulang->rencana_pulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->rencana_pulang !== null)
-                                                    {{ $asesmen->rmeAsesmenKepAnakRencanaPulang->rencana_pulang ? \Carbon\Carbon::parse($asesmen->rmeAsesmenKepAnakRencanaPulang->rencana_pulang)->format('d M Y') : '-' }}
+                                                    @if (isset($asesmen->rmeAsesmenKepAnakRencanaPulang->rencana_pulang) &&
+                                                            $asesmen->rmeAsesmenKepAnakRencanaPulang->rencana_pulang !== null)
+                                                        {{ $asesmen->rmeAsesmenKepAnakRencanaPulang->rencana_pulang ? \Carbon\Carbon::parse($asesmen->rmeAsesmenKepAnakRencanaPulang->rencana_pulang)->format('d M Y') : '-' }}
                                                     @else
-                                                    -
+                                                        -
                                                     @endif
                                                 </p>
                                             </div>
 
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Kesimpulan</label>
-                                                <p class="form-control-plaintext border-bottom">
+                                                <div
+                                                    class="alert 
+                            @if ($asesmen->rmeAsesmenKepAnakRencanaPulang->kesimpulan == 'Mebutuhkan rencana pulang khusus') alert-warning
+                            @elseif($asesmen->rmeAsesmenKepAnakRencanaPulang->kesimpulan == 'Tidak mebutuhkan rencana pulang khusus')
+                                alert-success
+                            @else
+                                alert-info @endif
+                        ">
                                                     {{ $asesmen->rmeAsesmenKepAnakRencanaPulang->kesimpulan ?? '-' }}
-                                                </p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -2222,90 +2357,58 @@
                             </div>
                         </div>
 
-                        <!-- 16. Diagnosis -->
+                        <!-- 16. Masalah/Diagnosis Keperawatan -->
                         <div class="tab-pane fade show">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
-                                        <h5>16. Diagnosis</h5>
+                                        <h5>16. Masalah/Diagnosis Keperawatan</h5>
                                         <div class="col-md-12">
-                                            <!-- Diagnosis Banding -->
+                                            <!-- Masalah/Diagnosis Keperawatan -->
                                             <div class="mb-4">
-                                                <label class="form-label fw-bold">Diagnosis Banding</label>
+                                                <label class="form-label fw-bold">1. Masalah/Diagnosis Keperawatan</label>
                                                 @php
-                                                    $diagnosisBanding = json_decode(
-                                                        $asesmen->rmeAsesmenKepAnak->diagnosis_banding ?? '[]',
+                                                    $masalahDiagnosis = json_decode(
+                                                        $asesmen->rmeAsesmenKepAnak->masalah_diagnosis ?? '[]',
                                                         true,
                                                     );
                                                 @endphp
-                                                @if (!empty($diagnosisBanding))
+                                                @if (!empty($masalahDiagnosis))
                                                     <div class="bg-light p-3 rounded">
-                                                        <ul class="list-unstyled mb-0">
-                                                            @foreach ($diagnosisBanding as $diagnosis)
-                                                                <li class="mb-2">
-                                                                    <span
-                                                                        class="badge bg-info">{{ $diagnosis }}</span>
-                                                                </li>
+                                                        <ol class="mb-0">
+                                                            @foreach ($masalahDiagnosis as $masalah)
+                                                                <li class="mb-2">{{ $masalah }}</li>
                                                             @endforeach
-                                                        </ul>
+                                                        </ol>
                                                     </div>
                                                 @else
                                                     <p class="form-control-plaintext border-bottom text-muted">
-                                                        Tidak ada diagnosis banding
+                                                        Tidak ada masalah diagnosis yang tercatat
                                                     </p>
                                                 @endif
                                             </div>
 
-                                            <!-- Diagnosis Kerja -->
+                                            <!-- Intervensi/Rencana Asuhan -->
                                             <div class="mb-4">
-                                                <label class="form-label fw-bold">Diagnosis Kerja</label>
+                                                <label class="form-label fw-bold">2. Intervensi/Rencana Asuhan dan Target
+                                                    Terukur</label>
                                                 @php
-                                                    $diagnosisKerja = json_decode(
-                                                        $asesmen->rmeAsesmenKepAnak->diagnosis_kerja ?? '[]',
+                                                    $intervensiRencana = json_decode(
+                                                        $asesmen->rmeAsesmenKepAnak->intervensi_rencana ?? '[]',
                                                         true,
                                                     );
                                                 @endphp
-                                                @if (!empty($diagnosisKerja))
+                                                @if (!empty($intervensiRencana))
                                                     <div class="bg-light p-3 rounded">
-                                                        <ul class="list-unstyled mb-0">
-                                                            @foreach ($diagnosisKerja as $diagnosis)
-                                                                <li class="mb-2">
-                                                                    <span
-                                                                        class="badge bg-success">{{ $diagnosis }}</span>
-                                                                </li>
+                                                        <ol class="mb-0">
+                                                            @foreach ($intervensiRencana as $intervensi)
+                                                                <li class="mb-2">{{ $intervensi }}</li>
                                                             @endforeach
-                                                        </ul>
+                                                        </ol>
                                                     </div>
                                                 @else
                                                     <p class="form-control-plaintext border-bottom text-muted">
-                                                        Tidak ada diagnosis kerja
-                                                    </p>
-                                                @endif
-                                            </div>
-
-                                            <!-- Prognosis -->
-                                            <div class="mb-4">
-                                                <label class="form-label fw-bold">Prognosis</label>
-                                                @php
-                                                    $prognosis = json_decode(
-                                                        $asesmen->rmeAsesmenKepAnak->prognosis ?? '[]',
-                                                        true,
-                                                    );
-                                                @endphp
-                                                @if (!empty($prognosis))
-                                                    <div class="bg-light p-3 rounded">
-                                                        <ul class="list-unstyled mb-0">
-                                                            @foreach ($prognosis as $item)
-                                                                <li class="mb-2">
-                                                                    <span
-                                                                        class="badge bg-warning">{{ $item }}</span>
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </div>
-                                                @else
-                                                    <p class="form-control-plaintext border-bottom text-muted">
-                                                        Tidak ada prognosis
+                                                        Tidak ada intervensi rencana yang tercatat
                                                     </p>
                                                 @endif
                                             </div>
@@ -2315,146 +2418,6 @@
                             </div>
                         </div>
 
-                        <!-- 17. Implementasi -->
-                        <div class="tab-pane fade show">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <h5>17. Implementasi</h5>
-                                        <div class="col-md-12">
-                                            <!-- Observasi -->
-                                            <div class="mb-4">
-                                                <label class="form-label fw-bold">Observasi</label>
-                                                @php
-                                                    $observasi = json_decode(
-                                                        $asesmen->rmeAsesmenKepAnak->observasi ?? '[]',
-                                                        true,
-                                                    );
-                                                @endphp
-                                                @if (!empty($observasi))
-                                                    <div class="bg-light p-3 rounded">
-                                                        <ul class="list-unstyled mb-0">
-                                                            @foreach ($observasi as $item)
-                                                                <li class="mb-2">
-                                                                    <span
-                                                                        class="badge bg-primary">{{ $item }}</span>
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </div>
-                                                @else
-                                                    <p class="form-control-plaintext border-bottom text-muted">
-                                                        Tidak ada observasi
-                                                    </p>
-                                                @endif
-                                            </div>
-
-                                            <!-- Terapeutik -->
-                                            <div class="mb-4">
-                                                <label class="form-label fw-bold">Terapeutik</label>
-                                                @php
-                                                    $terapeutik = json_decode(
-                                                        $asesmen->rmeAsesmenKepAnak->terapeutik ?? '[]',
-                                                        true,
-                                                    );
-                                                @endphp
-                                                @if (!empty($terapeutik))
-                                                    <div class="bg-light p-3 rounded">
-                                                        <ul class="list-unstyled mb-0">
-                                                            @foreach ($terapeutik as $item)
-                                                                <li class="mb-2">
-                                                                    <span
-                                                                        class="badge bg-success">{{ $item }}</span>
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </div>
-                                                @else
-                                                    <p class="form-control-plaintext border-bottom text-muted">
-                                                        Tidak ada terapeutik
-                                                    </p>
-                                                @endif
-                                            </div>
-
-                                            <!-- Edukasi -->
-                                            <div class="mb-4">
-                                                <label class="form-label fw-bold">Edukasi</label>
-                                                @php
-                                                    $edukasi = json_decode(
-                                                        $asesmen->rmeAsesmenKepAnak->edukasi ?? '[]',
-                                                        true,
-                                                    );
-                                                @endphp
-                                                @if (!empty($edukasi))
-                                                    <div class="bg-light p-3 rounded">
-                                                        <ul class="list-unstyled mb-0">
-                                                            @foreach ($edukasi as $item)
-                                                                <li class="mb-2">
-                                                                    <span
-                                                                        class="badge bg-warning">{{ $item }}</span>
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </div>
-                                                @else
-                                                    <p class="form-control-plaintext border-bottom text-muted">
-                                                        Tidak ada edukasi
-                                                    </p>
-                                                @endif
-                                            </div>
-
-                                            <!-- Kolaborasi -->
-                                            <div class="mb-4">
-                                                <label class="form-label fw-bold">Kolaborasi</label>
-                                                @php
-                                                    $kolaborasi = json_decode(
-                                                        $asesmen->rmeAsesmenKepAnak->kolaborasi ?? '[]',
-                                                        true,
-                                                    );
-                                                @endphp
-                                                @if (!empty($kolaborasi))
-                                                    <div class="bg-light p-3 rounded">
-                                                        <ul class="list-unstyled mb-0">
-                                                            @foreach ($kolaborasi as $item)
-                                                                <li class="mb-2">
-                                                                    <span
-                                                                        class="badge bg-info">{{ $item }}</span>
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </div>
-                                                @else
-                                                    <p class="form-control-plaintext border-bottom text-muted">
-                                                        Tidak ada kolaborasi
-                                                    </p>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 18. Evaluasi -->
-                        <div class="tab-pane fade show">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <h5>18. Evaluasi</h5>
-                                        <div class="col-md-12">
-                                            <div class="mb-4">
-                                                <label class="form-label fw-bold">Evaluasi Keperawatan</label>
-                                                <p class="form-control-plaintext border-bottom">
-                                                    {{ $asesmen->rmeAsesmenKepAnak->evaluasi ?? '-' }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Continue with other sections following the same pattern... -->
 
                     </div>
                 </div>
