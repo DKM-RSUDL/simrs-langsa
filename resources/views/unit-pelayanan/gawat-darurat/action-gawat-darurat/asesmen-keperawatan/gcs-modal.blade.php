@@ -11,19 +11,19 @@
                 <div class="mb-3">
                     <label><strong>E: Eye Response</strong></label>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" id="eye_4" name="gcs_eye" value="4" data-text="Spontan">
+                        <input type="radio" class="form-check-input" id="eye_4" name="gcs_eye" value="4" data-text="Spontan" disabled>
                         <label class="form-check-label" for="eye_4">4 - Spontan</label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" id="eye_3" name="gcs_eye" value="3" data-text="Reaksi thd suara">
+                        <input type="radio" class="form-check-input" id="eye_3" name="gcs_eye" value="3" data-text="Reaksi thd suara" disabled>
                         <label class="form-check-label" for="eye_3">3 - Reaksi terhadap suara</label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" id="eye_2" name="gcs_eye" value="2" data-text="Reaksi thd tekanan">
+                        <input type="radio" class="form-check-input" id="eye_2" name="gcs_eye" value="2" data-text="Reaksi thd tekanan" disabled>
                         <label class="form-check-label" for="eye_2">2 - Reaksi terhadap tekanan</label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" id="eye_1" name="gcs_eye" value="1" data-text="Tidak terbuka">
+                        <input type="radio" class="form-check-input" id="eye_1" name="gcs_eye" value="1" data-text="Tidak terbuka" disabled>
                         <label class="form-check-label" for="eye_1">1 - Tidak terbuka</label>
                     </div>
                     <div class="mt-2">
@@ -35,23 +35,23 @@
                 <div class="mb-3">
                     <label><strong>V: Verbal Response</strong></label>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" id="verbal_5" name="gcs_verbal" value="5" data-text="Normal/berceloteh">
+                        <input type="radio" class="form-check-input" id="verbal_5" name="gcs_verbal" value="5" data-text="Normal/berceloteh" disabled>
                         <label class="form-check-label" for="verbal_5">5 - Normal/berceloteh</label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" id="verbal_4" name="gcs_verbal" value="4" data-text="Bingung/menangis iritasi">
+                        <input type="radio" class="form-check-input" id="verbal_4" name="gcs_verbal" value="4" data-text="Bingung/menangis iritasi" disabled>
                         <label class="form-check-label" for="verbal_4">4 - Bingung/menangis iritasi</label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" id="verbal_3" name="gcs_verbal" value="3" data-text="Erangan/menggerang thd nyeri">
+                        <input type="radio" class="form-check-input" id="verbal_3" name="gcs_verbal" value="3" data-text="Erangan/menggerang thd nyeri" disabled>
                         <label class="form-check-label" for="verbal_3">3 - Erangan/menggerang terhadap nyeri</label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" id="verbal_2" name="gcs_verbal" value="2" data-text="Suara tidak jelas">
+                        <input type="radio" class="form-check-input" id="verbal_2" name="gcs_verbal" value="2" data-text="Suara tidak jelas" disabled>
                         <label class="form-check-label" for="verbal_2">2 - Suara tidak jelas</label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" id="verbal_1" name="gcs_verbal" value="1" data-text="Tidak bersuara/merespon suara">
+                        <input type="radio" class="form-check-input" id="verbal_1" name="gcs_verbal" value="1" data-text="Tidak bersuara/merespon suara" disabled>
                         <label class="form-check-label" for="verbal_1">1 - Tidak bersuara/merespon suara</label>
                     </div>
                     <div class="mt-2">
@@ -63,27 +63,27 @@
                 <div class="mb-3">
                     <label><strong>M: Motor Response</strong></label>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" id="motoric_6" name="gcs_motoric" value="6" data-text="Mematuhi perintah/gerakan spontan">
+                        <input type="radio" class="form-check-input" id="motoric_6" name="gcs_motoric" value="6" data-text="Mematuhi perintah/gerakan spontan" disabled>
                         <label class="form-check-label" for="motoric_6">6 - Mematuhi perintah/gerakan spontan</label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" id="motoric_5" name="gcs_motoric" value="5" data-text="Melokalisasi nyeri/menghindari sentuhan">
+                        <input type="radio" class="form-check-input" id="motoric_5" name="gcs_motoric" value="5" data-text="Melokalisasi nyeri/menghindari sentuhan" disabled>
                         <label class="form-check-label" for="motoric_5">5 - Melokalisasi nyeri/menghindari sentuhan</label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" id="motoric_4" name="gcs_motoric" value="4" data-text="Fleksi normal">
+                        <input type="radio" class="form-check-input" id="motoric_4" name="gcs_motoric" value="4" data-text="Fleksi normal" disabled>
                         <label class="form-check-label" for="motoric_4">4 - Fleksi normal</label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" id="motoric_3" name="gcs_motoric" value="3" data-text="Abnormal fleksi">
+                        <input type="radio" class="form-check-input" id="motoric_3" name="gcs_motoric" value="3" data-text="Abnormal fleksi" disabled>
                         <label class="form-check-label" for="motoric_3">3 - Abnormal fleksi</label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" id="motoric_2" name="gcs_motoric" value="2" data-text="Ekstensi thd nyeri">
+                        <input type="radio" class="form-check-input" id="motoric_2" name="gcs_motoric" value="2" data-text="Ekstensi thd nyeri" disabled>
                         <label class="form-check-label" for="motoric_2">2 - Ekstensi terhadap nyeri</label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" id="motoric_1" name="gcs_motoric" value="1" data-text="Tidak ada gerakan">
+                        <input type="radio" class="form-check-input" id="motoric_1" name="gcs_motoric" value="1" data-text="Tidak ada gerakan" disabled>
                         <label class="form-check-label" for="motoric_1">1 - Tidak ada gerakan</label>
                     </div>
                     <div class="mt-2">
@@ -461,24 +461,37 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initGCSModal() {
-    // Add event listeners to all GCS radio buttons
-    document.querySelectorAll('input[name="gcs_eye"], input[name="gcs_verbal"], input[name="gcs_motoric"]')
-        .forEach(input => {
-            input.addEventListener('change', updateGCSDisplay);
-        });
+    // No event listeners needed since inputs are disabled
 }
 
 function openGCSModal() {
     const gcsModal = new bootstrap.Modal(document.getElementById('gcsModal'));
     gcsModal.show();
     
-    // Reset semua radio button
-    document.querySelectorAll('#gcsModal input[type="radio"]').forEach(radio => {
-        radio.checked = false;
-    });
-    
     // Reset displays
     resetGCSDisplay();
+
+    // Get GCS data from input
+    const gcsInput = document.getElementById('gcsInput').value;
+    if (gcsInput) {
+        // Parse GCS value (e.g., "15 E4 V5 M6")
+        const gcsParts = gcsInput.match(/(\d+)\s*E(\d)\s*V(\d)\s*M(\d)/);
+        if (gcsParts) {
+            const [, total, eye, verbal, motoric] = gcsParts;
+
+            // Set radio buttons
+            const eyeRadio = document.querySelector(`input[name="gcs_eye"][value="${eye}"]`);
+            const verbalRadio = document.querySelector(`input[name="gcs_verbal"][value="${verbal}"]`);
+            const motoricRadio = document.querySelector(`input[name="gcs_motoric"][value="${motoric}"]`);
+
+            if (eyeRadio) eyeRadio.checked = true;
+            if (verbalRadio) verbalRadio.checked = true;
+            if (motoricRadio) motoricRadio.checked = true;
+
+            // Update displays
+            updateGCSDisplay();
+        }
+    }
 }
 
 function resetGCSDisplay() {
@@ -490,7 +503,7 @@ function resetGCSDisplay() {
         '<i class="ti-hand-point-up me-1"></i>Motor: <span class="text-muted">Belum dipilih</span>';
     document.getElementById('totalGCSDisplay').textContent = '0';
     document.getElementById('gcsInterpretation').innerHTML = 
-        '<small class="text-muted">Silakan pilih semua kategori</small>';
+        '<small class="text-muted">Data GCS tidak lengkap</small>';
 }
 
 function updateGCSDisplay() {
@@ -527,7 +540,7 @@ function updateGCSInterpretation(total, eye, verbal, motoric) {
     const interpretationElement = document.getElementById('gcsInterpretation');
     
     if (!eye || !verbal || !motoric) {
-        interpretationElement.innerHTML = '<small class="text-muted">Silakan pilih semua kategori</small>';
+        interpretationElement.innerHTML = '<small class="text-muted">Data GCS tidak lengkap</small>';
         return;
     }
 
@@ -546,83 +559,5 @@ function updateGCSInterpretation(total, eye, verbal, motoric) {
     }
 
     interpretationElement.innerHTML = `<span class="${className}">${interpretation}</span>`;
-}
-
-function saveGCS() {
-    const eye = document.querySelector('input[name="gcs_eye"]:checked');
-    const verbal = document.querySelector('input[name="gcs_verbal"]:checked');
-    const motoric = document.querySelector('input[name="gcs_motoric"]:checked');
-
-    if (!eye || !verbal || !motoric) {
-        alert("Harap pilih semua kategori (Eye, Verbal, Motor) untuk menghitung nilai GCS.");
-        return;
-    }
-
-    const totalGCS = parseInt(eye.value) + parseInt(verbal.value) + parseInt(motoric.value);
-    
-    // Format GCS sesuai standar medis: Total E# V# M#
-    const gcsFormat = `${totalGCS} E${eye.value} V${verbal.value} M${motoric.value}`;
-    
-    // Update input field
-    const gcsInput = document.getElementById('gcsInput');
-    if (gcsInput) {
-        gcsInput.value = gcsFormat;
-        
-        // Add visual feedback
-        gcsInput.classList.add('is-valid');
-        setTimeout(() => {
-            gcsInput.classList.remove('is-valid');
-        }, 3000);
-    }
-
-    // Store detailed GCS data globally if needed
-    window.gcsData = {
-        eye: {
-            value: parseInt(eye.value),
-            description: eye.getAttribute('data-text')
-        },
-        verbal: {
-            value: parseInt(verbal.value),
-            description: verbal.getAttribute('data-text')
-        },
-        motoric: {
-            value: parseInt(motoric.value),
-            description: motoric.getAttribute('data-text')
-        },
-        total: totalGCS,
-        formatted: gcsFormat
-    };
-
-    // Close modal
-    const gcsModal = bootstrap.Modal.getInstance(document.getElementById('gcsModal'));
-    if (gcsModal) {
-        gcsModal.hide();
-    }
-
-    // Show success message
-    showToast('GCS berhasil disimpan: ' + gcsFormat, 'success');
-}
-
-function showToast(message, type = 'info') {
-    // Simple toast implementation - you can replace with your preferred toast library
-    const toast = document.createElement('div');
-    toast.className = `alert alert-${type} position-fixed`;
-    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
-    toast.innerHTML = `
-        <div class="d-flex align-items-center">
-            <i class="ti-check me-2"></i>
-            ${message}
-            <button type="button" class="btn-close ms-auto" onclick="this.parentElement.parentElement.remove()"></button>
-        </div>
-    `;
-    
-    document.body.appendChild(toast);
-    
-    // Auto remove after 3 seconds
-    setTimeout(() => {
-        if (toast.parentElement) {
-            toast.remove();
-        }
-    }, 3000);
 }
 </script>
