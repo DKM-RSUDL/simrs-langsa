@@ -281,10 +281,27 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initRetriase() {
+    // Parse existing retriase data from the hidden input
     let retriaseArray = [];
+    const retriaseDataInput = document.getElementById('retriaseData');
+    if (retriaseDataInput && retriaseDataInput.value) {
+        try {
+            const parsedData = JSON.parse(retriaseDataInput.value);
+            if (Array.isArray(parsedData)) {
+                retriaseArray = parsedData;
+            }
+        } catch (e) {
+            console.log('Error parsing retriase data:', e);
+            retriaseArray = [];
+        }
+    }
+
     let editRetriaseIndex = -1;
 
-    // Event listeners
+    // Add event listeners for existing items
+    addRetriaseEventListeners();
+
+    // Event listeners for modal
     const btnSimpanRetriase = document.getElementById('btnSimpanRetriase');
     const retriaseModal = document.getElementById('retriaseModal');
     const btnSimpanGCSRetriase = document.getElementById('btnSimpanGCSRetriase');
@@ -310,6 +327,22 @@ function initRetriase() {
 
     // GCS Calculator untuk Retriase
     initGCSRetriaseCalculator();
+
+    function addRetriaseEventListeners() {
+        document.querySelectorAll('.edit-retriase').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const index = parseInt(this.dataset.index);
+                openRetriaseModal('edit', index);
+            });
+        });
+
+        document.querySelectorAll('.delete-retriase').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const index = parseInt(this.dataset.index);
+                deleteRetriase(index);
+            });
+        });
+    }
 
     function getKesimpulanTriaseText(kode) {
         const mapping = {
@@ -369,10 +402,14 @@ function initRetriase() {
             }
         }
 
+        // Format tanggal_jam untuk display
+        const formattedDate = new Date(tanggal + ' ' + jam);
+        const tanggalJamDisplay = formattedDate.toLocaleDateString('id-ID') + ' ' + jam;
+
         const retriaseData = {
             tanggal: tanggal,
             jam: jam,
-            tanggal_jam: `${tanggal} ${jam}`,
+            tanggal_jam: tanggalJamDisplay,
             gcs: gcs || '-',
             temp: temp || '-',
             rr: rr || '-',
@@ -437,19 +474,23 @@ function initRetriase() {
 
     function renderRetriaseTable() {
         const tbody = document.querySelector('#retriaseTable tbody');
-        const noAlatRow = tbody.querySelector('tr');
+        const noAlatRow = tbody.querySelector('tr#no-alat-row') || tbody.querySelector('tr');
 
         if (retriaseArray.length === 0) {
-            noAlatRow.style.display = 'table-row';
-            const existingRows = tbody.querySelectorAll('tr:not(:first-child)');
+            if (noAlatRow) {
+                noAlatRow.style.display = 'table-row';
+            }
+            const existingRows = tbody.querySelectorAll('tr:not(#no-alat-row)');
             existingRows.forEach(row => row.remove());
             return;
         }
 
-        noAlatRow.style.display = 'none';
+        if (noAlatRow) {
+            noAlatRow.style.display = 'none';
+        }
 
         // Clear existing rows except no-data row
-        const existingRows = tbody.querySelectorAll('tr:not(:first-child)');
+        const existingRows = tbody.querySelectorAll('tr:not(#no-alat-row)');
         existingRows.forEach(row => row.remove());
 
         // Add new rows
@@ -492,20 +533,8 @@ function initRetriase() {
             tbody.appendChild(row);
         });
 
-        // Add event listeners for new buttons
-        tbody.querySelectorAll('.edit-retriase').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const index = parseInt(this.dataset.index);
-                openRetriaseModal('edit', index);
-            });
-        });
-
-        tbody.querySelectorAll('.delete-retriase').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const index = parseInt(this.dataset.index);
-                deleteRetriase(index);
-            });
-        });
+        // Re-add event listeners for new buttons
+        addRetriaseEventListeners();
     }
 
     function openRetriaseModal(mode, index = -1) {
@@ -565,7 +594,6 @@ function initRetriase() {
         document.getElementById('retriaseTdDiastole').value = '';
         document.getElementById('retriaseKeluhan').value = '';
         document.getElementById('retriaseKesimpulanTriase').value = '';
-
     }
 
     // Expose functions globally

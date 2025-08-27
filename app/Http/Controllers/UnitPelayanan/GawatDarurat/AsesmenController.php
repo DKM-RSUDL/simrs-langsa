@@ -9,6 +9,7 @@ use App\Models\Dokter;
 use App\Models\Kunjungan;
 use App\Models\ListTindakanPasien;
 use App\Models\MrItemFisik;
+use App\Models\RmeAlergiPasien;
 use App\Models\RmeAsesmen;
 use App\Models\RmeAsesmenDtl;
 use App\Models\RmeAsesmenPemeriksaanFisik;
@@ -16,6 +17,7 @@ use App\Models\RmeEfekNyeri;
 use App\Models\RmeFaktorPemberat;
 use App\Models\RmeFaktorPeringan;
 use App\Models\RmeFrekuensiNyeri;
+use App\Models\RmeJenisNyeri;
 use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMenjalar;
 use App\Models\RmeRekonsiliasiObat;
@@ -28,13 +30,17 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class AsesmenController extends Controller
 {
+    private $kdUnit;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/gawat-darurat');
+        $this->kdUnit = 3; // Gawat Darurat
     }
 
     public function index($kd_pasien, $tgl_masuk)
@@ -124,26 +130,214 @@ class AsesmenController extends Controller
     }
 
 
-    public function show($kd_pasien, $tgl_masuk, $id)
+    public function create(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        try {
-            // Parse tanggal tanpa waktu
-            $date = Carbon::parse($tgl_masuk)->format('Y-m-d');
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit', 'dataTriase'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_unit', $this->kdUnit)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->first();
 
-            // Mengambil data kunjungan dan tanggal triase terkait
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        // Ambil data triase terakhir untuk pasien yang sama
+        $latestTriase = DataTriase::where('kd_pasien_triase', $kd_pasien)
+            ->whereNotNull('vital_sign')
+            ->orderBy('tanggal_triase', 'desc')
+            ->first();
+
+        // Parse vital sign dari triase jika ada
+        $triaseVitalSign = null;
+        if ($latestTriase && $latestTriase->vital_sign) {
+            try {
+                $triaseVitalSign = json_decode($latestTriase->vital_sign, true);
+            } catch (\Exception $e) {
+                $triaseVitalSign = null;
+            }
+        }
+
+        $dokter = Dokter::where('status', 1)->get();
+        $triageClass = $this->getTriageClass($dataMedis->kd_triase);
+        $menjalar = RmeMenjalar::all();
+        $frekuensinyeri = RmeFrekuensiNyeri::all();
+        $kualitasnyeri = RmeKualitasNyeri::all();
+        $faktorpemberat = RmeFaktorPemberat::all();
+        $faktorperingan = RmeFaktorPeringan::all();
+        $efeknyeri = RmeEfekNyeri::all();
+        $jenisnyeri = RmeJenisNyeri::all();
+        $itemFisik = MrItemFisik::orderby('urut')->get();
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
+        $unitPoli = Unit::where('kd_bagian', '2')->where('aktif', 1)->get();
+
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.create', compact(
+            'dataMedis',
+            'triageClass',
+            'dokter',
+            'menjalar',
+            'frekuensinyeri',
+            'kualitasnyeri',
+            'faktorpemberat',
+            'faktorperingan',
+            'efeknyeri',
+            'jenisnyeri',
+            'alergiPasien',
+            'unitPoli',
+            'itemFisik',
+            'triaseVitalSign'
+        ));
+    }
+
+    public function edit(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        // Ambil data kunjungan
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit', 'dataTriase'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_unit', $this->kdUnit)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->first();
+
+        if (!$dataMedis) {
+            abort(404, 'Data kunjungan tidak ditemukan');
+        }
+
+        // Ambil data asesmen
+        $asesmen = RmeAsesmen::with([
+            'menjalar',
+            'frekuensiNyeri',
+            'kualitasNyeri',
+            'faktorPemberat',
+            'faktorPeringan',
+            'efekNyeri',
+            'pemeriksaanFisik',
+            'pemeriksaanFisik.itemFisik'
+        ])->where('id', $id)->first();
+
+        if (!$asesmen) {
+            abort(404, 'Data asesmen tidak ditemukan');
+        }
+
+        // PERBAIKAN: Ambil tindak lanjut sebagai single record
+        $tindakLanjutData = RmeAsesmenDtl::where('id_asesmen', $id)->first();
+
+        // Set ke asesmen untuk konsistensi dengan view
+        $asesmen->tindaklanjut = $tindakLanjutData;
+
+        // Hitung umur pasien
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        // Parse data JSON dari asesmen
+        $tindakanResusitasi = $this->parseJsonSafely($asesmen->tindakan_resusitasi);
+        $vitalSign = $this->parseJsonSafely($asesmen->vital_sign);
+        $antropometri = $this->parseJsonSafely($asesmen->antropometri);
+        $diagnosis = $this->parseJsonSafely($asesmen->diagnosis);
+        $alatTerpasang = $this->parseJsonSafely($asesmen->alat_terpasang);
+
+        // Data lainnya
+        $retriaseData = DataTriase::where('id_asesmen', $id)->get();
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
+        $pemeriksaanFisikData = RmeAsesmenPemeriksaanFisik::where('id_asesmen', $id)
+            ->get()
+            ->keyBy('id_item_fisik');
+
+        // Data master
+        $dokter = Dokter::where('status', 1)->get();
+        $triageClass = $this->getTriageClass($dataMedis->kd_triase);
+        $menjalar = RmeMenjalar::all();
+        $frekuensinyeri = RmeFrekuensiNyeri::all();
+        $kualitasnyeri = RmeKualitasNyeri::all();
+        $faktorpemberat = RmeFaktorPemberat::all();
+        $faktorperingan = RmeFaktorPeringan::all();
+        $efeknyeri = RmeEfekNyeri::all();
+        $jenisnyeri = RmeJenisNyeri::all();
+        $itemFisik = MrItemFisik::orderby('urut')->get();
+        $unitPoli = Unit::where('kd_bagian', '2')->where('aktif', 1)->get();
+
+        // Triase untuk fallback
+        $latestTriase = DataTriase::where('kd_pasien_triase', $kd_pasien)
+            ->whereNotNull('vital_sign')
+            ->orderBy('tanggal_triase', 'desc')
+            ->first();
+
+        $triaseVitalSign = null;
+        if ($latestTriase && $latestTriase->vital_sign) {
+            try {
+                $triaseVitalSign = json_decode($latestTriase->vital_sign, true);
+            } catch (\Exception $e) {
+                $triaseVitalSign = null;
+            }
+        }
+
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit', compact(
+            'dataMedis',
+            'asesmen',
+            'triageClass',
+            'dokter',
+            'menjalar',
+            'frekuensinyeri',
+            'kualitasnyeri',
+            'faktorpemberat',
+            'faktorperingan',
+            'efeknyeri',
+            'jenisnyeri',
+            'alergiPasien',
+            'unitPoli',
+            'itemFisik',
+            'triaseVitalSign',
+            'tindakanResusitasi',
+            'vitalSign',
+            'antropometri',
+            'diagnosis',
+            'alatTerpasang',
+            'retriaseData',
+            'pemeriksaanFisikData'
+        ));
+    }
+
+    public function update(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        DB::beginTransaction();
+
+        try {
+            $user = auth()->user();
+
+            // Validasi asesmen exists
+            $asesmen = RmeAsesmen::where('id', $id)->first();
+            if (!$asesmen) {
+                return back()->with('error', 'Asesmen tidak ditemukan');
+            }
+
+            // Get data medis untuk referensi
             $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
                 ->join('transaksi as t', function ($join) {
-                    $join->on(
-                        'kunjungan.kd_pasien',
-                        '=',
-                        't.kd_pasien'
-                    );
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
                     $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                    $join->on(
-                        'kunjungan.tgl_masuk',
-                        '=',
-                        't.tgl_transaksi'
-                    );
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                 })
                 ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
@@ -151,8 +345,323 @@ class AsesmenController extends Controller
                 ->where('kunjungan.kd_unit', 3)
                 ->where('kunjungan.kd_pasien', $kd_pasien)
                 ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
                 ->first();
 
+            if (!$dataMedis) {
+                return back()->with('error', 'Data kunjungan tidak ditemukan');
+            }
+
+            // Hitung umur pasien
+            if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+                $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+            } else {
+                $dataMedis->pasien->umur = 'Tidak Diketahui';
+            }
+
+            // Update data asesmen
+            $tanggalMasuk = $request->tanggal_masuk ?? date('Y-m-d');
+            $jamMasuk = $request->jam_masuk ?? date('H:i');
+            $waktuAsesmen = $tanggalMasuk . ' ' . $jamMasuk . ':00';
+
+            $asesmen->waktu_asesmen = $waktuAsesmen;
+            $asesmen->tindakan_resusitasi = json_encode($request->tindakan_resusitasi) ?? '';
+            $asesmen->anamnesis = $request->keluhan_utama;
+            $asesmen->riwayat_penyakit = $request->riwayat_penyakit;
+            $asesmen->riwayat_penyakit_keluarga = $request->riwayat_penyakit_keluarga;
+            $asesmen->riwayat_pengobatan = $request->riwayat_pengobatan;
+
+            // Format vital_sign sesuai struktur yang diinginkan
+            $vitalSignData = [
+                'td_sistole' => $request->vital_sign['td_sistole'] ?? '',
+                'td_diastole' => $request->vital_sign['td_diastole'] ?? '',
+                'nadi' => $request->vital_sign['nadi'] ?? '',
+                'temp' => $request->vital_sign['suhu'] ?? '',
+                'rr' => $request->vital_sign['respirasi'] ?? '',
+                'spo2_tanpa_o2' => $request->vital_sign['spo2_tanpa_o2'] ?? '',
+                'spo2_dengan_o2' => $request->vital_sign['spo2_dengan_o2'] ?? '',
+                'gcs' => $request->vital_sign['gcs'] ?? ''
+            ];
+
+            $asesmen->vital_sign = json_encode($vitalSignData);
+            $asesmen->antropometri = json_encode($request->antropometri);
+            $asesmen->skala_nyeri = $request->skala_nyeri_nilai;
+            $asesmen->lokasi = $request->lokasi;
+            $asesmen->durasi = $request->durasi;
+            $asesmen->menjalar_id = $request->menjalar;
+            $asesmen->frekuensi_nyeri_id = $request->frekuensi;
+            $asesmen->kualitas_nyeri_id = $request->kualitas;
+            $asesmen->faktor_pemberat_id = $request->faktor_pemberat;
+            $asesmen->faktor_peringan_id = $request->faktor_peringan;
+            $asesmen->efek_nyeri = $request->efek_nyeri;
+            $asesmen->jenis_nyeri_id = $request->jenis_nyeri;
+            $asesmen->diagnosis = $request->diagnosa_data ? json_encode($request->diagnosa_data) : null;
+            $asesmen->alat_terpasang = $request->alat_terpasang_data;
+            $asesmen->kondisi_pasien = $request->kondisi_pasien;
+            $asesmen->user_id = $user->id;
+            $asesmen->save();
+
+            // Update alergi pasien
+            $alergiData = json_decode($request->alergis, true);
+            if (!empty($alergiData)) {
+                RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
+                foreach ($alergiData as $alergi) {
+                    RmeAlergiPasien::create([
+                        'kd_pasien' => $kd_pasien,
+                        'jenis_alergi' => $alergi['jenis_alergi'],
+                        'nama_alergi' => $alergi['alergen'],
+                        'reaksi' => $alergi['reaksi'],
+                        'tingkat_keparahan' => $alergi['tingkat_keparahan']
+                    ]);
+                }
+            }
+
+            // Update pemeriksaan fisik
+            RmeAsesmenPemeriksaanFisik::where('id_asesmen', $id)->delete();
+            $itemFisik = MrItemFisik::all();
+            foreach ($itemFisik as $item) {
+                $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
+                $keterangan = $request->input($item->id . '_keterangan');
+                if ($isNormal) $keterangan = '';
+
+                RmeAsesmenPemeriksaanFisik::create([
+                    'id_asesmen' => $asesmen->id,
+                    'id_item_fisik' => $item->id,
+                    'is_normal' => $isNormal,
+                    'keterangan' => $keterangan
+                ]);
+            }
+
+            // Update data retriase
+            DataTriase::where('id_asesmen', $id)->delete();
+            $retriaseData = json_decode($request->retriase_data, true);
+            if ($retriaseData && !empty($retriaseData)) {
+                foreach ($retriaseData as $retriase) {
+                    $newRetriase = new DataTriase();
+                    $newRetriase->id_asesmen = $asesmen->id;
+                    $newRetriase->nama_pasien = $dataMedis->pasien->nama;
+                    $newRetriase->usia = $dataMedis->pasien->umur;
+                    $newRetriase->jenis_kelamin = $dataMedis->pasien->jenis_kelamin;
+                    $newRetriase->tanggal_lahir = $dataMedis->pasien->tgl_lahir;
+
+                    // Format tanggal dari form retriase
+                    $tanggalJam = $retriase['tanggal'] . ' ' . $retriase['jam'] . ':00';
+                    $newRetriase->tanggal_triase = $tanggalJam;
+
+                    $newRetriase->dokter_triase = $dataMedis->dokter->kd_dokter ?? null;
+                    $newRetriase->kd_pasien_triase = $dataMedis->kd_pasien;
+                    $newRetriase->status = $dataMedis->status;
+                    $newRetriase->usia_bulan = $dataMedis->usia_bulan;
+                    $newRetriase->foto_pasien = $dataMedis->foto_pasien;
+
+                    // Kesimpulan triase
+                    $newRetriase->kode_triase = $retriase['kesimpulan_triase'] ?? null;
+                    $newRetriase->hasil_triase = $retriase['kesimpulan_triase_text'] ?? null;
+
+                    // Keluhan sebagai anamnesis retriase
+                    $newRetriase->anamnesis_retriase = $retriase['keluhan'] ?? null;
+
+                    // Vital signs retriase - menggunakan struktur yang sama
+                    $vitalSignsRetriase = [
+                        'gcs' => $retriase['gcs'] ?? '',
+                        'temp' => $retriase['temp'] ?? '',
+                        'rr' => $retriase['rr'] ?? '',
+                        'spo2_tanpa_o2' => $retriase['spo2_tanpa_o2'] ?? '',
+                        'spo2_dengan_o2' => $retriase['spo2_dengan_o2'] ?? '',
+                        'td_sistole' => $retriase['td_sistole'] ?? '',
+                        'td_diastole' => $retriase['td_diastole'] ?? ''
+                    ];
+                    $newRetriase->vitalsign_retriase = json_encode($vitalSignsRetriase);
+                    $newRetriase->save();
+                }
+            }
+
+            // Update tindak lanjut
+            $tindakLanjutDtl = RmeAsesmenDtl::where('id_asesmen', $id)->first();
+            if (!$tindakLanjutDtl) {
+                $tindakLanjutDtl = new RmeAsesmenDtl();
+                $tindakLanjutDtl->id_asesmen = $asesmen->id;
+            }
+
+            if ($request->has('tindak_lanjut_data')) {
+                $tindakLanjutData = json_decode($request->tindak_lanjut_data, true);
+
+                if ($tindakLanjutData && isset($tindakLanjutData['option'])) {
+                    switch ($tindakLanjutData['option']) {
+                        case 'rawatInap':
+                            $tindakLanjutDtl->tindak_lanjut_code = 1;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Rawat Inap';
+
+                            // Update atau create SPRI data
+                            $spri = RmeSpri::where('id_asesmen', $id)->first();
+                            if (!$spri) {
+                                $spri = new RmeSpri();
+                                $spri->kd_pasien = $dataMedis->kd_pasien;
+                                $spri->kd_unit = $dataMedis->kd_unit;
+                                $spri->tgl_masuk = $dataMedis->tgl_masuk;
+                                $spri->urut_masuk = $dataMedis->urut_masuk;
+                                $spri->id_asesmen = $asesmen->id;
+                            }
+
+                            $spri->tanggal_ranap = !empty($tindakLanjutData['tanggalRawatInap']) ? $tindakLanjutData['tanggalRawatInap'] : null;
+                            $spri->jam_ranap = !empty($tindakLanjutData['jamRawatInap']) ? $tindakLanjutData['jamRawatInap'] : null;
+                            $spri->keluhan_utama = $tindakLanjutData['keluhanUtama_ranap'] ?? null;
+                            $spri->jalannya_penyakit = $tindakLanjutData['jalannyaPenyakit_ranap'] ?? null;
+                            $spri->hasil_pemeriksaan = $tindakLanjutData['hasilPemeriksaan_ranap'] ?? null;
+                            $spri->diagnosis = $tindakLanjutData['diagnosis_ranap'] ?? null;
+                            $spri->tindakan = $tindakLanjutData['tindakan_ranap'] ?? null;
+                            $spri->anjuran = $tindakLanjutData['anjuran_ranap'] ?? null;
+                            $spri->save();
+                            break;
+
+                        case 'rujukKeluar':
+                            $tindakLanjutDtl->tindak_lanjut_code = 5;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk RS Lain';
+                            $tindakLanjutDtl->tujuan_rujuk = $tindakLanjutData['tujuan_rujuk'] ?? null;
+                            $tindakLanjutDtl->alasan_rujuk = $tindakLanjutData['alasan_rujuk'] ?? null;
+                            $tindakLanjutDtl->transportasi_rujuk = $tindakLanjutData['transportasi_rujuk'] ?? null;
+                            $tindakLanjutDtl->keterangan = $tindakLanjutData['keterangan_rujuk'] ?? null;
+                            break;
+
+                        case 'pulangSembuh':
+                            $tindakLanjutDtl->tindak_lanjut_code = 6;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Pulang Sembuh';
+                            $tindakLanjutDtl->tanggal_pulang = !empty($tindakLanjutData['tanggalPulang']) ? $tindakLanjutData['tanggalPulang'] : null;
+                            $tindakLanjutDtl->jam_pulang = !empty($tindakLanjutData['jamPulang']) ? $tindakLanjutData['jamPulang'] : null;
+                            $tindakLanjutDtl->alasan_pulang = $tindakLanjutData['alasan_pulang'] ?? null;
+                            $tindakLanjutDtl->kondisi_pulang = $tindakLanjutData['kondisi_pulang'] ?? null;
+                            break;
+
+                        case 'berobatJalan':
+                            $tindakLanjutDtl->tindak_lanjut_code = 8;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Berobat Jalan Ke Poli';
+                            $tindakLanjutDtl->tanggal_rajal = !empty($tindakLanjutData['tanggal_rajal']) ? $tindakLanjutData['tanggal_rajal'] : null;
+                            $tindakLanjutDtl->poli_unit_tujuan = $tindakLanjutData['poli_unit_tujuan'] ?? null;
+                            $tindakLanjutDtl->keterangan = $tindakLanjutData['catatan_rajal'] ?? null;
+                            break;
+
+                        case 'menolakRawatInap':
+                            $tindakLanjutDtl->tindak_lanjut_code = 9;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Menolak Rawat Inap';
+                            $tindakLanjutDtl->keterangan = $tindakLanjutData['alasanMenolak'] ?? null;
+                            break;
+
+                        case 'meninggalDunia':
+                            $tindakLanjutDtl->tindak_lanjut_code = 10;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Meninggal Dunia';
+                            $tindakLanjutDtl->tanggal_meninggal = !empty($tindakLanjutData['tanggalMeninggal']) ? $tindakLanjutData['tanggalMeninggal'] : null;
+                            $tindakLanjutDtl->jam_meninggal = !empty($tindakLanjutData['jamMeninggal']) ? $tindakLanjutData['jamMeninggal'] : null;
+                            $tindakLanjutDtl->keterangan = $tindakLanjutData['penyebab_kematian'] ?? null;
+                            break;
+
+                        case 'deathoffarrival':
+                            $tindakLanjutDtl->tindak_lanjut_code = 11;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'DOA';
+                            $tindakLanjutDtl->tanggal_meninggal = !empty($tindakLanjutData['tanggalDoa']) ? $tindakLanjutData['tanggalDoa'] : null;
+                            $tindakLanjutDtl->jam_meninggal = !empty($tindakLanjutData['jamDoa']) ? $tindakLanjutData['jamDoa'] : null;
+                            $tindakLanjutDtl->keterangan = $tindakLanjutData['keterangan_doa'] ?? null;
+                            break;
+                    }
+                }
+            }
+
+            $tindakLanjutDtl->save();
+
+            // Update resume
+            $resumeData = [
+                'anamnesis'             => $request->keluhan_utama,
+                'diagnosis'             => $request->diagnosa_data,
+                'tindak_lanjut_code'    => $tindakLanjutDtl->tindak_lanjut_code ?? null,
+                'tindak_lanjut_name'    => $tindakLanjutDtl->tindak_lanjut_name ?? null,
+                'tujuan_rujuk'          => $tindakLanjutDtl->tujuan_rujuk ?? null,
+                'alasan_rujuk'          => $tindakLanjutDtl->alasan_rujuk ?? null,
+                'transportasi_rujuk'    => $tindakLanjutDtl->transportasi_rujuk ?? null,
+                'tanggal_pulang'        => $tindakLanjutDtl->tanggal_pulang ?? null,
+                'jam_pulang'            => $tindakLanjutDtl->jam_pulang ?? null,
+                'alasan_pulang'         => $tindakLanjutDtl->alasan_pulang ?? null,
+                'kondisi_pulang'        => $tindakLanjutDtl->kondisi_pulang ?? null,
+                'tanggal_rajal'         => $tindakLanjutDtl->tanggal_rajal ?? null,
+                'poli_unit_tujuan'      => $tindakLanjutDtl->poli_unit_tujuan ?? null,
+                'keterangan'            => $tindakLanjutDtl->keterangan ?? null,
+                'tanggal_meninggal'     => $tindakLanjutDtl->tanggal_meninggal ?? null,
+                'jam_meninggal'         => $tindakLanjutDtl->jam_meninggal ?? null,
+                'konpas'                => [
+                    'sistole'   => [
+                        'hasil' => $vitalSignData['td_sistole'] ?? null
+                    ],
+                    'distole'   => [
+                        'hasil' => $vitalSignData['td_diastole'] ?? null
+                    ],
+                    'respiration_rate'   => [
+                        'hasil' => $vitalSignData['rr'] ?? null
+                    ],
+                    'suhu'   => [
+                        'hasil' => $vitalSignData['temp'] ?? null
+                    ],
+                    'nadi'   => [
+                        'hasil' => $vitalSignData['nadi'] ?? null
+                    ],
+                    'tinggi_badan'   => [
+                        'hasil' => $request->antropometri['tb'] ?? null
+                    ],
+                    'berat_badan'   => [
+                        'hasil' => $request->antropometri['bb'] ?? null
+                    ]
+                ]
+            ];
+
+            $this->createResume($kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+
+            DB::commit();
+
+            return redirect()->route('asesmen.index', [$kd_pasien, date('Y-m-d', strtotime($tgl_masuk)), $urut_masuk])
+                ->with('success', 'Asesmen berhasil diperbarui');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error updating asesmen: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage())->withInput();
+        }
+    }
+
+    public function show($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            // Cek apakah asesmen dengan ID ini ada
+            $asesmenExists = RmeAsesmen::where('id', $id)->first();
+
+            if (!$asesmenExists) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => "Asesmen dengan ID {$id} tidak ditemukan"
+                ], 404);
+            }
+
+            // Cek data kunjungan
+            $date = Carbon::parse($tgl_masuk)->format('Y-m-d');
+
+            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+                ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+                ->where('kunjungan.kd_unit', 3)
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->first();
+
+            if (!$dataMedis) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Data kunjungan tidak ditemukan'
+                ], 404);
+            }
+
+            // Query asesmen dengan relasi
             $asesmen = RmeAsesmen::with([
                 'menjalar',
                 'frekuensiNyeri',
@@ -162,28 +671,29 @@ class AsesmenController extends Controller
                 'efekNyeri',
                 'tindaklanjut',
                 'tindaklanjut.spri'
-            ])
-                ->where('id', $id)
-                ->where('kd_pasien', $kd_pasien)
-                ->whereDate('tgl_masuk', $date)
-                ->firstOrFail();
+            ])->where('id', $id)->first();
 
-            // dd($asesmen);
+            if (!$asesmen) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => "Data asesmen tidak ditemukan"
+                ], 404);
+            }
 
-            $tindakanResusitasi = is_string($asesmen->tindakan_resusitasi)
-                ? json_decode($asesmen->tindakan_resusitasi, true)
-                : $asesmen->tindakan_resusitasi;
+            // Parse JSON data
+            $tindakanResusitasi = $this->parseJsonSafely($asesmen->tindakan_resusitasi);
+            $vitalSign = $this->parseJsonSafely($asesmen->vital_sign);
+            $antropometri = $this->parseJsonSafely($asesmen->antropometri);
+            $diagnosis = $this->parseJsonSafely($asesmen->diagnosis);
+            $alatTerpasang = $this->parseJsonSafely($asesmen->alat_terpasang);
 
-            $riwayatAlergi = is_string($asesmen->riwayat_alergi)
-                ? json_decode($asesmen->riwayat_alergi, true)
-                : $asesmen->riwayat_alergi;
+            // Ambil data alergi dari tabel RmeAlergiPasien
+            $riwayatAlergi = RmeAlergiPasien::where('kd_pasien', $asesmen->kd_pasien)->get();
 
-            $alatTerpasang = is_string($asesmen->alat_terpasang)
-                ? json_decode($asesmen->alat_terpasang, true)
-                : $asesmen->alat_terpasang;
-
+            // Ambil data retriase
             $retriaseData = DataTriase::where('id_asesmen', $id)->get();
 
+            // Ambil pemeriksaan fisik
             $pemeriksaanFisik = RmeAsesmenPemeriksaanFisik::with('itemFisik')
                 ->where('id_asesmen', $id)
                 ->get()
@@ -207,8 +717,8 @@ class AsesmenController extends Controller
                         'riwayat_penyakit_keluarga' => $asesmen->riwayat_penyakit_keluarga,
                         'riwayat_pengobatan' => $asesmen->riwayat_pengobatan,
                         'riwayat_alergi' => $riwayatAlergi,
-                        'vital_sign' => json_decode($asesmen->vital_sign, true),
-                        'antropometri' => json_decode($asesmen->antropometri, true),
+                        'vital_sign' => $vitalSign,
+                        'antropometri' => $antropometri,
                         'show_skala_nyeri' => $asesmen->skala_nyeri,
                         'show_lokasi' => $asesmen->lokasi,
                         'show_durasi' => $asesmen->durasi,
@@ -218,14 +728,12 @@ class AsesmenController extends Controller
                         'show_faktor_pemberat' => $asesmen->faktorPemberat ? $asesmen->faktorPemberat->name : null,
                         'show_faktor_peringan' => $asesmen->faktorPeringan ? $asesmen->faktorPeringan->name : null,
                         'show_efek_nyeri' => $asesmen->efekNyeri ? $asesmen->efekNyeri->name : null,
-                        'show_diagnosis' => json_decode($asesmen->diagnosis, true),
+                        'show_diagnosis' => $diagnosis,
                         'retriase_data' => $retriaseData,
                         'alat_terpasang' => $alatTerpasang,
                         'show_kondisi_pasien' => $asesmen->kondisi_pasien,
                         'tindaklanjut' => $asesmen->tindaklanjut,
-                        'spri' => $asesmen->spri,
                         'pemeriksaan_fisik' => $pemeriksaanFisik
-
                     ],
                     'dataMedis' => $dataMedis
                 ]
@@ -233,276 +741,18 @@ class AsesmenController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
-            ], 404);
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
         }
     }
 
-    public function update($kd_pasien, $tgl_masuk, $id, Request $request)
+    private function parseJsonSafely($data)
     {
-        DB::beginTransaction();
-        try {
-
-            $asesmen = RmeAsesmen::where('id', $id)
-                ->where('kd_pasien', $kd_pasien)
-                ->whereDate('tgl_masuk', $tgl_masuk)
-                ->firstOrFail();
-
-            $dataMedis = Kunjungan::with(['pasien', 'dokter'])
-                ->where('kd_pasien', $kd_pasien)
-                ->whereDate('tgl_masuk', $tgl_masuk)
-                ->first();
-
-            $updateData = [
-                'tindakan_resusitasi' => json_encode($request->tindakan_resusitasi),
-                'anamnesis' => $request->anamnesis,
-                'skala_nyeri' => $request->skala_nyeri,
-                'lokasi' => $request->lokasi,
-                'durasi' => $request->durasi,
-                'riwayat_penyakit' => $request->riwayat_penyakit,
-                'riwayat_penyakit_keluarga' => $request->riwayat_penyakit_keluarga,
-                'riwayat_pengobatan' => $request->riwayat_pengobatan,
-                'vital_sign' => json_encode($request->vital_sign),
-                'antropometri' => json_encode($request->antropometri),
-                'riwayat_alergi' => json_encode($request->riwayat_alergi),
-                'menjalar_id' => $request->menjalar_id,
-                'frekuensi_nyeri_id' => $request->frekuensi_nyeri_id,
-                'kualitas_nyeri_id' => $request->kualitas_nyeri_id,
-                'faktor_pemberat_id' => $request->faktor_pemberat_id,
-                'faktor_peringan_id' => $request->faktor_peringan_id,
-                'efek_nyeri' => $request->efek_nyeri,
-                'diagnosis' => json_encode($request->diagnosis),
-                'alat_terpasang' => json_encode($request->alat_terpasang),
-                'kondisi_pasien' => $request->kondisi_pasien,
-            ];
-
-            $asesmen->update($updateData);
-
-            if ($request->has('retriase_data')) {
-                // Get existing retriase data to compare
-                $existingRetriase = DataTriase::where('id_asesmen', $id)->get();
-
-                foreach ($request->retriase_data as $retriaseData) {
-                    // Check if this is a new retriase data
-                    $isNewData = true;
-                    foreach ($existingRetriase as $existing) {
-                        // Compare relevant fields to determine if it's new data
-                        if (
-                            $existing->tanggal_triase === $retriaseData['tanggal_triase'] &&
-                            $existing->hasil_triase === $retriaseData['hasil_triase'] &&
-                            $existing->kode_triase === $retriaseData['kode_triase']
-                        ) {
-                            $isNewData = false;
-                            break;
-                        }
-                    }
-
-                    // If it's new data, insert it
-                    if ($isNewData) {
-                        $triase = new DataTriase();
-                        $triase->id_asesmen = $id;
-                        $triase->nama_pasien = $dataMedis->pasien->nama;
-                        $triase->usia = $dataMedis->pasien->umur ?? 0;
-                        $triase->jenis_kelamin = $dataMedis->pasien->jenis_kelamin;
-                        $triase->tanggal_lahir = $dataMedis->pasien->tgl_lahir;
-                        $triase->tanggal_triase = $retriaseData['tanggal_triase'];
-                        $triase->dokter_triase = $dataMedis->dokter->kd_dokter;
-                        $triase->kd_pasien_triase = $kd_pasien;
-                        $triase->status = 1;
-                        $triase->usia_bulan = $dataMedis->usia_bulan ?? 0;
-                        $triase->foto_pasien = $dataMedis->foto_pasien ?? null;
-                        $triase->hasil_triase = $retriaseData['hasil_triase'];
-                        $triase->kode_triase = $retriaseData['kode_triase'];
-                        $triase->anamnesis_retriase = $retriaseData['anamnesis_retriase'];
-                        $triase->catatan_retriase = $retriaseData['catatan_retriase'];
-                        $triase->vitalsign_retriase = $retriaseData['vitalsign_retriase'];
-                        $triase->triase = $retriaseData['triase'];
-                        $triase->save();
-                    }
-                }
-            }
-
-            if ($request->has('tindak_lanjut_data')) {
-                $tindakLanjutData = is_string($request->tindak_lanjut_data) ?
-                    json_decode($request->tindak_lanjut_data, true) :
-                    $request->tindak_lanjut_data;
-
-                $tindakLanjutDtl = RmeAsesmenDtl::where('id_asesmen', $id)->first();
-                if (!$tindakLanjutDtl) {
-                    $tindakLanjutDtl = new RmeAsesmenDtl();
-                    $tindakLanjutDtl->id_asesmen = $id;
-                }
-
-                if ($tindakLanjutData && isset($tindakLanjutData['option'])) {
-                    switch ($tindakLanjutData['option']) {
-                        case 'rawatInap':
-                            $tindakLanjutDtl->tindak_lanjut_code = 1;
-                            $tindakLanjutDtl->tindak_lanjut_name = 'Rawat Inap';
-
-                            $spri = RmeSpri::where('id_asesmen', $id)->first();
-
-                            $spriData = [
-                                'kd_pasien' => $dataMedis->kd_pasien,
-                                'kd_unit' => $dataMedis->kd_unit,
-                                'tgl_masuk' => $dataMedis->tgl_masuk,
-                                'urut_masuk' => $dataMedis->urut_masuk,
-                                'id_asesmen' => $id,
-                                'tanggal_ranap' => $tindakLanjutData['tanggal_rawat_inap'] ?? '',
-                                'jam_ranap' => $tindakLanjutData['jam_rawat_inap'] ?? '',
-                                'keluhan_utama' => $tindakLanjutData['keluhan_utama_ranap'] ?? '',
-                                'jalannya_penyakit' => $tindakLanjutData['jalannya_penyakit_ranap'] ?? '',
-                                'hasil_pemeriksaan' => $tindakLanjutData['hasil_pemeriksaan_ranap'] ?? '',
-                                'diagnosis' => $tindakLanjutData['diagnosis_ranap'] ?? '',
-                                'tindakan' => $tindakLanjutData['tindakan_ranap'] ?? '',
-                                'anjuran' => $tindakLanjutData['anjuran_ranap'] ?? ''
-                            ];
-                            if ($spri) {
-                                // Update data yang sudah ada
-                                $spri->update($spriData);
-                            } else {
-                                // Buat data baru jika belum ada
-                                RmeSpri::create($spriData);
-                            }
-                            break;
-
-                        case 'rujukKeluar':
-                            $tindakLanjutDtl->tindak_lanjut_code = 5;
-                            $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk RS Lain';
-                            $tindakLanjutDtl->tujuan_rujuk = $tindakLanjutData['tujuan_rujuk'] ?? '';
-                            $tindakLanjutDtl->alasan_rujuk = $tindakLanjutData['alasan_rujuk'] ?? '';
-                            $tindakLanjutDtl->transportasi_rujuk = $tindakLanjutData['transportasi_rujuk'] ?? '';
-                            break;
-
-                        case 'pulangSembuh':
-                            $tindakLanjutDtl->tindak_lanjut_code = 6;
-                            $tindakLanjutDtl->tindak_lanjut_name = 'Pulang Sembuh';
-                            $tindakLanjutDtl->tanggal_pulang = $tindakLanjutData['tanggal_pulang'] ?? '';
-                            $tindakLanjutDtl->jam_pulang = $tindakLanjutData['jam_pulang'] ?? '';
-                            $tindakLanjutDtl->alasan_pulang = $tindakLanjutData['alasan_pulang'] ?? '';
-                            $tindakLanjutDtl->kondisi_pulang = $tindakLanjutData['kondisi_pulang'] ?? '';
-                            break;
-
-                        case 'berobatJalan':
-                            $tindakLanjutDtl->tindak_lanjut_code = 8;
-                            $tindakLanjutDtl->tindak_lanjut_name = 'Berobat Jalan Ke Poli';
-                            $tindakLanjutDtl->tanggal_rajal = $tindakLanjutData['tanggal_rajal'] ?? '';
-                            $tindakLanjutDtl->poli_unit_tujuan = $tindakLanjutData['poli_unit_tujuan'] ?? '';
-                            break;
-
-                        case 'menolakRawatInap':
-                            $tindakLanjutDtl->tindak_lanjut_code = 9;
-                            $tindakLanjutDtl->tindak_lanjut_name = 'Menolak Rawat Inap';
-                            $tindakLanjutDtl->keterangan = $tindakLanjutData['alasan_menolak'] ?? '';
-                            break;
-
-                        case 'meninggalDunia':
-                            $tindakLanjutDtl->tindak_lanjut_code = 10;
-                            $tindakLanjutDtl->tindak_lanjut_name = 'Meninggal Dunia';
-                            $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggal_meninggal'] ?? '';
-                            $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jam_meninggal'] ?? '';
-                            break;
-
-                        case 'deathoffarrival':
-                            $tindakLanjutDtl->tindak_lanjut_code = 11;
-                            $tindakLanjutDtl->tindak_lanjut_name = 'DOA';
-                            $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggal_meninggal'] ?? '';
-                            $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jam_meninggal'] ?? '';
-                            break;
-
-                        default:
-                            $tindakLanjutDtl->tindak_lanjut_code = null;
-                            $tindakLanjutDtl->tindak_lanjut_name = null;
-                    }
-
-                    $tindakLanjutDtl->save();
-                }
-            }
-
-            if ($request->has('pemeriksaan_fisik')) {
-                foreach ($request->pemeriksaan_fisik as $item) {
-                    // Clear 'keterangan' if 'is_normal' is set to 1 (normal)
-                    $keterangan = $item['is_normal'] == 1 ? '' : $item['keterangan'];
-
-                    // Update or create each 'pemeriksaan_fisik' record
-                    RmeAsesmenPemeriksaanFisik::updateOrCreate(
-                        [
-                            'id_asesmen' => $id,
-                            'id_item_fisik' => $item['id_item_fisik'],
-                        ],
-                        [
-                            'is_normal' => $item['is_normal'],
-                            'keterangan' => $keterangan,
-                        ]
-                    );
-                }
-            }
-
-            // dd($request->diagnosis);
-
-            $vitalSign = $request->vital_sign;
-            $antropometri = $request->antropometri;
-            $diagnosa = $request->diagnosis;
-
-            // create resume
-            $resumeData = [
-                'anamnesis'             => $request->anamnesis,
-                'diagnosis'             => $diagnosa,
-                'tindak_lanjut_code'    => $tindakLanjutDtl->tindak_lanjut_code ?? null,
-                'tindak_lanjut_name'    => $tindakLanjutDtl->tindak_lanjut_name ?? null,
-                'tujuan_rujuk'          => $tindakLanjutDtl->tujuan_rujuk,
-                'alasan_rujuk'          => $tindakLanjutDtl->alasan_rujuk,
-                'transportasi_rujuk'    => $tindakLanjutDtl->transportasi_rujuk,
-                'tanggal_pulang'        => $tindakLanjutDtl->tanggal_pulang,
-                'jam_pulang'            => $tindakLanjutDtl->jam_pulang,
-                'alasan_pulang'         => $tindakLanjutDtl->alasan_pulang,
-                'kondisi_pulang'        => $tindakLanjutDtl->kondisi_pulang,
-                'tanggal_rajal'         => $tindakLanjutDtl->tanggal_rajal,
-                'poli_unit_tujuan'      => $tindakLanjutDtl->poli_unit_tujuan,
-                'keterangan'            => $tindakLanjutDtl->keterangan,
-                'tanggal_meninggal'     => $tindakLanjutDtl->tanggal_meninggal,
-                'jam_meninggal'         => $tindakLanjutDtl->jam_meninggal,
-                'tanggal_meninggal'     => $tindakLanjutDtl->tanggal_meninggal,
-                'jam_meninggal_doa'     => $tindakLanjutDtl->jam_meninggal,
-                'konpas'                => [
-                    'sistole'   => [
-                        'hasil' => $vitalSign['td_sistole'] ?? null
-                    ],
-                    'distole'   => [
-                        'hasil' => $vitalSign['td_diastole'] ?? null
-                    ],
-                    'respiration_rate'   => [
-                        'hasil' => $vitalSign['resp'] ?? null
-                    ],
-                    'suhu'   => [
-                        'hasil' => $vitalSign['suhu'] ?? null
-                    ],
-                    'nadi'   => [
-                        'hasil' => $vitalSign['nadi'] ?? null
-                    ],
-                    'tinggi_badan'   => [
-                        'hasil' => $antropometri['tb'] ?? null
-                    ],
-                    'berat_badan'   => [
-                        'hasil' => $antropometri['bb'] ?? null
-                    ]
-                ]
-            ];
-
-            $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk, $resumeData);
-
-            DB::commit();
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Data berhasil diupdate'
-            ]);
-        } catch (\Exception $e) {
-            DB::rollback();
-
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Gagal mengupdate data: ' . $e->getMessage()
-            ], 500);
+        if (is_string($data)) {
+            $decoded = json_decode($data, true);
+            return $decoded !== null ? $decoded : [];
         }
+        return $data ?: [];
     }
 
     private function getTriageClass($kdTriase)
@@ -665,7 +915,6 @@ class AsesmenController extends Controller
         try {
 
             $user = auth()->user();
-
             $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
                 ->join('transaksi as t', function ($join) {
                     $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
@@ -686,22 +935,39 @@ class AsesmenController extends Controller
                 $dataMedis->pasien->umur = 'Tidak Diketahui';
             }
 
-            // dd( $request->vital_sign);
+            $tanggalMasuk = $request->tanggal_masuk ?? date('Y-m-d');
+            $jamMasuk = $request->jam_masuk ?? date('H:i');
+            $waktuAsesmen = $tanggalMasuk . ' ' . $jamMasuk . ':00';
 
             $asesmen = new RmeAsesmen();
             $asesmen->kd_pasien = $dataMedis->kd_pasien;
             $asesmen->kd_unit = $dataMedis->kd_unit;
             $asesmen->tgl_masuk = $dataMedis->tgl_masuk;
             $asesmen->urut_masuk = $dataMedis->urut_masuk;
-            $asesmen->tindakan_resusitasi = $request->tindakan_resusitasi;
-            $asesmen->anamnesis = $request->anamnesis;
+            $asesmen->waktu_asesmen = $waktuAsesmen;
+
+            $asesmen->tindakan_resusitasi = json_encode($request->tindakan_resusitasi) ?? '';
+            $asesmen->anamnesis = $request->keluhan_utama;
             $asesmen->riwayat_penyakit = $request->riwayat_penyakit;
             $asesmen->riwayat_penyakit_keluarga = $request->riwayat_penyakit_keluarga;
             $asesmen->riwayat_pengobatan = $request->riwayat_pengobatan;
-            $asesmen->riwayat_alergi = $request->riwayat_alergi;
-            $asesmen->vital_sign = $request->vital_sign;
-            $asesmen->antropometri = $request->antropometri;
-            $asesmen->skala_nyeri = $request->skala_nyeri;
+
+            // Format vital_sign sesuai struktur yang diinginkan
+            $vitalSignData = [
+                'td_sistole' => $request->vital_sign['td_sistole'] ?? '',
+                'td_diastole' => $request->vital_sign['td_diastole'] ?? '',
+                'nadi' => $request->vital_sign['nadi'] ?? '',
+                'temp' => $request->vital_sign['suhu'] ?? '',
+                'rr' => $request->vital_sign['respirasi'] ?? '',
+                'spo2_tanpa_o2' => $request->vital_sign['spo2_tanpa_o2'] ?? '',
+                'spo2_dengan_o2' => $request->vital_sign['spo2_dengan_o2'] ?? '',
+                'gcs' => $request->vital_sign['gcs'] ?? ''
+            ];
+
+            $asesmen->vital_sign = json_encode($vitalSignData);
+            $asesmen->antropometri = json_encode($request->antropometri);
+
+            $asesmen->skala_nyeri = $request->skala_nyeri_nilai;
             $asesmen->lokasi = $request->lokasi;
             $asesmen->durasi = $request->durasi;
             $asesmen->menjalar_id = $request->menjalar;
@@ -710,70 +976,92 @@ class AsesmenController extends Controller
             $asesmen->faktor_pemberat_id = $request->faktor_pemberat;
             $asesmen->faktor_peringan_id = $request->faktor_peringan;
             $asesmen->efek_nyeri = $request->efek_nyeri;
-            $asesmen->diagnosis = $request->diagnosa_data;
+            $asesmen->jenis_nyeri_id = $request->jenis_nyeri;
+
+            $asesmen->diagnosis = $request->diagnosa_data ? json_encode($request->diagnosa_data) : null;
             $asesmen->alat_terpasang = $request->alat_terpasang_data;
+
             $asesmen->kondisi_pasien = $request->kondisi_pasien;
             $asesmen->user_id = $user->id;
-            $asesmen->waktu_asesmen = date("Y-m-d H:i:s");
             $asesmen->kategori = 1;
             $asesmen->sub_kategori = 1;
             $asesmen->save();
 
-            // dd($asesmen->all());
-
-            // Di dalam method store
-            $pemeriksaanFisik = json_decode($request->pemeriksaan_fisik, true);
-
-            if (is_array($pemeriksaanFisik)) {
-                foreach ($pemeriksaanFisik as $itemFisik) {
-                    // Simpan semua data tanpa kondisi
-                    RmeAsesmenPemeriksaanFisik::create([
-                        'id_asesmen' => $asesmen->id,
-                        'id_item_fisik' => $itemFisik['id'],
-                        'is_normal' => $itemFisik['is_normal'],
-                        'keterangan' => $itemFisik['keterangan'] ?? '',
+            // Simpan alergi pasien
+            $alergiData = json_decode($request->alergis, true);
+            if (!empty($alergiData)) {
+                RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
+                foreach ($alergiData as $alergi) {
+                    RmeAlergiPasien::create([
+                        'kd_pasien' => $kd_pasien,
+                        'jenis_alergi' => $alergi['jenis_alergi'],
+                        'nama_alergi' => $alergi['alergen'],
+                        'reaksi' => $alergi['reaksi'],
+                        'tingkat_keparahan' => $alergi['tingkat_keparahan']
                     ]);
                 }
             }
 
-            // Simpan data triase
-            $reTriaseData = json_decode($request->retriage_data, true);
-            if ($reTriaseData) {
-                foreach ($reTriaseData as $reTriase) {
-                    $triase = new DataTriase();
-                    $triase->id_asesmen = $asesmen->id;
-                    $triase->nama_pasien = $dataMedis->pasien->nama;
-                    $triase->usia = $dataMedis->pasien->umur;
-                    $triase->jenis_kelamin = $dataMedis->pasien->jenis_kelamin;
-                    $triase->tanggal_lahir = $dataMedis->pasien->tgl_lahir;
-                    $formattedDate = Carbon::createFromFormat('m/d/Y, h:i:s A', $reTriase['tanggalJam'])->format('Y-m-d H:i:s');
-                    $triase->tanggal_triase = $formattedDate;
-                    $triase->dokter_triase = $dataMedis->dokter->kd_dokter;
-                    $triase->kd_pasien_triase = $dataMedis->kd_pasien;
-                    $triase->status = $dataMedis->status;
-                    $triase->usia_bulan = $dataMedis->usia_bulan;
-                    $triase->foto_pasien = $dataMedis->foto_pasien;
-                    $triase->hasil_triase = $reTriase['triase']['ket_triase'];
-                    $triase->kode_triase = $reTriase['triase']['kode_triase'];
-                    $triase->anamnesis_retriase = $reTriase['keluhan'];
-                    $triase->catatan_retriase = $reTriase['catatan'];
-                    $triase->vitalsign_retriase = json_encode($reTriase['vitalSigns']);
+            // Simpan pemeriksaan fisik
+            $itemFisik = MrItemFisik::all();
+            foreach ($itemFisik as $item) {
+                $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
+                $keterangan = $request->input($item->id . '_keterangan');
+                if ($isNormal) $keterangan = '';
 
-                    $triaseData = [
-                        'hasil_triase' => $reTriase['triase']['ket_triase'],
-                        'kode_triase' => $reTriase['triase']['kode_triase'],
-                        'air_way' => $reTriase['triase']['air_way'],
-                        'breathing' => $reTriase['triase']['breathing'],
-                        'circulation' => $reTriase['triase']['circulation'],
-                        'disability' => $reTriase['triase']['disability']
+                RmeAsesmenPemeriksaanFisik::create([
+                    'id_asesmen' => $asesmen->id,
+                    'id_item_fisik' => $item->id,
+                    'is_normal' => $isNormal,
+                    'keterangan' => $keterangan
+                ]);
+            }
+
+            // Simpan data retriase
+            $retriaseData = json_decode($request->retriase_data, true);
+            if ($retriaseData && !empty($retriaseData)) {
+                foreach ($retriaseData as $retriase) {
+                    $newRetriase = new DataTriase();
+                    $newRetriase->id_asesmen = $asesmen->id;
+                    $newRetriase->nama_pasien = $dataMedis->pasien->nama;
+                    $newRetriase->usia = $dataMedis->pasien->umur;
+                    $newRetriase->jenis_kelamin = $dataMedis->pasien->jenis_kelamin;
+                    $newRetriase->tanggal_lahir = $dataMedis->pasien->tgl_lahir;
+
+                    // Format tanggal dari form retriase
+                    $tanggalJam = $retriase['tanggal'] . ' ' . $retriase['jam'] . ':00';
+                    $newRetriase->tanggal_triase = $tanggalJam;
+
+                    $newRetriase->dokter_triase = $dataMedis->dokter->kd_dokter ?? null;
+                    $newRetriase->kd_pasien_triase = $dataMedis->kd_pasien;
+                    $newRetriase->status = $dataMedis->status;
+                    $newRetriase->usia_bulan = $dataMedis->usia_bulan;
+                    $newRetriase->foto_pasien = $dataMedis->foto_pasien;
+
+                    // Kesimpulan triase
+                    $newRetriase->kode_triase = $retriase['kesimpulan_triase'] ?? null;
+                    $newRetriase->hasil_triase = $retriase['kesimpulan_triase_text'] ?? null;
+
+                    // Keluhan sebagai anamnesis retriase
+                    $newRetriase->anamnesis_retriase = $retriase['keluhan'] ?? null;
+
+                    // Vital signs retriase - menggunakan struktur yang sama
+                    $vitalSignsRetriase = [
+                        'gcs' => $retriase['gcs'] ?? '',
+                        'temp' => $retriase['temp'] ?? '',
+                        'rr' => $retriase['rr'] ?? '',
+                        'spo2_tanpa_o2' => $retriase['spo2_tanpa_o2'] ?? '',
+                        'spo2_dengan_o2' => $retriase['spo2_dengan_o2'] ?? '',
+                        'td_sistole' => $retriase['td_sistole'] ?? '',
+                        'td_diastole' => $retriase['td_diastole'] ?? ''
                     ];
-                    $triase->triase = json_encode($triaseData);
-
-                    $triase->save();
+                    $newRetriase->vitalsign_retriase = json_encode($vitalSignsRetriase);
+                    $newRetriase->save();
                 }
             }
 
-            //simpan tindak lanjut
+            // Simpan tindak lanjut
+            $tindakLanjutDtl = null;
             if ($request->has('tindak_lanjut_data')) {
                 $tindakLanjutData = json_decode($request->tindak_lanjut_data, true);
 
@@ -792,65 +1080,69 @@ class AsesmenController extends Controller
                                 'tgl_masuk' => $dataMedis->tgl_masuk,
                                 'urut_masuk' => $dataMedis->urut_masuk,
                                 'id_asesmen' => $asesmen->id,
-                                'tanggal_ranap' => $tindakLanjutData['tanggalRawatInap'] ?? '',
-                                'jam_ranap' => $tindakLanjutData['jamRawatInap'] ?? null,
-                                'keluhan_utama' => $tindakLanjutData['keluhanUtama_ranap'] ?? '',
-                                'jalannya_penyakit' => $tindakLanjutData['jalannyaPenyakit_ranap'] ?? '',
-                                'hasil_pemeriksaan' => $tindakLanjutData['hasilPemeriksaan_ranap'] ?? '',
-                                'diagnosis' => $tindakLanjutData['diagnosis_ranap'] ?? '',
-                                'tindakan' => $tindakLanjutData['tindakan_ranap'] ?? '',
-                                'anjuran' => $tindakLanjutData['anjuran_ranap'] ?? ''
+                                'tanggal_ranap' => !empty($tindakLanjutData['tanggalRawatInap']) ? $tindakLanjutData['tanggalRawatInap'] : null,
+                                'jam_ranap' => !empty($tindakLanjutData['jamRawatInap']) ? $tindakLanjutData['jamRawatInap'] : null,
+                                'keluhan_utama' => $tindakLanjutData['keluhanUtama_ranap'] ?? null,
+                                'jalannya_penyakit' => $tindakLanjutData['jalannyaPenyakit_ranap'] ?? null,
+                                'hasil_pemeriksaan' => $tindakLanjutData['hasilPemeriksaan_ranap'] ?? null,
+                                'diagnosis' => $tindakLanjutData['diagnosis_ranap'] ?? null,
+                                'tindakan' => $tindakLanjutData['tindakan_ranap'] ?? null,
+                                'anjuran' => $tindakLanjutData['anjuran_ranap'] ?? null
                             ]);
                             break;
 
                         case 'kamarOperasi':
                             $tindakLanjutDtl->tindak_lanjut_code = 7;
                             $tindakLanjutDtl->tindak_lanjut_name = 'Kamar Operasi';
-                            $tindakLanjutDtl->keterangan = $tindakLanjutData['kamarOperasi'] ?? '';
+                            $tindakLanjutDtl->keterangan = $tindakLanjutData['kamarOperasi'] ?? null;
                             break;
 
                         case 'rujukKeluar':
                             $tindakLanjutDtl->tindak_lanjut_code = 5;
                             $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk RS Lain';
-                            $tindakLanjutDtl->tujuan_rujuk = $tindakLanjutData['tujuan_rujuk'] ?? '';
-                            $tindakLanjutDtl->alasan_rujuk = $tindakLanjutData['alasan_rujuk'] ?? '';
-                            $tindakLanjutDtl->transportasi_rujuk = $tindakLanjutData['transportasi_rujuk'] ?? '';
+                            $tindakLanjutDtl->tujuan_rujuk = $tindakLanjutData['tujuan_rujuk'] ?? null;
+                            $tindakLanjutDtl->alasan_rujuk = $tindakLanjutData['alasan_rujuk'] ?? null;
+                            $tindakLanjutDtl->transportasi_rujuk = $tindakLanjutData['transportasi_rujuk'] ?? null;
+                            $tindakLanjutDtl->keterangan = $tindakLanjutData['keterangan_rujuk'] ?? null;
                             break;
 
                         case 'pulangSembuh':
                             $tindakLanjutDtl->tindak_lanjut_code = 6;
                             $tindakLanjutDtl->tindak_lanjut_name = 'Pulang Sembuh';
-                            $tindakLanjutDtl->tanggal_pulang = $tindakLanjutData['tanggalPulang'] ?? '';
-                            $tindakLanjutDtl->jam_pulang = $tindakLanjutData['jamPulang'] ?? '';
-                            $tindakLanjutDtl->alasan_pulang = $tindakLanjutData['alasan_pulang'] ?? '';
-                            $tindakLanjutDtl->kondisi_pulang = $tindakLanjutData['kondisi_pulang'] ?? '';
+                            $tindakLanjutDtl->tanggal_pulang = !empty($tindakLanjutData['tanggalPulang']) ? $tindakLanjutData['tanggalPulang'] : null;
+                            $tindakLanjutDtl->jam_pulang = !empty($tindakLanjutData['jamPulang']) ? $tindakLanjutData['jamPulang'] : null;
+                            $tindakLanjutDtl->alasan_pulang = $tindakLanjutData['alasan_pulang'] ?? null;
+                            $tindakLanjutDtl->kondisi_pulang = $tindakLanjutData['kondisi_pulang'] ?? null;
                             break;
 
                         case 'berobatJalan':
                             $tindakLanjutDtl->tindak_lanjut_code = 8;
                             $tindakLanjutDtl->tindak_lanjut_name = 'Berobat Jalan Ke Poli';
-                            $tindakLanjutDtl->tanggal_rajal = $tindakLanjutData['tanggal_rajal'] ?? '';
-                            $tindakLanjutDtl->poli_unit_tujuan = $tindakLanjutData['poli_unit_tujuan'] ?? '';
+                            $tindakLanjutDtl->tanggal_rajal = !empty($tindakLanjutData['tanggal_rajal']) ? $tindakLanjutData['tanggal_rajal'] : null;
+                            $tindakLanjutDtl->poli_unit_tujuan = $tindakLanjutData['poli_unit_tujuan'] ?? null;
+                            $tindakLanjutDtl->keterangan = $tindakLanjutData['catatan_rajal'] ?? null;
                             break;
 
                         case 'menolakRawatInap':
                             $tindakLanjutDtl->tindak_lanjut_code = 9;
                             $tindakLanjutDtl->tindak_lanjut_name = 'Menolak Rawat Inap';
-                            $tindakLanjutDtl->keterangan = $tindakLanjutData['alasanMenolak'] ?? '';
+                            $tindakLanjutDtl->keterangan = $tindakLanjutData['alasanMenolak'] ?? null;
                             break;
 
                         case 'meninggalDunia':
                             $tindakLanjutDtl->tindak_lanjut_code = 10;
                             $tindakLanjutDtl->tindak_lanjut_name = 'Meninggal Dunia';
-                            $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggalMeninggal'] ?? '';
-                            $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jamMeninggal'] ?? '';
+                            $tindakLanjutDtl->tanggal_meninggal = !empty($tindakLanjutData['tanggalMeninggal']) ? $tindakLanjutData['tanggalMeninggal'] : null;
+                            $tindakLanjutDtl->jam_meninggal = !empty($tindakLanjutData['jamMeninggal']) ? $tindakLanjutData['jamMeninggal'] : null;
+                            $tindakLanjutDtl->keterangan = $tindakLanjutData['penyebab_kematian'] ?? null;
                             break;
 
                         case 'deathofarrival':
                             $tindakLanjutDtl->tindak_lanjut_code = 11;
                             $tindakLanjutDtl->tindak_lanjut_name = 'DOA';
-                            $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggalDoa'] ?? '';
-                            $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jamDoa'] ?? '';
+                            $tindakLanjutDtl->tanggal_meninggal = !empty($tindakLanjutData['tanggalDoa']) ? $tindakLanjutData['tanggalDoa'] : null;
+                            $tindakLanjutDtl->jam_meninggal = !empty($tindakLanjutData['jamDoa']) ? $tindakLanjutData['jamDoa'] : null;
+                            $tindakLanjutDtl->keterangan = $tindakLanjutData['keterangan_doa'] ?? null;
                             break;
 
                         default:
@@ -858,31 +1150,31 @@ class AsesmenController extends Controller
                             $tindakLanjutDtl->tindak_lanjut_name = null;
                     }
                 } else {
-                    // Set default empty values when tindakLanjutData is empty
-                    $tindakLanjutDtl->tindak_lanjut_code = '';
-                    $tindakLanjutDtl->tindak_lanjut_name = '';
-                    $tindakLanjutDtl->keterangan = '';
-                    $tindakLanjutDtl->tanggal_meninggal = '';
-                    $tindakLanjutDtl->jam_meninggal = '';
-                    $tindakLanjutDtl->tanggal_pulang = '';
-                    $tindakLanjutDtl->jam_pulang = '';
-                    $tindakLanjutDtl->alasan_pulang = '';
-                    $tindakLanjutDtl->tanggal_rajal = '';
-                    $tindakLanjutDtl->poli_unit_tujuan = '';
-                    $tindakLanjutDtl->tujuan_rujuk = '';
-                    $tindakLanjutDtl->alasan_rujuk = '';
-                    $tindakLanjutDtl->transportasi_rujuk = '';
-                    $tindakLanjutDtl->kamar_operasi = '';
+                    // Set NULL values when tindakLanjutData is empty
+                    $tindakLanjutDtl->tindak_lanjut_code = null;
+                    $tindakLanjutDtl->tindak_lanjut_name = null;
+                    $tindakLanjutDtl->keterangan = null;
+                    $tindakLanjutDtl->tanggal_meninggal = null;
+                    $tindakLanjutDtl->jam_meninggal = null;
+                    $tindakLanjutDtl->tanggal_pulang = null;
+                    $tindakLanjutDtl->jam_pulang = null;
+                    $tindakLanjutDtl->alasan_pulang = null;
+                    $tindakLanjutDtl->kondisi_pulang = null;
+                    $tindakLanjutDtl->tanggal_rajal = null;
+                    $tindakLanjutDtl->poli_unit_tujuan = null;
+                    $tindakLanjutDtl->tujuan_rujuk = null;
+                    $tindakLanjutDtl->alasan_rujuk = null;
+                    $tindakLanjutDtl->transportasi_rujuk = null;
+                    $tindakLanjutDtl->kamar_operasi = null;
                 }
 
                 $tindakLanjutDtl->save();
             }
 
-            // dd($request->vital_sign[0]['td_sistole']);
-
-            $vitalSign = json_decode($request->vital_sign, true);
-            $antropometri = json_decode($request->antropometri, true);
-            $diagnosa = json_decode($request->diagnosa_data, true);
+            // Menggunakan data vital sign yang sudah diformat
+            $vitalSign = $vitalSignData;
+            $antropometri = $request->antropometri;
+            $diagnosa = $request->diagnosa_data;
 
             // create resume
             $resumeData = [
@@ -890,20 +1182,20 @@ class AsesmenController extends Controller
                 'diagnosis'             => $diagnosa,
                 'tindak_lanjut_code'    => $tindakLanjutDtl->tindak_lanjut_code ?? null,
                 'tindak_lanjut_name'    => $tindakLanjutDtl->tindak_lanjut_name ?? null,
-                'tujuan_rujuk'          => $tindakLanjutDtl->tujuan_rujuk,
-                'alasan_rujuk'          => $tindakLanjutDtl->alasan_rujuk,
-                'transportasi_rujuk'    => $tindakLanjutDtl->transportasi_rujuk,
-                'tanggal_pulang'        => $tindakLanjutDtl->tanggal_pulang,
-                'jam_pulang'            => $tindakLanjutDtl->jam_pulang,
-                'alasan_pulang'         => $tindakLanjutDtl->alasan_pulang,
-                'kondisi_pulang'        => $tindakLanjutDtl->kondisi_pulang,
-                'tanggal_rajal'         => $tindakLanjutDtl->tanggal_rajal,
-                'poli_unit_tujuan'      => $tindakLanjutDtl->poli_unit_tujuan,
-                'keterangan'            => $tindakLanjutDtl->keterangan,
-                'tanggal_meninggal'     => $tindakLanjutDtl->tanggal_meninggal,
-                'jam_meninggal'         => $tindakLanjutDtl->jam_meninggal,
-                'tanggal_meninggal'     => $tindakLanjutDtl->tanggal_meninggal,
-                'jam_meninggal_doa'     => $tindakLanjutDtl->jam_meninggal,
+                'tujuan_rujuk'          => $tindakLanjutDtl->tujuan_rujuk ?? null,
+                'alasan_rujuk'          => $tindakLanjutDtl->alasan_rujuk ?? null,
+                'transportasi_rujuk'    => $tindakLanjutDtl->transportasi_rujuk ?? null,
+                'tanggal_pulang'        => $tindakLanjutDtl->tanggal_pulang ?? null,
+                'jam_pulang'            => $tindakLanjutDtl->jam_pulang ?? null,
+                'alasan_pulang'         => $tindakLanjutDtl->alasan_pulang ?? null,
+                'kondisi_pulang'        => $tindakLanjutDtl->kondisi_pulang ?? null,
+                'tanggal_rajal'         => $tindakLanjutDtl->tanggal_rajal ?? null,
+                'poli_unit_tujuan'      => $tindakLanjutDtl->poli_unit_tujuan ?? null,
+                'keterangan'            => $tindakLanjutDtl->keterangan ?? null,
+                'tanggal_meninggal'     => $tindakLanjutDtl->tanggal_meninggal ?? null,
+                'jam_meninggal'         => $tindakLanjutDtl->jam_meninggal ?? null,
+                'tanggal_meninggal'     => $tindakLanjutDtl->tanggal_meninggal ?? null,
+                'jam_meninggal_doa'     => $tindakLanjutDtl->jam_meninggal ?? null,
                 'konpas'                => [
                     'sistole'   => [
                         'hasil' => $vitalSign['td_sistole'] ?? null
@@ -912,10 +1204,10 @@ class AsesmenController extends Controller
                         'hasil' => $vitalSign['td_diastole'] ?? null
                     ],
                     'respiration_rate'   => [
-                        'hasil' => $vitalSign['resp'] ?? null
+                        'hasil' => $vitalSign['rr'] ?? null
                     ],
                     'suhu'   => [
-                        'hasil' => $vitalSign['suhu'] ?? null
+                        'hasil' => $vitalSign['temp'] ?? null
                     ],
                     'nadi'   => [
                         'hasil' => $vitalSign['nadi'] ?? null
@@ -932,9 +1224,9 @@ class AsesmenController extends Controller
             $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk, $resumeData);
 
             DB::commit();
-            return response()->json(['message' => 'Berhasil']);
+            return redirect()->route('asesmen.index', [$kd_pasien, date('Y-m-d', strtotime($tgl_masuk)), $request->urut_masuk])
+                ->with('success', 'Asesmen berhasil disimpan');
         } catch (\Exception $e) {
-            DB::rollBack();
             DB::rollBack();
             return response()->json(['message' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }

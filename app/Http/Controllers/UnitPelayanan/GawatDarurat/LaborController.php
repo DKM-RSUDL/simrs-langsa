@@ -46,6 +46,16 @@ class LaborController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
         $DataLapPemeriksaan = LapLisItemPemeriksaan::with('produk')
             ->select('kategori', 'kd_produk')
             ->get()
@@ -117,6 +127,7 @@ class LaborController extends Controller
                         $q->whereRaw('LOWER(nama_lengkap) like ?', ["%$search%"]);
                     });
             })
+            ->where('kategori', 'LB')
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $dataMedis->tgl_masuk)
             ->where('urut_masuk', $dataMedis->urut_masuk)
@@ -136,16 +147,6 @@ class LaborController extends Controller
             $item->labResults = $labResults;
             return $item;
         });
-
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
-        if (!$dataMedis) {
-            abort(404, 'Data not found');
-        }
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.index', compact(
             'dataMedis',
@@ -268,6 +269,7 @@ class LaborController extends Controller
                 'status' => 'nullable|array',
                 'status.*' => 'nullable|integer',
                 'kd_dokter' => 'required|string|max:3',
+                'indikasi_klinis'   => 'nullable'
             ]);
 
             $validatedData['kategori'] = $validatedData['kategori'] ?? 'LB';
@@ -329,7 +331,8 @@ class LaborController extends Controller
                 'kd_kasir' => $validatedData['kd_kasir'] ?? null,
                 'status_order' => 1,
                 'transaksi_penunjang' => $validatedData['transaksi_penunjang'] ?? null,
-                'user_create' => Auth::id()
+                'user_create' => Auth::id(),
+                'indikasi_klinis'   => $validatedData['indikasi_klinis']
             ]);
 
             foreach ($validatedData['kd_produk'] as $index => $kd_produk) {
@@ -368,7 +371,6 @@ class LaborController extends Controller
         DB::beginTransaction();
 
         try {
-
             $validatedData = $request->validate([
                 // Field untuk SegalaOrder
                 'kd_pasien' => 'required|string|max:12',
@@ -384,7 +386,7 @@ class LaborController extends Controller
                 'transaksi_penunjang' => 'nullable|string|max:255',
                 'cyto' => 'required|string|max:2',
                 'puasa' => 'required|string|max:2',
-                'jadwal_pemeriksaan' => 'nullable|date_format:Y-m-d H:i:s|after_or_equal:tgl_order',
+                'jadwal_pemeriksaan' => 'nullable|date_format:Y-m-d\TH:i|after_or_equal:tgl_order',
                 'diagnosis' => 'nullable|string|max:255',
 
                 // Field untuk SegalaOrderDet (ubah menjadi array)
@@ -397,6 +399,7 @@ class LaborController extends Controller
                 'status' => 'nullable|array',
                 'status.*' => 'nullable|integer',
                 'kd_dokter' => 'required|string|max:3',
+                'indikasi_klinis'   => 'nullable'
             ]);
 
             $segalaOrder = SegalaOrder::findOrFail($kd_order);
@@ -438,7 +441,8 @@ class LaborController extends Controller
                 'status_order' => 1,
                 'transaksi_penunjang' => $validatedData['transaksi_penunjang'] ?? null,
                 'kd_dokter' => $validatedData['kd_dokter'],
-                'user_edit' => Auth::id()
+                'user_edit' => Auth::id(),
+                'indikasi_klinis'   => $validatedData['indikasi_klinis']
             ]);
 
             // Delete existing order details

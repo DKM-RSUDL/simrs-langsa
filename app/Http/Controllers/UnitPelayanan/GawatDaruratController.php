@@ -25,7 +25,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class GawatDaruratController extends Controller
 {
@@ -127,12 +128,108 @@ class GawatDaruratController extends Controller
         return view('unit-pelayanan.gawat-darurat.index', compact('dokter',));
     }
 
+    public function getTriaseData(Request $request)
+    {
+        try {
+            $kdKasir = $request->kd_kasir;
+            $noTrx = $request->no_transaksi;
+
+            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit', 'getVitalSign'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('t.kd_kasir', $kdKasir)
+                ->where('t.no_transaksi', $noTrx)
+                ->first();
+
+            $triaseData = DataTriase::find($dataMedis->triase_id);
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'OK',
+                'data'      => [
+                    'kunjungan' => $dataMedis,
+                    'triase'    => $triaseData
+                ]
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status'    => 'error',
+                'message'   => $e->getMessage(),
+                'data'      => []
+            ]);
+        }
+    }
+
+    public function updateFotoTriase($kd_kasir, $no_transaksi, Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            $validator = Validator::make($request->all(), [
+                'foto_pasien'   => 'nullable|file|image|max:3072',
+                'triase_id'     => 'required'
+            ]);
+
+            if ($validator->fails()) throw new Exception('Terjadi kesalahan pada input form !');
+
+            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit', 'getVitalSign'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('t.kd_kasir', $kd_kasir)
+                ->where('t.no_transaksi', $no_transaksi)
+                ->first();
+
+            if (empty($dataMedis)) throw new Exception('Kunjungan Pasien tidak ditemukan !');
+            if ($dataMedis->triase_id != $request->triase_id) throw new Exception('Request perubahan tidak valid !');
+
+            $triaseData = DataTriase::find($request->triase_id);
+            if (empty($triaseData)) throw new Exception('Triase Pasien tidak ditemukan !');
+
+            if ($request->hasFile('foto_pasien')) {
+                $file = $request->file('foto_pasien');
+
+                // delete foto lama
+                if (Storage::exists($file)) Storage::delete($file);
+
+                // store
+                $path = $file->store('uploads/triase/' . date('Y-m-d', strtotime($dataMedis->tgl_masuk)) . "/$dataMedis->kd_pasien/$dataMedis->urut_masuk");
+                $triaseData->foto_pasien = $path;
+                $triaseData->save();
+
+                DB::commit();
+                return back()->with('success', 'Foto triase pasien berhasil di ubah !');
+            } else {
+                throw new Exception('Tidak ada perubahan foto triase');
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function triaseIndex()
+    {
+        $dokter = DokterKlinik::with(['dokter', 'unit'])
+            ->where('kd_unit', 3)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
+
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.triase.index', compact('dokter'));
+    }
+
     public function storeTriase(Request $request)
     {
         DB::beginTransaction();
 
         try {
-
             // validate data
             $messageErr = [
                 'dokter_triase.required'    => 'Dokter harus dipilih!',
@@ -468,7 +565,7 @@ class GawatDaruratController extends Controller
             SjpKunjungan::create($sjpKunjunganData);
 
             DB::commit();
-            return back()->with('success', 'Data triase berhasil ditambah');
+            return to_route('gawat-darurat.index')->with('success', 'Data triase berhasil ditambah');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
@@ -478,8 +575,69 @@ class GawatDaruratController extends Controller
     public function getPatientByNikAjax(Request $request)
     {
         try {
-            $pasien = Pasien::where('no_pengenal', $request->nik)
+            $pasien = Pasien::where(function ($q) use ($request) {
+                $q->where('no_pengenal', $request->nik)
+                    ->orWhere('kd_pasien', $request->nik);
+            })
                 ->first();
+
+            if (empty($pasien)) {
+                return response()->json([
+                    'status'    => 'error',
+                    'message'   => 'Data tidak ditemukan',
+                    'data'      => []
+                ], 200);
+            } else {
+                return response()->json([
+                    'status'    => 'success',
+                    'message'   => 'Data ditemukan',
+                    'data'      => $pasien
+                ], 200);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'status'    => 'error',
+                'message'   => $e->getMessage(),
+                'data'      => []
+            ] . 500);
+        }
+    }
+
+    public function getPatientByNamaAjax(Request $request)
+    {
+
+        try {
+            $pasien = Pasien::where('nama', 'LIKE', "%$request->nama%")
+                ->get();
+
+            if (empty($pasien)) {
+                return response()->json([
+                    'status'    => 'error',
+                    'message'   => 'Data tidak ditemukan',
+                    'data'      => []
+                ], 200);
+            } else {
+                return response()->json([
+                    'status'    => 'success',
+                    'message'   => 'Data ditemukan',
+                    'data'      => $pasien
+                ], 200);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'status'    => 'error',
+                'message'   => $e->getMessage(),
+                'data'      => []
+            ] . 500);
+        }
+    }
+
+    public function getPatientByAlamatAjax(Request $request)
+    {
+
+        try {
+            $pasien = Pasien::where('alamat', 'LIKE', "%$request->alamat%")
+                ->get();
 
             if (empty($pasien)) {
                 return response()->json([

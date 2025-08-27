@@ -110,11 +110,11 @@
                             </div> --}}
 
                             <div class="patient-card mt-4">
-                                <h6 class="fw-bold">Catatan Klinis/Diagnosis</h6>
+                                <h6 class="fw-bold">Diagnosis</h6>
                                 <div class="diagnosis-list">
-                                    @if(count($diagnosisList) > 0)
+                                    @if (count($diagnosisList) > 0)
                                         <ul class="list-unstyled mb-0">
-                                            @foreach($diagnosisList as $diagnosis)
+                                            @foreach ($diagnosisList as $diagnosis)
                                                 <li class="mb-2">
                                                     <i class="fas fa-circle-notch me-2 text-primary"></i>
                                                     {{ $diagnosis }}
@@ -125,6 +125,14 @@
                                         <p class="mb-0">-</p>
                                     @endif
                                 </div>
+
+                                <input type="hidden" name="diagnosis"
+                                    value="{{ count($diagnosisList) > 0 ? implode(', ', $diagnosisList) . ' ' : '' }}">
+                            </div>
+
+                            <div class="patient-card mt-4">
+                                <h6 class="fw-bold">Indikasi Klinis</h6>
+                                <textarea name="indikasi_klinis" id="indikasi_klinis" class="form-control">{{ $dataDiagnosis->anamnesis ?? '' }}</textarea>
                             </div>
 
                         </div>

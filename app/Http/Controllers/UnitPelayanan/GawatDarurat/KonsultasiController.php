@@ -13,6 +13,7 @@ use App\Models\Konsultasi;
 use App\Models\KonsultasiIGD;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
+use App\Models\RmeAsesmen;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\RujukanKunjungan;
@@ -49,6 +50,16 @@ class KonsultasiController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
 
         $dokterPengirim = DokterKlinik::with(['dokter', 'unit'])
             ->where('kd_unit', 3)
@@ -114,16 +125,26 @@ class KonsultasiController extends Controller
             ->get();
 
 
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
+        // get asesmen data
+        $asesmen = RmeAsesmen::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', 3)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->orderBy('id', 'DESC')
+            ->first();
 
-        if (!$dataMedis) {
-            abort(404, 'Data not found');
-        }
+        $diagnosis = json_decode($asesmen->diagnosis, true);
+        $asesmenCreate = implode(',', $diagnosis);
 
+        $subjectiveCreate = $asesmen->anamnesis;
+
+        $vitalSign = json_decode($asesmen->vital_sign, true);
+
+        $backgroundCreate = '';
+
+        foreach ($vitalSign as $key => $value) {
+            $backgroundCreate .= "$key: $value, ";
+        }
 
         return view(
             'unit-pelayanan.gawat-darurat.action-gawat-darurat.konsultasi.index',
@@ -132,7 +153,10 @@ class KonsultasiController extends Controller
                 'dokterPengirim',
                 'dokterSpesialis',
                 'unit',
-                'konsultasi'
+                'konsultasi',
+                'asesmenCreate',
+                'subjectiveCreate',
+                'backgroundCreate'
             )
         );
     }

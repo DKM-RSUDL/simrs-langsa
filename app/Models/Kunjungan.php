@@ -101,4 +101,9 @@ class Kunjungan extends Model
         return $this->belongsTo(RujukanAsal::class, 'cara_penerimaan', 'cara_penerimaan');
     }
 
+    public function dataTriase()
+    {
+        return $this->belongsTo(DataTriase::class, 'triase_id', 'id');
+    }
+
 }

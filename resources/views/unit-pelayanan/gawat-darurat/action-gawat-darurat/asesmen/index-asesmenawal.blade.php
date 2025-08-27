@@ -35,10 +35,18 @@
 
         <!-- Button "Tambah" di sebelah kanan -->
         <div class="col-md-4 text-end ms-auto">
-            @canany(['is-admin', 'is-dokter-umum', 'is-dokter-spesialis'])
+
+            {{-- @canany(['is-admin', 'is-dokter-umum', 'is-dokter-spesialis'])
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailPasienModal" type="button">
                     <i class="ti-plus"></i> Tambah
                 </button>
+            @endcanany --}}
+
+            @canany(['is-admin', 'is-dokter-umum', 'is-dokter-spesialis'])
+                <a class="btn btn-primary"
+                    href="{{ route('asesmen.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                    <i class="ti-plus"></i> Tambah
+                </a>
             @endcanany
 
             @canany(['is-admin', 'is-perawat', 'is-bidan'])
@@ -46,7 +54,7 @@
                     class="btn btn-primary">
                     <i class="ti-plus"></i> Keperawatan
                 </a>
-                @endcanany
+            @endcanany
         </div>
     </div>
 </div>
@@ -90,30 +98,30 @@
             <div class="d-flex gap-2">
                 @if ($item->kategori == 1)
                     <button type="button" onclick="showAsesmen('{{ $item->id }}')"
-                        data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/asesmen/' . $item->id) }}"
+                        data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/' . $item->id) }}"
                         class="btn btn-info btn-sm px-3">
                         <i class="fas fa-eye me-1"></i> Lihat
                     </button>
-                    <button type="button" onclick="editAsesmen('{{ $item->id }}')"
-                        data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/asesmen/' . $item->id) }}"
-                        class="btn btn-secondary btn-sm px-3">
+                    <a class="btn btn-secondary btn-sm px-3"
+                        href="{{ route('asesmen.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}">
                         <i class="fas fa-edit me-1"></i> Edit
-                    </button>
+                    </a>
                 @elseif($item->kategori == 2)
-
                     <a href="{{ route('asesmen-keperawatan.show', [
                         'kd_pasien' => $dataMedis->kd_pasien,
                         'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
-                        'id' => $item->id
-                    ]) }}" class="btn btn-sm btn-info">
+                        'id' => $item->id,
+                    ]) }}"
+                        class="btn btn-sm btn-info">
                         <i class="fas fa-eye me-1"></i> Lihat
                     </a>
 
                     <a href="{{ route('asesmen-keperawatan.edit', [
                         'kd_pasien' => $dataMedis->kd_pasien,
                         'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
-                        'id' => $item->id
-                    ]) }}" class="btn btn-sm btn-secondary">
+                        'id' => $item->id,
+                    ]) }}"
+                        class="btn btn-sm btn-secondary">
                         <i class="fas fa-edit"></i> Edit
                     </a>
                 @endif
@@ -122,155 +130,156 @@
     @endforeach
 </ul>
 
-
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.show')
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit')
 {{-- @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show') --}}
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.create-asesmen')
 
-<style>
-    #asesmenList .list-group-item:nth-child(even) {
-        background-color: #edf7ff;
-    }
-
-    /* Background putih untuk item ganjil */
-    #asesmenList .list-group-item:nth-child(odd) {
-        background-color: #ffffff;
-    }
-
-    /* Efek hover tetap sama untuk konsistensi */
-    #asesmenList .list-group-item:hover {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-
-    .list-group-item {
-        margin-bottom: 0.2rem;
-        border-radius: 0.5rem !important;
-        padding: 0.5rem;
-        border: 1px solid #dee2e6;
-        background: white;
-        transition: all 0.2s;
-    }
-
-    .list-group-item:hover {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-
-    .gap-2 {
-        gap: 0.5rem !important;
-    }
-
-    .gap-3 {
-        gap: 1rem !important;
-    }
-
-    .gap-4 {
-        gap: 1.5rem !important;
-    }
-
-    .btn-sm {
-        padding: 0.4rem 1rem;
-        font-size: 0.875rem;
-    }
-
-    .btn i {
-        font-size: 0.875rem;
-    }
-</style>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Get elements
-        const selectEpisode = document.getElementById('SelectEpisode');
-        const startDateInput = document.getElementById('start_date');
-        const endDateInput = document.getElementById('end_date');
-        const searchInput = document.getElementById('searchInput');
-        const asesmenList = document.getElementById('asesmenList');
-
-        function filterList() {
-
-            const startDate = startDateInput.value;
-            const endDate = endDateInput.value;
-            const search = searchInput.value.toLowerCase().trim();
-            const episodeValue = selectEpisode.value;
-
-            // Debug values
-            console.log({
-                startDate,
-                endDate,
-                search,
-                episodeValue
-            });
-
-            const items = asesmenList.getElementsByTagName('li');
-            console.log('Total items:', items.length);
-
-            Array.from(items).forEach(item => {
-                const itemDate = item.getAttribute('data-date');
-                const itemName = item.getAttribute('data-name').toLowerCase();
-
-                let show = true;
-
-                // Date filter
-                if (startDate && itemDate) {
-                    show = show && (itemDate >= startDate);
-                }
-
-                if (endDate && itemDate) {
-                    show = show && (itemDate <= endDate);
-                }
-
-                // Search filter
-                if (search) {
-                    show = show && itemName.includes(search);
-                }
-
-                // Episode filter
-                if (episodeValue !== 'semua' && itemDate) {
-                    const currentDate = new Date();
-                    const itemDateTime = new Date(itemDate);
-                    const monthDiff = Math.floor(
-                        (currentDate - itemDateTime) / (1000 * 60 * 60 * 24 * 30)
-                    );
-
-
-                    switch (episodeValue) {
-                        case 'Episode1': // Bulan ini
-                            show = show && (monthDiff === 0);
-                            break;
-                        case 'Episode2': // 1 bulan
-                            show = show && (monthDiff <= 1);
-                            break;
-                        case 'Episode3': // 3 bulan
-                            show = show && (monthDiff <= 3);
-                            break;
-                        case 'Episode4': // 6 bulan
-                            show = show && (monthDiff <= 6);
-                            break;
-                        case 'Episode5': // 9 bulan
-                            show = show && (monthDiff <= 9);
-                            break;
-                    }
-                }
-
-                // Menggunakan d-flex untuk menampilkan dan d-none untuk menyembunyikan
-                if (show) {
-                    item.classList.remove('d-none');
-                    item.classList.add('d-flex');
-                } else {
-                    item.classList.remove('d-flex');
-                    item.classList.add('d-none');
-                }
-            });
+@push('css')
+    <style>
+        #asesmenList .list-group-item:nth-child(even) {
+            background-color: #edf7ff;
         }
 
-        // Add event listeners
-        selectEpisode.addEventListener('change', filterList);
-        startDateInput.addEventListener('input', filterList);
-        endDateInput.addEventListener('input', filterList);
-        searchInput.addEventListener('input', filterList);
+        /* Background putih untuk item ganjil */
+        #asesmenList .list-group-item:nth-child(odd) {
+            background-color: #ffffff;
+        }
 
-        // Run initial filter
-        filterList();
-    });
-</script>
+        /* Efek hover tetap sama untuk konsistensi */
+        #asesmenList .list-group-item:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .list-group-item {
+            margin-bottom: 0.2rem;
+            border-radius: 0.5rem !important;
+            padding: 0.5rem;
+            border: 1px solid #dee2e6;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .list-group-item:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .gap-2 {
+            gap: 0.5rem !important;
+        }
+
+        .gap-3 {
+            gap: 1rem !important;
+        }
+
+        .gap-4 {
+            gap: 1.5rem !important;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .btn i {
+            font-size: 0.875rem;
+        }
+    </style>
+@endpush
+
+@push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get elements
+            const selectEpisode = document.getElementById('SelectEpisode');
+            const startDateInput = document.getElementById('start_date');
+            const endDateInput = document.getElementById('end_date');
+            const searchInput = document.getElementById('searchInput');
+            const asesmenList = document.getElementById('asesmenList');
+
+            function filterList() {
+
+                const startDate = startDateInput.value;
+                const endDate = endDateInput.value;
+                const search = searchInput.value.toLowerCase().trim();
+                const episodeValue = selectEpisode.value;
+
+                // Debug values
+                console.log({
+                    startDate,
+                    endDate,
+                    search,
+                    episodeValue
+                });
+
+                const items = asesmenList.getElementsByTagName('li');
+                console.log('Total items:', items.length);
+
+                Array.from(items).forEach(item => {
+                    const itemDate = item.getAttribute('data-date');
+                    const itemName = item.getAttribute('data-name').toLowerCase();
+
+                    let show = true;
+
+                    // Date filter
+                    if (startDate && itemDate) {
+                        show = show && (itemDate >= startDate);
+                    }
+
+                    if (endDate && itemDate) {
+                        show = show && (itemDate <= endDate);
+                    }
+
+                    // Search filter
+                    if (search) {
+                        show = show && itemName.includes(search);
+                    }
+
+                    // Episode filter
+                    if (episodeValue !== 'semua' && itemDate) {
+                        const currentDate = new Date();
+                        const itemDateTime = new Date(itemDate);
+                        const monthDiff = Math.floor(
+                            (currentDate - itemDateTime) / (1000 * 60 * 60 * 24 * 30)
+                        );
+
+
+                        switch (episodeValue) {
+                            case 'Episode1': // Bulan ini
+                                show = show && (monthDiff === 0);
+                                break;
+                            case 'Episode2': // 1 bulan
+                                show = show && (monthDiff <= 1);
+                                break;
+                            case 'Episode3': // 3 bulan
+                                show = show && (monthDiff <= 3);
+                                break;
+                            case 'Episode4': // 6 bulan
+                                show = show && (monthDiff <= 6);
+                                break;
+                            case 'Episode5': // 9 bulan
+                                show = show && (monthDiff <= 9);
+                                break;
+                        }
+                    }
+
+                    // Menggunakan d-flex untuk menampilkan dan d-none untuk menyembunyikan
+                    if (show) {
+                        item.classList.remove('d-none');
+                        item.classList.add('d-flex');
+                    } else {
+                        item.classList.remove('d-flex');
+                        item.classList.add('d-none');
+                    }
+                });
+            }
+
+            // Add event listeners
+            selectEpisode.addEventListener('change', filterList);
+            startDateInput.addEventListener('input', filterList);
+            endDateInput.addEventListener('input', filterList);
+            searchInput.addEventListener('input', filterList);
+
+            // Run initial filter
+            filterList();
+        });
+    </script>
+@endpush

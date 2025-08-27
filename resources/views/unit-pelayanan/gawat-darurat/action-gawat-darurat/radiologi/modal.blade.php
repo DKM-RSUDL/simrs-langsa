@@ -147,8 +147,13 @@
                             </div>
 
                             <div class="patient-card mt-4">
-                                <h6 class="fw-bold">Catatan Klinis/Diagnosis</h6>
-                                <textarea class="form-control" id="diagnosis" name="diagnosis">{{ old('diagnosis') }}</textarea>
+                                <h6 class="fw-bold">Diagnosis</h6>
+                                <textarea class="form-control" id="diagnosis" name="diagnosis">{{ old('diagnosis', count($resumeData->diagnosis ?? []) > 0 ? implode(', ', $resumeData->diagnosis ?? []) : '') }}</textarea>
+                            </div>
+
+                            <div class="patient-card mt-4">
+                                <h6 class="fw-bold">Indikasi Klinis</h6>
+                                <textarea class="form-control" id="indikasi_klinis" name="indikasi_klinis">{{ old('indikasi_klinis', $resumeData->anamnesis ?? '') }}</textarea>
                             </div>
                         </div>
 
@@ -323,8 +328,13 @@
                             </div>
 
                             <div class="patient-card mt-4">
-                                <h6 class="fw-bold">Catatan Klinis/Diagnosis</h6>
+                                <h6 class="fw-bold">Diagnosis</h6>
                                 <textarea class="form-control" id="diagnosis" name="diagnosis">{{ old('diagnosis') }}</textarea>
+                            </div>
+
+                            <div class="patient-card mt-4">
+                                <h6 class="fw-bold">Indikasi Klinis</h6>
+                                <textarea class="form-control" id="indikasi_klinis" name="indikasi_klinis">{{ old('indikasi_klinis') }}</textarea>
                             </div>
                         </div>
 
@@ -415,8 +425,17 @@
                         <div class="patient-card mt-4">
                             <div class="row">
                                 <div class="col-12">
-                                    <p class="p-0 m-0"><strong>Catatan Klinis/Diagnosis :</strong></p>
+                                    <p class="p-0 m-0"><strong>Diagnosis :</strong></p>
                                     <p class="p-0 m-0" id="diagnosis">Tidak ada diagnosis</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="patient-card mt-4">
+                            <div class="row">
+                                <div class="col-12">
+                                    <p class="p-0 m-0"><strong>Indikasi Klinis :</strong></p>
+                                    <p class="p-0 m-0" id="indikasi_klinis">Tidak ada indikasi</p>
                                 </div>
                             </div>
                         </div>
