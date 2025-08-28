@@ -1457,19 +1457,19 @@
                                     <h5 class="fw-semibold mb-4">9. Diagnosis</h5>
 
                                     <div class="mb-4">
-                                    <label class="text-primary fw-semibold">Prognosis</label>
-                                    
-                                    <select class="form-select" name="tht_prognosis">
-                                        <option value="" disabled>--Pilih Prognosis--</option>
-                                        @forelse ($satsetPrognosis as $item)
-                                            <option value="{{ $item->prognosis_id }}" 
-                                                {{ old('tht_prognosis', $asesmen->rmeAsesmenThtDiagnosisImplementasi[0]->tht_prognosis ?? '') == $item->prognosis_id ? 'selected' : '' }}>
-                                                {{ $item->value ?? 'Field tidak ditemukan' }}
-                                            </option>
-                                        @empty
-                                            <option value="" disabled>Tidak ada data</option>
-                                        @endforelse
-                                    </select>
+                                        <label class="text-primary fw-semibold">Prognosis</label>
+                                        <select class="form-select" name="tht_prognosis">
+                                            <option value="" disabled>--Pilih Prognosis--</option>
+                                            @forelse ($satsetPrognosis as $item)
+                                                <option value="{{ $item->prognosis_id }}" 
+                                                    {{ old('tht_prognosis', $asesmen->rmeAsesmenThtDiagnosisImplementasi[0]->tht_prognosis ?? '') == $item->prognosis_id ? 'selected' : '' }}>
+                                                    {{ $item->value ?? 'Field tidak ditemukan' }}
+                                                </option>
+                                            @empty
+                                                <option value="" disabled>Tidak ada data</option>
+                                            @endforelse
+                                        </select>
+                                    </div>
                                 </div>
 
                                     @php

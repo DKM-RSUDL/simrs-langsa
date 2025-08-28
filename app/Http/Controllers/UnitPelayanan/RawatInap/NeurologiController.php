@@ -5,6 +5,7 @@ namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
 use App\Models\MrItemFisik;
+use App\Models\RmeAlergiPasien;
 use App\Models\RmeAsesmen;
 use App\Models\RmeAsesmenNeurologi;
 use App\Models\RmeAsesmenNeurologiDischargePlanning;
@@ -15,6 +16,7 @@ use App\Models\RmeMasterDiagnosis;
 use App\Models\RmeMasterImplementasi;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
+use App\Models\SatsetPrognosis;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -35,6 +37,8 @@ class NeurologiController extends Controller
         $itemFisik = MrItemFisik::orderby('urut')->get();
         $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
         $rmeMasterImplementasi = RmeMasterImplementasi::all();
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
+        $satsetPrognosis = SatsetPrognosis::all();
 
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -63,7 +67,9 @@ class NeurologiController extends Controller
             'dataMedis',
             'itemFisik',
             'rmeMasterDiagnosis',
-            'rmeMasterImplementasi'
+            'rmeMasterImplementasi',
+            'alergiPasien',
+            'satsetPrognosis'
         ));
     }
 
@@ -98,6 +104,8 @@ class NeurologiController extends Controller
             $asesmenNeurologi->respirasi = $request->respirasi;
             $asesmenNeurologi->suhu = $request->suhu;
             $asesmenNeurologi->nadi = $request->nadi;
+            $asesmenNeurologi->darah_sistole = $request->darah_sistole;
+            $asesmenNeurologi->darah_diastole = $request->darah_diastole;
             $asesmenNeurologi->evaluasi_evaluasi_keperawatan = $request->evaluasi_evaluasi_keperawatan;
             $asesmenNeurologi->save();
 
@@ -182,6 +190,8 @@ class NeurologiController extends Controller
             $asesmenNeurologiIntensitasNyeri->terapeutik = $request->terapeutik;
             $asesmenNeurologiIntensitasNyeri->edukasi = $request->edukasi;
             $asesmenNeurologiIntensitasNyeri->kolaborasi = $request->kolaborasi;
+            $asesmenNeurologiIntensitasNyeri->neurologi_prognosis = $request->neurologi_prognosis;
+            $asesmenNeurologiIntensitasNyeri->rencana_pengobatan = $request->rencana_pengobatan;
             $asesmenNeurologiIntensitasNyeri->save();
 
             //Simpan Diagnosa ke Master
@@ -309,11 +319,15 @@ class NeurologiController extends Controller
 
             $itemFisikIds = $asesmen->pemeriksaanFisik->pluck('id_item_fisik')->unique()->toArray();
             $itemFisik = MrItemFisik::whereIn('id', $itemFisikIds)->orderBy('urut')->get();
+            $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
+            $satsetPrognosis = SatsetPrognosis::all();
 
             return view('unit-pelayanan.rawat-inap.pelayanan.neurologi.show', compact(
                 'asesmen',
                 'dataMedis',
-                'itemFisik'
+                'itemFisik',
+                'alergiPasien',
+                'satsetPrognosis'
             ));
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
@@ -344,17 +358,25 @@ class NeurologiController extends Controller
                 ->firstOrFail();
 
             // Ambil data pendukung
-            $itemFisik = MrItemFisik::orderBy('urut')->get();
+            $itemFisik = MrItemFisik::orderby('urut')->get();
+            $pemeriksaanFisik = RmeAsesmenPemeriksaanFisik::where('id_asesmen', $asesmen->id)
+            ->get()
+            ->keyBy('id_item_fisik');
             $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
             $rmeMasterImplementasi = RmeMasterImplementasi::all();
+            $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
+            $satsetPrognosis = SatsetPrognosis::all();
 
             // Kirim data ke view
             return view('unit-pelayanan.rawat-inap.pelayanan.neurologi.edit', compact(
                 'asesmen',
                 'dataMedis',
                 'itemFisik',
+                'pemeriksaanFisik',
                 'rmeMasterDiagnosis',
                 'rmeMasterImplementasi',
+                'alergiPasien',
+                'satsetPrognosis'
             ));
         } catch (\Exception $e) {
             // Tangani error dan berikan pesan yang jelas
@@ -392,6 +414,8 @@ class NeurologiController extends Controller
             $asesmenNeurologi->respirasi = $request->respirasi;
             $asesmenNeurologi->suhu = $request->suhu;
             $asesmenNeurologi->nadi = $request->nadi;
+            $asesmenNeurologi->darah_diastole = $request->darah_diastole;
+            $asesmenNeurologi->evaluasi_evaluasi_keperawatan = $request->evaluasi_evaluasi_keperawatan;
             $asesmenNeurologi->evaluasi_evaluasi_keperawatan = $request->evaluasi_evaluasi_keperawatan;
             $asesmenNeurologi->save();
 
@@ -480,6 +504,8 @@ class NeurologiController extends Controller
             $asesmenNeurologiIntensitasNyeri->terapeutik = $request->terapeutik;
             $asesmenNeurologiIntensitasNyeri->edukasi = $request->edukasi;
             $asesmenNeurologiIntensitasNyeri->kolaborasi = $request->kolaborasi;
+            $asesmenNeurologiIntensitasNyeri->neurologi_prognosis = $request->neurologi_prognosis;
+            $asesmenNeurologiIntensitasNyeri->rencana_pengobatan = $request->rencana_pengobatan;
             $asesmenNeurologiIntensitasNyeri->save();
 
             //Simpan Diagnosa ke Master

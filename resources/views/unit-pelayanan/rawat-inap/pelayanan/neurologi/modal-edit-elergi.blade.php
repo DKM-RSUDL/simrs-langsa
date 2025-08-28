@@ -1,236 +1,303 @@
-<!-- Modal Create/Edit Alergi -->
-<div class="modal fade" id="modal-create-elergi-neurologi" tabindex="-1" aria-labelledby="smallModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
+<!-- Modal Alergi -->
+<div class="modal fade" id="alergiModal" tabindex="-1" aria-labelledby="alergiModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="smallModalLabel">Input Alergi</h5>
+                <h5 class="modal-title" id="alergiModalLabel">Manajemen Data Alergi</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <input type="hidden" id="edit_index" value="-1">
-                <div class="mb-3">
-                    <label for="jenis" class="form-label">Jenis Alergi</label>
-                    <select class="form-select" id="jenis" name="jenis">
-                        <option value="">Pilih Jenis</option>
-                        <option value="Obat">Obat</option>
-                        <option value="Makanan">Makanan</option>
-                        <option value="Udara">Udara</option>
-                        <option value="Lainnya">Lainnya</option>
-                    </select>
+                <!-- Form Input Alergi -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">Tambah Data Alergi</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="modal_jenis_alergi" class="form-label">Jenis Alergi</label>
+                                <select class="form-select" id="modal_jenis_alergi">
+                                    <option value="">-- Pilih Jenis Alergi --</option>
+                                    <option value="Obat">Obat</option>
+                                    <option value="Makanan">Makanan</option>
+                                    <option value="Udara">Udara</option>
+                                    <option value="Lainnya">Lainnya</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="modal_alergen" class="form-label">Alergen</label>
+                                <input type="text" class="form-control" id="modal_alergen"
+                                    placeholder="Contoh: Paracetamol, Seafood, Debu">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="modal_reaksi" class="form-label">Reaksi</label>
+                                <input type="text" class="form-control" id="modal_reaksi"
+                                    placeholder="Contoh: Gatal, Ruam, Sesak nafas">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="modal_tingkat_keparahan" class="form-label">Tingkat Keparahan</label>
+                                <select class="form-select" id="modal_tingkat_keparahan">
+                                    <option value="">-- Pilih Tingkat Keparahan --</option>
+                                    <option value="Ringan">Ringan</option>
+                                    <option value="Sedang">Sedang</option>
+                                    <option value="Berat">Berat</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-primary btn-sm" id="addToAlergiList">
+                                <i class="bi bi-plus"></i> Tambah ke Daftar
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="alergen" class="form-label">Alergen</label>
-                    <input type="text" class="form-control" id="alergen" name="alergen">
-                </div>
-                <div class="mb-3">
-                    <label for="reaksi" class="form-label">Reaksi</label>
-                    <input type="text" class="form-control" id="reaksi" name="reaksi">
+
+                <!-- Daftar Alergi -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="card-title mb-0">Daftar Alergi Pasien</h6>
+                        <span class="badge bg-primary" id="alergiCount">0</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th width="20%">Jenis Alergi</th>
+                                        <th width="25%">Alergen</th>
+                                        <th width="25%">Reaksi</th>
+                                        <th width="20%">Tingkat Keparahan</th>
+                                        <th width="10%">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="modalAlergiList">
+                                    <!-- Data akan ditampilkan di sini -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="noAlergiMessage" class="text-center text-muted py-3" style="display: none;">
+                            <i class="bi bi-info-circle"></i> Belum ada data alergi
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-primary" id="btn-simpan-alergi">Simpan</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" id="saveAlergiData">
+                    <i class="bi bi-check"></i> Simpan Data Alergi
+                </button>
             </div>
         </div>
     </div>
 </div>
 
+
 @push('js')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Inisialisasi array untuk menyimpan data alergi
-    let alergiList = [];
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ==========================================
+            // Manajemen Data Alergi Modal - SIMPLE FIX
+            // ==========================================
 
-    // Cek apakah ada data alergi yang sudah tersimpan sebelumnya
-    @if(isset($asesmen->rmeAsesmenNeurologi->riwayat_alergi) && $asesmen->rmeAsesmenNeurologi->riwayat_alergi)
-        try {
-            alergiList = JSON.parse(`{!! $asesmen->rmeAsesmenNeurologi->riwayat_alergi !!}`);
-            // Jika data tidak dalam bentuk array, konversi ke array kosong
-            if (!Array.isArray(alergiList)) {
-                alergiList = [];
+            // Array untuk menyimpan data alergi sementara
+            let alergiDataArray = [];
+
+            // Cek apakah data alergi dari PHP ada
+            try {
+                const existingAlergiData = @json($alergiPasien ?? []);
+                alergiDataArray = existingAlergiData.map(item => ({
+                    jenis_alergi: item.jenis_alergi || '',
+                    alergen: item.nama_alergi || '',
+                    reaksi: item.reaksi || '',
+                    tingkat_keparahan: item.tingkat_keparahan || '',
+                    is_existing: true,
+                    id: item.id || null
+                }));
+            } catch (e) {
+                console.log('Data alergi tidak tersedia');
+                alergiDataArray = [];
             }
-        } catch (e) {
-            console.error("Error parsing allergy data:", e);
-            alergiList = [];
-        }
-    @endif
 
-    // Function untuk menampilkan list alergi
-    function displayAlergi() {
-        const listContainer = document.getElementById('list-alergi');
-        let html = '';
-
-        if (alergiList.length === 0) {
-            html = `
-                <tr>
-                    <td colspan="5" class="text-center text-muted">Belum ada data alergi</td>
-                </tr>
-            `;
-        } else {
-            alergiList.forEach((item, index) => {
-                html += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${item.jenis}</td>
-                        <td>${item.alergen}</td>
-                        <td>${item.reaksi}</td>
-                        <td>
-                            <button type="button" class="btn btn-sm btn-warning edit-alergi me-1" data-index="${index}">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button type="button" class="btn btn-sm btn-danger remove-alergi" data-index="${index}">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        listContainer.innerHTML = html;
-
-        // Update hidden input value
-        document.getElementById('riwayat_alergi_hidden').value = JSON.stringify(alergiList);
-
-        // Reinitialize delete and edit buttons
-        document.querySelectorAll('.remove-alergi').forEach(button => {
-            button.addEventListener('click', handleDelete);
-        });
-
-        document.querySelectorAll('.edit-alergi').forEach(button => {
-            button.addEventListener('click', handleEdit);
-        });
-    }
-
-    // Handle edit
-    function handleEdit(e) {
-        const index = e.currentTarget.dataset.index;
-        const item = alergiList[index];
-
-        // Set values in form
-        document.getElementById('edit_index').value = index;
-        document.getElementById('jenis').value = item.jenis;
-        document.getElementById('alergen').value = item.alergen;
-        document.getElementById('reaksi').value = item.reaksi;
-
-        // Show modal
-        const modal = new bootstrap.Modal(document.getElementById('modal-create-elergi-neurologi'));
-        modal.show();
-    }
-
-    // Handle delete
-    function handleDelete(e) {
-        const index = e.currentTarget.dataset.index;
-
-        Swal.fire({
-            title: 'Konfirmasi',
-            text: "Apakah Anda yakin ingin menghapus data alergi ini?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, Hapus!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                alergiList.splice(index, 1);
-                displayAlergi();
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil',
-                    text: 'Data alergi berhasil dihapus',
-                    timer: 1500,
-                    showConfirmButton: false
+            // Event listeners dengan pengecekan element
+            const openAlergiModal = document.getElementById('openAlergiModal');
+            if (openAlergiModal) {
+                openAlergiModal.addEventListener('click', function() {
+                    updateModalAlergiList();
                 });
             }
-        });
-    }
 
-    // Show modal button for adding new allergy
-    const addButton = document.getElementById('btn-add-elergi-neurologi');
-    if (addButton) {
-        addButton.addEventListener('click', function() {
-            // Reset form and set edit index to -1 (indicating new entry)
-            document.getElementById('edit_index').value = -1;
-            document.getElementById('jenis').value = '';
-            document.getElementById('alergen').value = '';
-            document.getElementById('reaksi').value = '';
+            const addToAlergiList = document.getElementById('addToAlergiList');
+            if (addToAlergiList) {
+                addToAlergiList.addEventListener('click', function() {
+                    const jenisAlergi = document.getElementById('modal_jenis_alergi')?.value?.trim();
+                    const alergen = document.getElementById('modal_alergen')?.value?.trim();
+                    const reaksi = document.getElementById('modal_reaksi')?.value?.trim();
+                    const tingkatKeparahan = document.getElementById('modal_tingkat_keparahan')?.value
+                        ?.trim();
 
-            const modal = new bootstrap.Modal(document.getElementById('modal-create-elergi-neurologi'));
-            modal.show();
-        });
-    }
+                    if (!jenisAlergi || !alergen || !reaksi || !tingkatKeparahan) {
+                        return;
+                    }
 
-    // Save button
-    const saveButton = document.getElementById('btn-simpan-alergi');
-    if (saveButton) {
-        saveButton.addEventListener('click', function() {
-            const editIndex = parseInt(document.getElementById('edit_index').value);
-            const jenis = document.getElementById('jenis').value;
-            const alergen = document.getElementById('alergen').value.trim();
-            const reaksi = document.getElementById('reaksi').value.trim();
+                    const isDuplicate = alergiDataArray.some(item =>
+                        item.jenis_alergi === jenisAlergi &&
+                        item.alergen.toLowerCase() === alergen.toLowerCase()
+                    );
 
-            if (!jenis || !alergen || !reaksi) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Peringatan',
-                    text: 'Semua field harus diisi!'
+                    if (isDuplicate) {
+                        return;
+                    }
+
+                    alergiDataArray.push({
+                        jenis_alergi: jenisAlergi,
+                        alergen: alergen,
+                        reaksi: reaksi,
+                        tingkat_keparahan: tingkatKeparahan,
+                        is_existing: false
+                    });
+
+                    updateModalAlergiList();
+                    resetAlergiForm();
                 });
-                return;
             }
 
-            const newData = {
-                jenis: jenis,
-                alergen: alergen,
-                reaksi: reaksi
+            const saveAlergiData = document.getElementById('saveAlergiData');
+            if (saveAlergiData) {
+                saveAlergiData.addEventListener('click', function() {
+                    updateMainAlergiTable();
+                    updateHiddenAlergiInput();
+
+                    const alergiModal = document.getElementById('alergiModal');
+                    if (alergiModal && typeof bootstrap !== 'undefined') {
+                        const modalInstance = bootstrap.Modal.getInstance(alergiModal);
+                        if (modalInstance) modalInstance.hide();
+                    }
+                });
+            }
+
+            // Fungsi update modal list
+            function updateModalAlergiList() {
+                const tbody = document.getElementById('modalAlergiList');
+                const noDataMessage = document.getElementById('noAlergiMessage');
+                const countBadge = document.getElementById('alergiCount');
+
+                if (!tbody) return;
+
+                tbody.innerHTML = '';
+
+                if (alergiDataArray.length === 0) {
+                    if (noDataMessage) noDataMessage.style.display = 'block';
+                    const table = tbody.closest('table');
+                    if (table) table.style.display = 'none';
+                } else {
+                    if (noDataMessage) noDataMessage.style.display = 'none';
+                    const table = tbody.closest('table');
+                    if (table) table.style.display = 'table';
+
+                    alergiDataArray.forEach((item, index) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${item.jenis_alergi}</td>
+                            <td>${item.alergen}</td>
+                            <td>${item.reaksi}</td>
+                            <td>
+                                <span class="badge ${getKeparahanBadgeClass(item.tingkat_keparahan)}">
+                                    ${item.tingkat_keparahan}
+                                </span>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="removeAlergiFromModal(${index})">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                ${item.is_existing ? '<small class="text-muted d-block">Dari DB</small>' : '<small class="text-success d-block">Baru</small>'}
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+
+                if (countBadge) countBadge.textContent = alergiDataArray.length;
+            }
+
+            // Fungsi update main table
+            function updateMainAlergiTable() {
+                const tbody = document.querySelector('#createAlergiTable tbody');
+                const noAlergiRow = document.getElementById('no-alergi-row');
+
+                if (!tbody || !noAlergiRow) return;
+
+                const existingRows = tbody.querySelectorAll('tr:not(#no-alergi-row)');
+                existingRows.forEach(row => row.remove());
+
+                if (alergiDataArray.length === 0) {
+                    noAlergiRow.style.display = 'table-row';
+                } else {
+                    noAlergiRow.style.display = 'none';
+
+                    alergiDataArray.forEach((item, index) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${item.jenis_alergi}</td>
+                            <td>${item.alergen}</td>
+                            <td>${item.reaksi}</td>
+                            <td>
+                                <span class="badge ${getKeparahanBadgeClass(item.tingkat_keparahan)}">
+                                    ${item.tingkat_keparahan}
+                                </span>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeAlergiFromMain(${index})">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+            }
+
+            function updateHiddenAlergiInput() {
+                const hiddenInput = document.getElementById('alergisInput');
+                if (hiddenInput) {
+                    hiddenInput.value = JSON.stringify(alergiDataArray);
+                }
+            }
+
+            function resetAlergiForm() {
+                const fields = ['modal_jenis_alergi', 'modal_alergen', 'modal_reaksi', 'modal_tingkat_keparahan'];
+                fields.forEach(fieldId => {
+                    const field = document.getElementById(fieldId);
+                    if (field) field.value = '';
+                });
+            }
+
+            function getKeparahanBadgeClass(keparahan) {
+                switch (keparahan.toLowerCase()) {
+                    case 'ringan':
+                        return 'bg-success';
+                    case 'sedang':
+                        return 'bg-warning';
+                    case 'berat':
+                        return 'bg-danger';
+                    default:
+                        return 'bg-secondary';
+                }
+            }
+
+            // Fungsi global untuk onclick
+            window.removeAlergiFromModal = function(index) {
+                alergiDataArray.splice(index, 1);
+                updateModalAlergiList();
             };
 
-            if (editIndex >= 0) {
-                // Update existing item
-                alergiList[editIndex] = newData;
-                successMessage = 'Data alergi berhasil diperbarui';
-            } else {
-                // Add new item
-                alergiList.push(newData);
-                successMessage = 'Data alergi berhasil ditambahkan';
-            }
+            window.removeAlergiFromMain = function(index) {
+                alergiDataArray.splice(index, 1);
+                updateMainAlergiTable();
+                updateHiddenAlergiInput();
+            };
 
-            // Update display
-            displayAlergi();
-
-            // Reset and close modal
-            document.getElementById('edit_index').value = -1;
-            document.getElementById('jenis').value = '';
-            document.getElementById('alergen').value = '';
-            document.getElementById('reaksi').value = '';
-
-            const modal = bootstrap.Modal.getInstance(document.getElementById('modal-create-elergi-neurologi'));
-            modal.hide();
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil',
-                text: successMessage,
-                timer: 1500,
-                showConfirmButton: false
-            });
+            // Load awal
+            updateMainAlergiTable();
         });
-    }
-
-    // Reset form when modal is closed
-    const modal = document.getElementById('modal-create-elergi-neurologi');
-    if (modal) {
-        modal.addEventListener('hidden.bs.modal', function() {
-            document.getElementById('edit_index').value = -1;
-            document.getElementById('jenis').value = '';
-            document.getElementById('alergen').value = '';
-            document.getElementById('reaksi').value = '';
-        });
-    }
-
-    // Initial display
-    displayAlergi();
-});
-</script>
+    </script>
 @endpush
