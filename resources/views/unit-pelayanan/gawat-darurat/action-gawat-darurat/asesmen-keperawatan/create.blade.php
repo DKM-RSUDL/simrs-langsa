@@ -10,7 +10,7 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ url()->previous() }}" class="btn">
+            <a href="{{ route('asesmen.index', [$dataMedis->kd_pasien, \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), $dataMedis->urut_masuk]) }}" class="btn">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
             <form id="asesmenForm" method="POST">

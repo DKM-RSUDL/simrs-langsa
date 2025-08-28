@@ -85,7 +85,7 @@
                                         </select>
                                     </div>
 
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label style="min-width: 200px;">Ruang</label>
                                         <select class="form-select" name="ruang">
                                             <option disabled>Pilih</option>
@@ -94,7 +94,7 @@
                                             <option value="0" {{ ($asesmen->rmeAsesmenTht->ruang ?? '') == '0' ?
                                                 'selected' : '' }}>Tidak</option>
                                         </select>
-                                    </div>
+                                    </div> --}}
                                 </div>
 
                                 <div class="section-separator" id="anamnesis">
@@ -105,10 +105,97 @@
                                         <textarea class="form-control" name="anamnesis_anamnesis" rows="4"
                                             placeholder="keluhan utama pasien">{{ $asesmen->rmeAsesmenTht->anamnesis_anamnesis ?? '' }}</textarea>
                                     </div>
+
+                                     <div class="form-group">
+                                            <label style="min-width: 200px;">Riwayat Penyakit Sekarang</label>
+                                            <input type="text" class="form-control" name="penyakit_sekarang"
+                                                placeholder="Riwayat Penyakit Sekarang" value="{{ $asesmen->rmeAsesmenTht->penyakit_sekarang ?? '' }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label style="min-width: 200px;">Riwayat Penyakit Terhadulu</label>
+                                            <input type="text" class="form-control" name="penyakit_terdahulu"
+                                                placeholder="Riwayat Penyakit Terdahulu" value="{{ $asesmen->rmeAsesmenTht->penyakit_terdahulu ?? '' }}">
+                                        </div>
+                                </div>
+
+                                <div class="section-separator">
+                                    <h5 class="section-title">3. Riwayat Penggunaan Obat</h5>
+                                    <input type="hidden" name="riwayat_penggunaan_obat" id="riwayatObatData">
+
+                                    <a href="javascript:void(0)"
+                                        class="btn btn-sm btn-outline-secondary text-decoration-none fw-bold ms-3" id="btn-riwayat-obat">
+                                        <i class="bi bi-plus-square"></i> Tambah
+                                    </a>
+
+                                    <div class="table-responsive">
+                                        <table class="table" id="medication-history-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nama Obat</th>
+                                                    <th>Dosis</th>
+                                                    <th>Waktu Penggunaan</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @php
+                                                $medications =
+                                                $asesmen->rmeAsesmenThtRiwayatKesehatanObatAlergi[0]['riwayat_penggunaan_obat']
+                                                ?? [];
+                                                $medications = is_string($medications) ? json_decode($medications, true)
+                                                : $medications;
+                                                $medications = is_array($medications) ? $medications : [];
+                                                @endphp
+                                                @foreach($medications as $medication)
+                                                <tr>
+                                                    <td>{{ $medication['namaObat'] }}</td>
+                                                    <td>{{ $medication['dosis'] }} {{ $medication['satuan'] }}
+                                                        {{ $medication['frekuensi'] }}</td>
+                                                    <td>{{ $medication['keterangan'] }}</td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    @push('modals')
+                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.moda-edit-riwayat-obat')
+                                    @endpush
+                                </div>
+
+                                <div class="section-separator" id="alergi">
+                                    <h5 class="section-title">4. Alergi</h5>
+
+                                    <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
+                                        id="openAlergiModal" data-bs-toggle="modal" data-bs-target="#alergiModal">
+                                        <i class="ti-plus"></i> Tambah Alergi
+                                    </button>
+                                    <input type="hidden" name="alergis" id="alergisInput" value="[]">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="createAlergiTable">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th width="20%">Jenis Alergi</th>
+                                                    <th width="25%">Alergen</th>
+                                                    <th width="25%">Reaksi</th>
+                                                    <th width="20%">Tingkat Keparahan</th>
+                                                    <th width="10%">Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr id="no-alergi-row">
+                                                    <td colspan="5" class="text-center text-muted">Tidak ada data
+                                                        alergi</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    @push('modals')
+                                        @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.modal-create-alergi')
+                                    @endpush
                                 </div>
 
                                 <div class="section-separator" id="pemeriksaan-fisik">
-                                    <h5 class="section-title">3. Pemeriksaan fisik</h5>
+                                    <h5 class="section-title">5. Pemeriksaan fisik</h5>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Tek. Darah (mmHg)</label>
@@ -185,30 +272,6 @@
                                     </div>
 
                                     <h6 class="fw-bold">Pemeriksaan Fisik Koprehensif</h6>
-                                    <span class="fw-bold">Laringoskopi Indirex</span>
-
-                                    <div class="form-group mt-4">
-                                        <label style="min-width: 200px;">Pangkal Lidah</label>
-                                        <input type="text" class="form-control" name="pangkal_lidah"
-                                            placeholder="Jelaskan"
-                                            value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->pangkal_lidah ?? '' }}">
-                                    </div>
-                                    <div class="form-group mt-3">
-                                        <label style="min-width: 200px;">Tonsil Lidah</label>
-                                        <input type="text" class="form-control" name="tonsil_lidah"
-                                            placeholder="Jelaskan"
-                                            value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->tonsil_lidah ?? '' }}">
-                                    </div>
-                                    <div class="form-group mt-3">
-                                        <label style="min-width: 200px;">Epiglotis</label>
-                                        <input type="text" class="form-control" name="epiglotis" placeholder="Jelaskan"
-                                            value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->epiglotis ?? '' }}">
-                                    </div>
-                                    <div class="form-group mt-3">
-                                        <label style="min-width: 200px;">Pita Suara</label>
-                                        <input type="text" class="form-control" name="pita_suara" placeholder="Jelaskan"
-                                            value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->pita_suara ?? '' }}">
-                                    </div>
 
                                     <span class="fw-bold mt-4">Daun Telinga</span>
 
@@ -355,6 +418,65 @@
                                         </div>
                                     </div>
 
+                                    <p class="my-3 fw-bold">Membran Tympani</p>
+                                    <div class="mb-3 row align-items-center">
+                                        <label class="col-3">Warna</label>
+                                        <div class="col-4">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Kanan</span>
+                                                <input type="text" class="form-control"
+                                                    name="membran_tympani_warna_kanan" placeholder="jelaskan"
+                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->membran_tympani_warna_kanan ?? '' }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Kiri</span>
+                                                <input type="text" class="form-control"
+                                                    name="membran_tympani_warna_kiri" placeholder="jelaskan"
+                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->membran_tympani_warna_kiri ?? '' }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row align-items-center">
+                                        <label class="col-3">Perforasi</label>
+                                        <div class="col-4">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Kanan</span>
+                                                <input type="text" class="form-control"
+                                                    name="membran_tympani_perforasi_kanan" placeholder="jelaskan"
+                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->membran_tympani_perforasi_kanan ?? '' }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Kiri</span>
+                                                <input type="text" class="form-control"
+                                                    name="membran_tympani_perforasi_kiri" placeholder="jelaskan"
+                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->membran_tympani_perforasi_kiri ?? '' }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row align-items-center">
+                                        <label class="col-3">lainnya</label>
+                                        <div class="col-4">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Kanan</span>
+                                                <input type="text" class="form-control"
+                                                    name="membran_tympani_lainnya_kanan" placeholder="jelaskan"
+                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->membran_tympani_lainnya_kanan ?? '' }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Kiri</span>
+                                                <input type="text" class="form-control"
+                                                    name="membran_tympani_lainnya_kiri" placeholder="jelaskan"
+                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->membran_tympani_lainnya_kiri ?? '' }}">
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <span class="fw-bold mt-4">Tes Pendengaran</span>
                                     <div class="mb-3 row align-items-center">
                                         <label class="col-3">Renne Tes</label>
@@ -432,89 +554,6 @@
                                                 <input type="text" class="form-control"
                                                     name="tes_pendengaran_bebisik_kiri" placeholder="jelaskan"
                                                     value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->tes_pendengaran_bebisik_kiri ?? '' }}">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <h6 class="fw-bold mt-4">Paranatal Sinus</h6>
-                                    <p class="my-3 fw-bold">Senus Frontalis</p>
-                                    <div class="mb-3 row align-items-center">
-                                        <label class="col-3">Nyeri Tekan</label>
-                                        <div class="col-4">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Kanan</span>
-                                                <input type="text" class="form-control"
-                                                    name="senus_frontalis_nyeri_tekan_kanan" placeholder="jelaskan"
-                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->senus_frontalis_nyeri_tekan_kanan ?? '' }}">
-                                            </div>
-                                        </div>
-                                        <div class="col-5">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Kiri</span>
-                                                <input type="text" class="form-control"
-                                                    name="senus_frontalis_nyeri_tekan_kiri" placeholder="jelaskan"
-                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->senus_frontalis_nyeri_tekan_kiri ?? '' }}">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3 row align-items-center">
-                                        <label class="col-3">Transluminasi</label>
-                                        <div class="col-4">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Kanan</span>
-                                                <input type="text" class="form-control"
-                                                    name="senus_frontalis_transluminasi_kanan" placeholder="jelaskan"
-                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->senus_frontalis_transluminasi_kanan ?? '' }}">
-                                            </div>
-                                        </div>
-                                        <div class="col-5">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Kiri</span>
-                                                <input type="text" class="form-control"
-                                                    name="senus_frontalis_transluminasi_kiri" placeholder="jelaskan"
-                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->senus_frontalis_transluminasi_kiri ?? '' }}">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <p class="my-3 fw-bold">Sinus Maksinasi</p>
-                                    <div class="mb-3 row align-items-center">
-                                        <label class="col-3">Nyari Tekan</label>
-                                        <div class="col-4">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Kanan</span>
-                                                <input type="text" class="form-control"
-                                                    name="sinus_maksinasi_nyari_tekan_kanan" placeholder="jelaskan"
-                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->sinus_maksinasi_nyari_tekan_kanan ?? '' }}">
-                                            </div>
-                                        </div>
-                                        <div class="col-5">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Kiri</span>
-                                                <input type="text" class="form-control"
-                                                    name="sinus_maksinasi_nyari_tekan_kiri" placeholder="jelaskan"
-                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->sinus_maksinasi_nyari_tekan_kiri ?? '' }}">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3 row align-items-center">
-                                        <label class="col-3">Transluminasi</label>
-                                        <div class="col-4">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Kanan</span>
-                                                <input type="text" class="form-control"
-                                                    name="sinus_maksinasi_transluminasi_kanan" placeholder="jelaskan"
-                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->sinus_maksinasi_transluminasi_kanan ?? '' }}">
-                                            </div>
-                                        </div>
-                                        <div class="col-5">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Kiri</span>
-                                                <input type="text" class="form-control"
-                                                    name="sinus_maksinasi_transluminasi_kiri" placeholder="jelaskan"
-                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->sinus_maksinasi_transluminasi_kiri ?? '' }}">
                                             </div>
                                         </div>
                                     </div>
@@ -602,6 +641,69 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="mb-3 row align-items-center">
+                                        <label class="col-3">Superior</label>
+                                        <div class="col-4">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Kanan</span>
+                                                <input type="text" class="form-control"
+                                                    name="rhinoscopi_superior_kanan"
+                                                    placeholder="jelaskan"
+                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->rhinoscopi_superior_kanan ?? '' }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Kiri</span>
+                                                <input type="text" class="form-control"
+                                                    name="rhinoscopi_superior_kiri"
+                                                    placeholder="jelaskan"
+                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->rhinoscopi_superior_kiri ?? '' }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row align-items-center">
+                                        <label class="col-3">media</label>
+                                        <div class="col-4">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Kanan</span>
+                                                <input type="text" class="form-control"
+                                                    name="rhinoscopi_media_kanan"
+                                                    placeholder="jelaskan"
+                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->rhinoscopi_media_kanan ?? '' }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Kiri</span>
+                                                <input type="text" class="form-control"
+                                                    name="rhinoscopi_media_kiri"
+                                                    placeholder="jelaskan"
+                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->rhinoscopi_media_kiri ?? '' }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row align-items-center">
+                                        <label class="col-3">fasso rossenmuler</label>
+                                        <div class="col-4">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Kanan</span>
+                                                <input type="text" class="form-control"
+                                                    name="rhinoscopi_fasso_rossenmuler_kanan"
+                                                    placeholder="jelaskan"
+                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->rhinoscopi_fasso_rossenmuler_kanan ?? '' }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Kiri</span>
+                                                <input type="text" class="form-control"
+                                                    name="rhinoscopi_fasso_rossenmuler_kiri"
+                                                    placeholder="jelaskan"
+                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->rhinoscopi_fasso_rossenmuler_kiri ?? '' }}">
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     <p class="my-3 fw-bold">Meatus Nasi</p>
                                     <div class="mb-3 row align-items-center">
@@ -658,65 +760,6 @@
                                                 <input type="text" class="form-control" name="meatus_nasi_inferior_kiri"
                                                     placeholder="jelaskan"
                                                     value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->meatus_nasi_inferior_kiri ?? '' }}">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <p class="my-3 fw-bold">Membran Tympani</p>
-                                    <div class="mb-3 row align-items-center">
-                                        <label class="col-3">Warna</label>
-                                        <div class="col-4">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Kanan</span>
-                                                <input type="text" class="form-control"
-                                                    name="membran_tympani_warna_kanan" placeholder="jelaskan"
-                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->membran_tympani_warna_kanan ?? '' }}">
-                                            </div>
-                                        </div>
-                                        <div class="col-5">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Kiri</span>
-                                                <input type="text" class="form-control"
-                                                    name="membran_tympani_warna_kiri" placeholder="jelaskan"
-                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->membran_tympani_warna_kiri ?? '' }}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3 row align-items-center">
-                                        <label class="col-3">Perforasi</label>
-                                        <div class="col-4">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Kanan</span>
-                                                <input type="text" class="form-control"
-                                                    name="membran_tympani_perforasi_kanan" placeholder="jelaskan"
-                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->membran_tympani_perforasi_kanan ?? '' }}">
-                                            </div>
-                                        </div>
-                                        <div class="col-5">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Kiri</span>
-                                                <input type="text" class="form-control"
-                                                    name="membran_tympani_perforasi_kiri" placeholder="jelaskan"
-                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->membran_tympani_perforasi_kiri ?? '' }}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3 row align-items-center">
-                                        <label class="col-3">lainnya</label>
-                                        <div class="col-4">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Kanan</span>
-                                                <input type="text" class="form-control"
-                                                    name="membran_tympani_lainnya_kanan" placeholder="jelaskan"
-                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->membran_tympani_lainnya_kanan ?? '' }}">
-                                            </div>
-                                        </div>
-                                        <div class="col-5">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Kiri</span>
-                                                <input type="text" class="form-control"
-                                                    name="membran_tympani_lainnya_kiri" placeholder="jelaskan"
-                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->membran_tympani_lainnya_kiri ?? '' }}">
                                             </div>
                                         </div>
                                     </div>
@@ -798,6 +841,154 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <h6 class="fw-bold mt-4">Paranatal Sinus</h6>
+                                    <p class="my-3 fw-bold">Senus Frontalis</p>
+                                    <div class="mb-3 row align-items-center">
+                                        <label class="col-3">Nyeri Tekan</label>
+                                        <div class="col-4">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Kanan</span>
+                                                <input type="text" class="form-control"
+                                                    name="senus_frontalis_nyeri_tekan_kanan" placeholder="jelaskan"
+                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->senus_frontalis_nyeri_tekan_kanan ?? '' }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Kiri</span>
+                                                <input type="text" class="form-control"
+                                                    name="senus_frontalis_nyeri_tekan_kiri" placeholder="jelaskan"
+                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->senus_frontalis_nyeri_tekan_kiri ?? '' }}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3 row align-items-center">
+                                        <label class="col-3">Transluminasi</label>
+                                        <div class="col-4">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Kanan</span>
+                                                <input type="text" class="form-control"
+                                                    name="senus_frontalis_transluminasi_kanan" placeholder="jelaskan"
+                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->senus_frontalis_transluminasi_kanan ?? '' }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Kiri</span>
+                                                <input type="text" class="form-control"
+                                                    name="senus_frontalis_transluminasi_kiri" placeholder="jelaskan"
+                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->senus_frontalis_transluminasi_kiri ?? '' }}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <p class="my-3 fw-bold">Sinus Maksinasi</p>
+                                    <div class="mb-3 row align-items-center">
+                                        <label class="col-3">Nyari Tekan</label>
+                                        <div class="col-4">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Kanan</span>
+                                                <input type="text" class="form-control"
+                                                    name="sinus_maksinasi_nyari_tekan_kanan" placeholder="jelaskan"
+                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->sinus_maksinasi_nyari_tekan_kanan ?? '' }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Kiri</span>
+                                                <input type="text" class="form-control"
+                                                    name="sinus_maksinasi_nyari_tekan_kiri" placeholder="jelaskan"
+                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->sinus_maksinasi_nyari_tekan_kiri ?? '' }}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3 row align-items-center">
+                                        <label class="col-3">Transluminasi</label>
+                                        <div class="col-4">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Kanan</span>
+                                                <input type="text" class="form-control"
+                                                    name="sinus_maksinasi_transluminasi_kanan" placeholder="jelaskan"
+                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->sinus_maksinasi_transluminasi_kanan ?? '' }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Kiri</span>
+                                                <input type="text" class="form-control"
+                                                    name="sinus_maksinasi_transluminasi_kiri" placeholder="jelaskan"
+                                                    value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->sinus_maksinasi_transluminasi_kiri ?? '' }}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <span class="fw-bold">Laringoskopi Indirex</span>
+
+                                    <div class="form-group mt-4">
+                                        <label style="min-width: 200px;">Pangkal Lidah</label>
+                                        <input type="text" class="form-control" name="pangkal_lidah"
+                                            placeholder="Jelaskan"
+                                            value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->pangkal_lidah ?? '' }}">
+                                    </div>
+                                    <div class="form-group mt-3">
+                                        <label style="min-width: 200px;">Tonsil Lidah</label>
+                                        <input type="text" class="form-control" name="tonsil_lidah"
+                                            placeholder="Jelaskan"
+                                            value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->tonsil_lidah ?? '' }}">
+                                    </div>
+                                    <div class="form-group mt-3">
+                                        <label style="min-width: 200px;">Epiglotis</label>
+                                        <input type="text" class="form-control" name="epiglotis" placeholder="Jelaskan"
+                                            value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->epiglotis ?? '' }}">
+                                    </div>
+                                    <div class="form-group mt-3">
+                                        <label style="min-width: 200px;">Pita Suara</label>
+                                        <input type="text" class="form-control" name="pita_suara" placeholder="Jelaskan"
+                                            value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->pita_suara ?? '' }}">
+                                    </div>
+
+                                    <p class="my-3 fw-bold">Plica Vokalis</p>
+                                        <div class="mb-3 row align-items-center">
+                                            <label class="col-3">bentuk</label>
+                                            <div class="col-4">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">Kanan</span>
+                                                    <input type="text" class="form-control"
+                                                        name="plica_vokalis_bentuk_kanan" placeholder="jelaskan"
+                                                        value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->plica_vokalis_bentuk_kanan ?? '' }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-5">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">Kiri</span>
+                                                    <input type="text" class="form-control"
+                                                        name="plica_vokalis_bentuk_kiri" placeholder="jelaskan"
+                                                        value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->plica_vokalis_bentuk_kiri ?? '' }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 row align-items-center">
+                                            <label class="col-3">warna</label>
+                                            <div class="col-4">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">Kanan</span>
+                                                    <input type="text" class="form-control"
+                                                        name="plica_vokalis_warna_kanan" placeholder="jelaskan"
+                                                        value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->plica_vokalis_warna_kanan ?? '' }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-5">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">Kiri</span>
+                                                    <input type="text" class="form-control"
+                                                        name="plica_vokalis_warna_kiri" placeholder="jelaskan"
+                                                        value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->plica_vokalis_warna_kiri ?? '' }}">
+                                                </div>
+                                            </div>
+                                        </div>
 
                                     <p class="my-3 fw-bold">Antropometri</p>
 
@@ -1009,101 +1200,43 @@
                                     </div>
                                 </div>
 
-                                <div class="section-separator">
-                                    <h5 class="section-title">5. Riwayat Penggunaan Obat</h5>
-                                    <input type="hidden" name="riwayat_penggunaan_obat" id="riwayatObatData">
+                                <div class="section-separator" style="margin-bottom: 2rem;"
+                                    id="hasil-pemeriksaan-penunjang">
+                                    <h5 class="fw-semibold mb-4">7. Hasil Laboratorium</h5>
 
-                                    <a href="javascript:void(0)"
-                                        class="text-secondary text-decoration-none fw-bold ms-3" id="btn-riwayat-obat">
-                                        <i class="bi bi-plus-square"></i> Tambah
-                                    </a>
-
-                                    <div class="table-responsive">
-                                        <table class="table" id="medication-history-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Nama Obat</th>
-                                                    <th>Dosis</th>
-                                                    <th>Waktu Penggunaan</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @php
-                                                $medications =
-                                                $asesmen->rmeAsesmenThtRiwayatKesehatanObatAlergi[0]['riwayat_penggunaan_obat']
-                                                ?? [];
-                                                $medications = is_string($medications) ? json_decode($medications, true)
-                                                : $medications;
-                                                $medications = is_array($medications) ? $medications : [];
-                                                @endphp
-                                                @foreach($medications as $medication)
-                                                <tr>
-                                                    <td>{{ $medication['namaObat'] }}</td>
-                                                    <td>{{ $medication['dosis'] }} {{ $medication['satuan'] }}
-                                                        {{ $medication['frekuensi'] }}</td>
-                                                    <td>{{ $medication['keterangan'] }}</td>
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Darah</label>
+                                        <input type="text" class="form-control" name="darah"
+                                            placeholder="darah"
+                                            value="{{ $asesmen->rmeAsesmenTht->darah ?? '' }}">
                                     </div>
-                                    @push('modals')
-                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.moda-edit-riwayat-obat')
-                                    @endpush
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Urine</label>
+                                        <input type="text" class="form-control" name="urine"
+                                            placeholder="urine"
+                                            value="{{ $asesmen->rmeAsesmenTht->urine ?? '' }}">
+                                    </div>
                                 </div>
 
-                                <div class="section-separator" id="alergi">
-                                    <h5 class="section-title">6. Alergi</h5>
 
-                                    {{-- Hidden input to store allergy data --}}
-                                    <input type="hidden" name="alergi" value="{{
-        json_encode($asesmen->rmeAsesmenThtRiwayatKesehatanObatAlergi[0]['alergi'] ?? [])
-                                        }}">
+                                <div class="section-separator" style="margin-bottom: 2rem;"
+                                    id="hasil-pemeriksaan-penunjang">
+                                    <h5 class="fw-semibold mb-4">8. Hasil Penunjang</h5>
 
-                                    {{-- Button to open modal --}}
-                                    <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                        id="openAlergiModal">
-                                        <i class="bi bi-plus-square"></i> Tambah
-                                    </button>
-
-                                    <div class="table-responsive">
-                                        <table class="table" id="createAlergiTable">
-                                            <thead>
-                                                <tr>
-                                                    <th>Alergen</th>
-                                                    <th>Reaksi</th>
-                                                    <th>Tingkat Keparahan</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @php
-                                                $allergies =
-                                                $asesmen->rmeAsesmenThtRiwayatKesehatanObatAlergi[0]['alergi'] ?? [];
-                                                $allergies = is_string($allergies) ? json_decode($allergies, true) :
-                                                $allergies;
-                                                $allergies = is_array($allergies) ? $allergies : [];
-                                                @endphp
-                                                @foreach($allergies as $allergy)
-                                                <tr>
-                                                    <td>{{ $allergy['alergen'] }}</td>
-                                                    <td>{{ $allergy['reaksi'] }}</td>
-                                                    <td>{{ $allergy['severe'] }}</td>
-                                                    <td></td>
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Rontgent</label>
+                                        <input type="text" class="form-control" name="rontgent"
+                                            placeholder="rontgent"
+                                            value="{{ $asesmen->rmeAsesmenTht->rontgent ?? '' }}">
                                     </div>
-                                    @push('modals')
-                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.modal-edit-alergi')
-                                    @endpush
-                                </div>
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Gistopatology</label>
+                                        <input type="text" class="form-control" name="gistopatology"
+                                            placeholder="gistopatology"
+                                            value="{{ $asesmen->rmeAsesmenTht->gistopatology ?? '' }}">
+                                    </div>
 
-                                <div class="section-separator" style="margin-bottom: 2rem;">
-                                    <h5 class="fw-semibold mb-4">7. Hasil Pemeriksaan Penunjang</h5>
-
-                                    <div class="mt-4">
+                                    {{-- <div class="mt-4">
                                         @php
                                         $examTypes = [
                                         'darah' => 'Darah',
@@ -1158,12 +1291,12 @@
                                             </div>
                                             <div class="col-auto">
                                                 <div id="{{ $key }}Preview" class="preview-container">
-                                                    {{-- Preview will be populated by JavaScript --}}
+                                                    <!-- Preview will be populated by JavaScript -->
                                                 </div>
                                             </div>
                                         </div>
                                         @endforeach
-                                    </div>
+                                    </div> --}}
                                 </div>
 
                                 {{-- Blade Template --}}
@@ -1323,6 +1456,22 @@
                                 <div class="section-separator" id="diagnosis">
                                     <h5 class="fw-semibold mb-4">9. Diagnosis</h5>
 
+                                    <div class="mb-4">
+                                    <label class="text-primary fw-semibold">Prognosis</label>
+                                    
+                                    <select class="form-select" name="tht_prognosis">
+                                        <option value="" disabled>--Pilih Prognosis--</option>
+                                        @forelse ($satsetPrognosis as $item)
+                                            <option value="{{ $item->prognosis_id }}" 
+                                                {{ old('tht_prognosis', $asesmen->rmeAsesmenThtDiagnosisImplementasi[0]->tht_prognosis ?? '') == $item->prognosis_id ? 'selected' : '' }}>
+                                                {{ $item->value ?? 'Field tidak ditemukan' }}
+                                            </option>
+                                        @empty
+                                            <option value="" disabled>Tidak ada data</option>
+                                        @endforelse
+                                    </select>
+                                </div>
+
                                     @php
                                     // Parse existing diagnosis data from database
                                     $diagnosisBanding =
@@ -1396,7 +1545,7 @@
                                     </div>
                                 </div>
 
-                                <div class="section-separator" style="margin-bottom: 2rem;">
+                                {{-- <div class="section-separator" style="margin-bottom: 2rem;">
                                     <h5 class="fw-semibold mb-4">10. Implementasi</h5>
 
                                     @php
@@ -1536,16 +1685,16 @@
                                         <input type="hidden" id="prognosis" name="prognosis"
                                             value="{{ json_encode($implementationData['prognosis']) }}">
                                     </div>
-                                </div>
+                                </div> --}}
 
-                                <div class="section-separator" style="margin-bottom: 2rem;">
+                                {{-- <div class="section-separator" style="margin-bottom: 2rem;">
                                     <h5 class="fw-semibold mb-4">11. Evaluasi</h5>
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Tambah Evaluasi Keperawatan</label>
                                         <textarea class="form-control" name="evaluasi_evaluasi_keperawatan" rows="4"
                                             placeholder="Evaluasi Keperawaran">{{ $asesmen->rmeAsesmenTht->evaluasi_evaluasi_keperawatan ?? '' }}</textarea>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="d-flex justify-content-end mt-4">
                                     <a href="{{ url()->previous() }}" class="btn btn-secondary me-2">

@@ -10,7 +10,7 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ url()->previous() }}" class="btn">
+            <a href="{{ url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum") }}" class="btn">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
             {{-- <form method="POST"
@@ -79,14 +79,14 @@
                                                 </select>
                                             </div>
 
-                                            <div class="form-group">
+                                            {{-- <div class="form-group">
                                                 <label style="min-width: 200px;">Ruang</label>
                                                 <select class="form-select" name="ruang">
                                                     <option selected disabled>Pilih</option>
                                                     <option value="1">Ya</option>
                                                     <option value="0">Tidak</option>
                                                 </select>
-                                            </div>
+                                            </div> --}}
                                         </div>
 
                                         <div class="section-separator" id="anamnesis">
@@ -97,10 +97,79 @@
                                                 <textarea class="form-control" name="anamnesis_anamnesis" rows="4"
                                                     placeholder="keluhan utama pasien"></textarea>
                                             </div>
+
+                                            <div class="form-group">
+                                                <label style="min-width: 200px;">Riwayat Penyakit Sekarang</label>
+                                                <input type="text" class="form-control" name="penyakit_sekarang"
+                                                    placeholder="Riwayat Penyakit Sekarang">
+                                            </div>
+                                            <div class="form-group">
+                                                <label style="min-width: 200px;">Riwayat Penyakit Terhadulu</label>
+                                                <input type="text" class="form-control" name="penyakit_terdahulu"
+                                                    placeholder="Riwayat Penyakit Terdahulu">
+                                            </div>
+                                        </div>
+
+                                        <div class="section-separator" id="riwayat-penggunaan-obat">
+                                            <h5 class="section-title">3. Riwayat Penggunaan Obat</h5>
+                                            <input type="hidden" name="riwayat_penggunaan_obat" id="riwayatObatData">
+                                            <a href="javascript:void(0)"
+                                                class="btn btn-sm btn-outline-secondary text-decoration-none fw-bold ms-3"
+                                                id="btn-riwayat-obat">
+                                                <i class="bi bi-plus-square"></i> Tambah
+                                            </a>
+
+                                            <div class="table-responsive">
+                                                <table class="table" id="createRiwayatObatTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Nama Obat</th>
+                                                            <th>Dosis</th>
+                                                            <th>Waktu Penggunaan</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- Table content will be dynamically populated -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            @push('modals')
+                                                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.moda-riwayat-obat')
+                                            @endpush
+                                        </div>
+
+                                        <div class="section-separator" id="alergi">
+                                            <h5 class="section-title">4. Alergi</h5>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
+                                                id="openAlergiModal" data-bs-toggle="modal" data-bs-target="#alergiModal">
+                                                <i class="ti-plus"></i> Tambah Alergi
+                                            </button>
+                                            <input type="hidden" name="alergis" id="alergisInput" value="[]">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered" id="createAlergiTable">
+                                                    <thead class="table-light">
+                                                        <tr>
+                                                            <th width="20%">Jenis Alergi</th>
+                                                            <th width="25%">Alergen</th>
+                                                            <th width="25%">Reaksi</th>
+                                                            <th width="20%">Tingkat Keparahan</th>
+                                                            <th width="10%">Aksi</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr id="no-alergi-row">
+                                                            <td colspan="5" class="text-center text-muted">Tidak ada data alergi</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            @push('modals')
+                                                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.modal-create-alergi')
+                                            @endpush
                                         </div>
 
                                         <div class="section-separator" id="pemeriksaan-fisik">
-                                            <h5 class="section-title">3. Pemeriksaan fisik</h5>
+                                            <h5 class="section-title">5. Pemeriksaan fisik</h5>
 
                                             <div class="form-group">
                                                 <label style="min-width: 200px;">Tek. Darah (mmHg)</label>
@@ -160,30 +229,7 @@
                                                 </select>
                                             </div>
 
-                                            <h6 class="fw-bold">Pemeriksaan Fisik Koprehensif</h6>
-                                            <span class="fw-bold">Laringoskopi Indirex</span>
-
-                                            <div class="form-group mt-4">
-                                                <label style="min-width: 200px;">Pangkal Lidah</label>
-                                                <input type="text" class="form-control" name="pangkal_lidah"
-                                                    placeholder="Jelaskan">
-                                            </div>
-                                            <div class="form-group mt-3">
-                                                <label style="min-width: 200px;">Tonsil Lidah</label>
-                                                <input type="text" class="form-control" name="tonsil_lidah"
-                                                    placeholder="Jelaskan">
-                                            </div>
-                                            <div class="form-group mt-3">
-                                                <label style="min-width: 200px;">Epiglotis</label>
-                                                <input type="text" class="form-control" name="epiglotis"
-                                                    placeholder="Jelaskan">
-                                            </div>
-                                            <div class="form-group mt-3">
-                                                <label style="min-width: 200px;">Pita Suara</label>
-                                                <input type="text" class="form-control" name="pita_suara"
-                                                    placeholder="Jelaskan">
-                                            </div>
-
+                                            <h5 class="fw-bold">Pemeriksaan Fisik Koprehensif</h5>
                                             <span class="fw-bold mt-4">Daun Telinga</span>
 
                                             <div class="mb-3 row align-items-center">
@@ -315,6 +361,59 @@
                                                 </div>
                                             </div>
 
+                                            <spam class="my-3 fw-bold">Membran Tympani</spam>
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-3">Warna</label>
+                                                <div class="col-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kanan</span>
+                                                        <input type="text" class="form-control"
+                                                            name="membran_tympani_warna_kanan" placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                                <div class="col-5">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kiri</span>
+                                                        <input type="text" class="form-control"
+                                                            name="membran_tympani_warna_kiri" placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-3">Perforasi</label>
+                                                <div class="col-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kanan</span>
+                                                        <input type="text" class="form-control"
+                                                            name="membran_tympani_perforasi_kanan" placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                                <div class="col-5">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kiri</span>
+                                                        <input type="text" class="form-control"
+                                                            name="membran_tympani_perforasi_kiri" placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-3">lainnya</label>
+                                                <div class="col-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kanan</span>
+                                                        <input type="text" class="form-control"
+                                                            name="membran_tympani_lainnya_kanan" placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                                <div class="col-5">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kiri</span>
+                                                        <input type="text" class="form-control"
+                                                            name="membran_tympani_lainnya_kiri" placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <span class="fw-bold mt-4">Tes Pendengaran</span>
                                             <div class="mb-3 row align-items-center">
                                                 <label class="col-3">Renne Tes</label>
@@ -386,6 +485,267 @@
                                                         <span class="input-group-text">Kiri</span>
                                                         <input type="text" class="form-control"
                                                             name="tes_pendengaran_bebisik_kiri" placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <spam class="my-3 fw-bold">Rhinoscopi Anterior</spam>
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-3">Cavun Nasi</label>
+                                                <div class="col-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kanan</span>
+                                                        <input type="text" class="form-control"
+                                                            name="rhinoscopi_anterior_cavun_nasi_kanan"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                                <div class="col-5">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kiri</span>
+                                                        <input type="text" class="form-control"
+                                                            name="rhinoscopi_anterior_cavun_nasi_kiri"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-3">Konka Inferior</label>
+                                                <div class="col-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kanan</span>
+                                                        <input type="text" class="form-control"
+                                                            name="rhinoscopi_anterior_konka_inferior_kanan"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                                <div class="col-5">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kiri</span>
+                                                        <input type="text" class="form-control"
+                                                            name="rhinoscopi_anterior_konka_inferior_kiri"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-3">Septum Nasi</label>
+                                                <div class="col-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kanan</span>
+                                                        <input type="text" class="form-control"
+                                                            name="rhinoscopi_anterior_septum_nasi_kanan"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                                <div class="col-5">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kiri</span>
+                                                        <input type="text" class="form-control"
+                                                            name="rhinoscopi_anterior_septum_nasi_kiri"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <spam class="my-3 fw-bold">Rhinoscopi Pasterior</spam>
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-3">Septum Nasi</label>
+                                                <div class="col-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kanan</span>
+                                                        <input type="text" class="form-control"
+                                                            name="rhinoscopi_pasterior_septum_nasi_kanan"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                                <div class="col-5">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kiri</span>
+                                                        <input type="text" class="form-control"
+                                                            name="rhinoscopi_pasterior_septum_nasi_kiri"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-3">Superior</label>
+                                                <div class="col-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kanan</span>
+                                                        <input type="text" class="form-control"
+                                                            name="rhinoscopi_superior_kanan"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                                <div class="col-5">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kiri</span>
+                                                        <input type="text" class="form-control"
+                                                            name="rhinoscopi_superior_kiri"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-3">media</label>
+                                                <div class="col-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kanan</span>
+                                                        <input type="text" class="form-control"
+                                                            name="rhinoscopi_media_kanan"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                                <div class="col-5">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kiri</span>
+                                                        <input type="text" class="form-control"
+                                                            name="rhinoscopi_media_kiri"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-3">fasso rossenmuler</label>
+                                                <div class="col-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kanan</span>
+                                                        <input type="text" class="form-control"
+                                                            name="rhinoscopi_fasso_rossenmuler_kanan"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                                <div class="col-5">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kiri</span>
+                                                        <input type="text" class="form-control"
+                                                            name="rhinoscopi_fasso_rossenmuler_kiri"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <p class="my-3 fw-bold">Meatus Nasi</p>
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-3">Superior</label>
+                                                <div class="col-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kanan</span>
+                                                        <input type="text" class="form-control"
+                                                            name="meatus_nasi_superior_kanan" placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                                <div class="col-5">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kiri</span>
+                                                        <input type="text" class="form-control"
+                                                            name="meatus_nasi_superior_kiri" placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-3">Media</label>
+                                                <div class="col-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kanan</span>
+                                                        <input type="text" class="form-control"
+                                                            name="meatus_nasi_media_kanan" placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                                <div class="col-5">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kiri</span>
+                                                        <input type="text" class="form-control"
+                                                            name="meatus_nasi_media_kiri" placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-3">Inferior</label>
+                                                <div class="col-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kanan</span>
+                                                        <input type="text" class="form-control"
+                                                            name="meatus_nasi_inferior_kanan" placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                                <div class="col-5">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kiri</span>
+                                                        <input type="text" class="form-control"
+                                                            name="meatus_nasi_inferior_kiri" placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <p class="my-3 fw-bold">Hidung</p>
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-3">Bentuk</label>
+                                                <div class="col-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kanan</span>
+                                                        <input type="text" class="form-control" name="hidung_bentuk_kanan"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                                <div class="col-5">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kiri</span>
+                                                        <input type="text" class="form-control" name="hidung_bentuk_kiri"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-3">Luka</label>
+                                                <div class="col-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kanan</span>
+                                                        <input type="text" class="form-control" name="hidung_luka_kanan"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                                <div class="col-5">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kiri</span>
+                                                        <input type="text" class="form-control" name="hidung_luka_kiri"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-3">Bisul</label>
+                                                <div class="col-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kanan</span>
+                                                        <input type="text" class="form-control" name="hidung_bisul_kanan"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                                <div class="col-5">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kiri</span>
+                                                        <input type="text" class="form-control" name="hidung_bisul_kiri"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-3">Fissare</label>
+                                                <div class="col-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kanan</span>
+                                                        <input type="text" class="form-control" name="hidung_fissare_kanan"
+                                                            placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                                <div class="col-5">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Kiri</span>
+                                                        <input type="text" class="form-control" name="hidung_fissare_kiri"
+                                                            placeholder="jelaskan">
                                                     </div>
                                                 </div>
                                             </div>
@@ -469,259 +829,60 @@
                                                 </div>
                                             </div>
 
-                                            <p class="my-3 fw-bold">Rhinoscopi Anterior</p>
-                                            <div class="mb-3 row align-items-center">
-                                                <label class="col-3">Cavun Nasi</label>
-                                                <div class="col-4">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kanan</span>
-                                                        <input type="text" class="form-control"
-                                                            name="rhinoscopi_anterior_cavun_nasi_kanan"
-                                                            placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                                <div class="col-5">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kiri</span>
-                                                        <input type="text" class="form-control"
-                                                            name="rhinoscopi_anterior_cavun_nasi_kiri"
-                                                            placeholder="jelaskan">
-                                                    </div>
-                                                </div>
+                                            <span class="fw-bold">Laringoskopi Indirex</span>
+                                            <div class="form-group mt-4">
+                                                <label style="min-width: 200px;">Pangkal Lidah</label>
+                                                <input type="text" class="form-control" name="pangkal_lidah"
+                                                    placeholder="Jelaskan">
+                                            </div>
+                                            <div class="form-group mt-3">
+                                                <label style="min-width: 200px;">Tonsil Lidah</label>
+                                                <input type="text" class="form-control" name="tonsil_lidah"
+                                                    placeholder="Jelaskan">
+                                            </div>
+                                            <div class="form-group mt-3">
+                                                <label style="min-width: 200px;">Epiglotis</label>
+                                                <input type="text" class="form-control" name="epiglotis"
+                                                    placeholder="Jelaskan">
+                                            </div>
+                                            <div class="form-group mt-3">
+                                                <label style="min-width: 200px;">Pita Suara</label>
+                                                <input type="text" class="form-control" name="pita_suara"
+                                                    placeholder="Jelaskan">
                                             </div>
 
+                                            <p class="my-3 fw-bold">Plica Vokalis</p>
                                             <div class="mb-3 row align-items-center">
-                                                <label class="col-3">Konka Inferior</label>
+                                                <label class="col-3">bentuk</label>
                                                 <div class="col-4">
                                                     <div class="input-group">
                                                         <span class="input-group-text">Kanan</span>
                                                         <input type="text" class="form-control"
-                                                            name="rhinoscopi_anterior_konka_inferior_kanan"
-                                                            placeholder="jelaskan">
+                                                            name="plica_vokalis_bentuk_kanan" placeholder="jelaskan">
                                                     </div>
                                                 </div>
                                                 <div class="col-5">
                                                     <div class="input-group">
                                                         <span class="input-group-text">Kiri</span>
                                                         <input type="text" class="form-control"
-                                                            name="rhinoscopi_anterior_konka_inferior_kiri"
-                                                            placeholder="jelaskan">
+                                                            name="plica_vokalis_bentuk_kiri" placeholder="jelaskan">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mb-3 row align-items-center">
-                                                <label class="col-3">Septum Nasi</label>
+                                                <label class="col-3">warna</label>
                                                 <div class="col-4">
                                                     <div class="input-group">
                                                         <span class="input-group-text">Kanan</span>
                                                         <input type="text" class="form-control"
-                                                            name="rhinoscopi_anterior_septum_nasi_kanan"
-                                                            placeholder="jelaskan">
+                                                            name="plica_vokalis_warna_kanan" placeholder="jelaskan">
                                                     </div>
                                                 </div>
                                                 <div class="col-5">
                                                     <div class="input-group">
                                                         <span class="input-group-text">Kiri</span>
                                                         <input type="text" class="form-control"
-                                                            name="rhinoscopi_anterior_septum_nasi_kiri"
-                                                            placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <p class="my-3 fw-bold">Rhinoscopi Pasterior</p>
-                                            <div class="mb-3 row align-items-center">
-                                                <label class="col-3">Septum Nasi</label>
-                                                <div class="col-4">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kanan</span>
-                                                        <input type="text" class="form-control"
-                                                            name="rhinoscopi_pasterior_septum_nasi_kanan"
-                                                            placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                                <div class="col-5">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kiri</span>
-                                                        <input type="text" class="form-control"
-                                                            name="rhinoscopi_pasterior_septum_nasi_kiri"
-                                                            placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <p class="my-3 fw-bold">Meatus Nasi</p>
-                                            <div class="mb-3 row align-items-center">
-                                                <label class="col-3">Superior</label>
-                                                <div class="col-4">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kanan</span>
-                                                        <input type="text" class="form-control"
-                                                            name="meatus_nasi_superior_kanan" placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                                <div class="col-5">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kiri</span>
-                                                        <input type="text" class="form-control"
-                                                            name="meatus_nasi_superior_kiri" placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3 row align-items-center">
-                                                <label class="col-3">Media</label>
-                                                <div class="col-4">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kanan</span>
-                                                        <input type="text" class="form-control"
-                                                            name="meatus_nasi_media_kanan" placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                                <div class="col-5">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kiri</span>
-                                                        <input type="text" class="form-control"
-                                                            name="meatus_nasi_media_kiri" placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3 row align-items-center">
-                                                <label class="col-3">Inferior</label>
-                                                <div class="col-4">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kanan</span>
-                                                        <input type="text" class="form-control"
-                                                            name="meatus_nasi_inferior_kanan" placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                                <div class="col-5">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kiri</span>
-                                                        <input type="text" class="form-control"
-                                                            name="meatus_nasi_inferior_kiri" placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <p class="my-3 fw-bold">Membran Tympani</p>
-                                            <div class="mb-3 row align-items-center">
-                                                <label class="col-3">Warna</label>
-                                                <div class="col-4">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kanan</span>
-                                                        <input type="text" class="form-control"
-                                                            name="membran_tympani_warna_kanan" placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                                <div class="col-5">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kiri</span>
-                                                        <input type="text" class="form-control"
-                                                            name="membran_tympani_warna_kiri" placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3 row align-items-center">
-                                                <label class="col-3">Perforasi</label>
-                                                <div class="col-4">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kanan</span>
-                                                        <input type="text" class="form-control"
-                                                            name="membran_tympani_perforasi_kanan" placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                                <div class="col-5">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kiri</span>
-                                                        <input type="text" class="form-control"
-                                                            name="membran_tympani_perforasi_kiri" placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3 row align-items-center">
-                                                <label class="col-3">lainnya</label>
-                                                <div class="col-4">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kanan</span>
-                                                        <input type="text" class="form-control"
-                                                            name="membran_tympani_lainnya_kanan" placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                                <div class="col-5">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kiri</span>
-                                                        <input type="text" class="form-control"
-                                                            name="membran_tympani_lainnya_kiri" placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <p class="my-3 fw-bold">Hidung</p>
-                                            <div class="mb-3 row align-items-center">
-                                                <label class="col-3">Bentuk</label>
-                                                <div class="col-4">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kanan</span>
-                                                        <input type="text" class="form-control" name="hidung_bentuk_kanan"
-                                                            placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                                <div class="col-5">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kiri</span>
-                                                        <input type="text" class="form-control" name="hidung_bentuk_kiri"
-                                                            placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3 row align-items-center">
-                                                <label class="col-3">Luka</label>
-                                                <div class="col-4">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kanan</span>
-                                                        <input type="text" class="form-control" name="hidung_luka_kanan"
-                                                            placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                                <div class="col-5">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kiri</span>
-                                                        <input type="text" class="form-control" name="hidung_luka_kiri"
-                                                            placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3 row align-items-center">
-                                                <label class="col-3">Bisul</label>
-                                                <div class="col-4">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kanan</span>
-                                                        <input type="text" class="form-control" name="hidung_bisul_kanan"
-                                                            placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                                <div class="col-5">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kiri</span>
-                                                        <input type="text" class="form-control" name="hidung_bisul_kiri"
-                                                            placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3 row align-items-center">
-                                                <label class="col-3">Fissare</label>
-                                                <div class="col-4">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kanan</span>
-                                                        <input type="text" class="form-control" name="hidung_fissare_kanan"
-                                                            placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                                <div class="col-5">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">Kiri</span>
-                                                        <input type="text" class="form-control" name="hidung_fissare_kiri"
-                                                            placeholder="jelaskan">
+                                                            name="plica_vokalis_warna_kiri" placeholder="jelaskan">
                                                     </div>
                                                 </div>
                                             </div>
@@ -838,7 +999,7 @@
                                         </div>
 
                                         <div class="section-separator" id="riwayat-kesehatan">
-                                            <h5 class="section-title">4. Riwayat Kesehatan</h5>
+                                            <h5 class="section-title">6. Riwayat Kesehatan</h5>
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <strong class="fw-normal">
@@ -895,67 +1056,39 @@
                                             </div>
                                         </div>
 
-                                        <div class="section-separator" id="riwayat-penggunaan-obat">
-                                            <h5 class="section-title">5. Riwayat Penggunaan Obat</h5>
-                                            <input type="hidden" name="riwayat_penggunaan_obat" id="riwayatObatData">
-                                            <a href="javascript:void(0)"
-                                                class="text-secondary text-decoration-none fw-bold ms-3"
-                                                id="btn-riwayat-obat">
-                                                <i class="bi bi-plus-square"></i> Tambah
-                                            </a>
+                                        <div class="section-separator" style="margin-bottom: 2rem;"
+                                            id="hasil-pemeriksaan-penunjang">
+                                            <h5 class="fw-semibold mb-4">7. Hasil Laboratorium</h5>
 
-                                            <div class="table-responsive">
-                                                <table class="table" id="createRiwayatObatTable">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Nama Obat</th>
-                                                            <th>Dosis</th>
-                                                            <th>Waktu Penggunaan</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <!-- Table content will be dynamically populated -->
-                                                    </tbody>
-                                                </table>
+                                            <div class="form-group">
+                                                <label style="min-width: 200px;">Darah</label>
+                                                <input type="text" class="form-control" name="darah"
+                                                    placeholder="darah">
                                             </div>
-                                            @push('modals')
-                                                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.moda-riwayat-obat')
-                                            @endpush
+                                            <div class="form-group">
+                                                <label style="min-width: 200px;">Urine</label>
+                                                <input type="text" class="form-control" name="urine"
+                                                    placeholder="urine">
+                                            </div>
                                         </div>
 
-                                        <div class="section-separator" id="alergi">
-                                            <h5 class="section-title">6. Alergi</h5>
-                                            <input type="hidden" name="alergi" value="[]">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                                id="openAlergiModal">
-                                                <i class="ti-plus"></i> Tambah
-                                            </button>
-
-                                            <div class="table-responsive">
-                                                <table class="table" id="createAlergiTable">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Alergen</th>
-                                                            <th>Reaksi</th>
-                                                            <th>Severe</th>
-                                                            <th></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <!-- Table content will be dynamically populated -->
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            @push('modals')
-                                                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.modal-create-alergi')
-                                            @endpush
-                                        </div>
 
                                         <div class="section-separator" style="margin-bottom: 2rem;"
                                             id="hasil-pemeriksaan-penunjang">
-                                            <h5 class="fw-semibold mb-4">7. Hasil Pemeriksaan Penunjang</h5>
+                                            <h5 class="fw-semibold mb-4">8. Hasil Penunjang</h5>
 
-                                            <div class="mt-4">
+                                            <div class="form-group">
+                                                <label style="min-width: 200px;">Rontgent</label>
+                                                <input type="text" class="form-control" name="rontgent"
+                                                    placeholder="rontgent">
+                                            </div>
+                                            <div class="form-group">
+                                                <label style="min-width: 200px;">Gistopatology</label>
+                                                <input type="text" class="form-control" name="gistopatology"
+                                                    placeholder="gistopatology">
+                                            </div>
+
+                                            {{-- <div class="mt-4">
                                                 @php
                                                     $examTypes = [
                                                         'darah' => 'Darah',
@@ -1001,11 +1134,224 @@
                                                         </div>
                                                     </div>
                                                 @endforeach
+                                            </div> --}}
+                                        </div>
+
+                                        <div class="section-separator" id="diagnosis">
+                                            <h5 class="fw-semibold mb-4">9. Diagnosis</h5>
+
+                                            <select class="form-select" name="tht_prognosis">
+                                                <option value="" selected disabled>--Pilih Prognosis--</option>
+                                                @forelse ($satsetPrognosis as $item)                                            
+                                                    <option value="{{ $item->prognosis_id }}">
+                                                        {{ $item->value ?? 'Field tidak ditemukan' }}
+                                                    </option>
+                                                @empty
+                                                    <option value="" disabled>Tidak ada data</option>
+                                                @endforelse
+                                            </select>
+
+                                            <!-- Diagnosis Banding -->
+                                            <div class="mb-4">
+                                                <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
+                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                    diagnosis banding,
+                                                    apabila tidak ada, Pilih tanda tambah untuk menambah
+                                                    keterangan diagnosis banding yang tidak ditemukan.</small>
+
+                                                <div class="input-group mb-3">
+                                                    <span class="input-group-text bg-white border-end-0">
+                                                        <i class="bi bi-search text-secondary"></i>
+                                                    </span>
+                                                    <input type="text" id="diagnosis-banding-input"
+                                                        class="form-control border-start-0 ps-0"
+                                                        placeholder="Cari dan tambah Diagnosis Banding">
+                                                    <span class="input-group-text bg-white" id="add-diagnosis-banding">
+                                                        <i class="bi bi-plus-circle text-primary"></i>
+                                                    </span>
+                                                </div>
+
+                                                <div id="diagnosis-banding-list"
+                                                    class="diagnosis-list bg-light p-3 rounded">
+                                                    <!-- Diagnosis items will be added here dynamically -->
+                                                </div>
+
+                                                <!-- Hidden input to store JSON data -->
+                                                <input type="hidden" id="diagnosis_banding" name="diagnosis_banding"
+                                                    value="[]">
+                                            </div>
+
+                                            <!-- Diagnosis Kerja -->
+                                            <div class="mb-4">
+                                                <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
+                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                    diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah
+                                                    keterangan diagnosis kerja yang tidak ditemukan.</small>
+
+                                                <div class="input-group mb-3">
+                                                    <span class="input-group-text bg-white border-end-0">
+                                                        <i class="bi bi-search text-secondary"></i>
+                                                    </span>
+                                                    <input type="text" id="diagnosis-kerja-input"
+                                                        class="form-control border-start-0 ps-0"
+                                                        placeholder="Cari dan tambah Diagnosis Kerja">
+                                                    <span class="input-group-text bg-white" id="add-diagnosis-kerja">
+                                                        <i class="bi bi-plus-circle text-primary"></i>
+                                                    </span>
+                                                </div>
+
+                                                <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
+                                                    <!-- Diagnosis items will be added here dynamically -->
+                                                </div>
+
+                                                <!-- Hidden input to store JSON data -->
+                                                <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja" value="[]">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label style="min-width: 200px;">Rencana Penatalaksanaan Dan Pengobatan</label>
+                                                <textarea class="form-control" name="rencana_penatalaksanaan" rows="4"
+                                                    placeholder="Rencana Penatalaksanaan Dan Pengobatan"></textarea>
                                             </div>
                                         </div>
 
+                                        {{-- <div class="section-separator" style="margin-bottom: 2rem;" id="implementasi">
+                                            <h5 class="fw-semibold mb-4">10. Implementasi</h5>
+
+                                            <!-- Rencana Penatalaksanaan dan Pengobatan -->
+                                            <div class="mb-4">
+                                                <label class="text-primary fw-semibold">Rencana Penatalaksanaan dan
+                                                    Pengobatan</label>
+                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                    rencana, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
+                                                    rencana Penatalaksanaan dan Pengobatan kerja yang tidak
+                                                    ditemukan.</small>
+                                            </div>
+
+                                            <!-- Observasi Section -->
+                                            <div class="mb-4">
+                                                <label class="fw-semibold mb-2">Observasi</label>
+                                                <div class="input-group mt-2">
+                                                    <span class="input-group-text bg-white border-end-0">
+                                                        <i class="bi bi-search text-secondary"></i>
+                                                    </span>
+                                                    <input type="text" id="observasi-input"
+                                                        class="form-control border-start-0 ps-0"
+                                                        placeholder="Cari dan tambah Observasi">
+                                                    <span class="input-group-text bg-white" id="add-observasi">
+                                                        <i class="bi bi-plus-circle text-primary"></i>
+                                                    </span>
+                                                </div>
+                                                <div id="observasi-list" class="list-group mb-2">
+                                                    <!-- Items will be added here dynamically -->
+                                                </div>
+                                                <!-- Hidden input to store JSON data -->
+                                                <input type="hidden" id="observasi" name="observasi" value="[]">
+                                            </div>
+
+                                            <!-- Terapeutik Section -->
+                                            <div class="mb-4">
+                                                <label class="fw-semibold mb-2">Terapeutik</label>
+                                                <div class="input-group mt-2">
+                                                    <span class="input-group-text bg-white border-end-0">
+                                                        <i class="bi bi-search text-secondary"></i>
+                                                    </span>
+                                                    <input type="text" id="terapeutik-input"
+                                                        class="form-control border-start-0 ps-0"
+                                                        placeholder="Cari dan tambah Terapeutik">
+                                                    <span class="input-group-text bg-white" id="add-terapeutik">
+                                                        <i class="bi bi-plus-circle text-primary"></i>
+                                                    </span>
+                                                </div>
+                                                <div id="terapeutik-list" class="list-group mb-2">
+                                                    <!-- Items will be added here dynamically -->
+                                                </div>
+                                                <!-- Hidden input to store JSON data -->
+                                                <input type="hidden" id="terapeutik" name="terapeutik" value="[]">
+                                            </div>
+
+                                            <!-- Edukasi Section -->
+                                            <div class="mb-4">
+                                                <label class="fw-semibold mb-2">Edukasi</label>
+                                                <div class="input-group mt-2">
+                                                    <span class="input-group-text bg-white border-end-0">
+                                                        <i class="bi bi-search text-secondary"></i>
+                                                    </span>
+                                                    <input type="text" id="edukasi-input"
+                                                        class="form-control border-start-0 ps-0"
+                                                        placeholder="Cari dan tambah Edukasi">
+                                                    <span class="input-group-text bg-white" id="add-edukasi">
+                                                        <i class="bi bi-plus-circle text-primary"></i>
+                                                    </span>
+                                                </div>
+                                                <div id="edukasi-list" class="list-group mb-2">
+                                                    <!-- Items will be added here dynamically -->
+                                                </div>
+                                                <!-- Hidden input to store JSON data -->
+                                                <input type="hidden" id="edukasi" name="edukasi" value="[]">
+                                            </div>
+
+                                            <!-- Kolaborasi Section -->
+                                            <div class="mb-4">
+                                                <label class="fw-semibold mb-2">Kolaborasi</label>
+                                                <div class="input-group mt-2">
+                                                    <span class="input-group-text bg-white border-end-0">
+                                                        <i class="bi bi-search text-secondary"></i>
+                                                    </span>
+                                                    <input type="text" id="kolaborasi-input"
+                                                        class="form-control border-start-0 ps-0"
+                                                        placeholder="Cari dan tambah Kolaborasi">
+                                                    <span class="input-group-text bg-white" id="add-kolaborasi">
+                                                        <i class="bi bi-plus-circle text-primary"></i>
+                                                    </span>
+                                                </div>
+                                                <div id="kolaborasi-list" class="list-group mb-2">
+                                                    <!-- Items will be added here dynamically -->
+                                                </div>
+                                                <!-- Hidden input to store JSON data -->
+                                                <input type="hidden" id="kolaborasi" name="kolaborasi" value="[]">
+                                            </div>
+
+                                            <!-- Kolaborasi Section -->
+                                            <div class="mb-4">
+                                                <label class="text-primary fw-semibold">Prognosis</label>
+                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                    Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
+                                                    keterangan
+                                                    Prognosis yang tidak ditemukan.</small>
+                                                <!-- sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis -->
+                                                <div class="input-group mb-3">
+                                                    <span class="input-group-text bg-white border-end-0">
+                                                        <i class="bi bi-search text-secondary"></i>
+                                                    </span>
+                                                    <input type="text" id="rencana-input"
+                                                        class="form-control border-start-0 ps-0"
+                                                        placeholder="Cari dan tambah Rencana Penatalaksanaan">
+                                                    <span class="input-group-text bg-white" id="add-rencana">
+                                                        <i class="bi bi-plus-circle text-primary"></i>
+                                                    </span>
+                                                </div>
+
+                                                <div id="rencana-list" class="list-group mb-3">
+                                                    <!-- Items will be added here dynamically -->
+                                                </div>
+                                                <!-- Hidden input to store JSON data -->
+                                                <input type="hidden" id="rencana_penatalaksanaan" name="prognosis"
+                                                    value="[]">
+                                            </div>
+                                        </div> --}}
+
+                                        {{-- <div class="section-separator" style="margin-bottom: 2rem;" id="evaluasi">
+                                            <h5 class="fw-semibold mb-4">11. Evaluasi</h5>
+                                            <div class="form-group">
+                                                <label style="min-width: 200px;">Tambah Evaluasi Keperawatan</label>
+                                                <textarea class="form-control" name="evaluasi_evaluasi_keperawatan" rows="4"
+                                                    placeholder="Evaluasi Keperawaran"></textarea>
+                                            </div>
+                                        </div> --}}
+
                                         <div class="section-separator" style="margin-bottom: 2rem;" id="discharge-planning">
-                                            <h5 class="fw-semibold mb-4">8. Discharge Planning</h5>
+                                            <h5 class="fw-semibold mb-4">10. Discharge Planning</h5>
 
                                             <form id="dischargePlanningForm">
                                                 <div class="mb-3 row align-items-center">
@@ -1131,202 +1477,6 @@
                                             </form>
                                         </div>
 
-                                        <div class="section-separator" id="diagnosis">
-                                            <h5 class="fw-semibold mb-4">9. Diagnosis</h5>
-
-                                            <!-- Diagnosis Banding -->
-                                            <div class="mb-4">
-                                                <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
-                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                    diagnosis banding,
-                                                    apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                    keterangan diagnosis banding yang tidak ditemukan.</small>
-
-                                                <div class="input-group mb-3">
-                                                    <span class="input-group-text bg-white border-end-0">
-                                                        <i class="bi bi-search text-secondary"></i>
-                                                    </span>
-                                                    <input type="text" id="diagnosis-banding-input"
-                                                        class="form-control border-start-0 ps-0"
-                                                        placeholder="Cari dan tambah Diagnosis Banding">
-                                                    <span class="input-group-text bg-white" id="add-diagnosis-banding">
-                                                        <i class="bi bi-plus-circle text-primary"></i>
-                                                    </span>
-                                                </div>
-
-                                                <div id="diagnosis-banding-list"
-                                                    class="diagnosis-list bg-light p-3 rounded">
-                                                    <!-- Diagnosis items will be added here dynamically -->
-                                                </div>
-
-                                                <!-- Hidden input to store JSON data -->
-                                                <input type="hidden" id="diagnosis_banding" name="diagnosis_banding"
-                                                    value="[]">
-                                            </div>
-
-                                            <!-- Diagnosis Kerja -->
-                                            <div class="mb-4">
-                                                <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
-                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                    diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                    keterangan diagnosis kerja yang tidak ditemukan.</small>
-
-                                                <div class="input-group mb-3">
-                                                    <span class="input-group-text bg-white border-end-0">
-                                                        <i class="bi bi-search text-secondary"></i>
-                                                    </span>
-                                                    <input type="text" id="diagnosis-kerja-input"
-                                                        class="form-control border-start-0 ps-0"
-                                                        placeholder="Cari dan tambah Diagnosis Kerja">
-                                                    <span class="input-group-text bg-white" id="add-diagnosis-kerja">
-                                                        <i class="bi bi-plus-circle text-primary"></i>
-                                                    </span>
-                                                </div>
-
-                                                <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
-                                                    <!-- Diagnosis items will be added here dynamically -->
-                                                </div>
-
-                                                <!-- Hidden input to store JSON data -->
-                                                <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja" value="[]">
-                                            </div>
-                                        </div>
-
-                                        <div class="section-separator" style="margin-bottom: 2rem;" id="implementasi">
-                                            <h5 class="fw-semibold mb-4">10. Implementasi</h5>
-
-                                            <!-- Rencana Penatalaksanaan dan Pengobatan -->
-                                            <div class="mb-4">
-                                                <label class="text-primary fw-semibold">Rencana Penatalaksanaan dan
-                                                    Pengobatan</label>
-                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                    rencana, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
-                                                    rencana Penatalaksanaan dan Pengobatan kerja yang tidak
-                                                    ditemukan.</small>
-                                            </div>
-
-                                            <!-- Observasi Section -->
-                                            <div class="mb-4">
-                                                <label class="fw-semibold mb-2">Observasi</label>
-                                                <div class="input-group mt-2">
-                                                    <span class="input-group-text bg-white border-end-0">
-                                                        <i class="bi bi-search text-secondary"></i>
-                                                    </span>
-                                                    <input type="text" id="observasi-input"
-                                                        class="form-control border-start-0 ps-0"
-                                                        placeholder="Cari dan tambah Observasi">
-                                                    <span class="input-group-text bg-white" id="add-observasi">
-                                                        <i class="bi bi-plus-circle text-primary"></i>
-                                                    </span>
-                                                </div>
-                                                <div id="observasi-list" class="list-group mb-2">
-                                                    <!-- Items will be added here dynamically -->
-                                                </div>
-                                                <!-- Hidden input to store JSON data -->
-                                                <input type="hidden" id="observasi" name="observasi" value="[]">
-                                            </div>
-
-                                            <!-- Terapeutik Section -->
-                                            <div class="mb-4">
-                                                <label class="fw-semibold mb-2">Terapeutik</label>
-                                                <div class="input-group mt-2">
-                                                    <span class="input-group-text bg-white border-end-0">
-                                                        <i class="bi bi-search text-secondary"></i>
-                                                    </span>
-                                                    <input type="text" id="terapeutik-input"
-                                                        class="form-control border-start-0 ps-0"
-                                                        placeholder="Cari dan tambah Terapeutik">
-                                                    <span class="input-group-text bg-white" id="add-terapeutik">
-                                                        <i class="bi bi-plus-circle text-primary"></i>
-                                                    </span>
-                                                </div>
-                                                <div id="terapeutik-list" class="list-group mb-2">
-                                                    <!-- Items will be added here dynamically -->
-                                                </div>
-                                                <!-- Hidden input to store JSON data -->
-                                                <input type="hidden" id="terapeutik" name="terapeutik" value="[]">
-                                            </div>
-
-                                            <!-- Edukasi Section -->
-                                            <div class="mb-4">
-                                                <label class="fw-semibold mb-2">Edukasi</label>
-                                                <div class="input-group mt-2">
-                                                    <span class="input-group-text bg-white border-end-0">
-                                                        <i class="bi bi-search text-secondary"></i>
-                                                    </span>
-                                                    <input type="text" id="edukasi-input"
-                                                        class="form-control border-start-0 ps-0"
-                                                        placeholder="Cari dan tambah Edukasi">
-                                                    <span class="input-group-text bg-white" id="add-edukasi">
-                                                        <i class="bi bi-plus-circle text-primary"></i>
-                                                    </span>
-                                                </div>
-                                                <div id="edukasi-list" class="list-group mb-2">
-                                                    <!-- Items will be added here dynamically -->
-                                                </div>
-                                                <!-- Hidden input to store JSON data -->
-                                                <input type="hidden" id="edukasi" name="edukasi" value="[]">
-                                            </div>
-
-                                            <!-- Kolaborasi Section -->
-                                            <div class="mb-4">
-                                                <label class="fw-semibold mb-2">Kolaborasi</label>
-                                                <div class="input-group mt-2">
-                                                    <span class="input-group-text bg-white border-end-0">
-                                                        <i class="bi bi-search text-secondary"></i>
-                                                    </span>
-                                                    <input type="text" id="kolaborasi-input"
-                                                        class="form-control border-start-0 ps-0"
-                                                        placeholder="Cari dan tambah Kolaborasi">
-                                                    <span class="input-group-text bg-white" id="add-kolaborasi">
-                                                        <i class="bi bi-plus-circle text-primary"></i>
-                                                    </span>
-                                                </div>
-                                                <div id="kolaborasi-list" class="list-group mb-2">
-                                                    <!-- Items will be added here dynamically -->
-                                                </div>
-                                                <!-- Hidden input to store JSON data -->
-                                                <input type="hidden" id="kolaborasi" name="kolaborasi" value="[]">
-                                            </div>
-
-                                            <!-- Kolaborasi Section -->
-                                            <div class="mb-4">
-                                                <label class="text-primary fw-semibold">Prognosis</label>
-                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                    Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                    keterangan
-                                                    Prognosis yang tidak ditemukan.</small>
-                                                <!-- sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis -->
-                                                <div class="input-group mb-3">
-                                                    <span class="input-group-text bg-white border-end-0">
-                                                        <i class="bi bi-search text-secondary"></i>
-                                                    </span>
-                                                    <input type="text" id="rencana-input"
-                                                        class="form-control border-start-0 ps-0"
-                                                        placeholder="Cari dan tambah Rencana Penatalaksanaan">
-                                                    <span class="input-group-text bg-white" id="add-rencana">
-                                                        <i class="bi bi-plus-circle text-primary"></i>
-                                                    </span>
-                                                </div>
-
-                                                <div id="rencana-list" class="list-group mb-3">
-                                                    <!-- Items will be added here dynamically -->
-                                                </div>
-                                                <!-- Hidden input to store JSON data -->
-                                                <input type="hidden" id="rencana_penatalaksanaan" name="prognosis"
-                                                    value="[]">
-                                            </div>
-                                        </div>
-
-                                        <div class="section-separator" style="margin-bottom: 2rem;" id="evaluasi">
-                                            <h5 class="fw-semibold mb-4">11. Evaluasi</h5>
-                                            <div class="form-group">
-                                                <label style="min-width: 200px;">Tambah Evaluasi Keperawatan</label>
-                                                <textarea class="form-control" name="evaluasi_evaluasi_keperawatan" rows="4"
-                                                    placeholder="Evaluasi Keperawaran"></textarea>
-                                            </div>
-                                        </div>
-
                                         <div class="d-flex justify-content-end">
                                             <button type="submit" class="btn btn-primary">Simpan</button>
                                         </div>
@@ -1341,3 +1491,127 @@
         </div>
     </div>
 @endsection
+
+@push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const dischargeSelects = document.querySelectorAll('.discharge-select');
+            const kesimpulanKhusus = document.getElementById('kesimpulan_khusus');
+            const kesimpulanTidakKhusus = document.getElementById('kesimpulan_tidak_khusus');
+            const kesimpulanValue = document.getElementById('kesimpulan_value');
+
+            function updateKesimpulan() {
+                let adaYa = false;
+                let semuaTerjawab = true;
+
+                dischargeSelects.forEach(function(select) {
+                    const value = select.value;
+
+                    if (!value || value === '') {
+                        semuaTerjawab = false;
+                    }
+
+                    if (value === 'ya') {
+                        adaYa = true;
+                    }
+                });
+
+                if (semuaTerjawab) {
+                    if (adaYa) {
+                        kesimpulanKhusus.style.display = 'block';
+                        kesimpulanTidakKhusus.style.display = 'none';
+                        kesimpulanValue.value = 'membutuhkan_rencana_khusus';
+                    } else {
+                        kesimpulanKhusus.style.display = 'none';
+                        kesimpulanTidakKhusus.style.display = 'block';
+                        kesimpulanValue.value = 'tidak_membutuhkan_rencana_khusus';
+                    }
+                } else {
+                    kesimpulanKhusus.style.display = 'none';
+                    kesimpulanTidakKhusus.style.display = 'none';
+                    kesimpulanValue.value = '';
+                }
+            }
+
+            dischargeSelects.forEach(function(select) {
+                select.addEventListener('change', updateKesimpulan);
+            });
+
+            function autoFillDiagnosis() {
+                const diagnosisInput = document.getElementById('diagnosis_medis');
+
+                if (window.asesmenData && window.asesmenData.diagnosis) {
+                    diagnosisInput.value = window.asesmenData.diagnosis;
+                }
+            }
+
+            autoFillDiagnosis();
+
+            window.resetDischargePlanning = function() {
+                dischargeSelects.forEach(function(select) {
+                    select.selectedIndex = 0;
+                });
+                updateKesimpulan();
+            };
+
+            window.setDischargePlanning = function(data) {
+                if (data.usia_lanjut) {
+                    document.getElementById('usia_lanjut').value = data.usia_lanjut;
+                }
+                if (data.hambatan_mobilisasi) {
+                    document.getElementById('hambatan_mobilisasi').value = data.hambatan_mobilisasi;
+                }
+                if (data.pelayanan_medis) {
+                    document.getElementById('pelayanan_medis_berkelanjutan').value = data.pelayanan_medis;
+                }
+                if (data.ketergantungan_aktivitas) {
+                    document.getElementById('ketergantungan_aktivitas').value = data.ketergantungan_aktivitas;
+                }
+                if (data.diagnosis_medis) {
+                    document.getElementById('diagnosis_medis').value = data.diagnosis_medis;
+                }
+
+                updateKesimpulan();
+            };
+
+            updateKesimpulan();
+        });
+
+        const additionalCSS = `
+            .alert {
+                padding: 12px;
+                margin-bottom: 10px;
+                border: 1px solid transparent;
+                border-radius: 4px;
+                font-weight: 500;
+            }
+
+            .alert-warning {
+                color: #856404;
+                background-color: #fff3cd;
+                border-color: #ffeaa7;
+            }
+
+            .alert-success {
+                color: #155724;
+                background-color: #d4edda;
+                border-color: #c3e6cb;
+            }
+
+            .discharge-select:focus {
+                border-color: #80bdff;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            }
+
+            .form-group label {
+                font-weight: 500;
+                margin-bottom: 5px;
+            }
+        `;
+
+        const styleSheet = document.createElement("style");
+        styleSheet.innerText = additionalCSS;
+        document.head.appendChild(styleSheet);
+    </script>
+@endpush
