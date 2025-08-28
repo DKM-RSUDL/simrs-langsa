@@ -1627,231 +1627,60 @@
                                 </div>
                             </div>
 
-                            <!-- 16. Diagnosis -->
+                            <!-- 16. Masalah/Diagnosis Keperawatan -->
                             <div class="tab-pane fade show">
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="row">
-                                            <h5>16. Diagnosis</h5>
+                                            <h5>16. Masalah/Diagnosis Keperawatan</h5>
                                             <div class="col-md-12">
-                                                <!-- Diagnosis Banding -->
+                                                <!-- Masalah/Diagnosis Keperawatan -->
                                                 <div class="mb-4">
-                                                    <label class="form-label fw-bold">Diagnosis Banding</label>
+                                                    <label class="form-label fw-bold">1. Masalah/Diagnosis Keperawatan</label>
                                                     @php
-                                                        $diagnosisBanding = json_decode(
-                                                            $asesmen->rmeAsesmenPerinatology->diagnosis_banding ?? '[]',
+                                                        $masalahDiagnosis = json_decode(
+                                                            $asesmen->rmeAsesmenPerinatology->masalah_diagnosis ?? '[]',
                                                             true,
                                                         );
                                                     @endphp
-                                                    @if (!empty($diagnosisBanding))
+                                                    @if (!empty($masalahDiagnosis))
                                                         <div class="bg-light p-3 rounded">
-                                                            <ul class="list-unstyled mb-0">
-                                                                @foreach ($diagnosisBanding as $diagnosis)
-                                                                    <li class="mb-2">
-                                                                        <span
-                                                                            class="badge bg-info">{{ $diagnosis }}</span>
-                                                                    </li>
+                                                            <ol class="mb-0">
+                                                                @foreach ($masalahDiagnosis as $masalah)
+                                                                    <li class="mb-2">{{ $masalah }}</li>
                                                                 @endforeach
-                                                            </ul>
+                                                            </ol>
                                                         </div>
                                                     @else
                                                         <p class="form-control-plaintext border-bottom text-muted">
-                                                            Tidak ada diagnosis banding
+                                                            Tidak ada masalah diagnosis yang tercatat
                                                         </p>
                                                     @endif
                                                 </div>
 
-                                                <!-- Diagnosis Kerja -->
+                                                <!-- Intervensi/Rencana Asuhan -->
                                                 <div class="mb-4">
-                                                    <label class="form-label fw-bold">Diagnosis Kerja</label>
+                                                    <label class="form-label fw-bold">2. Intervensi/Rencana Asuhan dan Target
+                                                        Terukur</label>
                                                     @php
-                                                        $diagnosisKerja = json_decode(
-                                                            $asesmen->rmeAsesmenPerinatology->diagnosis_kerja ?? '[]',
+                                                        $intervensiRencana = json_decode(
+                                                            $asesmen->rmeAsesmenPerinatology->intervensi_rencana ?? '[]',
                                                             true,
                                                         );
                                                     @endphp
-                                                    @if (!empty($diagnosisKerja))
+                                                    @if (!empty($intervensiRencana))
                                                         <div class="bg-light p-3 rounded">
-                                                            <ul class="list-unstyled mb-0">
-                                                                @foreach ($diagnosisKerja as $diagnosis)
-                                                                    <li class="mb-2">
-                                                                        <span
-                                                                            class="badge bg-success">{{ $diagnosis }}</span>
-                                                                    </li>
+                                                            <ol class="mb-0">
+                                                                @foreach ($intervensiRencana as $intervensi)
+                                                                    <li class="mb-2">{{ $intervensi }}</li>
                                                                 @endforeach
-                                                            </ul>
+                                                            </ol>
                                                         </div>
                                                     @else
                                                         <p class="form-control-plaintext border-bottom text-muted">
-                                                            Tidak ada diagnosis kerja
+                                                            Tidak ada intervensi rencana yang tercatat
                                                         </p>
                                                     @endif
-                                                </div>
-
-                                                <!-- Prognosis -->
-                                                <div class="mb-4">
-                                                    <label class="form-label fw-bold">Prognosis</label>
-                                                    @php
-                                                        $prognosis = json_decode(
-                                                            $asesmen->rmeAsesmenPerinatology->prognosis ?? '[]',
-                                                            true,
-                                                        );
-                                                    @endphp
-                                                    @if (!empty($prognosis))
-                                                        <div class="bg-light p-3 rounded">
-                                                            <ul class="list-unstyled mb-0">
-                                                                @foreach ($prognosis as $item)
-                                                                    <li class="mb-2">
-                                                                        <span
-                                                                            class="badge bg-warning">{{ $item }}</span>
-                                                                    </li>
-                                                                @endforeach
-                                                            </ul>
-                                                        </div>
-                                                    @else
-                                                        <p class="form-control-plaintext border-bottom text-muted">
-                                                            Tidak ada prognosis
-                                                        </p>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- 17. Implementasi -->
-                            <div class="tab-pane fade show">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <h5>17. Implementasi</h5>
-                                            <div class="col-md-12">
-                                                <!-- Observasi -->
-                                                <div class="mb-4">
-                                                    <label class="form-label fw-bold">Observasi</label>
-                                                    @php
-                                                        $observasi = json_decode(
-                                                            $asesmen->rmeAsesmenPerinatology->observasi ?? '[]',
-                                                            true,
-                                                        );
-                                                    @endphp
-                                                    @if (!empty($observasi))
-                                                        <div class="bg-light p-3 rounded">
-                                                            <ul class="list-unstyled mb-0">
-                                                                @foreach ($observasi as $item)
-                                                                    <li class="mb-2">
-                                                                        <span
-                                                                            class="badge bg-primary">{{ $item }}</span>
-                                                                    </li>
-                                                                @endforeach
-                                                            </ul>
-                                                        </div>
-                                                    @else
-                                                        <p class="form-control-plaintext border-bottom text-muted">
-                                                            Tidak ada observasi
-                                                        </p>
-                                                    @endif
-                                                </div>
-
-                                                <!-- Terapeutik -->
-                                                <div class="mb-4">
-                                                    <label class="form-label fw-bold">Terapeutik</label>
-                                                    @php
-                                                        $terapeutik = json_decode(
-                                                            $asesmen->rmeAsesmenPerinatology->terapeutik ?? '[]',
-                                                            true,
-                                                        );
-                                                    @endphp
-                                                    @if (!empty($terapeutik))
-                                                        <div class="bg-light p-3 rounded">
-                                                            <ul class="list-unstyled mb-0">
-                                                                @foreach ($terapeutik as $item)
-                                                                    <li class="mb-2">
-                                                                        <span
-                                                                            class="badge bg-success">{{ $item }}</span>
-                                                                    </li>
-                                                                @endforeach
-                                                            </ul>
-                                                        </div>
-                                                    @else
-                                                        <p class="form-control-plaintext border-bottom text-muted">
-                                                            Tidak ada terapeutik
-                                                        </p>
-                                                    @endif
-                                                </div>
-
-                                                <!-- Edukasi -->
-                                                <div class="mb-4">
-                                                    <label class="form-label fw-bold">Edukasi</label>
-                                                    @php
-                                                        $edukasi = json_decode(
-                                                            $asesmen->rmeAsesmenPerinatology->edukasi ?? '[]',
-                                                            true,
-                                                        );
-                                                    @endphp
-                                                    @if (!empty($edukasi))
-                                                        <div class="bg-light p-3 rounded">
-                                                            <ul class="list-unstyled mb-0">
-                                                                @foreach ($edukasi as $item)
-                                                                    <li class="mb-2">
-                                                                        <span
-                                                                            class="badge bg-warning">{{ $item }}</span>
-                                                                    </li>
-                                                                @endforeach
-                                                            </ul>
-                                                        </div>
-                                                    @else
-                                                        <p class="form-control-plaintext border-bottom text-muted">
-                                                            Tidak ada edukasi
-                                                        </p>
-                                                    @endif
-                                                </div>
-
-                                                <!-- Kolaborasi -->
-                                                <div class="mb-4">
-                                                    <label class="form-label fw-bold">Kolaborasi</label>
-                                                    @php
-                                                        $kolaborasi = json_decode(
-                                                            $asesmen->rmeAsesmenPerinatology->kolaborasi ?? '[]',
-                                                            true,
-                                                        );
-                                                    @endphp
-                                                    @if (!empty($kolaborasi))
-                                                        <div class="bg-light p-3 rounded">
-                                                            <ul class="list-unstyled mb-0">
-                                                                @foreach ($kolaborasi as $item)
-                                                                    <li class="mb-2">
-                                                                        <span
-                                                                            class="badge bg-info">{{ $item }}</span>
-                                                                    </li>
-                                                                @endforeach
-                                                            </ul>
-                                                        </div>
-                                                    @else
-                                                        <p class="form-control-plaintext border-bottom text-muted">
-                                                            Tidak ada kolaborasi
-                                                        </p>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- 18. Evaluasi -->
-                            <div class="tab-pane fade show">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <h5>18. Evaluasi</h5>
-                                            <div class="col-md-12">
-                                                <div class="mb-4">
-                                                    <label class="form-label fw-bold">Evaluasi Keperawatan</label>
-                                                    <p class="form-control-plaintext border-bottom">
-                                                        {{ $asesmen->rmeAsesmenPerinatology->evaluasi ?? '-' }}
-                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
