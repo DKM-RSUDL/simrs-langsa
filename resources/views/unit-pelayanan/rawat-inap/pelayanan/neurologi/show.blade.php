@@ -196,83 +196,89 @@
                                                 </p>
                                             </div>
                                             <div class="col-12">
-                                                <div class="row">
-                                                    @php
-                                                        $pemeriksaanFisikData = $asesmen->pemeriksaanFisik;
-                                                        $itemFisikNames = [];
-                                                        foreach ($itemFisik as $item) {
-                                                            $itemFisikNames[$item->id] = $item->nama;
-                                                        }
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered">
 
-                                                        $totalItems = count($pemeriksaanFisikData);
-                                                        $halfCount = ceil($totalItems / 2);
-                                                        $firstColumn = $pemeriksaanFisikData->take($halfCount);
-                                                        $secondColumn = $pemeriksaanFisikData->skip($halfCount);
-                                                    @endphp
-                                                    <div class="col-md-6">
-                                                        @foreach ($firstColumn as $item)
+                                                        <tbody>
                                                             @php
-                                                                $status = $item->is_normal;
-                                                                $keterangan = $item->keterangan;
-                                                                $itemId = $item->id_item_fisik;
-                                                                $namaItem =
-                                                                    $itemFisikNames[$itemId] ?? 'Item #' . $itemId;
+                                                                $pemeriksaanFisikData = $asesmen->pemeriksaanFisik;
+                                                                $itemFisikNames = [];
+                                                                foreach ($itemFisik as $item) {
+                                                                    $itemFisikNames[$item->id] = $item->nama;
+                                                                }
+
+                                                                $totalItems = count($pemeriksaanFisikData);
+                                                                $halfCount = ceil($totalItems / 2);
+                                                                $firstColumn = $pemeriksaanFisikData->take($halfCount);
+                                                                $secondColumn = $pemeriksaanFisikData->skip($halfCount);
+
+                                                                $maxRows = max($firstColumn->count(), $secondColumn->count());
                                                             @endphp
-                                                            <div
-                                                                class="d-flex justify-content-between align-items-center border-bottom py-2">
-                                                                <span>{{ $namaItem }}</span>
-                                                                <div class="d-flex align-items-center">
-                                                                    @if ($status == '0' || $status == 0)
-                                                                        <span class="badge bg-warning text-dark me-2">Tidak
-                                                                            Normal</span>
-                                                                    @elseif ($status == '1' || $status == 1)
-                                                                        <span class="badge bg-success me-2">Normal</span>
+
+                                                            @for ($i = 0; $i < $maxRows; $i++)
+                                                                <tr>
+                                                                    <!-- Kolom Kiri -->
+                                                                    @if ($firstColumn->has($i))
+                                                                        @php
+                                                                            $item = $firstColumn[$i];
+                                                                            $status = $item->is_normal;
+                                                                            $keterangan = $item->keterangan;
+                                                                            $itemId = $item->id_item_fisik;
+                                                                            $namaItem = $itemFisikNames[$itemId] ?? 'Item #' . $itemId;
+                                                                        @endphp
+                                                                        <td>
+                                                                            {{ $namaItem }}
+                                                                            @if ($keterangan && ($status == '0' || $status == 0))
+                                                                                <br>
+                                                                                <small class="text-muted">Keterangan: {{ $keterangan }}</small>
+                                                                            @endif
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            @if ($status == '0' || $status == 0)
+                                                                                <span class="badge bg-warning text-dark">Tidak Normal</span>
+                                                                            @elseif ($status == '1' || $status == 1)
+                                                                                <span class="badge bg-success">Normal</span>
+                                                                            @else
+                                                                                <span class="badge bg-secondary">Tidak Diperiksa</span>
+                                                                            @endif
+                                                                        </td>
                                                                     @else
-                                                                        <span class="badge bg-secondary me-2">Tidak
-                                                                            Diperiksa</span>
+                                                                        <td></td>
+                                                                        <td></td>
                                                                     @endif
-                                                                </div>
-                                                            </div>
-                                                            @if ($keterangan && ($status == '0' || $status == 0))
-                                                                <div class="mt-1 mb-2">
-                                                                    <small class="text-muted">Keterangan:
-                                                                        {{ $keterangan }}</small>
-                                                                </div>
-                                                            @endif
-                                                        @endforeach
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        @foreach ($secondColumn as $item)
-                                                            @php
-                                                                $status = $item->is_normal;
-                                                                $keterangan = $item->keterangan;
-                                                                $itemId = $item->id_item_fisik;
-                                                                $namaItem =
-                                                                    $itemFisikNames[$itemId] ?? 'Item #' . $itemId;
-                                                            @endphp
-                                                            <div
-                                                                class="d-flex justify-content-between align-items-center border-bottom py-2">
-                                                                <span>{{ $namaItem }}</span>
-                                                                <div class="d-flex align-items-center">
-                                                                    @if ($status == '0' || $status == 0)
-                                                                        <span class="badge bg-warning text-dark me-2">Tidak
-                                                                            Normal</span>
-                                                                    @elseif ($status == '1' || $status == 1)
-                                                                        <span class="badge bg-success me-2">Normal</span>
+
+                                                                    <!-- Kolom Kanan -->
+                                                                    @if ($secondColumn->has($i))
+                                                                        @php
+                                                                            $item = $secondColumn[$i];
+                                                                            $status = $item->is_normal;
+                                                                            $keterangan = $item->keterangan;
+                                                                            $itemId = $item->id_item_fisik;
+                                                                            $namaItem = $itemFisikNames[$itemId] ?? 'Item #' . $itemId;
+                                                                        @endphp
+                                                                        <td>
+                                                                            {{ $namaItem }}
+                                                                            @if ($keterangan && ($status == '0' || $status == 0))
+                                                                                <br>
+                                                                                <small class="text-muted">Keterangan: {{ $keterangan }}</small>
+                                                                            @endif
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            @if ($status == '0' || $status == 0)
+                                                                                <span class="badge bg-warning text-dark">Tidak Normal</span>
+                                                                            @elseif ($status == '1' || $status == 1)
+                                                                                <span class="badge bg-success">Normal</span>
+                                                                            @else
+                                                                                <span class="badge bg-secondary">Tidak Diperiksa</span>
+                                                                            @endif
+                                                                        </td>
                                                                     @else
-                                                                        <span class="badge bg-secondary me-2">Tidak
-                                                                            Diperiksa</span>
+                                                                        
                                                                     @endif
-                                                                </div>
-                                                            </div>
-                                                            @if ($keterangan && ($status == '0' || $status == 0))
-                                                                <div class="mt-1 mb-2">
-                                                                    <small class="text-muted">Keterangan:
-                                                                        {{ $keterangan }}</small>
-                                                                </div>
-                                                            @endif
-                                                        @endforeach
-                                                    </div>
+                                                                </tr>
+                                                            @endfor
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
                                         @endif
@@ -703,7 +709,7 @@
                                             <select class="form-select" name="neurologi_prognosis" disabled>
                                                 <option value="" disabled>--Pilih Prognosis--</option>
                                                 @forelse ($satsetPrognosis as $item)
-                                                    <option value="{{ $item->prognosis_id }}" 
+                                                    <option value="{{ $item->prognosis_id }}"
                                                         {{ old('neurologi_prognosis', $asesmen->rmeAsesmenNeurologiIntensitasNyeri[0]->neurologi_prognosis ?? '') == $item->prognosis_id ? 'selected' : '' }}>
                                                         {{ $item->value ?? 'Field tidak ditemukan' }}
                                                     </option>
@@ -798,9 +804,9 @@
                                                 <i class="bi bi-clipboard-plus me-1 text-primary"></i>
                                                 Rencana penatalaksanaan dan pengobatan:
                                             </label>
-                                            <textarea class="form-control" 
-                                                    id="rencana_pengobatan" 
-                                                    name="rencana_pengobatan" 
+                                            <textarea class="form-control"
+                                                    id="rencana_pengobatan"
+                                                    name="rencana_pengobatan"
                                                     rows="3"
                                                     placeholder="Tuliskan Rencana penatalaksanaan dan pengobatan..." disabled>{{ old('rencana_pengobatan', $asesmen->rmeAsesmenNeurologiIntensitasNyeri->rencana_pengobatan ?? '') }}</textarea>
                                         </div>

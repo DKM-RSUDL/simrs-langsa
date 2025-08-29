@@ -293,7 +293,7 @@
 
                                                 <!-- Pupil -->
                                                 <div class="row mb-3">
-                                                    
+
                                                     <div class="col-md-12">
                                                         <div class="input-group">
                                                             <label style="min-width: 170px;" class="fw-normal">Pupil</label>
@@ -365,16 +365,16 @@
                                                     <div class="col-md-10">
                                                         <div class="row">
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="ekstremitas_atas" placeholder="Atas">
+                                                                <input type="text" class="form-control" name="ekstremitas_atas" placeholder="Kanan Atas">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="ekstremitas_kanan" placeholder="Kanan">
+                                                                <input type="text" class="form-control" name="ekstremitas_kanan" placeholder="Kiri Atas">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="ekstremitas_bawah" placeholder="Bawah">
+                                                                <input type="text" class="form-control" name="ekstremitas_bawah" placeholder="Kanan Bawah">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="ekstremitas_kiri" placeholder="Kiri">
+                                                                <input type="text" class="form-control" name="ekstremitas_kiri" placeholder="Kiri Bawah">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -387,16 +387,16 @@
                                                     <div class="col-md-10">
                                                         <div class="row">
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="refleks_atas" placeholder="Atas">
+                                                                <input type="text" class="form-control" name="refleks_atas" placeholder="Kanan Atas">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="refleks_kanan" placeholder="Kanan">
+                                                                <input type="text" class="form-control" name="refleks_kanan" placeholder="Kiri Atas">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="refleks_bawah" placeholder="Bawah">
+                                                                <input type="text" class="form-control" name="refleks_bawah" placeholder="Kanan Bawah">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="refleks_kiri" placeholder="Kiri">
+                                                                <input type="text" class="form-control" name="refleks_kiri" placeholder="Kiri Bawah">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -409,16 +409,16 @@
                                                     <div class="col-md-10">
                                                         <div class="row">
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="refleks_patologis_atas" placeholder="Atas">
+                                                                <input type="text" class="form-control" name="refleks_patologis_atas" placeholder="Kanan Atas">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="refleks_patologis_kanan" placeholder="Kanan">
+                                                                <input type="text" class="form-control" name="refleks_patologis_kanan" placeholder="Kiri Atas">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="refleks_patologis_bawah" placeholder="Bawah">
+                                                                <input type="text" class="form-control" name="refleks_patologis_bawah" placeholder="Kanan Bawah">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="refleks_patologis_kiri" placeholder="Kiri">
+                                                                <input type="text" class="form-control" name="refleks_patologis_kiri" placeholder="Kiri Bawah">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -431,16 +431,16 @@
                                                     <div class="col-md-10">
                                                         <div class="row">
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="kekuatan_atas" placeholder="Atas">
+                                                                <input type="text" class="form-control" name="kekuatan_atas" placeholder="Kanan Atas">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="kekuatan_kanan" placeholder="Kanan">
+                                                                <input type="text" class="form-control" name="kekuatan_kanan" placeholder="Kiri Atas">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="kekuatan_bawah" placeholder="Bawah">
+                                                                <input type="text" class="form-control" name="kekuatan_bawah" placeholder="Kanan Bawah">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="kekuatan_kiri" placeholder="Kiri">
+                                                                <input type="text" class="form-control" name="kekuatan_kiri" placeholder="Kiri Bawah">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -678,7 +678,7 @@
 
                                                     <select class="form-select" name="neurologi_prognosis">
                                                         <option value="" selected disabled>--Pilih Prognosis--</option>
-                                                        @forelse ($satsetPrognosis as $item)                                            
+                                                        @forelse ($satsetPrognosis as $item)
                                                             <option value="{{ $item->prognosis_id }}">
                                                                 {{ $item->value ?? 'Field tidak ditemukan' }}
                                                             </option>

@@ -405,22 +405,22 @@
                                                         <div class="row">
                                                             <div class="col-md-3">
                                                                 <input type="text" class="form-control"
-                                                                    name="ekstremitas_atas" placeholder="Atas Kanan"
+                                                                    name="ekstremitas_atas" placeholder="Kanan Atas"
                                                                     value="{{ $asesmen->rmeAsesmenNeurologiSistemSyaraf->ekstremitas_atas ?? '' }}">
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <input type="text" class="form-control"
-                                                                    name="ekstremitas_kanan" placeholder="Atas Kiri"
+                                                                    name="ekstremitas_kanan" placeholder="Kiri Atas"
                                                                     value="{{ $asesmen->rmeAsesmenNeurologiSistemSyaraf->ekstremitas_kanan ?? '' }}">
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <input type="text" class="form-control"
-                                                                    name="ekstremitas_bawah" placeholder="Bawah Kanan"
+                                                                    name="ekstremitas_bawah" placeholder="Kanan Bawah"
                                                                     value="{{ $asesmen->rmeAsesmenNeurologiSistemSyaraf->ekstremitas_bawah ?? '' }}">
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <input type="text" class="form-control"
-                                                                    name="ekstremitas_kiri" placeholder="Bawah Kiri"
+                                                                    name="ekstremitas_kiri" placeholder="Kiri Bawah"
                                                                     value="{{ $asesmen->rmeAsesmenNeurologiSistemSyaraf->ekstremitas_kiri ?? '' }}">
                                                             </div>
                                                         </div>
@@ -435,22 +435,22 @@
                                                         <div class="row">
                                                             <div class="col-md-3">
                                                                 <input type="text" class="form-control"
-                                                                    name="refleks_atas" placeholder="Atas Kanan"
+                                                                    name="refleks_atas" placeholder="Kanan Atas"
                                                                     value="{{ $asesmen->rmeAsesmenNeurologiSistemSyaraf->refleks_atas ?? '' }}">
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <input type="text" class="form-control"
-                                                                    name="refleks_kanan" placeholder="Atas Kiri"
+                                                                    name="refleks_kanan" placeholder="Kiri Atas"
                                                                     value="{{ $asesmen->rmeAsesmenNeurologiSistemSyaraf->refleks_kanan ?? '' }}">
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <input type="text" class="form-control"
-                                                                    name="refleks_bawah" placeholder="Bawah Kanan"
+                                                                    name="refleks_bawah" placeholder="Kanan Bawah"
                                                                     value="{{ $asesmen->rmeAsesmenNeurologiSistemSyaraf->refleks_bawah ?? '' }}">
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <input type="text" class="form-control"
-                                                                    name="refleks_kiri" placeholder="Bawah Kiri"
+                                                                    name="refleks_kiri" placeholder="Kiri Bawah"
                                                                     value="{{ $asesmen->rmeAsesmenNeurologiSistemSyaraf->refleks_kiri ?? '' }}">
                                                             </div>
                                                         </div>
@@ -465,23 +465,23 @@
                                                         <div class="row">
                                                             <div class="col-md-3">
                                                                 <input type="text" class="form-control"
-                                                                    name="refleks_patologis_atas" placeholder="Atas Kanan"
+                                                                    name="refleks_patologis_atas" placeholder="Kanan Atas"
                                                                     value="{{ $asesmen->rmeAsesmenNeurologiSistemSyaraf->refleks_patologis_atas ?? '' }}">
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <input type="text" class="form-control"
-                                                                    name="refleks_patologis_kanan" placeholder="Atas Kiri"
+                                                                    name="refleks_patologis_kanan" placeholder="Kiri Atas"
                                                                     value="{{ $asesmen->rmeAsesmenNeurologiSistemSyaraf->refleks_patologis_kanan ?? '' }}">
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <input type="text" class="form-control"
                                                                     name="refleks_patologis_bawah"
-                                                                    placeholder="Bawah Kanan"
+                                                                    placeholder="Kanan Bawah"
                                                                     value="{{ $asesmen->rmeAsesmenNeurologiSistemSyaraf->refleks_patologis_bawah ?? '' }}">
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <input type="text" class="form-control"
-                                                                    name="refleks_patologis_kiri" placeholder="Bawah Kiri"
+                                                                    name="refleks_patologis_kiri" placeholder="Kiri Bawah"
                                                                     value="{{ $asesmen->rmeAsesmenNeurologiSistemSyaraf->refleks_patologis_kiri ?? '' }}">
                                                             </div>
                                                         </div>
@@ -496,22 +496,22 @@
                                                         <div class="row">
                                                             <div class="col-md-3">
                                                                 <input type="text" class="form-control"
-                                                                    name="kekuatan_atas"
+                                                                    name="kekuatan_atas" placeholder="Kanan Atas"
                                                                     value="{{ $asesmen->rmeAsesmenNeurologiSistemSyaraf->kekuatan_atas ?? '' }}">
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <input type="text" class="form-control"
-                                                                    name="kekuatan_kanan"
+                                                                    name="kekuatan_kanan" placeholder="Kiri Atas"
                                                                     value="{{ $asesmen->rmeAsesmenNeurologiSistemSyaraf->kekuatan_kanan ?? '' }}">
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <input type="text" class="form-control"
-                                                                    name="kekuatan_bawah"
+                                                                    name="kekuatan_bawah" placeholder="Kanan Bawah"
                                                                     value="{{ $asesmen->rmeAsesmenNeurologiSistemSyaraf->kekuatan_bawah ?? '' }}">
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <input type="text" class="form-control"
-                                                                    name="kekuatan_kiri"
+                                                                    name="kekuatan_kiri" placeholder="Kiri Bawah"
                                                                     value="{{ $asesmen->rmeAsesmenNeurologiSistemSyaraf->kekuatan_kiri ?? '' }}">
                                                             </div>
                                                         </div>
@@ -785,7 +785,7 @@
                                                         <select class="form-select" name="neurologi_prognosis">
                                                             <option value="" disabled>--Pilih Prognosis--</option>
                                                             @forelse ($satsetPrognosis as $item)
-                                                                <option value="{{ $item->prognosis_id }}" 
+                                                                <option value="{{ $item->prognosis_id }}"
                                                                     {{ old('neurologi_prognosis', $asesmen->rmeAsesmenNeurologiIntensitasNyeri[0]->neurologi_prognosis ?? '') == $item->prognosis_id ? 'selected' : '' }}>
                                                                     {{ $item->value ?? 'Field tidak ditemukan' }}
                                                                 </option>
@@ -893,9 +893,9 @@
                                                             <i class="bi bi-clipboard-plus me-1 text-primary"></i>
                                                             Rencana penatalaksanaan dan pengobatan:
                                                         </label>
-                                                        <textarea class="form-control" 
-                                                                id="rencana_pengobatan" 
-                                                                name="rencana_pengobatan" 
+                                                        <textarea class="form-control"
+                                                                id="rencana_pengobatan"
+                                                                name="rencana_pengobatan"
                                                                 rows="3"
                                                                 placeholder="Tuliskan Rencana penatalaksanaan dan pengobatan...">{{ old('rencana_pengobatan', $asesmen->rmeAsesmenNeurologiIntensitasNyeri->rencana_pengobatan ?? '') }}</textarea>
                                                     </div>
