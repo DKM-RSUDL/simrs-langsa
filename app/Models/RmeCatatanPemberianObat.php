@@ -15,7 +15,11 @@ class RmeCatatanPemberianObat extends Model
 
     public function petugas()
     {
-        return $this->belongsTo(User::class, 'kd_petugas', 'id');
+        return $this->belongsTo(User::class, 'kd_petugas', 'kd_karyawan');
     }
 
+    public function petugasValidasi()
+    {
+        return $this->belongsTo(User::class, 'petugas_validasi', 'kd_karyawan');
+    }
 }

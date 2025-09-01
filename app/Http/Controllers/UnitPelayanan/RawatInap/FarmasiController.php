@@ -13,7 +13,9 @@ use App\Models\RmeRekonsiliasiObat;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -395,19 +397,20 @@ class FarmasiController extends Controller
 
     public function catatanObat(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
+        DB::beginTransaction();
+
         try {
             // Validasi data
             $validatedData = $request->validate([
-                'kd_petugas' => 'required',
                 'nama_obat' => 'required',
                 'frekuensi' => 'required',
                 'keterangan' => 'required',
                 'dosis' => 'required',
                 'satuan' => 'required',
                 'tanggal' => 'required|date',
-                'freak' => 'required',
                 'jam' => 'required',
                 'catatan' => 'nullable',
+                'is_validasi'   => 'required|in:0,1'
             ]);
 
             // Simpan ke tabel RmeCatatanPemberianObat
@@ -416,20 +419,22 @@ class FarmasiController extends Controller
             $catatan->kd_unit = $kd_unit;
             $catatan->tgl_masuk = $tgl_masuk;
             $catatan->urut_masuk = $urut_masuk;
-            $catatan->kd_petugas = $validatedData['kd_petugas'];
+            $catatan->kd_petugas = Auth::user()->karyawan->kd_karyawan;
             $catatan->nama_obat = $validatedData['nama_obat'];
             $catatan->frekuensi = $validatedData['frekuensi'];
             $catatan->keterangan = $validatedData['keterangan'];
             $catatan->dosis = $validatedData['dosis'];
             $catatan->satuan = $validatedData['satuan'];
-            $catatan->freak = $validatedData['freak'];
             $catatan->tanggal = $validatedData['tanggal'] . ' ' . $validatedData['jam'];
             $catatan->catatan = $validatedData['catatan'];
+            $catatan->is_validasi = $validatedData['is_validasi'];
             $catatan->save();
 
-            return response()->json(['message' => 'Catatan pemberian obat berhasil disimpan', 'id' => $catatan->id]);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Gagal menyimpan catatan', 'error' => $e->getMessage()], 500);
+            DB::commit();
+            return back()->with('success', 'Catatan pemberian obat berhasil disimpan');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -439,7 +444,7 @@ class FarmasiController extends Controller
             ->where('kd_unit', $kd_unit)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
-            ->with('petugas')
+            ->with(['petugas', 'petugasValidasi'])
             ->select(
                 'id',
                 'kd_petugas',
@@ -450,7 +455,9 @@ class FarmasiController extends Controller
                 'keterangan',
                 'freak',
                 'tanggal',
-                'catatan'
+                'catatan',
+                'is_validasi',
+                'petugas_validasi'
             )
             ->orderBy('tanggal', 'desc')
             ->get();
@@ -481,6 +488,57 @@ class FarmasiController extends Controller
                 'message' => 'Gagal menghapus catatan',
                 'error' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function validasiCatatanObat($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            $validator = Validator::make($request->all(), [
+                'catatan'   => 'required',
+            ]);
+
+            if ($validator->fails()) throw new Exception('Payload tidak valid !');
+
+            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->where('kunjungan.kd_unit', $kd_unit)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->first();
+
+            if (empty($dataMedis)) throw new Exception('Kunjungan pasien tidak ditemukan !');
+
+            $id = decrypt($request->catatan);
+            $catatan = RmeCatatanPemberianObat::find($id);
+
+            if (empty($catatan)) throw new Exception('CPO tidak ditemukan !');
+
+            // update validasi
+            $catatan->petugas_validasi = Auth::user()->karyawan->kd_karyawan;
+            $catatan->save();
+
+            DB::commit();
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'OK',
+                'data'     => []
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'    => 'error',
+                'message'   => $e->getMessage(),
+                'data'     => []
+            ]);
         }
     }
 

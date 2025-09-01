@@ -5,24 +5,23 @@
     <style>
         /* .header-background { background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");} */
         .modal-overlay {
-        display: none;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 1050;
-    }
-    
-    #editObatModal {
-        z-index: 1060;
-    }
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1050;
+        }
+
+        #editObatModal {
+            z-index: 1060;
+        }
     </style>
 @endpush
 
 @section('content')
-
     <div class="row">
         <div class="col-md-3">
             @include('components.patient-card')
@@ -52,14 +51,16 @@
                                     Catatan Pemberian Obat</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="rekonsiliasi-tab" data-bs-toggle="tab" data-bs-target="#rekonsiliasi"
-                                    type="button" role="tab" aria-controls="rekonsiliasi" aria-selected="false">Rekonsiliasi Obat</button>
+                                <button class="nav-link" id="rekonsiliasi-tab" data-bs-toggle="tab"
+                                    data-bs-target="#rekonsiliasi" type="button" role="tab"
+                                    aria-controls="rekonsiliasi" aria-selected="false">Rekonsiliasi Obat</button>
                             </li>
                         </ul>
 
                         {{-- Tab Content --}}
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="resep" role="tabpanel" aria-labelledby="resep-tab">
+                            <div class="tab-pane fade show active" id="resep" role="tabpanel"
+                                aria-labelledby="resep-tab">
                                 {{-- TAB 1. buatlah list disini --}}
                                 @include('unit-pelayanan.rawat-inap.pelayanan.farmasi.tabsresep')
                             </div>
@@ -83,15 +84,13 @@
     </div>
 @endsection
 
-
 @push('js')
     <script>
         $(document).ready(function() {
-
-
             // Simpan tab aktif ke localStorage saat tab berubah
-            $('#myTab .nav-link').on('shown.bs.tab', function (e) {
-                const activeTabId = $(e.target).attr('id'); // Misal: resep-tab, riwayat-tab, rekonsiliasi-tab
+            $('#myTab .nav-link').on('shown.bs.tab', function(e) {
+                const activeTabId = $(e.target).attr(
+                    'id'); // Misal: resep-tab, riwayat-tab, rekonsiliasi-tab
                 localStorage.setItem('activeMainTab', activeTabId);
             });
 
@@ -100,13 +99,13 @@
             if (savedTab) {
                 $(`#${savedTab}`).tab('show'); // Aktifkan tab yang tersimpan
             }
-           
+
 
             function formatDateTime(date, time) {
                 if (!date || !time) {
                     return '';
                 }
-                
+
                 let formattedDate;
                 if (date.includes('-')) {
                     formattedDate = date;
