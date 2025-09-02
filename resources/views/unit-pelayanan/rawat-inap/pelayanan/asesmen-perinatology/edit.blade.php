@@ -1,7 +1,160 @@
 @extends('layouts.administrator.master')
 
+
+@push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
+    <style>
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-asesmen {
+            margin-top: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .progress-wrapper {
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .progress-status {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-label {
+            color: #6c757d;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .progress-percentage {
+            color: #198754;
+            font-weight: 600;
+        }
+
+        .custom-progress {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-custom {
+            height: 100%;
+            background-color: #097dd6;
+            transition: width 0.6s ease;
+        }
+
+        .section-separator {
+            border-top: 2px solid #097dd6;
+            margin: 2rem 0;
+            padding-top: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .form-group label {
+            margin-right: 1rem;
+            padding-top: 0.5rem;
+        }
+
+        .diagnosis-section {
+            margin-top: 1.5rem;
+        }
+
+        .diagnosis-row {
+            padding: 0.5rem 1rem;
+            border-color: #dee2e6 !important;
+        }
+
+        .diagnosis-item {
+            background-color: transparent;
+        }
+
+        .border-top {
+            border-top: 1px solid #dee2e6 !important;
+        }
+
+        .border-bottom {
+            border-bottom: 1px solid #dee2e6 !important;
+        }
+
+        .form-check {
+            margin: 0;
+            padding-left: 1.5rem;
+            min-height: auto;
+        }
+
+        .form-check-input {
+            margin-top: 0.3rem;
+        }
+
+        .form-check label {
+            margin-right: 0;
+            padding-top: 0;
+        }
+
+        .btn-outline-primary {
+            color: #097dd6;
+            border-color: #097dd6;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #097dd6;
+            color: white;
+        }
+
+        .pain-scale-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .pain-scale-image {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: fixed;
+            /* Ubah ke absolute */
+            min-width: 300px;
+            background-color: #fff;
+            border: 1px solid rgba(0, 0, 0, .15);
+            border-radius: 0.25rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, .15);
+            z-index: 1000;
+            transform: translateY(5px);
+            /* Tambahkan sedikit offset */
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Tambahkan wrapper untuk positioning yang lebih baik */
+        .dropdown-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+    </style>
+@endpush
+
 @section('content')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-perinatology.edit-include')
 
     <div class="row">
         <div class="col-md-3">
@@ -2289,264 +2442,61 @@
                                     </div>
                                 </div>
 
-                                <!-- 14. Diagnosa -->
-                                <div class="section-separator" id="diagnosis">
-                                    <h5 class="fw-semibold mb-4">14. Diagnosis</h5>
+                                <!-- 16. Masalah/Diagnosis Keperawatan -->
+                                <div class="section-separator" id="diagnosis-keperawatan">
+                                    <h5 class="section-title">16. Masalah/Diagnosis Keperawatan</h5>
+                                    <p class="text-muted">Diisi berdasarkan hasil asesmen dan berurut sesuai masalah
+                                        yang dominan terlebih dahulu</p>
 
-                                    @php
-                                    // Parse existing diagnosis data from database
-                                    $diagnosisBanding = !empty($asesmen->rmeAsesmenPerinatology->diagnosis_banding)
-                                        ? json_decode($asesmen->rmeAsesmenPerinatology->diagnosis_banding, true)
-                                        : [];
-                                    $diagnosisKerja = !empty($asesmen->rmeAsesmenPerinatology->diagnosis_kerja)
-                                        ? json_decode($asesmen->rmeAsesmenPerinatology->diagnosis_kerja, true)
-                                        : [];
-                                    @endphp
-
-                                    <!-- Diagnosis Banding -->
+                                    <!-- Field 1: Masalah/Diagnosis Keperawatan -->
                                     <div class="mb-4">
-                                        <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
-                                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari diagnosis banding, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan diagnosis banding yang tidak ditemukan.</small>
-
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="diagnosis-banding-input" class="form-control border-start-0 ps-0"
-                                                placeholder="Cari dan tambah Diagnosis Banding">
-                                            <span class="input-group-text bg-white" id="add-diagnosis-banding">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <label class="form-label fw-bold">1. Masalah/Diagnosis Keperawatan</label>
+                                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                                id="btnTambahMasalah">
+                                                <i class="bi bi-plus"></i> Tambah
+                                            </button>
                                         </div>
 
-                                        <div id="diagnosis-banding-list" class="diagnosis-list bg-light p-3 rounded">
-                                            @forelse($diagnosisBanding as $index => $diagnosis)
-                                                <div class="diagnosis-item d-flex justify-content-between align-items-center mb-2">
-                                                    <span>{{ $index + 1 }}. {{ $diagnosis }}</span>
-                                                    <button type="button" class="btn btn-sm text-danger delete-diagnosis"
-                                                        data-type="banding" data-index="{{ $index }}">
+                                        <div id="masalahContainer">
+                                            <div class="masalah-item mb-2">
+                                                <div class="d-flex gap-2">
+                                                    <textarea class="form-control" name="masalah_diagnosis[]" rows="2"
+                                                        placeholder="Tuliskan masalah atau diagnosis keperawatan..."></textarea>
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-outline-danger remove-masalah"
+                                                        onclick="removeMasalah(this)" style="display: none;">
                                                         <i class="bi bi-trash"></i>
                                                     </button>
                                                 </div>
-                                            @empty
-                                                <div class="text-muted fst-italic">Belum ada diagnosis banding</div>
-                                            @endforelse
+                                            </div>
                                         </div>
-
-                                        <!-- Hidden input for form submission -->
-                                        <input type="hidden" id="diagnosis_banding" name="diagnosis_banding"
-                                            value="{{ json_encode($diagnosisBanding) }}">
                                     </div>
 
-                                    <!-- Diagnosis Kerja -->
+                                    <!-- Field 2: Intervensi/Rencana Asuhan -->
                                     <div class="mb-4">
-                                        <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
-                                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan diagnosis kerja yang tidak ditemukan.</small>
-
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="diagnosis-kerja-input" class="form-control border-start-0 ps-0"
-                                                placeholder="Cari dan tambah Diagnosis Kerja">
-                                            <span class="input-group-text bg-white" id="add-diagnosis-kerja">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <label class="form-label fw-bold">2. Intervensi/Rencana Asuhan dan Target
+                                                Terukur</label>
+                                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                                id="btnTambahIntervensi">
+                                                <i class="bi bi-plus"></i> Tambah
+                                            </button>
                                         </div>
 
-                                        <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
-                                            @forelse($diagnosisKerja as $index => $diagnosis)
-                                                <div class="diagnosis-item d-flex justify-content-between align-items-center mb-2">
-                                                    <span>{{ $index + 1 }}. {{ $diagnosis }}</span>
-                                                    <button type="button" class="btn btn-sm text-danger delete-diagnosis"
-                                                        data-type="kerja" data-index="{{ $index }}">
+                                        <div id="intervensiContainer">
+                                            <div class="intervensi-item mb-2">
+                                                <div class="d-flex gap-2">
+                                                    <textarea class="form-control" name="intervensi_rencana[]" rows="3"
+                                                        placeholder="Tuliskan intervensi, rencana asuhan, dan target yang terukur..."></textarea>
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-outline-danger remove-intervensi"
+                                                        onclick="removeIntervensi(this)" style="display: none;">
                                                         <i class="bi bi-trash"></i>
                                                     </button>
                                                 </div>
-                                            @empty
-                                                <div class="text-muted fst-italic">Belum ada diagnosis kerja</div>
-                                            @endforelse
+                                            </div>
                                         </div>
-
-                                        <!-- Hidden input for form submission -->
-                                        <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja"
-                                            value="{{ json_encode($diagnosisKerja) }}">
-                                    </div>
-                                </div>
-
-                                <!-- 15. Implementasi -->
-                                <div class="section-separator" style="margin-bottom: 2rem;">
-                                    <h5 class="fw-semibold mb-4">15. Implementasi</h5>
-
-                                    @php
-                                        // Parse data implementasi dari database (sesuaikan dengan field di model asesmen anak)
-                                        $observasi = !empty($asesmen->rmeAsesmenPerinatology->observasi)
-                                            ? json_decode($asesmen->rmeAsesmenPerinatology->observasi, true)
-                                            : [];
-                                        $terapeutik = !empty($asesmen->rmeAsesmenPerinatology->terapeutik)
-                                            ? json_decode($asesmen->rmeAsesmenPerinatology->terapeutik, true)
-                                            : [];
-                                        $edukasi = !empty($asesmen->rmeAsesmenPerinatology->edukasi)
-                                            ? json_decode($asesmen->rmeAsesmenPerinatology->edukasi, true)
-                                            : [];
-                                        $kolaborasi = !empty($asesmen->rmeAsesmenPerinatology->kolaborasi)
-                                            ? json_decode($asesmen->rmeAsesmenPerinatology->kolaborasi, true)
-                                            : [];
-                                        $prognosis = !empty($asesmen->rmeAsesmenPerinatology->prognosis)
-                                            ? json_decode($asesmen->rmeAsesmenPerinatology->prognosis, true)
-                                            : [];
-                                    @endphp
-
-                                    <!-- Rencana Penatalaksanaan dan Pengobatan -->
-                                    <div class="mb-4">
-                                        <label class="text-primary fw-semibold">Rencana Penatalaksanaan dan Pengobatan</label>
-                                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari rencana, atau tanda tambah untuk menambah keterangan rencana yang tidak ditemukan.</small>
-                                    </div>
-
-                                    <!-- Observasi Section -->
-                                    <div class="mb-4">
-                                        <label class="fw-semibold mb-2">Observasi</label>
-                                        <div class="input-group mt-2">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="observasi-input" class="form-control border-start-0 ps-0" placeholder="Cari dan tambah Observasi">
-                                            <span class="input-group-text bg-white" id="add-observasi">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
-                                        </div>
-                                        <div id="observasi-list" class="list-group mb-2">
-                                            @forelse($observasi as $index => $item)
-                                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <span>{{ $index + 1 }}. {{ $item }}</span>
-                                                    <button type="button" class="btn btn-sm text-danger delete-item" data-type="observasi" data-index="{{ $index }}">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                            @empty
-                                                <div class="list-group-item text-muted fst-italic">Belum ada data observasi</div>
-                                            @endforelse
-                                        </div>
-                                        <input type="hidden" id="observasi" name="observasi" value="{{ json_encode($observasi) }}">
-                                    </div>
-
-                                    <!-- Terapeutik Section -->
-                                    <div class="mb-4">
-                                        <label class="fw-semibold mb-2">Terapeutik</label>
-                                        <div class="input-group mt-2">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="terapeutik-input" class="form-control border-start-0 ps-0" placeholder="Cari dan tambah Terapeutik">
-                                            <span class="input-group-text bg-white" id="add-terapeutik">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
-                                        </div>
-                                        <div id="terapeutik-list" class="list-group mb-2">
-                                            @forelse($terapeutik as $index => $item)
-                                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <span>{{ $index + 1 }}. {{ $item }}</span>
-                                                    <button type="button" class="btn btn-sm text-danger delete-item" data-type="terapeutik" data-index="{{ $index }}">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                            @empty
-                                                <div class="list-group-item text-muted fst-italic">Belum ada data terapeutik</div>
-                                            @endforelse
-                                        </div>
-                                        <input type="hidden" id="terapeutik" name="terapeutik" value="{{ json_encode($terapeutik) }}">
-                                    </div>
-
-                                    <!-- Edukasi Section -->
-                                    <div class="mb-4">
-                                        <label class="fw-semibold mb-2">Edukasi</label>
-                                        <div class="input-group mt-2">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="edukasi-input" class="form-control border-start-0 ps-0" placeholder="Cari dan tambah Edukasi">
-                                            <span class="input-group-text bg-white" id="add-edukasi">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
-                                        </div>
-                                        <div id="edukasi-list" class="list-group mb-2">
-                                            @forelse($edukasi as $index => $item)
-                                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <span>{{ $index + 1 }}. {{ $item }}</span>
-                                                    <button type="button" class="btn btn-sm text-danger delete-item" data-type="edukasi" data-index="{{ $index }}">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                            @empty
-                                                <div class="list-group-item text-muted fst-italic">Belum ada data edukasi</div>
-                                            @endforelse
-                                        </div>
-                                        <input type="hidden" id="edukasi" name="edukasi" value="{{ json_encode($edukasi) }}">
-                                    </div>
-
-                                    <!-- Kolaborasi Section -->
-                                    <div class="mb-4">
-                                        <label class="fw-semibold mb-2">Kolaborasi</label>
-                                        <div class="input-group mt-2">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="kolaborasi-input" class="form-control border-start-0 ps-0" placeholder="Cari dan tambah Kolaborasi">
-                                            <span class="input-group-text bg-white" id="add-kolaborasi">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
-                                        </div>
-                                        <div id="kolaborasi-list" class="list-group mb-2">
-                                            @forelse($kolaborasi as $index => $item)
-                                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <span>{{ $index + 1 }}. {{ $item }}</span>
-                                                    <button type="button" class="btn btn-sm text-danger delete-item" data-type="kolaborasi" data-index="{{ $index }}">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                            @empty
-                                                <div class="list-group-item text-muted fst-italic">Belum ada data kolaborasi</div>
-                                            @endforelse
-                                        </div>
-                                        <input type="hidden" id="kolaborasi" name="kolaborasi" value="{{ json_encode($kolaborasi) }}">
-                                    </div>
-
-                                    <!-- Prognosis Section -->
-                                    <div class="mb-4">
-                                        <label class="text-primary fw-semibold">Prognosis</label>
-                                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari prognosis, atau tanda tambah untuk menambah keterangan prognosis yang tidak ditemukan.</small>
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="prognosis-input" class="form-control border-start-0 ps-0" placeholder="Cari dan tambah Prognosis">
-                                            <span class="input-group-text bg-white" id="add-prognosis">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
-                                        </div>
-                                        <div id="prognosis-list" class="list-group mb-3">
-                                            @forelse($prognosis as $index => $item)
-                                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <span>{{ $index + 1 }}. {{ $item }}</span>
-                                                    <button type="button" class="btn btn-sm text-danger delete-item" data-type="prognosis" data-index="{{ $index }}">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                            @empty
-                                                <div class="list-group-item text-muted fst-italic">Belum ada data prognosis</div>
-                                            @endforelse
-                                        </div>
-                                        <input type="hidden" id="prognosis" name="prognosis" value="{{ json_encode($prognosis) }}">
-                                    </div>
-                                </div>
-
-                                <!-- 16. Evaluasi -->
-                                <div class="section-separator" style="margin-bottom: 2rem;" id="evaluasi">
-                                    <h5 class="fw-semibold mb-4">16. Evaluasi</h5>
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Tambah Evaluasi Keperawatan</label>
-                                        <textarea class="form-control" name="evaluasi_keperawatan" rows="4"
-                                            placeholder="Evaluasi Keperawaran">{{ $asesmen->rmeAsesmenPerinatology->evaluasi ?? '' }}</textarea>
                                     </div>
                                 </div>
 
@@ -2563,9 +2513,631 @@
         </div>
     </div>
     {{-- Include modals --}}
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-perinatology.edit-modal-create-alergi')
     @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-perinatology.modal-create-downscore')
     @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-perinatology.modal-intervensirisikojatuh')
     @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-perinatology.modal-skala-adl')
     @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skalanyeri')
+
+
+    <!-- Modal Alergi -->
+    <div class="modal fade" id="alergiModal" tabindex="-1" aria-labelledby="alergiModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="alergiModalLabel">Manajemen Data Alergi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form Input Alergi -->
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">Tambah Data Alergi</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="modal_jenis_alergi" class="form-label">Jenis Alergi</label>
+                                    <select class="form-select" id="modal_jenis_alergi">
+                                        <option value="">-- Pilih Jenis Alergi --</option>
+                                        <option value="Obat">Obat</option>
+                                        <option value="Makanan">Makanan</option>
+                                        <option value="Udara">Udara</option>
+                                        <option value="Lainnya">Lainnya</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="modal_alergen" class="form-label">Alergen</label>
+                                    <input type="text" class="form-control" id="modal_alergen"
+                                        placeholder="Contoh: Paracetamol, Seafood, Debu">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="modal_reaksi" class="form-label">Reaksi</label>
+                                    <input type="text" class="form-control" id="modal_reaksi"
+                                        placeholder="Contoh: Gatal, Ruam, Sesak nafas">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="modal_tingkat_keparahan" class="form-label">Tingkat Keparahan</label>
+                                    <select class="form-select" id="modal_tingkat_keparahan">
+                                        <option value="">-- Pilih Tingkat Keparahan --</option>
+                                        <option value="Ringan">Ringan</option>
+                                        <option value="Sedang">Sedang</option>
+                                        <option value="Berat">Berat</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <button type="button" class="btn btn-primary btn-sm" id="addToAlergiList">
+                                    <i class="bi bi-plus"></i> Tambah ke Daftar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Daftar Alergi -->
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="card-title mb-0">Daftar Alergi Pasien</h6>
+                            <span class="badge bg-primary" id="alergiCount">0</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th width="20%">Jenis Alergi</th>
+                                            <th width="25%">Alergen</th>
+                                            <th width="25%">Reaksi</th>
+                                            <th width="20%">Tingkat Keparahan</th>
+                                            <th width="10%">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="modalAlergiList">
+                                        <!-- Data akan ditampilkan di sini -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="noAlergiMessage" class="text-center text-muted py-3" style="display: none;">
+                                <i class="bi bi-info-circle"></i> Belum ada data alergi
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-primary" id="saveAlergiData">
+                        <i class="bi bi-check"></i> Simpan Data Alergi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 @endsection
+
+@push('js')
+    <script>
+        // Pass data from PHP to JavaScript
+        window.alergiPasienData = @json($alergiPasien ?? []);
+        
+        // Parse masalah diagnosis data
+        window.masalahDiagnosisData = [];
+        window.intervensiRencanaData = [];
+        
+        @if(isset($asesmen->masalah_diagnosis_parsed))
+            window.masalahDiagnosisData = @json($asesmen->masalah_diagnosis_parsed);
+        @endif
+        
+        @if(isset($asesmen->intervensi_rencana_parsed))
+            window.intervensiRencanaData = @json($asesmen->intervensi_rencana_parsed);
+        @endif
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            'use strict';
+
+            // ==================================================================================
+            // CONFIGURATION AND UTILITIES
+            // ==================================================================================
+            
+            const CONFIG = {
+                STORAGE_KEYS: {
+                    ALERGI: 'alergisInput',
+                    MASALAH_DIAGNOSIS: 'masalah_diagnosis',
+                    INTERVENSI_RENCANA: 'intervensi_rencana'
+                }
+            };
+
+            function showAlert(message, type = 'info') {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: type,
+                        title: type === 'error' ? 'Error' : 'Information',
+                        text: message,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok'
+                    });
+                } else {
+                    alert(message);
+                }
+            }
+
+            // ==================================================================================
+            // ALLERGY MODULE - FIXED
+            // ==================================================================================
+            
+            const AllergyModule = {
+                alergiDataArray: [],
+                
+                init() {
+                    console.log('Initializing Allergy Module...');
+                    this.loadExistingData();
+                    this.initEventListeners();
+                    this.updateMainAlergiTable();
+                    this.updateHiddenAlergiInput();
+                },
+
+                loadExistingData() {
+                    try {
+                        // Load from PHP variable passed to JavaScript
+                        if (typeof window.alergiPasienData !== 'undefined') {
+                            this.alergiDataArray = window.alergiPasienData.map(item => ({
+                                jenis_alergi: item.jenis_alergi || '',
+                                alergen: item.nama_alergi || '',
+                                reaksi: item.reaksi || '',
+                                tingkat_keparahan: item.tingkat_keparahan || '',
+                                is_existing: true,
+                                id: item.id || null
+                            }));
+                        } else {
+                            // Fallback: try to load from hidden input
+                            const hiddenInput = document.getElementById('alergisInput');
+                            if (hiddenInput && hiddenInput.value) {
+                                const data = JSON.parse(hiddenInput.value);
+                                this.alergiDataArray = data || [];
+                            }
+                        }
+                        
+                        console.log('Loaded allergy data:', this.alergiDataArray);
+                    } catch (e) {
+                        console.error('Error loading existing alergi data:', e);
+                        this.alergiDataArray = [];
+                    }
+                },
+
+                initEventListeners() {
+                    const openAlergiModal = document.getElementById('openAlergiModal');
+                    const addToAlergiList = document.getElementById('addToAlergiList');
+                    const saveAlergiData = document.getElementById('saveAlergiData');
+
+                    if (openAlergiModal) {
+                        openAlergiModal.addEventListener('click', () => {
+                            this.updateModalAlergiList();
+                        });
+                    }
+
+                    if (addToAlergiList) {
+                        addToAlergiList.addEventListener('click', () => {
+                            this.addAlergiToList();
+                        });
+                    }
+
+                    if (saveAlergiData) {
+                        saveAlergiData.addEventListener('click', () => {
+                            this.saveAlergiData();
+                        });
+                    }
+                },
+
+                addAlergiToList() {
+                    const jenisAlergi = document.getElementById('modal_jenis_alergi')?.value?.trim();
+                    const alergen = document.getElementById('modal_alergen')?.value?.trim();
+                    const reaksi = document.getElementById('modal_reaksi')?.value?.trim();
+                    const tingkatKeparahan = document.getElementById('modal_tingkat_keparahan')?.value?.trim();
+
+                    if (!jenisAlergi || !alergen || !reaksi || !tingkatKeparahan) {
+                        showAlert('Semua field harus diisi', 'warning');
+                        return;
+                    }
+
+                    // Check for duplicates
+                    const isDuplicate = this.alergiDataArray.some(item =>
+                        item.jenis_alergi === jenisAlergi &&
+                        item.alergen.toLowerCase() === alergen.toLowerCase()
+                    );
+
+                    if (isDuplicate) {
+                        showAlert('Alergi ini sudah ada dalam daftar', 'warning');
+                        return;
+                    }
+
+                    this.alergiDataArray.push({
+                        jenis_alergi: jenisAlergi,
+                        alergen: alergen,
+                        reaksi: reaksi,
+                        tingkat_keparahan: tingkatKeparahan,
+                        is_existing: false
+                    });
+
+                    this.updateModalAlergiList();
+                    this.resetAlergiForm();
+                },
+
+                updateModalAlergiList() {
+                    const tbody = document.getElementById('modalAlergiList');
+                    const noDataMessage = document.getElementById('noAlergiMessage');
+                    const countBadge = document.getElementById('alergiCount');
+
+                    if (!tbody) return;
+
+                    tbody.innerHTML = '';
+
+                    if (this.alergiDataArray.length === 0) {
+                        if (noDataMessage) noDataMessage.style.display = 'block';
+                        const table = tbody.closest('table');
+                        if (table) table.style.display = 'none';
+                    } else {
+                        if (noDataMessage) noDataMessage.style.display = 'none';
+                        const table = tbody.closest('table');
+                        if (table) table.style.display = 'table';
+
+                        this.alergiDataArray.forEach((item, index) => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${item.jenis_alergi}</td>
+                                <td>${item.alergen}</td>
+                                <td>${item.reaksi}</td>
+                                <td>
+                                    <span class="badge ${this.getKeparahanBadgeClass(item.tingkat_keparahan)}">
+                                        ${item.tingkat_keparahan}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="AllergyModule.removeAlergiFromModal(${index})">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                    ${item.is_existing ? '<small class="text-muted d-block">Dari DB</small>' : '<small class="text-success d-block">Baru</small>'}
+                                </td>
+                            `;
+                            tbody.appendChild(row);
+                        });
+                    }
+
+                    if (countBadge) countBadge.textContent = this.alergiDataArray.length;
+                },
+
+                updateMainAlergiTable() {
+                    const tbody = document.querySelector('#createAlergiTable tbody');
+                    if (!tbody) return;
+
+                    // Remove existing rows except no-alergi-row
+                    const existingRows = tbody.querySelectorAll('tr:not(#no-alergi-row)');
+                    existingRows.forEach(row => row.remove());
+
+                    const noAlergiRow = document.getElementById('no-alergi-row');
+
+                    if (this.alergiDataArray.length === 0) {
+                        if (!noAlergiRow) {
+                            const emptyRow = document.createElement('tr');
+                            emptyRow.id = 'no-alergi-row';
+                            emptyRow.innerHTML = '<td colspan="5" class="text-center text-muted">Belum ada data alergi</td>';
+                            tbody.appendChild(emptyRow);
+                        } else {
+                            noAlergiRow.style.display = 'table-row';
+                        }
+                    } else {
+                        if (noAlergiRow) noAlergiRow.style.display = 'none';
+
+                        this.alergiDataArray.forEach((item, index) => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${item.jenis_alergi}</td>
+                                <td>${item.alergen}</td>
+                                <td>${item.reaksi}</td>
+                                <td>
+                                    <span class="badge ${this.getKeparahanBadgeClass(item.tingkat_keparahan)}">
+                                        ${item.tingkat_keparahan}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="AllergyModule.removeAlergiFromMain(${index})">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            `;
+                            tbody.appendChild(row);
+                        });
+                    }
+                },
+
+                saveAlergiData() {
+                    this.updateMainAlergiTable();
+                    this.updateHiddenAlergiInput();
+
+                    const alergiModal = document.getElementById('alergiModal');
+                    if (alergiModal && typeof bootstrap !== 'undefined') {
+                        const modalInstance = bootstrap.Modal.getInstance(alergiModal);
+                        if (modalInstance) modalInstance.hide();
+                    }
+
+                    showAlert('Data alergi berhasil disimpan', 'success');
+                },
+
+                resetAlergiForm() {
+                    const fields = ['modal_jenis_alergi', 'modal_alergen', 'modal_reaksi', 'modal_tingkat_keparahan'];
+                    fields.forEach(fieldId => {
+                        const field = document.getElementById(fieldId);
+                        if (field) field.value = '';
+                    });
+                },
+
+                updateHiddenAlergiInput() {
+                    const hiddenInput = document.getElementById('alergisInput');
+                    if (hiddenInput) {
+                        hiddenInput.value = JSON.stringify(this.alergiDataArray);
+                    }
+                },
+
+                getKeparahanBadgeClass(keparahan) {
+                    switch (keparahan?.toLowerCase()) {
+                        case 'ringan': return 'bg-success';
+                        case 'sedang': return 'bg-warning';
+                        case 'berat': return 'bg-danger';
+                        default: return 'bg-secondary';
+                    }
+                },
+
+                removeAlergiFromModal(index) {
+                    this.alergiDataArray.splice(index, 1);
+                    this.updateModalAlergiList();
+                },
+
+                removeAlergiFromMain(index) {
+                    this.alergiDataArray.splice(index, 1);
+                    this.updateMainAlergiTable();
+                    this.updateHiddenAlergiInput();
+                }
+            };
+
+            // Make AllergyModule globally accessible
+            window.AllergyModule = AllergyModule;
+
+            // ==================================================================================
+            // MASALAH DIAGNOSIS MODULE - FIXED
+            // ==================================================================================
+            
+            const MasalahDiagnosisModule = {
+                init() {
+                    console.log('Initializing Masalah Diagnosis Module...');
+                    this.initMasalahFields();
+                    this.initIntervensiFields();
+                },
+
+                initMasalahFields() {
+                    const masalahContainer = document.getElementById('masalahContainer');
+                    const btnTambahMasalah = document.getElementById('btnTambahMasalah');
+
+                    if (!masalahContainer) {
+                        console.warn('masalahContainer not found');
+                        return;
+                    }
+
+                    // Get existing data from PHP
+                    let existingData = [];
+                    if (typeof window.masalahDiagnosisData !== 'undefined') {
+                        existingData = window.masalahDiagnosisData;
+                    }
+
+                    console.log('Masalah diagnosis existing data:', existingData);
+
+                    // Clear container
+                    masalahContainer.innerHTML = '';
+
+                    // Add existing data or create first empty field
+                    if (existingData && existingData.length > 0) {
+                        existingData.forEach((masalah, index) => {
+                            this.addMasalahField(masalahContainer, masalah, index === 0);
+                        });
+                    } else {
+                        this.addMasalahField(masalahContainer, '', true);
+                    }
+
+                    // Add event listener for adding new masalah
+                    if (btnTambahMasalah) {
+                        btnTambahMasalah.addEventListener('click', () => {
+                            this.addMasalahField(masalahContainer, '', false);
+                        });
+                    }
+                },
+
+                initIntervensiFields() {
+                    const intervensiContainer = document.getElementById('intervensiContainer');
+                    const btnTambahIntervensi = document.getElementById('btnTambahIntervensi');
+
+                    if (!intervensiContainer) {
+                        console.warn('intervensiContainer not found');
+                        return;
+                    }
+
+                    // Get existing data from PHP
+                    let existingData = [];
+                    if (typeof window.intervensiRencanaData !== 'undefined') {
+                        existingData = window.intervensiRencanaData;
+                    }
+
+                    console.log('Intervensi rencana existing data:', existingData);
+
+                    // Clear container
+                    intervensiContainer.innerHTML = '';
+
+                    // Add existing data or create first empty field
+                    if (existingData && existingData.length > 0) {
+                        existingData.forEach((intervensi, index) => {
+                            this.addIntervensiField(intervensiContainer, intervensi, index === 0);
+                        });
+                    } else {
+                        this.addIntervensiField(intervensiContainer, '', true);
+                    }
+
+                    // Add event listener for adding new intervensi
+                    if (btnTambahIntervensi) {
+                        btnTambahIntervensi.addEventListener('click', () => {
+                            this.addIntervensiField(intervensiContainer, '', false);
+                        });
+                    }
+                },
+
+                addMasalahField(container, value = '', isFirst = false) {
+                    const masalahItem = document.createElement('div');
+                    masalahItem.className = 'masalah-item mb-2';
+
+                    masalahItem.innerHTML = `
+                        <div class="d-flex gap-2">
+                            <textarea class="form-control" name="masalah_diagnosis[]" rows="2"
+                                placeholder="Tuliskan masalah atau diagnosis keperawatan...">${value}</textarea>
+                            <button type="button" class="btn btn-sm btn-outline-danger remove-masalah"
+                                style="display: ${isFirst ? 'none' : 'block'};">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    `;
+
+                    container.appendChild(masalahItem);
+
+                    // Add remove event listener
+                    const removeBtn = masalahItem.querySelector('.remove-masalah');
+                    if (removeBtn) {
+                        removeBtn.addEventListener('click', () => {
+                            masalahItem.remove();
+                            this.updateMasalahRemoveButtons();
+                        });
+                    }
+
+                    this.updateMasalahRemoveButtons();
+                },
+
+                addIntervensiField(container, value = '', isFirst = false) {
+                    const intervensiItem = document.createElement('div');
+                    intervensiItem.className = 'intervensi-item mb-2';
+
+                    intervensiItem.innerHTML = `
+                        <div class="d-flex gap-2">
+                            <textarea class="form-control" name="intervensi_rencana[]" rows="3"
+                                placeholder="Tuliskan intervensi, rencana asuhan, dan target yang terukur...">${value}</textarea>
+                            <button type="button" class="btn btn-sm btn-outline-danger remove-intervensi"
+                                style="display: ${isFirst ? 'none' : 'block'};">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    `;
+
+                    container.appendChild(intervensiItem);
+
+                    // Add remove event listener
+                    const removeBtn = intervensiItem.querySelector('.remove-intervensi');
+                    if (removeBtn) {
+                        removeBtn.addEventListener('click', () => {
+                            intervensiItem.remove();
+                            this.updateIntervensiRemoveButtons();
+                        });
+                    }
+
+                    this.updateIntervensiRemoveButtons();
+                },
+
+                updateMasalahRemoveButtons() {
+                    const masalahItems = document.querySelectorAll('.masalah-item');
+                    masalahItems.forEach((item, index) => {
+                        const removeBtn = item.querySelector('.remove-masalah');
+                        if (removeBtn) {
+                            removeBtn.style.display = (index === 0 && masalahItems.length === 1) ? 'none' : 'block';
+                        }
+                    });
+                },
+
+                updateIntervensiRemoveButtons() {
+                    const intervensiItems = document.querySelectorAll('.intervensi-item');
+                    intervensiItems.forEach((item, index) => {
+                        const removeBtn = item.querySelector('.remove-intervensi');
+                        if (removeBtn) {
+                            removeBtn.style.display = (index === 0 && intervensiItems.length === 1) ? 'none' : 'block';
+                        }
+                    });
+                }
+            };
+
+            // ==================================================================================
+            // OTHER EXISTING MODULES (keeping your existing functionality)
+            // ==================================================================================
+            
+            function initPemeriksaanFisik() {
+                // Handle "Tambah Keterangan" buttons
+                document.querySelectorAll('.tambah-keterangan').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const targetId = this.getAttribute('data-target');
+                        const keteranganDiv = document.getElementById(targetId);
+                        const normalCheckbox = this.closest('.pemeriksaan-item')?.querySelector('.form-check-input');
+
+                        if (keteranganDiv) {
+                            keteranganDiv.style.display = 'block';
+                            if (normalCheckbox) normalCheckbox.checked = false;
+                        }
+                    });
+                });
+
+                // Handle normal checkboxes
+                document.querySelectorAll('.form-check-input').forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        const pemeriksaanItem = this.closest('.pemeriksaan-item');
+                        if (pemeriksaanItem) {
+                            const keteranganDiv = pemeriksaanItem.querySelector('.keterangan');
+                            if (keteranganDiv && this.checked) {
+                                keteranganDiv.style.display = 'none';
+                                const input = keteranganDiv.querySelector('input');
+                                if (input) input.value = '';
+                            }
+                        }
+                    });
+                });
+
+                // Initialize existing data
+                document.querySelectorAll('.pemeriksaan-item').forEach(item => {
+                    const keteranganInput = item.querySelector('.keterangan input');
+                    const normalCheckbox = item.querySelector('.form-check-input');
+                    const keteranganDiv = item.querySelector('.keterangan');
+
+                    if (keteranganInput && keteranganInput.value && keteranganDiv) {
+                        if (normalCheckbox) normalCheckbox.checked = false;
+                        keteranganDiv.style.display = 'block';
+                    }
+                });
+            }
+
+            // ==================================================================================
+            // INITIALIZE ALL MODULES
+            // ==================================================================================
+
+            function initializeApp() {
+                console.log('Initializing Asesmen Perinatology Edit...');
+                
+                // Initialize core modules
+                AllergyModule.init();
+                MasalahDiagnosisModule.init();
+                initPemeriksaanFisik();
+                
+                // Initialize other existing functionality
+                if (typeof initDownScore === 'function') initDownScore();
+                if (typeof initStatusNyeri === 'function') initStatusNyeri();
+                if (typeof initRisikoJatuh === 'function') initRisikoJatuh();
+                if (typeof initStatusGizi === 'function') initStatusGizi();
+                if (typeof initStatusFungsional === 'function') initStatusFungsional();
+                if (typeof initDischargePlanning === 'function') initDischargePlanning();
+                if (typeof initDecubitus === 'function') initDecubitus();
+                
+                console.log('Asesmen Perinatology Edit initialized successfully');
+            }
+
+            // Start the application
+            initializeApp();
+        });
+    </script>
+@endpush

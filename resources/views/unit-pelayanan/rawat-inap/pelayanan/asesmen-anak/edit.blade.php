@@ -1,7 +1,160 @@
 @extends('layouts.administrator.master')
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
+    <style>
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-asesmen {
+            margin-top: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .progress-wrapper {
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .progress-status {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-label {
+            color: #6c757d;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .progress-percentage {
+            color: #198754;
+            font-weight: 600;
+        }
+
+        .custom-progress {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-custom {
+            height: 100%;
+            background-color: #097dd6;
+            transition: width 0.6s ease;
+        }
+
+        .section-separator {
+            border-top: 2px solid #097dd6;
+            margin: 2rem 0;
+            padding-top: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .form-group label {
+            margin-right: 1rem;
+            padding-top: 0.5rem;
+        }
+
+        .diagnosis-section {
+            margin-top: 1.5rem;
+        }
+
+        .diagnosis-row {
+            padding: 0.5rem 1rem;
+            border-color: #dee2e6 !important;
+        }
+
+        .diagnosis-item {
+            background-color: transparent;
+        }
+
+        .border-top {
+            border-top: 1px solid #dee2e6 !important;
+        }
+
+        .border-bottom {
+            border-bottom: 1px solid #dee2e6 !important;
+        }
+
+        .form-check {
+            margin: 0;
+            padding-left: 1.5rem;
+            min-height: auto;
+        }
+
+        .form-check-input {
+            margin-top: 0.3rem;
+        }
+
+        .form-check label {
+            margin-right: 0;
+            padding-top: 0;
+        }
+
+        .btn-outline-primary {
+            color: #097dd6;
+            border-color: #097dd6;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #097dd6;
+            color: white;
+        }
+
+        .pain-scale-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .pain-scale-image {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: fixed;
+            /* Ubah ke absolute */
+            min-width: 300px;
+            background-color: #fff;
+            border: 1px solid rgba(0, 0, 0, .15);
+            border-radius: 0.25rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, .15);
+            z-index: 1000;
+            transform: translateY(5px);
+            /* Tambahkan sedikit offset */
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Tambahkan wrapper untuk positioning yang lebih baik */
+        .dropdown-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+    </style>
+@endpush
+
+
 @section('content')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.edit-include')
 
     <div class="row">
         <div class="col-md-3">
@@ -9,7 +162,8 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum") }}" class="btn">
+            <a href="{{ url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum") }}"
+                class="btn">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
             <div class="d-flex justify-content-center">
@@ -56,7 +210,9 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Tiba Di Ruang Rawat Dengan Cara</label>
                                         <select class="form-select" name="cara_masuk">
-                                            <option disabled {{ empty($asesmen->rmeAsesmenKepAnak->cara_masuk) ? 'selected' : '' }}>--Pilih--</option>
+                                            <option disabled
+                                                {{ empty($asesmen->rmeAsesmenKepAnak->cara_masuk) ? 'selected' : '' }}>
+                                                --Pilih--</option>
                                             <option value="Mandiri"
                                                 {{ $asesmen->rmeAsesmenKepAnak->cara_masuk == 'Mandiri' ? 'selected' : '' }}>
                                                 Mandiri</option>
@@ -78,7 +234,9 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Kasus Trauma</label>
                                         <select class="form-select" name="kasus_trauma">
-                                            <option disabled {{ empty($asesmen->rmeAsesmenKepAnak->kasus_trauma) ? 'selected' : '' }}>--Pilih--</option>
+                                            <option disabled
+                                                {{ empty($asesmen->rmeAsesmenKepAnak->kasus_trauma) ? 'selected' : '' }}>
+                                                --Pilih--</option>
                                             <option value="Kecelakaan Lalu Lintas"
                                                 {{ $asesmen->rmeAsesmenKepAnak->kasus_trauma == 'Kecelakaan Lalu Lintas' ? 'selected' : '' }}>
                                                 Kecelakaan Lalu Lintas</option>
@@ -103,6 +261,253 @@
                                         <label style="min-width: 200px;">Anamnesis</label>
                                         <textarea class="form-control" name="anamnesis" rows="4"
                                             placeholder="keluhan utama dan riwayat penyakit sekarang">{{ $asesmen->anamnesis }}</textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Keluhan Utama</label>
+                                        <input type="text" class="form-control" name="keluhan_utama"
+                                            value="{{ $asesmen->rmeAsesmenKepAnak->keluhan_utama }}"
+                                            placeholder="keluhan utama">
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Riwayat Kesehatan Sekarang</label>
+                                        <input type="text" class="form-control" name="riwayat_kesehatan_sekarang"
+                                            value="{{ $asesmen->rmeAsesmenKepAnak->riwayat_kesehatan_sekarang }}"
+                                            placeholder="riwayat kesehatan sekarang">
+                                    </div>
+
+                                </div>
+
+                                {{-- 5. Riwayat Kesehatan --}}
+                                <div class="section-separator" id="riwayat-kesehatan">
+                                    <h5 class="section-title">5. Riwayat Kesehatan</h5>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Penyakit Yang Pernah Diderita</label>
+                                        <div class="w-100">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
+                                                data-bs-toggle="modal" data-bs-target="#penyakitModal">
+                                                <i class="ti-plus"></i> Tambah
+                                            </button>
+                                            <div id="selectedPenyakitList" class="d-flex flex-column gap-2">
+                                                <!-- List will be populated via JavaScript -->
+                                                <div id="emptyState"
+                                                    class="border border-dashed border-secondary rounded p-3 text-center text-muted">
+                                                    <i class="ti-info-circle mb-2"></i>
+                                                    <p class="mb-0">Belum ada penyakit yang ditambahkan</p>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="penyakit_diderita" id="penyakitDideritaInput"
+                                                value='{{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->penyakit_yang_diderita ?? '[]' }}'>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Riwayat Kecelakaan</label>
+                                        <div class="w-100">
+                                            <div class="d-flex gap-3 flex-wrap mb-2">
+                                                @php
+                                                    // Parse data dari database - bisa berupa JSON string atau array
+                                                    $riwayatKecelakaanLalu = [];
+                                                    if (
+                                                        !empty(
+                                                            $asesmen->rmeAsesmenKepAnakRiwayatKesehatan
+                                                                ->riwayat_kecelakaan_lalu
+                                                        )
+                                                    ) {
+                                                        $riwayatKecelakaanLalu = is_string(
+                                                            $asesmen->rmeAsesmenKepAnakRiwayatKesehatan
+                                                                ->riwayat_kecelakaan_lalu,
+                                                        )
+                                                            ? json_decode(
+                                                                $asesmen->rmeAsesmenKepAnakRiwayatKesehatan
+                                                                    ->riwayat_kecelakaan_lalu,
+                                                                true,
+                                                            )
+                                                            : $asesmen->rmeAsesmenKepAnakRiwayatKesehatan
+                                                                ->riwayat_kecelakaan_lalu;
+                                                    }
+                                                    // Pastikan $riwayatKecelakaanLalu adalah array
+                                                    $riwayatKecelakaanLalu = is_array($riwayatKecelakaanLalu)
+                                                        ? $riwayatKecelakaanLalu
+                                                        : [];
+                                                @endphp
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="riwayat_kecelakaan_lalu[]" value="Jatuh" id="jatuh_lalu"
+                                                        {{ in_array('Jatuh', $riwayatKecelakaanLalu) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="jatuh_lalu">Jatuh</label>
+                                                </div>
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="riwayat_kecelakaan_lalu[]" value="Tenggelam"
+                                                        id="tenggelam_lalu"
+                                                        {{ in_array('Tenggelam', $riwayatKecelakaanLalu) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="tenggelam_lalu">Tenggelam</label>
+                                                </div>
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="riwayat_kecelakaan_lalu[]" value="KLL" id="kll_lalu"
+                                                        {{ in_array('KLL', $riwayatKecelakaanLalu) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="kll_lalu">KLL</label>
+                                                </div>
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="riwayat_kecelakaan_lalu[]" value="Keracunan"
+                                                        id="keracunan_lalu"
+                                                        {{ in_array('Keracunan', $riwayatKecelakaanLalu) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="keracunan_lalu">Keracunan</label>
+                                                </div>
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="riwayat_kecelakaan_lalu[]" value="Tidak Ada"
+                                                        id="tidak_ada_kecelakaan"
+                                                        {{ in_array('Tidak Ada', $riwayatKecelakaanLalu) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="tidak_ada_kecelakaan">Tidak
+                                                        Ada</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Riwayat Rawat Inap</label>
+                                        <div class="d-flex gap-3" style="width: 100%;">
+                                            <select class="form-select flex-grow-1" name="riwayat_rawat_inap">
+                                                <option disabled
+                                                    {{ empty($asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_rawat_inap) ? 'selected' : '' }}>
+                                                    --Pilih--</option>
+                                                <option value="Ya"
+                                                    {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_rawat_inap == 'Ya' ? 'selected' : '' }}>
+                                                    Ya</option>
+                                                <option value="Tidak"
+                                                    {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_rawat_inap == 'Tidak' ? 'selected' : '' }}>
+                                                    Tidak</option>
+                                            </select>
+                                            <input type="date" class="form-control" name="tanggal_rawat_inap"
+                                                value="{{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->tanggal_riwayat_rawat_inap }}"
+                                                style="width: 200px;">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Riwayat Operasi</label>
+                                        <select class="form-select" name="riwayat_operasi">
+                                            <option disabled
+                                                {{ empty($asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_operasi) ? 'selected' : '' }}>
+                                                --Pilih--</option>
+                                            <option value="Ya"
+                                                {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_operasi == 'Ya' ? 'selected' : '' }}>
+                                                Ya</option>
+                                            <option value="Tidak"
+                                                {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_operasi == 'Tidak' ? 'selected' : '' }}>
+                                                Tidak</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Jenis/Nama Operasi</label>
+                                        <div class="w-100">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
+                                                data-bs-toggle="modal" data-bs-target="#operasiModal">
+                                                <i class="ti-plus"></i> Tambah
+                                            </button>
+                                            <div id="selectedOperasiList" class="d-flex flex-column gap-2">
+                                                <div id="emptyStateOperasi"
+                                                    class="border border-dashed border-secondary rounded p-3 text-center text-muted">
+                                                    <i class="ti-info-circle mb-2"></i>
+                                                    <p class="mb-0">Belum ada operasi yang ditambahkan</p>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="jenis_operasi" id="jenisOperasiInput"
+                                                value='{{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->nama_operasi ?? '[]' }}'>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Riwayat Kesehatan Keluarga</label>
+                                        <div class="w-100">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
+                                                data-bs-toggle="modal" data-bs-target="#riwayatKeluargaModal">
+                                                <i class="ti-plus"></i> Tambah
+                                            </button>
+                                            <div id="selectedRiwayatList" class="d-flex flex-column gap-2">
+                                                @if ($asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_penyakit_keluarga)
+                                                    <!-- List riwayat kesehatan keluarga akan di-populate via JavaScript -->
+                                                @else
+                                                    <div id="emptyStateRiwayat"
+                                                        class="border border-dashed border-secondary rounded p-3 text-center text-muted">
+                                                        <i class="ti-info-circle mb-2"></i>
+                                                        <p class="mb-0">Belum ada riwayat kesehatan keluarga yang
+                                                            ditambahkan.</p>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <input type="hidden" name="riwayat_kesehatan_keluarga"
+                                                id="riwayatKesehatanInput"
+                                                value="{{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_penyakit_keluarga }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Konsumsi Obat-Obatan</label>
+                                        <input type="text" class="form-control" name="konsumsi_obat"
+                                            value="{{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->konsumsi_obat }}">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Tumbuh Kembang Dibanding
+                                            Saudara-Saudaranya</label>
+                                        <select class="form-select" name="tumbuh_kembang">
+                                            <option disabled
+                                                {{ empty($asesmen->rmeAsesmenKepAnakRiwayatKesehatan->tumbuh_kembang) ? 'selected' : '' }}>
+                                                --Pilih--</option>
+                                            <option value="Sama"
+                                                {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->tumbuh_kembang == 'Sama' ? 'selected' : '' }}>
+                                                Sama</option>
+                                            <option value="Cepat"
+                                                {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->tumbuh_kembang == 'Cepat' ? 'selected' : '' }}>
+                                                Cepat</option>
+                                            <option value="Lambat"
+                                                {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->tumbuh_kembang == 'Lambat' ? 'selected' : '' }}>
+                                                Lambat</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {{-- 6. Alergi --}}
+                                <div class="section-separator" id="alergi">
+                                    <h5 class="section-title">6. Alergi</h5>
+
+                                    <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
+                                        id="openAlergiModal" data-bs-toggle="modal" data-bs-target="#alergiModal">
+                                        <i class="ti-plus"></i> Tambah Alergi
+                                    </button>
+                                    <input type="hidden" name="alergis" id="alergisInput" value="[]">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="createAlergiTable">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Jenis Alergi</th>
+                                                    <th>Alergen</th>
+                                                    <th>Reaksi</th>
+                                                    <th>Tingkat Keparahan</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr id="no-alergi-row">
+                                                    <td colspan="5" class="text-center text-muted">Tidak ada data
+                                                        alergi</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
 
@@ -170,7 +575,9 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Kesadaran</label>
                                         <select class="form-select" name="kesadaran">
-                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->kesadaran == null ? 'selected' : '' }}>--Pilih--</option>
+                                            <option disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakFisik->kesadaran == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
                                             <option value="Compos Mentis"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->kesadaran == 'Compos Mentis' ? 'selected' : '' }}>
                                                 Compos Mentis</option>
@@ -190,34 +597,25 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label style="min-width: 200px;">AVPU</label>
-                                        <select class="form-select" name="avpu">
-                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->avpu == null ? 'selected' : '' }}>--Pilih--</option>
-                                            <option value="0"
-                                                {{ $asesmen->rmeAsesmenKepAnakFisik->avpu == '0' ? 'selected' : '' }}>Sadar
-                                                Baik/Alert</option>
-                                            <option value="1"
-                                                {{ $asesmen->rmeAsesmenKepAnakFisik->avpu == '1' ? 'selected' : '' }}>
-                                                Berespon dengan kata-kata/Voice</option>
-                                            <option value="2"
-                                                {{ $asesmen->rmeAsesmenKepAnakFisik->avpu == '2' ? 'selected' : '' }}>Hanya
-                                                berespon jika dirangsang nyeri/pain</option>
-                                            <option value="3"
-                                                {{ $asesmen->rmeAsesmenKepAnakFisik->avpu == '3' ? 'selected' : '' }}>
-                                                Pasien tidak sadar/unresponsive</option>
-                                            <option value="4"
-                                                {{ $asesmen->rmeAsesmenKepAnakFisik->avpu == '4' ? 'selected' : '' }}>
-                                                Gelisah atau bingung</option>
-                                            <option value="5"
-                                                {{ $asesmen->rmeAsesmenKepAnakFisik->avpu == '5' ? 'selected' : '' }}>Acute
-                                                Confusional States</option>
-                                        </select>
+                                        <label style="min-width: 200px;">GCS (Glasgow Coma Scale)</label>
+                                        <div class="d-flex gap-3" style="width: 100%;">
+                                            <input type="text" class="form-control bg-light" name="gcs"
+                                                id="gcs_display" placeholder="Klik untuk input GCS" readonly
+                                                style="cursor: pointer;">
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                data-bs-target="#gcsModal">
+                                                Input GCS
+                                            </button>
+                                        </div>
+                                        <input type="hidden" name="gcs_value" id="gcs_value">
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Penglihatan</label>
                                         <select class="form-select" name="penglihatan">
-                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->penglihatan == null ? 'selected' : '' }}>--Pilih--</option>
+                                            <option disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakFisik->penglihatan == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
                                             <option value="1"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->penglihatan == '1' ? 'selected' : '' }}>
                                                 Baik</option>
@@ -233,7 +631,9 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Pendengaran</label>
                                         <select class="form-select" name="pendengaran">
-                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->pendengaran == null ? 'selected' : '' }}>--Pilih--</option>
+                                            <option disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakFisik->pendengaran == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
                                             <option value="1"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->pendengaran == '1' ? 'selected' : '' }}>
                                                 Baik</option>
@@ -249,7 +649,9 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Bicara</label>
                                         <select class="form-select" name="bicara">
-                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->bicara == null ? 'selected' : '' }}>--Pilih--</option>
+                                            <option disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakFisik->bicara == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
                                             <option value="1"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->bicara == '1' ? 'selected' : '' }}>
                                                 Normal</option>
@@ -262,7 +664,9 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Refleks Menelan</label>
                                         <select class="form-select" name="refleks_menelan">
-                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->refleksi_menelan == null ? 'selected' : '' }}>--Pilih--</option>
+                                            <option disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakFisik->refleksi_menelan == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
                                             <option value="1"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->refleksi_menelan == '1' ? 'selected' : '' }}>
                                                 Normal</option>
@@ -278,7 +682,9 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Pola Tidur</label>
                                         <select class="form-select" name="pola_tidur">
-                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->pola_tidur == null ? 'selected' : '' }}>--Pilih--</option>
+                                            <option disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakFisik->pola_tidur == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
                                             <option value="1"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->pola_tidur == '1' ? 'selected' : '' }}>
                                                 Normal</option>
@@ -291,7 +697,9 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Luka</label>
                                         <select class="form-select" name="luka">
-                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->luka == null ? 'selected' : '' }}>--Pilih--</option>
+                                            <option disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakFisik->luka == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
                                             <option value="1"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->luka == '1' ? 'selected' : '' }}>
                                                 Normal</option>
@@ -307,7 +715,9 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Defekasi</label>
                                         <select class="form-select" name="defekasi">
-                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->defekasi == null ? 'selected' : '' }}>--Pilih--</option>
+                                            <option disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakFisik->defekasi == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
                                             <option value="1"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->defekasi == '1' ? 'selected' : '' }}>
                                                 Tidak Ada</option>
@@ -326,7 +736,9 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Miksi</label>
                                         <select class="form-select" name="miksi">
-                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->miksi == null ? 'selected' : '' }}>--Pilih--</option>
+                                            <option disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakFisik->miksi == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
                                             <option value="1"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->miksi == '1' ? 'selected' : '' }}>
                                                 Normal</option>
@@ -342,7 +754,9 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Gastrointestinal</label>
                                         <select class="form-select" name="gastrointestinal">
-                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->gastrointestinal == null ? 'selected' : '' }}>--Pilih--</option>
+                                            <option disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakFisik->gastrointestinal == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
                                             <option value="1"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->gastrointestinal == '1' ? 'selected' : '' }}>
                                                 Normal</option>
@@ -355,15 +769,18 @@
                                         </select>
                                     </div>
 
-                                    <div class="form-group">
+                                    
+
+                                    <div class="mt-4">
+                                        <h6>Pemeriksaan Lanjutan</h6>
+
+                                        <div class="form-group">
                                         <label style="min-width: 200px;">Lahir Umur Kehamilan</label>
                                         <input type="text" class="form-control" name="umur_kehamilan"
                                             value="{{ $asesmen->rmeAsesmenKepAnakFisik->lahir_umur_kehamilan }}"
                                             placeholder="minggu/bulan">
                                     </div>
 
-                                    <div class="mt-4">
-                                        <h6>Pemeriksaan Lanjutan</h6>
                                         <div class="form-group">
                                             <label style="min-width: 200px;">ASI Sampai Umur</label>
                                             <input type="text" class="form-control" name="Asi_Sampai_Umur"
@@ -493,7 +910,8 @@
                                                                 <div class="pemeriksaan-item">
                                                                     <div
                                                                         class="d-flex align-items-center border-bottom pb-2">
-                                                                        <div class="flex-grow-1">{{ $item->nama }}</div>
+                                                                        <div class="flex-grow-1">{{ $item->nama }}
+                                                                        </div>
                                                                         <div class="form-check me-3">
                                                                             <input type="checkbox"
                                                                                 class="form-check-input"
@@ -536,14 +954,19 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Jenis Skala NYERI</label>
                                         <select class="form-select" name="jenis_skala_nyeri" id="jenis_skala_nyeri">
-                                            <option disabled {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->jenis_skala_nyeri) ? 'selected' : '' }}>--Pilih--</option>
-                                            <option value="NRS" {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->jenis_skala_nyeri == 1 ? 'selected' : '' }}>
+                                            <option disabled
+                                                {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->jenis_skala_nyeri) ? 'selected' : '' }}>
+                                                --Pilih--</option>
+                                            <option value="NRS"
+                                                {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->jenis_skala_nyeri == 1 ? 'selected' : '' }}>
                                                 Numeric Rating Scale (NRS)
                                             </option>
-                                            <option value="FLACC" {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->jenis_skala_nyeri == 2 ? 'selected' : '' }}>
+                                            <option value="FLACC"
+                                                {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->jenis_skala_nyeri == 2 ? 'selected' : '' }}>
                                                 Face, Legs, Activity, Cry, Consolability (FLACC)
                                             </option>
-                                            <option value="CRIES" {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->jenis_skala_nyeri == 3 ? 'selected' : '' }}>
+                                            <option value="CRIES"
+                                                {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->jenis_skala_nyeri == 3 ? 'selected' : '' }}>
                                                 Crying, Requires, Increased, Expression, Sleepless (CRIES)
                                             </option>
                                         </select>
@@ -551,13 +974,15 @@
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Nilai Skala Nyeri</label>
-                                        <input type="text" class="form-control" id="nilai_skala_nyeri" name="nilai_skala_nyeri" readonly
+                                        <input type="text" class="form-control" id="nilai_skala_nyeri"
+                                            name="nilai_skala_nyeri" readonly
                                             value="{{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->nilai_nyeri ?? '' }}">
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Kesimpulan Nyeri</label>
-                                        <input type="hidden" class="form-control" id="kesimpulan_nyeri" name="kesimpulan_nyeri"
+                                        <input type="hidden" class="form-control" id="kesimpulan_nyeri"
+                                            name="kesimpulan_nyeri"
                                             value="{{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->kesimpulan_nyeri ?? '' }}">
                                         <div class="alert alert-success" id="kesimpulan_nyeri_alert">
                                             {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->kesimpulan_nyeri ?? 'Pilih skala nyeri terlebih dahulu' }}
@@ -584,7 +1009,9 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">Jenis nyeri</label>
                                                 <select class="form-select" name="jenis_nyeri">
-                                                    <option disabled {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->jenis_nyeri) ? 'selected' : '' }}>--Pilih--</option>
+                                                    <option disabled
+                                                        {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->jenis_nyeri) ? 'selected' : '' }}>
+                                                        --Pilih--</option>
                                                     @foreach ($jenisnyeri as $jenis)
                                                         <option value="{{ $jenis->id }}"
                                                             {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->jenis_nyeri == $jenis->id ? 'selected' : '' }}>
@@ -596,7 +1023,9 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">Frekuensi</label>
                                                 <select class="form-select" name="frekuensi_nyeri">
-                                                    <option disabled {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->frekuensi) ? 'selected' : '' }}>--Pilih--</option>
+                                                    <option disabled
+                                                        {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->frekuensi) ? 'selected' : '' }}>
+                                                        --Pilih--</option>
                                                     @foreach ($frekuensinyeri as $frekuensi)
                                                         <option value="{{ $frekuensi->id }}"
                                                             {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->frekuensi == $frekuensi->id ? 'selected' : '' }}>
@@ -611,7 +1040,9 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">Menjalar?</label>
                                                 <select class="form-select" name="nyeri_menjalar">
-                                                    <option disabled {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->menjalar) ? 'selected' : '' }}>--Pilih--</option>
+                                                    <option disabled
+                                                        {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->menjalar) ? 'selected' : '' }}>
+                                                        --Pilih--</option>
                                                     @foreach ($menjalar as $menjalarItem)
                                                         <option value="{{ $menjalarItem->id }}"
                                                             {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->menjalar == $menjalarItem->id ? 'selected' : '' }}>
@@ -623,7 +1054,9 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">Kualitas</label>
                                                 <select class="form-select" name="kualitas_nyeri">
-                                                    <option disabled {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->kualitas) ? 'selected' : '' }}>--Pilih--</option>
+                                                    <option disabled
+                                                        {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->kualitas) ? 'selected' : '' }}>
+                                                        --Pilih--</option>
                                                     @foreach ($kualitasnyeri as $kualitas)
                                                         <option value="{{ $kualitas->id }}"
                                                             {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->kualitas == $kualitas->id ? 'selected' : '' }}>
@@ -638,7 +1071,9 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">Faktor pemberat</label>
                                                 <select class="form-select" name="faktor_pemberat">
-                                                    <option disabled {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->faktor_pemberat) ? 'selected' : '' }}>--Pilih--</option>
+                                                    <option disabled
+                                                        {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->faktor_pemberat) ? 'selected' : '' }}>
+                                                        --Pilih--</option>
                                                     @foreach ($faktorpemberat as $pemberat)
                                                         <option value="{{ $pemberat->id }}"
                                                             {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->faktor_pemberat == $pemberat->id ? 'selected' : '' }}>
@@ -650,7 +1085,9 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">Faktor peringan</label>
                                                 <select class="form-select" name="faktor_peringan">
-                                                    <option disabled {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->faktor_peringan) ? 'selected' : '' }}>--Pilih--</option>
+                                                    <option disabled
+                                                        {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->faktor_peringan) ? 'selected' : '' }}>
+                                                        --Pilih--</option>
                                                     @foreach ($faktorperingan as $peringan)
                                                         <option value="{{ $peringan->id }}"
                                                             {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->faktor_peringan == $peringan->id ? 'selected' : '' }}>
@@ -665,7 +1102,9 @@
                                             <div class="col-12">
                                                 <label class="form-label">Efek Nyeri</label>
                                                 <select class="form-select" name="efek_nyeri">
-                                                    <option disabled {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->efek_nyeri) ? 'selected' : '' }}>--Pilih--</option>
+                                                    <option disabled
+                                                        {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->efek_nyeri) ? 'selected' : '' }}>
+                                                        --Pilih--</option>
                                                     @foreach ($efeknyeri as $efek)
                                                         <option value="{{ $efek->id }}"
                                                             {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->efek_nyeri == $efek->id ? 'selected' : '' }}>
@@ -676,183 +1115,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                {{-- 5. Riwayat Kesehatan --}}
-                                <div class="section-separator" id="riwayat-kesehatan">
-                                    <h5 class="section-title">5. Riwayat Kesehatan</h5>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Penyakit Yang Pernah Diderita</label>
-                                        <div class="w-100">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                                data-bs-toggle="modal" data-bs-target="#editPenyakitModal">
-                                                <i class="ti-plus"></i> Tambah
-                                            </button>
-                                            <div id="selectedPenyakitList" class="d-flex flex-column gap-2">
-                                                <!-- List will be populated via JavaScript -->
-                                                <div id="emptyState"
-                                                    class="border border-dashed border-secondary rounded p-3 text-center text-muted">
-                                                    <i class="ti-info-circle mb-2"></i>
-                                                    <p class="mb-0">Belum ada penyakit yang ditambahkan</p>
-                                                </div>
-                                            </div>
-                                            <input type="hidden" name="penyakit_diderita" id="penyakitDideritaInput"
-                                                value='{{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->penyakit_yang_diderita ?? '[]' }}'>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Riwayat Kecelakaan</label>
-                                        <select class="form-select" name="riwayat_kecelakaan">
-                                            <option disabled {{ empty($asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_kecelakaan) ? 'selected' : '' }}>--Pilih--</option>
-                                            @php $riwayatKecelakaan = $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_kecelakaan; @endphp
-                                            <option value="Kecelakaan Lalu Lintas"
-                                                {{ $riwayatKecelakaan == 'Kecelakaan Lalu Lintas' ? 'selected' : '' }}>
-                                                Kecelakaan Lalu Lintas</option>
-                                            <option value="Kecelakaan Kerja"
-                                                {{ $riwayatKecelakaan == 'Kecelakaan Kerja' ? 'selected' : '' }}>
-                                                Kecelakaan Kerja</option>
-                                            <option value="Kecelakaan Rumah Tangga"
-                                                {{ $riwayatKecelakaan == 'Kecelakaan Rumah Tangga' ? 'selected' : '' }}>
-                                                Kecelakaan Rumah Tangga</option>
-                                            <option value="Kecelakaan Olahraga"
-                                                {{ $riwayatKecelakaan == 'Kecelakaan Olahraga' ? 'selected' : '' }}>
-                                                Kecelakaan Olahraga</option>
-                                            <option value="Kecelakaan Lainnya"
-                                                {{ $riwayatKecelakaan == 'Kecelakaan Lainnya' ? 'selected' : '' }}>
-                                                Kecelakaan Lainnya</option>
-                                            <option value="Tidak Ada"
-                                                {{ $riwayatKecelakaan == 'Tidak Ada' ? 'selected' : '' }}>Tidak Ada
-                                            </option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Riwayat Rawat Inap</label>
-                                        <div class="d-flex gap-3" style="width: 100%;">
-                                            <select class="form-select flex-grow-1" name="riwayat_rawat_inap">
-                                                <option disabled {{ empty($asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_rawat_inap) ? 'selected' : '' }}>--Pilih--</option>
-                                                <option value="Ya"
-                                                    {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_rawat_inap == 'Ya' ? 'selected' : '' }}>
-                                                    Ya</option>
-                                                <option value="Tidak"
-                                                    {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_rawat_inap == 'Tidak' ? 'selected' : '' }}>
-                                                    Tidak</option>
-                                            </select>
-                                            <input type="date" class="form-control" name="tanggal_rawat_inap"
-                                                value="{{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->tanggal_riwayat_rawat_inap }}"
-                                                style="width: 200px;">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Riwayat Operasi</label>
-                                        <select class="form-select" name="riwayat_operasi">
-                                            <option disabled {{ empty($asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_operasi) ? 'selected' : '' }}>--Pilih--</option>
-                                            <option value="Ya"
-                                                {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_operasi == 'Ya' ? 'selected' : '' }}>
-                                                Ya</option>
-                                            <option value="Tidak"
-                                                {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_operasi == 'Tidak' ? 'selected' : '' }}>
-                                                Tidak</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Jenis/Nama Operasi</label>
-                                        <div class="w-100">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                                data-bs-toggle="modal" data-bs-target="#operasiModal">
-                                                <i class="ti-plus"></i> Tambah
-                                            </button>
-                                            <div id="selectedOperasiList" class="d-flex flex-column gap-2">
-                                                <div id="emptyStateOperasi"
-                                                    class="border border-dashed border-secondary rounded p-3 text-center text-muted">
-                                                    <i class="ti-info-circle mb-2"></i>
-                                                    <p class="mb-0">Belum ada operasi yang ditambahkan</p>
-                                                </div>
-                                            </div>
-                                            <input type="hidden" name="jenis_operasi" id="jenisOperasiInput"
-                                                value='{{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->nama_operasi ?? '[]' }}'>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Riwayat Kesehatan Keluarga</label>
-                                        <div class="w-100">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                                data-bs-toggle="modal" data-bs-target="#riwayatKeluargaModal">
-                                                <i class="ti-plus"></i> Tambah
-                                            </button>
-                                            <div id="selectedRiwayatList" class="d-flex flex-column gap-2">
-                                                @if ($asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_penyakit_keluarga)
-                                                    <!-- List riwayat kesehatan keluarga akan di-populate via JavaScript -->
-                                                @else
-                                                    <div id="emptyStateRiwayat"
-                                                        class="border border-dashed border-secondary rounded p-3 text-center text-muted">
-                                                        <i class="ti-info-circle mb-2"></i>
-                                                        <p class="mb-0">Belum ada riwayat kesehatan keluarga yang
-                                                            ditambahkan.</p>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                            <input type="hidden" name="riwayat_kesehatan_keluarga"
-                                                id="riwayatKesehatanInput"
-                                                value="{{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_penyakit_keluarga }}">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Konsumsi Obat-Obatan</label>
-                                        <input type="text" class="form-control" name="konsumsi_obat"
-                                            value="{{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->konsumsi_obat }}">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Tumbuh Kembang Dibanding
-                                            Saudara-Saudaranya</label>
-                                        <select class="form-select" name="tumbuh_kembang">
-                                            <option disabled {{ empty($asesmen->rmeAsesmenKepAnakRiwayatKesehatan->tumbuh_kembang) ? 'selected' : '' }}>--Pilih--</option>
-                                            <option value="Sama"
-                                                {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->tumbuh_kembang == 'Sama' ? 'selected' : '' }}>
-                                                Sama</option>
-                                            <option value="Cepat"
-                                                {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->tumbuh_kembang == 'Cepat' ? 'selected' : '' }}>
-                                                Cepat</option>
-                                            <option value="Lambat"
-                                                {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->tumbuh_kembang == 'Lambat' ? 'selected' : '' }}>
-                                                Lambat</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                {{-- 6. Alergi sectio --}}
-                                <div class="section-separator" id="alergi">
-                                    <h5 class="section-title">6. Alergi</h5>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                        id="openAlergiModal">
-                                        <i class="ti-plus"></i> Tambah
-                                    </button>
-                                    <div class="table-responsive">
-                                        <table class="table" id="createAlergiTable">
-                                            <thead>
-                                                <tr>
-                                                    <th>Jenis</th>
-                                                    <th>Alergen</th>
-                                                    <th>Reaksi</th>
-                                                    <th>Severe</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <!-- Table content will be dynamically populated -->
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <input type="hidden" name="alergis" id="alergisInput"
-                                        value='{{ $asesmen->riwayat_alergi ?? '[]' }}'>
-
                                 </div>
 
                                 {{-- 7. Risiko Jatuh --}}
@@ -1481,1206 +1743,3786 @@
                                         <h6 class="mb-3">Intervensi Risiko Jatuh</h6>
                                         <p class="mb-2">Tambah tindakan intervensi risiko jatuh:</p>
 
-                                        <button type="button" class="btn btn-sm btn-outline-secondary btn-tindakan-keperawatan mb-3" data-bs-toggle="modal" data-bs-target="#tindakanKeperawatanRisikoJatuhModal">
+                                        <button type="button"
+                                            class="btn btn-sm btn-outline-secondary btn-tindakan-keperawatan mb-3"
+                                            data-bs-toggle="modal" data-bs-target="#tindakanKeperawatanRisikoJatuhModal">
                                             <i class="ti-plus"></i> Tambah
                                         </button>
                                         <div id="selectedTindakanList-risikojatuh" class="d-flex flex-column gap-2">
-                                            @if($asesmen->rmeAsesmenKepAnakRisikoJatuh->intervensi_risiko_jatuh)
+                                            @if ($asesmen->rmeAsesmenKepAnakRisikoJatuh->intervensi_risiko_jatuh)
                                                 @php
-                                                    $intervensiList = json_decode($asesmen->rmeAsesmenKepAnakRisikoJatuh->intervensi_risiko_jatuh, true);
+                                                    $intervensiList = json_decode(
+                                                        $asesmen->rmeAsesmenKepAnakRisikoJatuh->intervensi_risiko_jatuh,
+                                                        true,
+                                                    );
                                                 @endphp
-                                                @foreach($intervensiList as $index => $item)
-                                                    <div class="p-2 bg-light rounded d-flex justify-content-between align-items-center">
+                                                @foreach ($intervensiList as $index => $item)
+                                                    <div
+                                                        class="p-2 bg-light rounded d-flex justify-content-between align-items-center">
                                                         <span>{{ $item }}</span>
-                                                        <button type="button" class="btn btn-sm btn-danger delete-tindakan" data-index="{{ $index }}" data-target="risikojatuh">
+                                                        <button type="button"
+                                                            class="btn btn-sm btn-danger delete-tindakan"
+                                                            data-index="{{ $index }}" data-target="risikojatuh">
                                                             <i class="fas fa-times"></i>
                                                         </button>
                                                     </div>
                                                 @endforeach
                                             @endif
                                         </div>
-                                        <input type="hidden" name="intervensi_risiko_jatuh_json" id="intervensi_risiko_jatuh_json" value='{{ $asesmen->rmeAsesmenKepAnakRisikoJatuh->intervensi_risiko_jatuh ?? "[]" }}'>
+                                        <input type="hidden" name="intervensi_risiko_jatuh_json"
+                                            id="intervensi_risiko_jatuh_json"
+                                            value='{{ $asesmen->rmeAsesmenKepAnakRisikoJatuh->intervensi_risiko_jatuh ?? '[]' }}'>
                                     </div>
                                     <!-- Hidden input for lainnya -->
-                                    <input type="hidden" id="skala_lainnya" name="risiko_jatuh_lainnya" value="{{ $asesmen->rmeAsesmenKepAnakRisikoJatuh->resiko_jatuh_lainnya ?? '' }}">
-                                    </div>
+                                    <input type="hidden" id="skala_lainnya" name="risiko_jatuh_lainnya"
+                                        value="{{ $asesmen->rmeAsesmenKepAnakRisikoJatuh->resiko_jatuh_lainnya ?? '' }}">
+                                </div>
+                            </div>
+
+                            <!-- 8. Risiko dekubitus -->
+                            <div class="section-separator" id="decubitus">
+                                <h5 class="section-title">8. Risiko dekubitus</h5>
+                                <p class="text-muted">Pilih jenis Skala Risiko Dekubitus sesuai kondisi pasien</p>
+
+                                <div class="form-group mb-4">
+                                    <select class="form-select" id="skalaRisikoDekubitus" name="jenis_skala_dekubitus">
+                                        <option value="" disabled
+                                            {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->jenis_skala == null ? 'selected' : '' }}>
+                                            --Pilih Skala--</option>
+                                        <option value="norton"
+                                            {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->jenis_skala == 1 ? 'selected' : '' }}>
+                                            Skala Norton</option>
+                                        <option value="braden"
+                                            {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->jenis_skala == 2 ? 'selected' : '' }}>
+                                            Skala Braden</option>
+                                    </select>
                                 </div>
 
-                                <!-- 8. Risiko dekubitus -->
-                                <div class="section-separator" id="decubitus">
-                                    <h5 class="section-title">8. Risiko dekubitus</h5>
-                                    <p class="text-muted">Pilih jenis Skala Risiko Dekubitus sesuai kondisi pasien</p>
-
-                                    <div class="form-group mb-4">
-                                        <select class="form-select" id="skalaRisikoDekubitus" name="jenis_skala_dekubitus">
-                                            <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->jenis_skala == null ? 'selected' : '' }}>--Pilih Skala--</option>
-                                            <option value="norton" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->jenis_skala == 1 ? 'selected' : '' }}>Skala Norton</option>
-                                            <option value="braden" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->jenis_skala == 2 ? 'selected' : '' }}>Skala Braden</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Form Skala Norton -->
-                                    <div id="formNorton" class="decubitus-form" style="display: none;">
-                                        <h6 class="mb-4">Penilaian Risiko DECUBITUS Skala Norton</h6>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Kondisi Fisik</label>
-                                            <select class="form-select bg-light" name="kondisi_fisik">
-                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_fisik == null ? 'selected' : '' }}>--Pilih--</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_fisik == '4' ? 'selected' : '' }}>Baik</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_fisik == '3' ? 'selected' : '' }}>Sedang</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_fisik == '2' ? 'selected' : '' }}>Buruk</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_fisik == '1' ? 'selected' : '' }}>Sangat Buruk</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Kondisi mental</label>
-                                            <select class="form-select bg-light" name="kondisi_mental">
-                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_mental == null ? 'selected' : '' }}>--Pilih--</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_mental == '4' ? 'selected' : '' }}>Sadar</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_mental == '3' ? 'selected' : '' }}>Apatis</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_mental == '2' ? 'selected' : '' }}>Bingung</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_mental == '1' ? 'selected' : '' }}>Stupor</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Aktivitas</label>
-                                            <select class="form-select bg-light" name="norton_aktivitas">
-                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_aktivitas == null ? 'selected' : '' }}>--Pilih--</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_aktivitas == '4' ? 'selected' : '' }}>Aktif</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_aktivitas == '3' ? 'selected' : '' }}>Jalan dengan bantuan</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_aktivitas == '2' ? 'selected' : '' }}>Terbatas di kursi</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_aktivitas == '1' ? 'selected' : '' }}>Terbatas di tempat tidur</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Mobilitas</label>
-                                            <select class="form-select bg-light" name="norton_mobilitas">
-                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_mobilitas == null ? 'selected' : '' }}>--Pilih--</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_mobilitas == '4' ? 'selected' : '' }}>Bebas bergerak</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_mobilitas == '3' ? 'selected' : '' }}>Agak terbatas</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_mobilitas == '2' ? 'selected' : '' }}>Sangat terbatas</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_mobilitas == '1' ? 'selected' : '' }}>Tidak dapat bergerak</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Inkontinensia</label>
-                                            <select class="form-select bg-light" name="inkontinensia">
-                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_inkontenesia == null ? 'selected' : '' }}>--Pilih--</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_inkontenesia == '4' ? 'selected' : '' }}>Tidak ada</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_inkontenesia == '3' ? 'selected' : '' }}>Kadang-kadang</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_inkontenesia == '2' ? 'selected' : '' }}>Biasanya urin</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_inkontenesia == '1' ? 'selected' : '' }}>Urin dan feses</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mt-4">
-                                            <div class="d-flex gap-2">
-                                                <span class="fw-bold">Kesimpulan :</span>
-                                                <div id="kesimpulanNorton" 
-                                                    class="alert {{ strpos($asesmen->rmeAsesmenKepAnakResikoDekubitus->decubitus_kesimpulan ?? '', 'Tinggi') !== false ? 'alert-danger' : (strpos($asesmen->rmeAsesmenKepAnakResikoDekubitus->decubitus_kesimpulan ?? '', 'Sedang') !== false ? 'alert-warning' : 'alert-success') }} mb-0 flex-grow-1">
-                                                    {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->decubitus_kesimpulan ?? 'Risiko Rendah' }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Form Skala Braden -->
-                                    <div id="formBraden" class="decubitus-form" style="display: none;">
-                                        <h6 class="mb-4">Penilaian Risiko DECUBITUS Skala Braden</h6>
-                                        <div class="mb-4">
-                                            <label class="form-label">Persepsi Sensori</label>
-                                            <select class="form-select bg-light" name="persepsi_sensori">
-                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_persepsi == null ? 'selected' : '' }}>--Pilih--</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_persepsi == '1' ? 'selected' : '' }}>Keterbatasan Penuh</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_persepsi == '2' ? 'selected' : '' }}>Sangat Terbatas</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_persepsi == '3' ? 'selected' : '' }}>Keterbatasan Ringan</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_persepsi == '4' ? 'selected' : '' }}>Tidak Ada Gangguan</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Kelembapan</label>
-                                            <select class="form-select bg-light" name="kelembapan">
-                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_kelembapan == null ? 'selected' : '' }}>--Pilih--</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_kelembapan == '1' ? 'selected' : '' }}>Selalu Lembap</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_kelembapan == '2' ? 'selected' : '' }}>Umumnya Lembap</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_kelembapan == '3' ? 'selected' : '' }}>Kadang-Kadang Lembap</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_kelembapan == '4' ? 'selected' : '' }}>Jarang Lembap</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Aktivitas</label>
-                                            <select class="form-select bg-light" name="braden_aktivitas">
-                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_aktivitas == null ? 'selected' : '' }}>--Pilih--</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_aktivitas == '1' ? 'selected' : '' }}>Total di Tempat Tidur</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_aktivitas == '2' ? 'selected' : '' }}>Dapat Duduk</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_aktivitas == '3' ? 'selected' : '' }}>Berjalan Kadang-kadang</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_aktivitas == '4' ? 'selected' : '' }}>Dapat Berjalan-jalan</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Mobilitas</label>
-                                            <select class="form-select bg-light" name="braden_mobilitas">
-                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_mobilitas == null ? 'selected' : '' }}>--Pilih--</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_mobilitas == '1' ? 'selected' : '' }}>Tidak Mampu Bergerak Sama sekali</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_mobilitas == '2' ? 'selected' : '' }}>Sangat Terbatas</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_mobilitas == '3' ? 'selected' : '' }}>Tidak Ada Masalah</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_mobilitas == '4' ? 'selected' : '' }}>Tanpa Keterbatasan</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Nutrisi</label>
-                                            <select class="form-select bg-light" name="nutrisi">
-                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_nutrisi == null ? 'selected' : '' }}>--Pilih--</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_nutrisi == '1' ? 'selected' : '' }}>Sangat Buruk</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_nutrisi == '2' ? 'selected' : '' }}>Kurang Menucukup</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_nutrisi == '3' ? 'selected' : '' }}>Mencukupi</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_nutrisi == '4' ? 'selected' : '' }}>Sangat Baik</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Pergesekan dan Pergeseran</label>
-                                            <select class="form-select bg-light" name="pergesekan">
-                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_pergesekan == null ? 'selected' : '' }}>--Pilih--</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_pergesekan == '1' ? 'selected' : '' }}>Bermasalah</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_pergesekan == '2' ? 'selected' : '' }}>Potensial Bermasalah</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_pergesekan == '3' ? 'selected' : '' }}>Keterbatasan Ringan</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mt-4">
-                                            <div class="d-flex gap-2">
-                                                <span class="fw-bold">Kesimpulan :</span>
-                                                <div id="kesimpulanBraden" 
-                                                    class="alert {{ strpos($asesmen->rmeAsesmenKepAnakResikoDekubitus->decubitus_kesimpulan ?? '', 'Tinggi') !== false ? 'alert-danger' : (strpos($asesmen->rmeAsesmenKepAnakResikoDekubitus->decubitus_kesimpulan ?? '', 'Sedang') !== false ? 'alert-warning' : 'alert-success') }} mb-0 flex-grow-1">
-                                                    {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->decubitus_kesimpulan ?? 'Kesimpulan Skala Braden' }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- 9. Status Psikologis -->
-                                <div class="section-separator" id="statusPsikologis">
-                                    <h5 class="section-title">9. Status Psikologis</h5>
+                                <!-- Form Skala Norton -->
+                                <div id="formNorton" class="decubitus-form" style="display: none;">
+                                    <h6 class="mb-4">Penilaian Risiko DECUBITUS Skala Norton</h6>
 
                                     <div class="mb-4">
-                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                            <label>Kondisi Psikologis</label>
-                                            <div class="dropdown-wrapper" style="position: relative;">
-                                                <button type="button" class="btn btn-sm btn-primary" id="btnKondisiPsikologis">
-                                                    <i class="ti-plus"></i>
-                                                </button>
-                                                <div class="dropdown-menu" id="dropdownKondisiPsikologis" style="display: none; position: absolute; z-index: 1000;">
-                                                    <div class="p-2">
-                                                        <div class="fw-bold mb-2">STATUS PSIKOLOGIS PASIEN</div>
-                                                        <div class="kondisi-options">
-                                                            @php
-                                                                $kondisiPsikologis = json_decode($asesmen->rmeAsesmenKepAnakStatusPsikologis->kondisi_psikologis ?? '[]', true);
-                                                            @endphp
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="Tidak ada kelainan" id="kondisi1" 
-                                                                    {{ in_array('Tidak ada kelainan', $kondisiPsikologis) ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="kondisi1">Tidak ada kelainan</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="Cemas" id="kondisi2"
-                                                                    {{ in_array('Cemas', $kondisiPsikologis) ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="kondisi2">Cemas</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="Takut" id="kondisi3"
-                                                                    {{ in_array('Takut', $kondisiPsikologis) ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="kondisi3">Takut</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="Marah" id="kondisi4"
-                                                                    {{ in_array('Marah', $kondisiPsikologis) ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="kondisi4">Marah</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="Sedih" id="kondisi5"
-                                                                    {{ in_array('Sedih', $kondisiPsikologis) ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="kondisi5">Sedih</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="Tenang" id="kondisi6"
-                                                                    {{ in_array('Tenang', $kondisiPsikologis) ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="kondisi6">Tenang</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="Tidak semangat" id="kondisi7"
-                                                                    {{ in_array('Tidak semangat', $kondisiPsikologis) ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="kondisi7">Tidak semangat</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="Tertekan" id="kondisi8"
-                                                                    {{ in_array('Tertekan', $kondisiPsikologis) ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="kondisi8">Tertekan</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="Depresi" id="kondisi9"
-                                                                    {{ in_array('Depresi', $kondisiPsikologis) ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="kondisi9">Depresi</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="Sulit tidur" id="kondisi10"
-                                                                    {{ in_array('Sulit tidur', $kondisiPsikologis) ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="kondisi10">Sulit tidur</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div id="selectedKondisiPsikologis" class="d-flex gap-2 flex-wrap">
-                                                <!-- Selected items will be displayed here as badges -->
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="kondisi_psikologis_json" id="kondisi_psikologis_json" value='{{ $asesmen->rmeAsesmenKepAnakStatusPsikologis->kondisi_psikologis ?? "[]" }}'>
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <div class="d-flex align-items-start gap-2 mb-2">
-                                            <label>Gangguan Perilaku</label>
-                                            <div class="dropdown-wrapper" style="position: relative;">
-                                                <button type="button" class="btn btn-sm btn-primary" id="btnGangguanPerilaku">
-                                                    <i class="ti-plus"></i>
-                                                </button>
-
-                                                <!-- Dropdown Menu -->
-                                                <div class="dropdown-menu p-2 shadow-sm" id="dropdownGangguanPerilaku"
-                                                    style="display: none; position: absolute; z-index: 1000; min-width: 250px; background: white; border: 1px solid rgba(0,0,0,.15); border-radius: 4px;">
-                                                    <div class="fw-bold mb-2">GANGGUAN PERILAKU</div>
-                                                    <div class="perilaku-options">
-                                                        @php
-                                                            $gangguanPerilaku = json_decode($asesmen->rmeAsesmenKepAnakStatusPsikologis->gangguan_perilaku ?? '[]', true);
-                                                        @endphp
-                                                        <div class="form-check mb-2">
-                                                            <input class="form-check-input" type="checkbox" value="Tidak Ada Gangguan" id="perilaku1"
-                                                                {{ in_array('Tidak Ada Gangguan', $gangguanPerilaku) ? 'checked' : '' }}>
-                                                            <label class="form-check-label" for="perilaku1">Tidak Ada Gangguan</label>
-                                                        </div>
-                                                        <div class="form-check mb-2">
-                                                            <input class="form-check-input" type="checkbox" value="Perilaku Kekerasan" id="perilaku2"
-                                                                {{ in_array('Perilaku Kekerasan', $gangguanPerilaku) ? 'checked' : '' }}>
-                                                            <label class="form-check-label" for="perilaku2">Perilaku Kekerasan</label>
-                                                        </div>
-                                                        <div class="form-check mb-2">
-                                                            <input class="form-check-input" type="checkbox" value="Halusinasi" id="perilaku3"
-                                                                {{ in_array('Halusinasi', $gangguanPerilaku) ? 'checked' : '' }}>
-                                                            <label class="form-check-label" for="perilaku3">Halusinasi</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div id="selectedGangguanPerilaku" class="d-flex gap-2 flex-wrap align-items-center">
-                                                <!-- Selected items will be displayed here as badges -->
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="gangguan_perilaku_json" id="gangguan_perilaku_json" value='{{ $asesmen->rmeAsesmenKepAnakStatusPsikologis->gangguan_perilaku ?? "[]" }}'>
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label class="form-label">Potensi menyakiti diri sendiri/orang lain</label>
-                                        <select class="form-select" name="potensi_menyakiti">
-                                            <option value="" disabled>pilih</option>
-                                            <option value="0" {{ $asesmen->rmeAsesmenKepAnakStatusPsikologis->potensi_menyakiti == 0 ? 'selected' : '' }}>Ya</option>
-                                            <option value="1" {{ $asesmen->rmeAsesmenKepAnakStatusPsikologis->potensi_menyakiti == 1 ? 'selected' : '' }}>Tidak</option>
+                                        <label class="form-label">Kondisi Fisik</label>
+                                        <select class="form-select bg-light" name="kondisi_fisik">
+                                            <option value="" disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_fisik == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
+                                            <option value="4"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_fisik == '4' ? 'selected' : '' }}>
+                                                Baik</option>
+                                            <option value="3"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_fisik == '3' ? 'selected' : '' }}>
+                                                Sedang</option>
+                                            <option value="2"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_fisik == '2' ? 'selected' : '' }}>
+                                                Buruk</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_fisik == '1' ? 'selected' : '' }}>
+                                                Sangat Buruk</option>
                                         </select>
                                     </div>
 
                                     <div class="mb-4">
-                                        <label class="form-label">Anggota Keluarga Gangguan Jiwa</label>
-                                        <select class="form-select" name="anggota_keluarga_gangguan_jiwa">
-                                            <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakStatusPsikologis->anggota_keluarga_gangguan_jiwa == null ? 'selected' : '' }}>--Pilih--</option>
-                                            <option value="0" {{ $asesmen->rmeAsesmenKepAnakStatusPsikologis->keluarga_gangguan_jiwa == 0 ? 'selected' : '' }}>Ya</option>
-                                            <option value="1" {{ $asesmen->rmeAsesmenKepAnakStatusPsikologis->keluarga_gangguan_jiwa == 1 ? 'selected' : '' }}>Tidak</option>
+                                        <label class="form-label">Kondisi mental</label>
+                                        <select class="form-select bg-light" name="kondisi_mental">
+                                            <option value="" disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_mental == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
+                                            <option value="4"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_mental == '4' ? 'selected' : '' }}>
+                                                Sadar</option>
+                                            <option value="3"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_mental == '3' ? 'selected' : '' }}>
+                                                Apatis</option>
+                                            <option value="2"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_mental == '2' ? 'selected' : '' }}>
+                                                Bingung</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_mental == '1' ? 'selected' : '' }}>
+                                                Stupor</option>
                                         </select>
                                     </div>
 
                                     <div class="mb-4">
-                                        <label class="form-label">Lainnya</label>
-                                        <input type="text" class="form-control" name="psikologis_lainnya" value="{{ $asesmen->rmeAsesmenKepAnakStatusPsikologis->lainnya }}">
-                                    </div>
-                                </div>
-
-                                <!-- 10. Statsu Spiritual -->
-                                <div class="section-separator" id="status_spiritual">
-                                    <h5 class="section-title">10. Status Spiritual</h5>
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Keyakinan Agama</label>
-                                        <select class="form-select" name="keyakinan_agama">
-                                            <option value="" disabled {{ $asesmen->rmeAsesmenKepAnak->keyakinan_agama == null ? 'selected' : '' }}>--Pilih--</option>
-                                            <option value="Islam" {{ $asesmen->rmeAsesmenKepAnak->agama == 'Islam' ? 'selected' : '' }}>Islam</option>
-                                            <option value="Protestan" {{ $asesmen->rmeAsesmenKepAnak->agama == 'Protestan' ? 'selected' : '' }}>Protestan</option>
-                                            <option value="Khatolik" {{ $asesmen->rmeAsesmenKepAnak->agama == 'Khatolik' ? 'selected' : '' }}>Khatolik</option>
-                                            <option value="Budha" {{ $asesmen->rmeAsesmenKepAnak->agama == 'Budha' ? 'selected' : '' }}>Budha</option>
-                                            <option value="Hindu" {{ $asesmen->rmeAsesmenKepAnak->agama == 'Hindu' ? 'selected' : '' }}>Hindu</option>
-                                            <option value="Konghucu" {{ $asesmen->rmeAsesmenKepAnak->agama == 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
-                                            <option value="Lainnya" {{ $asesmen->rmeAsesmenKepAnak->agama == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Pandangan Pasien Terhadap Penyakit Nya</label>
-                                        <select class="form-select" name="pandangan_terhadap_penyakit">
-                                            <option value="" disabled {{ $asesmen->rmeAsesmenKepAnak->pandangan_terhadap_penyakit == null ? 'selected' : '' }}>--Pilih--</option>
-                                            <option value="Takdir" {{ $asesmen->rmeAsesmenKepAnak->pandangan_terhadap_penyakit == 'Takdir' ? 'selected' : '' }}>Takdir</option>
-                                            <option value="Hukuman" {{ $asesmen->rmeAsesmenKepAnak->pandangan_terhadap_penyakit == 'Hukuman' ? 'selected' : '' }}>Hukuman</option>
-                                            <option value="Tidak Ada" {{ $asesmen->rmeAsesmenKepAnak->pandangan_terhadap_penyakit == 'Tidak Ada' ? 'selected' : '' }}>Tidak Ada</option>
-                                            <option value="Lainnya" {{ $asesmen->rmeAsesmenKepAnak->pandangan_terhadap_penyakit == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <!-- 11. Statsu Ekonomi -->
-                                <div class="section-separator" id="status_sosial_ekonomi">
-                                    <h5 class="section-title">11. Status Sosial Ekonomi</h5>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Pekerjaan</label>
-                                        <select class="form-select" name="pekerjaan_pasien">
-                                            <option value="" {{ !$asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_pekerjaan ? 'selected' : '' }}>--Pilih--</option>
-                                            <option value="Belum Bekerja" {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_pekerjaan == 'Belum Bekerja' ? 'selected' : '' }}>Belum Bekerja</option>
-                                            <option value="Purnawaktu" {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_pekerjaan == 'Purnawaktu' ? 'selected' : '' }}>Purnawaktu</option>
-                                            <option value="Paruh Waktu" {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_pekerjaan == 'Paruh Waktu' ? 'selected' : '' }}>Paruh Waktu</option>
-                                            <option value="Pensiunan" {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_pekerjaan == 'Pensiunan' ? 'selected' : '' }}>Pensiunan</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Status Pernikahan</label>
-                                        <div class="d-flex gap-3" style="width: 100%;">
-                                            <select class="form-select flex-grow-1" name="status_pernikahan">
-                                                <option value="" {{ !$asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_status_pernikahan ? 'selected' : '' }}>--Pilih--</option>
-                                                <option value="Menikah" {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_status_pernikahan == 'Menikah' ? 'selected' : '' }}>Menikah</option>
-                                                <option value="Belum Menikah" {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_status_pernikahan == 'Belum Menikah' ? 'selected' : '' }}>Belum Menikah</option>
-                                                <option value="Cerai" {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_status_pernikahan == 'Cerai' ? 'selected' : '' }}>Cerai</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Tempat Tinggal</label>
-                                        <select class="form-select" name="tempat_tinggal">
-                                            <option value="" {{ !$asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_tempat_tinggal ? 'selected' : '' }}>--Pilih--</option>
-                                            <option value="Rumah" {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_tempat_tinggal == 'Rumah' ? 'selected' : '' }}>Rumah</option>
-                                            <option value="Asrama" {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_tempat_tinggal == 'Asrama' ? 'selected' : '' }}>Asrama</option>
-                                            <option value="Lainnya" {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_tempat_tinggal == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Curiga Penganiayaan</label>
-                                        <select class="form-select" name="curiga_penganiayaan">
-                                            <option value="" {{ !$asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_curiga_penganiayaan ? 'selected' : '' }}>--Pilih--</option>
-                                            <option value="Ya" {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_curiga_penganiayaan == 'Ya' ? 'selected' : '' }}>Ya</option>
-                                            <option value="Tidak" {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_curiga_penganiayaan == 'Tidak' ? 'selected' : '' }}>Tidak</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Status Tinggal Dengan Keluarga</label>
-                                        <select class="form-select" name="status_tinggal">
-                                            <option value="" {{ !$asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_tinggal_dengan_keluarga ? 'selected' : '' }}>--Pilih--</option>
-                                            <option value="Orang Tua" {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_tinggal_dengan_keluarga == 'Orang Tua' ? 'selected' : '' }}>Orang Tua</option>
-                                            <option value="Wali" {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_tinggal_dengan_keluarga == 'Wali' ? 'selected' : '' }}>Wali</option>
-                                            <option value="Lainnya" {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_tinggal_dengan_keluarga == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <!-- 12. Status Gizi -->
-                                <div class="section-separator" id="status_gizi">
-                                    <h5 class="section-title">12. Status Gizi</h5>
-                                    <div class="form-group mb-4">
-                                        <select class="form-select" name="gizi_jenis" id="nutritionAssessment">
-                                            <option value="" >--Pilih--</option>
-                                            <option value="1" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_jenis == 1 ? 'selected' : '' }}>Malnutrition Screening Tool (MST)</option>
-                                            <option value="2" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_jenis == 2 ? 'selected' : '' }}>The Mini Nutritional Assessment (MNA)</option>
-                                            <option value="3" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_jenis == 3 ? 'selected' : '' }}>Strong Kids (1 bln - 18 Tahun)</option>
-                                            <option value="5" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_jenis == 5 ? 'selected' : '' }}>Tidak Dapat Dinilai</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- MST Form -->
-                                    <div id="mst" class="assessment-form" style="display: none;">
-                                        <h6 class="mb-3">Penilaian Gizi Malnutrition Screening Tool (MST)</h6>
-                                        <div class="mb-3">
-                                            <label class="form-label">Apakah pasien mengalami penurunan BB yang tidak diinginkan dalam 6 bulan terakhir?</label>
-                                            <select class="form-select" name="gizi_mst_penurunan_bb">
-                                                <option value="">pilih</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_penurunan_bb == '0' ? 'selected' : '' }}>Tidak ada penurunan Berat Badan (BB)</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_penurunan_bb == '2' ? 'selected' : '' }}>Tidak yakin/ tidak tahu/ terasa baju lebi longgar</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_penurunan_bb == '3' ? 'selected' : '' }}>Ya ada penurunan BB</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Jika jawaban di atas "Ya ada penurunan BB", berapa penurunan BB tersebut?</label>
-                                            <select class="form-select" name="gizi_mst_jumlah_penurunan_bb">
-                                                <option value="0">pilih</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_jumlah_penurunan_bb == '1' ? 'selected' : '' }}>1-5 kg</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_jumlah_penurunan_bb == '2' ? 'selected' : '' }}>6-10 kg</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_jumlah_penurunan_bb == '3' ? 'selected' : '' }}>11-15 kg</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_jumlah_penurunan_bb == '4' ? 'selected' : '' }}>>15 kg</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Apakah asupan makan berkurang karena tidak nafsu makan?</label>
-                                            <select class="form-select" name="gizi_mst_nafsu_makan_berkurang">
-                                                <option value="">pilih</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_nafsu_makan_berkurang == '1' ? 'selected' : '' }}>Ya</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_nafsu_makan_berkurang == '0' ? 'selected' : '' }}>Tidak</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Pasien didiagnosa khusus seperti: DM, Cancer (kemoterapi), Geriatri, GGk (hemodialisis), Penurunan Imun</label>
-                                            <select class="form-select" name="gizi_mst_diagnosis_khusus">
-                                                <option value="">pilih</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_diagnosis_khusus == '1' ? 'selected' : '' }}>Ya</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_diagnosis_khusus == '0' ? 'selected' : '' }}>Tidak</option>
-                                            </select>
-                                        </div>
-                                        <!-- Nilai -->
-                                        <div id="mstConclusion" class="risk-indicators mt-4">
-                                            <div class="alert alert-success">Kesimpulan: 0-1 tidak berisiko malnutrisi</div>
-                                            <div class="alert alert-warning">Kesimpulan: ≥ 2 berisiko malnutrisi</div>
-                                            <input type="hidden" name="gizi_mst_kesimpulan" id="gizi_mst_kesimpulan" value="{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_kesimpulan }}">
-                                        </div>
-                                    </div>
-
-                                    <!-- MNA Form -->
-                                    <div id="mna" class="assessment-form" style="display: none;">
-                                        <h6 class="mb-3">Penilaian Gizi The Mini Nutritional Assessment (MNA) / Lansia</h6>
-
-                                        <div class="mb-3">
-                                            <label class="form-label">
-                                                Apakah pasien mengalami penurunan asupan makanan selama 3 bulan terakhir karena hilang selera makan, masalah pencernaan, kesulitan mengunyah atau menelan?
-                                            </label>
-                                            <select class="form-select" name="gizi_mna_penurunan_asupan_3_bulan">
-                                                <option value="">--Pilih--</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_penurunan_asupan_3_bulan == '0' ? 'selected' : '' }}>Mengalami penurunan asupan makanan yang parah</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_penurunan_asupan_3_bulan == '1' ? 'selected' : '' }}>Mengalami penurunan asupan makanan sedang</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_penurunan_asupan_3_bulan == '2' ? 'selected' : '' }}>Tidak mengalami penurunan asupan makanan</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="form-label">
-                                                Apakah pasien mengalami kehilangan Berat Badan (BB) selama 3 bulan terakhir?
-                                            </label>
-                                            <select class="form-select" name="gizi_mna_kehilangan_bb_3_bulan">
-                                                <option value="">-- Pilih --</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_kehilangan_bb_3_bulan == '0' ? 'selected' : '' }}>Kehilangan BB lebih dari 3 Kg</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_kehilangan_bb_3_bulan == '1' ? 'selected' : '' }}>Tidak tahu</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_kehilangan_bb_3_bulan == '2' ? 'selected' : '' }}>Kehilangan BB antara 1 s.d 3 Kg</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_kehilangan_bb_3_bulan == '3' ? 'selected' : '' }}>Tidak ada kehilangan BB</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="form-label">Bagaimana mobilisasi atau pergerakan pasien?</label>
-                                            <select class="form-select" name="gizi_mna_mobilisasi">
-                                                <option value="">-- Pilih --</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_mobilisasi == '0' ? 'selected' : '' }}>Hanya di tempat tidur atau kursi roda</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_mobilisasi == '1' ? 'selected' : '' }}>Dapat turun dari tempat tidur tapi tidak dapat jalan-jalan</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_mobilisasi == '2' ? 'selected' : '' }}>Dapat jalan-jalan</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="form-label">
-                                                Apakah Pasien mengalami stres psikologi atau penyakit akut selama 3 bulan terakhir?
-                                            </label>
-                                            <select class="form-select" name="gizi_mna_stress_penyakit_akut">
-                                                <option value="">-- Pilih --</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_stress_penyakit_akut == '0' ? 'selected' : '' }}>Ya</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_stress_penyakit_akut == '1' ? 'selected' : '' }}>Tidak</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="form-label">Apakah pasien mengalami masalah neuropsikologi?</label>
-                                            <select class="form-select" name="gizi_mna_status_neuropsikologi">
-                                                <option value="">-- Pilih --</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_status_neuropsikologi == '0' ? 'selected' : '' }}>Demensia atau depresi berat</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_status_neuropsikologi == '1' ? 'selected' : '' }}>Demensia ringan</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_status_neuropsikologi == '2' ? 'selected' : '' }}>Tidak mengalami masalah neuropsikologi</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="form-label">Berapa Berat Badan (BB) pasien? (Kg)</label>
-                                            <input type="number" name="gizi_mna_berat_badan" class="form-control" id="mnaWeight" min="1" step="0.1" placeholder="Masukkan berat badan dalam Kg" value="{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_berat_badan }}">
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="form-label">Berapa Tinggi Badan (TB) pasien? (cm)</label>
-                                            <input type="number" name="gizi_mna_tinggi_badan" class="form-control" id="mnaHeight" min="1" step="0.1" placeholder="Masukkan tinggi badan dalam cm" value="{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_tinggi_badan }}">
-                                        </div>
-
-                                        <!-- IMT -->
-                                        <div class="mb-3">
-                                            <label class="form-label">Indeks Massa Tubuh (IMT)</label>
-                                            <div class="text-muted small mb-2">
-                                                <i>Rumus IMT = BB (Kg) / (TB (m))²</i>
-                                            </div>
-                                            <input type="number" name="gizi_mna_imt" class="form-control bg-light" id="mnaBMI" readonly placeholder="IMT akan terhitung otomatis" value="{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_imt }}">
-                                        </div>
-
-                                        <!-- Kesimpulan -->
-                                        <div id="mnaConclusion" class="risk-indicators mt-4">
-                                            <div class="alert alert-info mb-3" style="{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_kesimpulan ? 'display: none;' : '' }}">
-                                                Silakan isi semua parameter di atas untuk melihat kesimpulan
-                                            </div>
-                                            <div class="alert alert-success" style="{{ strpos($asesmen->rmeAsesmenKepAnakGizi->gizi_mna_kesimpulan ?? '', 'Tidak Beresiko') !== false ? '' : 'display: none;' }}">
-                                                Kesimpulan: Total Skor ≥ 12 (Tidak Beresiko Malnutrisi)
-                                            </div>
-                                            <div class="alert alert-warning" style="{{ strpos($asesmen->rmeAsesmenKepAnakGizi->gizi_mna_kesimpulan ?? '', 'Beresiko') !== false ? '' : 'display: none;' }}">
-                                                Kesimpulan: Total Skor ≤ 11 (Beresiko Malnutrisi)
-                                            </div>
-                                            <input type="hidden" name="gizi_mna_kesimpulan" id="gizi_mna_kesimpulan" value="{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_kesimpulan }}">
-                                        </div>
-                                    </div>
-
-                                    <!-- Strong Kids Form -->
-                                    <div id="strong-kids" class="assessment-form" style="display: none;">
-                                        <h6 class="mb-3">Penilaian Gizi Strong Kids</h6>
-                                        <div class="mb-3">
-                                            <label class="form-label">Apakah anak tampa kurus kehilangan lemak subkutan, kehilangan massa otot, dan/ atau wajah cekung?</label>
-                                            <select class="form-select" name="gizi_strong_status_kurus">
-                                                <option value="">pilih</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_status_kurus == '1' ? 'selected' : '' }}>Ya</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_status_kurus == '0' ? 'selected' : '' }}>Tidak</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Apakah terdapat penurunan BB selama satu bulan terakhir (untuk semua usia)?
-                                                (berdasarkan penilaian objektif data BB bila ada/penilaian subjektif dari orang tua pasien ATAU tidak ada peningkatan berat badan atau tinggi badan (pada bayi < 1 tahun) selama 3 bulan terakhir)</label>
-                                            <select class="form-select" name="gizi_strong_penurunan_bb">
-                                                <option value="">pilih</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_penurunan_bb == '1' ? 'selected' : '' }}>Ya</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_penurunan_bb == '0' ? 'selected' : '' }}>Tidak</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="form-label">Apakah salah satu dari hal berikut ini ada? <br>
-                                                - Diare berlabihan (>= 5 kali perhari) dan/atau muntah(>3 klai perhari) selama 1-3 hari terakhir
-                                                - Penurunan asupan makanan selama 1-3 hari terakhir
-                                                - Intervensi gizi yang sudah ada sebelumnya (misalnya, ONS atau pemberian maka selang)</label>
-                                            <select class="form-select" name="gizi_strong_gangguan_pencernaan">
-                                                <option value="">pilih</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_gangguan_pencernaan == '1' ? 'selected' : '' }}>Ya</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_gangguan_pencernaan == '0' ? 'selected' : '' }}>Tidak</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Apakah terdapat penyakit atau keadaan yang mengakibatkan pasien berisiko mengalaman mainutrisi? <br>
-                                                <a href="#"><i>Lihat penyakit yang berisiko malnutrisi</i></a></label>
-                                            <select class="form-select" name="gizi_strong_penyakit_berisiko">
-                                                <option value="">pilih</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_penyakit_berisiko == '2' ? 'selected' : '' }}>Ya</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_penyakit_berisiko == '0' ? 'selected' : '' }}>Tidak</option>
-                                            </select>
-                                        </div>
-                                        <!-- Nilai -->
-                                        <div id="strongKidsConclusion" class="risk-indicators mt-4">
-                                            <div class="alert alert-success" style="{{ strpos($asesmen->rmeAsesmenKepAnakGizi->gizi_strong_kesimpulan ?? '', 'rendah') !== false ? '' : 'display: none;' }}">Kesimpulan: 0 (Beresiko rendah)</div>
-                                            <div class="alert alert-warning" style="{{ strpos($asesmen->rmeAsesmenKepAnakGizi->gizi_strong_kesimpulan ?? '', 'sedang') !== false ? '' : 'display: none;' }}">Kesimpulan: 1-3 (Beresiko sedang)</div>
-                                            <div class="alert alert-danger" style="{{ strpos($asesmen->rmeAsesmenKepAnakGizi->gizi_strong_kesimpulan ?? '', 'Tinggi') !== false ? '' : 'display: none;' }}">Kesimpulan: 4-5 (Beresiko Tinggi)</div>
-                                            <input type="hidden" name="gizi_strong_kesimpulan" id="gizi_strong_kesimpulan" value="{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_kesimpulan }}">
-                                        </div>
-                                    </div>
-
-                                    <!-- Form NRS -->
-                                    <div id="nrs" class="assessment-form" style="display: none;">
-                                        <h5 class="mb-4">Penilaian Risiko NRS</h5>
-
-                                        <!-- NRS Form fields here -->
-                                        <div class="mb-3">
-                                            <label class="form-label">Apakah pasien datang kerumah sakit karena jatuh?</label>
-                                            <select class="form-select" name="gizi_nrs_jatuh_saat_masuk_rs">
-                                                <option value="">pilih</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_nrs_jatuh_saat_masuk_rs == '2' ? 'selected' : '' }}>Ya</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_nrs_jatuh_saat_masuk_rs == '0' ? 'selected' : '' }}>Tidak</option>
-                                            </select>
-                                        </div>
-                                        
-                                        <!-- Add more NRS form fields here -->
-                                        
-                                        <!-- Nilai -->
-                                        <div id="nrsConclusion" class="risk-indicators mt-4">
-                                            <div class="alert alert-success" style="{{ strpos($asesmen->rmeAsesmenKepAnakGizi->gizi_nrs_kesimpulan ?? '', 'rendah') !== false ? '' : 'display: none;' }}">Kesimpulan: Beresiko rendah</div>
-                                            <div class="alert alert-warning" style="{{ strpos($asesmen->rmeAsesmenKepAnakGizi->gizi_nrs_kesimpulan ?? '', 'sedang') !== false ? '' : 'display: none;' }}">Kesimpulan: Beresiko sedang</div>
-                                            <div class="alert alert-danger" style="{{ strpos($asesmen->rmeAsesmenKepAnakGizi->gizi_nrs_kesimpulan ?? '', 'Tinggi') !== false ? '' : 'display: none;' }}">Kesimpulan: Beresiko Tinggi</div>
-                                            <input type="hidden" name="gizi_nrs_kesimpulan" id="gizi_nrs_kesimpulan" value="{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_nrs_kesimpulan }}">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- 13. Status Fungsional -->
-                                <div class="section-separator" id="status-fungsional">
-                                    <h5 class="section-title">13. Status Fungsional</h5>
-
-                                    <div class="mb-4">
-                                        <label class="form-label">Pilih jenis Skala Pengkajian Aktivitas Harian (ADL) sesuai kondisi pasien</label>
-                                        <select class="form-select" name="skala_fungsional" id="skala_fungsional">
-                                            <option value="" disabled>Pilih Skala Fungsional</option>
-                                            <option value="Pengkajian Aktivitas" {{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->jenis_skala == 1 ? 'selected' : '' }}>
-                                                Pengkajian Aktivitas Harian
-                                            </option>
-                                            <option value="Lainnya" {{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->jenis_skala == 2 ? 'selected' : '' }}>
-                                                Lainnya
-                                            </option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Nilai Skala ADL</label>
-                                        <input type="text" class="form-control" id="adl_total" name="adl_total" readonly
-                                            value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->nilai_skala_adl ?? '' }}">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Kesimpulan Fungsional</label>
-                                        <div id="adl_kesimpulan" class="alert {{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->kesimpulan_fungsional ? 
-                                            (strpos($asesmen->rmeAsesmenKepAnakStatusFungsional?->kesimpulan_fungsional, 'Ketergantungan Total') !== false ? 'alert-danger' : 
-                                            (strpos($asesmen->rmeAsesmenKepAnakStatusFungsional?->kesimpulan_fungsional, 'Ketergantungan Berat') !== false ? 'alert-warning' : 
-                                            (strpos($asesmen->rmeAsesmenKepAnakStatusFungsional?->kesimpulan_fungsional, 'Ketergantungan Sedang') !== false ? 'alert-info' : 'alert-success'))) 
-                                            : 'alert-info' }}">
-                                            {{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->kesimpulan_fungsional ?? 'Pilih skala aktivitas harian terlebih dahulu' }}
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Hidden fields untuk menyimpan data ADL -->
-                                    <input type="hidden" id="adl_jenis_skala" name="adl_jenis_skala" 
-                                        value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->jenis_skala ?? '' }}">
-                                    <input type="hidden" id="adl_makan" name="adl_makan" 
-                                        value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->makan ?? '' }}">
-                                    <input type="hidden" id="adl_makan_value" name="adl_makan_value" 
-                                        value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->makan_value ?? '' }}">
-                                    <input type="hidden" id="adl_berjalan" name="adl_berjalan" 
-                                        value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->berjalan ?? '' }}">
-                                    <input type="hidden" id="adl_berjalan_value" name="adl_berjalan_value" 
-                                        value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->berjalan_value ?? '' }}">
-                                    <input type="hidden" id="adl_mandi" name="adl_mandi" 
-                                        value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->mandi ?? '' }}">
-                                    <input type="hidden" id="adl_mandi_value" name="adl_mandi_value" 
-                                        value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->mandi_value ?? '' }}">
-                                    <input type="hidden" id="adl_kesimpulan_value" name="adl_kesimpulan_value" 
-                                        value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->kesimpulan_fungsional ?? '' }}">
-                                </div>
-
-                                <!-- 14. Kebutuhan Edukasi -->
-                                <div class="section-separator" id="kebutuhan-edukasi">
-                                    <h5 class="section-title">14. Status Kebutuhan Edukasi, Pendidikan dan Pengajaran</h5>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Gaya Bicara</label>
-                                        <select class="form-select" name="gaya_bicara">
-                                            <option value="" disabled {{ !$asesmen->rmeAsesmenKepAnak || !$asesmen->rmeAsesmenKepAnak->gaya_bicara ? 'selected' : '' }}>--Pilih--</option>
-                                            <option value="normal" {{ $asesmen->rmeAsesmenKepAnak->gaya_bicara == 'normal' ? 'selected' : '' }}>Normal</option>
-                                            <option value="lambat" {{ $asesmen->rmeAsesmenKepAnak->gaya_bicara == 'lambat' ? 'selected' : '' }}>Lambat</option>
-                                            <option value="cepat" {{ $asesmen->rmeAsesmenKepAnak->gaya_bicara == 'cepat' ? 'selected' : '' }}>Cepat</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Bahasa Sehari-Hari</label>
-                                        <select class="form-select" name="bahasa_sehari_hari">
-                                            <option value="" disabled {{ !$asesmen->rmeAsesmenKepAnak || !$asesmen->rmeAsesmenKepAnak->bahasa ? 'selected' : '' }}>--Pilih--</option>
-                                            <option value="Bahasa Indonesia" {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Bahasa Indonesia' ? 'selected' : '' }}>Bahasa Indonesia</option>
-                                            <option value="Aceh" {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Aceh' ? 'selected' : '' }}>Aceh</option>
-                                            <option value="Batak" {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Batak' ? 'selected' : '' }}>Batak</option>
-                                            <option value="Minangkabau" {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Minangkabau' ? 'selected' : '' }}>Minangkabau</option>
-                                            <option value="Melayu" {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Melayu' ? 'selected' : '' }}>Melayu</option>
-                                            <option value="Sunda" {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Sunda' ? 'selected' : '' }}>Sunda</option>
-                                            <option value="Jawa" {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Jawa' ? 'selected' : '' }}>Jawa</option>
-                                            <option value="Madura" {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Madura' ? 'selected' : '' }}>Madura</option>
-                                            <option value="Bali" {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Bali' ? 'selected' : '' }}>Bali</option>
-                                            <option value="Sasak" {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Sasak' ? 'selected' : '' }}>Sasak</option>
-                                            <option value="Banjar" {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Banjar' ? 'selected' : '' }}>Banjar</option>
-                                            <option value="Bugis" {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Bugis' ? 'selected' : '' }}>Bugis</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Perlu Penerjemah</label>
-                                        <select class="form-select" name="perlu_penerjemah">
-                                            <option value="" disabled {{ !$asesmen->rmeAsesmenKepAnak || !$asesmen->rmeAsesmenKepAnak->perlu_penerjemahan ? 'selected' : '' }}>--Pilih--</option>
-                                            <option value="ya" {{ $asesmen->rmeAsesmenKepAnak->perlu_penerjemahan == 'ya' ? 'selected' : '' }}>Ya</option>
-                                            <option value="tidak" {{ $asesmen->rmeAsesmenKepAnak->perlu_penerjemahan == 'tidak' ? 'selected' : '' }}>Tidak</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Hambatan Komunikasi</label>
-                                        <select class="form-select" name="hambatan_komunikasi">
-                                            <option value="" disabled>--Pilih--</option>
-                                            <option value="tidak_ada" {{ $asesmen->rmeAsesmenKepAnak->hambatan_komunikasi == 'tidak_ada' ? 'selected' : '' }}>Tidak Ada</option>
-                                            <option value="pendengaran" {{ $asesmen->rmeAsesmenKepAnak->hambatan_komunikasi == 'pendengaran' ? 'selected' : '' }}>Gangguan Pendengaran</option>
-                                            <option value="bicara" {{ $asesmen->rmeAsesmenKepAnak->hambatan_komunikasi == 'bicara' ? 'selected' : '' }}>Gangguan Bicara</option>
-                                            <option value="bahasa" {{ $asesmen->rmeAsesmenKepAnak->hambatan_komunikasi == 'bahasa' ? 'selected' : '' }}>Perbedaan Bahasa</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Media Disukai</label>
-                                        <select class="form-select" name="media_disukai">
-                                            <option value="" disabled {{ !$asesmen->rmeAsesmenKepAnak || !$asesmen->rmeAsesmenKepAnak->media_disukai ? 'selected' : '' }}>--Pilih--</option>
-                                            <option value="cetak" {{ $asesmen->rmeAsesmenKepAnak->media_disukai == 'cetak' ? 'selected' : '' }}>Media Cetak</option>
-                                            <option value="video" {{ $asesmen->rmeAsesmenKepAnak->media_disukai == 'video' ? 'selected' : '' }}>Video</option>
-                                            <option value="diskusi" {{ $asesmen->rmeAsesmenKepAnak->media_disukai == 'diskusi' ? 'selected' : '' }}>Diskusi Langsung</option>
-                                            <option value="demonstrasi" {{ $asesmen->rmeAsesmenKepAnak->media_disukai == 'demonstrasi' ? 'selected' : '' }}>Demonstrasi</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Tingkat Pendidikan</label>
-                                        <select class="form-select" name="tingkat_pendidikan">
-                                            <option value="" disabled {{ !$asesmen->rmeAsesmenKepAnak || !$asesmen->rmeAsesmenKepAnak->tingkat_pendidikan ? 'selected' : '' }}>--Pilih--</option>
-                                            <option value="SD" {{ $asesmen->rmeAsesmenKepAnak->tingkat_pendidikan == 'SD' ? 'selected' : '' }}>SD</option>
-                                            <option value="SMP" {{ $asesmen->rmeAsesmenKepAnak->tingkat_pendidikan == 'SMP' ? 'selected' : '' }}>SMP</option>
-                                            <option value="SMA" {{ $asesmen->rmeAsesmenKepAnak->tingkat_pendidikan == 'SMA' ? 'selected' : '' }}>SMA</option>
-                                            <option value="Diploma" {{ $asesmen->rmeAsesmenKepAnak->tingkat_pendidikan == 'Diploma' ? 'selected' : '' }}>Diploma</option>
-                                            <option value="Sarjana" {{ $asesmen->rmeAsesmenKepAnak->tingkat_pendidikan == 'Sarjana' ? 'selected' : '' }}>Sarjana</option>
-                                            <option value="Tidak Sekolah" {{ $asesmen->rmeAsesmenKepAnak->tingkat_pendidikan == 'Tidak Sekolah' ? 'selected' : '' }}>Tidak Sekolah</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <!-- 15. Plan -->
-
-                                <div class="section-separator" id="discharge-planning">
-                                    <h5 class="section-title">15. Discharge Planning</h5>
-
-                                    <div class="mb-4">
-                                        <label class="form-label">Diagnosis medis</label>
-                                        <input type="text" class="form-control" name="diagnosis_medis"
-                                            placeholder="Diagnosis"
-                                            value="{{ $asesmen->rmeAsesmenKepAnakRencanaPulang->diagnosis_medis ?? '' }}">
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label class="form-label">Usia lanjut</label>
-                                        <select class="form-select" name="usia_lanjut">
-                                            <option selected disabled>--Pilih--</option>
-                                            <option value="0" 
-                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->usia_lanjut === '0' ? 'selected' : '' }}>
-                                                Ya
-                                            </option>
-                                            <option value="1" 
-                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->usia_lanjut === '1' ? 'selected' : '' }}>
-                                                Tidak
-                                            </option>
+                                        <label class="form-label">Aktivitas</label>
+                                        <select class="form-select bg-light" name="norton_aktivitas">
+                                            <option value="" disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_aktivitas == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
+                                            <option value="4"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_aktivitas == '4' ? 'selected' : '' }}>
+                                                Aktif</option>
+                                            <option value="3"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_aktivitas == '3' ? 'selected' : '' }}>
+                                                Jalan dengan bantuan</option>
+                                            <option value="2"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_aktivitas == '2' ? 'selected' : '' }}>
+                                                Terbatas di kursi</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_aktivitas == '1' ? 'selected' : '' }}>
+                                                Terbatas di tempat tidur</option>
                                         </select>
                                     </div>
 
                                     <div class="mb-4">
-                                        <label class="form-label">Hambatan mobilisasi</label>
-                                        <select class="form-select" name="hambatan_mobilisasi">
-                                            <option selected disabled>--Pilih--</option>
-                                            <option value="0" 
-                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->hambatan_mobilisasi === '0' ? 'selected' : '' }}>
-                                                Ya
-                                            </option>
-                                            <option value="1" 
-                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->hambatan_mobilisasi === '1' ? 'selected' : '' }}>
-                                                Tidak
-                                            </option>
+                                        <label class="form-label">Mobilitas</label>
+                                        <select class="form-select bg-light" name="norton_mobilitas">
+                                            <option value="" disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_mobilitas == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
+                                            <option value="4"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_mobilitas == '4' ? 'selected' : '' }}>
+                                                Bebas bergerak</option>
+                                            <option value="3"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_mobilitas == '3' ? 'selected' : '' }}>
+                                                Agak terbatas</option>
+                                            <option value="2"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_mobilitas == '2' ? 'selected' : '' }}>
+                                                Sangat terbatas</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_mobilitas == '1' ? 'selected' : '' }}>
+                                                Tidak dapat bergerak</option>
                                         </select>
                                     </div>
 
                                     <div class="mb-4">
-                                        <label class="form-label">Membutuhkan penggunaan media berkelanjutan</label>
-                                        <select class="form-select" name="penggunaan_media_berkelanjutan">
-                                            <option selected disabled>--Pilih--</option>
-                                            <option value="ya" 
-                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->membutuhkan_pelayanan_medis === 'ya' ? 'selected' : '' }}>
-                                                Ya
-                                            </option>
-                                            <option value="tidak" 
-                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->membutuhkan_pelayanan_medis === 'tidak' ? 'selected' : '' }}>
-                                                Tidak
-                                            </option>
+                                        <label class="form-label">Inkontinensia</label>
+                                        <select class="form-select bg-light" name="inkontinensia">
+                                            <option value="" disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_inkontenesia == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
+                                            <option value="4"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_inkontenesia == '4' ? 'selected' : '' }}>
+                                                Tidak ada</option>
+                                            <option value="3"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_inkontenesia == '3' ? 'selected' : '' }}>
+                                                Kadang-kadang</option>
+                                            <option value="2"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_inkontenesia == '2' ? 'selected' : '' }}>
+                                                Biasanya urin</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_inkontenesia == '1' ? 'selected' : '' }}>
+                                                Urin dan feses</option>
                                         </select>
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label class="form-label">Ketergantungan dengan orang lain dalam aktivitas harian</label>
-                                        <select class="form-select" name="ketergantungan_aktivitas">
-                                            <option selected disabled>--Pilih--</option>
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label class="form-label">Pasien / Keluarga Memerlukan Keterampilan Khusus Setelah Pulang</label>
-                                        <select class="form-select" name="keterampilan_khusus">
-                                            <option selected disabled>--Pilih--</option>
-                                            <option value="ya" 
-                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memerlukan_keterampilan_khusus === 'ya' ? 'selected' : '' }}>
-                                                Ya
-                                            </option>
-                                            <option value="tidak" 
-                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memerlukan_keterampilan_khusus === 'tidak' ? 'selected' : '' }}>
-                                                Tidak
-                                            </option>
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label class="form-label">Pasien Memerlukan Alat Bantu Setelah Keluar Rumah Sakit</label>
-                                        <select class="form-select" name="alat_bantu">
-                                            <option selected disabled>--Pilih--</option>
-                                            <option value="ya" 
-                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memerlukan_alat_bantu === 'ya' ? 'selected' : '' }}>
-                                                Ya
-                                            </option>
-                                            <option value="tidak" 
-                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memerlukan_alat_bantu === 'tidak' ? 'selected' : '' }}>
-                                                Tidak
-                                            </option>
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label class="form-label">Pasien Memiliki Nyeri Kronis Dan / Kebiasaan Setelah Pulang</label>
-                                        <select class="form-select" name="nyeri_kronis">
-                                            <option selected disabled>--Pilih--</option>
-                                            <option value="ya" 
-                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memiliki_nyeri_kronis === 'ya' ? 'selected' : '' }}>
-                                                Ya
-                                            </option>
-                                            <option value="tidak" 
-                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memiliki_nyeri_kronis === 'tidak' ? 'selected' : '' }}>
-                                                Tidak
-                                            </option>
-                                        </select>
-                                    </div>
-
-                                    <div class="row mb-4">
-                                        <div class="col-md-6">
-                                            <label class="form-label">Perkiraan lama hari dirawat</label>
-                                            <input type="text" class="form-control" name="perkiraan_hari" 
-                                                placeholder="hari"
-                                                value="{{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) ? $asesmen->rmeAsesmenKepAnakRencanaPulang->perkiraan_lama_dirawat : '' }}">
-                                        </div>
-                                        
-                                        <div class="col-md-6">
-                                            <label class="form-label">Rencana Tanggal Pulang</label>
-                                            <input type="date" class="form-control" name="tanggal_pulang"
-                                                value="{{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) ? $asesmen->rmeAsesmenKepAnakRencanaPulang->rencana_pulang : '' }}">
-                                        </div>
                                     </div>
 
                                     <div class="mt-4">
-                                        <label class="form-label">KESIMPULAN</label>
-                                        <div class="d-flex flex-column gap-2">
-                                            <div class="alert alert-info">
-                                                
-                                            </div>
-                                            <div class="alert alert-warning">
-                                                Mebutuhkan rencana pulang khusus
-                                            </div>
-                                            <div class="alert alert-success">
-                                                Tidak mebutuhkan rencana pulang khusus
+                                        <div class="d-flex gap-2">
+                                            <span class="fw-bold">Kesimpulan :</span>
+                                            <div id="kesimpulanNorton"
+                                                class="alert {{ strpos($asesmen->rmeAsesmenKepAnakResikoDekubitus->decubitus_kesimpulan ?? '', 'Tinggi') !== false ? 'alert-danger' : (strpos($asesmen->rmeAsesmenKepAnakResikoDekubitus->decubitus_kesimpulan ?? '', 'Sedang') !== false ? 'alert-warning' : 'alert-success') }} mb-0 flex-grow-1">
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->decubitus_kesimpulan ?? 'Risiko Rendah' }}
                                             </div>
                                         </div>
-                                        <input type="hidden" id="kesimpulan" name="kesimpulan_planing" 
-                                            value="{{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) ? $asesmen->rmeAsesmenKepAnakRencanaPulang->kesimpulan : 'Tidak mebutuhkan rencana pulang khusus' }}">
                                     </div>
                                 </div>
 
-                                <!-- 16. Diagnosa -->
-                                <div class="section-separator" id="diagnosis">
-                                    <h5 class="fw-semibold mb-4">16. Diagnosis</h5>
-
-                                    @php
-                                    // Parse existing diagnosis data from database
-                                    $diagnosisBanding = !empty($asesmen->rmeAsesmenKepAnak->diagnosis_banding) 
-                                        ? json_decode($asesmen->rmeAsesmenKepAnak->diagnosis_banding, true) 
-                                        : [];
-                                    $diagnosisKerja = !empty($asesmen->rmeAsesmenKepAnak->diagnosis_kerja) 
-                                        ? json_decode($asesmen->rmeAsesmenKepAnak->diagnosis_kerja, true) 
-                                        : [];
-                                    @endphp
-
-                                    <!-- Diagnosis Banding -->
+                                <!-- Form Skala Braden -->
+                                <div id="formBraden" class="decubitus-form" style="display: none;">
+                                    <h6 class="mb-4">Penilaian Risiko DECUBITUS Skala Braden</h6>
                                     <div class="mb-4">
-                                        <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
-                                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari diagnosis banding, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan diagnosis banding yang tidak ditemukan.</small>
-
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="diagnosis-banding-input" class="form-control border-start-0 ps-0"
-                                                placeholder="Cari dan tambah Diagnosis Banding">
-                                            <span class="input-group-text bg-white" id="add-diagnosis-banding">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
-                                        </div>
-
-                                        <div id="diagnosis-banding-list" class="diagnosis-list bg-light p-3 rounded">
-                                            @forelse($diagnosisBanding as $index => $diagnosis)
-                                                <div class="diagnosis-item d-flex justify-content-between align-items-center mb-2">
-                                                    <span>{{ $index + 1 }}. {{ $diagnosis }}</span>
-                                                    <button type="button" class="btn btn-sm text-danger delete-diagnosis" 
-                                                        data-type="banding" data-index="{{ $index }}">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                            @empty
-                                                <div class="text-muted fst-italic">Belum ada diagnosis banding</div>
-                                            @endforelse
-                                        </div>
-
-                                        <!-- Hidden input for form submission -->
-                                        <input type="hidden" id="diagnosis_banding" name="diagnosis_banding"
-                                            value="{{ json_encode($diagnosisBanding) }}">
+                                        <label class="form-label">Persepsi Sensori</label>
+                                        <select class="form-select bg-light" name="persepsi_sensori">
+                                            <option value="" disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_persepsi == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_persepsi == '1' ? 'selected' : '' }}>
+                                                Keterbatasan Penuh</option>
+                                            <option value="2"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_persepsi == '2' ? 'selected' : '' }}>
+                                                Sangat Terbatas</option>
+                                            <option value="3"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_persepsi == '3' ? 'selected' : '' }}>
+                                                Keterbatasan Ringan</option>
+                                            <option value="4"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_persepsi == '4' ? 'selected' : '' }}>
+                                                Tidak Ada Gangguan</option>
+                                        </select>
                                     </div>
 
-                                    <!-- Diagnosis Kerja -->
                                     <div class="mb-4">
-                                        <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
-                                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan diagnosis kerja yang tidak ditemukan.</small>
-
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="diagnosis-kerja-input" class="form-control border-start-0 ps-0"
-                                                placeholder="Cari dan tambah Diagnosis Kerja">
-                                            <span class="input-group-text bg-white" id="add-diagnosis-kerja">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
-                                        </div>
-
-                                        <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
-                                            @forelse($diagnosisKerja as $index => $diagnosis)
-                                                <div class="diagnosis-item d-flex justify-content-between align-items-center mb-2">
-                                                    <span>{{ $index + 1 }}. {{ $diagnosis }}</span>
-                                                    <button type="button" class="btn btn-sm text-danger delete-diagnosis" 
-                                                        data-type="kerja" data-index="{{ $index }}">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                            @empty
-                                                <div class="text-muted fst-italic">Belum ada diagnosis kerja</div>
-                                            @endforelse
-                                        </div>
-
-                                        <!-- Hidden input for form submission -->
-                                        <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja"
-                                            value="{{ json_encode($diagnosisKerja) }}">
+                                        <label class="form-label">Kelembapan</label>
+                                        <select class="form-select bg-light" name="kelembapan">
+                                            <option value="" disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_kelembapan == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_kelembapan == '1' ? 'selected' : '' }}>
+                                                Selalu Lembap</option>
+                                            <option value="2"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_kelembapan == '2' ? 'selected' : '' }}>
+                                                Umumnya Lembap</option>
+                                            <option value="3"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_kelembapan == '3' ? 'selected' : '' }}>
+                                                Kadang-Kadang Lembap</option>
+                                            <option value="4"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_kelembapan == '4' ? 'selected' : '' }}>
+                                                Jarang Lembap</option>
+                                        </select>
                                     </div>
-                                </div>
 
-                                <!-- 17. Implementasi -->
-                                <div class="section-separator" style="margin-bottom: 2rem;">
-                                    <h5 class="fw-semibold mb-4">16. Implementasi</h5>
-
-                                    @php
-                                        // Parse data implementasi dari database (sesuaikan dengan field di model asesmen anak)
-                                        $observasi = !empty($asesmen->rmeAsesmenKepAnak->observasi) 
-                                            ? json_decode($asesmen->rmeAsesmenKepAnak->observasi, true) 
-                                            : [];
-                                        $terapeutik = !empty($asesmen->rmeAsesmenKepAnak->terapeutik) 
-                                            ? json_decode($asesmen->rmeAsesmenKepAnak->terapeutik, true) 
-                                            : [];
-                                        $edukasi = !empty($asesmen->rmeAsesmenKepAnak->edukasi) 
-                                            ? json_decode($asesmen->rmeAsesmenKepAnak->edukasi, true) 
-                                            : [];
-                                        $kolaborasi = !empty($asesmen->rmeAsesmenKepAnak->kolaborasi) 
-                                            ? json_decode($asesmen->rmeAsesmenKepAnak->kolaborasi, true) 
-                                            : [];
-                                        $prognosis = !empty($asesmen->rmeAsesmenKepAnak->prognosis) 
-                                            ? json_decode($asesmen->rmeAsesmenKepAnak->prognosis, true) 
-                                            : [];
-                                    @endphp
-
-                                    <!-- Rencana Penatalaksanaan dan Pengobatan -->
                                     <div class="mb-4">
-                                        <label class="text-primary fw-semibold">Rencana Penatalaksanaan dan Pengobatan</label>
-                                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari rencana, atau tanda tambah untuk menambah keterangan rencana yang tidak ditemukan.</small>
+                                        <label class="form-label">Aktivitas</label>
+                                        <select class="form-select bg-light" name="braden_aktivitas">
+                                            <option value="" disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_aktivitas == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_aktivitas == '1' ? 'selected' : '' }}>
+                                                Total di Tempat Tidur</option>
+                                            <option value="2"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_aktivitas == '2' ? 'selected' : '' }}>
+                                                Dapat Duduk</option>
+                                            <option value="3"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_aktivitas == '3' ? 'selected' : '' }}>
+                                                Berjalan Kadang-kadang</option>
+                                            <option value="4"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_aktivitas == '4' ? 'selected' : '' }}>
+                                                Dapat Berjalan-jalan</option>
+                                        </select>
                                     </div>
 
-                                    <!-- Observasi Section -->
                                     <div class="mb-4">
-                                        <label class="fw-semibold mb-2">Observasi</label>
-                                        <div class="input-group mt-2">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="observasi-input" class="form-control border-start-0 ps-0" placeholder="Cari dan tambah Observasi">
-                                            <span class="input-group-text bg-white" id="add-observasi">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
-                                        </div>
-                                        <div id="observasi-list" class="list-group mb-2">
-                                            @forelse($observasi as $index => $item)
-                                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <span>{{ $index + 1 }}. {{ $item }}</span>
-                                                    <button type="button" class="btn btn-sm text-danger delete-item" data-type="observasi" data-index="{{ $index }}">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                            @empty
-                                                <div class="list-group-item text-muted fst-italic">Belum ada data observasi</div>
-                                            @endforelse
-                                        </div>
-                                        <input type="hidden" id="observasi" name="observasi" value="{{ json_encode($observasi) }}">
+                                        <label class="form-label">Mobilitas</label>
+                                        <select class="form-select bg-light" name="braden_mobilitas">
+                                            <option value="" disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_mobilitas == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_mobilitas == '1' ? 'selected' : '' }}>
+                                                Tidak Mampu Bergerak Sama sekali</option>
+                                            <option value="2"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_mobilitas == '2' ? 'selected' : '' }}>
+                                                Sangat Terbatas</option>
+                                            <option value="3"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_mobilitas == '3' ? 'selected' : '' }}>
+                                                Tidak Ada Masalah</option>
+                                            <option value="4"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_mobilitas == '4' ? 'selected' : '' }}>
+                                                Tanpa Keterbatasan</option>
+                                        </select>
                                     </div>
 
-                                    <!-- Terapeutik Section -->
                                     <div class="mb-4">
-                                        <label class="fw-semibold mb-2">Terapeutik</label>
-                                        <div class="input-group mt-2">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="terapeutik-input" class="form-control border-start-0 ps-0" placeholder="Cari dan tambah Terapeutik">
-                                            <span class="input-group-text bg-white" id="add-terapeutik">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
-                                        </div>
-                                        <div id="terapeutik-list" class="list-group mb-2">
-                                            @forelse($terapeutik as $index => $item)
-                                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <span>{{ $index + 1 }}. {{ $item }}</span>
-                                                    <button type="button" class="btn btn-sm text-danger delete-item" data-type="terapeutik" data-index="{{ $index }}">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                            @empty
-                                                <div class="list-group-item text-muted fst-italic">Belum ada data terapeutik</div>
-                                            @endforelse
-                                        </div>
-                                        <input type="hidden" id="terapeutik" name="terapeutik" value="{{ json_encode($terapeutik) }}">
+                                        <label class="form-label">Nutrisi</label>
+                                        <select class="form-select bg-light" name="nutrisi">
+                                            <option value="" disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_nutrisi == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_nutrisi == '1' ? 'selected' : '' }}>
+                                                Sangat Buruk</option>
+                                            <option value="2"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_nutrisi == '2' ? 'selected' : '' }}>
+                                                Kurang Menucukup</option>
+                                            <option value="3"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_nutrisi == '3' ? 'selected' : '' }}>
+                                                Mencukupi</option>
+                                            <option value="4"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_nutrisi == '4' ? 'selected' : '' }}>
+                                                Sangat Baik</option>
+                                        </select>
                                     </div>
 
-                                    <!-- Edukasi Section -->
                                     <div class="mb-4">
-                                        <label class="fw-semibold mb-2">Edukasi</label>
-                                        <div class="input-group mt-2">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="edukasi-input" class="form-control border-start-0 ps-0" placeholder="Cari dan tambah Edukasi">
-                                            <span class="input-group-text bg-white" id="add-edukasi">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
-                                        </div>
-                                        <div id="edukasi-list" class="list-group mb-2">
-                                            @forelse($edukasi as $index => $item)
-                                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <span>{{ $index + 1 }}. {{ $item }}</span>
-                                                    <button type="button" class="btn btn-sm text-danger delete-item" data-type="edukasi" data-index="{{ $index }}">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                            @empty
-                                                <div class="list-group-item text-muted fst-italic">Belum ada data edukasi</div>
-                                            @endforelse
-                                        </div>
-                                        <input type="hidden" id="edukasi" name="edukasi" value="{{ json_encode($edukasi) }}">
+                                        <label class="form-label">Pergesekan dan Pergeseran</label>
+                                        <select class="form-select bg-light" name="pergesekan">
+                                            <option value="" disabled
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_pergesekan == null ? 'selected' : '' }}>
+                                                --Pilih--</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_pergesekan == '1' ? 'selected' : '' }}>
+                                                Bermasalah</option>
+                                            <option value="2"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_pergesekan == '2' ? 'selected' : '' }}>
+                                                Potensial Bermasalah</option>
+                                            <option value="3"
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_pergesekan == '3' ? 'selected' : '' }}>
+                                                Keterbatasan Ringan</option>
+                                        </select>
                                     </div>
 
-                                    <!-- Kolaborasi Section -->
-                                    <div class="mb-4">
-                                        <label class="fw-semibold mb-2">Kolaborasi</label>
-                                        <div class="input-group mt-2">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="kolaborasi-input" class="form-control border-start-0 ps-0" placeholder="Cari dan tambah Kolaborasi">
-                                            <span class="input-group-text bg-white" id="add-kolaborasi">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
+                                    <div class="mt-4">
+                                        <div class="d-flex gap-2">
+                                            <span class="fw-bold">Kesimpulan :</span>
+                                            <div id="kesimpulanBraden"
+                                                class="alert {{ strpos($asesmen->rmeAsesmenKepAnakResikoDekubitus->decubitus_kesimpulan ?? '', 'Tinggi') !== false ? 'alert-danger' : (strpos($asesmen->rmeAsesmenKepAnakResikoDekubitus->decubitus_kesimpulan ?? '', 'Sedang') !== false ? 'alert-warning' : 'alert-success') }} mb-0 flex-grow-1">
+                                                {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->decubitus_kesimpulan ?? 'Kesimpulan Skala Braden' }}
+                                            </div>
                                         </div>
-                                        <div id="kolaborasi-list" class="list-group mb-2">
-                                            @forelse($kolaborasi as $index => $item)
-                                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <span>{{ $index + 1 }}. {{ $item }}</span>
-                                                    <button type="button" class="btn btn-sm text-danger delete-item" data-type="kolaborasi" data-index="{{ $index }}">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                            @empty
-                                                <div class="list-group-item text-muted fst-italic">Belum ada data kolaborasi</div>
-                                            @endforelse
-                                        </div>
-                                        <input type="hidden" id="kolaborasi" name="kolaborasi" value="{{ json_encode($kolaborasi) }}">
                                     </div>
-
-                                    <!-- Prognosis Section -->
-                                    <div class="mb-4">
-                                        <label class="text-primary fw-semibold">Prognosis</label>
-                                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari prognosis, atau tanda tambah untuk menambah keterangan prognosis yang tidak ditemukan.</small>
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="prognosis-input" class="form-control border-start-0 ps-0" placeholder="Cari dan tambah Prognosis">
-                                            <span class="input-group-text bg-white" id="add-prognosis">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
-                                        </div>
-                                        <div id="prognosis-list" class="list-group mb-3">
-                                            @forelse($prognosis as $index => $item)
-                                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <span>{{ $index + 1 }}. {{ $item }}</span>
-                                                    <button type="button" class="btn btn-sm text-danger delete-item" data-type="prognosis" data-index="{{ $index }}">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                            @empty
-                                                <div class="list-group-item text-muted fst-italic">Belum ada data prognosis</div>
-                                            @endforelse
-                                        </div>
-                                        <input type="hidden" id="prognosis" name="prognosis" value="{{ json_encode($prognosis) }}">
-                                    </div>
-                                </div>
-
-                                <!-- 18. Evaluasi -->
-                                <div class="section-separator" style="margin-bottom: 2rem;" id="evaluasi">
-                                    <h5 class="fw-semibold mb-4">18. Evaluasi</h5>
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Tambah Evaluasi Keperawatan</label>
-                                        <textarea class="form-control" name="evaluasi_keperawatan" rows="4"
-                                            placeholder="Evaluasi Keperawaran">{{ $asesmen->rmeAsesmenKepAnak->evaluasi ?? '' }}</textarea>
-                                    </div>
-                                </div>
-
-
-                                {{-- Final section - Submit button --}}
-                                <div class="text-end mt-4">
-                                    <button type="submit" class="btn btn-primary">Update Asesmen</button>
                                 </div>
                             </div>
-                        </form>
+
+                            <!-- 9. Status Psikologis -->
+                            <div class="section-separator" id="statusPsikologis">
+                                <h5 class="section-title">9. Status Psikologis</h5>
+
+                                <div class="mb-4">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <label>Kondisi Psikologis</label>
+                                        <div class="dropdown-wrapper" style="position: relative;">
+                                            <button type="button" class="btn btn-sm btn-primary"
+                                                id="btnKondisiPsikologis">
+                                                <i class="ti-plus"></i>
+                                            </button>
+                                            <div class="dropdown-menu" id="dropdownKondisiPsikologis"
+                                                style="display: none; position: absolute; z-index: 1000;">
+                                                <div class="p-2">
+                                                    <div class="fw-bold mb-2">STATUS PSIKOLOGIS PASIEN</div>
+                                                    <div class="kondisi-options">
+                                                        @php
+                                                            $kondisiPsikologis = json_decode(
+                                                                $asesmen->rmeAsesmenKepAnakStatusPsikologis
+                                                                    ->kondisi_psikologis ?? '[]',
+                                                                true,
+                                                            );
+                                                        @endphp
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="Tidak ada kelainan" id="kondisi1"
+                                                                {{ in_array('Tidak ada kelainan', $kondisiPsikologis) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="kondisi1">Tidak ada
+                                                                kelainan</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="Cemas" id="kondisi2"
+                                                                {{ in_array('Cemas', $kondisiPsikologis) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="kondisi2">Cemas</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="Takut" id="kondisi3"
+                                                                {{ in_array('Takut', $kondisiPsikologis) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="kondisi3">Takut</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="Marah" id="kondisi4"
+                                                                {{ in_array('Marah', $kondisiPsikologis) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="kondisi4">Marah</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="Sedih" id="kondisi5"
+                                                                {{ in_array('Sedih', $kondisiPsikologis) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="kondisi5">Sedih</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="Tenang" id="kondisi6"
+                                                                {{ in_array('Tenang', $kondisiPsikologis) ? 'checked' : '' }}>
+                                                            <label class="form-check-label"
+                                                                for="kondisi6">Tenang</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="Tidak semangat" id="kondisi7"
+                                                                {{ in_array('Tidak semangat', $kondisiPsikologis) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="kondisi7">Tidak
+                                                                semangat</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="Tertekan" id="kondisi8"
+                                                                {{ in_array('Tertekan', $kondisiPsikologis) ? 'checked' : '' }}>
+                                                            <label class="form-check-label"
+                                                                for="kondisi8">Tertekan</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="Depresi" id="kondisi9"
+                                                                {{ in_array('Depresi', $kondisiPsikologis) ? 'checked' : '' }}>
+                                                            <label class="form-check-label"
+                                                                for="kondisi9">Depresi</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="Sulit tidur" id="kondisi10"
+                                                                {{ in_array('Sulit tidur', $kondisiPsikologis) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="kondisi10">Sulit
+                                                                tidur</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="selectedKondisiPsikologis" class="d-flex gap-2 flex-wrap">
+                                            <!-- Selected items will be displayed here as badges -->
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="kondisi_psikologis_json" id="kondisi_psikologis_json"
+                                        value='{{ $asesmen->rmeAsesmenKepAnakStatusPsikologis->kondisi_psikologis ?? '[]' }}'>
+                                </div>
+
+                                <div class="mb-4">
+                                    <div class="d-flex align-items-start gap-2 mb-2">
+                                        <label>Gangguan Perilaku</label>
+                                        <div class="dropdown-wrapper" style="position: relative;">
+                                            <button type="button" class="btn btn-sm btn-primary"
+                                                id="btnGangguanPerilaku">
+                                                <i class="ti-plus"></i>
+                                            </button>
+
+                                            <!-- Dropdown Menu -->
+                                            <div class="dropdown-menu p-2 shadow-sm" id="dropdownGangguanPerilaku"
+                                                style="display: none; position: absolute; z-index: 1000; min-width: 250px; background: white; border: 1px solid rgba(0,0,0,.15); border-radius: 4px;">
+                                                <div class="fw-bold mb-2">GANGGUAN PERILAKU</div>
+                                                <div class="perilaku-options">
+                                                    @php
+                                                        $gangguanPerilaku = json_decode(
+                                                            $asesmen->rmeAsesmenKepAnakStatusPsikologis
+                                                                ->gangguan_perilaku ?? '[]',
+                                                            true,
+                                                        );
+                                                    @endphp
+                                                    <div class="form-check mb-2">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            value="Tidak Ada Gangguan" id="perilaku1"
+                                                            {{ in_array('Tidak Ada Gangguan', $gangguanPerilaku) ? 'checked' : '' }}>
+                                                        <label class="form-check-label" for="perilaku1">Tidak Ada
+                                                            Gangguan</label>
+                                                    </div>
+                                                    <div class="form-check mb-2">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            value="Perilaku Kekerasan" id="perilaku2"
+                                                            {{ in_array('Perilaku Kekerasan', $gangguanPerilaku) ? 'checked' : '' }}>
+                                                        <label class="form-check-label" for="perilaku2">Perilaku
+                                                            Kekerasan</label>
+                                                    </div>
+                                                    <div class="form-check mb-2">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            value="Halusinasi" id="perilaku3"
+                                                            {{ in_array('Halusinasi', $gangguanPerilaku) ? 'checked' : '' }}>
+                                                        <label class="form-check-label"
+                                                            for="perilaku3">Halusinasi</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="selectedGangguanPerilaku"
+                                            class="d-flex gap-2 flex-wrap align-items-center">
+                                            <!-- Selected items will be displayed here as badges -->
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="gangguan_perilaku_json" id="gangguan_perilaku_json"
+                                        value='{{ $asesmen->rmeAsesmenKepAnakStatusPsikologis->gangguan_perilaku ?? '[]' }}'>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Potensi menyakiti diri sendiri/orang lain</label>
+                                    <select class="form-select" name="potensi_menyakiti">
+                                        <option value="" disabled>pilih</option>
+                                        <option value="0"
+                                            {{ $asesmen->rmeAsesmenKepAnakStatusPsikologis->potensi_menyakiti == 0 ? 'selected' : '' }}>
+                                            Ya</option>
+                                        <option value="1"
+                                            {{ $asesmen->rmeAsesmenKepAnakStatusPsikologis->potensi_menyakiti == 1 ? 'selected' : '' }}>
+                                            Tidak</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Anggota Keluarga Gangguan Jiwa</label>
+                                    <select class="form-select" name="anggota_keluarga_gangguan_jiwa">
+                                        <option value="" disabled
+                                            {{ $asesmen->rmeAsesmenKepAnakStatusPsikologis->anggota_keluarga_gangguan_jiwa == null ? 'selected' : '' }}>
+                                            --Pilih--</option>
+                                        <option value="0"
+                                            {{ $asesmen->rmeAsesmenKepAnakStatusPsikologis->keluarga_gangguan_jiwa == 0 ? 'selected' : '' }}>
+                                            Ya</option>
+                                        <option value="1"
+                                            {{ $asesmen->rmeAsesmenKepAnakStatusPsikologis->keluarga_gangguan_jiwa == 1 ? 'selected' : '' }}>
+                                            Tidak</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Lainnya</label>
+                                    <input type="text" class="form-control" name="psikologis_lainnya"
+                                        value="{{ $asesmen->rmeAsesmenKepAnakStatusPsikologis->lainnya }}">
+                                </div>
+                            </div>
+
+                            <!-- 10. Statsu Spiritual -->
+                            <div class="section-separator" id="status_spiritual">
+                                <h5 class="section-title">10. Status Spiritual</h5>
+                                <div class="form-group">
+                                    <label style="min-width: 200px;">Keyakinan Agama</label>
+                                    <select class="form-select" name="keyakinan_agama">
+                                        <option value="" disabled
+                                            {{ $asesmen->rmeAsesmenKepAnak->keyakinan_agama == null ? 'selected' : '' }}>
+                                            --Pilih--</option>
+                                        <option value="Islam"
+                                            {{ $asesmen->rmeAsesmenKepAnak->agama == 'Islam' ? 'selected' : '' }}>Islam
+                                        </option>
+                                        <option value="Protestan"
+                                            {{ $asesmen->rmeAsesmenKepAnak->agama == 'Protestan' ? 'selected' : '' }}>
+                                            Protestan</option>
+                                        <option value="Khatolik"
+                                            {{ $asesmen->rmeAsesmenKepAnak->agama == 'Khatolik' ? 'selected' : '' }}>
+                                            Khatolik</option>
+                                        <option value="Budha"
+                                            {{ $asesmen->rmeAsesmenKepAnak->agama == 'Budha' ? 'selected' : '' }}>Budha
+                                        </option>
+                                        <option value="Hindu"
+                                            {{ $asesmen->rmeAsesmenKepAnak->agama == 'Hindu' ? 'selected' : '' }}>Hindu
+                                        </option>
+                                        <option value="Konghucu"
+                                            {{ $asesmen->rmeAsesmenKepAnak->agama == 'Konghucu' ? 'selected' : '' }}>
+                                            Konghucu</option>
+                                        <option value="Lainnya"
+                                            {{ $asesmen->rmeAsesmenKepAnak->agama == 'Lainnya' ? 'selected' : '' }}>
+                                            Lainnya</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label style="min-width: 200px;">Pandangan Pasien Terhadap Penyakit Nya</label>
+                                    <select class="form-select" name="pandangan_terhadap_penyakit">
+                                        <option value="" disabled
+                                            {{ $asesmen->rmeAsesmenKepAnak->pandangan_terhadap_penyakit == null ? 'selected' : '' }}>
+                                            --Pilih--</option>
+                                        <option value="Takdir"
+                                            {{ $asesmen->rmeAsesmenKepAnak->pandangan_terhadap_penyakit == 'Takdir' ? 'selected' : '' }}>
+                                            Takdir</option>
+                                        <option value="Hukuman"
+                                            {{ $asesmen->rmeAsesmenKepAnak->pandangan_terhadap_penyakit == 'Hukuman' ? 'selected' : '' }}>
+                                            Hukuman</option>
+                                        <option value="Tidak Ada"
+                                            {{ $asesmen->rmeAsesmenKepAnak->pandangan_terhadap_penyakit == 'Tidak Ada' ? 'selected' : '' }}>
+                                            Tidak Ada</option>
+                                        <option value="Lainnya"
+                                            {{ $asesmen->rmeAsesmenKepAnak->pandangan_terhadap_penyakit == 'Lainnya' ? 'selected' : '' }}>
+                                            Lainnya</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- 11. Statsu Ekonomi -->
+                            <div class="section-separator" id="status_sosial_ekonomi">
+                                <h5 class="section-title">11. Status Sosial Ekonomi</h5>
+
+                                <div class="form-group">
+                                    <label style="min-width: 200px;">Pekerjaan</label>
+                                    <select class="form-select" name="pekerjaan_pasien">
+                                        <option value=""
+                                            {{ !$asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_pekerjaan ? 'selected' : '' }}>
+                                            --Pilih--</option>
+                                        <option value="Belum Bekerja"
+                                            {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_pekerjaan == 'Belum Bekerja' ? 'selected' : '' }}>
+                                            Belum Bekerja</option>
+                                        <option value="Purnawaktu"
+                                            {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_pekerjaan == 'Purnawaktu' ? 'selected' : '' }}>
+                                            Purnawaktu</option>
+                                        <option value="Paruh Waktu"
+                                            {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_pekerjaan == 'Paruh Waktu' ? 'selected' : '' }}>
+                                            Paruh Waktu</option>
+                                        <option value="Pensiunan"
+                                            {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_pekerjaan == 'Pensiunan' ? 'selected' : '' }}>
+                                            Pensiunan</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="min-width: 200px;">Status Pernikahan</label>
+                                    <div class="d-flex gap-3" style="width: 100%;">
+                                        <select class="form-select flex-grow-1" name="status_pernikahan">
+                                            <option value=""
+                                                {{ !$asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_status_pernikahan ? 'selected' : '' }}>
+                                                --Pilih--</option>
+                                            <option value="Menikah"
+                                                {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_status_pernikahan == 'Menikah' ? 'selected' : '' }}>
+                                                Menikah</option>
+                                            <option value="Belum Menikah"
+                                                {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_status_pernikahan == 'Belum Menikah' ? 'selected' : '' }}>
+                                                Belum Menikah</option>
+                                            <option value="Cerai"
+                                                {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_status_pernikahan == 'Cerai' ? 'selected' : '' }}>
+                                                Cerai</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="min-width: 200px;">Tempat Tinggal</label>
+                                    <select class="form-select" name="tempat_tinggal">
+                                        <option value=""
+                                            {{ !$asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_tempat_tinggal ? 'selected' : '' }}>
+                                            --Pilih--</option>
+                                        <option value="Rumah"
+                                            {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_tempat_tinggal == 'Rumah' ? 'selected' : '' }}>
+                                            Rumah</option>
+                                        <option value="Asrama"
+                                            {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_tempat_tinggal == 'Asrama' ? 'selected' : '' }}>
+                                            Asrama</option>
+                                        <option value="Lainnya"
+                                            {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_tempat_tinggal == 'Lainnya' ? 'selected' : '' }}>
+                                            Lainnya</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="min-width: 200px;">Curiga Penganiayaan</label>
+                                    <select class="form-select" name="curiga_penganiayaan">
+                                        <option value=""
+                                            {{ !$asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_curiga_penganiayaan ? 'selected' : '' }}>
+                                            --Pilih--</option>
+                                        <option value="Ya"
+                                            {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_curiga_penganiayaan == 'Ya' ? 'selected' : '' }}>
+                                            Ya</option>
+                                        <option value="Tidak"
+                                            {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_curiga_penganiayaan == 'Tidak' ? 'selected' : '' }}>
+                                            Tidak</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="min-width: 200px;">Status Tinggal Dengan Keluarga</label>
+                                    <select class="form-select" name="status_tinggal">
+                                        <option value=""
+                                            {{ !$asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_tinggal_dengan_keluarga ? 'selected' : '' }}>
+                                            --Pilih--</option>
+                                        <option value="Orang Tua"
+                                            {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_tinggal_dengan_keluarga == 'Orang Tua' ? 'selected' : '' }}>
+                                            Orang Tua</option>
+                                        <option value="Wali"
+                                            {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_tinggal_dengan_keluarga == 'Wali' ? 'selected' : '' }}>
+                                            Wali</option>
+                                        <option value="Lainnya"
+                                            {{ $asesmen->rmeAsesmenKepAnakSosialEkonomi?->sosial_ekonomi_tinggal_dengan_keluarga == 'Lainnya' ? 'selected' : '' }}>
+                                            Lainnya</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- 12. Status Gizi -->
+                            <div class="section-separator" id="status_gizi">
+                                <h5 class="section-title">12. Status Gizi</h5>
+                                <div class="form-group mb-4">
+                                    <select class="form-select" name="gizi_jenis" id="nutritionAssessment">
+                                        <option value="">--Pilih--</option>
+                                        <option value="1"
+                                            {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_jenis == 1 ? 'selected' : '' }}>
+                                            Malnutrition Screening Tool (MST)</option>
+                                        <option value="2"
+                                            {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_jenis == 2 ? 'selected' : '' }}>The
+                                            Mini Nutritional Assessment (MNA)</option>
+                                        <option value="3"
+                                            {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_jenis == 3 ? 'selected' : '' }}>
+                                            Strong Kids (1 bln - 18 Tahun)</option>
+                                        <option value="5"
+                                            {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_jenis == 5 ? 'selected' : '' }}>Tidak
+                                            Dapat Dinilai</option>
+                                    </select>
+                                </div>
+
+                                <!-- MST Form -->
+                                <div id="mst" class="assessment-form" style="display: none;">
+                                    <h6 class="mb-3">Penilaian Gizi Malnutrition Screening Tool (MST)</h6>
+                                    <div class="mb-3">
+                                        <label class="form-label">Apakah pasien mengalami penurunan BB yang tidak
+                                            diinginkan dalam 6 bulan terakhir?</label>
+                                        <select class="form-select" name="gizi_mst_penurunan_bb">
+                                            <option value="">pilih</option>
+                                            <option value="0"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_penurunan_bb == '0' ? 'selected' : '' }}>
+                                                Tidak ada penurunan Berat Badan (BB)</option>
+                                            <option value="2"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_penurunan_bb == '2' ? 'selected' : '' }}>
+                                                Tidak yakin/ tidak tahu/ terasa baju lebi longgar</option>
+                                            <option value="3"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_penurunan_bb == '3' ? 'selected' : '' }}>
+                                                Ya ada penurunan BB</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Jika jawaban di atas "Ya ada penurunan BB", berapa
+                                            penurunan BB tersebut?</label>
+                                        <select class="form-select" name="gizi_mst_jumlah_penurunan_bb">
+                                            <option value="0">pilih</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_jumlah_penurunan_bb == '1' ? 'selected' : '' }}>
+                                                1-5 kg</option>
+                                            <option value="2"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_jumlah_penurunan_bb == '2' ? 'selected' : '' }}>
+                                                6-10 kg</option>
+                                            <option value="3"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_jumlah_penurunan_bb == '3' ? 'selected' : '' }}>
+                                                11-15 kg</option>
+                                            <option value="4"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_jumlah_penurunan_bb == '4' ? 'selected' : '' }}>
+                                                >15 kg</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Apakah asupan makan berkurang karena tidak nafsu
+                                            makan?</label>
+                                        <select class="form-select" name="gizi_mst_nafsu_makan_berkurang">
+                                            <option value="">pilih</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_nafsu_makan_berkurang == '1' ? 'selected' : '' }}>
+                                                Ya</option>
+                                            <option value="0"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_nafsu_makan_berkurang == '0' ? 'selected' : '' }}>
+                                                Tidak</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Pasien didiagnosa khusus seperti: DM, Cancer
+                                            (kemoterapi), Geriatri, GGk (hemodialisis), Penurunan Imun</label>
+                                        <select class="form-select" name="gizi_mst_diagnosis_khusus">
+                                            <option value="">pilih</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_diagnosis_khusus == '1' ? 'selected' : '' }}>
+                                                Ya</option>
+                                            <option value="0"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_diagnosis_khusus == '0' ? 'selected' : '' }}>
+                                                Tidak</option>
+                                        </select>
+                                    </div>
+                                    <!-- Nilai -->
+                                    <div id="mstConclusion" class="risk-indicators mt-4">
+                                        <div class="alert alert-success">Kesimpulan: 0-1 tidak berisiko malnutrisi</div>
+                                        <div class="alert alert-warning">Kesimpulan: ≥ 2 berisiko malnutrisi</div>
+                                        <input type="hidden" name="gizi_mst_kesimpulan" id="gizi_mst_kesimpulan"
+                                            value="{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mst_kesimpulan }}">
+                                    </div>
+                                </div>
+
+                                <!-- MNA Form -->
+                                <div id="mna" class="assessment-form" style="display: none;">
+                                    <h6 class="mb-3">Penilaian Gizi The Mini Nutritional Assessment (MNA) / Lansia</h6>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">
+                                            Apakah pasien mengalami penurunan asupan makanan selama 3 bulan terakhir karena
+                                            hilang selera makan, masalah pencernaan, kesulitan mengunyah atau menelan?
+                                        </label>
+                                        <select class="form-select" name="gizi_mna_penurunan_asupan_3_bulan">
+                                            <option value="">--Pilih--</option>
+                                            <option value="0"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_penurunan_asupan_3_bulan == '0' ? 'selected' : '' }}>
+                                                Mengalami penurunan asupan makanan yang parah</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_penurunan_asupan_3_bulan == '1' ? 'selected' : '' }}>
+                                                Mengalami penurunan asupan makanan sedang</option>
+                                            <option value="2"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_penurunan_asupan_3_bulan == '2' ? 'selected' : '' }}>
+                                                Tidak mengalami penurunan asupan makanan</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">
+                                            Apakah pasien mengalami kehilangan Berat Badan (BB) selama 3 bulan terakhir?
+                                        </label>
+                                        <select class="form-select" name="gizi_mna_kehilangan_bb_3_bulan">
+                                            <option value="">-- Pilih --</option>
+                                            <option value="0"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_kehilangan_bb_3_bulan == '0' ? 'selected' : '' }}>
+                                                Kehilangan BB lebih dari 3 Kg</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_kehilangan_bb_3_bulan == '1' ? 'selected' : '' }}>
+                                                Tidak tahu</option>
+                                            <option value="2"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_kehilangan_bb_3_bulan == '2' ? 'selected' : '' }}>
+                                                Kehilangan BB antara 1 s.d 3 Kg</option>
+                                            <option value="3"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_kehilangan_bb_3_bulan == '3' ? 'selected' : '' }}>
+                                                Tidak ada kehilangan BB</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Bagaimana mobilisasi atau pergerakan pasien?</label>
+                                        <select class="form-select" name="gizi_mna_mobilisasi">
+                                            <option value="">-- Pilih --</option>
+                                            <option value="0"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_mobilisasi == '0' ? 'selected' : '' }}>
+                                                Hanya di tempat tidur atau kursi roda</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_mobilisasi == '1' ? 'selected' : '' }}>
+                                                Dapat turun dari tempat tidur tapi tidak dapat jalan-jalan</option>
+                                            <option value="2"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_mobilisasi == '2' ? 'selected' : '' }}>
+                                                Dapat jalan-jalan</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">
+                                            Apakah Pasien mengalami stres psikologi atau penyakit akut selama 3 bulan
+                                            terakhir?
+                                        </label>
+                                        <select class="form-select" name="gizi_mna_stress_penyakit_akut">
+                                            <option value="">-- Pilih --</option>
+                                            <option value="0"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_stress_penyakit_akut == '0' ? 'selected' : '' }}>
+                                                Ya</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_stress_penyakit_akut == '1' ? 'selected' : '' }}>
+                                                Tidak</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Apakah pasien mengalami masalah neuropsikologi?</label>
+                                        <select class="form-select" name="gizi_mna_status_neuropsikologi">
+                                            <option value="">-- Pilih --</option>
+                                            <option value="0"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_status_neuropsikologi == '0' ? 'selected' : '' }}>
+                                                Demensia atau depresi berat</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_status_neuropsikologi == '1' ? 'selected' : '' }}>
+                                                Demensia ringan</option>
+                                            <option value="2"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_status_neuropsikologi == '2' ? 'selected' : '' }}>
+                                                Tidak mengalami masalah neuropsikologi</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Berapa Berat Badan (BB) pasien? (Kg)</label>
+                                        <input type="number" name="gizi_mna_berat_badan" class="form-control"
+                                            id="mnaWeight" min="1" step="0.1"
+                                            placeholder="Masukkan berat badan dalam Kg"
+                                            value="{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_berat_badan }}">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Berapa Tinggi Badan (TB) pasien? (cm)</label>
+                                        <input type="number" name="gizi_mna_tinggi_badan" class="form-control"
+                                            id="mnaHeight" min="1" step="0.1"
+                                            placeholder="Masukkan tinggi badan dalam cm"
+                                            value="{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_tinggi_badan }}">
+                                    </div>
+
+                                    <!-- IMT -->
+                                    <div class="mb-3">
+                                        <label class="form-label">Indeks Massa Tubuh (IMT)</label>
+                                        <div class="text-muted small mb-2">
+                                            <i>Rumus IMT = BB (Kg) / (TB (m))²</i>
+                                        </div>
+                                        <input type="number" name="gizi_mna_imt" class="form-control bg-light"
+                                            id="mnaBMI" readonly placeholder="IMT akan terhitung otomatis"
+                                            value="{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_imt }}">
+                                    </div>
+
+                                    <!-- Kesimpulan -->
+                                    <div id="mnaConclusion" class="risk-indicators mt-4">
+                                        <div class="alert alert-info mb-3"
+                                            style="{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_kesimpulan ? 'display: none;' : '' }}">
+                                            Silakan isi semua parameter di atas untuk melihat kesimpulan
+                                        </div>
+                                        <div class="alert alert-success"
+                                            style="{{ strpos($asesmen->rmeAsesmenKepAnakGizi->gizi_mna_kesimpulan ?? '', 'Tidak Beresiko') !== false ? '' : 'display: none;' }}">
+                                            Kesimpulan: Total Skor ≥ 12 (Tidak Beresiko Malnutrisi)
+                                        </div>
+                                        <div class="alert alert-warning"
+                                            style="{{ strpos($asesmen->rmeAsesmenKepAnakGizi->gizi_mna_kesimpulan ?? '', 'Beresiko') !== false ? '' : 'display: none;' }}">
+                                            Kesimpulan: Total Skor ≤ 11 (Beresiko Malnutrisi)
+                                        </div>
+                                        <input type="hidden" name="gizi_mna_kesimpulan" id="gizi_mna_kesimpulan"
+                                            value="{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_mna_kesimpulan }}">
+                                    </div>
+                                </div>
+
+                                <!-- Strong Kids Form -->
+                                <div id="strong-kids" class="assessment-form" style="display: none;">
+                                    <h6 class="mb-3">Penilaian Gizi Strong Kids</h6>
+                                    <div class="mb-3">
+                                        <label class="form-label">Apakah anak tampa kurus kehilangan lemak subkutan,
+                                            kehilangan massa otot, dan/ atau wajah cekung?</label>
+                                        <select class="form-select" name="gizi_strong_status_kurus">
+                                            <option value="">pilih</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_status_kurus == '1' ? 'selected' : '' }}>
+                                                Ya</option>
+                                            <option value="0"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_status_kurus == '0' ? 'selected' : '' }}>
+                                                Tidak</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Apakah terdapat penurunan BB selama satu bulan terakhir
+                                            (untuk semua usia)?
+                                            (berdasarkan penilaian objektif data BB bila ada/penilaian subjektif dari orang
+                                            tua pasien ATAU tidak ada peningkatan berat badan atau tinggi badan (pada bayi <
+                                                1 tahun) selama 3 bulan terakhir)</label>
+                                                <select class="form-select" name="gizi_strong_penurunan_bb">
+                                                    <option value="">pilih</option>
+                                                    <option value="1"
+                                                        {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_penurunan_bb == '1' ? 'selected' : '' }}>
+                                                        Ya</option>
+                                                    <option value="0"
+                                                        {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_penurunan_bb == '0' ? 'selected' : '' }}>
+                                                        Tidak</option>
+                                                </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Apakah salah satu dari hal berikut ini ada? <br>
+                                            - Diare berlabihan (>= 5 kali perhari) dan/atau muntah(>3 klai perhari) selama
+                                            1-3 hari terakhir
+                                            - Penurunan asupan makanan selama 1-3 hari terakhir
+                                            - Intervensi gizi yang sudah ada sebelumnya (misalnya, ONS atau pemberian maka
+                                            selang)</label>
+                                        <select class="form-select" name="gizi_strong_gangguan_pencernaan">
+                                            <option value="">pilih</option>
+                                            <option value="1"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_gangguan_pencernaan == '1' ? 'selected' : '' }}>
+                                                Ya</option>
+                                            <option value="0"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_gangguan_pencernaan == '0' ? 'selected' : '' }}>
+                                                Tidak</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Apakah terdapat penyakit atau keadaan yang mengakibatkan
+                                            pasien berisiko mengalaman mainutrisi? <br>
+                                            <a href="#"><i>Lihat penyakit yang berisiko malnutrisi</i></a></label>
+                                        <select class="form-select" name="gizi_strong_penyakit_berisiko">
+                                            <option value="">pilih</option>
+                                            <option value="2"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_penyakit_berisiko == '2' ? 'selected' : '' }}>
+                                                Ya</option>
+                                            <option value="0"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_penyakit_berisiko == '0' ? 'selected' : '' }}>
+                                                Tidak</option>
+                                        </select>
+                                    </div>
+                                    <!-- Nilai -->
+                                    <div id="strongKidsConclusion" class="risk-indicators mt-4">
+                                        <div class="alert alert-success"
+                                            style="{{ strpos($asesmen->rmeAsesmenKepAnakGizi->gizi_strong_kesimpulan ?? '', 'rendah') !== false ? '' : 'display: none;' }}">
+                                            Kesimpulan: 0 (Beresiko rendah)</div>
+                                        <div class="alert alert-warning"
+                                            style="{{ strpos($asesmen->rmeAsesmenKepAnakGizi->gizi_strong_kesimpulan ?? '', 'sedang') !== false ? '' : 'display: none;' }}">
+                                            Kesimpulan: 1-3 (Beresiko sedang)</div>
+                                        <div class="alert alert-danger"
+                                            style="{{ strpos($asesmen->rmeAsesmenKepAnakGizi->gizi_strong_kesimpulan ?? '', 'Tinggi') !== false ? '' : 'display: none;' }}">
+                                            Kesimpulan: 4-5 (Beresiko Tinggi)</div>
+                                        <input type="hidden" name="gizi_strong_kesimpulan"
+                                            id="gizi_strong_kesimpulan"
+                                            value="{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_strong_kesimpulan }}">
+                                    </div>
+                                </div>
+
+                                <!-- Form NRS -->
+                                <div id="nrs" class="assessment-form" style="display: none;">
+                                    <h5 class="mb-4">Penilaian Risiko NRS</h5>
+
+                                    <!-- NRS Form fields here -->
+                                    <div class="mb-3">
+                                        <label class="form-label">Apakah pasien datang kerumah sakit karena jatuh?</label>
+                                        <select class="form-select" name="gizi_nrs_jatuh_saat_masuk_rs">
+                                            <option value="">pilih</option>
+                                            <option value="2"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_nrs_jatuh_saat_masuk_rs == '2' ? 'selected' : '' }}>
+                                                Ya</option>
+                                            <option value="0"
+                                                {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_nrs_jatuh_saat_masuk_rs == '0' ? 'selected' : '' }}>
+                                                Tidak</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Add more NRS form fields here -->
+
+                                    <!-- Nilai -->
+                                    <div id="nrsConclusion" class="risk-indicators mt-4">
+                                        <div class="alert alert-success"
+                                            style="{{ strpos($asesmen->rmeAsesmenKepAnakGizi->gizi_nrs_kesimpulan ?? '', 'rendah') !== false ? '' : 'display: none;' }}">
+                                            Kesimpulan: Beresiko rendah</div>
+                                        <div class="alert alert-warning"
+                                            style="{{ strpos($asesmen->rmeAsesmenKepAnakGizi->gizi_nrs_kesimpulan ?? '', 'sedang') !== false ? '' : 'display: none;' }}">
+                                            Kesimpulan: Beresiko sedang</div>
+                                        <div class="alert alert-danger"
+                                            style="{{ strpos($asesmen->rmeAsesmenKepAnakGizi->gizi_nrs_kesimpulan ?? '', 'Tinggi') !== false ? '' : 'display: none;' }}">
+                                            Kesimpulan: Beresiko Tinggi</div>
+                                        <input type="hidden" name="gizi_nrs_kesimpulan" id="gizi_nrs_kesimpulan"
+                                            value="{{ $asesmen->rmeAsesmenKepAnakGizi->gizi_nrs_kesimpulan }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 13. Status Fungsional -->
+                            <div class="section-separator" id="status-fungsional">
+                                <h5 class="section-title">13. Status Fungsional</h5>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Pilih jenis Skala Pengkajian Aktivitas Harian (ADL) sesuai
+                                        kondisi pasien</label>
+                                    <select class="form-select" name="skala_fungsional" id="skala_fungsional">
+                                        <option value="" disabled>Pilih Skala Fungsional</option>
+                                        <option value="Pengkajian Aktivitas"
+                                            {{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->jenis_skala == 1 ? 'selected' : '' }}>
+                                            Pengkajian Aktivitas Harian
+                                        </option>
+                                        <option value="Lainnya"
+                                            {{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->jenis_skala == 2 ? 'selected' : '' }}>
+                                            Lainnya
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="min-width: 200px;">Nilai Skala ADL</label>
+                                    <input type="text" class="form-control" id="adl_total" name="adl_total"
+                                        readonly
+                                        value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->nilai_skala_adl ?? '' }}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="min-width: 200px;">Kesimpulan Fungsional</label>
+                                    <div id="adl_kesimpulan"
+                                        class="alert {{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->kesimpulan_fungsional
+                                            ? (strpos($asesmen->rmeAsesmenKepAnakStatusFungsional?->kesimpulan_fungsional, 'Ketergantungan Total') !== false
+                                                ? 'alert-danger'
+                                                : (strpos($asesmen->rmeAsesmenKepAnakStatusFungsional?->kesimpulan_fungsional, 'Ketergantungan Berat') !== false
+                                                    ? 'alert-warning'
+                                                    : (strpos($asesmen->rmeAsesmenKepAnakStatusFungsional?->kesimpulan_fungsional, 'Ketergantungan Sedang') !==
+                                                    false
+                                                        ? 'alert-info'
+                                                        : 'alert-success')))
+                                            : 'alert-info' }}">
+                                        {{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->kesimpulan_fungsional ?? 'Pilih skala aktivitas harian terlebih dahulu' }}
+                                    </div>
+                                </div>
+
+                                <!-- Hidden fields untuk menyimpan data ADL -->
+                                <input type="hidden" id="adl_jenis_skala" name="adl_jenis_skala"
+                                    value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->jenis_skala ?? '' }}">
+                                <input type="hidden" id="adl_makan" name="adl_makan"
+                                    value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->makan ?? '' }}">
+                                <input type="hidden" id="adl_makan_value" name="adl_makan_value"
+                                    value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->makan_value ?? '' }}">
+                                <input type="hidden" id="adl_berjalan" name="adl_berjalan"
+                                    value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->berjalan ?? '' }}">
+                                <input type="hidden" id="adl_berjalan_value" name="adl_berjalan_value"
+                                    value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->berjalan_value ?? '' }}">
+                                <input type="hidden" id="adl_mandi" name="adl_mandi"
+                                    value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->mandi ?? '' }}">
+                                <input type="hidden" id="adl_mandi_value" name="adl_mandi_value"
+                                    value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->mandi_value ?? '' }}">
+                                <input type="hidden" id="adl_kesimpulan_value" name="adl_kesimpulan_value"
+                                    value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->kesimpulan_fungsional ?? '' }}">
+                            </div>
+
+                            <!-- 14. Kebutuhan Edukasi -->
+                            <div class="section-separator" id="kebutuhan-edukasi">
+                                <h5 class="section-title">14. Status Kebutuhan Edukasi, Pendidikan dan Pengajaran</h5>
+
+                                <div class="form-group">
+                                    <label style="min-width: 200px;">Gaya Bicara</label>
+                                    <select class="form-select" name="gaya_bicara">
+                                        <option value="" disabled
+                                            {{ !$asesmen->rmeAsesmenKepAnak || !$asesmen->rmeAsesmenKepAnak->gaya_bicara ? 'selected' : '' }}>
+                                            --Pilih--</option>
+                                        <option value="normal"
+                                            {{ $asesmen->rmeAsesmenKepAnak->gaya_bicara == 'normal' ? 'selected' : '' }}>
+                                            Normal</option>
+                                        <option value="lambat"
+                                            {{ $asesmen->rmeAsesmenKepAnak->gaya_bicara == 'lambat' ? 'selected' : '' }}>
+                                            Lambat</option>
+                                        <option value="cepat"
+                                            {{ $asesmen->rmeAsesmenKepAnak->gaya_bicara == 'cepat' ? 'selected' : '' }}>
+                                            Cepat</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="min-width: 200px;">Bahasa Sehari-Hari</label>
+                                    <select class="form-select" name="bahasa_sehari_hari">
+                                        <option value="" disabled
+                                            {{ !$asesmen->rmeAsesmenKepAnak || !$asesmen->rmeAsesmenKepAnak->bahasa ? 'selected' : '' }}>
+                                            --Pilih--</option>
+                                        <option value="Bahasa Indonesia"
+                                            {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Bahasa Indonesia' ? 'selected' : '' }}>
+                                            Bahasa Indonesia</option>
+                                        <option value="Aceh"
+                                            {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Aceh' ? 'selected' : '' }}>Aceh
+                                        </option>
+                                        <option value="Batak"
+                                            {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Batak' ? 'selected' : '' }}>Batak
+                                        </option>
+                                        <option value="Minangkabau"
+                                            {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Minangkabau' ? 'selected' : '' }}>
+                                            Minangkabau</option>
+                                        <option value="Melayu"
+                                            {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Melayu' ? 'selected' : '' }}>Melayu
+                                        </option>
+                                        <option value="Sunda"
+                                            {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Sunda' ? 'selected' : '' }}>Sunda
+                                        </option>
+                                        <option value="Jawa"
+                                            {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Jawa' ? 'selected' : '' }}>Jawa
+                                        </option>
+                                        <option value="Madura"
+                                            {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Madura' ? 'selected' : '' }}>Madura
+                                        </option>
+                                        <option value="Bali"
+                                            {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Bali' ? 'selected' : '' }}>Bali
+                                        </option>
+                                        <option value="Sasak"
+                                            {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Sasak' ? 'selected' : '' }}>Sasak
+                                        </option>
+                                        <option value="Banjar"
+                                            {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Banjar' ? 'selected' : '' }}>Banjar
+                                        </option>
+                                        <option value="Bugis"
+                                            {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Bugis' ? 'selected' : '' }}>Bugis
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="min-width: 200px;">Perlu Penerjemah</label>
+                                    <select class="form-select" name="perlu_penerjemah">
+                                        <option value="" disabled
+                                            {{ !$asesmen->rmeAsesmenKepAnak || !$asesmen->rmeAsesmenKepAnak->perlu_penerjemahan ? 'selected' : '' }}>
+                                            --Pilih--</option>
+                                        <option value="ya"
+                                            {{ $asesmen->rmeAsesmenKepAnak->perlu_penerjemahan == 'ya' ? 'selected' : '' }}>
+                                            Ya</option>
+                                        <option value="tidak"
+                                            {{ $asesmen->rmeAsesmenKepAnak->perlu_penerjemahan == 'tidak' ? 'selected' : '' }}>
+                                            Tidak</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="min-width: 200px;">Hambatan Komunikasi</label>
+                                    <select class="form-select" name="hambatan_komunikasi">
+                                        <option value="" disabled>--Pilih--</option>
+                                        <option value="tidak_ada"
+                                            {{ $asesmen->rmeAsesmenKepAnak->hambatan_komunikasi == 'tidak_ada' ? 'selected' : '' }}>
+                                            Tidak Ada</option>
+                                        <option value="pendengaran"
+                                            {{ $asesmen->rmeAsesmenKepAnak->hambatan_komunikasi == 'pendengaran' ? 'selected' : '' }}>
+                                            Gangguan Pendengaran</option>
+                                        <option value="bicara"
+                                            {{ $asesmen->rmeAsesmenKepAnak->hambatan_komunikasi == 'bicara' ? 'selected' : '' }}>
+                                            Gangguan Bicara</option>
+                                        <option value="bahasa"
+                                            {{ $asesmen->rmeAsesmenKepAnak->hambatan_komunikasi == 'bahasa' ? 'selected' : '' }}>
+                                            Perbedaan Bahasa</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="min-width: 200px;">Media Disukai</label>
+                                    <select class="form-select" name="media_disukai">
+                                        <option value="" disabled
+                                            {{ !$asesmen->rmeAsesmenKepAnak || !$asesmen->rmeAsesmenKepAnak->media_disukai ? 'selected' : '' }}>
+                                            --Pilih--</option>
+                                        <option value="cetak"
+                                            {{ $asesmen->rmeAsesmenKepAnak->media_disukai == 'cetak' ? 'selected' : '' }}>
+                                            Media Cetak</option>
+                                        <option value="video"
+                                            {{ $asesmen->rmeAsesmenKepAnak->media_disukai == 'video' ? 'selected' : '' }}>
+                                            Video</option>
+                                        <option value="diskusi"
+                                            {{ $asesmen->rmeAsesmenKepAnak->media_disukai == 'diskusi' ? 'selected' : '' }}>
+                                            Diskusi Langsung</option>
+                                        <option value="demonstrasi"
+                                            {{ $asesmen->rmeAsesmenKepAnak->media_disukai == 'demonstrasi' ? 'selected' : '' }}>
+                                            Demonstrasi</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="min-width: 200px;">Tingkat Pendidikan</label>
+                                    <select class="form-select" name="tingkat_pendidikan">
+                                        <option value="" disabled
+                                            {{ !$asesmen->rmeAsesmenKepAnak || !$asesmen->rmeAsesmenKepAnak->tingkat_pendidikan ? 'selected' : '' }}>
+                                            --Pilih--</option>
+                                        <option value="SD"
+                                            {{ $asesmen->rmeAsesmenKepAnak->tingkat_pendidikan == 'SD' ? 'selected' : '' }}>
+                                            SD</option>
+                                        <option value="SMP"
+                                            {{ $asesmen->rmeAsesmenKepAnak->tingkat_pendidikan == 'SMP' ? 'selected' : '' }}>
+                                            SMP</option>
+                                        <option value="SMA"
+                                            {{ $asesmen->rmeAsesmenKepAnak->tingkat_pendidikan == 'SMA' ? 'selected' : '' }}>
+                                            SMA</option>
+                                        <option value="Diploma"
+                                            {{ $asesmen->rmeAsesmenKepAnak->tingkat_pendidikan == 'Diploma' ? 'selected' : '' }}>
+                                            Diploma</option>
+                                        <option value="Sarjana"
+                                            {{ $asesmen->rmeAsesmenKepAnak->tingkat_pendidikan == 'Sarjana' ? 'selected' : '' }}>
+                                            Sarjana</option>
+                                        <option value="Tidak Sekolah"
+                                            {{ $asesmen->rmeAsesmenKepAnak->tingkat_pendidikan == 'Tidak Sekolah' ? 'selected' : '' }}>
+                                            Tidak Sekolah</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- 15. Plan -->
+
+                            <div class="section-separator" id="discharge-planning">
+                                <h5 class="section-title">15. Discharge Planning</h5>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Diagnosis medis</label>
+                                    <input type="text" class="form-control" name="diagnosis_medis"
+                                        placeholder="Diagnosis"
+                                        value="{{ $asesmen->rmeAsesmenKepAnakRencanaPulang->diagnosis_medis ?? '' }}">
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Usia lanjut</label>
+                                    <select class="form-select" name="usia_lanjut">
+                                        <option selected disabled>--Pilih--</option>
+                                        <option value="0"
+                                            {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->usia_lanjut === '0' ? 'selected' : '' }}>
+                                            Ya
+                                        </option>
+                                        <option value="1"
+                                            {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->usia_lanjut === '1' ? 'selected' : '' }}>
+                                            Tidak
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Hambatan mobilisasi</label>
+                                    <select class="form-select" name="hambatan_mobilisasi">
+                                        <option selected disabled>--Pilih--</option>
+                                        <option value="0"
+                                            {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->hambatan_mobilisasi === '0' ? 'selected' : '' }}>
+                                            Ya
+                                        </option>
+                                        <option value="1"
+                                            {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->hambatan_mobilisasi === '1' ? 'selected' : '' }}>
+                                            Tidak
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Membutuhkan penggunaan media berkelanjutan</label>
+                                    <select class="form-select" name="penggunaan_media_berkelanjutan">
+                                        <option selected disabled>--Pilih--</option>
+                                        <option value="ya"
+                                            {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->membutuhkan_pelayanan_medis === 'ya' ? 'selected' : '' }}>
+                                            Ya
+                                        </option>
+                                        <option value="tidak"
+                                            {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->membutuhkan_pelayanan_medis === 'tidak' ? 'selected' : '' }}>
+                                            Tidak
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Ketergantungan dengan orang lain dalam aktivitas
+                                        harian</label>
+                                    <select class="form-select" name="ketergantungan_aktivitas">
+                                        <option selected disabled>--Pilih--</option>
+                                        <option value="ya">Ya</option>
+                                        <option value="tidak">Tidak</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Pasien / Keluarga Memerlukan Keterampilan Khusus Setelah
+                                        Pulang</label>
+                                    <select class="form-select" name="keterampilan_khusus">
+                                        <option selected disabled>--Pilih--</option>
+                                        <option value="ya"
+                                            {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memerlukan_keterampilan_khusus === 'ya' ? 'selected' : '' }}>
+                                            Ya
+                                        </option>
+                                        <option value="tidak"
+                                            {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memerlukan_keterampilan_khusus === 'tidak' ? 'selected' : '' }}>
+                                            Tidak
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Pasien Memerlukan Alat Bantu Setelah Keluar Rumah
+                                        Sakit</label>
+                                    <select class="form-select" name="alat_bantu">
+                                        <option selected disabled>--Pilih--</option>
+                                        <option value="ya"
+                                            {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memerlukan_alat_bantu === 'ya' ? 'selected' : '' }}>
+                                            Ya
+                                        </option>
+                                        <option value="tidak"
+                                            {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memerlukan_alat_bantu === 'tidak' ? 'selected' : '' }}>
+                                            Tidak
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Pasien Memiliki Nyeri Kronis Dan / Kebiasaan Setelah
+                                        Pulang</label>
+                                    <select class="form-select" name="nyeri_kronis">
+                                        <option selected disabled>--Pilih--</option>
+                                        <option value="ya"
+                                            {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memiliki_nyeri_kronis === 'ya' ? 'selected' : '' }}>
+                                            Ya
+                                        </option>
+                                        <option value="tidak"
+                                            {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memiliki_nyeri_kronis === 'tidak' ? 'selected' : '' }}>
+                                            Tidak
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Perkiraan lama hari dirawat</label>
+                                        <input type="text" class="form-control" name="perkiraan_hari"
+                                            placeholder="hari"
+                                            value="{{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) ? $asesmen->rmeAsesmenKepAnakRencanaPulang->perkiraan_lama_dirawat : '' }}">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Rencana Tanggal Pulang</label>
+                                        <input type="date" class="form-control" name="tanggal_pulang"
+                                            value="{{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) ? $asesmen->rmeAsesmenKepAnakRencanaPulang->rencana_pulang : '' }}">
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    <label class="form-label">KESIMPULAN</label>
+                                    <div class="d-flex flex-column gap-2">
+                                        <div class="alert alert-info">
+
+                                        </div>
+                                        <div class="alert alert-warning">
+                                            Mebutuhkan rencana pulang khusus
+                                        </div>
+                                        <div class="alert alert-success">
+                                            Tidak mebutuhkan rencana pulang khusus
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="kesimpulan" name="kesimpulan_planing"
+                                        value="{{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) ? $asesmen->rmeAsesmenKepAnakRencanaPulang->kesimpulan : 'Tidak mebutuhkan rencana pulang khusus' }}">
+                                </div>
+                            </div>
+
+                            <!-- 16. Masalah/Diagnosis Keperawatan -->
+                            <div class="section-separator" id="diagnosis-keperawatan">
+                                <h5 class="section-title">16. Masalah/Diagnosis Keperawatan</h5>
+                                <p class="text-muted">Diisi berdasarkan hasil asesmen dan berurut sesuai masalah
+                                    yang dominan terlebih dahulu</p>
+
+                                <!-- Field 1: Masalah/Diagnosis Keperawatan -->
+                                <div class="mb-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <label class="form-label fw-bold">1. Masalah/Diagnosis Keperawatan</label>
+                                        <button type="button" class="btn btn-sm btn-outline-primary"
+                                            id="btnTambahMasalah">
+                                            <i class="bi bi-plus"></i> Tambah
+                                        </button>
+                                    </div>
+
+                                    <div id="masalahContainer">
+                                        <div class="masalah-item mb-2">
+                                            <div class="d-flex gap-2">
+                                                <textarea class="form-control" name="masalah_diagnosis[]" rows="2"
+                                                    placeholder="Tuliskan masalah atau diagnosis keperawatan..."></textarea>
+                                                <button type="button"
+                                                    class="btn btn-sm btn-outline-danger remove-masalah"
+                                                    onclick="removeMasalah(this)" style="display: none;">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Field 2: Intervensi/Rencana Asuhan -->
+                                <div class="mb-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <label class="form-label fw-bold">2. Intervensi/Rencana Asuhan dan Target
+                                            Terukur</label>
+                                        <button type="button" class="btn btn-sm btn-outline-primary"
+                                            id="btnTambahIntervensi">
+                                            <i class="bi bi-plus"></i> Tambah
+                                        </button>
+                                    </div>
+
+                                    <div id="intervensiContainer">
+                                        <div class="intervensi-item mb-2">
+                                            <div class="d-flex gap-2">
+                                                <textarea class="form-control" name="intervensi_rencana[]" rows="3"
+                                                    placeholder="Tuliskan intervensi, rencana asuhan, dan target yang terukur..."></textarea>
+                                                <button type="button"
+                                                    class="btn btn-sm btn-outline-danger remove-intervensi"
+                                                    onclick="removeIntervensi(this)" style="display: none;">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            {{-- Final section - Submit button --}}
+                            <div class="text-end mt-4">
+                                <button type="submit" class="btn btn-primary">Update Asesmen</button>
+                            </div>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-    {{-- Include modals --}}
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.edit-modal-create-alergi')
+    </div>
+
     @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skalanyeri')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.edit-modal-penyakitdiderita')
     @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.edit-modal-jenisoperasi')
     @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-riwayatkeluarga')
     @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-intervensirisikojatuh')
     @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skala-adl')
+
+    <!-- Modal Alergi -->
+    <div class="modal fade" id="alergiModal" tabindex="-1" aria-labelledby="alergiModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="alergiModalLabel">Manajemen Data Alergi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form Input Alergi -->
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">Tambah Data Alergi</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="modal_jenis_alergi" class="form-label">Jenis Alergi</label>
+                                    <select class="form-select" id="modal_jenis_alergi">
+                                        <option value="">-- Pilih Jenis Alergi --</option>
+                                        <option value="Obat">Obat</option>
+                                        <option value="Makanan">Makanan</option>
+                                        <option value="Udara">Udara</option>
+                                        <option value="Lainnya">Lainnya</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="modal_alergen" class="form-label">Alergen</label>
+                                    <input type="text" class="form-control" id="modal_alergen"
+                                        placeholder="Contoh: Paracetamol, Seafood, Debu">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="modal_reaksi" class="form-label">Reaksi</label>
+                                    <input type="text" class="form-control" id="modal_reaksi"
+                                        placeholder="Contoh: Gatal, Ruam, Sesak nafas">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="modal_tingkat_keparahan" class="form-label">Tingkat Keparahan</label>
+                                    <select class="form-select" id="modal_tingkat_keparahan">
+                                        <option value="">-- Pilih Tingkat Keparahan --</option>
+                                        <option value="Ringan">Ringan</option>
+                                        <option value="Sedang">Sedang</option>
+                                        <option value="Berat">Berat</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <button type="button" class="btn btn-primary btn-sm" id="addToAlergiList">
+                                    <i class="bi bi-plus"></i> Tambah ke Daftar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Daftar Alergi -->
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="card-title mb-0">Daftar Alergi Pasien</h6>
+                            <span class="badge bg-primary" id="alergiCount">0</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th width="20%">Jenis Alergi</th>
+                                            <th width="25%">Alergen</th>
+                                            <th width="25%">Reaksi</th>
+                                            <th width="20%">Tingkat Keparahan</th>
+                                            <th width="10%">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="modalAlergiList">
+                                        <!-- Data akan ditampilkan di sini -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="noAlergiMessage" class="text-center text-muted py-3" style="display: none;">
+                                <i class="bi bi-info-circle"></i> Belum ada data alergi
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-primary" id="saveAlergiData">
+                        <i class="bi bi-check"></i> Simpan Data Alergi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for adding diseases -->
+    <div class="modal fade" id="penyakitModal" tabindex="-1" aria-labelledby="penyakitModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="penyakitModalLabel">Tambah Penyakit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="penyakitInput" class="form-label">Nama Penyakit</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="penyakitInput"
+                                placeholder="Masukkan nama penyakit">
+                            <button class="btn btn-outline-secondary" type="button" id="tambahKeList">
+                                <i class="ti-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Temporary list in modal -->
+                    <div id="modalPenyakitList" class="d-flex flex-column gap-2">
+                        <div id="modalEmptyState"
+                            class="border border-dashed border-secondary rounded p-3 text-center text-muted">
+                            <p class="mb-0">Belum ada penyakit dalam list sementara</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-primary" id="simpanPenyakit"
+                        data-bs-dismiss="modal">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GCS Modal -->
+    <div class="modal fade" id="gcsModal" tabindex="-1" aria-labelledby="gcsModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="gcsModalLabel">Glasgow Coma Scale (GCS)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <!-- Eye Opening (E) -->
+                        <div class="col-md-4">
+                            <h6 class="fw-bold mb-3">Eye Opening (E)</h6>
+                            <div class="gcs-section" data-category="eye">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input gcs-check" type="radio"
+                                        name="gcs_eye" value="4" id="eye4">
+                                    <label class="form-check-label" for="eye4">
+                                        <strong>4</strong> - Spontan
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input gcs-check" type="radio"
+                                        name="gcs_eye" value="3" id="eye3">
+                                    <label class="form-check-label" for="eye3">
+                                        <strong>3</strong> - Terhadap suara
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input gcs-check" type="radio"
+                                        name="gcs_eye" value="2" id="eye2">
+                                    <label class="form-check-label" for="eye2">
+                                        <strong>2</strong> - Terhadap nyeri
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input gcs-check" type="radio"
+                                        name="gcs_eye" value="1" id="eye1">
+                                    <label class="form-check-label" for="eye1">
+                                        <strong>1</strong> - Tidak ada respon
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Verbal Response (V) -->
+                        <div class="col-md-4">
+                            <h6 class="fw-bold mb-3">Verbal Response (V)</h6>
+                            <div class="gcs-section" data-category="verbal">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input gcs-check" type="radio"
+                                        name="gcs_verbal" value="5" id="verbal5">
+                                    <label class="form-check-label" for="verbal5">
+                                        <strong>5</strong> - Orientasi baik
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input gcs-check" type="radio"
+                                        name="gcs_verbal" value="4" id="verbal4">
+                                    <label class="form-check-label" for="verbal4">
+                                        <strong>4</strong> - Bingung
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input gcs-check" type="radio"
+                                        name="gcs_verbal" value="3" id="verbal3">
+                                    <label class="form-check-label" for="verbal3">
+                                        <strong>3</strong> - Kata-kata tidak tepat
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input gcs-check" type="radio"
+                                        name="gcs_verbal" value="2" id="verbal2">
+                                    <label class="form-check-label" for="verbal2">
+                                        <strong>2</strong> - Suara tidak jelas
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input gcs-check" type="radio"
+                                        name="gcs_verbal" value="1" id="verbal1">
+                                    <label class="form-check-label" for="verbal1">
+                                        <strong>1</strong> - Tidak ada respon
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Motor Response (M) -->
+                        <div class="col-md-4">
+                            <h6 class="fw-bold mb-3">Motor Response (M)</h6>
+                            <div class="gcs-section" data-category="motor">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input gcs-check" type="radio"
+                                        name="gcs_motor" value="6" id="motor6">
+                                    <label class="form-check-label" for="motor6">
+                                        <strong>6</strong> - Mengikuti perintah
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input gcs-check" type="radio"
+                                        name="gcs_motor" value="5" id="motor5">
+                                    <label class="form-check-label" for="motor5">
+                                        <strong>5</strong> - Melokalisir nyeri
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input gcs-check" type="radio"
+                                        name="gcs_motor" value="4" id="motor4">
+                                    <label class="form-check-label" for="motor4">
+                                        <strong>4</strong> - Menarik dari nyeri
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input gcs-check" type="radio"
+                                        name="gcs_motor" value="3" id="motor3">
+                                    <label class="form-check-label" for="motor3">
+                                        <strong>3</strong> - Fleksi abnormal
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input gcs-check" type="radio"
+                                        name="gcs_motor" value="2" id="motor2">
+                                    <label class="form-check-label" for="motor2">
+                                        <strong>2</strong> - Ekstensi abnormal
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input gcs-check" type="radio"
+                                        name="gcs_motor" value="1" id="motor1">
+                                    <label class="form-check-label" for="motor1">
+                                        <strong>1</strong> - Tidak ada respon
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GCS Summary -->
+                    <div class="mt-4 p-3 bg-light rounded">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h6 class="mb-2">Total GCS:</h6>
+                                <div class="d-flex gap-3 mb-2">
+                                    <span>E: <span id="gcs_eye_display">-</span></span>
+                                    <span>V: <span id="gcs_verbal_display">-</span></span>
+                                    <span>M: <span id="gcs_motor_display">-</span></span>
+                                </div>
+                                <div class="alert alert-info mb-0" id="gcs_total_display">
+                                    <strong>Total: - </strong>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <h6 class="mb-2">Interpretasi:</h6>
+                                <div class="alert alert-secondary mb-0" id="gcs_interpretation">
+                                    Pilih semua komponen
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="simpanGCS">Simpan
+                        GCS</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
+
+
+@push('js')
+    <script>
+        /**
+         * JavaScript untuk Form Asesmen Keperawatan Anak
+         * Diorganisir berdasarkan modul dan fungsi
+         */
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // ===================================================================
+            // 1. MODUL DASAR - Inisialisasi waktu dan perhitungan dasar
+            // ===================================================================
+
+            const BasicModule = {
+                init() {
+                    this.setDefaultDateTime();
+                    this.initAnthropometricCalculation();
+                    this.initPhysicalExamination();
+                },
+
+                setDefaultDateTime() {
+                    const currentDate = new Date();
+                    const dateInput = document.getElementById('tanggal_masuk');
+                    const timeInput = document.getElementById('jam_masuk');
+
+                    if (dateInput) {
+                        dateInput.value = currentDate.toISOString().split('T')[0];
+                    }
+
+                    if (timeInput) {
+                        const hours = String(currentDate.getHours()).padStart(2, '0');
+                        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                        timeInput.value = `${hours}:${minutes}`;
+                    }
+                },
+
+                initAnthropometricCalculation() {
+                    const tinggiInput = document.getElementById("tinggi_badan");
+                    const beratInput = document.getElementById("berat_badan");
+                    const imtInput = document.getElementById("imt");
+                    const lptInput = document.getElementById("lpt");
+
+                    if (!tinggiInput || !beratInput) return;
+
+                    const calculate = () => {
+                        const tinggi = parseFloat(tinggiInput.value) / 100; // Konversi ke meter
+                        const berat = parseFloat(beratInput.value);
+
+                        if (tinggi > 0 && berat > 0) {
+                            const imt = berat / (tinggi * tinggi);
+                            const lpt = (tinggi * 100 * berat) / 3600;
+
+                            if (imtInput) imtInput.value = imt.toFixed(2);
+                            if (lptInput) lptInput.value = lpt.toFixed(2);
+                        } else {
+                            if (imtInput) imtInput.value = "";
+                            if (lptInput) lptInput.value = "";
+                        }
+                    };
+
+                    tinggiInput.addEventListener("input", calculate);
+                    beratInput.addEventListener("input", calculate);
+                },
+
+                initPhysicalExamination() {
+                    // Handler untuk tombol tambah keterangan
+                    document.querySelectorAll('.tambah-keterangan').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const targetId = this.getAttribute('data-target');
+                            const keteranganDiv = document.getElementById(targetId);
+                            const normalCheckbox = this.closest('.pemeriksaan-item')
+                                .querySelector('.form-check-input');
+
+                            if (keteranganDiv) {
+                                keteranganDiv.style.display = 'block';
+                                if (normalCheckbox) normalCheckbox.checked = false;
+                            }
+                        });
+                    });
+
+                    // Handler untuk checkbox normal
+                    document.querySelectorAll('.form-check-input').forEach(checkbox => {
+                        checkbox.addEventListener('change', function() {
+                            const pemeriksaanItem = this.closest('.pemeriksaan-item');
+                            if (pemeriksaanItem) {
+                                const keteranganDiv = pemeriksaanItem.querySelector(
+                                    '.keterangan');
+                                if (keteranganDiv && this.checked) {
+                                    keteranganDiv.style.display = 'none';
+                                    const input = keteranganDiv.querySelector('input');
+                                    if (input) input.value = '';
+                                }
+                            }
+                        });
+                    });
+                }
+            };
+
+            // ===================================================================
+            // 2. MODUL SKALA NYERI
+            // ===================================================================
+
+            const PainScaleModule = {
+                init() {
+                    this.initScaleSelection();
+                    this.initNRSScale();
+                    this.initFLACCScale();
+                    this.initCRIESScale();
+                },
+
+                initScaleSelection() {
+                    const skalaSelect = document.getElementById('jenis_skala_nyeri');
+                    if (!skalaSelect) return;
+
+                    skalaSelect.addEventListener('change', function() {
+                        // Tutup modal yang terbuka
+                        document.querySelectorAll('.modal.show').forEach(modal => {
+                            const modalInstance = bootstrap.Modal.getInstance(modal);
+                            if (modalInstance) modalInstance.hide();
+                        });
+
+                        // Buka modal yang dipilih
+                        const modalMap = {
+                            'NRS': 'modalNRS',
+                            'FLACC': 'modalFLACC',
+                            'CRIES': 'modalCRIES'
+                        };
+
+                        const modalId = modalMap[this.value];
+                        if (modalId) {
+                            const modal = document.getElementById(modalId);
+                            if (modal) {
+                                new bootstrap.Modal(modal).show();
+                            }
+                        }
+                    });
+                },
+
+                initNRSScale() {
+                    const nrsValue = document.getElementById('nrs_value');
+                    const nrsKesimpulan = document.getElementById('nrs_kesimpulan');
+                    const simpanNRS = document.getElementById('simpanNRS');
+
+                    if (!nrsValue) return;
+
+                    nrsValue.addEventListener('input', function() {
+                        let value = parseInt(this.value);
+                        if (value < 0) this.value = 0;
+                        if (value > 10) this.value = 10;
+                        value = parseInt(this.value);
+
+                        const conclusion = this.getConclusionByScore(value);
+                        this.updateNRSConclusion(nrsKesimpulan, conclusion);
+                    }.bind(this));
+
+                    if (simpanNRS) {
+                        simpanNRS.addEventListener('click', () => {
+                            this.saveNRSValue();
+                        });
+                    }
+                },
+
+                initFLACCScale() {
+                    document.querySelectorAll('.flacc-check').forEach(check => {
+                        check.addEventListener('change', () => this.updateFLACCTotal());
+                    });
+
+                    const simpanFLACC = document.getElementById('simpanFLACC');
+                    if (simpanFLACC) {
+                        simpanFLACC.addEventListener('click', () => this.saveFLACCValue());
+                    }
+                },
+
+                initCRIESScale() {
+                    document.querySelectorAll('.cries-check').forEach(check => {
+                        check.addEventListener('change', () => this.updateCRIESTotal());
+                    });
+
+                    const simpanCRIES = document.getElementById('simpanCRIES');
+                    if (simpanCRIES) {
+                        simpanCRIES.addEventListener('click', () => this.saveCRIESValue());
+                    }
+                },
+
+                getConclusionByScore(score) {
+                    if (score >= 0 && score <= 3) {
+                        return {
+                            text: 'Nyeri Ringan',
+                            class: 'alert-success',
+                            emoji: 'bi-emoji-smile'
+                        };
+                    } else if (score >= 4 && score <= 6) {
+                        return {
+                            text: 'Nyeri Sedang',
+                            class: 'alert-warning',
+                            emoji: 'bi-emoji-neutral'
+                        };
+                    } else {
+                        return {
+                            text: 'Nyeri Berat',
+                            class: 'alert-danger',
+                            emoji: 'bi-emoji-frown'
+                        };
+                    }
+                },
+
+                updateNRSConclusion(element, conclusion) {
+                    if (!element) return;
+
+                    element.className = `alert ${conclusion.class}`;
+                    element.innerHTML = `
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi ${conclusion.emoji} fs-4"></i>
+                            <span>${conclusion.text}</span>
+                        </div>
+                    `;
+                },
+
+                saveNRSValue() {
+                    const nrsValue = document.getElementById('nrs_value');
+                    const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
+                    const kesimpulanNyeri = document.getElementById('kesimpulan_nyeri');
+                    const kesimpulanNyeriAlert = document.getElementById('kesimpulan_nyeri_alert');
+
+                    if (!nrsValue || !nilaiSkalaNyeri) return;
+
+                    const value = parseInt(nrsValue.value);
+                    const conclusion = this.getConclusionByScore(value);
+
+                    nilaiSkalaNyeri.value = value;
+                    if (kesimpulanNyeri) kesimpulanNyeri.value = conclusion.text;
+
+                    if (kesimpulanNyeriAlert) {
+                        kesimpulanNyeriAlert.innerHTML = `
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi ${conclusion.emoji} fs-4"></i>
+                                <span>${conclusion.text}</span>
+                            </div>
+                        `;
+                        kesimpulanNyeriAlert.className = `alert ${conclusion.class}`;
+                    }
+
+                    const modal = document.getElementById('modalNRS');
+                    if (modal) {
+                        bootstrap.Modal.getInstance(modal).hide();
+                    }
+                },
+
+                updateFLACCTotal() {
+                    const flaccChecks = document.querySelectorAll('.flacc-check:checked');
+                    const flaccTotal = document.getElementById('flaccTotal');
+                    const flaccKesimpulan = document.getElementById('flaccKesimpulan');
+
+                    let total = 0;
+                    flaccChecks.forEach(check => {
+                        total += parseInt(check.value);
+                    });
+
+                    if (flaccTotal) flaccTotal.value = total;
+
+                    const conclusion = this.getConclusionByScore(total);
+                    if (flaccKesimpulan) {
+                        flaccKesimpulan.textContent = conclusion.text;
+                        flaccKesimpulan.className = `alert py-1 px-3 mb-0 ${conclusion.class}`;
+                    }
+                },
+
+                saveFLACCValue() {
+                    const flaccTotal = document.getElementById('flaccTotal');
+                    const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
+                    const kesimpulanNyeri = document.getElementById('kesimpulan_nyeri');
+                    const kesimpulanNyeriAlert = document.getElementById('kesimpulan_nyeri_alert');
+
+                    if (!flaccTotal || !nilaiSkalaNyeri) return;
+
+                    const total = parseInt(flaccTotal.value);
+                    const conclusion = this.getConclusionByScore(total);
+
+                    nilaiSkalaNyeri.value = total;
+                    if (kesimpulanNyeri) kesimpulanNyeri.value = conclusion.text;
+
+                    if (kesimpulanNyeriAlert) {
+                        kesimpulanNyeriAlert.innerHTML = `
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi ${conclusion.emoji} fs-4"></i>
+                                <span>${conclusion.text}</span>
+                            </div>
+                        `;
+                        kesimpulanNyeriAlert.className = `alert ${conclusion.class}`;
+                    }
+
+                    const modal = document.getElementById('modalFLACC');
+                    if (modal) {
+                        bootstrap.Modal.getInstance(modal).hide();
+                    }
+                },
+
+                updateCRIESTotal() {
+                    const criesChecks = document.querySelectorAll('.cries-check:checked');
+                    const criesTotal = document.getElementById('criesTotal');
+                    const criesKesimpulan = document.getElementById('criesKesimpulan');
+
+                    let total = 0;
+                    criesChecks.forEach(check => {
+                        total += parseInt(check.value);
+                    });
+
+                    if (criesTotal) criesTotal.value = total;
+
+                    const conclusion = this.getConclusionByScore(total);
+                    if (criesKesimpulan) {
+                        criesKesimpulan.textContent = conclusion.text;
+                        criesKesimpulan.className = `alert py-1 px-3 mb-0 ${conclusion.class}`;
+                    }
+                },
+
+                saveCRIESValue() {
+                    const criesTotal = document.getElementById('criesTotal');
+                    const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
+                    const kesimpulanNyeri = document.getElementById('kesimpulan_nyeri');
+                    const kesimpulanNyeriAlert = document.getElementById('kesimpulan_nyeri_alert');
+
+                    if (!criesTotal || !nilaiSkalaNyeri) return;
+
+                    const total = parseInt(criesTotal.value);
+                    const conclusion = this.getConclusionByScore(total);
+
+                    nilaiSkalaNyeri.value = total;
+                    if (kesimpulanNyeri) kesimpulanNyeri.value = conclusion.text;
+
+                    if (kesimpulanNyeriAlert) {
+                        kesimpulanNyeriAlert.innerHTML = `
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi ${conclusion.emoji} fs-4"></i>
+                                <span>${conclusion.text}</span>
+                            </div>
+                        `;
+                        kesimpulanNyeriAlert.className = `alert ${conclusion.class}`;
+                    }
+
+                    const modal = document.getElementById('modalCRIES');
+                    if (modal) {
+                        bootstrap.Modal.getInstance(modal).hide();
+                    }
+                }
+            };
+
+            // ===================================================================
+            // 3. MODUL RISIKO JATUH
+            // ===================================================================
+
+            const FallRiskModule = {
+                init() {
+                    const risikoJatuhSkala = document.getElementById('risikoJatuhSkala');
+                    if (risikoJatuhSkala) {
+                        const initialValue = risikoJatuhSkala.value;
+                        if (initialValue) {
+                            this.showForm(initialValue);
+                        }
+                    }
+                },
+
+                showForm(formType) {
+                    // Sembunyikan semua form
+                    document.querySelectorAll('.risk-form').forEach(form => {
+                        form.style.display = 'none';
+                    });
+
+                    if (formType === '5') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Perhatian',
+                            text: 'Pasien tidak dapat dinilai status resiko jatuh',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+                        });
+                        document.getElementById('skala_lainnya').value = 'resiko jatuh lainnya';
+                        return;
+                    }
+
+                    const formMapping = {
+                        '1': 'skala_umumForm',
+                        '2': 'skala_morseForm',
+                        '3': 'skala_humptyForm',
+                        '4': 'skala_ontarioForm'
+                    };
+
+                    const selectedForm = document.getElementById(formMapping[formType]);
+                    if (selectedForm) {
+                        selectedForm.style.display = 'block';
+                        const formTypeMap = {
+                            '1': 'umum',
+                            '2': 'morse',
+                            '3': 'humpty',
+                            '4': 'ontario'
+                        };
+                        this.updateConclusion(formTypeMap[formType]);
+                    }
+                },
+
+                updateConclusion(formType) {
+                    const form = document.getElementById('skala_' + formType + 'Form');
+                    if (!form) return;
+
+                    const selects = form.querySelectorAll('select');
+                    let score = 0;
+                    let hasYes = false;
+
+                    selects.forEach(select => {
+                        if (select.value === '1') hasYes = true;
+                        score += parseInt(select.value) || 0;
+                    });
+
+                    const conclusionDiv = form.querySelector('.conclusion');
+                    if (!conclusionDiv) return;
+
+                    const conclusionSpan = conclusionDiv.querySelector('#kesimpulanTextForm');
+                    const conclusionInput = conclusionDiv.querySelector('input[type="hidden"]');
+
+                    let conclusion = '';
+                    let bgClass = '';
+
+                    switch (formType) {
+                        case 'umum':
+                            conclusion = hasYes ? 'Berisiko jatuh' : 'Tidak berisiko jatuh';
+                            bgClass = hasYes ? 'bg-danger' : 'bg-success';
+                            if (conclusionInput) conclusionInput.value = conclusion;
+                            break;
+
+                        case 'morse':
+                            if (score >= 45) {
+                                conclusion = 'Risiko Tinggi';
+                                bgClass = 'bg-danger';
+                            } else if (score >= 25) {
+                                conclusion = 'Risiko Sedang';
+                                bgClass = 'bg-warning';
+                            } else {
+                                conclusion = 'Risiko Rendah';
+                                bgClass = 'bg-success';
+                            }
+                            conclusion += ' (Skor: ' + score + ')';
+                            const morseInput = document.getElementById('risiko_jatuh_morse_kesimpulan');
+                            if (morseInput) morseInput.value = conclusion;
+                            break;
+
+                        case 'humpty':
+                            conclusion = score >= 12 ? 'Risiko Tinggi' : 'Risiko Rendah';
+                            bgClass = score >= 12 ? 'bg-danger' : 'bg-success';
+                            conclusion += ' (Skor: ' + score + ')';
+                            const humptyInput = document.getElementById('risiko_jatuh_pediatrik_kesimpulan');
+                            if (humptyInput) humptyInput.value = conclusion;
+                            break;
+
+                        case 'ontario':
+                            if (score >= 9) {
+                                conclusion = 'Risiko Tinggi';
+                                bgClass = 'bg-danger';
+                            } else if (score >= 4) {
+                                conclusion = 'Risiko Sedang';
+                                bgClass = 'bg-warning';
+                            } else {
+                                conclusion = 'Risiko Rendah';
+                                bgClass = 'bg-success';
+                            }
+                            conclusion += ' (Skor: ' + score + ')';
+                            const ontarioInput = document.getElementById('risiko_jatuh_lansia_kesimpulan');
+                            if (ontarioInput) ontarioInput.value = conclusion;
+                            break;
+                    }
+
+                    if (conclusionDiv) {
+                        conclusionDiv.className = 'conclusion ' + bgClass;
+                        if (conclusionSpan) conclusionSpan.textContent = conclusion;
+                    }
+                }
+            };
+
+            // ===================================================================
+            // 4. MODUL RISIKO DEKUBITUS
+            // ===================================================================
+
+            const DecubitusRiskModule = {
+                init() {
+                    const skalaDecubitusSelect = document.getElementById('skalaRisikoDekubitus');
+                    if (skalaDecubitusSelect) {
+                        if (skalaDecubitusSelect.value) {
+                            this.showDecubitusForm(skalaDecubitusSelect.value);
+                        }
+
+                        skalaDecubitusSelect.addEventListener('change', (e) => {
+                            this.showDecubitusForm(e.target.value);
+                        });
+                    }
+
+                    this.initFormListeners();
+                },
+
+                showDecubitusForm(formType) {
+                    document.querySelectorAll('.decubitus-form').forEach(form => {
+                        form.style.display = 'none';
+                    });
+
+                    let formElement = null;
+                    if (formType === 'norton') {
+                        formElement = document.getElementById('formNorton');
+                    } else if (formType === 'braden') {
+                        formElement = document.getElementById('formBraden');
+                    }
+
+                    if (formElement) {
+                        formElement.style.display = 'block';
+                        this.updateDecubitusConclusion(formType);
+                    }
+                },
+
+                initFormListeners() {
+                    const formNorton = document.getElementById('formNorton');
+                    if (formNorton) {
+                        formNorton.querySelectorAll('select').forEach(select => {
+                            select.addEventListener('change', () => this.updateDecubitusConclusion(
+                                'norton'));
+                        });
+                    }
+
+                    const formBraden = document.getElementById('formBraden');
+                    if (formBraden) {
+                        formBraden.querySelectorAll('select').forEach(select => {
+                            select.addEventListener('change', () => this.updateDecubitusConclusion(
+                                'braden'));
+                        });
+                    }
+                },
+
+                updateDecubitusConclusion(formType) {
+                    const form = document.getElementById('form' + formType.charAt(0).toUpperCase() + formType
+                        .slice(1));
+                    if (!form) return;
+
+                    const kesimpulanDiv = form.querySelector('#kesimpulanNorton') || form.querySelector(
+                        '#kesimpulanBraden');
+                    if (!kesimpulanDiv) return;
+
+                    let total = 0;
+                    let allFilled = true;
+                    let fields = [];
+
+                    if (formType === 'norton') {
+                        fields = ['kondisi_fisik', 'kondisi_mental', 'norton_aktivitas', 'norton_mobilitas',
+                            'inkontinensia'
+                        ];
+                    } else if (formType === 'braden') {
+                        fields = ['persepsi_sensori', 'kelembapan', 'braden_aktivitas', 'braden_mobilitas',
+                            'nutrisi', 'pergesekan'
+                        ];
+                    }
+
+                    fields.forEach(field => {
+                        const select = form.querySelector(`select[name="${field}"]`);
+                        if (!select || !select.value) {
+                            allFilled = false;
+                            return;
+                        }
+                        total += parseInt(select.value);
+                    });
+
+                    if (!allFilled) {
+                        kesimpulanDiv.className = 'alert alert-info mb-0 flex-grow-1';
+                        kesimpulanDiv.textContent = 'Pilih semua kriteria untuk melihat kesimpulan';
+                        return;
+                    }
+
+                    let conclusion = '';
+                    let alertClass = '';
+
+                    if (formType === 'norton') {
+                        if (total <= 12) {
+                            conclusion = 'Risiko Tinggi';
+                            alertClass = 'alert-danger';
+                        } else if (total <= 14) {
+                            conclusion = 'Risiko Sedang';
+                            alertClass = 'alert-warning';
+                        } else {
+                            conclusion = 'Risiko Rendah';
+                            alertClass = 'alert-success';
+                        }
+                    } else if (formType === 'braden') {
+                        if (total <= 12) {
+                            conclusion = 'Risiko Tinggi';
+                            alertClass = 'alert-danger';
+                        } else if (total <= 16) {
+                            conclusion = 'Risiko Sedang';
+                            alertClass = 'alert-warning';
+                        } else {
+                            conclusion = 'Risiko Rendah';
+                            alertClass = 'alert-success';
+                        }
+                    }
+
+                    conclusion += ` (Skor: ${total})`;
+                    kesimpulanDiv.className = `alert ${alertClass} mb-0 flex-grow-1`;
+                    kesimpulanDiv.textContent = conclusion;
+                }
+            };
+
+            // ===================================================================
+            // 5. MODUL STATUS PSIKOLOGIS
+            // ===================================================================
+
+            const PsychologicalStatusModule = {
+                init() {
+                    this.initKondisiPsikologis();
+                    this.initGangguanPerilaku();
+                    this.initEventListeners();
+                },
+
+                initKondisiPsikologis() {
+                    try {
+                        const kondisiPsikologisData = document.getElementById('kondisi_psikologis_json')?.value;
+                        if (kondisiPsikologisData && kondisiPsikologisData !== '[]') {
+                            const data = JSON.parse(kondisiPsikologisData);
+                            this.updateSelectedItems('selectedKondisiPsikologis', data, 'kondisi');
+                            this.handleNoKelainanLogic();
+                        }
+                    } catch (e) {
+                        console.error('Error parsing kondisi psikologis data:', e);
+                    }
+                },
+
+                initGangguanPerilaku() {
+                    try {
+                        const gangguanPerilakuData = document.getElementById('gangguan_perilaku_json')?.value;
+                        if (gangguanPerilakuData && gangguanPerilakuData !== '[]') {
+                            const data = JSON.parse(gangguanPerilakuData);
+                            this.updateSelectedItems('selectedGangguanPerilaku', data, 'perilaku');
+                            this.handleNoGangguanLogic();
+                        }
+                    } catch (e) {
+                        console.error('Error parsing gangguan perilaku data:', e);
+                    }
+                },
+
+                initEventListeners() {
+                    const btnKondisiPsikologis = document.getElementById('btnKondisiPsikologis');
+                    const btnGangguanPerilaku = document.getElementById('btnGangguanPerilaku');
+
+                    if (btnKondisiPsikologis) {
+                        btnKondisiPsikologis.addEventListener('click', () =>
+                            this.toggleDropdown('dropdownKondisiPsikologis'));
+                    }
+
+                    if (btnGangguanPerilaku) {
+                        btnGangguanPerilaku.addEventListener('click', () =>
+                            this.toggleDropdown('dropdownGangguanPerilaku'));
+                    }
+
+                    // Event listeners untuk checkbox
+                    document.querySelectorAll('.kondisi-options input[type="checkbox"]').forEach(checkbox => {
+                        checkbox.addEventListener('change', () => this.handleKondisiPsikologis());
+                    });
+
+                    document.querySelectorAll('.perilaku-options input[type="checkbox"]').forEach(checkbox => {
+                        checkbox.addEventListener('change', () => this.handleGangguanPerilaku());
+                    });
+
+                    // Click outside to close dropdowns
+                    document.addEventListener('click', (event) => {
+                        if (!event.target.closest('.dropdown-wrapper')) {
+                            document.getElementById('dropdownKondisiPsikologis')?.setAttribute('style',
+                                'display: none');
+                            document.getElementById('dropdownGangguanPerilaku')?.setAttribute('style',
+                                'display: none');
+                        }
+                    });
+                },
+
+                toggleDropdown(dropdownId) {
+                    const dropdown = document.getElementById(dropdownId);
+                    if (dropdown) {
+                        const isVisible = dropdown.style.display === 'block';
+                        dropdown.style.display = isVisible ? 'none' : 'block';
+                    }
+                },
+
+                updateSelectedItems(containerId, items, type) {
+                    const container = document.getElementById(containerId);
+                    if (!container) return;
+
+                    container.innerHTML = items.map(item => `
+                        <div class="alert alert-light border d-flex justify-content-between align-items-center py-1 px-2 mb-1">
+                            <span>${item}</span>
+                            <button type="button" class="btn btn-sm btn-link text-danger p-0 ms-2" 
+                                    onclick="removeItem('${containerId}', '${item}')">
+                                <i class="bi bi-x" style="font-size: 1.2rem;"></i>
+                            </button>
+                        </div>
+                    `).join('');
+
+                    const hiddenInputId = type === 'kondisi' ? 'kondisi_psikologis_json' :
+                        'gangguan_perilaku_json';
+                    const hiddenInput = document.getElementById(hiddenInputId);
+                    if (hiddenInput) {
+                        hiddenInput.value = JSON.stringify(items);
+                    }
+                },
+
+                handleKondisiPsikologis() {
+                    const kondisiCheckboxes = document.querySelectorAll(
+                        '.kondisi-options input[type="checkbox"]');
+                    const selectedItems = [];
+
+                    kondisiCheckboxes.forEach(checkbox => {
+                        if (checkbox.checked) {
+                            selectedItems.push(checkbox.value);
+                        }
+                    });
+
+                    this.updateSelectedItems('selectedKondisiPsikologis', selectedItems, 'kondisi');
+                    this.handleNoKelainanLogic();
+                },
+
+                handleGangguanPerilaku() {
+                    const perilakuCheckboxes = document.querySelectorAll(
+                        '.perilaku-options input[type="checkbox"]');
+                    const selectedItems = [];
+
+                    perilakuCheckboxes.forEach(checkbox => {
+                        if (checkbox.checked) {
+                            selectedItems.push(checkbox.value);
+                        }
+                    });
+
+                    this.updateSelectedItems('selectedGangguanPerilaku', selectedItems, 'perilaku');
+                    this.handleNoGangguanLogic();
+                },
+
+                handleNoKelainanLogic() {
+                    const noKelainanCheckbox = document.getElementById('kondisi1');
+                    const kondisiCheckboxes = document.querySelectorAll(
+                        '.kondisi-options input[type="checkbox"]');
+
+                    if (noKelainanCheckbox?.checked) {
+                        kondisiCheckboxes.forEach(cb => {
+                            if (cb !== noKelainanCheckbox) {
+                                cb.checked = false;
+                                cb.disabled = true;
+                            }
+                        });
+                    } else {
+                        kondisiCheckboxes.forEach(cb => {
+                            if (cb) cb.disabled = false;
+                        });
+                    }
+                },
+
+                handleNoGangguanLogic() {
+                    const noGangguanCheckbox = document.getElementById('perilaku1');
+                    const perilakuCheckboxes = document.querySelectorAll(
+                        '.perilaku-options input[type="checkbox"]');
+
+                    if (noGangguanCheckbox?.checked) {
+                        perilakuCheckboxes.forEach(cb => {
+                            if (cb !== noGangguanCheckbox) {
+                                cb.checked = false;
+                                cb.disabled = true;
+                            }
+                        });
+                    } else {
+                        perilakuCheckboxes.forEach(cb => {
+                            if (cb) cb.disabled = false;
+                        });
+                    }
+                }
+            };
+
+            // ===================================================================
+            // 6. MODUL STATUS GIZI
+            // ===================================================================
+
+            const NutritionModule = {
+                init() {
+                    const nutritionSelect = document.getElementById('nutritionAssessment');
+                    if (nutritionSelect) {
+                        if (nutritionSelect.value) {
+                            this.showSelectedNutritionForm();
+                        }
+                        nutritionSelect.addEventListener('change', () => this.showSelectedNutritionForm());
+                    }
+                },
+
+                showSelectedNutritionForm() {
+                    const nutritionSelect = document.getElementById('nutritionAssessment');
+                    const selectedValue = nutritionSelect?.value;
+
+                    // Sembunyikan semua form
+                    document.querySelectorAll('.assessment-form').forEach(form => {
+                        form.style.display = 'none';
+                    });
+
+                    if (selectedValue === '5') return;
+
+                    const formMapping = {
+                        '1': 'mst',
+                        '2': 'mna',
+                        '3': 'strong-kids',
+                        '4': 'nrs'
+                    };
+
+                    const formId = formMapping[selectedValue];
+                    if (formId) {
+                        const selectedForm = document.getElementById(formId);
+                        if (selectedForm) {
+                            selectedForm.style.display = 'block';
+                            this.initializeFormListeners(formId);
+                        }
+                    }
+                },
+
+                initializeFormListeners(formId) {
+                    const form = document.getElementById(formId);
+                    if (!form) return;
+
+                    const selects = form.querySelectorAll('select');
+
+                    switch (formId) {
+                        case 'mst':
+                            selects.forEach(select => {
+                                select.addEventListener('change', () => this.calculateMSTScore(form));
+                            });
+                            this.calculateMSTScore(form);
+                            break;
+                        case 'mna':
+                            selects.forEach(select => {
+                                select.addEventListener('change', () => this.calculateMNAScore(form));
+                            });
+                            this.initializeBMICalculation();
+                            this.calculateMNAScore(form);
+                            break;
+                        case 'strong-kids':
+                            selects.forEach(select => {
+                                select.addEventListener('change', () => this.calculateStrongKidsScore(
+                                    form));
+                            });
+                            this.calculateStrongKidsScore(form);
+                            break;
+                        case 'nrs':
+                            selects.forEach(select => {
+                                select.addEventListener('change', () => this.calculateNRSScore(form));
+                            });
+                            this.calculateNRSScore(form);
+                            break;
+                    }
+                },
+
+                calculateMSTScore(form) {
+                    if (!form) return;
+
+                    const selects = form.querySelectorAll('select');
+                    let total = 0;
+                    let allSelected = true;
+
+                    selects.forEach(select => {
+                        if (select.value === '') {
+                            allSelected = false;
+                        } else {
+                            total += parseInt(select.value || 0);
+                        }
+                    });
+
+                    if (!allSelected) return;
+
+                    const kesimpulan = total <= 1 ? 'Tidak berisiko malnutrisi' : 'Berisiko malnutrisi';
+                    const kesimpulanInput = document.getElementById('gizi_mst_kesimpulan');
+                    if (kesimpulanInput) kesimpulanInput.value = kesimpulan;
+
+                    const conclusions = form.querySelectorAll('.risk-indicators .alert');
+                    conclusions.forEach(alert => {
+                        if ((total <= 1 && alert.classList.contains('alert-success')) ||
+                            (total >= 2 && alert.classList.contains('alert-warning'))) {
+                            alert.style.display = 'block';
+                        } else {
+                            alert.style.display = 'none';
+                        }
+                    });
+                },
+
+                initializeBMICalculation() {
+                    const weightInput = document.getElementById('mnaWeight');
+                    const heightInput = document.getElementById('mnaHeight');
+                    const bmiInput = document.getElementById('mnaBMI');
+
+                    if (!weightInput || !heightInput || !bmiInput) return;
+
+                    const calculateBMI = () => {
+                        const weight = parseFloat(weightInput.value || 0);
+                        const height = parseFloat(heightInput.value || 0);
+
+                        if (weight > 0 && height > 0) {
+                            const heightInMeters = height / 100;
+                            const bmi = weight / (heightInMeters * heightInMeters);
+                            bmiInput.value = bmi.toFixed(2);
+                        }
+                    };
+
+                    weightInput.addEventListener('input', calculateBMI);
+                    heightInput.addEventListener('input', calculateBMI);
+                },
+
+                calculateMNAScore(form) {
+                    const selects = form.querySelectorAll('select[name^="gizi_mna_"]');
+                    let total = 0;
+
+                    selects.forEach(select => {
+                        const value = parseInt(select.value || 0);
+                        total += value;
+                    });
+
+                    const kesimpulan = total >= 12 ? '≥ 12 Tidak Beresiko' : '≤ 11 Beresiko malnutrisi';
+                    const kesimpulanInput = document.getElementById('gizi_mna_kesimpulan');
+                    if (kesimpulanInput) kesimpulanInput.value = kesimpulan;
+
+                    const conclusionDiv = document.getElementById('mnaConclusion');
+                    if (conclusionDiv) {
+                        const alertClass = total >= 12 ? 'alert-success' : 'alert-warning';
+                        conclusionDiv.innerHTML = `
+                            <div class="alert ${alertClass}">
+                                Kesimpulan: ${kesimpulan} (Total Score: ${total})
+                            </div>
+                            <input type="hidden" name="gizi_mna_kesimpulan" id="gizi_mna_kesimpulan" value="${kesimpulan}">
+                        `;
+                    }
+                },
+
+                calculateStrongKidsScore(form) {
+                    const selects = form.querySelectorAll('select');
+                    let total = 0;
+
+                    selects.forEach(select => {
+                        total += parseInt(select.value || 0);
+                    });
+
+                    let kesimpulan, kesimpulanText, type;
+                    if (total === 0) {
+                        kesimpulan = 'Beresiko rendah';
+                        kesimpulanText = '0 (Beresiko rendah)';
+                        type = 'success';
+                    } else if (total >= 1 && total <= 3) {
+                        kesimpulan = 'Beresiko sedang';
+                        kesimpulanText = '1-3 (Beresiko sedang)';
+                        type = 'warning';
+                    } else {
+                        kesimpulan = 'Beresiko Tinggi';
+                        kesimpulanText = '4-5 (Beresiko Tinggi)';
+                        type = 'danger';
+                    }
+
+                    const kesimpulanInput = document.getElementById('gizi_strong_kesimpulan');
+                    if (kesimpulanInput) kesimpulanInput.value = kesimpulanText;
+
+                    const conclusionDiv = document.getElementById('strongKidsConclusion');
+                    if (conclusionDiv) {
+                        conclusionDiv.innerHTML = `
+                            <div class="alert alert-${type}">
+                                Kesimpulan: ${kesimpulanText} (Total Score: ${total})
+                            </div>
+                            <input type="hidden" name="gizi_strong_kesimpulan" id="gizi_strong_kesimpulan" value="${kesimpulanText}">
+                        `;
+                    }
+                },
+
+                calculateNRSScore(form) {
+                    const selects = form.querySelectorAll('select');
+                    let total = 0;
+
+                    selects.forEach(select => {
+                        total += parseInt(select.value || 0);
+                    });
+
+                    let kesimpulan, kesimpulanText, type;
+                    if (total <= 5) {
+                        kesimpulan = 'Beresiko rendah';
+                        kesimpulanText = '≤ 5 (Beresiko rendah)';
+                        type = 'success';
+                    } else if (total <= 10) {
+                        kesimpulan = 'Beresiko sedang';
+                        kesimpulanText = '6-10 (Beresiko sedang)';
+                        type = 'warning';
+                    } else {
+                        kesimpulan = 'Beresiko Tinggi';
+                        kesimpulanText = '> 10 (Beresiko Tinggi)';
+                        type = 'danger';
+                    }
+
+                    const kesimpulanInput = document.getElementById('gizi_nrs_kesimpulan');
+                    if (kesimpulanInput) kesimpulanInput.value = kesimpulanText;
+
+                    const conclusionDiv = document.getElementById('nrsConclusion');
+                    if (conclusionDiv) {
+                        conclusionDiv.innerHTML = `
+                            <div class="alert alert-${type}">
+                                Kesimpulan: ${kesimpulanText} (Total Score: ${total})
+                            </div>
+                            <input type="hidden" name="gizi_nrs_kesimpulan" id="gizi_nrs_kesimpulan" value="${kesimpulanText}">
+                        `;
+                    }
+                }
+            };
+
+            // ===================================================================
+            // 7. MODUL STATUS FUNGSIONAL (ADL)
+            // ===================================================================
+
+            const FunctionalStatusModule = {
+                init() {
+                    const statusFungsionalSelect = document.getElementById('skala_fungsional');
+                    if (statusFungsionalSelect) {
+                        statusFungsionalSelect.addEventListener('change', (e) => this.handleScaleSelection(e
+                            .target.value));
+                    }
+
+                    this.initADLHandlers();
+                },
+
+                handleScaleSelection(value) {
+                    const adlTotal = document.getElementById('adl_total');
+                    const adlKesimpulanAlert = document.getElementById('adl_kesimpulan');
+
+                    if (value === 'Pengkajian Aktivitas') {
+                        // Reset nilai sebelum menampilkan modal
+                        if (adlTotal) adlTotal.value = '';
+                        if (adlKesimpulanAlert) {
+                            adlKesimpulanAlert.className = 'alert alert-info';
+                            adlKesimpulanAlert.textContent = 'Pilih skala aktivitas harian terlebih dahulu';
+                        }
+
+                        const modal = document.getElementById('modalADL');
+                        if (modal) {
+                            new bootstrap.Modal(modal).show();
+                        }
+                    } else if (value === 'Lainnya') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Perhatian',
+                            text: 'Skala pengukuran lainnya belum tersedia',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+                        }).then(() => {
+                            if (statusFungsionalSelect) statusFungsionalSelect.value = '';
+                            if (adlTotal) adlTotal.value = '';
+                            if (adlKesimpulanAlert) {
+                                adlKesimpulanAlert.className = 'alert alert-info';
+                                adlKesimpulanAlert.textContent =
+                                    'Pilih skala aktivitas harian terlebih dahulu';
+                            }
+                        });
+                    }
+                },
+
+                initADLHandlers() {
+                    document.querySelectorAll('.adl-check').forEach(check => {
+                        check.addEventListener('change', () => this.updateADLTotal());
+                    });
+
+                    const simpanADL = document.getElementById('simpanADL');
+                    if (simpanADL) {
+                        simpanADL.addEventListener('click', () => this.saveADLData());
+                    }
+                },
+
+                updateADLTotal() {
+                    const adlChecks = document.querySelectorAll('.adl-check:checked');
+                    const adlModalTotal = document.getElementById('adlTotal');
+                    const adlModalKesimpulan = document.getElementById('adlKesimpulan');
+
+                    let total = 0;
+                    adlChecks.forEach(check => {
+                        total += parseInt(check.value);
+                    });
+
+                    if (adlModalTotal) adlModalTotal.value = total;
+
+                    // Hitung jumlah kategori yang sudah dipilih
+                    const checkedCategories = new Set(Array.from(adlChecks).map(check =>
+                        check.getAttribute('data-category')));
+                    const allCategoriesSelected = checkedCategories.size === 3; // 3 kategori
+
+                    if (!allCategoriesSelected) {
+                        if (adlModalKesimpulan) {
+                            adlModalKesimpulan.className = 'alert alert-info py-1 px-3 mb-0';
+                            adlModalKesimpulan.textContent = 'Pilih semua kategori terlebih dahulu';
+                        }
+                        return;
+                    }
+
+                    let kesimpulan = '';
+                    let alertClass = '';
+
+                    if (total <= 4) {
+                        kesimpulan = 'Mandiri';
+                        alertClass = 'alert-success';
+                    } else if (total <= 8) {
+                        kesimpulan = 'Ketergantungan Ringan';
+                        alertClass = 'alert-info';
+                    } else if (total <= 11) {
+                        kesimpulan = 'Ketergantungan Sedang';
+                        alertClass = 'alert-warning';
+                    } else {
+                        kesimpulan = 'Ketergantungan Berat';
+                        alertClass = 'alert-danger';
+                    }
+
+                    if (adlModalKesimpulan) {
+                        adlModalKesimpulan.className = `alert ${alertClass} py-1 px-3 mb-0`;
+                        adlModalKesimpulan.textContent = kesimpulan;
+                    }
+                },
+
+                saveADLData() {
+                    const adlModalTotal = document.getElementById('adlTotal');
+                    const adlModalKesimpulan = document.getElementById('adlKesimpulan');
+                    const adlTotal = document.getElementById('adl_total');
+                    const adlKesimpulanAlert = document.getElementById('adl_kesimpulan');
+
+                    if (!adlModalTotal || !adlModalTotal.value || !adlKesimpulanAlert) return;
+
+                    // Update nilai total
+                    if (adlTotal) adlTotal.value = adlModalTotal.value;
+
+                    // Update kesimpulan di form utama
+                    if (adlModalKesimpulan) {
+                        adlKesimpulanAlert.className = adlModalKesimpulan.className.replace('py-1 px-3 mb-0',
+                            '');
+                        adlKesimpulanAlert.textContent = adlModalKesimpulan.textContent;
+                    }
+
+                    // Simpan nilai-nilai tersembunyi
+                    const adlValues = this.getSelectedADLValues();
+                    this.updateHiddenADLInputs(adlValues, adlModalKesimpulan?.textContent);
+
+                    // Tutup modal
+                    const modal = document.getElementById('modalADL');
+                    if (modal) {
+                        bootstrap.Modal.getInstance(modal).hide();
+                    }
+                },
+
+                getSelectedADLValues() {
+                    const makanValue = document.querySelector('input[name="makan"]:checked')?.value || '';
+                    const berjalanValue = document.querySelector('input[name="berjalan"]:checked')?.value || '';
+                    const mandiValue = document.querySelector('input[name="mandi"]:checked')?.value || '';
+
+                    const getTextValue = (value) => {
+                        switch (value) {
+                            case '1':
+                                return 'Mandiri';
+                            case '2':
+                                return '25% Dibantu';
+                            case '3':
+                                return '50% Dibantu';
+                            case '4':
+                                return '75% Dibantu';
+                            default:
+                                return '';
+                        }
+                    };
+
+                    return {
+                        makan: getTextValue(makanValue),
+                        makanValue: makanValue,
+                        berjalan: getTextValue(berjalanValue),
+                        berjalanValue: berjalanValue,
+                        mandi: getTextValue(mandiValue),
+                        mandiValue: mandiValue
+                    };
+                },
+
+                updateHiddenADLInputs(adlValues, kesimpulan) {
+                    const hiddenInputs = {
+                        'adl_makan': adlValues.makan,
+                        'adl_makan_value': adlValues.makanValue,
+                        'adl_berjalan': adlValues.berjalan,
+                        'adl_berjalan_value': adlValues.berjalanValue,
+                        'adl_mandi': adlValues.mandi,
+                        'adl_mandi_value': adlValues.mandiValue,
+                        'adl_kesimpulan_value': kesimpulan,
+                        'adl_jenis_skala': '1'
+                    };
+
+                    Object.entries(hiddenInputs).forEach(([id, value]) => {
+                        const input = document.getElementById(id);
+                        if (input) input.value = value || '';
+                    });
+                }
+            };
+
+            // ===================================================================
+            // 8. MODUL DISCHARGE PLANNING
+            // ===================================================================
+
+            const DischargePlanningModule = {
+                init() {
+                    const dischargePlanningSection = document.getElementById('discharge-planning');
+                    if (!dischargePlanningSection) return;
+
+                    const allSelects = dischargePlanningSection.querySelectorAll('select');
+                    allSelects.forEach(select => {
+                        select.addEventListener('change', () => this.updateConclusion());
+                    });
+
+                    this.updateConclusion();
+                },
+
+                updateConclusion() {
+                    const dischargePlanningSection = document.getElementById('discharge-planning');
+                    if (!dischargePlanningSection) return;
+
+                    const allSelects = dischargePlanningSection.querySelectorAll('select');
+                    const alertWarning = dischargePlanningSection.querySelector('.alert-warning');
+                    const alertSuccess = dischargePlanningSection.querySelector('.alert-success');
+                    const alertInfo = dischargePlanningSection.querySelector('.alert-info');
+                    const kesimpulanInput = document.getElementById('kesimpulan');
+
+                    let needsSpecialPlan = false;
+                    let allSelected = true;
+
+                    allSelects.forEach(select => {
+                        if (!select.value) {
+                            allSelected = false;
+                        } else if (select.value === 'ya') {
+                            needsSpecialPlan = true;
+                        }
+                    });
+
+                    if (!allSelected) {
+                        this.showAlert(alertInfo, 'block');
+                        this.showAlert(alertWarning, 'none');
+                        this.showAlert(alertSuccess, 'none');
+                        if (kesimpulanInput) kesimpulanInput.value = 'Pilih semua Planning';
+                        return;
+                    }
+
+                    if (needsSpecialPlan) {
+                        this.showAlert(alertWarning, 'block');
+                        this.showAlert(alertSuccess, 'none');
+                        this.showAlert(alertInfo, 'none');
+                        if (kesimpulanInput) kesimpulanInput.value = 'Mebutuhkan rencana pulang khusus';
+                    } else {
+                        this.showAlert(alertWarning, 'none');
+                        this.showAlert(alertSuccess, 'block');
+                        this.showAlert(alertInfo, 'none');
+                        if (kesimpulanInput) kesimpulanInput.value = 'Tidak mebutuhkan rencana pulang khusus';
+                    }
+                },
+
+                showAlert(alertElement, display) {
+                    if (alertElement) alertElement.style.display = display;
+                }
+            };
+
+            // ===================================================================
+            // 9. MODUL PENYAKIT YANG PERNAH DIDERITA
+            // ===================================================================
+
+            const PenyakitModule = {
+                penyakitList: [],
+                tempPenyakitList: [],
+
+                init() {
+                    this.loadExistingData();
+                    this.initEventListeners();
+                    this.updatePenyakitList();
+                },
+
+                loadExistingData() {
+                    const existingData = document.getElementById('penyakitDideritaInput')?.value;
+
+                    try {
+                        if (existingData && existingData !== '[]') {
+                            this.penyakitList = typeof existingData === 'string' ?
+                                JSON.parse(existingData) : existingData;
+                        }
+                    } catch (e) {
+                        console.error('Error parsing penyakit data:', e);
+                        this.penyakitList = [];
+                    }
+                },
+
+                initEventListeners() {
+                    const tambahKeListBtn = document.getElementById('tambahKeList');
+                    if (tambahKeListBtn) {
+                        tambahKeListBtn.addEventListener('click', () => this.addToTempList());
+                    }
+
+                    const simpanPenyakitBtn = document.getElementById('simpanPenyakit');
+                    if (simpanPenyakitBtn) {
+                        simpanPenyakitBtn.addEventListener('click', () => this.savePenyakit());
+                    }
+
+                    const penyakitInput = document.getElementById('penyakitInput');
+                    if (penyakitInput) {
+                        penyakitInput.addEventListener('keypress', (e) => {
+                            if (e.key === 'Enter') {
+                                e.preventDefault();
+                                this.addToTempList();
+                            }
+                        });
+                    }
+
+                    const penyakitModal = document.getElementById('penyakitModal');
+                    if (penyakitModal) {
+                        penyakitModal.addEventListener('show.bs.modal', () => {
+                            this.resetTempList();
+                        });
+                    }
+                },
+
+                updatePenyakitList() {
+                    const listContainer = document.getElementById('selectedPenyakitList');
+                    const hiddenInput = document.getElementById('penyakitDideritaInput');
+                    const emptyState = document.getElementById('emptyState');
+
+                    if (!listContainer || !hiddenInput) return;
+
+                    listContainer.innerHTML = '';
+
+                    if (this.penyakitList.length === 0) {
+                        if (emptyState) {
+                            const emptyStateClone = emptyState.cloneNode(true);
+                            emptyStateClone.style.display = 'block';
+                            listContainer.appendChild(emptyStateClone);
+                        }
+                    } else {
+                        this.penyakitList.forEach((penyakit, index) => {
+                            const item = document.createElement('div');
+                            item.className =
+                                'p-2 bg-light rounded d-flex justify-content-between align-items-center mb-2';
+                            item.innerHTML = `
+                                <span>${this.escapeHtml(penyakit)}</span>
+                                <button type="button" class="btn btn-sm btn-danger delete-penyakit" data-index="${index}">
+                                    <i class="ti-trash"></i>
+                                </button>
+                            `;
+
+                            // Add event listener to delete button
+                            const deleteBtn = item.querySelector('.delete-penyakit');
+                            deleteBtn.addEventListener('click', () => this.removePenyakit(index));
+
+                            listContainer.appendChild(item);
+                        });
+                    }
+
+                    hiddenInput.value = JSON.stringify(this.penyakitList);
+                },
+
+                updateModalList() {
+                    const modalList = document.getElementById('modalPenyakitList');
+                    if (!modalList) return;
+
+                    modalList.innerHTML = '';
+
+                    if (this.tempPenyakitList.length === 0) {
+                        const modalEmptyState = document.createElement('div');
+                        modalEmptyState.className =
+                            'border border-dashed border-secondary rounded p-3 text-center text-muted';
+                        modalEmptyState.innerHTML =
+                            '<p class="mb-0">Belum ada penyakit dalam list sementara</p>';
+                        modalList.appendChild(modalEmptyState);
+                    } else {
+                        this.tempPenyakitList.forEach((penyakit, index) => {
+                            const item = document.createElement('div');
+                            item.className =
+                                'p-2 bg-light rounded d-flex justify-content-between align-items-center mb-2';
+                            item.innerHTML = `
+                                <span>${this.escapeHtml(penyakit)}</span>
+                                <button type="button" class="btn btn-sm btn-danger delete-temp-penyakit" data-index="${index}">
+                                    <i class="ti-trash"></i>
+                                </button>
+                            `;
+
+                            // Add event listener to delete button
+                            const deleteBtn = item.querySelector('.delete-temp-penyakit');
+                            deleteBtn.addEventListener('click', () => this.removeTempPenyakit(index));
+
+                            modalList.appendChild(item);
+                        });
+                    }
+                },
+
+                addToTempList() {
+                    const input = document.getElementById('penyakitInput');
+                    if (!input) return;
+
+                    const penyakit = input.value.trim();
+
+                    if (penyakit) {
+                        if (!this.tempPenyakitList.includes(penyakit) && !this.penyakitList.includes(
+                            penyakit)) {
+                            this.tempPenyakitList.push(penyakit);
+                            this.updateModalList();
+                            input.value = '';
+                            input.focus();
+                        }
+                    }
+                },
+
+                savePenyakit() {
+                    if (this.tempPenyakitList.length > 0) {
+                        this.penyakitList = [...this.penyakitList, ...this.tempPenyakitList];
+                        this.tempPenyakitList = [];
+                        this.updatePenyakitList();
+
+                        // Close modal
+                        const penyakitModal = document.getElementById('penyakitModal');
+                        if (penyakitModal) {
+                            const modal = bootstrap.Modal.getInstance(penyakitModal);
+                            if (modal) {
+                                modal.hide();
+                            }
+                        }
+                    }
+                },
+
+                removePenyakit(index) {
+                    if (index >= 0 && index < this.penyakitList.length) {
+                        this.penyakitList.splice(index, 1);
+                        this.updatePenyakitList();
+                    }
+                },
+
+                removeTempPenyakit(index) {
+                    if (index >= 0 && index < this.tempPenyakitList.length) {
+                        this.tempPenyakitList.splice(index, 1);
+                        this.updateModalList();
+                    }
+                },
+
+                resetTempList() {
+                    this.tempPenyakitList = [];
+                    this.updateModalList();
+                    const penyakitInput = document.getElementById('penyakitInput');
+                    if (penyakitInput) {
+                        penyakitInput.value = '';
+                    }
+                },
+
+                escapeHtml(text) {
+                    const div = document.createElement('div');
+                    div.textContent = text;
+                    return div.innerHTML;
+                }
+            };
+
+            // ===================================================================
+            // 10. MODUL MANAJEMEN ALERGI
+            // ===================================================================
+
+            const AllergyModule = {
+                alergiDataArray: [],
+
+                init() {
+                    this.loadExistingData();
+                    this.initEventListeners();
+                    this.updateMainAlergiTable();
+                },
+
+                loadExistingData() {
+                    try {
+                        // Ambil data alergi dari variable yang dikirim dari controller
+                        const alergiPasien = @json($alergiPasien ?? []);
+
+                        this.alergiDataArray = alergiPasien.map(item => ({
+                            jenis_alergi: item.jenis_alergi || '',
+                            alergen: item.nama_alergi || '',
+                            reaksi: item.reaksi || '',
+                            tingkat_keparahan: item.tingkat_keparahan || '',
+                            is_existing: true,
+                            id: item.id || null
+                        }));
+                    } catch (e) {
+                        console.error('Error loading existing alergi data:', e);
+                        this.alergiDataArray = [];
+                    }
+                },
+
+                initEventListeners() {
+                    const openAlergiModal = document.getElementById('openAlergiModal');
+                    if (openAlergiModal) {
+                        openAlergiModal.addEventListener('click', () => this.updateModalAlergiList());
+                    }
+
+                    const addToAlergiList = document.getElementById('addToAlergiList');
+                    if (addToAlergiList) {
+                        addToAlergiList.addEventListener('click', () => this.addAlergiToList());
+                    }
+
+                    const saveAlergiData = document.getElementById('saveAlergiData');
+                    if (saveAlergiData) {
+                        saveAlergiData.addEventListener('click', () => this.saveAlergiData());
+                    }
+                },
+
+                addAlergiToList() {
+                    const jenisAlergi = document.getElementById('modal_jenis_alergi')?.value?.trim();
+                    const alergen = document.getElementById('modal_alergen')?.value?.trim();
+                    const reaksi = document.getElementById('modal_reaksi')?.value?.trim();
+                    const tingkatKeparahan = document.getElementById('modal_tingkat_keparahan')?.value?.trim();
+
+                    if (!jenisAlergi || !alergen || !reaksi || !tingkatKeparahan) return;
+
+                    const isDuplicate = this.alergiDataArray.some(item =>
+                        item.jenis_alergi === jenisAlergi &&
+                        item.alergen.toLowerCase() === alergen.toLowerCase()
+                    );
+
+                    if (isDuplicate) return;
+
+                    this.alergiDataArray.push({
+                        jenis_alergi: jenisAlergi,
+                        alergen: alergen,
+                        reaksi: reaksi,
+                        tingkat_keparahan: tingkatKeparahan,
+                        is_existing: false
+                    });
+
+                    this.updateModalAlergiList();
+                    this.resetAlergiForm();
+                },
+
+                updateModalAlergiList() {
+                    const tbody = document.getElementById('modalAlergiList');
+                    const noDataMessage = document.getElementById('noAlergiMessage');
+                    const countBadge = document.getElementById('alergiCount');
+
+                    if (!tbody) return;
+
+                    tbody.innerHTML = '';
+
+                    if (this.alergiDataArray.length === 0) {
+                        if (noDataMessage) noDataMessage.style.display = 'block';
+                        const table = tbody.closest('table');
+                        if (table) table.style.display = 'none';
+                    } else {
+                        if (noDataMessage) noDataMessage.style.display = 'none';
+                        const table = tbody.closest('table');
+                        if (table) table.style.display = 'table';
+
+                        this.alergiDataArray.forEach((item, index) => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${item.jenis_alergi}</td>
+                                <td>${item.alergen}</td>
+                                <td>${item.reaksi}</td>
+                                <td>
+                                    <span class="badge ${this.getKeparahanBadgeClass(item.tingkat_keparahan)}">
+                                        ${item.tingkat_keparahan}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="AllergyModule.removeAlergiFromModal(${index})">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                    ${item.is_existing ? '<small class="text-muted d-block">Dari DB</small>' : '<small class="text-success d-block">Baru</small>'}
+                                </td>
+                            `;
+                            tbody.appendChild(row);
+                        });
+                    }
+
+                    if (countBadge) countBadge.textContent = this.alergiDataArray.length;
+                },
+
+                updateMainAlergiTable() {
+                    const tbody = document.querySelector('#createAlergiTable tbody');
+                    const noAlergiRow = document.getElementById('no-alergi-row');
+
+                    if (!tbody || !noAlergiRow) return;
+
+                    const existingRows = tbody.querySelectorAll('tr:not(#no-alergi-row)');
+                    existingRows.forEach(row => row.remove());
+
+                    if (this.alergiDataArray.length === 0) {
+                        noAlergiRow.style.display = 'table-row';
+                    } else {
+                        noAlergiRow.style.display = 'none';
+
+                        this.alergiDataArray.forEach((item, index) => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${item.jenis_alergi}</td>
+                                <td>${item.alergen}</td>
+                                <td>${item.reaksi}</td>
+                                <td>
+                                    <span class="badge ${this.getKeparahanBadgeClass(item.tingkat_keparahan)}">
+                                        ${item.tingkat_keparahan}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="AllergyModule.removeAlergiFromMain(${index})">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            `;
+                            tbody.appendChild(row);
+                        });
+                    }
+                },
+
+                saveAlergiData() {
+                    this.updateMainAlergiTable();
+                    this.updateHiddenAlergiInput();
+
+                    const alergiModal = document.getElementById('alergiModal');
+                    if (alergiModal && typeof bootstrap !== 'undefined') {
+                        const modalInstance = bootstrap.Modal.getInstance(alergiModal);
+                        if (modalInstance) modalInstance.hide();
+                    }
+                },
+
+                resetAlergiForm() {
+                    const fields = ['modal_jenis_alergi', 'modal_alergen', 'modal_reaksi',
+                        'modal_tingkat_keparahan'
+                    ];
+                    fields.forEach(fieldId => {
+                        const field = document.getElementById(fieldId);
+                        if (field) field.value = '';
+                    });
+                },
+
+                updateHiddenAlergiInput() {
+                    const hiddenInput = document.getElementById('alergisInput');
+                    if (hiddenInput) {
+                        hiddenInput.value = JSON.stringify(this.alergiDataArray);
+                    }
+                },
+
+                getKeparahanBadgeClass(keparahan) {
+                    switch (keparahan.toLowerCase()) {
+                        case 'ringan':
+                            return 'bg-success';
+                        case 'sedang':
+                            return 'bg-warning';
+                        case 'berat':
+                            return 'bg-danger';
+                        default:
+                            return 'bg-secondary';
+                    }
+                },
+
+                removeAlergiFromModal(index) {
+                    this.alergiDataArray.splice(index, 1);
+                    this.updateModalAlergiList();
+                },
+
+                removeAlergiFromMain(index) {
+                    this.alergiDataArray.splice(index, 1);
+                    this.updateMainAlergiTable();
+                    this.updateHiddenAlergiInput();
+                }
+            };
+
+            // ===================================================================
+            // 11. MODUL GCS
+            // ===================================================================
+            // Fungsi global untuk GCS
+            const GCSModule = {
+                init() {
+                    this.loadExistingGCSData();
+                    this.initEventListeners();
+                },
+
+                loadExistingGCSData() {
+                    // Load data GCS yang sudah ada
+                    @if(isset($asesmen->gcs_parsed))
+                        const gcsData = @json($asesmen->gcs_parsed);
+                        
+                        if (gcsData.eye) {
+                            document.querySelector(`input[name="gcs_eye"][value="${gcsData.eye}"]`)?.setAttribute('checked', 'checked');
+                            document.getElementById('gcs_eye_display').textContent = gcsData.eye;
+                        }
+                        
+                        if (gcsData.verbal) {
+                            document.querySelector(`input[name="gcs_verbal"][value="${gcsData.verbal}"]`)?.setAttribute('checked', 'checked');
+                            document.getElementById('gcs_verbal_display').textContent = gcsData.verbal;
+                        }
+                        
+                        if (gcsData.motor) {
+                            document.querySelector(`input[name="gcs_motor"][value="${gcsData.motor}"]`)?.setAttribute('checked', 'checked');
+                            document.getElementById('gcs_motor_display').textContent = gcsData.motor;
+                        }
+                        
+                        if (gcsData.total) {
+                            const gcsDisplay = document.getElementById('gcs_display');
+                            if (gcsDisplay) {
+                                gcsDisplay.value = `${gcsData.total} E${gcsData.eye} V${gcsData.verbal} M${gcsData.motor}`;
+                            }
+                            
+                            const gcsValue = document.getElementById('gcs_value');
+                            if (gcsValue) {
+                                gcsValue.value = `${gcsData.total} E${gcsData.eye} V${gcsData.verbal} M${gcsData.motor}`;
+                            }
+                            
+                            this.updateGCSTotal();
+                        }
+                    @endif
+                },
+
+                initEventListeners() {
+                    document.querySelectorAll('.gcs-check').forEach(check => {
+                        check.addEventListener('change', () => this.updateGCSTotal());
+                    });
+
+                    const simpanGCS = document.getElementById('simpanGCS');
+                    if (simpanGCS) {
+                        simpanGCS.addEventListener('click', () => this.saveGCSData());
+                    }
+                },
+
+                updateGCSTotal() {
+                    const eyeChecked = document.querySelector('input[name="gcs_eye"]:checked');
+                    const verbalChecked = document.querySelector('input[name="gcs_verbal"]:checked');
+                    const motorChecked = document.querySelector('input[name="gcs_motor"]:checked');
+
+                    const eyeValue = eyeChecked ? parseInt(eyeChecked.value) : 0;
+                    const verbalValue = verbalChecked ? parseInt(verbalChecked.value) : 0;
+                    const motorValue = motorChecked ? parseInt(motorChecked.value) : 0;
+
+                    const total = eyeValue + verbalValue + motorValue;
+
+                    // Update displays
+                    document.getElementById('gcs_eye_display').textContent = eyeValue || '-';
+                    document.getElementById('gcs_verbal_display').textContent = verbalValue || '-';
+                    document.getElementById('gcs_motor_display').textContent = motorValue || '-';
+
+                    const totalDisplay = document.getElementById('gcs_total_display');
+                    const interpretation = document.getElementById('gcs_interpretation');
+
+                    if (total > 0) {
+                        totalDisplay.innerHTML = `<strong>Total: ${total}</strong>`;
+                        
+                        let interpretationText = '';
+                        if (total >= 13) {
+                            interpretationText = 'Cedera kepala ringan';
+                            interpretation.className = 'alert alert-success mb-0';
+                        } else if (total >= 9) {
+                            interpretationText = 'Cedera kepala sedang';
+                            interpretation.className = 'alert alert-warning mb-0';
+                        } else {
+                            interpretationText = 'Cedera kepala berat';
+                            interpretation.className = 'alert alert-danger mb-0';
+                        }
+                        
+                        interpretation.textContent = interpretationText;
+                    } else {
+                        totalDisplay.innerHTML = '<strong>Total: - </strong>';
+                        interpretation.textContent = 'Pilih semua komponen';
+                        interpretation.className = 'alert alert-secondary mb-0';
+                    }
+                },
+
+                saveGCSData() {
+                    const eyeChecked = document.querySelector('input[name="gcs_eye"]:checked');
+                    const verbalChecked = document.querySelector('input[name="gcs_verbal"]:checked');
+                    const motorChecked = document.querySelector('input[name="gcs_motor"]:checked');
+
+                    if (!eyeChecked || !verbalChecked || !motorChecked) {
+                        alert('Harap pilih semua komponen GCS');
+                        return;
+                    }
+
+                    const eyeValue = eyeChecked.value;
+                    const verbalValue = verbalChecked.value;
+                    const motorValue = motorChecked.value;
+                    const total = parseInt(eyeValue) + parseInt(verbalValue) + parseInt(motorValue);
+
+                    const gcsString = `${total} E${eyeValue} V${verbalValue} M${motorValue}`;
+                    
+                    // Update form fields
+                    const gcsDisplay = document.getElementById('gcs_display');
+                    const gcsValue = document.getElementById('gcs_value');
+                    
+                    if (gcsDisplay) gcsDisplay.value = gcsString;
+                    if (gcsValue) gcsValue.value = gcsString;
+
+                    // Close modal
+                    const modal = document.getElementById('gcsModal');
+                    if (modal) {
+                        bootstrap.Modal.getInstance(modal).hide();
+                    }
+                }
+            };
+
+            // ===================================================================
+            // 11. MODUL DIAGNOSIS KEPERAWATAN
+            // ===================================================================
+
+            const DiagnosisKeperawatanModule = {
+                init() {
+                    this.loadExistingData();
+                    this.initEventListeners();
+                },
+
+                loadExistingData() {
+                    // Load masalah diagnosis
+                    @if(isset($asesmen->masalah_diagnosis_parsed) && !empty($asesmen->masalah_diagnosis_parsed))
+                        const masalahData = @json($asesmen->masalah_diagnosis_parsed);
+                        this.populateMasalahDiagnosis(masalahData);
+                    @endif
+
+                    // Load intervensi rencana
+                    @if(isset($asesmen->intervensi_rencana_parsed) && !empty($asesmen->intervensi_rencana_parsed))
+                        const intervensiData = @json($asesmen->intervensi_rencana_parsed);
+                        this.populateIntervensiRencana(intervensiData);
+                    @endif
+                },
+
+                populateMasalahDiagnosis(data) {
+                    const container = document.getElementById('masalahContainer');
+                    if (!container || !data.length) return;
+
+                    // Clear existing items
+                    container.innerHTML = '';
+
+                    data.forEach((item, index) => {
+                        const masalahItem = this.createMasalahItem(item, index > 0);
+                        container.appendChild(masalahItem);
+                    });
+                },
+
+                populateIntervensiRencana(data) {
+                    const container = document.getElementById('intervensiContainer');
+                    if (!container || !data.length) return;
+
+                    // Clear existing items
+                    container.innerHTML = '';
+
+                    data.forEach((item, index) => {
+                        const intervensiItem = this.createIntervensiItem(item, index > 0);
+                        container.appendChild(intervensiItem);
+                    });
+                },
+
+                createMasalahItem(value = '', showRemove = false) {
+                    const div = document.createElement('div');
+                    div.className = 'masalah-item mb-2';
+                    
+                    div.innerHTML = `
+                        <div class="d-flex gap-2">
+                            <textarea class="form-control" name="masalah_diagnosis[]" rows="2"
+                                placeholder="Tuliskan masalah atau diagnosis keperawatan...">${value}</textarea>
+                            <button type="button" class="btn btn-sm btn-outline-danger remove-masalah"
+                                onclick="DiagnosisKeperawatanModule.removeMasalah(this)" 
+                                style="display: ${showRemove ? 'block' : 'none'};">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    return div;
+                },
+
+                createIntervensiItem(value = '', showRemove = false) {
+                    const div = document.createElement('div');
+                    div.className = 'intervensi-item mb-2';
+                    
+                    div.innerHTML = `
+                        <div class="d-flex gap-2">
+                            <textarea class="form-control" name="intervensi_rencana[]" rows="3"
+                                placeholder="Tuliskan intervensi, rencana asuhan, dan target yang terukur...">${value}</textarea>
+                            <button type="button" class="btn btn-sm btn-outline-danger remove-intervensi"
+                                onclick="DiagnosisKeperawatanModule.removeIntervensi(this)" 
+                                style="display: ${showRemove ? 'block' : 'none'};">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    return div;
+                },
+
+                initEventListeners() {
+                    // Button tambah masalah
+                    const btnTambahMasalah = document.getElementById('btnTambahMasalah');
+                    if (btnTambahMasalah) {
+                        btnTambahMasalah.addEventListener('click', () => {
+                            this.addMasalahItem();
+                        });
+                    }
+
+                    // Button tambah intervensi
+                    const btnTambahIntervensi = document.getElementById('btnTambahIntervensi');
+                    if (btnTambahIntervensi) {
+                        btnTambahIntervensi.addEventListener('click', () => {
+                            this.addIntervensiItem();
+                        });
+                    }
+                },
+
+                addMasalahItem() {
+                    const container = document.getElementById('masalahContainer');
+                    if (!container) return;
+
+                    const masalahItem = this.createMasalahItem('', true);
+                    container.appendChild(masalahItem);
+                    
+                    // Update visibility of remove buttons
+                    this.updateRemoveButtonsVisibility('masalah');
+                },
+
+                addIntervensiItem() {
+                    const container = document.getElementById('intervensiContainer');
+                    if (!container) return;
+
+                    const intervensiItem = this.createIntervensiItem('', true);
+                    container.appendChild(intervensiItem);
+                    
+                    // Update visibility of remove buttons
+                    this.updateRemoveButtonsVisibility('intervensi');
+                },
+
+                removeMasalah(button) {
+                    const masalahItem = button.closest('.masalah-item');
+                    if (masalahItem) {
+                        masalahItem.remove();
+                        this.updateRemoveButtonsVisibility('masalah');
+                    }
+                },
+
+                removeIntervensi(button) {
+                    const intervensiItem = button.closest('.intervensi-item');
+                    if (intervensiItem) {
+                        intervensiItem.remove();
+                        this.updateRemoveButtonsVisibility('intervensi');
+                    }
+                },
+
+                updateRemoveButtonsVisibility(type) {
+                    const container = document.getElementById(type === 'masalah' ? 'masalahContainer' : 'intervensiContainer');
+                    if (!container) return;
+
+                    const items = container.querySelectorAll(`.${type}-item`);
+                    items.forEach((item, index) => {
+                        const removeBtn = item.querySelector(`.remove-${type}`);
+                        if (removeBtn) {
+                            removeBtn.style.display = items.length > 1 ? 'block' : 'none';
+                        }
+                    });
+                }
+            };
+
+
+            // ===================================================================
+            // 10. FUNGSI GLOBAL
+            // ===================================================================
+
+            
+            // Fungsi global untuk risiko jatuh
+            window.showForm = function(formType) {
+                FallRiskModule.showForm(formType);
+            };
+
+            window.updateConclusion = function(formType) {
+                FallRiskModule.updateConclusion(formType);
+            };
+
+            // Fungsi global untuk dekubitus
+            window.showDecubitusForm = function(formType) {
+                DecubitusRiskModule.showDecubitusForm(formType);
+            };
+
+            window.updateDecubitusConclusion = function(formType) {
+                DecubitusRiskModule.updateDecubitusConclusion(formType);
+            };
+
+            // Fungsi global untuk status psikologis
+            window.removeItem = function(containerId, item) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+
+                // Uncheck checkbox yang sesuai
+                if (containerId === 'selectedKondisiPsikologis') {
+                    document.querySelectorAll('.kondisi-options input[type="checkbox"]').forEach(checkbox => {
+                        if (checkbox.value === item) {
+                            checkbox.checked = false;
+                            checkbox.dispatchEvent(new Event('change'));
+                        }
+                    });
+                } else if (containerId === 'selectedGangguanPerilaku') {
+                    document.querySelectorAll('.perilaku-options input[type="checkbox"]').forEach(checkbox => {
+                        if (checkbox.value === item) {
+                            checkbox.checked = false;
+                            checkbox.dispatchEvent(new Event('change'));
+                        }
+                    });
+                }
+            };
+
+            // Fungsi helper untuk dekubitus
+            window.getRiskConclusion = function(totalScore) {
+                // Implementasi berdasarkan logik yang ada di controller
+                if (totalScore <= 12) {
+                    return 'Risiko Tinggi (Skor: ' + totalScore + ')';
+                } else if (totalScore <= 16) {
+                    return 'Risiko Sedang (Skor: ' + totalScore + ')';
+                } else {
+                    return 'Risiko Rendah (Skor: ' + totalScore + ')';
+                }
+            };
+
+            window.removeMasalah = function(button) {
+                DiagnosisKeperawatanModule.removeMasalah(button);
+            };
+
+            window.removeIntervensi = function(button) {
+                DiagnosisKeperawatanModule.removeIntervensi(button);
+            };
+
+            // ===================================================================
+            // INISIALISASI SEMUA MODUL
+            // ===================================================================
+
+            BasicModule.init();
+            PainScaleModule.init();
+            FallRiskModule.init();
+            DecubitusRiskModule.init();
+            PsychologicalStatusModule.init();
+            NutritionModule.init();
+            FunctionalStatusModule.init();
+            DischargePlanningModule.init();
+            PenyakitModule.init();
+            AllergyModule.init();
+            GCSModule.init();
+            DiagnosisKeperawatanModule.init();
+
+            console.log('Asesmen Keperawatan Anak - JavaScript modules initialized successfully');
+        });
+    </script>
+@endpush

@@ -69,7 +69,7 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Nama Bayi</label>
                                             <input type="text" class="form-control" name="nama_bayi"
-                                                placeholder="Masukkan nama bayi">
+                                                placeholder="Masukkan nama bayi" value="{{ $dataMedis->pasien->nama }}">
                                         </div>
 
                                         <div class="form-group">
@@ -886,23 +886,26 @@
                                         <h5 class="section-title">7. Alergi</h5>
 
                                         <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                            id="openAlergiModal">
-                                            <i class="ti-plus"></i> Tambah
+                                            id="openAlergiModal" data-bs-toggle="modal" data-bs-target="#alergiModal">
+                                            <i class="ti-plus"></i> Tambah Alergi
                                         </button>
-                                        <input type="hidden" name="alergis" id="alergisInput">
+                                        <input type="hidden" name="alergis" id="alergisInput" value="[]">
                                         <div class="table-responsive">
-                                            <table class="table" id="createAlergiTable">
-                                                <thead>
+                                            <table class="table table-bordered" id="createAlergiTable">
+                                                <thead class="table-light">
                                                     <tr>
-                                                        <th>Jenis</th>
-                                                        <th>Alergen</th>
-                                                        <th>Reaksi</th>
-                                                        <th>Severe</th>
-                                                        <th></th>
+                                                        <th width="20%">Jenis Alergi</th>
+                                                        <th width="25%">Alergen</th>
+                                                        <th width="25%">Reaksi</th>
+                                                        <th width="20%">Tingkat Keparahan</th>
+                                                        <th width="10%">Aksi</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <!-- Table content will be dynamically populated -->
+                                                    <tr id="no-alergi-row">
+                                                        <td colspan="5" class="text-center text-muted">Tidak ada data
+                                                            alergi</td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -2185,197 +2188,70 @@
                                         </div>
                                     </div>
 
-                                    <div class="section-separator" id="diagnosis">
-                                        <h5 class="fw-semibold mb-4">14. Diagnosis</h5>
+                                    <div class="section-separator" id="diagnosis-keperawatan">
+                                        <h5 class="section-title">16. Masalah/Diagnosis Keperawatan</h5>
+                                        <p class="text-muted">Diisi berdasarkan hasil asesmen dan berurut sesuai masalah
+                                            yang dominan terlebih dahulu</p>
 
-                                        <!-- Diagnosis Banding -->
+                                        <!-- Field 1: Masalah/Diagnosis Keperawatan -->
                                         <div class="mb-4">
-                                            <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
-                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                diagnosis banding, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                keterangan diagnosis banding yang tidak ditemukan.</small>
-
-                                            <div class="input-group mb-3">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="diagnosis-banding-input" class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Diagnosis Banding">
-                                                <span class="input-group-text bg-white" id="add-diagnosis-banding">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <label class="form-label fw-bold">1. Masalah/Diagnosis Keperawatan</label>
+                                                <button type="button" class="btn btn-sm btn-outline-primary"
+                                                    id="btnTambahMasalah">
+                                                    <i class="bi bi-plus"></i> Tambah
+                                                </button>
                                             </div>
 
-                                            <div id="diagnosis-banding-list" class="diagnosis-list bg-light p-3 rounded">
-                                                <!-- Diagnosis items will be added here dynamically -->
+                                            <div id="masalahContainer">
+                                                <div class="masalah-item mb-2">
+                                                    <div class="d-flex gap-2">
+                                                        <textarea class="form-control" name="masalah_diagnosis[]" rows="2"
+                                                            placeholder="Tuliskan masalah atau diagnosis keperawatan..."></textarea>
+                                                        <button type="button"
+                                                            class="btn btn-sm btn-outline-danger remove-masalah"
+                                                            onclick="removeMasalah(this)" style="display: none;">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="diagnosis_banding" name="diagnosis_banding" value="[]">
                                         </div>
 
-                                        <!-- Diagnosis Kerja -->
+                                        <!-- Field 2: Intervensi/Rencana Asuhan -->
                                         <div class="mb-4">
-                                            <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
-                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                keterangan diagnosis kerja yang tidak ditemukan.</small>
-
-                                            <div class="input-group mb-3">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="diagnosis-kerja-input" class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Diagnosis Kerja">
-                                                <span class="input-group-text bg-white" id="add-diagnosis-kerja">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <label class="form-label fw-bold">2. Intervensi/Rencana Asuhan dan Target
+                                                    Terukur</label>
+                                                <button type="button" class="btn btn-sm btn-outline-primary"
+                                                    id="btnTambahIntervensi">
+                                                    <i class="bi bi-plus"></i> Tambah
+                                                </button>
                                             </div>
 
-                                            <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
-                                                <!-- Diagnosis items will be added here dynamically -->
+                                            <div id="intervensiContainer">
+                                                <div class="intervensi-item mb-2">
+                                                    <div class="d-flex gap-2">
+                                                        <textarea class="form-control" name="intervensi_rencana[]" rows="3"
+                                                            placeholder="Tuliskan intervensi, rencana asuhan, dan target yang terukur..."></textarea>
+                                                        <button type="button"
+                                                            class="btn btn-sm btn-outline-danger remove-intervensi"
+                                                            onclick="removeIntervensi(this)" style="display: none;">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja" value="[]">
-                                        </div>
-                                    </div>
-
-                                    <div class="section-separator" id="implemetasi" style="margin-bottom: 2rem;">
-                                        <h5 class="fw-semibold mb-4">15. Implementasi</h5>
-
-                                        <!-- Rencana Penatalaksanaan dan Pengobatan -->
-                                        <div class="mb-4">
-                                            <label class="text-primary fw-semibold">Rencana Penatalaksanaan dan Pengobatan</label>
-                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                rencana, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
-                                                rencana Penatalaksanaan dan Pengobatan kerja yang tidak ditemukan.</small>
-                                        </div>
-
-                                        <!-- Observasi Section -->
-                                        <div class="mb-4">
-                                            <label class="fw-semibold mb-2">Observasi</label>
-                                            <div class="input-group mt-2">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="observasi-input" class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Observasi">
-                                                <span class="input-group-text bg-white" id="add-observasi">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-                                            <div id="observasi-list" class="list-group mb-2 bg-light">
-                                                <!-- Items will be added here dynamically -->
-                                            </div>
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="observasi" name="observasi" value="[]">
-                                        </div>
-
-                                        <!-- Terapeutik Section -->
-                                        <div class="mb-4">
-                                            <label class="fw-semibold mb-2">Terapeutik</label>
-                                            <div class="input-group mt-2">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="terapeutik-input" class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Terapeutik">
-                                                <span class="input-group-text bg-white" id="add-terapeutik">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-                                            <div id="terapeutik-list" class="list-group mb-2">
-                                                <!-- Items will be added here dynamically -->
-                                            </div>
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="terapeutik" name="terapeutik" value="[]">
-                                        </div>
-
-                                        <!-- Edukasi Section -->
-                                        <div class="mb-4">
-                                            <label class="fw-semibold mb-2">Edukasi</label>
-                                            <div class="input-group mt-2">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="edukasi-input" class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Edukasi">
-                                                <span class="input-group-text bg-white" id="add-edukasi">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-                                            <div id="edukasi-list" class="list-group mb-2">
-                                                <!-- Items will be added here dynamically -->
-                                            </div>
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="edukasi" name="edukasi" value="[]">
-                                        </div>
-
-                                        <!-- Kolaborasi Section -->
-                                        <div class="mb-4">
-                                            <label class="fw-semibold mb-2">Kolaborasi</label>
-                                            <div class="input-group mt-2">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="kolaborasi-input" class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Kolaborasi">
-                                                <span class="input-group-text bg-white" id="add-kolaborasi">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-                                            <div id="kolaborasi-list" class="list-group mb-2">
-                                                <!-- Items will be added here dynamically -->
-                                            </div>
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="kolaborasi" name="kolaborasi" value="[]">
-                                        </div>
-
-                                        <!-- Kolaborasi Section -->
-                                        <div class="mb-4">
-                                            <label class="text-primary fw-semibold">Prognosis</label>
-                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                keterangan
-                                                Prognosis yang tidak ditemukan.</small>
-                                                <!-- sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis -->
-                                            <div class="input-group mb-3">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="rencana-input" class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Rencana Penatalaksanaan">
-                                                <span class="input-group-text bg-white" id="add-rencana">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-
-                                            <div id="rencana-list" class="list-group mb-3">
-                                                <!-- Items will be added here dynamically -->
-                                            </div>
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="rencana_penatalaksanaan" name="prognosis" value="[]">
-                                        </div>
-                                    </div>
-
-                                    <div class="section-separator" id="evaluasi">
-                                        <h5 class="section-title">16. Evaluasi</h5>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Tambah Evaluasi Keperawatan</label>
-                                            <textarea class="form-control" rows="4" name="evaluasi_keperawatan"
-                                                placeholder="Tambah evaluasi keperawatan..."></textarea>
-                                        </div>
-
-
-                                        <div class="text-end">
-                                            <button type="submit" class="btn btn-primary">Simpan</button>
                                         </div>
                                     </div>
 
                                 </div>
                             </div>
+
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary">Simpan</button>
+                            </div>
+
                             @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-perinatology.modal-create-alergi')
                             @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-perinatology.modal-create-downscore')
                             @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-perinatology.modal-skalanyeri')
