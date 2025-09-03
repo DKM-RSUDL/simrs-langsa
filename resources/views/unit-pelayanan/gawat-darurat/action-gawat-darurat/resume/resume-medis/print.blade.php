@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -77,7 +78,8 @@
             border-collapse: collapse;
         }
 
-        main table th, main table td {
+        main table th,
+        main table td {
             text-align: left;
             border: 1px solid black;
             padding: 8px;
@@ -110,9 +112,9 @@
         footer div .identity-num {
             margin: 0;
         }
-
     </style>
 </head>
+
 <body>
     <header>
         <div class="left-column">
@@ -139,8 +141,12 @@
                         @php
                             $gender = '-';
 
-                            if($resume->pasien->jenis_kelamin == 1) $gender = 'Laki-Laki';
-                            if($resume->pasien->jenis_kelamin == 0) $gender = 'Perempuan';
+                            if ($resume->pasien->jenis_kelamin == 1) {
+                                $gender = 'Laki-Laki';
+                            }
+                            if ($resume->pasien->jenis_kelamin == 0) {
+                                $gender = 'Perempuan';
+                            }
 
                             echo $gender;
                         @endphp
@@ -166,7 +172,8 @@
             </tr>
             <tr>
                 <th>Tanggal Keluar</th>
-                <td>{{ $resume->rmeResumeDet->tgl_pulang ? date('d/m/Y', strtotime($resume->rmeResumeDet->tgl_pulang)) : '-' }}</td>
+                <td>{{ $resume->rmeResumeDet->tgl_pulang ? date('d/m/Y', strtotime($resume->rmeResumeDet->tgl_pulang)) : '-' }}
+                </td>
             </tr>
             <tr>
                 <th>Lama Dirawat</th>
@@ -188,7 +195,7 @@
                     {{ $hasilKonpas }}
 
                     @if (!empty($pemeriksaanFisik))
-                            <br>
+                        <br>
                         @foreach ($pemeriksaanFisik as $pf)
                             <br>
                             {{ $pf->itemFisik->nama }} : {{ $pf->keterangan }}
@@ -198,25 +205,9 @@
             </tr>
             <tr>
                 <th>Temuan Klinik Penunjang</th>
-                <td>{{ $resume->pemeriksaan_penunjang }}</td>
-            </tr>
-            <tr>
-                <th>Diagnosis Primer</th>
-                <td>{{ $resume->diagnosis[0] ?? '-' }}</td>
-            </tr>
-            <tr>
-                <th>Diagnosis Sekunder</th>
                 <td>
-                    @if (isset($resume->diagnosis[1]))
-                        @for ($i=1; $i < count($resume->diagnosis); $i++)
-                            - {{ $resume->diagnosis[$i] }} <br>
-                        @endfor
-                    @endif
-                </td>
-            </tr>
-            <tr>
-                <th>Tindakan</th>
-                <td>
+                    <p>{{ $resume->pemeriksaan_penunjang }}</p>
+
                     <ul>
                         @if (count($labor) > 0)
                             <li>
@@ -247,20 +238,36 @@
                                 </ol>
                             </li>
                         @endif
-
-                        @if (count($tindakan) > 0)
-                            <li>
-                                <p><strong>Lainnya</strong></p>
-                                <ol>
-                                    @foreach ($tindakan as $tind)
-                                        <li>
-                                            {{ $tind->produk->deskripsi }} <br>
-                                        </li>
-                                    @endforeach
-                                </ol>
-                            </li>
-                        @endif
                     </ul>
+                </td>
+            </tr>
+            <tr>
+                <th>Diagnosis Primer</th>
+                <td>{{ $resume->diagnosis[0] ?? '-' }}</td>
+            </tr>
+            <tr>
+                <th>Diagnosis Sekunder</th>
+                <td>
+                    @if (isset($resume->diagnosis[1]))
+                        @for ($i = 1; $i < count($resume->diagnosis); $i++)
+                            - {{ $resume->diagnosis[$i] }} <br>
+                        @endfor
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <th>Tindakan</th>
+                <td>
+                    @if (count($tindakan) > 0)
+                        {{-- <p><strong>Lainnya</strong></p> --}}
+                        <ol>
+                            @foreach ($tindakan as $tind)
+                                <li>
+                                    {{ $tind->produk->deskripsi }} <br>
+                                </li>
+                            @endforeach
+                        </ol>
+                    @endif
                 </td>
             </tr>
             <tr>
@@ -273,6 +280,20 @@
                     @endforeach
                 </td>
             </tr>
+
+            @if ($resume->rmeResumeDet->tindak_lanjut_code == 6)
+                <tr>
+                    <th>Terapi Pulang</th>
+                    <td>
+                        @foreach ($resepAll as $resep)
+                            @foreach ($resep->detailResep as $dt)
+                                - {{ $dt->aptObat->nama_obat . ' ' . $dt->cara_pakai }} <br>
+                            @endforeach
+                        @endforeach
+                    </td>
+                </tr>
+            @endif
+
             <tr class="table-section-title">
                 <th colspan="2">Anjuran / Follow up</th>
             </tr>
@@ -295,7 +316,8 @@
             @if ($resume->rmeResumeDet->tindak_lanjut_code == 6)
                 <tr>
                     <th>Waktu Pulang</th>
-                    <td>{{ date('d/m/Y', strtotime($resume->rmeResumeDet->tgl_pulang)) . ' ' . date('H:i', strtotime($resume->rmeResumeDet->jam_pulang)) . ' WIB' }}</td>
+                    <td>{{ date('d/m/Y', strtotime($resume->rmeResumeDet->tgl_pulang)) . ' ' . date('H:i', strtotime($resume->rmeResumeDet->jam_pulang)) . ' WIB' }}
+                    </td>
                 </tr>
                 <tr>
                     <th>Alasan Pulang</th>
@@ -343,14 +365,16 @@
             @if ($resume->rmeResumeDet->tindak_lanjut_code == 10)
                 <tr>
                     <th>Waktu</th>
-                    <td>{{ date('d/m/Y', strtotime($resume->rmeResumeDet->tgl_meninggal)) . ' ' . date('H:i', strtotime($resume->rmeResumeDet->jam_meninggal)) . ' WIB' }}</td>
+                    <td>{{ date('d/m/Y', strtotime($resume->rmeResumeDet->tgl_meninggal)) . ' ' . date('H:i', strtotime($resume->rmeResumeDet->jam_meninggal)) . ' WIB' }}
+                    </td>
                 </tr>
             @endif
 
             @if ($resume->rmeResumeDet->tindak_lanjut_code == 11)
                 <tr>
                     <th>Waktu</th>
-                    <td>{{ date('d/m/Y', strtotime($resume->rmeResumeDet->tgl_meninggal_doa)) . ' ' . date('H:i', strtotime($resume->rmeResumeDet->jam_meninggal_doa)) . ' WIB' }}</td>
+                    <td>{{ date('d/m/Y', strtotime($resume->rmeResumeDet->tgl_meninggal_doa)) . ' ' . date('H:i', strtotime($resume->rmeResumeDet->jam_meninggal_doa)) . ' WIB' }}
+                    </td>
                 </tr>
             @endif
         </table>
@@ -363,7 +387,9 @@
             <p class="identity-num">
                 @php
                     $identityNum = 'Id Peg. ' . $dataMedis->dokter->kd_karyawan;
-                    if(!empty($dataMedis->dokter->detail->nip_baru)) $identityNum = 'NIP. ' . $dataMedis->dokter->detail->nip_baru;
+                    if (!empty($dataMedis->dokter->detail->nip_baru)) {
+                        $identityNum = 'NIP. ' . $dataMedis->dokter->detail->nip_baru;
+                    }
                     echo $identityNum;
                 @endphp
             </p>
@@ -382,4 +408,5 @@
         </div> --}}
     </footer>
 </body>
+
 </html>

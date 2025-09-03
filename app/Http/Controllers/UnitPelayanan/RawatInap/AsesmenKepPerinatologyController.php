@@ -5,6 +5,7 @@ namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
 use App\Models\MrItemFisik;
+use App\Models\RmeAlergiPasien;
 use App\Models\RmeAsesmen;
 use App\Models\RmeAsesmenKepPerinatology;
 use App\Models\RmeAsesmenKepPerinatologyFisik;
@@ -54,6 +55,7 @@ class AsesmenKepPerinatologyController extends Controller
         $jenisnyeri = RmeJenisNyeri::all();
         $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
         $rmeMasterImplementasi = RmeMasterImplementasi::all();
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -105,6 +107,7 @@ class AsesmenKepPerinatologyController extends Controller
             'faktorperingan',
             'efeknyeri',
             'jenisnyeri',
+            'alergiPasien',
             'rmeMasterDiagnosis',
             'rmeMasterImplementasi',
             'user'
@@ -130,15 +133,6 @@ class AsesmenKepPerinatologyController extends Controller
             $dataAsesmen->kategori = 2;
             $dataAsesmen->sub_kategori = 2;
             $dataAsesmen->anamnesis = $request->anamnesis;
-            $alergis = collect(json_decode($request->alergis, true))->map(function ($item) {
-                return [
-                    'jenis' => $item['jenis'],
-                    'alergen' => $item['alergen'],
-                    'reaksi' => $item['reaksi'],
-                    'keparahan' => $item['severe']
-                ];
-            })->toArray();
-            $dataAsesmen->riwayat_alergi = json_encode($alergis);
             $dataAsesmen->save();
 
 
@@ -185,14 +179,6 @@ class AsesmenKepPerinatologyController extends Controller
             $asesmenPerinatology->sidik_jari_ibu_kanan = $pathSidikJariKanan;
 
             $asesmenPerinatology->alamat = $request->alamat;
-            $asesmenPerinatology->diagnosis_banding = $request->diagnosis_banding ?? '[]';
-            $asesmenPerinatology->diagnosis_kerja = $request->diagnosis_kerja ?? '[]';
-            $asesmenPerinatology->prognosis = $request->prognosis;
-            $asesmenPerinatology->observasi = $request->observasi;
-            $asesmenPerinatology->terapeutik = $request->terapeutik;
-            $asesmenPerinatology->edukasi = $request->edukasi;
-            $asesmenPerinatology->kolaborasi = $request->kolaborasi;
-            $asesmenPerinatology->evaluasi = $request->evaluasi_keperawatan;
 
             $asesmenPerinatology->gaya_bicara = $request->gaya_bicara;
             $asesmenPerinatology->bahasa = $request->bahasa_sehari_hari;
@@ -200,40 +186,22 @@ class AsesmenKepPerinatologyController extends Controller
             $asesmenPerinatology->hambatan_komunikasi = $request->hambatan_komunikasi;
             $asesmenPerinatology->media_disukai = $request->media_disukai;
             $asesmenPerinatology->tingkat_pendidikan = $request->tingkat_pendidikan;
+
+            if ($request->has('masalah_diagnosis') && is_array($request->masalah_diagnosis)) {
+                $masalahDiagnosis = array_filter($request->masalah_diagnosis, function ($value) {
+                    return !empty(trim($value));
+                });
+                $asesmenPerinatology->masalah_diagnosis = json_encode(array_values($masalahDiagnosis));
+            }
+
+            if ($request->has('intervensi_rencana') && is_array($request->intervensi_rencana)) {
+                $intervensiRencana = array_filter($request->intervensi_rencana, function ($value) {
+                    return !empty(trim($value));
+                });
+                $asesmenPerinatology->intervensi_rencana = json_encode(array_values($intervensiRencana));
+            }
+
             $asesmenPerinatology->save();
-
-            //Simpan Diagnosa ke Master
-            $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
-            $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true);
-            $allDiagnoses = array_merge($diagnosisBandingList, $diagnosisKerjaList);
-            foreach ($allDiagnoses as $diagnosa) {
-                $existingDiagnosa = RmeMasterDiagnosis::where('nama_diagnosis', $diagnosa)->first();
-                if (!$existingDiagnosa) {
-                    $masterDiagnosa = new RmeMasterDiagnosis();
-                    $masterDiagnosa->nama_diagnosis = $diagnosa;
-                    $masterDiagnosa->save();
-                }
-            }
-
-            // Simpan Implementasi ke Master
-            $implementasiData = [
-                'prognosis' => json_decode($request->prognosis ?? '[]', true),
-                'observasi' => json_decode($request->observasi ?? '[]', true),
-                'terapeutik' => json_decode($request->terapeutik ?? '[]', true),
-                'edukasi' => json_decode($request->edukasi ?? '[]', true),
-                'kolaborasi' => json_decode($request->kolaborasi ?? '[]', true)
-            ];
-
-            foreach ($implementasiData as $column => $dataList) {
-                foreach ($dataList as $item) {
-                    $existingImplementasi = RmeMasterImplementasi::where($column, $item)->first();
-                    if (!$existingImplementasi) {
-                        $masterImplementasi = new RmeMasterImplementasi();
-                        $masterImplementasi->$column = $item;
-                        $masterImplementasi->save();
-                    }
-                }
-            }
 
             //simpan ke table RmeAsesemnKepPerinatologyFisik
             $perinatologyFisik = new RmeAsesmenKepPerinatologyFisik();
@@ -303,6 +271,27 @@ class AsesmenKepPerinatologyController extends Controller
                     'is_normal' => $isNormal,
                     'keterangan' => $keterangan
                 ]);
+            }
+
+            // Validasi data alergi
+            $alergiData = json_decode($request->alergis, true);
+
+            if (!empty($alergiData)) {
+                // Hapus data alergi lama untuk pasien ini
+                RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
+
+                // Simpan data alergi baru
+                foreach ($alergiData as $alergi) {
+                    // Skip data yang sudah ada di database (is_existing = true) 
+                    // kecuali jika ingin update
+                    RmeAlergiPasien::create([
+                        'kd_pasien' => $kd_pasien,
+                        'jenis_alergi' => $alergi['jenis_alergi'],
+                        'nama_alergi' => $alergi['alergen'],
+                        'reaksi' => $alergi['reaksi'],
+                        'tingkat_keparahan' => $alergi['tingkat_keparahan']
+                    ]);
+                }
             }
 
             //simpan ke table RmeAsesemnKepPerinatologyRiwayatIbu
@@ -449,7 +438,7 @@ class AsesmenKepPerinatologyController extends Controller
                 $asesmenKepAnakRisikoJatuh->save();
             }
 
-            //Simpan ke table RmeAsesmenKepAnakStatusDecubitus
+            //Simpan ke table rmeAsesmenPerinatologyStatusDecubitus
             $decubitusData = new RmeAsesmenKepPerinatologyResikoDekubitus();
             $decubitusData->id_asesmen = $dataAsesmen->id;
 
@@ -504,7 +493,7 @@ class AsesmenKepPerinatologyController extends Controller
             $decubitusData->save();
 
 
-            //Simpan ke table RmeAsesmenKepAnakGizi
+            //Simpan ke table rmeAsesmenPerinatologyGizi
             $asesmenKepPerinatologyStatusGizi = new RmeAsesmenKepPerinatologyGizi();
             $asesmenKepPerinatologyStatusGizi->id_asesmen = $dataAsesmen->id;
             $asesmenKepPerinatologyStatusGizi->gizi_jenis = (int)$request->gizi_jenis;
@@ -563,7 +552,7 @@ class AsesmenKepPerinatologyController extends Controller
 
             $asesmenKepPerinatologyStatusGizi->save();
 
-            //Simpan ke table RmeAsesmenKepAnakStatusFungsional
+            //Simpan ke table rmeAsesmenPerinatologyStatusFungsional
             $statusFungsional = new RmeAsesmenKepPerinatologyFungsional();
             $statusFungsional->id_asesmen = $dataAsesmen->id;
 
@@ -591,7 +580,7 @@ class AsesmenKepPerinatologyController extends Controller
             $statusFungsional->save();
 
 
-            // Simpan ke table RmeAsesmenKepAnakRencana
+            // Simpan ke table rmeAsesmenPerinatologyRencana
             $asesmenRencana = new RmeAsesmenKepPerinatologyRencanaPulang();
             $asesmenRencana->id_asesmen = $dataAsesmen->id;
             $asesmenRencana->diagnosis_medis = $request->diagnosis_medis;
@@ -697,15 +686,6 @@ class AsesmenKepPerinatologyController extends Controller
                 $dataMedis->pasien->umur = 'Tidak Diketahui';
             }
 
-            // Mengambil nama alergen dari riwayat_alergi
-            if ($dataMedis->riwayat_alergi) {
-                $dataMedis->riwayat_alergi = collect(json_decode($dataMedis->riwayat_alergi, true))
-                    ->pluck('alergen')
-                    ->all();
-            } else {
-                $dataMedis->riwayat_alergi = [];
-            }
-
             $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
 
             // Mengambil data tambahan yang diperlukan untuk tampilan
@@ -785,7 +765,24 @@ class AsesmenKepPerinatologyController extends Controller
 
             $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
 
+            if ($asesmen->rmeAsesmenPerinatology) {
+                // Parse masalah diagnosis
+                $masalahDiagnosis = [];
+                if ($asesmen->rmeAsesmenPerinatology->masalah_diagnosis) {
+                    $masalahDiagnosis = json_decode($asesmen->rmeAsesmenPerinatology->masalah_diagnosis, true) ?? [];
+                }
+                $asesmen->masalah_diagnosis_parsed = $masalahDiagnosis;
+
+                // Parse intervensi rencana
+                $intervensiRencana = [];
+                if ($asesmen->rmeAsesmenPerinatology->intervensi_rencana) {
+                    $intervensiRencana = json_decode($asesmen->rmeAsesmenPerinatology->intervensi_rencana, true) ?? [];
+                }
+                $asesmen->intervensi_rencana_parsed = $intervensiRencana;
+            }
+
             // Mengambil data tambahan yang diperlukan untuk tampilan
+            $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
             $itemFisik = MrItemFisik::orderby('urut')->get();
             $menjalar = RmeMenjalar::all();
             $frekuensinyeri = RmeFrekuensiNyeri::all();
@@ -811,6 +808,7 @@ class AsesmenKepPerinatologyController extends Controller
                 'faktorperingan',
                 'efeknyeri',
                 'jenisnyeri',
+                'alergiPasien',
                 'rmeMasterDiagnosis',
                 'rmeMasterImplementasi',
                 'user',
@@ -848,17 +846,6 @@ class AsesmenKepPerinatologyController extends Controller
 
             $dataAsesmen->waktu_asesmen = $waktu_asesmen;
             $dataAsesmen->anamnesis = $request->anamnesis;
-
-            // Update alergi
-            $alergis = collect(json_decode($request->alergis, true))->map(function ($item) {
-                return [
-                    'jenis' => $item['jenis'],
-                    'alergen' => $item['alergen'],
-                    'reaksi' => $item['reaksi'],
-                    'keparahan' => $item['severe']
-                ];
-            })->toArray();
-            $dataAsesmen->riwayat_alergi = json_encode($alergis);
             $dataAsesmen->save();
 
             // Update RmeAsesmenKepPerinatology
@@ -926,40 +913,22 @@ class AsesmenKepPerinatologyController extends Controller
             $asesmenPerinatology->hambatan_komunikasi = $request->hambatan_komunikasi;
             $asesmenPerinatology->media_disukai = $request->media_disukai;
             $asesmenPerinatology->tingkat_pendidikan = $request->tingkat_pendidikan;
+
+            if ($request->has('masalah_diagnosis') && is_array($request->masalah_diagnosis)) {
+                $masalahDiagnosis = array_filter($request->masalah_diagnosis, function ($value) {
+                    return !empty(trim($value));
+                });
+                $asesmenPerinatology->masalah_diagnosis = json_encode(array_values($masalahDiagnosis));
+            }
+
+            if ($request->has('intervensi_rencana') && is_array($request->intervensi_rencana)) {
+                $intervensiRencana = array_filter($request->intervensi_rencana, function ($value) {
+                    return !empty(trim($value));
+                });
+                $asesmenPerinatology->intervensi_rencana = json_encode(array_values($intervensiRencana));
+            }
+
             $asesmenPerinatology->save();
-
-            // Simpan Diagnosa ke Master
-            $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
-            $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true);
-            $allDiagnoses = array_merge($diagnosisBandingList, $diagnosisKerjaList);
-            foreach ($allDiagnoses as $diagnosa) {
-                $existingDiagnosa = RmeMasterDiagnosis::where('nama_diagnosis', $diagnosa)->first();
-                if (!$existingDiagnosa) {
-                    $masterDiagnosa = new RmeMasterDiagnosis();
-                    $masterDiagnosa->nama_diagnosis = $diagnosa;
-                    $masterDiagnosa->save();
-                }
-            }
-
-            // Simpan Implementasi ke Master
-            $implementasiData = [
-                'prognosis' => json_decode($request->prognosis ?? '[]', true),
-                'observasi' => json_decode($request->observasi ?? '[]', true),
-                'terapeutik' => json_decode($request->terapeutik ?? '[]', true),
-                'edukasi' => json_decode($request->edukasi ?? '[]', true),
-                'kolaborasi' => json_decode($request->kolaborasi ?? '[]', true)
-            ];
-
-            foreach ($implementasiData as $column => $dataList) {
-                foreach ($dataList as $item) {
-                    $existingImplementasi = RmeMasterImplementasi::where($column, $item)->first();
-                    if (!$existingImplementasi) {
-                        $masterImplementasi = new RmeMasterImplementasi();
-                        $masterImplementasi->$column = $item;
-                        $masterImplementasi->save();
-                    }
-                }
-            }
 
             // Update RmeAsesmenKepPerinatologyFisik
             $perinatologyFisik = RmeAsesmenKepPerinatologyFisik::where('id_asesmen', $id)->first();
@@ -1039,6 +1008,29 @@ class AsesmenKepPerinatologyController extends Controller
                     'keterangan' => $keterangan
                 ]);
             }
+
+            // Update data alergi
+            $alergiData = json_decode($request->alergis, true);
+
+            if (!empty($alergiData)) {
+                // Hapus data alergi lama untuk pasien ini
+                RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
+
+                // Simpan data alergi baru
+                foreach ($alergiData as $alergi) {
+                    RmeAlergiPasien::create([
+                        'kd_pasien' => $kd_pasien,
+                        'jenis_alergi' => $alergi['jenis_alergi'],
+                        'nama_alergi' => $alergi['alergen'],
+                        'reaksi' => $alergi['reaksi'],
+                        'tingkat_keparahan' => $alergi['tingkat_keparahan']
+                    ]);
+                }
+            } else {
+                // Jika tidak ada data alergi baru, hapus yang lama
+                RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
+            }
+
 
             // Update RmeAsesmenKepPerinatologyRiwayatIbu
             $riwayatIbu = RmeAsesmenKepPerinatologyRiwayatIbu::where('id_asesmen', $id)->first();
@@ -1170,7 +1162,7 @@ class AsesmenKepPerinatologyController extends Controller
             }
             $risikoJatuh->save();
 
-            // Update RmeAsesmenKepAnakStatusDecubitus
+            // Update rmeAsesmenPerinatologyStatusDecubitus
             $decubitusData = RmeAsesmenKepPerinatologyResikoDekubitus::where('id_asesmen', $dataAsesmen->id)->firstOrCreate();
             $jenisSkala = $request->input('jenis_skala_dekubitus') === 'norton' ? 1 : 2;
             $decubitusData->jenis_skala = $jenisSkala;
@@ -1222,7 +1214,7 @@ class AsesmenKepPerinatologyController extends Controller
             }
             $decubitusData->save();
 
-            // Update RmeAsesmenKepAnakGizi
+            // Update rmeAsesmenPerinatologyGizi
             $asesmenKepPerinatologyStatusGizi = RmeAsesmenKepPerinatologyGizi::where('id_asesmen', $id)->first();
             if (!$asesmenKepPerinatologyStatusGizi) {
                 $asesmenKepPerinatologyStatusGizi = new RmeAsesmenKepPerinatologyGizi();
@@ -1267,7 +1259,7 @@ class AsesmenKepPerinatologyController extends Controller
 
             $asesmenKepPerinatologyStatusGizi->save();
 
-            // Update RmeAsesmenKepAnakStatusFungsional
+            // Update rmeAsesmenPerinatologyStatusFungsional
             $statusFungsional = RmeAsesmenKepPerinatologyFungsional::where('id_asesmen', $dataAsesmen->id)->firstOrCreate();
 
             if ($request->filled('skala_fungsional')) {
@@ -1295,7 +1287,7 @@ class AsesmenKepPerinatologyController extends Controller
             }
 
 
-            // Update RmeAsesmenKepAnakRencana
+            // Update rmeAsesmenPerinatologyRencana
             $asesmenRencana = RmeAsesmenKepPerinatologyRencanaPulang::where('id_asesmen', $dataAsesmen->id)->firstOrCreate();
             $asesmenRencana->update([
                 'diagnosis_medis' => $request->diagnosis_medis,

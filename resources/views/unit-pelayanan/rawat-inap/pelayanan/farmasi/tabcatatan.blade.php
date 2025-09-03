@@ -34,10 +34,11 @@
                     <th>Tanggal dan Jam</th>
                     <th>Nama Obat</th>
                     <th>Dosis</th>
-                    <th>Frek</th>
                     <th>Petugas</th>
                     <th>Keterangan</th>
                     <th>Catatan</th>
+                    <th>Perlu Validasi</th>
+                    <th>Petugas Validasi</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -49,16 +50,38 @@
                             <td>{{ \Carbon\Carbon::parse($catatan->tanggal)->format('d/m/Y H:i') }}</td>
                             <td>{{ $catatan->nama_obat }}</td>
                             <td>{{ $catatan->dosis }} {{ $catatan->satuan }}</td>
-                            <td>{{ $catatan->freak }}</td>
-                            <td>{{ $catatan->petugas->name ?? ($catatan->kd_petugas ?? 'Tidak Diketahui') }}</td>
+                            <td>
+                                {{ $catatan->petugas->karyawan->nama ?? ($catatan->kd_petugas ?? 'Tidak Diketahui') }}
+                            </td>
                             <td>{{ $catatan->keterangan }}</td>
                             <td>{{ $catatan->catatan }}</td>
+                            <td align="middle">
+                                @if ($catatan->is_validasi == 1)
+                                    <p class="m-0 p-0 text-success">Ya</p>
+                                @else
+                                    <p class="m-0 p-0 text-secondary">Tidak</p>
+                                @endif
+                            </td>
+                            <td align="middle">
+                                {{ $catatan->petugasValidasi->karyawan->nama ?? ($catatan->petugas_validasi ?? '-') }}
+                            </td>
                             <td>
-                                <td>
-                                    <button class="btn btn-danger btn-sm btn-delete-catatan" data-id="{{ $catatan->id }}">
+                                @if (
+                                    $catatan->kd_petugas != (auth()->user()->karyawan->kd_karyawan ?? '0000000') &&
+                                        empty($catatan->petugas_validasi) &&
+                                        $catatan->is_validasi == 1)
+                                    <button class="btn btn-primary btn-sm btn-validasi-catatan"
+                                        data-id="{{ encrypt($catatan->id) }}">
+                                        <i class="bi bi-check"></i> Validasi
+                                    </button>
+                                @endif
+
+                                @if ($catatan->kd_petugas == (auth()->user()->karyawan->kd_karyawan ?? '0000000'))
+                                    <button class="btn btn-danger btn-sm btn-delete-catatan"
+                                        data-id="{{ $catatan->id }}">
                                         <i class="bi bi-trash"></i> Hapus
                                     </button>
-                                </td>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
@@ -82,6 +105,66 @@
 
 @push('js')
     <script>
+        $('.btn-validasi-catatan').click(function() {
+            let $this = jQuery(this);
+            let catatan = $this.attr('data-id');
+
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: 'Obat ini akan divalidasi dan tidak dapat dibatalkan',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, validasi!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    jQuery.ajax({
+                        type: "POST",
+                        url: "{{ route('rawat-inap.farmasi.catatanObat.validasi', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
+                        data: {
+                            "catatan": catatan,
+                            "_method": 'PUT',
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        beforeSend: function() {
+                            Swal.fire({
+                                title: 'Proses',
+                                text: 'Sedang memproses...',
+                                allowOutsideClick: false, // Tidak bisa diklik di luar
+                                allowEscapeKey: false, // Tidak bisa ditutup dengan ESC
+                                showConfirmButton: false, // Tidak ada tombol
+                                showCancelButton: false, // Tidak ada tombol cancel
+                                didOpen: () => {
+                                    Swal
+                                        .showLoading(); // Menampilkan loading spinner bawaan SweetAlert2
+                                }
+                            });
+                        },
+                        success: function(res) {
+                            let status = res.status;
+                            let msg = res.message;
+                            let data = res.data;
+
+                            if (status == 'error') {
+                                showToast('error', msg);
+                                return false;
+                            }
+
+                            showToast('success', 'Catatan pemberian obat berhasil divalidasi');
+                            location.reload();
+                        },
+                        error: function() {
+                            showToast('error', 'Internal Server Error');
+                        }
+                    });
+                }
+            });
+
+
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.btn-delete-catatan').forEach(button => {
                 button.removeEventListener('click', handleDeleteCatatan); // Hindari duplikasi
@@ -103,51 +186,54 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        const url = "{{ route('rawat-inap.farmasi.hapusCatatanObat', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, ':id']) }}".replace(':id', id);
+                        const url =
+                            "{{ route('rawat-inap.farmasi.hapusCatatanObat', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, ':id']) }}"
+                            .replace(':id', id);
                         console.log('URL yang dikirim (Catatan):', url);
 
                         fetch(url, {
-                            method: 'DELETE',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Content-Type': 'application/json',
-                            }
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            console.log('Response (Catatan):', data);
-                            if (data.message.includes('berhasil')) {
-                                Swal.fire(
-                                    'Terhapus!',
-                                    'Catatan berhasil dihapus.',
-                                    'success'
-                                ).then(() => {
-                                    this.closest('tr').remove();
-                                    document.querySelectorAll('#resepTable tbody tr').forEach((row, index) => {
-                                        row.cells[0].textContent = index + 1;
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    'Content-Type': 'application/json',
+                                }
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                console.log('Response (Catatan):', data);
+                                if (data.message.includes('berhasil')) {
+                                    Swal.fire(
+                                        'Terhapus!',
+                                        'Catatan berhasil dihapus.',
+                                        'success'
+                                    ).then(() => {
+                                        this.closest('tr').remove();
+                                        document.querySelectorAll('#resepTable tbody tr')
+                                            .forEach((row, index) => {
+                                                row.cells[0].textContent = index + 1;
+                                            });
                                     });
-                                });
-                            } else {
+                                } else {
+                                    Swal.fire(
+                                        'Gagal!',
+                                        'Gagal menghapus: ' + data.error,
+                                        'error'
+                                    );
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error (Catatan):', error);
                                 Swal.fire(
-                                    'Gagal!',
-                                    'Gagal menghapus: ' + data.error,
+                                    'Error!',
+                                    'Terjadi kesalahan saat menghapus.',
                                     'error'
                                 );
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error (Catatan):', error);
-                            Swal.fire(
-                                'Error!',
-                                'Terjadi kesalahan saat menghapus.',
-                                'error'
-                            );
-                        });
+                            });
                     }
                 });
             }

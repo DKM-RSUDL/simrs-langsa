@@ -55,7 +55,7 @@ class FarmasiController extends Controller
         // Ambil data rekonsiliasi obat
         $rekonsiliasiObat = $this->getRekonsiliasi($kd_pasien, $tgl_masuk, $dataMedis->urut_masuk);
 
-        $dokters = Dokter::all();
+        $dokters = Dokter::where('status', 1)->get();
 
         return view(
             'unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.index',

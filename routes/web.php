@@ -1347,6 +1347,7 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::get('/order-obat', 'orderObat')->name('.order-obat');
                                         Route::get('/search-obat', 'searchObat')->name('.searchObat');
                                         Route::post('/catatanObat', 'catatanObat')->name('.catatanObat');
+                                        Route::put('/catatanObat/validasi', 'validasiCatatanObat')->name('.catatanObat.validasi');
                                         Route::delete('/catatanObat/{id}', 'hapusCatatanObat')->name('.hapusCatatanObat');
                                         Route::post('/rekonsiliasiObat', 'rekonsiliasiObat')->name('.rekonsiliasiObat');
                                         Route::delete('/deleteRekonsiliasiObat', 'deleteRekonsiliasiObat')->name('.rekonsiliasiObatDelete');
