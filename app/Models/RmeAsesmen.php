@@ -477,4 +477,10 @@ class RmeAsesmen extends Model
     {
         return $query->where('sub_kategori', $sub_kategori);
     }
+
+    // asesmen medis anak
+    public function asesmenMedisAnak()
+    {
+        return $this->hasOne(RmeAsesmenMedisAnak::class, 'id_asesmen', 'id');
+    }
 }
