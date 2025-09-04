@@ -101,14 +101,6 @@
                         <td>
                             <div class="d-flex justify-content-between align-items-center">
                                 <span>${medication.keterangan}</span>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-link edit-medication" data-index="${index}">
-                                        <i class="bi bi-pencil text-primary"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-link remove-medication" data-index="${index}">
-                                        <i class="bi bi-trash text-danger"></i>
-                                    </button>
-                                </div>
                             </div>
                         </td>
                     </tr>

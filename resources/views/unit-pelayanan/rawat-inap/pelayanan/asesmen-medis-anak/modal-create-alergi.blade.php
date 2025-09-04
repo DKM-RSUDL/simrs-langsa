@@ -245,11 +245,13 @@
                                     ${item.tingkat_keparahan}
                                 </span>
                             </td>
+                            @if(!($readonly ?? false))
                             <td>
                                 <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeAlergiFromMain(${index})">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </td>
+                            @endif
                         `;
                         tbody.appendChild(row);
                     });

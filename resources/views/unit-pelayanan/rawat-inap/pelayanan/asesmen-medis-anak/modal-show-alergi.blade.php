@@ -245,11 +245,6 @@
                                     ${item.tingkat_keparahan}
                                 </span>
                             </td>
-                            <td>
-                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeAlergiFromMain(${index})">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
                         `;
                         tbody.appendChild(row);
                     });

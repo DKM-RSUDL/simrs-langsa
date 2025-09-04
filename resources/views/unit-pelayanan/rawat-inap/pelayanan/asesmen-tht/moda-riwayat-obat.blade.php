@@ -18,12 +18,7 @@
                         <div class="row g-2">
                             <div class="col-md-6">
                                 <label class="form-label small">Frekuensi/interval</label>
-                                <select class="form-select" id="frekuensi">
-                                    <option value="1 x 1 hari">1 x 1 hari</option>
-                                    <option value="2 x 1 hari">2 x 1 hari</option>
-                                    <option value="3 x 1 hari" selected>3 x 1 hari</option>
-                                    <option value="4 x 1 hari">4 x 1 hari</option>
-                                </select>
+                                <input type="text" class="form-control" id="frekuensi" placeholder="frekuensi">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Keterangan</label>
@@ -39,12 +34,7 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label">Dosis sekali minum</label>
-                            <select class="form-select" id="dosis">
-                                <option value="1/4">1/4</option>
-                                <option value="1/2" selected>1/2</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                            </select>
+                            <input type="text" class="form-control" id="dosis" placeholder="dosis">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Satuan</label>

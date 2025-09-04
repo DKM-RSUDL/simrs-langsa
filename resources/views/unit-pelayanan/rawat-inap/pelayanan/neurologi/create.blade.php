@@ -121,48 +121,54 @@
                                             <!-- Riwayat Alergi -->
                                             <div class="mb-3">
                                                 <h6 class="text-dark">Riwayat Alergi</h6>
-                                                <a href="javascript:void(0)" class="btn btn-sm btn-primary"
-                                                    id="btn-add-elergi-neurologi">
-                                                    <i class="fas fa-plus"></i> Tambah Alergi
-                                                </a>
-                                            </div>
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>No</th>
-                                                            <th>Jenis</th>
-                                                            <th>Alergen</th>
-                                                            <th>Reaksi</th>
-                                                            <th>Aksi</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="list-alergi">
-                                                        <!-- Data will be populated here -->
-                                                    </tbody>
-                                                </table>
-                                                <input type="hidden" name="riwayat_alergi" id="riwayat_alergi_hidden">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
+                                                    id="openAlergiModal" data-bs-toggle="modal" data-bs-target="#alergiModal">
+                                                    <i class="ti-plus"></i> Tambah Alergi
+                                                </button>
+                                                <input type="hidden" name="alergis" id="alergisInput" value="[]">
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered" id="createAlergiTable">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th width="20%">Jenis Alergi</th>
+                                                                <th width="25%">Alergen</th>
+                                                                <th width="25%">Reaksi</th>
+                                                                <th width="20%">Tingkat Keparahan</th>
+                                                                <th width="10%">Aksi</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr id="no-alergi-row">
+                                                                <td colspan="5" class="text-center text-muted">Tidak ada data alergi</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                @push('modals')
+                                                    @include('unit-pelayanan.rawat-inap.pelayanan.neurologi.modal-create-elergi')
+                                                @endpush
                                             </div>
 
+
                                             <!-- Status Present -->
-                                            <h6 class="mb-0">STATUS PRESENT</h6>
+                                            <h6 class="mb-0 fw-bold">STATUS PRESENT</h6>
                                             <div class="card-body">
                                                 <div class="row g-3">
                                                     <!-- Tekanan Darah -->
-                                                    <div class="col-md-6 mb-3">
-                                                        <div class="input-group input-group-sm">
-                                                            <span class="input-group-text bg-light text-dark fw-bold"
-                                                                style="width: 150px;">
-                                                                Tek. Darah
-                                                            </span>
-                                                            <input type="text" class="form-control text-center"
-                                                                id="tekanan_darah" name="tekanan_darah">
-                                                            <span class="input-group-text">mmHg</span>
+                                                    <div class="form-group">
+                                                        <label style="min-width: 200px;">Tek. Darah (mmHg)</label>
+                                                        <div class="d-flex gap-3" style="width: 100%;">
+                                                            <div class="flex-grow-1">
+                                                                <input type="number" class="form-control" name="darah_sistole"
+                                                                    placeholder="Sistole">
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <input type="number" class="form-control" name="darah_diastole"
+                                                                    placeholder="Diastole">
+                                                            </div>
                                                         </div>
                                                     </div>
-
-                                                    <!-- Respirasi -->
-                                                    <div class="col-md-6 mb-3">
+                                                    <div class="form-group">
                                                         <div class="input-group input-group-sm">
                                                             <span class="input-group-text bg-light text-dark fw-bold"
                                                                 style="width: 150px;">
@@ -173,9 +179,7 @@
                                                             <span class="input-group-text">x/menit</span>
                                                         </div>
                                                     </div>
-
-                                                    <!-- Suhu -->
-                                                    <div class="col-md-6 mb-3">
+                                                    <div class="form-group">
                                                         <div class="input-group input-group-sm">
                                                             <span class="input-group-text bg-light text-dark fw-bold"
                                                                 style="width: 150px;">
@@ -186,9 +190,7 @@
                                                             <span class="input-group-text">°C</span>
                                                         </div>
                                                     </div>
-
-                                                    <!-- Nadi -->
-                                                    <div class="col-md-6 mb-3">
+                                                    <div class="form-">
                                                         <div class="input-group input-group-sm">
                                                             <span class="input-group-text bg-light text-dark fw-bold"
                                                                 style="width: 150px;">
@@ -291,13 +293,15 @@
 
                                                 <!-- Pupil -->
                                                 <div class="row mb-3">
-                                                    <div class="col-md-2">
-                                                        <label>Pupil</label>
-                                                    </div>
-                                                    <div class="col-md-10">
+
+                                                    <div class="col-md-12">
                                                         <div class="input-group">
-                                                            <span class="input-group-text">Isokor/anisokor:</span>
-                                                            {{-- <input type="text" class="form-control" name="pupil_isokor"> --}}
+                                                            <label style="min-width: 170px;" class="fw-normal">Pupil</label>
+                                                            <select class="form-select" name="pupil_isokor" id="pupil_isokor">
+                                                                <option value="">Pilih...</option>
+                                                                <option value="Isokor">Isokor</option>
+                                                                <option value="Anisokor">Anisokor</option>
+                                                            </select>
                                                             <span class="input-group-text">Ø:</span>
                                                             <input type="text" class="form-control"
                                                                 style="width: 60px" name="pupil_anisokor">
@@ -307,11 +311,11 @@
                                                             <!-- Refleks Cahaya -->
                                                             <div class="d-flex align-items-center">
                                                                 <div class="form-check me-2">
-                                                                    <label class="form-check-label" for="refleks_cahaya">
+                                                                    <label style="min-width: 170px;" for="refleks_cahaya">
                                                                         Refleks cahaya:
                                                                     </label>
                                                                 </div>
-                                                                <div class="input-group" style="width: 150px;">
+                                                                <div class="input-group" >
                                                                     <input type="text"
                                                                         class="form-control form-control-sm"
                                                                         placeholder="Kiri" name="pupil_cahaya_kiri">
@@ -329,7 +333,7 @@
                                                                         Refleks kornea:
                                                                     </label>
                                                                 </div>
-                                                                <div class="input-group" style="width: 150px;">
+                                                                <div class="input-group" >
                                                                     <input type="text"
                                                                         class="form-control form-control-sm"
                                                                         placeholder="Kiri" name="pupil_kornea_kiri">
@@ -361,16 +365,16 @@
                                                     <div class="col-md-10">
                                                         <div class="row">
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="ekstremitas_atas">
+                                                                <input type="text" class="form-control" name="ekstremitas_atas" placeholder="Kanan Atas">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="ekstremitas_kanan">
+                                                                <input type="text" class="form-control" name="ekstremitas_kanan" placeholder="Kiri Atas">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="ekstremitas_bawah">
+                                                                <input type="text" class="form-control" name="ekstremitas_bawah" placeholder="Kanan Bawah">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="ekstremitas_kiri">
+                                                                <input type="text" class="form-control" name="ekstremitas_kiri" placeholder="Kiri Bawah">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -383,16 +387,16 @@
                                                     <div class="col-md-10">
                                                         <div class="row">
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="refleks_atas">
+                                                                <input type="text" class="form-control" name="refleks_atas" placeholder="Kanan Atas">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="refleks_kanan">
+                                                                <input type="text" class="form-control" name="refleks_kanan" placeholder="Kiri Atas">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="refleks_bawah">
+                                                                <input type="text" class="form-control" name="refleks_bawah" placeholder="Kanan Bawah">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="refleks_kiri">
+                                                                <input type="text" class="form-control" name="refleks_kiri" placeholder="Kiri Bawah">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -405,16 +409,16 @@
                                                     <div class="col-md-10">
                                                         <div class="row">
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="refleks_patologis_atas">
+                                                                <input type="text" class="form-control" name="refleks_patologis_atas" placeholder="Kanan Atas">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="refleks_patologis_kanan">
+                                                                <input type="text" class="form-control" name="refleks_patologis_kanan" placeholder="Kiri Atas">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="refleks_patologis_bawah">
+                                                                <input type="text" class="form-control" name="refleks_patologis_bawah" placeholder="Kanan Bawah">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="refleks_patologis_kiri">
+                                                                <input type="text" class="form-control" name="refleks_patologis_kiri" placeholder="Kiri Bawah">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -427,16 +431,16 @@
                                                     <div class="col-md-10">
                                                         <div class="row">
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="kekuatan_atas">
+                                                                <input type="text" class="form-control" name="kekuatan_atas" placeholder="Kanan Atas">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="kekuatan_kanan">
+                                                                <input type="text" class="form-control" name="kekuatan_kanan" placeholder="Kiri Atas">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="kekuatan_bawah">
+                                                                <input type="text" class="form-control" name="kekuatan_bawah" placeholder="Kanan Bawah">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control" name="kekuatan_kiri">
+                                                                <input type="text" class="form-control" name="kekuatan_kiri" placeholder="Kiri Bawah">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -672,8 +676,19 @@
                                                 <div class="section-separator" id="diagnosis">
                                                     <h5 class="fw-semibold mb-4">Diagnosis</h5>
 
+                                                    <select class="form-select" name="neurologi_prognosis">
+                                                        <option value="" selected disabled>--Pilih Prognosis--</option>
+                                                        @forelse ($satsetPrognosis as $item)
+                                                            <option value="{{ $item->prognosis_id }}">
+                                                                {{ $item->value ?? 'Field tidak ditemukan' }}
+                                                            </option>
+                                                        @empty
+                                                            <option value="" disabled>Tidak ada data</option>
+                                                        @endforelse
+                                                    </select>
+
                                                     <!-- Diagnosis Banding -->
-                                                    <div class="mb-4">
+                                                    <div class="mb-4 mt-2">
                                                         <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
 
                                                         <div class="input-group mb-3">
@@ -721,9 +736,18 @@
                                                         <!-- Hidden input to store JSON data -->
                                                         <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja" value="[]">
                                                     </div>
+
+                                                    <div class="mb-4">
+                                                        <label class="form-label fw-bold">
+                                                            <i class="bi bi-clipboard-plus me-1 text-primary"></i>
+                                                            Rencana penatalaksanaan dan pengobatan:
+                                                        </label>
+                                                        <textarea class="form-control" id="rencana_pengobatan" name="rencana_pengobatan" rows="3"
+                                                            placeholder="Tuliskan Rencana penatalaksanaan dan pengobatan..."></textarea>
+                                                    </div>
                                                 </div>
 
-                                                <div class="section-separator" style="margin-bottom: 2rem;" id="implementasi">
+                                                {{-- <div class="section-separator" style="margin-bottom: 2rem;" id="implementasi">
                                                     <h5 class="fw-semibold mb-4">Implementasi</h5>
 
                                                     <!-- Rencana Penatalaksanaan dan Pengobatan -->
@@ -847,7 +871,7 @@
                                                         <input type="hidden" id="rencana_penatalaksanaan" name="prognosis"
                                                             value="[]">
                                                     </div>
-                                                </div>
+                                                </div> --}}
 
                                             </div>
 
@@ -988,14 +1012,14 @@
                                                 </div>
                                             </div>
 
-                                            <div class="section-separator" style="margin-bottom: 2rem;" id="evaluasi">
+                                            {{-- <div class="section-separator" style="margin-bottom: 2rem;" id="evaluasi">
                                                 <h5 class="fw-semibold mb-4">Evaluasi</h5>
                                                 <div class="form-group">
                                                     <label style="min-width: 200px;">Tambah Evaluasi Keperawatan</label>
                                                     <textarea class="form-control" name="evaluasi_evaluasi_keperawatan" rows="4"
                                                         placeholder="Evaluasi Keperawaran"></textarea>
                                                 </div>
-                                            </div>
+                                            </div> --}}
 
                                             <div class="d-flex justify-content-end">
                                                 <button type="submit" class="btn btn-primary">Simpan</button>
@@ -1015,5 +1039,3 @@
         </div>
     </div>
 @endsection
-
-@include('unit-pelayanan.rawat-inap.pelayanan.neurologi.modal-create-elergi')

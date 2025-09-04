@@ -10,7 +10,7 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ url()->previous() }}" class="btn">
+            <a href="{{ route('asesmen.index', [$dataMedis->kd_pasien, \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), $dataMedis->urut_masuk]) }}" class="btn">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
             <form id="asesmenForm" method="POST">
@@ -146,7 +146,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Frekuensi nafas/menit</label>
-                                            <input type="text" class="form-control" name="breathing_frekuensi_nafas">
+                                            <input type="text" class="form-control" name="breathing_frekuensi_nafas" value="{{ $vitalSignMedis['rr'] ?? 0 }}" readonly>
                                         </div>
 
                                         <div class="form-group">
@@ -346,12 +346,12 @@
                                                 <option value="2">> 2 Detik</option>
                                             </select>
                                         </div>
-                                        
+
                                         <label style="min-width: 200px;" class="fw-bold">Nadi</label>
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Frekuensi</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
-                                                <div class="flex-grow-1">
+                                                {{-- <div class="flex-grow-1">
                                                     <div class="mb-1">
                                                         <small class="text-muted">Diberikan?</small>
                                                     </div>
@@ -360,7 +360,7 @@
                                                         <option value="1">Ya</option>
                                                         <option value="0">Tidak</option>
                                                     </select>
-                                                </div>
+                                                </div> --}}
                                                 <div class="flex-grow-1">
                                                     <div class="mb-1">
                                                         <small class="text-muted">Jumlah Frekuensi (x/mnt)</small>
@@ -402,7 +402,7 @@
                                                 <option value="0">Kurang</option>
                                             </select>
                                         </div>
-                                        
+
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Lainnya</label>
                                             <input class="form-control" type="text"
@@ -504,16 +504,18 @@
                                             <label class="form-label">GCS</label>
                                             <div class="input-group">
                                                 <input type="text" class="form-control" name="vital_sign[gcs]" id="gcsInput"
-                                                    placeholder="Contoh: 15 E4 V5 M6" readonly>
+                                                    value="{{ isset($vitalSignMedis['gcs']) ? $vitalSignMedis['gcs'] : '' }}"
+                                                    placeholder="Contoh: 15 E4 V5 M6" readonly disabled>
                                                 <button type="button" class="btn btn-outline-primary"
-                                                    onclick="openGCSModal()" title="Buka Kalkulator GCS">
-                                                    <i class="ti-calculator"></i> Hitung GCS
+                                                        onclick="openGCSModal()" title="Lihat Detail GCS">
+                                                    <i class="ti-calculator"></i> Lihat GCS
                                                 </button>
                                             </div>
                                             @push('modals')
                                                 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.gcs-modal')
                                             @endpush
                                         </div>
+
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Kesadaran</label>
                                             <select class="form-select" name="disability_kesadaran">
@@ -1027,7 +1029,7 @@
                                                         <input type="number"
                                                             class="form-control flex-grow-1 @error('skala_nyeri') is-invalid @enderror"
                                                             name="skala_nyeri" style="width: 100px;"
-                                                            value="{{ old('skala_nyeri', 0) }}" min="0" max="10">
+                                                            value="{{ old('skala_nyeri', $asesmenMedis->skala_nyeri ?? 0) }}" min="0" max="10" readonly>
                                                         @error('skala_nyeri')
                                                             <div class="invalid-feedback">
                                                                 {{ $message }}
@@ -1074,15 +1076,18 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label style="min-width: 120px;">Lokasi</label>
-                                                    <input type="text" class="form-control" name="skala_nyeri_lokasi">
+                                                    <input type="text" class="form-control" name="skala_nyeri_lokasi" 
+                                                        value="{{ old('skala_nyeri_lokasi', $asesmenMedis->lokasi ?? '') }}" readonly>
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label style="min-width: 120px;">Pemberat</label>
-                                                    <select class="form-select" name="skala_nyeri_pemberat_id">
+                                                    <select class="form-select" name="skala_nyeri_pemberat_id" readonly disabled>
                                                         <option value="">--Pilih--</option>
                                                         @foreach ($faktorPemberat as $pemberat)
-                                                            <option value="{{ $pemberat->id }}">{{ $pemberat->name }}
+                                                            <option value="{{ $pemberat->id }}" 
+                                                                    {{ old('skala_nyeri_pemberat_id', $asesmenMedis->faktor_pemberat_id ?? '') == $pemberat->id ? 'selected' : '' }} readonly>
+                                                                {{ $pemberat->name }}
                                                             </option>
                                                         @endforeach
                                                     </select>
@@ -1090,10 +1095,12 @@
 
                                                 <div class="form-group">
                                                     <label style="min-width: 120px;">Kualitas</label>
-                                                    <select class="form-select" name="skala_nyeri_kualitas_id">
+                                                    <select class="form-select" name="skala_nyeri_kualitas_id" readonly disabled>
                                                         <option value="">--Pilih--</option>
                                                         @foreach ($kualitasNyeri as $kualitas)
-                                                            <option value="{{ $kualitas->id }}">{{ $kualitas->name }}
+                                                            <option value="{{ $kualitas->id }}" 
+                                                                    {{ old('skala_nyeri_kualitas_id', $asesmenMedis->kualitas_nyeri_id ?? '') == $kualitas->id ? 'selected' : '' }} readonly>
+                                                                {{ $kualitas->name }}
                                                             </option>
                                                         @endforeach
                                                     </select>
@@ -1101,10 +1108,12 @@
 
                                                 <div class="form-group">
                                                     <label style="min-width: 120px;">Menjalar</label>
-                                                    <select class="form-select" name="skala_nyeri_menjalar_id">
+                                                    <select class="form-select" name="skala_nyeri_menjalar_id" readonly disabled>
                                                         <option value="">--Pilih--</option>
                                                         @foreach ($menjalar as $menj)
-                                                            <option value="{{ $menj->id }}">{{ $menj->name }}
+                                                            <option value="{{ $menj->id }}" 
+                                                                    {{ old('skala_nyeri_menjalar_id', $asesmenMedis->menjalar_id ?? '') == $menj->id ? 'selected' : '' }} readonly>
+                                                                {{ $menj->name }}
                                                             </option>
                                                         @endforeach
                                                     </select>
@@ -1114,15 +1123,18 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label style="min-width: 120px;">Durasi</label>
-                                                    <input type="text" class="form-control" name="skala_nyeri_durasi">
+                                                    <input type="text" class="form-control" name="skala_nyeri_durasi"
+                                                        value="{{ old('skala_nyeri_durasi', $asesmenMedis->durasi ?? '') }}" readonly>
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label style="min-width: 120px;">Peringan</label>
-                                                    <select class="form-select" name="skala_nyeri_peringan_id">
+                                                    <select class="form-select" name="skala_nyeri_peringan_id" readonly disabled>
                                                         <option value="">--Pilih--</option>
                                                         @foreach ($faktorPeringan as $peringan)
-                                                            <option value="{{ $peringan->id }}">{{ $peringan->name }}
+                                                            <option value="{{ $peringan->id }}" 
+                                                                    {{ old('skala_nyeri_peringan_id', $asesmenMedis->faktor_peringan_id ?? '') == $peringan->id ? 'selected' : '' }}>
+                                                                {{ $peringan->name }}
                                                             </option>
                                                         @endforeach
                                                     </select>
@@ -1130,10 +1142,12 @@
 
                                                 <div class="form-group">
                                                     <label style="min-width: 120px;">Frekuensi</label>
-                                                    <select class="form-select" name="skala_nyeri_frekuensi_id">
+                                                    <select class="form-select" name="skala_nyeri_frekuensi_id" readonly disabled>
                                                         <option value="">--Pilih--</option>
                                                         @foreach ($frekuensiNyeri as $frekuensi)
-                                                            <option value="{{ $frekuensi->id }}">{{ $frekuensi->name }}
+                                                            <option value="{{ $frekuensi->id }}" 
+                                                                    {{ old('skala_nyeri_frekuensi_id', $asesmenMedis->frekuensi_nyeri_id ?? '') == $frekuensi->id ? 'selected' : '' }}>
+                                                                {{ $frekuensi->name }}
                                                             </option>
                                                         @endforeach
                                                     </select>
@@ -1141,10 +1155,12 @@
 
                                                 <div class="form-group">
                                                     <label style="min-width: 120px;">Jenis</label>
-                                                    <select class="form-select" name="skala_nyeri_jenis_id">
+                                                    <select class="form-select" name="skala_nyeri_jenis_id" readonly disabled>
                                                         <option value="">--Pilih--</option>
                                                         @foreach ($jenisNyeri as $jenis)
-                                                            <option value="{{ $jenis->id }}">{{ $jenis->name }}
+                                                            <option value="{{ $jenis->id }}" 
+                                                                    {{ old('skala_nyeri_jenis_id', $asesmenMedis->jenis_id ?? '') == $jenis->id ? 'selected' : '' }}>
+                                                                {{ $jenis->name }}
                                                             </option>
                                                         @endforeach
                                                     </select>
@@ -2461,7 +2477,7 @@
                                         <!-- Hidden inputs untuk menyimpan data JSON -->
                                         <input type="hidden" id="implementationDataInput" name="implementasi_keperawatan" value="">
                                         <input type="hidden" id="evaluationDataInput" name="evaluasi_keperawatan" value="">
-                                        
+
                                         <!-- Implementasi Section -->
                                         <div class="section-separator">
                                             <h5 class="section-title">15. Implementasi</h5>
@@ -2471,7 +2487,7 @@
                                                     <i class="bi bi-plus-circle"></i> Tambah Tindakan
                                                 </button>
                                             </div>
-                                            
+
                                             <div class="table-responsive">
                                                 <table class="table table-bordered table-sm" id="implementationTable">
                                                     <thead class="table-light">
@@ -2500,7 +2516,7 @@
                                                     <i class="bi bi-plus-circle"></i> Tambah Evaluasi
                                                 </button>
                                             </div>
-                                            
+
                                             <div class="table-responsive">
                                                 <table class="table table-bordered table-sm" id="evaluationTable">
                                                     <thead class="table-light">
@@ -2564,7 +2580,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Tindakan Keperawatan</label>
-                            <textarea class="form-control" id="impl_action" rows="4" required 
+                            <textarea class="form-control" id="impl_action" rows="4" required
                                 placeholder="Masukkan detail tindakan keperawatan yang dilakukan..."></textarea>
                         </div>
                     </form>
@@ -2593,7 +2609,7 @@
                         <strong>A (Assessment):</strong> Analisa masalah keperawatan<br>
                         <strong>P (Planning):</strong> Rencana tindakan selanjutnya
                     </div>
-                    
+
                     <form id="evaluationForm">
                         <div class="mb-3">
                             <label class="form-label">Tanggal Evaluasi</label>
@@ -2605,22 +2621,22 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">S (Subjective) - Keluhan Pasien</label>
-                            <textarea class="form-control soap-format" id="eval_subjective" rows="2" 
+                            <textarea class="form-control soap-format" id="eval_subjective" rows="2"
                                 placeholder="S: Pasien mengeluh..."></textarea>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">O (Objective) - Data Objektif</label>
-                            <textarea class="form-control soap-format" id="eval_objective" rows="2" 
+                            <textarea class="form-control soap-format" id="eval_objective" rows="2"
                                 placeholder="O: TD: 120/80 mmHg, N: 80x/menit, RR: 20x/menit, S: 36.5°C..."></textarea>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">A (Assessment) - Analisa</label>
-                            <textarea class="form-control soap-format" id="eval_assessment" rows="2" 
+                            <textarea class="form-control soap-format" id="eval_assessment" rows="2"
                                 placeholder="A: Masalah keperawatan..."></textarea>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">P (Planning) - Rencana</label>
-                            <textarea class="form-control soap-format" id="eval_planning" rows="2" 
+                            <textarea class="form-control soap-format" id="eval_planning" rows="2"
                                 placeholder="P: Lanjutkan terapi, observasi..."></textarea>
                         </div>
                     </form>
@@ -2649,12 +2665,12 @@
             const now = new Date();
             const currentDate = now.toISOString().split('T')[0];
             const currentTime = now.toTimeString().slice(0, 5);
-            
+
             document.getElementById('impl_date').value = currentDate;
             document.getElementById('impl_time').value = currentTime;
             document.getElementById('eval_date').value = currentDate;
             document.getElementById('eval_time').value = currentTime;
-            
+
             // Load existing data dari hidden inputs
             loadFromHiddenInputs();
         });
@@ -2663,13 +2679,13 @@
         function openImplementationModal(index = -1) {
             // Prevent any default behavior
             event?.preventDefault();
-            
+
             editingIndex = index;
             editingType = 'implementation';
-            
+
             const modal = new bootstrap.Modal(document.getElementById('implementationModal'));
             const title = document.getElementById('implementationModalTitle');
-            
+
             if (index >= 0) {
                 // Edit mode
                 title.textContent = 'Edit Tindakan Keperawatan';
@@ -2681,13 +2697,13 @@
                 // Add mode
                 title.textContent = 'Tambah Tindakan Keperawatan';
                 document.getElementById('implementationForm').reset();
-                
+
                 // Set current date/time
                 const now = new Date();
                 document.getElementById('impl_date').value = now.toISOString().split('T')[0];
                 document.getElementById('impl_time').value = now.toTimeString().slice(0, 5);
             }
-            
+
             modal.show();
             return false;
         }
@@ -2697,7 +2713,7 @@
                 event.preventDefault();
                 event.stopPropagation();
             }
-            
+
             const date = document.getElementById('impl_date').value;
             const time = document.getElementById('impl_time').value;
             const action = document.getElementById('impl_action').value;
@@ -2721,20 +2737,20 @@
 
             updateImplementationTable();
             updateHiddenInputs(); // Update hidden input
-            
+
             // Close modal manually
             const modalElement = document.getElementById('implementationModal');
             const modal = bootstrap.Modal.getInstance(modalElement);
             if (modal) {
                 modal.hide();
             }
-            
+
             return false;
         }
 
         function updateImplementationTable() {
             const tbody = document.querySelector('#implementationTable tbody');
-            
+
             if (implementationData.length === 0) {
                 tbody.innerHTML = '<tr class="text-center text-muted"><td colspan="4">Belum ada data tindakan</td></tr>';
                 return;
@@ -2769,13 +2785,13 @@
         function openEvaluationModal(index = -1) {
             // Prevent any default behavior
             event?.preventDefault();
-            
+
             editingIndex = index;
             editingType = 'evaluation';
-            
+
             const modal = new bootstrap.Modal(document.getElementById('evaluationModal'));
             const title = document.getElementById('evaluationModalTitle');
-            
+
             if (index >= 0) {
                 // Edit mode
                 title.textContent = 'Edit Evaluasi Keperawatan (SOAP)';
@@ -2790,13 +2806,13 @@
                 // Add mode
                 title.textContent = 'Tambah Evaluasi Keperawatan (SOAP)';
                 document.getElementById('evaluationForm').reset();
-                
+
                 // Set current date/time
                 const now = new Date();
                 document.getElementById('eval_date').value = now.toISOString().split('T')[0];
                 document.getElementById('eval_time').value = now.toTimeString().slice(0, 5);
             }
-            
+
             modal.show();
             return false;
         }
@@ -2806,7 +2822,7 @@
                 event.preventDefault();
                 event.stopPropagation();
             }
-            
+
             const date = document.getElementById('eval_date').value;
             const time = document.getElementById('eval_time').value;
             const subjective = document.getElementById('eval_subjective').value;
@@ -2836,20 +2852,20 @@
 
             updateEvaluationTable();
             updateHiddenInputs(); // Update hidden input
-            
+
             // Close modal manually
             const modalElement = document.getElementById('evaluationModal');
             const modal = bootstrap.Modal.getInstance(modalElement);
             if (modal) {
                 modal.hide();
             }
-            
+
             return false;
         }
 
         function updateEvaluationTable() {
             const tbody = document.querySelector('#evaluationTable tbody');
-            
+
             if (evaluationData.length === 0) {
                 tbody.innerHTML = '<tr class="text-center text-muted"><td colspan="4">Belum ada data evaluasi</td></tr>';
                 return;
@@ -2861,7 +2877,7 @@
                 if (item.objective) soapText += `O: ${item.objective}\n`;
                 if (item.assessment) soapText += `A: ${item.assessment}\n`;
                 if (item.planning) soapText += `P: ${item.planning}`;
-                
+
                 return `
                     <tr>
                         <td>${formatDate(item.date)}</td>
@@ -2898,7 +2914,7 @@
         function loadFromHiddenInputs() {
             const implData = document.getElementById('implementationDataInput').value;
             const evalData = document.getElementById('evaluationDataInput').value;
-            
+
             if (implData) {
                 try {
                     implementationData = JSON.parse(implData);
@@ -2907,7 +2923,7 @@
                     console.error('Error parsing implementation data:', e);
                 }
             }
-            
+
             if (evalData) {
                 try {
                     evaluationData = JSON.parse(evalData);

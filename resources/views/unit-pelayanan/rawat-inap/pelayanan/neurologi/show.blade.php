@@ -12,7 +12,7 @@
                 <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">
                     <i class="ti-arrow-left"></i> Kembali
                 </a>
-                <div>
+                {{-- <div>
                     <a href="{{ route('rawat-inap.asesmen.medis.neurologi.print-pdf', [
                         $asesmen->kd_unit,
                         $asesmen->pasien->kd_pasien,
@@ -23,7 +23,7 @@
                         <i class="bi bi-printer"></i>
                         Print PDF
                     </a>
-                </div>
+                </div> --}}
             </div>
 
             <div class="">
@@ -111,46 +111,29 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
-                                        <h5>Riwayat Alergi</h5>
-                                        <div class="col-md-12">
-                                            @php
-                                                $alergiData = [];
-                                                if ($asesmen->rmeAsesmenNeurologi->riwayat_alergi) {
-                                                    $alergiData = json_decode(
-                                                        $asesmen->rmeAsesmenNeurologi->riwayat_alergi,
-                                                        true,
-                                                    );
-                                                }
-                                            @endphp
-
-                                            @if (!empty($alergiData))
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered table-sm">
-                                                        <thead class="bg-light">
-                                                            <tr>
-                                                                <th>No</th>
-                                                                <th>Jenis</th>
-                                                                <th>Alergen</th>
-                                                                <th>Reaksi</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($alergiData as $index => $alergi)
-                                                                <tr>
-                                                                    <td>{{ $index + 1 }}</td>
-                                                                    <td>{{ $alergi['jenis'] ?? '-' }}</td>
-                                                                    <td>{{ $alergi['alergen'] ?? '-' }}</td>
-                                                                    <td>{{ $alergi['reaksi'] ?? '-' }}</td>
-                                                                </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            @else
-                                                <p class="form-control-plaintext border-bottom">
-                                                    <span class="text-muted">Tidak ada data alergi</span>
-                                                </p>
-                                            @endif
+                                        <div class="mb-3">
+                                            <h6 class="text-dark">Riwayat Alergi</h6>
+                                            <input type="hidden" name="alergis" id="alergisInput" value="[]">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered" id="createAlergiTable">
+                                                    <thead class="table-light">
+                                                        <tr>
+                                                            <th width="20%">Jenis Alergi</th>
+                                                            <th width="25%">Alergen</th>
+                                                            <th width="25%">Reaksi</th>
+                                                            <th width="20%">Tingkat Keparahan</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr id="no-alergi-row">
+                                                            <td colspan="5" class="text-center text-muted">Tidak ada data alergi</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            @push('modals')
+                                                @include('unit-pelayanan.rawat-inap.pelayanan.neurologi.modal-show-elergi')
+                                            @endpush
                                         </div>
                                     </div>
                                 </div>
@@ -167,25 +150,33 @@
                                         <!-- Status Present -->
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">Tekanan Darah (mmHg) :</label>
+                                                <label class="form-label fw-bold">Tekanan Sistole (mmHg) :</label>
                                                 <p class="form-control-plaintext border-bottom">
-                                                    {{ $asesmen->rmeAsesmenNeurologi->tekanan_darah ?? '-' }} mmHg
+                                                    {{ $asesmen->rmeAsesmenNeurologi->darah_sistole ?? '-' }} mmHg
                                                 </p>
                                             </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Tekanan Distole (mmHg) :</label>
+                                                <p class="form-control-plaintext border-bottom">
+                                                    {{ $asesmen->rmeAsesmenNeurologi->darah_diastole ?? '-' }} x/menit
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Nadi (Per Menit) :</label>
                                                 <p class="form-control-plaintext border-bottom">
                                                     {{ $asesmen->rmeAsesmenNeurologi->nadi ?? '-' }} x/menit
                                                 </p>
                                             </div>
-                                        </div>
-                                        <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Suhu (°C) :</label>
                                                 <p class="form-control-plaintext border-bottom">
                                                     {{ $asesmen->rmeAsesmenNeurologi->suhu ?? '-' }} °C
                                                 </p>
                                             </div>
+                                        </div>
+                                        <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Respirasi (Per Menit) :</label>
                                                 <p class="form-control-plaintext border-bottom">
@@ -205,83 +196,89 @@
                                                 </p>
                                             </div>
                                             <div class="col-12">
-                                                <div class="row">
-                                                    @php
-                                                        $pemeriksaanFisikData = $asesmen->pemeriksaanFisik;
-                                                        $itemFisikNames = [];
-                                                        foreach ($itemFisik as $item) {
-                                                            $itemFisikNames[$item->id] = $item->nama;
-                                                        }
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered">
 
-                                                        $totalItems = count($pemeriksaanFisikData);
-                                                        $halfCount = ceil($totalItems / 2);
-                                                        $firstColumn = $pemeriksaanFisikData->take($halfCount);
-                                                        $secondColumn = $pemeriksaanFisikData->skip($halfCount);
-                                                    @endphp
-                                                    <div class="col-md-6">
-                                                        @foreach ($firstColumn as $item)
+                                                        <tbody>
                                                             @php
-                                                                $status = $item->is_normal;
-                                                                $keterangan = $item->keterangan;
-                                                                $itemId = $item->id_item_fisik;
-                                                                $namaItem =
-                                                                    $itemFisikNames[$itemId] ?? 'Item #' . $itemId;
+                                                                $pemeriksaanFisikData = $asesmen->pemeriksaanFisik;
+                                                                $itemFisikNames = [];
+                                                                foreach ($itemFisik as $item) {
+                                                                    $itemFisikNames[$item->id] = $item->nama;
+                                                                }
+
+                                                                $totalItems = count($pemeriksaanFisikData);
+                                                                $halfCount = ceil($totalItems / 2);
+                                                                $firstColumn = $pemeriksaanFisikData->take($halfCount);
+                                                                $secondColumn = $pemeriksaanFisikData->skip($halfCount);
+
+                                                                $maxRows = max($firstColumn->count(), $secondColumn->count());
                                                             @endphp
-                                                            <div
-                                                                class="d-flex justify-content-between align-items-center border-bottom py-2">
-                                                                <span>{{ $namaItem }}</span>
-                                                                <div class="d-flex align-items-center">
-                                                                    @if ($status == '0' || $status == 0)
-                                                                        <span class="badge bg-warning text-dark me-2">Tidak
-                                                                            Normal</span>
-                                                                    @elseif ($status == '1' || $status == 1)
-                                                                        <span class="badge bg-success me-2">Normal</span>
+
+                                                            @for ($i = 0; $i < $maxRows; $i++)
+                                                                <tr>
+                                                                    <!-- Kolom Kiri -->
+                                                                    @if ($firstColumn->has($i))
+                                                                        @php
+                                                                            $item = $firstColumn[$i];
+                                                                            $status = $item->is_normal;
+                                                                            $keterangan = $item->keterangan;
+                                                                            $itemId = $item->id_item_fisik;
+                                                                            $namaItem = $itemFisikNames[$itemId] ?? 'Item #' . $itemId;
+                                                                        @endphp
+                                                                        <td>
+                                                                            {{ $namaItem }}
+                                                                            @if ($keterangan && ($status == '0' || $status == 0))
+                                                                                <br>
+                                                                                <small class="text-muted">Keterangan: {{ $keterangan }}</small>
+                                                                            @endif
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            @if ($status == '0' || $status == 0)
+                                                                                <span class="badge bg-warning text-dark">Tidak Normal</span>
+                                                                            @elseif ($status == '1' || $status == 1)
+                                                                                <span class="badge bg-success">Normal</span>
+                                                                            @else
+                                                                                <span class="badge bg-secondary">Tidak Diperiksa</span>
+                                                                            @endif
+                                                                        </td>
                                                                     @else
-                                                                        <span class="badge bg-secondary me-2">Tidak
-                                                                            Diperiksa</span>
+                                                                        <td></td>
+                                                                        <td></td>
                                                                     @endif
-                                                                </div>
-                                                            </div>
-                                                            @if ($keterangan && ($status == '0' || $status == 0))
-                                                                <div class="mt-1 mb-2">
-                                                                    <small class="text-muted">Keterangan:
-                                                                        {{ $keterangan }}</small>
-                                                                </div>
-                                                            @endif
-                                                        @endforeach
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        @foreach ($secondColumn as $item)
-                                                            @php
-                                                                $status = $item->is_normal;
-                                                                $keterangan = $item->keterangan;
-                                                                $itemId = $item->id_item_fisik;
-                                                                $namaItem =
-                                                                    $itemFisikNames[$itemId] ?? 'Item #' . $itemId;
-                                                            @endphp
-                                                            <div
-                                                                class="d-flex justify-content-between align-items-center border-bottom py-2">
-                                                                <span>{{ $namaItem }}</span>
-                                                                <div class="d-flex align-items-center">
-                                                                    @if ($status == '0' || $status == 0)
-                                                                        <span class="badge bg-warning text-dark me-2">Tidak
-                                                                            Normal</span>
-                                                                    @elseif ($status == '1' || $status == 1)
-                                                                        <span class="badge bg-success me-2">Normal</span>
+
+                                                                    <!-- Kolom Kanan -->
+                                                                    @if ($secondColumn->has($i))
+                                                                        @php
+                                                                            $item = $secondColumn[$i];
+                                                                            $status = $item->is_normal;
+                                                                            $keterangan = $item->keterangan;
+                                                                            $itemId = $item->id_item_fisik;
+                                                                            $namaItem = $itemFisikNames[$itemId] ?? 'Item #' . $itemId;
+                                                                        @endphp
+                                                                        <td>
+                                                                            {{ $namaItem }}
+                                                                            @if ($keterangan && ($status == '0' || $status == 0))
+                                                                                <br>
+                                                                                <small class="text-muted">Keterangan: {{ $keterangan }}</small>
+                                                                            @endif
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            @if ($status == '0' || $status == 0)
+                                                                                <span class="badge bg-warning text-dark">Tidak Normal</span>
+                                                                            @elseif ($status == '1' || $status == 1)
+                                                                                <span class="badge bg-success">Normal</span>
+                                                                            @else
+                                                                                <span class="badge bg-secondary">Tidak Diperiksa</span>
+                                                                            @endif
+                                                                        </td>
                                                                     @else
-                                                                        <span class="badge bg-secondary me-2">Tidak
-                                                                            Diperiksa</span>
+                                                                        
                                                                     @endif
-                                                                </div>
-                                                            </div>
-                                                            @if ($keterangan && ($status == '0' || $status == 0))
-                                                                <div class="mt-1 mb-2">
-                                                                    <small class="text-muted">Keterangan:
-                                                                        {{ $keterangan }}</small>
-                                                                </div>
-                                                            @endif
-                                                        @endforeach
-                                                    </div>
+                                                                </tr>
+                                                            @endfor
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
                                         @endif
@@ -330,14 +327,25 @@
 
                                             <!-- Pupil -->
                                             <div class="col-md-12">
-                                                <h6 class="mb-3 text-primary">Pupil</h6>
                                                 <div class="row">
                                                     <div class="col-md-6">
-                                                        <div class="mb-3">
-                                                            <label class="form-label fw-bold">Isokor/anisokor :</label>
-                                                            <p class="form-control-plaintext border-bottom">
-                                                                {{ $asesmen->rmeAsesmenNeurologiSistemSyaraf->pupil_isokor ?? '-' }}
-                                                            </p>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="mb-3">
+                                                                    <label class="form-label fw-bold">Pupil :</label>
+                                                                    <p class="form-control-plaintext border-bottom">
+                                                                        {{ $asesmen->rmeAsesmenNeurologiSistemSyaraf->pupil_isokor ?? '-' }}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="mb-3">
+                                                                    <label class="form-label fw-bold">Ø:</label>
+                                                                    <p class="form-control-plaintext border-bottom">
+                                                                        {{ $asesmen->rmeAsesmenNeurologiSistemSyaraf->pupil_anisokor ?? '-' }}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="form-label fw-bold">Diameter :</label>
@@ -696,6 +704,20 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <h5>Diagnosis</h5>
+                                        <div class="mb-4">
+                                            <label class="text-primary fw-semibold">Prognosis</label>
+                                            <select class="form-select" name="neurologi_prognosis" disabled>
+                                                <option value="" disabled>--Pilih Prognosis--</option>
+                                                @forelse ($satsetPrognosis as $item)
+                                                    <option value="{{ $item->prognosis_id }}"
+                                                        {{ old('neurologi_prognosis', $asesmen->rmeAsesmenNeurologiIntensitasNyeri[0]->neurologi_prognosis ?? '') == $item->prognosis_id ? 'selected' : '' }}>
+                                                        {{ $item->value ?? 'Field tidak ditemukan' }}
+                                                    </option>
+                                                @empty
+                                                    <option value="" disabled>Tidak ada data</option>
+                                                @endforelse
+                                            </select>
+                                        </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Diagnosis Banding :</label>
@@ -777,13 +799,24 @@
                                                 @endif
                                             </div>
                                         </div>
+                                        <div class="mb-4">
+                                            <label class="form-label fw-bold">
+                                                <i class="bi bi-clipboard-plus me-1 text-primary"></i>
+                                                Rencana penatalaksanaan dan pengobatan:
+                                            </label>
+                                            <textarea class="form-control"
+                                                    id="rencana_pengobatan"
+                                                    name="rencana_pengobatan"
+                                                    rows="3"
+                                                    placeholder="Tuliskan Rencana penatalaksanaan dan pengobatan..." disabled>{{ old('rencana_pengobatan', $asesmen->rmeAsesmenNeurologiIntensitasNyeri->rencana_pengobatan ?? '') }}</textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- 10. Implementasi -->
-                        <div class="tab-pane fade show">
+                        {{-- <div class="tab-pane fade show">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
@@ -989,7 +1022,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <!-- 7. Discharge Planning -->
                         @if ($asesmen->rmeAsesmenNeurologiDischargePlanning)
@@ -1068,7 +1101,7 @@
                         @endif
 
                         <!-- 11. Evaluasi -->
-                        <div class="tab-pane fade show">
+                        {{-- <div class="tab-pane fade show">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
@@ -1084,7 +1117,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

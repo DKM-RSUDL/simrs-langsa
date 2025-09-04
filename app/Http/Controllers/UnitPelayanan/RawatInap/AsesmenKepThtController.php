@@ -16,6 +16,8 @@ use App\Models\RmeMasterDiagnosis;
 use App\Models\RmeMasterImplementasi;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
+use App\Models\RmeAlergiPasien;
+use App\Models\SatsetPrognosis;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -39,6 +41,8 @@ class AsesmenKepThtController extends Controller
         $itemFisik = MrItemFisik::orderby('urut')->get();
         $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
         $rmeMasterImplementasi = RmeMasterImplementasi::all();
+        $satsetPrognosis = SatsetPrognosis::all();
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
 
         // Mengambil data kunjungan dan tanggal triase terkait
@@ -86,7 +90,9 @@ class AsesmenKepThtController extends Controller
             'itemFisik',
             'user',
             'rmeMasterDiagnosis',
-            'rmeMasterImplementasi'
+            'rmeMasterImplementasi',
+            'alergiPasien',
+            'satsetPrognosis',
         ));
     }
 
@@ -121,6 +127,13 @@ class AsesmenKepThtController extends Controller
             $asesmenThtDataMasuk->ruang = $request->ruang;
             $asesmenThtDataMasuk->anamnesis_anamnesis = $request->anamnesis_anamnesis;
             $asesmenThtDataMasuk->evaluasi_evaluasi_keperawatan = $request->evaluasi_evaluasi_keperawatan;
+            $asesmenThtDataMasuk->penyakit_sekarang = $request->penyakit_sekarang;
+            $asesmenThtDataMasuk->penyakit_terdahulu = $request->penyakit_terdahulu;
+            $asesmenThtDataMasuk->rencana_penatalaksanaan = $request->rencana_penatalaksanaan;
+            $asesmenThtDataMasuk->darah = $request->darah;
+            $asesmenThtDataMasuk->urine = $request->urine;
+            $asesmenThtDataMasuk->rontgent = $request->rontgent;
+            $asesmenThtDataMasuk->gistopatology = $request->gistopatology;
 
             // Array untuk menyimpan path file yang berhasil diupload
             $uploadedFiles = [];
@@ -209,6 +222,12 @@ class AsesmenKepThtController extends Controller
             // Rhinoscopi Pasterior
             $asesmenThtPemeriksaanFisik->rhinoscopi_pasterior_septum_nasi_kanan = $request->rhinoscopi_pasterior_septum_nasi_kanan;
             $asesmenThtPemeriksaanFisik->rhinoscopi_pasterior_septum_nasi_kiri = $request->rhinoscopi_pasterior_septum_nasi_kiri;
+            $asesmenThtPemeriksaanFisik->rhinoscopi_superior_kanan = $request->rhinoscopi_superior_kanan;
+            $asesmenThtPemeriksaanFisik->rhinoscopi_superior_kiri = $request->rhinoscopi_superior_kiri;
+            $asesmenThtPemeriksaanFisik->rhinoscopi_media_kanan = $request->rhinoscopi_media_kanan;
+            $asesmenThtPemeriksaanFisik->rhinoscopi_media_kiri = $request->rhinoscopi_media_kiri;
+            $asesmenThtPemeriksaanFisik->rhinoscopi_fasso_rossenmuler_kanan = $request->rhinoscopi_fasso_rossenmuler_kanan;
+            $asesmenThtPemeriksaanFisik->rhinoscopi_fasso_rossenmuler_kiri = $request->rhinoscopi_fasso_rossenmuler_kiri;
             // Meatus Nasi
             $asesmenThtPemeriksaanFisik->meatus_nasi_superior_kanan = $request->meatus_nasi_superior_kanan;
             $asesmenThtPemeriksaanFisik->meatus_nasi_superior_kiri = $request->meatus_nasi_superior_kiri;
@@ -237,6 +256,12 @@ class AsesmenKepThtController extends Controller
             $asesmenThtPemeriksaanFisik->antropometr_berat_badan = $request->antropometr_berat_badan;
             $asesmenThtPemeriksaanFisik->antropometri_imt = $request->antropometri_imt;
             $asesmenThtPemeriksaanFisik->antropometri_lpt = $request->antropometri_lpt;
+
+            // Plica vokalis
+            $asesmenThtPemeriksaanFisik->plica_vokalis_bentuk_kanan = $request->plica_vokalis_bentuk_kanan;
+            $asesmenThtPemeriksaanFisik->plica_vokalis_bentuk_kiri = $request->plica_vokalis_bentuk_kiri;
+            $asesmenThtPemeriksaanFisik->plica_vokalis_warna_kanan = $request->plica_vokalis_warna_kanan;
+            $asesmenThtPemeriksaanFisik->plica_vokalis_warna_kiri = $request->plica_vokalis_warna_kiri;
 
             $asesmenThtPemeriksaanFisik->save();
 
@@ -334,6 +359,27 @@ class AsesmenKepThtController extends Controller
             }
             $asesmenThtRiwayatKesehatanObatAlergi->save();
 
+            // Validasi data alergi
+            $alergiData = json_decode($request->alergis, true);
+
+            if (!empty($alergiData)) {
+                // Hapus data alergi lama untuk pasien ini
+                RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
+
+                // Simpan data alergi baru
+                foreach ($alergiData as $alergi) {
+                    // Skip data yang sudah ada di database (is_existing = true)
+                    // kecuali jika ingin update
+                    RmeAlergiPasien::create([
+                        'kd_pasien' => $kd_pasien,
+                        'jenis_alergi' => $alergi['jenis_alergi'],
+                        'nama_alergi' => $alergi['alergen'],
+                        'reaksi' => $alergi['reaksi'],
+                        'tingkat_keparahan' => $alergi['tingkat_keparahan']
+                    ]);
+                }
+            }
+
             $asesmenThtDischargePlanning = new RmeAsesmenThtDischargePlanning();
             $asesmenThtDischargePlanning->id_asesmen = $asesmenTht->id;
             $asesmenThtDischargePlanning->dp_diagnosis_medis = $request->dp_diagnosis_medis;
@@ -355,6 +401,7 @@ class AsesmenKepThtController extends Controller
             $thtDiagnosisImplementasi->terapeutik = $request->terapeutik;
             $thtDiagnosisImplementasi->edukasi = $request->edukasi;
             $thtDiagnosisImplementasi->kolaborasi = $request->kolaborasi;
+            $thtDiagnosisImplementasi->tht_prognosis = $request->tht_prognosis;
             $thtDiagnosisImplementasi->save();
 
             //Simpan Diagnosa ke Master
@@ -449,10 +496,50 @@ class AsesmenKepThtController extends Controller
         }
     }
 
+    // public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    // {
+    //     try {
+    //         // Ambil data asesmen beserta relasinya
+    //         $asesmen = RmeAsesmen::with([
+    //             'user',
+    //             'rmeAsesmenTht',
+    //             'rmeAsesmenThtPemeriksaanFisik',
+    //             'pemeriksaanFisik',
+    //             'rmeAsesmenThtRiwayatKesehatanObatAlergi',
+    //             'rmeAsesmenThtDischargePlanning',
+    //             'rmeAsesmenThtDiagnosisImplementasi',
+    //         ])->findOrFail($id);
+
+    //         $dataMedis = Kunjungan::with('pasien')
+    //             ->where('kd_pasien', $kd_pasien)
+    //             ->where('kd_unit', $kd_unit)
+    //             ->whereDate('tgl_masuk', $tgl_masuk)
+    //             ->where('urut_masuk', $urut_masuk)
+    //             ->firstOrFail();
+
+    //         $itemFisikIds = $asesmen->pemeriksaanFisik->pluck('id_item_fisik')->unique()->toArray();
+    //         $itemFisik = MrItemFisik::whereIn('id', $itemFisikIds)->orderBy('urut')->get();
+    //         $satsetPrognosis = SatsetPrognosis::all();
+    //         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
+
+    //         return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.show', compact(
+    //             'asesmen',
+    //             'dataMedis',
+    //             'itemFisik',
+    //             'satsetPrognosis',
+    //             'alergiPasien',
+    //         ));
+    //     } catch (ModelNotFoundException $e) {
+    //         return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
+    //     } catch (\Exception $e) {
+    //         return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+    //     }
+    // }
+
     public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         try {
-            // Ambil data asesmen beserta relasinya
+            // Cari asesmen berdasarkan ID dengan eager loading untuk semua relasi yang dibutuhkan
             $asesmen = RmeAsesmen::with([
                 'user',
                 'rmeAsesmenTht',
@@ -463,25 +550,35 @@ class AsesmenKepThtController extends Controller
                 'rmeAsesmenThtDiagnosisImplementasi',
             ])->findOrFail($id);
 
+            // Pastikan data kunjungan pasien ditemukan dan sesuai dengan parameter
             $dataMedis = Kunjungan::with('pasien')
                 ->where('kd_pasien', $kd_pasien)
                 ->where('kd_unit', $kd_unit)
-                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tgl_masuk)))
                 ->where('urut_masuk', $urut_masuk)
                 ->firstOrFail();
 
-            $itemFisikIds = $asesmen->pemeriksaanFisik->pluck('id_item_fisik')->unique()->toArray();
-            $itemFisik = MrItemFisik::whereIn('id', $itemFisikIds)->orderBy('urut')->get();
+            // Ambil data pendukung
+            $itemFisik = MrItemFisik::orderBy('urut')->get();
+            $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
+            $rmeMasterImplementasi = RmeMasterImplementasi::all();
+            $satsetPrognosis = SatsetPrognosis::all();
+            $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
+            // Kirim data ke view
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.show', compact(
                 'asesmen',
                 'dataMedis',
-                'itemFisik'
+                'itemFisik',
+                'rmeMasterDiagnosis',
+                'rmeMasterImplementasi',
+                'satsetPrognosis',
+                'alergiPasien',
             ));
-        } catch (ModelNotFoundException $e) {
-            return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
         } catch (\Exception $e) {
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            // Tangani error dan berikan pesan yang jelas
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat mengambil data asesmen: ' . $e->getMessage());
         }
     }
 
@@ -511,6 +608,8 @@ class AsesmenKepThtController extends Controller
             $itemFisik = MrItemFisik::orderBy('urut')->get();
             $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
             $rmeMasterImplementasi = RmeMasterImplementasi::all();
+            $satsetPrognosis = SatsetPrognosis::all();
+            $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
             // Kirim data ke view
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.edit', compact(
@@ -519,6 +618,8 @@ class AsesmenKepThtController extends Controller
                 'itemFisik',
                 'rmeMasterDiagnosis',
                 'rmeMasterImplementasi',
+                'satsetPrognosis',
+                'alergiPasien',
             ));
         } catch (\Exception $e) {
             // Tangani error dan berikan pesan yang jelas
@@ -557,6 +658,13 @@ class AsesmenKepThtController extends Controller
             $asesmenThtDataMasuk->ruang = $request->ruang;
             $asesmenThtDataMasuk->anamnesis_anamnesis = $request->anamnesis_anamnesis;
             $asesmenThtDataMasuk->evaluasi_evaluasi_keperawatan = $request->evaluasi_evaluasi_keperawatan;
+            $asesmenThtDataMasuk->penyakit_sekarang = $request->penyakit_sekarang;
+            $asesmenThtDataMasuk->penyakit_terdahulu = $request->penyakit_terdahulu;
+            $asesmenThtDataMasuk->rencana_penatalaksanaan = $request->rencana_penatalaksanaan;
+            $asesmenThtDataMasuk->darah = $request->darah;
+            $asesmenThtDataMasuk->urine = $request->urine;
+            $asesmenThtDataMasuk->rontgent = $request->rontgent;
+            $asesmenThtDataMasuk->gistopatology = $request->gistopatology;
 
             $fileFields = [
                 'hasil_pemeriksaan_penunjang_darah',
@@ -679,6 +787,12 @@ class AsesmenKepThtController extends Controller
             // Rhinoscopi Pasterior
             $asesmenThtPemeriksaanFisik->rhinoscopi_pasterior_septum_nasi_kanan = $request->rhinoscopi_pasterior_septum_nasi_kanan;
             $asesmenThtPemeriksaanFisik->rhinoscopi_pasterior_septum_nasi_kiri = $request->rhinoscopi_pasterior_septum_nasi_kiri;
+            $asesmenThtPemeriksaanFisik->rhinoscopi_superior_kanan = $request->rhinoscopi_superior_kanan;
+            $asesmenThtPemeriksaanFisik->rhinoscopi_superior_kiri = $request->rhinoscopi_superior_kiri;
+            $asesmenThtPemeriksaanFisik->rhinoscopi_media_kanan = $request->rhinoscopi_media_kanan;
+            $asesmenThtPemeriksaanFisik->rhinoscopi_media_kiri = $request->rhinoscopi_media_kiri;
+            $asesmenThtPemeriksaanFisik->rhinoscopi_fasso_rossenmuler_kanan = $request->rhinoscopi_fasso_rossenmuler_kanan;
+            $asesmenThtPemeriksaanFisik->rhinoscopi_fasso_rossenmuler_kiri = $request->rhinoscopi_fasso_rossenmuler_kiri;
             // Meatus Nasi
             $asesmenThtPemeriksaanFisik->meatus_nasi_superior_kanan = $request->meatus_nasi_superior_kanan;
             $asesmenThtPemeriksaanFisik->meatus_nasi_superior_kiri = $request->meatus_nasi_superior_kiri;
@@ -707,6 +821,13 @@ class AsesmenKepThtController extends Controller
             $asesmenThtPemeriksaanFisik->antropometr_berat_badan = $request->antropometr_berat_badan;
             $asesmenThtPemeriksaanFisik->antropometri_imt = $request->antropometri_imt;
             $asesmenThtPemeriksaanFisik->antropometri_lpt = $request->antropometri_lpt;
+            
+            // Plica vokalis
+            $asesmenThtPemeriksaanFisik->plica_vokalis_bentuk_kanan = $request->plica_vokalis_bentuk_kanan;
+            $asesmenThtPemeriksaanFisik->plica_vokalis_bentuk_kiri = $request->plica_vokalis_bentuk_kiri;
+            $asesmenThtPemeriksaanFisik->plica_vokalis_warna_kanan = $request->plica_vokalis_warna_kanan;
+            $asesmenThtPemeriksaanFisik->plica_vokalis_warna_kiri = $request->plica_vokalis_warna_kiri;
+
 
             $asesmenThtPemeriksaanFisik->save();
 
@@ -830,6 +951,7 @@ class AsesmenKepThtController extends Controller
             $thtDiagnosisImplementasi->terapeutik = $request->terapeutik;
             $thtDiagnosisImplementasi->edukasi = $request->edukasi;
             $thtDiagnosisImplementasi->kolaborasi = $request->kolaborasi;
+            $thtDiagnosisImplementasi->tht_prognosis = $request->tht_prognosis;
             $thtDiagnosisImplementasi->save();
 
             //Simpan Diagnosa ke Master
