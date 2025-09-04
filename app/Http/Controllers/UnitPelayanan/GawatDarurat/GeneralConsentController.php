@@ -84,28 +84,28 @@ class GeneralConsentController extends Controller
             ];
             // dd($data);
 
-            $formatTglMasuk = date('Y-m-d', strtotime($tgl_masuk));
+            // $formatTglMasuk = date('Y-m-d', strtotime($tgl_masuk));
 
-            // store ttd petugas
-            if ($request->hasFile('ttd_petugas')) {
-                $path = $request->file('ttd_petugas')->store("uploads/gawat-darurat/general-consent/$formatTglMasuk/$kd_pasien/$urut_masuk");
+            // // store ttd petugas
+            // if ($request->hasFile('ttd_petugas')) {
+            //     $path = $request->file('ttd_petugas')->store("uploads/gawat-darurat/general-consent/$formatTglMasuk/$kd_pasien/$urut_masuk");
 
-                $data['ttd_petugas'] = $path;
-            }
+            //     $data['ttd_petugas'] = $path;
+            // }
 
-            // store ttd pj
-            if ($request->hasFile('ttd_pj')) {
-                $path = $request->file('ttd_pj')->store("uploads/gawat-darurat/general-consent/$formatTglMasuk/$kd_pasien/$urut_masuk");
+            // // store ttd pj
+            // if ($request->hasFile('ttd_pj')) {
+            //     $path = $request->file('ttd_pj')->store("uploads/gawat-darurat/general-consent/$formatTglMasuk/$kd_pasien/$urut_masuk");
 
-                $data['ttd_pj'] = $path;
-            }
+            //     $data['ttd_pj'] = $path;
+            // }
 
-            // store ttd saksi
-            if ($request->hasFile('ttd_saksi')) {
-                $path = $request->file('ttd_saksi')->store("uploads/gawat-darurat/general-consent/$formatTglMasuk/$kd_pasien/$urut_masuk");
+            // // store ttd saksi
+            // if ($request->hasFile('ttd_saksi')) {
+            //     $path = $request->file('ttd_saksi')->store("uploads/gawat-darurat/general-consent/$formatTglMasuk/$kd_pasien/$urut_masuk");
 
-                $data['ttd_saksi'] = $path;
-            }
+            //     $data['ttd_saksi'] = $path;
+            // }
 
             // store data
             GeneralConsent::create($data);
