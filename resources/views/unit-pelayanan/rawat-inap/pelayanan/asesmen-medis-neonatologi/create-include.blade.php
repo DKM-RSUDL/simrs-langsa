@@ -428,6 +428,255 @@
             }
         };
 
+        // 6. Apgar Skor
+        document.addEventListener('DOMContentLoaded', function() {
+            // Calculate totals and update interpretation
+            function calculateTotal() {
+                // Calculate 1 minute total
+                let total1 = 0;
+                let filled1 = 0;
+                const categories1 = ['appearance_1', 'pulse_1', 'grimace_1', 'activity_1', 'respiration_1'];
+                const data1 = {};
+                
+                categories1.forEach(category => {
+                    const select = document.querySelector(`select[name="${category}"]`);
+                    if (select && select.value !== '') {
+                        const value = parseInt(select.value);
+                        total1 += value;
+                        filled1++;
+                        data1[category] = {
+                            value: value,
+                            text: select.options[select.selectedIndex].text
+                        };
+                    } else {
+                        data1[category] = {
+                            value: null,
+                            text: null
+                        };
+                    }
+                });
+
+                // Calculate 5 minute total
+                let total5 = 0;
+                let filled5 = 0;
+                const categories5 = ['appearance_5', 'pulse_5', 'grimace_5', 'activity_5', 'respiration_5'];
+                const data5 = {};
+                
+                categories5.forEach(category => {
+                    const select = document.querySelector(`select[name="${category}"]`);
+                    if (select && select.value !== '') {
+                        const value = parseInt(select.value);
+                        total5 += value;
+                        filled5++;
+                        data5[category] = {
+                            value: value,
+                            text: select.options[select.selectedIndex].text
+                        };
+                    } else {
+                        data5[category] = {
+                            value: null,
+                            text: null
+                        };
+                    }
+                });
+
+                // Calculate combined total
+                const totalCombined = total1 + total5;
+
+                // Create complete data object
+                const apgarData = {
+                    minute_1: {
+                        categories: data1,
+                        total: total1,
+                        filled_count: filled1,
+                        is_complete: filled1 === 5
+                    },
+                    minute_5: {
+                        categories: data5,
+                        total: total5,
+                        filled_count: filled5,
+                        is_complete: filled5 === 5
+                    },
+                    combined: {
+                        total: totalCombined,
+                        both_complete: filled1 === 5 && filled5 === 5
+                    },
+                    timestamp: new Date().toISOString()
+                };
+
+                // Update display
+                document.getElementById('total_1_minute_display').textContent = total1;
+                document.getElementById('total_5_minute_display').textContent = total5;
+                document.getElementById('total_combined_display').textContent = totalCombined;
+
+                // Update hidden inputs
+                document.getElementById('total_1_minute').value = total1;
+                document.getElementById('total_5_minute').value = total5;
+                document.getElementById('total_combined').value = totalCombined;
+                document.getElementById('apgar_data').value = JSON.stringify(apgarData);
+
+                // Update badge colors based on scores
+                updateBadgeColor('total_1_minute_display', total1, filled1);
+                updateBadgeColor('total_5_minute_display', total5, filled5);
+                updateCombinedBadgeColor('total_combined_display', totalCombined, filled1, filled5);
+
+                // Show interpretation and save it
+                const interpretation = updateInterpretation(total1, total5, totalCombined, filled1, filled5);
+                document.getElementById('apgar_interpretation').value = interpretation;
+
+                // Log data untuk debugging (bisa dihapus di production)
+                console.log('APGAR Data:', apgarData);
+            }
+
+            // Update badge color based on score
+            function updateBadgeColor(elementId, score, filledCount) {
+                const badge = document.getElementById(elementId);
+
+                if (filledCount < 5) {
+                    badge.className = 'badge bg-secondary fs-5';
+                } else {
+                    if (score >= 8) {
+                        badge.className = 'badge bg-success fs-5';
+                    } else if (score >= 4) {
+                        badge.className = 'badge bg-warning fs-5';
+                    } else {
+                        badge.className = 'badge bg-danger fs-5';
+                    }
+                }
+            }
+
+            // Update combined badge color
+            function updateCombinedBadgeColor(elementId, totalScore, filled1, filled5) {
+                const badge = document.getElementById(elementId);
+
+                if (filled1 < 5 && filled5 < 5) {
+                    badge.className = 'badge bg-secondary fs-5';
+                } else {
+                    if (totalScore >= 16) {
+                        badge.className = 'badge bg-success fs-5';
+                    } else if (totalScore >= 8) {
+                        badge.className = 'badge bg-warning fs-5';
+                    } else {
+                        badge.className = 'badge bg-danger fs-5';
+                    }
+                }
+            }
+
+            // Update interpretation text and return the interpretation string
+            function updateInterpretation(total1, total5, totalCombined, filled1, filled5) {
+                const interpretation = document.getElementById('interpretation');
+                const interpretationText = document.getElementById('interpretation_text');
+
+                if (filled1 === 0 && filled5 === 0) {
+                    interpretation.style.display = 'none';
+                    return '';
+                }
+
+                let text = '';
+                let alertClass = 'alert alert-secondary';
+
+                // Interpretation based on individual scores
+                if (filled1 === 5 && filled5 === 5) {
+                    const maxScore = Math.max(total1, total5);
+
+                    if (maxScore >= 8) {
+                        text = `Kondisi bayi baik/normal. Skor 1 menit: ${total1}, Skor 5 menit: ${total5}, Total gabungan: ${totalCombined}. `;
+                        if (total5 > total1) {
+                            text += 'Kondisi membaik dari 1 ke 5 menit.';
+                        } else if (total5 === total1) {
+                            text += 'Kondisi stabil.';
+                        }
+                        alertClass = 'alert alert-success';
+                    } else if (maxScore >= 4) {
+                        text = `Bayi memerlukan pengawasan khusus. Skor 1 menit: ${total1}, Skor 5 menit: ${total5}, Total gabungan: ${totalCombined}. `;
+                        if (total5 > total1) {
+                            text += 'Ada perbaikan dari 1 ke 5 menit.';
+                        } else {
+                            text += 'Perlu perhatian berkelanjutan.';
+                        }
+                        alertClass = 'alert alert-warning';
+                    } else {
+                        text = `Bayi dalam kondisi kritis, memerlukan resusitasi segera. Skor 1 menit: ${total1}, Skor 5 menit: ${total5}, Total gabungan: ${totalCombined}. `;
+                        if (total5 > total1) {
+                            text += 'Ada sedikit perbaikan tapi masih memerlukan intervensi medis.';
+                        } else {
+                            text += 'Kondisi tetap kritis.';
+                        }
+                        alertClass = 'alert alert-danger';
+                    }
+                } else if (filled1 === 5) {
+                    text = `Skor 1 menit: ${total1} (${getScoreStatus(total1)}). Lengkapi penilaian 5 menit untuk evaluasi menyeluruh.`;
+                    alertClass = 'alert alert-info';
+                } else if (filled5 === 5) {
+                    text = `Skor 5 menit: ${total5} (${getScoreStatus(total5)}). Lengkapi penilaian 1 menit untuk evaluasi menyeluruh.`;
+                    alertClass = 'alert alert-info';
+                } else {
+                    text = `Penilaian belum lengkap. Lengkapi semua parameter untuk mendapatkan interpretasi yang akurat.`;
+                    alertClass = 'alert alert-warning';
+                }
+
+                interpretation.className = alertClass;
+                interpretationText.textContent = text;
+                interpretation.style.display = 'block';
+
+                return text;
+            }
+
+            // Get score status helper function
+            function getScoreStatus(score) {
+                if (score >= 8) return 'Baik/Normal';
+                if (score >= 4) return 'Perlu Perhatian';
+                return 'Kritis';
+            }
+
+            // Add event listeners to all select elements
+            const allSelects = document.querySelectorAll('select[name*="_1"], select[name*="_5"]');
+            allSelects.forEach(select => {
+                select.addEventListener('change', calculateTotal);
+            });
+
+            // Quick action buttons
+            document.getElementById('fillNormal').addEventListener('click', function() {
+                allSelects.forEach(select => {
+                    select.value = '2';
+                });
+                calculateTotal();
+            });
+
+            document.getElementById('copy1to5').addEventListener('click', function() {
+                const categories = ['appearance', 'pulse', 'grimace', 'activity', 'respiration'];
+                categories.forEach(category => {
+                    const select1 = document.querySelector(`select[name="${category}_1"]`);
+                    const select5 = document.querySelector(`select[name="${category}_5"]`);
+                    if (select1 && select5 && select1.value) {
+                        select5.value = select1.value;
+                    }
+                });
+                calculateTotal();
+            });
+
+            document.getElementById('resetAll').addEventListener('click', function() {
+                if (confirm('Apakah Anda yakin ingin mereset semua nilai APGAR?')) {
+                    allSelects.forEach(select => {
+                        select.value = '';
+                    });
+                    calculateTotal();
+                }
+            });
+
+            // Function to get APGAR data (bisa dipanggil dari luar)
+            window.getApgarData = function() {
+                const apgarDataInput = document.getElementById('apgar_data');
+                if (apgarDataInput && apgarDataInput.value) {
+                    return JSON.parse(apgarDataInput.value);
+                }
+                return null;
+            };
+
+            // Initial calculation
+            calculateTotal();
+        });
+
         // 7. Enhanced Diagnosis Management
         document.addEventListener('DOMContentLoaded', function () {
             initDiagnosisManagement('diagnosis-banding', 'diagnosis_banding');

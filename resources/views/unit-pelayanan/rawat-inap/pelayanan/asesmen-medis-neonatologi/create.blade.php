@@ -174,11 +174,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="anc" id="anc_tidak" value="tidak">
+                                                <input class="form-check-input" type="radio" name="anc" id="anc_tidak" value="0">
                                                 <label class="form-check-label" for="anc_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="anc" id="anc_ya" value="ya">
+                                                <input class="form-check-input" type="radio" name="anc" id="anc_ya" value="1">
                                                 <label class="form-check-label" for="anc_ya">Ya</label>
                                             </div>
                                         </div>
@@ -221,11 +221,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="nyeri_bak" id="nyeri_bak_tidak" value="tidak">
+                                                <input class="form-check-input" type="radio" name="nyeri_bak" id="nyeri_bak_tidak" value="0">
                                                 <label class="form-check-label" for="nyeri_bak_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="nyeri_bak" id="nyeri_bak_ya" value="ya">
+                                                <input class="form-check-input" type="radio" name="nyeri_bak" id="nyeri_bak_ya" value="1">
                                                 <label class="form-check-label" for="nyeri_bak_ya">Ya</label>
                                             </div>
                                         </div>
@@ -238,11 +238,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="keputihan" id="keputihan_tidak" value="tidak">
+                                                <input class="form-check-input" type="radio" name="keputihan" id="keputihan_tidak" value="0">
                                                 <label class="form-check-label" for="keputihan_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="keputihan" id="keputihan_ya" value="ya">
+                                                <input class="form-check-input" type="radio" name="keputihan" id="keputihan_ya" value="1">
                                                 <label class="form-check-label" for="keputihan_ya">Ya</label>
                                             </div>
                                         </div>
@@ -262,11 +262,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="perdarahan" id="perdarahan_tidak" value="tidak">
+                                                <input class="form-check-input" type="radio" name="perdarahan" id="perdarahan_tidak" value="0">
                                                 <label class="form-check-label" for="perdarahan_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="perdarahan" id="perdarahan_ya" value="ya">
+                                                <input class="form-check-input" type="radio" name="perdarahan" id="perdarahan_ya" value="1">
                                                 <label class="form-check-label" for="perdarahan_ya">Ya</label>
                                             </div>
                                         </div>
@@ -279,11 +279,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="ketuban_pecah" id="ketuban_tidak" value="tidak">
+                                                <input class="form-check-input" type="radio" name="ketuban_pecah" id="ketuban_tidak" value="0">
                                                 <label class="form-check-label" for="ketuban_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="ketuban_pecah" id="ketuban_ya" value="ya">
+                                                <input class="form-check-input" type="radio" name="ketuban_pecah" id="ketuban_ya" value="1">
                                                 <label class="form-check-label" for="ketuban_ya">Ya</label>
                                             </div>
                                         </div>
@@ -299,11 +299,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="gawat_janin" id="gawat_janin_tidak" value="tidak">
+                                                <input class="form-check-input" type="radio" name="gawat_janin" id="gawat_janin_tidak" value="0">
                                                 <label class="form-check-label" for="gawat_janin_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="gawat_janin" id="gawat_janin_ya" value="ya">
+                                                <input class="form-check-input" type="radio" name="gawat_janin" id="gawat_janin_ya" value="1">
                                                 <label class="form-check-label" for="gawat_janin_ya">Ya</label>
                                             </div>
                                         </div>
@@ -316,11 +316,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="demam" id="demam_tidak" value="tidak">
+                                                <input class="form-check-input" type="radio" name="demam" id="demam_tidak" value="0">
                                                 <label class="form-check-label" for="demam_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="demam" id="demam_ya" value="ya">
+                                                <input class="form-check-input" type="radio" name="demam" id="demam_ya" value="1">
                                                 <label class="form-check-label" for="demam_ya">Ya</label>
                                             </div>
                                         </div>
@@ -339,11 +339,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="terapi_deksametason" id="deksametason_tidak" value="tidak">
+                                                <input class="form-check-input" type="radio" name="terapi_deksametason" id="deksametason_tidak" value="0">
                                                 <label class="form-check-label" for="deksametason_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="terapi_deksametason" id="deksametason_ya" value="ya">
+                                                <input class="form-check-input" type="radio" name="terapi_deksametason" id="deksametason_ya" value="1">
                                                 <label class="form-check-label" for="deksametason_ya">Ya</label>
                                             </div>
                                         </div>
@@ -446,11 +446,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="anemia" id="anemia_tidak" value="tidak">
+                                                <input class="form-check-input" type="radio" name="anemia" id="anemia_tidak" value="0">
                                                 <label class="form-check-label" for="anemia_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="anemia" id="anemia_ya" value="ya">
+                                                <input class="form-check-input" type="radio" name="anemia" id="anemia_ya" value="1">
                                                 <label class="form-check-label" for="anemia_ya">Ya</label>
                                             </div>
                                         </div>
@@ -463,11 +463,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="dispnoe" id="dispnoe_tidak" value="tidak">
+                                                <input class="form-check-input" type="radio" name="dispnoe" id="dispnoe_tidak" value="0">
                                                 <label class="form-check-label" for="dispnoe_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="dispnoe" id="dispnoe_ya" value="ya">
+                                                <input class="form-check-input" type="radio" name="dispnoe" id="dispnoe_ya" value="1">
                                                 <label class="form-check-label" for="dispnoe_ya">Ya</label>
                                             </div>
                                         </div>
@@ -480,11 +480,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="edema" id="edema_tidak" value="tidak">
+                                                <input class="form-check-input" type="radio" name="edema" id="edema_tidak" value="0">
                                                 <label class="form-check-label" for="edema_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="edema" id="edema_ya" value="ya">
+                                                <input class="form-check-input" type="radio" name="edema" id="edema_ya" value="1">
                                                 <label class="form-check-label" for="edema_ya">Ya</label>
                                             </div>
                                         </div>
@@ -497,11 +497,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="ikterik" id="ikterik_tidak" value="tidak">
+                                                <input class="form-check-input" type="radio" name="ikterik" id="ikterik_tidak" value="0">
                                                 <label class="form-check-label" for="ikterik_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="ikterik" id="ikterik_ya" value="ya">
+                                                <input class="form-check-input" type="radio" name="ikterik" id="ikterik_ya" value="1">
                                                 <label class="form-check-label" for="ikterik_ya">Ya</label>
                                             </div>
                                         </div>
@@ -514,11 +514,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="sianosis" id="sianosis_tidak" value="tidak">
+                                                <input class="form-check-input" type="radio" name="sianosis" id="sianosis_tidak" value="0">
                                                 <label class="form-check-label" for="sianosis_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="sianosis" id="sianosis_ya" value="ya">
+                                                <input class="form-check-input" type="radio" name="sianosis" id="sianosis_ya" value="1">
                                                 <label class="form-check-label" for="sianosis_ya">Ya</label>
                                             </div>
                                         </div>
@@ -580,11 +580,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="merintih" id="merintih_tidak" value="tidak">
+                                                <input class="form-check-input" type="radio" name="merintih" id="merintih_tidak" value="0">
                                                 <label class="form-check-label" for="merintih_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="merintih" id="merintih_ya" value="ya">
+                                                <input class="form-check-input" type="radio" name="merintih" id="merintih_ya" value="1">
                                                 <label class="form-check-label" for="merintih_ya">Ya</label>
                                             </div>
                                         </div>
@@ -679,7 +679,7 @@
                                         </div>
                                         <div class="col-md-9">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="skor_nyeri" id="skor_nyeri_5" value="< 5">
+                                                <input class="form-check-input" type="radio" name="skor_nyeri" id="skor_nyeri_5" value="<5">
                                                 <label class="form-check-label" for="skor_nyeri_5">< 5</label>
                                             </div>
                                             <div class="form-check form-check-inline">
@@ -687,7 +687,7 @@
                                                 <label class="form-check-label" for="skor_nyeri_5_9">5-9</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="skor_nyeri" id="skor_nyeri_10" value=">= 10">
+                                                <input class="form-check-input" type="radio" name="skor_nyeri" id="skor_nyeri_10" value=">=10">
                                                 <label class="form-check-label" for="skor_nyeri_10">>= 10</label>
                                             </div>
                                         </div>
@@ -851,26 +851,24 @@
                                             <div class="d-flex justify-content-center gap-3 flex-wrap">
                                                 <div class="text-center">
                                                     <div class="fw-semibold">1 menit:</div>
-                                                    <span id="total_1_minute" class="badge bg-primary fs-5">0</span>
+                                                    <span id="total_1_minute_display" class="badge bg-primary fs-5">0</span>
                                                 </div>
                                                 <div class="text-center">
                                                     <div class="fw-semibold">5 menit:</div>
-                                                    <span id="total_5_minute" class="badge bg-primary fs-5">0</span>
+                                                    <span id="total_5_minute_display" class="badge bg-primary fs-5">0</span>
                                                 </div>
                                                 <div class="text-center">
                                                     <div class="fw-semibold">Total Gabungan:</div>
-                                                    <span id="total_combined" class="badge bg-success fs-5">0</span>
+                                                    <span id="total_combined_display" class="badge bg-success fs-5">0</span>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Interpretation -->
-                                    <div class="row mt-3">
-                                        <div class="col-12">
-                                            <div id="interpretation" class="alert alert-secondary" style="display: none;">
-                                                <strong>Interpretasi:</strong> <span id="interpretation_text"></span>
-                                            </div>
+                                            
+                                            <!-- Hidden inputs untuk menyimpan data -->
+                                            <input type="hidden" id="total_1_minute" name="total_1_minute" value="0">
+                                            <input type="hidden" id="total_5_minute" name="total_5_minute" value="0">
+                                            <input type="hidden" id="total_combined" name="total_combined" value="0">
+                                            <input type="hidden" id="apgar_data" name="apgar_data" value="{}">
+                                            <input type="hidden" id="apgar_interpretation" name="apgar_interpretation" value="">
                                         </div>
                                     </div>
 
@@ -907,11 +905,11 @@
                                             <label class="form-label">d. Caput sucedaneum:</label>
                                             <div class="d-flex gap-3">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="caput_sucedaneum" id="caput_tidak" value="tidak">
+                                                    <input class="form-check-input" type="radio" name="caput_sucedaneum" id="caput_tidak" value="0">
                                                     <label class="form-check-label" for="caput_tidak">Tidak</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="caput_sucedaneum" id="caput_ya" value="ya">
+                                                    <input class="form-check-input" type="radio" name="caput_sucedaneum" id="caput_ya" value="1">
                                                     <label class="form-check-label" for="caput_ya">Ya</label>
                                                 </div>
                                             </div>
@@ -921,11 +919,11 @@
                                             <label class="form-label">e. Cephalohematom:</label>
                                             <div class="d-flex gap-3">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="cephalohematom" id="cepha_tidak" value="tidak">
+                                                    <input class="form-check-input" type="radio" name="cephalohematom" id="cepha_tidak" value="0">
                                                     <label class="form-check-label" for="cepha_tidak">Tidak</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="cephalohematom" id="cepha_ya" value="ya">
+                                                    <input class="form-check-input" type="radio" name="cephalohematom" id="cepha_ya" value="1">
                                                     <label class="form-check-label" for="cepha_ya">Ya</label>
                                                 </div>
                                             </div>
@@ -1004,11 +1002,11 @@
                                             <label class="form-label">Nafas cuping hidung:</label>
                                             <div class="d-flex gap-3">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="nafas_cuping" id="nafas_cuping_ya" value="ya">
+                                                    <input class="form-check-input" type="radio" name="nafas_cuping" id="nafas_cuping_ya" value="1">
                                                     <label class="form-check-label" for="nafas_cuping_ya">Ya</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="nafas_cuping" id="nafas_cuping_tidak" value="tidak">
+                                                    <input class="form-check-input" type="radio" name="nafas_cuping" id="nafas_cuping_tidak" value="0">
                                                     <label class="form-check-label" for="nafas_cuping_tidak">Tidak</label>
                                                 </div>
                                             </div>
@@ -1045,11 +1043,11 @@
                                             <label class="form-label">Bibir/lidah sianosis:</label>
                                             <div class="d-flex flex-wrap gap-3">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="mulut_sianosis" id="mulut_sianosis_ya" value="ya">
+                                                    <input class="form-check-input" type="radio" name="mulut_sianosis" id="mulut_sianosis_ya" value="1">
                                                     <label class="form-check-label" for="mulut_sianosis_ya">Ya</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="mulut_sianosis" id="mulut_sianosis_tidak" value="tidak">
+                                                    <input class="form-check-input" type="radio" name="mulut_sianosis" id="mulut_sianosis_tidak" value="0">
                                                     <label class="form-check-label" for="mulut_sianosis_tidak">Tidak</label>
                                                 </div>
                                             </div>
@@ -1181,11 +1179,11 @@
                                             <label class="form-label">c. Venektasi:</label>
                                             <div class="d-flex gap-3">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="abdomen_venektasi" id="abdomen_venektasi_tidak" value="tidak">
+                                                    <input class="form-check-input" type="radio" name="abdomen_venektasi" id="abdomen_venektasi_tidak" value="0">
                                                     <label class="form-check-label" for="abdomen_venektasi_tidak">Tidak</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="abdomen_venektasi" id="abdomen_venektasi_ya" value="ya">
+                                                    <input class="form-check-input" type="radio" name="abdomen_venektasi" id="abdomen_venektasi_ya" value="1">
                                                     <label class="form-check-label" for="abdomen_venektasi_ya">Ya</label>
                                                 </div>
                                             </div>
@@ -1313,11 +1311,11 @@
                                             <label class="form-label">Mekonium:</label>
                                             <div class="d-flex gap-3">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="anus_mekonium" id="anus_mekonium_tidak" value="tidak">
+                                                    <input class="form-check-input" type="radio" name="anus_mekonium" id="anus_mekonium_tidak" value="0">
                                                     <label class="form-check-label" for="anus_mekonium_tidak">Tidak</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="anus_mekonium" id="anus_mekonium_ya" value="ya">
+                                                    <input class="form-check-input" type="radio" name="anus_mekonium" id="anus_mekonium_ya" value="1">
                                                     <label class="form-check-label" for="anus_mekonium_ya">Ya</label>
                                                 </div>
                                             </div>
@@ -1638,11 +1636,11 @@
                                                     <div class="col-md-7">
                                                         <div class="d-flex gap-3">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="radio" name="refleks_moro" id="refleks_moro_ya" value="ya">
+                                                                <input class="form-check-input" type="radio" name="refleks_moro" id="refleks_moro_ya" value="1">
                                                                 <label class="form-check-label" for="refleks_moro_ya">Ya</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="radio" name="refleks_moro" id="refleks_moro_tidak" value="tidak">
+                                                                <input class="form-check-input" type="radio" name="refleks_moro" id="refleks_moro_tidak" value="0">
                                                                 <label class="form-check-label" for="refleks_moro_tidak">Tidak</label>
                                                             </div>
                                                         </div>
@@ -1657,11 +1655,11 @@
                                                     <div class="col-md-7">
                                                         <div class="d-flex gap-3">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="radio" name="refleks_rooting" id="refleks_rooting_ya" value="ya">
+                                                                <input class="form-check-input" type="radio" name="refleks_rooting" id="refleks_rooting_ya" value="1">
                                                                 <label class="form-check-label" for="refleks_rooting_ya">Ya</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="radio" name="refleks_rooting" id="refleks_rooting_tidak" value="tidak">
+                                                                <input class="form-check-input" type="radio" name="refleks_rooting" id="refleks_rooting_tidak" value="0">
                                                                 <label class="form-check-label" for="refleks_rooting_tidak">Tidak</label>
                                                             </div>
                                                         </div>
@@ -1680,11 +1678,11 @@
                                                     <div class="col-md-7">
                                                         <div class="d-flex gap-3">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="radio" name="refleks_palmar_grasping" id="refleks_palmar_grasping_ya" value="ya">
+                                                                <input class="form-check-input" type="radio" name="refleks_palmar_grasping" id="refleks_palmar_grasping_ya" value="1">
                                                                 <label class="form-check-label" for="refleks_palmar_grasping_ya">Ya</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="radio" name="refleks_palmar_grasping" id="refleks_palmar_grasping_tidak" value="tidak">
+                                                                <input class="form-check-input" type="radio" name="refleks_palmar_grasping" id="refleks_palmar_grasping_tidak" value="0">
                                                                 <label class="form-check-label" for="refleks_palmar_grasping_tidak">Tidak</label>
                                                             </div>
                                                         </div>
@@ -1699,11 +1697,11 @@
                                                     <div class="col-md-7">
                                                         <div class="d-flex gap-3">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="radio" name="refleks_sucking" id="refleks_sucking_ya" value="ya">
+                                                                <input class="form-check-input" type="radio" name="refleks_sucking" id="refleks_sucking_ya" value="1">
                                                                 <label class="form-check-label" for="refleks_sucking_ya">Ya</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="radio" name="refleks_sucking" id="refleks_sucking_tidak" value="tidak">
+                                                                <input class="form-check-input" type="radio" name="refleks_sucking" id="refleks_sucking_tidak" value="0">
                                                                 <label class="form-check-label" for="refleks_sucking_tidak">Tidak</label>
                                                             </div>
                                                         </div>
@@ -1722,11 +1720,11 @@
                                                     <div class="col-md-7">
                                                         <div class="d-flex gap-3">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="radio" name="refleks_plantar_grasping" id="refleks_plantar_grasping_ya" value="ya">
+                                                                <input class="form-check-input" type="radio" name="refleks_plantar_grasping" id="refleks_plantar_grasping_ya" value="1">
                                                                 <label class="form-check-label" for="refleks_plantar_grasping_ya">Ya</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="radio" name="refleks_plantar_grasping" id="refleks_plantar_grasping_tidak" value="tidak">
+                                                                <input class="form-check-input" type="radio" name="refleks_plantar_grasping" id="refleks_plantar_grasping_tidak" value="0">
                                                                 <label class="form-check-label" for="refleks_plantar_grasping_tidak">Tidak</label>
                                                             </div>
                                                         </div>
@@ -1741,11 +1739,11 @@
                                                     <div class="col-md-7">
                                                         <div class="d-flex gap-3">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="radio" name="refleks_tonic_neck" id="refleks_tonic_neck_ya" value="ya">
+                                                                <input class="form-check-input" type="radio" name="refleks_tonic_neck" id="refleks_tonic_neck_ya" value="1">
                                                                 <label class="form-check-label" for="refleks_tonic_neck_ya">Ya</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="radio" name="refleks_tonic_neck" id="refleks_tonic_neck_tidak" value="tidak">
+                                                                <input class="form-check-input" type="radio" name="refleks_tonic_neck" id="refleks_tonic_neck_tidak" value="0">
                                                                 <label class="form-check-label" for="refleks_tonic_neck_tidak">Tidak</label>
                                                             </div>
                                                         </div>
@@ -2046,350 +2044,3 @@
         </div>
     </div>
 @endsection
-
-
-@push('js')
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-        // Function to toggle input fields based on radio button selection
-        function toggleInputFields(radioName, inputIds, yesValue = 'ya') {
-            const radios = document.getElementsByName(radioName);
-            const inputs = inputIds.map(id => document.getElementById(id));
-
-            // Initialize state based on current selection
-            const selectedValue = Array.from(radios).find(radio => radio.checked)?.value;
-            inputs.forEach(input => {
-                input.disabled = selectedValue !== yesValue;
-                if (selectedValue !== yesValue) {
-                    input.value = ''; // Clear input when disabled
-                }
-            });
-
-            // Add event listeners to radio buttons
-            radios.forEach(radio => {
-                radio.addEventListener('change', function () {
-                    inputs.forEach(input => {
-                        input.disabled = this.value !== yesValue;
-                        if (this.value !== yesValue) {
-                            input.value = ''; // Clear input when disabled
-                            input.classList.remove('is-invalid'); // Remove validation error styling
-                        }
-                    });
-                });
-            });
-        }
-
-        // Toggle inputs for Merokok
-        toggleInputFields('merokok', ['merokok_jumlah', 'merokok_lama']);
-
-        // Toggle inputs for Alkohol
-        toggleInputFields('alkohol', ['alkohol_jumlah']);
-
-        // Toggle inputs for Obat-obatan
-        toggleInputFields('obat_obatan', ['obat_jenis']);
-
-        // Client-side validation on form submission
-        document.querySelector('form').addEventListener('submit', function (event) {
-            let errors = [];
-
-            // Check Merokok
-            const merokok = document.querySelector('input[name="merokok"]:checked')?.value;
-            if (merokok === 'ya') {
-                const jumlah = document.getElementById('merokok_jumlah').value;
-                const lama = document.getElementById('merokok_lama').value;
-                if (!jumlah || jumlah < 0) {
-                    errors.push('Jumlah batang/hari harus diisi dan tidak boleh negatif.');
-                    document.getElementById('merokok_jumlah').classList.add('is-invalid');
-                }
-                if (!lama || lama < 0) {
-                    errors.push('Lama merokok harus diisi dan tidak boleh negatif.');
-                    document.getElementById('merokok_lama').classList.add('is-invalid');
-                }
-            }
-
-            // Check Alkohol
-            const alkohol = document.querySelector('input[name="alkohol"]:checked')?.value;
-            if (alkohol === 'ya' && !document.getElementById('alkohol_jumlah').value.trim()) {
-                errors.push('Jumlah konsumsi alkohol harus diisi.');
-                document.getElementById('alkohol_jumlah').classList.add('is-invalid');
-            }
-
-            // Check Obat-obatan
-            const obat = document.querySelector('input[name="obat_obatan"]:checked')?.value;
-            if (obat === 'ya' && !document.getElementById('obat_jenis').value.trim()) {
-                errors.push('Jenis obat-obatan harus diisi.');
-                document.getElementById('obat_jenis').classList.add('is-invalid');
-            }
-
-            // If there are errors, prevent form submission and show alert
-            if (errors.length > 0) {
-                event.preventDefault();
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Data Belum Lengkap',
-                    html: errors.join('<br>'),
-                    confirmButtonColor: '#3085d6',
-                });
-            }
-        });
-    });
-
-    // Skala Nyeri - JavaScript yang disederhanakan
-    function initSkalaNyeri() {
-        const input = $('input[name="skala_nyeri"]');
-        const hiddenInput = $('input[name="skala_nyeri_nilai"]');
-        const button = $('#skalaNyeriBtn');
-
-        // Trigger saat pertama kali load
-        const initialValue = parseInt(input.val()) || 0;
-        updateButton(initialValue);
-
-        // Sinkronkan hidden input dengan input utama
-        hiddenInput.val(initialValue);
-
-        // Event handler untuk input utama
-        input.on('input change', function() {
-            let nilai = parseInt($(this).val()) || 0;
-
-            // Batasi nilai antara 0-10
-            nilai = Math.min(Math.max(nilai, 0), 10);
-            $(this).val(nilai);
-
-            // Sinkronkan dengan hidden input
-            hiddenInput.val(nilai);
-
-            updateButton(nilai);
-        });
-
-        // Event handler untuk hidden input (jika diubah manual)
-        hiddenInput.on('input change', function() {
-            let nilai = parseInt($(this).val()) || 0;
-
-            // Batasi nilai antara 0-10
-            nilai = Math.min(Math.max(nilai, 0), 10);
-            $(this).val(nilai);
-
-            // Sinkronkan dengan input utama
-            input.val(nilai);
-
-            updateButton(nilai);
-        });
-
-        // Fungsi untuk update button
-        function updateButton(nilai) {
-            let buttonClass, textNyeri;
-
-            if (nilai === 0) {
-                buttonClass = 'btn-success';
-                textNyeri = 'Tidak Nyeri';
-            } else if (nilai >= 1 && nilai <= 3) {
-                buttonClass = 'btn-success';
-                textNyeri = 'Nyeri Ringan';
-            } else if (nilai >= 4 && nilai <= 5) {
-                buttonClass = 'btn-warning';
-                textNyeri = 'Nyeri Sedang';
-            } else if (nilai >= 6 && nilai <= 7) {
-                buttonClass = 'btn-warning';
-                textNyeri = 'Nyeri Berat';
-            } else if (nilai >= 8 && nilai <= 9) {
-                buttonClass = 'btn-danger';
-                textNyeri = 'Nyeri Sangat Berat';
-            } else if (nilai >= 10) {
-                buttonClass = 'btn-danger';
-                textNyeri = 'Nyeri Tak Tertahankan';
-            }
-
-            button
-                .removeClass('btn-success btn-warning btn-danger')
-                .addClass(buttonClass)
-                .text(textNyeri);
-        }
-    }
-
-    // Inisialisasi saat dokumen ready
-    $(document).ready(function() {
-        initSkalaNyeri();
-    });
-
-    //
-    document.addEventListener('DOMContentLoaded', function() {
-        // Calculate totals and update interpretation
-        function calculateTotal() {
-            // Calculate 1 minute total
-            let total1 = 0;
-            let filled1 = 0;
-            const categories1 = ['appearance_1', 'pulse_1', 'grimace_1', 'activity_1', 'respiration_1'];
-            categories1.forEach(category => {
-                const select = document.querySelector(`select[name="${category}"]`);
-                if (select && select.value !== '') {
-                    total1 += parseInt(select.value);
-                    filled1++;
-                }
-            });
-
-            // Calculate 5 minute total
-            let total5 = 0;
-            let filled5 = 0;
-            const categories5 = ['appearance_5', 'pulse_5', 'grimace_5', 'activity_5', 'respiration_5'];
-            categories5.forEach(category => {
-                const select = document.querySelector(`select[name="${category}"]`);
-                if (select && select.value !== '') {
-                    total5 += parseInt(select.value);
-                    filled5++;
-                }
-            });
-
-            // Calculate combined total
-            const totalCombined = total1 + total5;
-
-            // Update display
-            document.getElementById('total_1_minute').textContent = total1;
-            document.getElementById('total_5_minute').textContent = total5;
-            document.getElementById('total_combined').textContent = totalCombined;
-
-            // Update badge colors based on scores
-            updateBadgeColor('total_1_minute', total1, filled1);
-            updateBadgeColor('total_5_minute', total5, filled5);
-            updateCombinedBadgeColor('total_combined', totalCombined, filled1, filled5);
-
-            // Show interpretation
-            updateInterpretation(total1, total5, totalCombined, filled1, filled5);
-        }
-
-        // Update badge color based on score
-        function updateBadgeColor(elementId, score, filledCount) {
-            const badge = document.getElementById(elementId);
-
-            if (filledCount < 5) {
-                badge.className = 'badge bg-secondary fs-6';
-            } else {
-                if (score >= 8) {
-                    badge.className = 'badge bg-success fs-6';
-                } else if (score >= 4) {
-                    badge.className = 'badge bg-warning fs-6';
-                } else {
-                    badge.className = 'badge bg-danger fs-6';
-                }
-            }
-        }
-
-        // Update combined badge color
-        function updateCombinedBadgeColor(elementId, totalScore, filled1, filled5) {
-            const badge = document.getElementById(elementId);
-
-            if (filled1 < 5 && filled5 < 5) {
-                badge.className = 'badge bg-secondary fs-6';
-            } else {
-                if (totalScore >= 16) {
-                    badge.className = 'badge bg-success fs-6';
-                } else if (totalScore >= 8) {
-                    badge.className = 'badge bg-warning fs-6';
-                } else {
-                    badge.className = 'badge bg-danger fs-6';
-                }
-            }
-        }
-
-        // Update interpretation text
-        function updateInterpretation(total1, total5, totalCombined, filled1, filled5) {
-            const interpretation = document.getElementById('interpretation');
-            const interpretationText = document.getElementById('interpretation_text');
-
-            if (filled1 === 0 && filled5 === 0) {
-                interpretation.style.display = 'none';
-                return;
-            }
-
-            let text = '';
-            let alertClass = 'alert alert-secondary';
-
-            // Interpretation based on individual scores
-            if (filled1 === 5 && filled5 === 5) {
-                const maxScore = Math.max(total1, total5);
-
-                if (maxScore >= 8) {
-                    text = `Kondisi bayi baik/normal. Skor 1 menit: ${total1}, Skor 5 menit: ${total5}, Total gabungan: ${totalCombined}. `;
-                    if (total5 > total1) {
-                        text += 'Kondisi membaik dari 1 ke 5 menit.';
-                    } else if (total5 === total1) {
-                        text += 'Kondisi stabil.';
-                    }
-                    alertClass = 'alert alert-success';
-                } else if (maxScore >= 4) {
-                    text = `Bayi memerlukan pengawasan khusus. Skor 1 menit: ${total1}, Skor 5 menit: ${total5}, Total gabungan: ${totalCombined}. `;
-                    if (total5 > total1) {
-                        text += 'Ada perbaikan dari 1 ke 5 menit.';
-                    } else {
-                        text += 'Perlu perhatian berkelanjutan.';
-                    }
-                    alertClass = 'alert alert-warning';
-                } else {
-                    text = `Bayi dalam kondisi kritis, memerlukan resusitasi segera. Skor 1 menit: ${total1}, Skor 5 menit: ${total5}, Total gabungan: ${totalCombined}. `;
-                    if (total5 > total1) {
-                        text += 'Ada sedikit perbaikan tapi masih memerlukan intervensi medis.';
-                    } else {
-                        text += 'Kondisi tetap kritis.';
-                    }
-                    alertClass = 'alert alert-danger';
-                }
-            } else if (filled1 === 5) {
-                text = `Skor 1 menit: ${total1} (${getScoreStatus(total1)}). Lengkapi penilaian 5 menit untuk evaluasi menyeluruh.`;
-                alertClass = 'alert alert-info';
-            } else if (filled5 === 5) {
-                text = `Skor 5 menit: ${total5} (${getScoreStatus(total5)}). Lengkapi penilaian 1 menit untuk evaluasi menyeluruh.`;
-                alertClass = 'alert alert-info';
-            } else {
-                text = `Penilaian belum lengkap. Lengkapi semua parameter untuk mendapatkan interpretasi yang akurat.`;
-                alertClass = 'alert alert-warning';
-            }
-
-            interpretation.className = alertClass;
-            interpretationText.textContent = text;
-            interpretation.style.display = 'block';
-        }
-
-        // Get score status helper function
-        function getScoreStatus(score) {
-            if (score >= 8) return 'Baik/Normal';
-            if (score >= 4) return 'Perlu Perhatian';
-            return 'Kritis';
-        }
-
-        // Add event listeners to all select elements
-        const allSelects = document.querySelectorAll('select[name*="_1"], select[name*="_5"]');
-        allSelects.forEach(select => {
-            select.addEventListener('change', calculateTotal);
-        });
-
-        // Quick action buttons
-        document.getElementById('fillNormal').addEventListener('click', function() {
-            allSelects.forEach(select => {
-                select.value = '2';
-            });
-            calculateTotal();
-        });
-
-        document.getElementById('copy1to5').addEventListener('click', function() {
-            const categories = ['appearance', 'pulse', 'grimace', 'activity', 'respiration'];
-            categories.forEach(category => {
-                const select1 = document.querySelector(`select[name="${category}_1"]`);
-                const select5 = document.querySelector(`select[name="${category}_5"]`);
-                if (select1 && select5 && select1.value) {
-                    select5.value = select1.value;
-                }
-            });
-            calculateTotal();
-        });
-
-        document.getElementById('resetAll').addEventListener('click', function() {
-            allSelects.forEach(select => {
-                select.value = '';
-            });
-            calculateTotal();
-        });
-
-        // Initial calculation
-        calculateTotal();
-    });
-    </script>
-@endpush
