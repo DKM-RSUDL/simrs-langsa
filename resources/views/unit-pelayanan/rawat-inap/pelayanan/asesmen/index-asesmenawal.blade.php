@@ -155,6 +155,13 @@
     'urut_masuk' => request()->route('urut_masuk'),
 ]) }}">Pengkajian Awal Medis</a>
                     </li>
+                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.medis.medis-neonatologi.index', [
+    'kd_unit' => request()->route('kd_unit'),
+    'kd_pasien' => request()->route('kd_pasien'),
+    'tgl_masuk' => request()->route('tgl_masuk'),
+    'urut_masuk' => request()->route('urut_masuk'),
+]) }}">Medis Neonatologi</a>
+                    </li>
                 </ul>
             </div>
 

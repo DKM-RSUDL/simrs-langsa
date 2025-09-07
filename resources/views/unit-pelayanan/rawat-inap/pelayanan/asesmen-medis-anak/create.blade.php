@@ -437,7 +437,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">a. Betuk:</label>
+                                            <label class="form-label">a. Bentuk:</label>
                                             <div class="d-flex flex-wrap gap-3">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="thoraks_bentuk[]" id="thoraks_simetris" value="simetris">
