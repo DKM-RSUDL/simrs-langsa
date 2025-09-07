@@ -1524,7 +1524,7 @@ Route::middleware('ssoToken')->group(function () {
                                                 });
                                             });
 
-                                            // Medis Anak
+                                            // medis neonatologi
                                             Route::prefix('medis-neonatologi')->group(function () {
                                                 Route::name('.medis-neonatologi')->group(function () {
                                                     Route::controller(RawatInapAsesmenMedisNeonatologiController::class)->group(function () {
