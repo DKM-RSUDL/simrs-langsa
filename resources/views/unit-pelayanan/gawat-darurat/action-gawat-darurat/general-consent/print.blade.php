@@ -470,7 +470,7 @@
                         @else
                             <strong>tidak mengijinkan</strong>
                         @endif
-                        Rumah Sakit memberi akses bagi: keluarga dan handai taulan serta orang-orang yang akan menjenguk saya. (sebutkan nama/profesi bila ada permintaan khusus) {{ $generalConsent->akses_privasi_keterangan ?? '.......................' }}
+                        Rumah Sakit memberi akses bagi: keluarga dan handai taulan serta orang-orang yang akan menjenguk saya. {{ $generalConsent->akses_privasi_keterangan ?? '.......................' }}
                     </li>
                     <li>Saya 
                         @if($generalConsent->setuju_privasi_khusus == 1)
@@ -478,7 +478,7 @@
                         @else
                             <strong>tidak menginginkan</strong>
                         @endif
-                        privasi khusus. Sebutkan bila ada permintaan privasi khusus. {{ $generalConsent->privasi_khusus_keterangan ?? '.......................' }}
+                        privasi khusus. {{ $generalConsent->privasi_khusus_keterangan ?? '.......................' }}
                     </li>
                 </ol>
             </div>
