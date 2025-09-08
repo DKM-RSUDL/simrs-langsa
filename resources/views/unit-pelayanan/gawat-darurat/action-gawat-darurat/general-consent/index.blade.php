@@ -42,17 +42,21 @@
                     <tbody>
                         @foreach ($generalConsent as $item)
                             <tr>
-                                <td>{{ date('d M Y', strtotime($item->tanggal)) . ' ' . date('H:i:s', strtotime($item->jam)) }}
+                                <td>{{ date('d M Y', strtotime($item->tanggal)) . ' ' . date('H:i', strtotime($item->jam)) }}
                                 </td>
                                 <td>{{ $item->user->name }}</td>
                                 <td>{{ $item->pj_nama }}</td>
                                 <td>{{ $item->saksi_nama }}</td>
                                 <td>
-                                    <div class="d-flex">
-                                        <button class="btn btn-sm btn-primary me-2 btn-show-consent"
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-sm btn-primary btn-show-consent"
                                             data-gc="{{ $item->id }}" data-bs-target="#showGeneralConsentModal">
                                             <i class="fas fa-eye"></i>
                                         </button>
+
+                                        <a href="{{ route('general-consent.print', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-primary btn-sm" title="Cetak" target="_blank">
+                                            <i class="ti-printer"></i>
+                                        </a>
 
                                         <form
                                             action="{{ route('general-consent.delete', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $item->id]) }}"
