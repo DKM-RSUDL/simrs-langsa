@@ -1,13 +1,5 @@
 @extends('layouts.administrator.master')
 
-@push('css')
-    <style>
-        disabled {
-            font-weight: normal !important;
-        }
-    </style>
-@endpush
-
 @section('content')
 
     @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-medis-neonatologi.edit-include')
