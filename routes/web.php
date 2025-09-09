@@ -1096,6 +1096,7 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::post('/show', 'show')->name('.show');
                                         Route::post('/', 'store')->name('.store');
                                         Route::delete('/{data}', 'delete')->name('.delete');
+                                         Route::get('/print/{data}', 'print')->name('.print');
                                     });
                                 });
                             });

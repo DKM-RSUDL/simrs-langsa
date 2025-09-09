@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class InformedConsentController extends Controller
 {
@@ -226,5 +227,65 @@ class InformedConsentController extends Controller
                 $resumeDtl->save();
             }
         }
+    }
+
+     public function print($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        // Get Patient data
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->first();
+
+        if (!$dataMedis) {
+            abort(404, 'Data pasien tidak ditemukan');
+        }
+
+        // Get Informed Consent data
+        $informedConsent = InformedConsent::with('user')
+            ->where('id', $id)
+            ->where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->where('urut_masuk', $urut_masuk)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->first();
+
+        if (!$informedConsent) {
+            abort(404, 'Informed consent tidak ditemukan');
+        }
+
+        // Persiapkan data untuk PDF
+        $data = [
+            'dataMedis' => $dataMedis,
+            'informedConsent' => $informedConsent,
+        ];
+
+        // Generate PDF dengan DomPDF
+        $pdf = Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.informed-consent.print', $data);
+
+        // Atur PDF properties
+        $pdf->setPaper('a4', 'portrait');
+        $pdf->setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'defaultFont' => 'sans-serif',
+            'isFontSubsettingEnabled' => true,
+            'isPhpEnabled' => true,
+            'debugCss' => false,
+        ]);
+
+        // Nama file PDF
+        $filename = 'Informed_Consent_' . str_replace(' ', '_', $dataMedis->pasien->nama ?? 'Pasien') . '_' . date('Y-m-d') . '.pdf';
+
+        // Download file PDF
+        return $pdf->stream($filename);
     }
 }
