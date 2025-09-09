@@ -52,4 +52,65 @@ class GeneralConsent extends Model
     public function user(){
         return $this->belongsTo(User::class, 'id_user', 'id');
     }
+
+    /**
+     * Get relationship name from ID
+     */
+    public function getRelationshipName($relationshipId)
+    {
+        $relationships = [
+            0 => 'Diri Sendiri',
+            1 => 'Orang Tua',
+            2 => 'Anak',
+            3 => 'Saudara Kandung',
+            4 => 'Suami',
+            5 => 'Istri',
+            6 => 'Kakek',
+            7 => 'Nenek',
+            8 => 'Cucu',
+            9 => 'Lainnya'
+        ];
+
+        return $relationships[$relationshipId] ?? '-';
+    }
+
+    /**
+     * Get PJ relationship name
+     */
+    public function getPjHubunganPasienNameAttribute()
+    {
+        return $this->getRelationshipName($this->pj_hubungan_pasien);
+    }
+
+    /**
+     * Get Saksi relationship name
+     */
+    public function getSaksiHubunganPasienNameAttribute()
+    {
+        return $this->getRelationshipName($this->saksi_hubungan_pasien);
+    }
+
+    /**
+     * Get Info relationship name 1
+     */
+    public function getInfoHubunganPasien1NameAttribute()
+    {
+        return $this->getRelationshipName($this->info_hubungan_pasien_1);
+    }
+
+    /**
+     * Get Info relationship name 2
+     */
+    public function getInfoHubunganPasien2NameAttribute()
+    {
+        return $this->getRelationshipName($this->info_hubungan_pasien_2);
+    }
+
+    /**
+     * Get Info relationship name 3
+     */
+    public function getInfoHubunganPasien3NameAttribute()
+    {
+        return $this->getRelationshipName($this->info_hubungan_pasien_3);
+    }
 }

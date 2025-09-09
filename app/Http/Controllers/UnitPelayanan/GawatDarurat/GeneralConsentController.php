@@ -5,6 +5,7 @@ namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 use App\Http\Controllers\Controller;
 use App\Models\GeneralConsent;
 use App\Models\Kunjungan;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -84,28 +85,28 @@ class GeneralConsentController extends Controller
             ];
             // dd($data);
 
-            $formatTglMasuk = date('Y-m-d', strtotime($tgl_masuk));
+            // $formatTglMasuk = date('Y-m-d', strtotime($tgl_masuk));
 
-            // store ttd petugas
-            if ($request->hasFile('ttd_petugas')) {
-                $path = $request->file('ttd_petugas')->store("uploads/gawat-darurat/general-consent/$formatTglMasuk/$kd_pasien/$urut_masuk");
+            // // store ttd petugas
+            // if ($request->hasFile('ttd_petugas')) {
+            //     $path = $request->file('ttd_petugas')->store("uploads/gawat-darurat/general-consent/$formatTglMasuk/$kd_pasien/$urut_masuk");
 
-                $data['ttd_petugas'] = $path;
-            }
+            //     $data['ttd_petugas'] = $path;
+            // }
 
-            // store ttd pj
-            if ($request->hasFile('ttd_pj')) {
-                $path = $request->file('ttd_pj')->store("uploads/gawat-darurat/general-consent/$formatTglMasuk/$kd_pasien/$urut_masuk");
+            // // store ttd pj
+            // if ($request->hasFile('ttd_pj')) {
+            //     $path = $request->file('ttd_pj')->store("uploads/gawat-darurat/general-consent/$formatTglMasuk/$kd_pasien/$urut_masuk");
 
-                $data['ttd_pj'] = $path;
-            }
+            //     $data['ttd_pj'] = $path;
+            // }
 
-            // store ttd saksi
-            if ($request->hasFile('ttd_saksi')) {
-                $path = $request->file('ttd_saksi')->store("uploads/gawat-darurat/general-consent/$formatTglMasuk/$kd_pasien/$urut_masuk");
+            // // store ttd saksi
+            // if ($request->hasFile('ttd_saksi')) {
+            //     $path = $request->file('ttd_saksi')->store("uploads/gawat-darurat/general-consent/$formatTglMasuk/$kd_pasien/$urut_masuk");
 
-                $data['ttd_saksi'] = $path;
-            }
+            //     $data['ttd_saksi'] = $path;
+            // }
 
             // store data
             GeneralConsent::create($data);
@@ -157,5 +158,65 @@ class GeneralConsentController extends Controller
                 'data'      => []
             ]);
         }
+    }
+
+    public function print($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        // Get Patient data
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit', 'customer'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_unit', 3)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->first();
+
+        if (!$dataMedis) {
+            abort(404, 'Data pasien tidak ditemukan');
+        }
+
+        // Get General Consent data
+        $generalConsent = GeneralConsent::with('user')
+            ->where('id', $id)
+            ->where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', 3)
+            ->where('urut_masuk', $urut_masuk)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->first();
+
+        if (!$generalConsent) {
+            abort(404, 'General consent tidak ditemukan');
+        }
+
+        // Persiapkan data untuk PDF
+        $data = [
+            'dataMedis' => $dataMedis,
+            'generalConsent' => $generalConsent,
+        ];
+
+        // Generate PDF dengan DomPDF
+        $pdf = PDF::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.general-consent.print', $data);
+
+        // Atur PDF properties
+        $pdf->setPaper('a4', 'portrait');
+        $pdf->setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'defaultFont' => 'sans-serif',
+            'isFontSubsettingEnabled' => true,
+            'isPhpEnabled' => true,
+            'debugCss' => false,
+        ]);
+
+        // Nama file PDF
+        $filename = 'General_Consent_' . str_replace(' ', '_', $dataMedis->pasien->nama ?? 'Pasien') . '_' . date('Y-m-d') . '.pdf';
+
+        // Download file PDF
+        return $pdf->stream($filename);
     }
 }

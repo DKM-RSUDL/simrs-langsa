@@ -524,7 +524,7 @@
                         </div>
                     </div>
 
-                    <div class="border-bottom border-primary mt-3"></div>
+                    {{-- <div class="border-bottom border-primary mt-3"></div>
 
                     <div class="row mt-3">
                         <div class="col-12">
@@ -550,7 +550,7 @@
                             <button type="button" class="btn btn-secondary btn-sm mt-2 "
                                 id="resetCanvasSaksi">Reset</button>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
 
                 <!-- Jumlah dan Total di Footer -->

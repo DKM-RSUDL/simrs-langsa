@@ -50,11 +50,15 @@
                                 <td>{{ $item->saksi1_nama }}</td>
                                 <td>{{ $item->saksi2_nama }}</td>
                                 <td>
-                                    <div class="d-flex">
-                                        <button class="btn btn-sm btn-primary me-2 btn-show-consent"
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-sm btn-primary btn-show-consent"
                                             data-ic="{{ $item->id }}" data-bs-target="#showInformedConsentModal">
                                             <i class="fas fa-eye"></i>
                                         </button>
+
+                                        <a href="{{ route('rawat-inap.informed-consent.print', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-success btn-sm" title="Cetak" target="_blank">
+                                            <i class="ti-printer"></i>
+                                        </a>
 
                                         <form
                                             action="{{ route('rawat-inap.informed-consent.delete', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $item->id]) }}"
