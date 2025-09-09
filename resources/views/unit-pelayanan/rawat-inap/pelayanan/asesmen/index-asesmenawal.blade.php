@@ -397,6 +397,28 @@
                 </a>
             @endif
 
+            @if ($item->kategori == 1 && $item->sub_kategori == 14)
+                <a href="{{ route('rawat-inap.asesmen.medis.medis-neonatologi.show', [
+                    'kd_unit' => $dataMedis->kd_unit,
+                    'kd_pasien' => $dataMedis->kd_pasien,
+                    'tgl_masuk' => date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
+                    'urut_masuk' => $dataMedis->urut_masuk,
+                    'id' => $item->asesmenMedisNeonatologi->id ?? $item->id
+                ]) }}" class="btn btn-sm btn-info">
+                    <i class="fas fa-eye me-1"></i> Lihat
+                </a>
+
+                <a href="{{ route('rawat-inap.asesmen.medis.medis-neonatologi.edit', [
+                    'kd_unit' => $dataMedis->kd_unit,
+                    'kd_pasien' => $dataMedis->kd_pasien,
+                    'tgl_masuk' => date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
+                    'urut_masuk' => $dataMedis->urut_masuk,
+                    'id' => $item->asesmenMedisNeonatologi->id ?? $item->id
+                ]) }}" class="btn btn-sm btn-secondary">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+            @endif
+
             @if ($item->kategori == 1 && $item->sub_kategori == 4)
             <a href="{{ route('rawat-inap.asesmen.medis.obstetri-maternitas.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                 class="btn btn-sm btn-info">

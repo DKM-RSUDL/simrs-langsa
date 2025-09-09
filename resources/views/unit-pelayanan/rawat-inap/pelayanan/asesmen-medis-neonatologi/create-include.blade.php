@@ -437,7 +437,7 @@
                 let filled1 = 0;
                 const categories1 = ['appearance_1', 'pulse_1', 'grimace_1', 'activity_1', 'respiration_1'];
                 const data1 = {};
-                
+
                 categories1.forEach(category => {
                     const select = document.querySelector(`select[name="${category}"]`);
                     if (select && select.value !== '') {
@@ -461,7 +461,7 @@
                 let filled5 = 0;
                 const categories5 = ['appearance_5', 'pulse_5', 'grimace_5', 'activity_5', 'respiration_5'];
                 const data5 = {};
-                
+
                 categories5.forEach(category => {
                     const select = document.querySelector(`select[name="${category}"]`);
                     if (select && select.value !== '') {
@@ -887,12 +887,12 @@
 
         // Discharge Planning
         document.addEventListener('DOMContentLoaded', function() {
-    
+
             // Handler untuk usia yang menarik bayi
             const usiaRadios = document.querySelectorAll('input[name="usia_menarik_bayi"]');
             const keteranganUsia = document.querySelector('input[name="keterangan_usia"]');
             const keteranganTidakUsia = document.querySelector('input[name="keterangan_tidak_usia"]');
-            
+
             usiaRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
                     if (this.value === 'ya') {
@@ -910,7 +910,7 @@
             // Handler untuk masalah saat pulang
             const masalahRadios = document.querySelectorAll('input[name="masalah_pulang"]');
             const keteranganMasalah = document.querySelector('textarea[name="keterangan_masalah_pulang"]');
-            
+
             masalahRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
                     if (this.value === 'ya') {
@@ -925,7 +925,7 @@
             // Handler untuk edukasi lainnya
             const edukasiLainnya = document.querySelector('#edukasi_lainnya');
             const edukasiLainnyaKeterangan = document.querySelector('input[name="edukasi_lainnya_keterangan"]');
-            
+
             edukasiLainnya.addEventListener('change', function() {
                 if (this.checked) {
                     edukasiLainnyaKeterangan.disabled = false;
@@ -938,7 +938,7 @@
             // Handler untuk ada yang membantu
             const membrantuRadios = document.querySelectorAll('input[name="ada_membantu"]');
             const keteranganMembantu = document.querySelector('input[name="keterangan_membantu"]');
-            
+
             membrantuRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
                     if (this.value === 'ada') {

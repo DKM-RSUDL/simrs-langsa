@@ -43,13 +43,13 @@
                                     <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
                                     <div class="d-flex gap-3" style="width: 100%;">
                                         <input type="date" class="form-control" name="tanggal" value="{{ date('Y-m-d') }}">
-                                        <input type="time" class="form-control" name="jam_masuk" value="{{ date('H:i') }}">
+                                        <input type="time" class="form-control" name="jam" value="{{ date('H:i') }}">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Nama keluarga yang bisa </br> dihubungi No Hp/ Telp</label>
                                     <div class="d-flex gap-3" style="width: 100%;">
-                                        <input type="number" class="form-control" name="no_hp" max="12">
+                                        <input type="text" class="form-control" name="no_hp">
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -128,18 +128,18 @@
                                             <label style="min-width: 200px; vertical-align: top;">Lahir:</label>
                                             <div class="mt-2">
                                                 <div class="form-check mb-2">
-                                                    <input class="form-check-input" type="radio" name="lahir[]" id="lahir_rsudlangsa" value="lahir_rsudlangsa">
+                                                    <input class="form-check-input" type="radio" name="lahir" id="lahir_rsudlangsa" value="1">
                                                     <label class="form-check-label" for="lahir_rsudlangsa">
                                                         Lahir di RSU Langsa
                                                     </label>
                                                 </div>
                                                 <div class="form-check mb-2">
-                                                    <input class="form-check-input" type="radio" name="lahir[]" id="lahir_rs_lain" value="lahir_rs_lain">
+                                                    <input class="form-check-input" type="radio" name="lahir" id="lahir_rs_lain" value="0">
                                                     <label class="form-check-label" for="lahir_rs_lain">
                                                         Luar RSU Langsa:
                                                     </label>
                                                 </div>
-                                                <input type="text" class="form-control mt-2" name="lahir_rs_lain_detail"
+                                                <input type="text" class="form-control mt-2" name="lahir_rs_lain"
                                                     placeholder="Sebutkan lainnya">
                                             </div>
                                         </div>
@@ -326,7 +326,7 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="input-group">
-                                                <input type="text" class="form-control" name="demam_suhu" step="0.1" min="35" max="45" placeholder="36.5">
+                                                <input type="text" class="form-control" name="demam_suhu" placeholder="36.5">
                                                 <span class="input-group-text">°C</span>
                                             </div>
                                         </div>
@@ -408,7 +408,7 @@
                                             </div>
                                         </div>
                                         <label class="form-check-label mt-2" for="lainnya">Lainnya</label>
-                                        <input type="text" class="form-control" name="lainnya" placeholder="lainnya">
+                                        <input type="text" class="form-control" name="riwayat_penyakit_ibu_lain" placeholder="lainnya">
                                     </div>
 
                                 </div>
@@ -531,7 +531,7 @@
                                         </div>
                                         <div class="col-md-9">
                                             <div class="input-group">
-                                                <input type="number" class="form-control" name="denyut_jantung" min="0" max="300" placeholder="0">
+                                                <input type="number" class="form-control" name="denyut_jantung" placeholder="0">
                                                 <span class="input-group-text">x/mnt</span>
                                             </div>
                                         </div>
@@ -544,7 +544,7 @@
                                         </div>
                                         <div class="col-md-9">
                                             <div class="input-group">
-                                                <input type="number" class="form-control" name="nadi" min="0" max="300" placeholder="0">
+                                                <input type="number" class="form-control" name="nadi" placeholder="0">
                                                 <span class="input-group-text">x/mnt</span>
                                             </div>
                                         </div>
@@ -557,7 +557,7 @@
                                         </div>
                                         <div class="col-md-9">
                                             <div class="input-group">
-                                                <input type="number" class="form-control" name="respirasi" min="0" max="100" placeholder="0">
+                                                <input type="number" class="form-control" name="respirasi" placeholder="0">
                                                 <span class="input-group-text">x/mnt</span>
                                             </div>
                                         </div>
@@ -569,7 +569,7 @@
                                             <label class="form-label">SpO:</label>
                                         </div>
                                         <div class="col-md-9">
-                                            <input type="number" class="form-control" name="spo" min="0" max="100" placeholder="0">
+                                            <input type="number" class="form-control" name="spo" placeholder="0">
                                         </div>
                                     </div>
 
@@ -597,7 +597,7 @@
                                         </div>
                                         <div class="col-md-9">
                                             <div class="input-group">
-                                                <input type="text" class="form-control" name="temperatur" step="0.1" min="35" max="45" placeholder="36.5">
+                                                <input type="text" class="form-control" name="temperatur" step="0.1" placeholder="36.5">
                                                 <span class="input-group-text">°C</span>
                                             </div>
                                         </div>
@@ -705,179 +705,9 @@
                                 </div>
                             </div>
 
-                            <div class="section-separator" id="apgar-score">
-                                <h5 class="section-title">6. Apgar Skor</h5>
-
-                                <div class="container-fluid">
-                                    <!-- Appearance (warna kulit) -->
-                                    <div class="row mb-3">
-                                        <div class="col-md-3">
-                                            <label class="form-label fw-semibold">
-                                                Appearance (warna kulit):
-                                            </label>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label">1 menit:</label>
-                                            <select class="form-select" name="appearance_1">
-                                                <option value="">Pilih skor</option>
-                                                <option value="0">0 - Pucat</option>
-                                                <option value="1">1 - Badan merah, ekstermitas biru</option>
-                                                <option value="2">2 - Seluruh tubuh kemerah-merahan</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label">5 menit:</label>
-                                            <select class="form-select" name="appearance_5">
-                                                <option value="">Pilih skor</option>
-                                                <option value="0">0 - Pucat</option>
-                                                <option value="1">1 - Badan merah, ekstermitas biru</option>
-                                                <option value="2">2 - Seluruh tubuh kemerah-merahan</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <!-- Pulse (Nadi) -->
-                                    <div class="row mb-3">
-                                        <div class="col-md-3">
-                                            <label class="form-label fw-semibold">
-                                                Pulse (Nadi):
-                                            </label>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label">1 menit:</label>
-                                            <select class="form-select" name="pulse_1">
-                                                <option value="">Pilih skor</option>
-                                                <option value="0">0 - Tidak ada</option>
-                                                <option value="1">1 - < 100</option>
-                                                <option value="2">2 - > 100</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label">5 menit:</label>
-                                            <select class="form-select" name="pulse_5">
-                                                <option value="">Pilih skor</option>
-                                                <option value="0">0 - Tidak ada</option>
-                                                <option value="1">1 - < 100</option>
-                                                <option value="2">2 - > 100</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <!-- Grimace (Reaksi rangsangan) -->
-                                    <div class="row mb-3">
-                                        <div class="col-md-3">
-                                            <label class="form-label fw-semibold">
-                                                Grimace (Reaksi rangsangan):
-                                            </label>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label">1 menit:</label>
-                                            <select class="form-select" name="grimace_1">
-                                                <option value="">Pilih skor</option>
-                                                <option value="0">0 - Tidak ada</option>
-                                                <option value="1">1 - Sedikit gerakan mimik</option>
-                                                <option value="2">2 - Batuk/ bersin</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label">5 menit:</label>
-                                            <select class="form-select" name="grimace_5">
-                                                <option value="">Pilih skor</option>
-                                                <option value="0">0 - Tidak ada</option>
-                                                <option value="1">1 - Sedikit gerakan mimik</option>
-                                                <option value="2">2 - Batuk/ bersin</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <!-- Activity -->
-                                    <div class="row mb-3">
-                                        <div class="col-md-3">
-                                            <label class="form-label fw-semibold">
-                                                Activity:
-                                            </label>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label">1 menit:</label>
-                                            <select class="form-select" name="activity_1">
-                                                <option value="">Pilih skor</option>
-                                                <option value="0">0 - Tidak ada</option>
-                                                <option value="1">1 - Ekstremitas dalam sedikit fleksi</option>
-                                                <option value="2">2 - Gerakan aktif</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label">5 menit:</label>
-                                            <select class="form-select" name="activity_5">
-                                                <option value="">Pilih skor</option>
-                                                <option value="0">0 - Tidak ada</option>
-                                                <option value="1">1 - Ekstremitas dalam sedikit fleksi</option>
-                                                <option value="2">2 - Gerakan aktif</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <!-- Respiration -->
-                                    <div class="row mb-3">
-                                        <div class="col-md-3">
-                                            <label class="form-label fw-semibold">
-                                                Respiration:
-                                            </label>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label">1 menit:</label>
-                                            <select class="form-select" name="respiration_1">
-                                                <option value="">Pilih skor</option>
-                                                <option value="0">0 - Tidak ada</option>
-                                                <option value="1">1 - Lemah/ tidak teratur</option>
-                                                <option value="2">2 - Baik/ menangis</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label">5 menit:</label>
-                                            <select class="form-select" name="respiration_5">
-                                                <option value="">Pilih skor</option>
-                                                <option value="0">0 - Tidak ada</option>
-                                                <option value="1">1 - Lemah/ tidak teratur</option>
-                                                <option value="2">2 - Baik/ menangis</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <!-- Total Score -->
-                                    <div class="row mt-4 pt-3 border-top">
-                                        <div class="col-md-12">
-                                            <label class="form-label fw-bold mb-3">TOTAL SKOR:</label>
-                                            <div class="d-flex justify-content-center gap-3 flex-wrap">
-                                                <div class="text-center">
-                                                    <div class="fw-semibold">1 menit:</div>
-                                                    <span id="total_1_minute_display" class="badge bg-primary fs-5">0</span>
-                                                </div>
-                                                <div class="text-center">
-                                                    <div class="fw-semibold">5 menit:</div>
-                                                    <span id="total_5_minute_display" class="badge bg-primary fs-5">0</span>
-                                                </div>
-                                                <div class="text-center">
-                                                    <div class="fw-semibold">Total Gabungan:</div>
-                                                    <span id="total_combined_display" class="badge bg-success fs-5">0</span>
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- Hidden inputs untuk menyimpan data -->
-                                            <input type="hidden" id="total_1_minute" name="total_1_minute" value="0">
-                                            <input type="hidden" id="total_5_minute" name="total_5_minute" value="0">
-                                            <input type="hidden" id="total_combined" name="total_combined" value="0">
-                                            <input type="hidden" id="apgar_data" name="apgar_data" value="{}">
-                                            <input type="hidden" id="apgar_interpretation" name="apgar_interpretation" value="">
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <!-- 7. Status Generalis -->
+                            <!-- 6. Status Generalis -->
                             <div class="section-separator" id="pemeriksaan-fisik">
-                                <h5 class="section-title">7. Status Generalis</h5>
+                                <h5 class="section-title">6. Status Generalis</h5>
                                 <div class="card-body">
 
                                     <!-- 1. Kepala -->
@@ -1111,7 +941,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Areola mamae ∅:</label>
-                                            <input type="text" class="form-control" name="areola_mamae" placeholder="Diameter areola">
+                                            <input type="text" class="form-control" name="thoraks_areola_mamae" placeholder="Diameter areola">
                                         </div>
 
                                         <label class="form-label fw-bold">b. Jantung:</label> <br>
@@ -1263,7 +1093,7 @@
                                             <div class="row mt-3">
                                                 <div class="col-md-12 mb-3">
                                                     <label class="form-label">Kelainan:</label>
-                                                    <input type="text" class="form-control" name="abdomen_Kelainan" placeholder="Kelainan">
+                                                    <input type="text" class="form-control" name="abdomen_kelainan" placeholder="Kelainan">
                                                 </div>
                                             </div>
                                         </div>
@@ -1360,12 +1190,12 @@
                                             <label class="form-label">Waktu pengisian kapiler:</label>
                                             <div class="d-flex gap-3">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="waktu_pengisian_kapiler" id="kapiler_kurang_2" value="<2″">
-                                                    <label class="form-check-label" for="kapiler_kurang_2">&lt;2″</label>
+                                                    <input class="form-check-input" type="radio" name="waktu_pengisian_kapiler" id="kapiler_kurang_2" value="<2">
+                                                    <label class="form-check-label" for="kapiler_kurang_2">&lt;2</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="waktu_pengisian_kapiler" id="kapiler_lebih_2" value=">2″">
-                                                    <label class="form-check-label" for="kapiler_lebih_2">&gt;2″</label>
+                                                    <input class="form-check-input" type="radio" name="waktu_pengisian_kapiler" id="kapiler_lebih_2" value=">2">
+                                                    <label class="form-check-label" for="kapiler_lebih_2">&gt;2</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -1457,13 +1287,183 @@
                                 </div>
                             </div>
 
+                            <div class="section-separator" id="apgar-score">
+                                <h5 class="section-title">7. Apgar Skor</h5>
+
+                                <div class="container-fluid">
+                                    <!-- Appearance (warna kulit) -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label fw-semibold">
+                                                Appearance (warna kulit):
+                                            </label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">1 menit:</label>
+                                            <select class="form-select" name="appearance_1">
+                                                <option value="">Pilih skor</option>
+                                                <option value="0">0 - Pucat</option>
+                                                <option value="1">1 - Badan merah, ekstermitas biru</option>
+                                                <option value="2">2 - Seluruh tubuh kemerah-merahan</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">5 menit:</label>
+                                            <select class="form-select" name="appearance_5">
+                                                <option value="">Pilih skor</option>
+                                                <option value="0">0 - Pucat</option>
+                                                <option value="1">1 - Badan merah, ekstermitas biru</option>
+                                                <option value="2">2 - Seluruh tubuh kemerah-merahan</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Pulse (Nadi) -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label fw-semibold">
+                                                Pulse (Nadi):
+                                            </label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">1 menit:</label>
+                                            <select class="form-select" name="pulse_1">
+                                                <option value="">Pilih skor</option>
+                                                <option value="0">0 - Tidak ada</option>
+                                                <option value="1">1 - < 100</option>
+                                                <option value="2">2 - > 100</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">5 menit:</label>
+                                            <select class="form-select" name="pulse_5">
+                                                <option value="">Pilih skor</option>
+                                                <option value="0">0 - Tidak ada</option>
+                                                <option value="1">1 - < 100</option>
+                                                <option value="2">2 - > 100</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Grimace (Reaksi rangsangan) -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label fw-semibold">
+                                                Grimace (Reaksi rangsangan):
+                                            </label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">1 menit:</label>
+                                            <select class="form-select" name="grimace_1">
+                                                <option value="">Pilih skor</option>
+                                                <option value="0">0 - Tidak ada</option>
+                                                <option value="1">1 - Sedikit gerakan mimik</option>
+                                                <option value="2">2 - Batuk/ bersin</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">5 menit:</label>
+                                            <select class="form-select" name="grimace_5">
+                                                <option value="">Pilih skor</option>
+                                                <option value="0">0 - Tidak ada</option>
+                                                <option value="1">1 - Sedikit gerakan mimik</option>
+                                                <option value="2">2 - Batuk/ bersin</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Activity -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label fw-semibold">
+                                                Activity:
+                                            </label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">1 menit:</label>
+                                            <select class="form-select" name="activity_1">
+                                                <option value="">Pilih skor</option>
+                                                <option value="0">0 - Tidak ada</option>
+                                                <option value="1">1 - Ekstremitas dalam sedikit fleksi</option>
+                                                <option value="2">2 - Gerakan aktif</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">5 menit:</label>
+                                            <select class="form-select" name="activity_5">
+                                                <option value="">Pilih skor</option>
+                                                <option value="0">0 - Tidak ada</option>
+                                                <option value="1">1 - Ekstremitas dalam sedikit fleksi</option>
+                                                <option value="2">2 - Gerakan aktif</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Respiration -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label fw-semibold">
+                                                Respiration:
+                                            </label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">1 menit:</label>
+                                            <select class="form-select" name="respiration_1">
+                                                <option value="">Pilih skor</option>
+                                                <option value="0">0 - Tidak ada</option>
+                                                <option value="1">1 - Lemah/ tidak teratur</option>
+                                                <option value="2">2 - Baik/ menangis</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">5 menit:</label>
+                                            <select class="form-select" name="respiration_5">
+                                                <option value="">Pilih skor</option>
+                                                <option value="0">0 - Tidak ada</option>
+                                                <option value="1">1 - Lemah/ tidak teratur</option>
+                                                <option value="2">2 - Baik/ menangis</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Total Score -->
+                                    <div class="row mt-4 pt-3 border-top">
+                                        <div class="col-md-12">
+                                            <label class="form-label fw-bold mb-3">TOTAL SKOR:</label>
+                                            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                                                <div class="text-center">
+                                                    <div class="fw-semibold">1 menit:</div>
+                                                    <span id="total_1_minute_display" class="badge bg-primary fs-5">0</span>
+                                                </div>
+                                                <div class="text-center">
+                                                    <div class="fw-semibold">5 menit:</div>
+                                                    <span id="total_5_minute_display" class="badge bg-primary fs-5">0</span>
+                                                </div>
+                                                <div class="text-center">
+                                                    <div class="fw-semibold">Total Gabungan:</div>
+                                                    <span id="total_combined_display" class="badge bg-success fs-5">0</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Hidden inputs untuk menyimpan data -->
+                                            <input type="hidden" id="total_1_minute" name="total_1_minute" value="0">
+                                            <input type="hidden" id="total_5_minute" name="total_5_minute" value="0">
+                                            <input type="hidden" id="total_combined" name="total_combined" value="0">
+                                            <input type="hidden" id="apgar_data" name="apgar_data" value="{}">
+                                            <input type="hidden" id="apgar_interpretation" name="apgar_interpretation" value="">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
                             <div class="section-separator" id="diagnosisIbu">
-                                <h5 class="section-title">8. Diagnosis</h5>                            
+                                <h5 class="section-title">8. Diagnosis</h5>
                                 <!-- Diagnosis IBU -->
                                 <div class="row mb-4">
                                     <div class="col-12">
                                         <h6 class="text-primary mb-3">Diagnosis Ibu</h6>
-                                        
+
                                         <!-- Nomor diagnosis -->
                                         <div class="mb-4">
                                             <div class="row">
@@ -1523,7 +1523,7 @@
 
                                         <!-- Faktor Resiko IBU -->
                                         <h6 class="text-primary mb-3">Faktor Resiko Ibu</h6>
-                                        
+
                                         <!-- Mayor -->
                                         <div class="mb-3">
                                             <label class="form-label"><strong>Mayor:</strong></label>
@@ -1620,12 +1620,12 @@
                             </div>
 
                             <div class="section-separator" id="refleksPrimitif">
-                                <h5 class="section-title">9. Refleks Primitif</h5>                            
+                                <h5 class="section-title">9. Refleks Primitif</h5>
 
                             <!-- Refleks Primitif -->
                                 <div class="row mb-4">
                                     <div class="col-12">
-                                        
+
                                         <!-- Baris 1: Refleks moro dan Refleks rooting -->
                                         <div class="row mb-3">
                                             <div class="col-md-6">
@@ -1761,28 +1761,28 @@
                                 <!-- Kelainan Bawaan -->
                                 <div class="row mb-4">
                                     <div class="col-12">
-                                        
+
                                         <div class="row">
                                             <div class="col-1"><strong>1</strong></div>
                                             <div class="col-11">
                                                 <input type="text" class="form-control mb-2" name="kelainan_bawaan_1" placeholder="Kelainan bawaan 1">
                                             </div>
                                         </div>
-                                        
+
                                         <div class="row">
                                             <div class="col-1"><strong>2</strong></div>
                                             <div class="col-11">
                                                 <input type="text" class="form-control mb-2" name="kelainan_bawaan_2" placeholder="Kelainan bawaan 2">
                                             </div>
                                         </div>
-                                        
+
                                         <div class="row">
                                             <div class="col-1"><strong>3</strong></div>
                                             <div class="col-11">
                                                 <input type="text" class="form-control mb-2" name="kelainan_bawaan_3" placeholder="Kelainan bawaan 3">
                                             </div>
                                         </div>
-                                        
+
                                         <div class="row">
                                             <div class="col-1"><strong>4</strong></div>
                                             <div class="col-11">
@@ -1815,7 +1815,7 @@
                                 <div class="mb-4">
                                     <label class="text-primary fw-semibold">Prognosis</label>
 
-                                    <select class="form-select" name="paru_prognosis">
+                                    <select class="form-select" name="prognosis">
                                         <option value="" selected disabled>--Pilih Prognosis--</option>
                                         @forelse ($satsetPrognosis as $item)
                                             <option value="{{ $item->prognosis_id }}">
@@ -1893,7 +1893,7 @@
                             <div class="section-separator" id="discharge-planning">
                                 <h5 class="section-title">13. Perencanaan Pulang Pasien (Discharge Planning)</h5>
                                 <div class="card-body">
-                                    
+
                                     <!-- 1. Usia yang menarik bayi di rumah -->
                                     <div class="mb-4">
                                         <label class="form-label fw-bold">Usia yang menarik bayi di rumah</label>
