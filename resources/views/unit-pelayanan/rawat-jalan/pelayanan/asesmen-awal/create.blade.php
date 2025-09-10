@@ -214,5 +214,4 @@
 </script>
 @endpush
 @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen-awal.modal-create-alergi')
-@include('unit-pelayanan.rawat-jalan.pelayanan.asesmen-awal.modal-riwayatkeluarga')
 @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen-awal.include')

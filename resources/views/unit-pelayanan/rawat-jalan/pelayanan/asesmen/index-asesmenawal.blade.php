@@ -174,15 +174,11 @@
         <!-- Button "Tambah" di sebelah kanan -->
         <!-- Button "Tambah" dengan Bootstrap Dropdown -->
         <div class="col-md-3 text-end ms-auto">
-
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailPasienModal" type="button">
-                <i class="ti-plus"></i> Tambah
-            </button>
             @php
                 $tglMasukData = date('Y-m-d', strtotime($dataMedis->tgl_masuk));
             @endphp
 
-            <div class="dropdown mt-2">
+            <div class="dropdown">
                 <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
                     data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-plus me-2"></i>Tambah Asesmen
@@ -223,6 +219,11 @@
 
                     <li>
                         <h6 class="dropdown-header"><i class="fas fa-stethoscope me-2"></i>Asesmen Medis</h6>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{{ route('rawat-jalan.asesmen.medis.awal.index', ['kd_unit' => request()->route('kd_unit'),'kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), 'urut_masuk' => request()->route('urut_masuk')]) }}">
+                            <i class="fas fa-play me-2"></i>Asesmen Awal
+                        </a>
                     </li>
                     <li>
                         <a class="dropdown-item" href="">
