@@ -109,6 +109,12 @@ class RmeAsesmen extends Model
     {
         return $this->hasOne(RmeAsesmenKepUmum::class, 'id_asesmen', 'id');
     }
+
+    // Awal
+    public function asesmenMedisAwal()
+    {
+        return $this->hasOne(RmeAsesmenMedisAwal::class, 'id_asesmen', 'id');
+    }
     public function asesmenKepUmumBreathing()
     {
         return $this->hasOne(RmeAsesmenKepUmumBreathing::class, 'id_asesmen', 'id');

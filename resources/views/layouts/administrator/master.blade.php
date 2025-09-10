@@ -104,6 +104,7 @@
 
     <!-- js for this page only -->
     @stack('js')
+    @stack('scripts')
     <!-- ======= -->
 </body>
 
