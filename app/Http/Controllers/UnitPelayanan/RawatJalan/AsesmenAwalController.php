@@ -103,8 +103,8 @@ class AsesmenAwalController extends Controller
             $asesmen->sub_kategori = 1; // Umum/Dewasa
             $asesmen->save();
 
-            // Decode diagnosis array
-            $diagnosisData = json_decode($request->diagnosis, true) ?: [];
+            // Decode diagnosis array (fix: ambil dari diagnosis_banding)
+            $diagnosisData = json_decode($request->diagnosis_banding, true) ?: [];
 
             // Create asesmen awal record
             $dataAsesmen = new RmeAsesmenMedisAwal();
@@ -125,13 +125,18 @@ class AsesmenAwalController extends Controller
 
                 // Simpan data alergi baru
                 foreach ($alergiData as $alergi) {
-                    // Skip data yang sudah ada di database (is_existing = true)
-                    // kecuali jika ingin update
-                    if (!isset($alergi['is_existing']) || !$alergi['is_existing']) {
+                    // Validasi data alergi, pastikan semua key ada
+                    if (
+                        (!isset($alergi['is_existing']) || !$alergi['is_existing']) &&
+                        isset($alergi['jenis_alergi']) &&
+                        (isset($alergi['alergen']) || isset($alergi['nama_alergi'])) &&
+                        isset($alergi['reaksi']) &&
+                        isset($alergi['tingkat_keparahan'])
+                    ) {
                         RmeAlergiPasien::create([
                             'kd_pasien' => $kd_pasien,
                             'jenis_alergi' => $alergi['jenis_alergi'],
-                            'nama_alergi' => $alergi['alergen'],
+                            'nama_alergi' => $alergi['alergen'] ?? $alergi['nama_alergi'],
                             'reaksi' => $alergi['reaksi'],
                             'tingkat_keparahan' => $alergi['tingkat_keparahan']
                         ]);
@@ -245,11 +250,18 @@ class AsesmenAwalController extends Controller
             if (!empty($alergiData)) {
                 RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
                 foreach ($alergiData as $alergi) {
-                    if (!isset($alergi['is_existing']) || !$alergi['is_existing']) {
+                    // Validasi data alergi, pastikan semua key ada
+                    if (
+                        (!isset($alergi['is_existing']) || !$alergi['is_existing']) &&
+                        isset($alergi['jenis_alergi']) &&
+                        (isset($alergi['alergen']) || isset($alergi['nama_alergi'])) &&
+                        isset($alergi['reaksi']) &&
+                        isset($alergi['tingkat_keparahan'])
+                    ) {
                         RmeAlergiPasien::create([
                             'kd_pasien' => $kd_pasien,
                             'jenis_alergi' => $alergi['jenis_alergi'],
-                            'nama_alergi' => $alergi['alergen'],
+                            'nama_alergi' => $alergi['alergen'] ?? $alergi['nama_alergi'],
                             'reaksi' => $alergi['reaksi'],
                             'tingkat_keparahan' => $alergi['tingkat_keparahan']
                         ]);
@@ -271,7 +283,7 @@ class AsesmenAwalController extends Controller
         }
     }
 
-     public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         $user = auth()->user();
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();

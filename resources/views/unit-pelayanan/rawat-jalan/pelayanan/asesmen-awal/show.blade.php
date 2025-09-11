@@ -49,7 +49,8 @@
                                                 <input disabled type="date" class="form-control" name="waktu_asesmen"
                                                     id="waktu_asesmen"
                                                     value="{{ old('waktu_asesmen', isset($rmeAsesmen->asesmenMedisAwal) ? \Carbon\Carbon::parse($rmeAsesmen->asesmenMedisAwal->waktu_asesmen)->format('Y-m-d') : '') }}">
-                                                <input disabled type="time" class="form-control" name="jam_masuk" id="jam_masuk"
+                                                <input disabled type="time" class="form-control" name="jam_masuk"
+                                                    id="jam_masuk"
                                                     value="{{ old('jam_masuk', isset($rmeAsesmen->asesmenMedisAwal) ? \Carbon\Carbon::parse($rmeAsesmen->asesmenMedisAwal->waktu_asesmen)->format('H:i') : '') }}">
                                             </div>
                                         </div>
@@ -62,7 +63,8 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Pemeriksaan Fisik</label>
-                                            <textarea disabled class="form-control" name="pemeriksaan_fisik" rows="4" placeholder="Masukkan pemeriksaan fisik">{{ old('pemeriksaan_fisik', $rmeAsesmen->asesmenMedisAwal->pemeriksaan_fisik ?? '') }}</textarea>
+                                            <textarea disabled class="form-control" name="pemeriksaan_fisik" rows="4"
+                                                placeholder="Masukkan pemeriksaan fisik">{{ old('pemeriksaan_fisik', $rmeAsesmen->asesmenMedisAwal->pemeriksaan_fisik ?? '') }}</textarea>
                                         </div>
 
                                         <div class="form-group">
@@ -125,7 +127,7 @@
     </div>
 @endsection
 
-@push('scripts')
+@push('js')
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const input = document.getElementById("diagnosis-input");
