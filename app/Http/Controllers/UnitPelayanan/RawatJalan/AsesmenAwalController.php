@@ -116,31 +116,53 @@ class AsesmenAwalController extends Controller
             $dataAsesmen->edukasi = $request->edukasi;
             $dataAsesmen->save();
 
-            // Validasi dan simpan data alergi
+            // Sync data alergi pasien
             $alergiData = json_decode($request->alergis, true);
+            $alergiLama = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
+            $alergiBaru = [];
             if (!empty($alergiData)) {
-                // Hapus data alergi lama untuk pasien ini
-                RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
-
-                // Simpan data alergi baru
                 foreach ($alergiData as $alergi) {
-                    // Validasi data alergi, pastikan semua key ada
-                    if (
-                        (!isset($alergi['is_existing']) || !$alergi['is_existing']) &&
-                        isset($alergi['jenis_alergi']) &&
-                        (isset($alergi['alergen']) || isset($alergi['nama_alergi'])) &&
-                        isset($alergi['reaksi']) &&
-                        isset($alergi['tingkat_keparahan'])
-                    ) {
-                        RmeAlergiPasien::create([
-                            'kd_pasien' => $kd_pasien,
-                            'jenis_alergi' => $alergi['jenis_alergi'],
-                            'nama_alergi' => $alergi['alergen'] ?? $alergi['nama_alergi'],
+                    // Key unik: jenis_alergi + nama_alergi/alergen
+                    $jenis = $alergi['jenis_alergi'] ?? null;
+                    $nama = $alergi['alergen'] ?? ($alergi['nama_alergi'] ?? null);
+                    if ($jenis && $nama && isset($alergi['reaksi']) && isset($alergi['tingkat_keparahan'])) {
+                        $alergiBaru[] = [
+                            'jenis_alergi' => $jenis,
+                            'nama_alergi' => $nama,
                             'reaksi' => $alergi['reaksi'],
                             'tingkat_keparahan' => $alergi['tingkat_keparahan']
-                        ]);
+                        ];
+                        // Update jika sudah ada
+                        $existing = $alergiLama->where('jenis_alergi', $jenis)->where('nama_alergi', $nama)->first();
+                        if ($existing) {
+                            $existing->update([
+                                'reaksi' => $alergi['reaksi'],
+                                'tingkat_keparahan' => $alergi['tingkat_keparahan']
+                            ]);
+                        } else {
+                            RmeAlergiPasien::create([
+                                'kd_pasien' => $kd_pasien,
+                                'jenis_alergi' => $jenis,
+                                'nama_alergi' => $nama,
+                                'reaksi' => $alergi['reaksi'],
+                                'tingkat_keparahan' => $alergi['tingkat_keparahan']
+                            ]);
+                        }
                     }
+                }
+            }
+            // Hapus data lama yang tidak ada di input baru
+            foreach ($alergiLama as $lama) {
+                $found = false;
+                foreach ($alergiBaru as $baru) {
+                    if ($lama->jenis_alergi == $baru['jenis_alergi'] && $lama->nama_alergi == $baru['nama_alergi']) {
+                        $found = true;
+                        break;
+                    }
+                }
+                if (!$found) {
+                    $lama->delete();
                 }
             }
 
@@ -244,28 +266,51 @@ class AsesmenAwalController extends Controller
             $asesmenAwal->edukasi = $request->edukasi;
             $asesmenAwal->save();
 
-            // Update data alergi
+            // Sync data alergi pasien
             $alergiData = json_decode($request->alergis, true);
+            $alergiLama = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
+            $alergiBaru = [];
             if (!empty($alergiData)) {
-                RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
                 foreach ($alergiData as $alergi) {
-                    // Validasi data alergi, pastikan semua key ada
-                    if (
-                        (!isset($alergi['is_existing']) || !$alergi['is_existing']) &&
-                        isset($alergi['jenis_alergi']) &&
-                        (isset($alergi['alergen']) || isset($alergi['nama_alergi'])) &&
-                        isset($alergi['reaksi']) &&
-                        isset($alergi['tingkat_keparahan'])
-                    ) {
-                        RmeAlergiPasien::create([
-                            'kd_pasien' => $kd_pasien,
-                            'jenis_alergi' => $alergi['jenis_alergi'],
-                            'nama_alergi' => $alergi['alergen'] ?? $alergi['nama_alergi'],
+                    $jenis = $alergi['jenis_alergi'] ?? null;
+                    $nama = $alergi['alergen'] ?? ($alergi['nama_alergi'] ?? null);
+                    if ($jenis && $nama && isset($alergi['reaksi']) && isset($alergi['tingkat_keparahan'])) {
+                        $alergiBaru[] = [
+                            'jenis_alergi' => $jenis,
+                            'nama_alergi' => $nama,
                             'reaksi' => $alergi['reaksi'],
                             'tingkat_keparahan' => $alergi['tingkat_keparahan']
-                        ]);
+                        ];
+                        $existing = $alergiLama->where('jenis_alergi', $jenis)->where('nama_alergi', $nama)->first();
+                        if ($existing) {
+                            $existing->update([
+                                'reaksi' => $alergi['reaksi'],
+                                'tingkat_keparahan' => $alergi['tingkat_keparahan']
+                            ]);
+                        } else {
+                            RmeAlergiPasien::create([
+                                'kd_pasien' => $kd_pasien,
+                                'jenis_alergi' => $jenis,
+                                'nama_alergi' => $nama,
+                                'reaksi' => $alergi['reaksi'],
+                                'tingkat_keparahan' => $alergi['tingkat_keparahan']
+                            ]);
+                        }
                     }
+                }
+            }
+            // Hapus data lama yang tidak ada di input baru
+            foreach ($alergiLama as $lama) {
+                $found = false;
+                foreach ($alergiBaru as $baru) {
+                    if ($lama->jenis_alergi == $baru['jenis_alergi'] && $lama->nama_alergi == $baru['nama_alergi']) {
+                        $found = true;
+                        break;
+                    }
+                }
+                if (!$found) {
+                    $lama->delete();
                 }
             }
 
