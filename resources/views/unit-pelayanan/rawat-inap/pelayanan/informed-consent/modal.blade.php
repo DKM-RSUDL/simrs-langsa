@@ -309,36 +309,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="border-bottom border-primary mt-3"></div>
-
-                    <div class="row mt-3">
-                        <div class="col-12">
-                            <p class="fs-4 fw-bold">TANDA TANGAN PASIEN/KELUARGA</p>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mt-3">
-                            <div id='canvasPJ' class="ttd-canvas"></div>
-                            <button type="button" class="btn btn-secondary btn-sm mt-2 "
-                                id="resetCanvasPJ">Reset</button>
-                        </div>
-                        <div class="col-md-6 mt-3">
-                            <div id='canvasSaksi1' class="ttd-canvas"></div>
-                            <button type="button" class="btn btn-secondary btn-sm mt-2 "
-                                id="resetCanvasSaksi1">Reset</button>
-                        </div>
-                        <div class="col-md-6 mt-3">
-                            <div id='canvasSaksi2' class="ttd-canvas"></div>
-                            <button type="button" class="btn btn-secondary btn-sm mt-2 "
-                                id="resetCanvasSaksi2">Reset</button>
-                        </div>
-
-                        <input class="d-none" type="file" name="ttd_pj" id="ttd_pj">
-                        <input class="d-none" type="file" name="ttd_saksi_1" id="ttd_saksi_1">
-                        <input class="d-none" type="file" name="ttd_saksi_2" id="ttd_saksi_2">
-                    </div>
                 </div>
 
                 <!-- Jumlah dan Total di Footer -->
