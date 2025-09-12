@@ -239,7 +239,7 @@
                         <div>
                             <div>Tanda tangan dokter</div>
                             <div class="section-signature-space"></div>
-                            <div class="section-signature-label">{{ $informedConsent->nama_pemberi_info ?? 'Nama & Tanda Tangan' }}</div>
+                            <div class="section-signature-label">{{ $informedConsent->nama_pemberi_info ?? '..........' }}</div>
                         </div>
                     </td>
                 </tr>
@@ -251,7 +251,7 @@
                         <div>
                             <div>Tanda tangan pasien/kel</div>
                             <div class="section-signature-space"></div>
-                            <div class="section-signature-label">{{ $informedConsent->nama_penerima_info ?? 'Nama & Tanda Tangan' }}</div>
+                            <div class="section-signature-label">{{ $informedConsent->nama_penerima_info ?? '(..........)' }}</div>
                         </div>
                     </td>
                 </tr>
@@ -289,12 +289,12 @@
                     <td class="signature-sub-cell">
                         <div class="signature-name-space"><strong>Yang menyatakan:</strong></div>
                         <div class="signature-line"></div>
-                        <div class="signature-caption">{{ $informedConsent->keluarga_nama ?? '-' }}</div>
+                        <div class="signature-caption">{{ $informedConsent->keluarga_nama ?? '(...........................)' }}</div>
                     </td>
                     <td class="signature-sub-cell">
                         <div class="signature-name-space">Dokter</div>
                         <div class="signature-line"></div>
-                        <div class="signature-caption">{{ $informedConsent->nama_pemberi_info ?? 'Nama Jelas dan TTD' }}</div>
+                        <div class="signature-caption">{{ $informedConsent->nama_pemberi_info ?? '(...........................)' }}</div>
                     </td>
                     <td class="signature-sub-cell">
                     <td class="signature-sub-cell">

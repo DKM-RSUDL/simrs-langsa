@@ -174,6 +174,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\ResikoJatuh\SkalaHumptyDumptyC
 use App\Http\Controllers\UnitPelayanan\RawatJalan\ResikoJatuh\SkalaMorseController as RawatJalanSkalaMorseController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenController as RawatJalanAsesmenController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenGeriatriController as RawatJalanAsesmenGeriatriController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenAwalController as RawatJalanAsesmenAwalController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenKeperawatanRajalController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenKulitKelaminController as RawatJalanAsesmenKulitKelaminController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenPsikiatriController as RawatJalanAsesmenPsikiatriController;
@@ -533,6 +534,19 @@ Route::middleware('ssoToken')->group(function () {
                                                         Route::get('/{id}/edit', 'edit')->name('.edit');
                                                         Route::put('/{id}', 'update')->name('.update');
                                                         Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                                    });
+                                                });
+                                            });
+                                            
+                                            // Awal
+                                            Route::prefix('awal')->group(function () {
+                                                Route::name('.awal')->group(function () {
+                                                    Route::controller(RawatJalanAsesmenAwalController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
+                                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                        Route::put('/{id}', 'update')->name('.update');
                                                     });
                                                 });
                                             });

@@ -174,15 +174,11 @@
         <!-- Button "Tambah" di sebelah kanan -->
         <!-- Button "Tambah" dengan Bootstrap Dropdown -->
         <div class="col-md-3 text-end ms-auto">
-
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailPasienModal" type="button">
-                <i class="ti-plus"></i> Tambah
-            </button>
             @php
                 $tglMasukData = date('Y-m-d', strtotime($dataMedis->tgl_masuk));
             @endphp
 
-            <div class="dropdown mt-2">
+            <div class="dropdown">
                 <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
                     data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-plus me-2"></i>Tambah Asesmen
@@ -223,6 +219,11 @@
 
                     <li>
                         <h6 class="dropdown-header"><i class="fas fa-stethoscope me-2"></i>Asesmen Medis</h6>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{{ route('rawat-jalan.asesmen.medis.awal.index', ['kd_unit' => request()->route('kd_unit'),'kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), 'urut_masuk' => request()->route('urut_masuk')]) }}">
+                            <i class="fas fa-play me-2"></i>Asesmen Awal
+                        </a>
                     </li>
                     <li>
                         <a class="dropdown-item" href="">
@@ -304,7 +305,16 @@
             </div>
             <div>
                 @if ($item->kategori == 1 && $item->sub_kategori == 1)
-                    <button type="button" onclick="showAsesmen('{{ $item->id }}')"
+                    <a href="{{ route('rawat-jalan.asesmen.medis.awal.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-sm btn-info">
+                        <i class="fas fa-eye me-1"></i> Lihat
+                    </a>
+
+                    <a href="{{ route('rawat-jalan.asesmen.medis.awal.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-sm btn-secondary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    {{-- <button type="button" onclick="showAsesmen('{{ $item->id }}')"
                         data-url="{{ url('unit-pelayanan/rawat-jalan/unit/' . $dataMedis->kd_unit . '/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/' . $item->id) }}"
                         class="btn btn-info btn-sm">
                         <i class="fas fa-eye"></i> Lihat
@@ -314,8 +324,8 @@
                         data-url="{{ url('unit-pelayanan/rawat-jalan/unit/' . $dataMedis->kd_unit . '/pelayanan/' . $dataMedis->kd_pasien .'/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/' . $item->id) }}"
                         class="btn btn-secondary btn-sm">
                         <i class="fas fa-edit"></i> Edit
-                    </button>
-                    @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen.edit')
+                    </button> --}}
+                    {{-- @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen.edit') --}}
 
                 @elseif($item->kategori == 2 && $item->sub_kategori == 1)
                     <button type="button"
