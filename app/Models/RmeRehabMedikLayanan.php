@@ -27,6 +27,8 @@ class RmeRehabMedikLayanan extends Model
         'tatalaksana',
         'suspek_penyakit',
         'suspek_penyakit_ket',
+        'anjuran',
+        'evaluasi',
         'diagnosa',
         'permintaan_terapi',
         'user_create',

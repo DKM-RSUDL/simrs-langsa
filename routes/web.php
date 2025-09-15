@@ -214,6 +214,8 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\StatusNyeri\SkalaNumerikContro
 use App\Http\Controllers\UnitPelayanan\RawatJalan\PersetujuanTransfusiDarahController as RawatJalanPersetujuanTransfusiDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\Covid19Controller as RawatJalanCovid19Controller;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\EchocardiographyController as RawatJalanEchocardiographyController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\Rehab\LayananController as RehabLayananController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\Rehab\TindakanController as RehabTindakanController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
@@ -1077,6 +1079,48 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
+
+                            // REHAB MEDIK
+                            // Pelayanan
+                            Route::prefix('layanan-rehab-medik')->group(function () {
+                                Route::name('.layanan-rehab-medik')->group(function () {
+                                    Route::controller(RehabLayananController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::get('/show/{data}', 'show')->name('.show');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::delete('/', 'destroy')->name('.destroy');
+
+                                        // PROGRAM
+                                        Route::prefix('program')->group(function () {
+                                            Route::name('.program')->group(function () {
+                                                Route::get('/create', 'createProgram')->name('.create');
+                                                Route::get('/{data}/edit', 'editProgram')->name('.edit');
+                                                Route::post('/', 'storeProgram')->name('.store');
+                                                Route::put('/{data}', 'updateProgram')->name('.update');
+                                                Route::delete('/', 'destroyProgram')->name('.destroy');
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+
+                            // Tindakan
+                            Route::prefix('tindakan-rehab-medik')->group(function () {
+                                Route::name('.tindakan-rehab-medik')->group(function () {
+                                    Route::controller(RehabTindakanController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/show/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::delete('/', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
                         });
                     });
                 });
@@ -1111,7 +1155,7 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::post('/show', 'show')->name('.show');
                                         Route::post('/', 'store')->name('.store');
                                         Route::delete('/{data}', 'delete')->name('.delete');
-                                         Route::get('/print/{data}', 'print')->name('.print');
+                                        Route::get('/print/{data}', 'print')->name('.print');
                                     });
                                 });
                             });
@@ -1551,7 +1595,6 @@ Route::middleware('ssoToken')->group(function () {
                                                     });
                                                 });
                                             });
-
                                         });
                                     });
 
