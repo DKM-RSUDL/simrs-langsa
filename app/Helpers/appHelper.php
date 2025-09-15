@@ -86,6 +86,8 @@ if (!function_exists('getKategoriAsesmen')) {
                 break;
             case 13:
                 $subKategoriLabel = 'Terminal & Keluarga';
+            case 14:
+                $subKategoriLabel = 'Neonatologi';
         }
 
         return "$kategoriLabel $subKategoriLabel";

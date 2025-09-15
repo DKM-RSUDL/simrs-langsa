@@ -194,7 +194,7 @@
                                 <i class="fas fa-user-nurse me-2"></i>Keperawatan
                             </a>
                         </li>
-                        <li>
+                        {{-- <li>
                             <a class="dropdown-item" href=""></i>Anak
                             </a>
                         </li>
@@ -212,7 +212,7 @@
                             <a class="dropdown-item" href="">
                                 <i class="fas fa-heart me-2"></i>Terminal
                             </a>
-                        </li>
+                        </li> --}}
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -227,7 +227,7 @@
                             <i class="fas fa-play me-2"></i>Asesmen Awal
                         </a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a class="dropdown-item" href="">
                             <i class="fas fa-female me-2"></i>Obstetri/Maternitas
                         </a>
@@ -271,7 +271,7 @@
                             href="{{ route('rawat-jalan.asesmen.medis.psikiatri.index', ['kd_unit' => request()->route('kd_unit'), 'kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), 'urut_masuk' => request()->route('urut_masuk')]) }}">
                             <i class="fas fa-user-md me-2"></i>Psikiatri
                         </a>
-                    </li>
+                    </li> --}}
                 </ul>
             </div>
         </div>

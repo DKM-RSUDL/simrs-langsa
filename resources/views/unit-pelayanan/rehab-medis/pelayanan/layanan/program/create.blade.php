@@ -21,13 +21,15 @@
                 <i class="ti-arrow-left"></i> Kembali
             </a>
 
-            <form action="{{ route('rehab-medis.pelayanan.layanan.program.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" method="post">
+            <form
+                action="{{ route('rehab-medis.pelayanan.layanan.program.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                method="post">
                 @csrf
 
                 <div class="d-flex justify-content-center">
                     <div class="card w-100 h-100">
                         <div class="card-header text-center border-bottom">
-                            <h5 class="text-secondary fw-bold">Serah Terima Pasien Antar Ruang</h5>
+                            <h5 class="text-secondary fw-bold">Program Terapi</h5>
                         </div>
 
                         <div class="card-body mt-3">
@@ -35,8 +37,10 @@
                             <div class="form-group">
                                 <label style="max-width: 200px;">Waktu pelayanan</label>
                                 <div class="d-flex">
-                                    <input type="date" name="tgl_pelayanan" class="form-control me-3" value="{{ date('Y-m-d') }}">
-                                    <input type="time" name="jam_pelayanan" class="form-control" value="{{ date('H:i') }}">
+                                    <input type="date" name="tgl_pelayanan" class="form-control me-3"
+                                        value="{{ date('Y-m-d') }}">
+                                    <input type="time" name="jam_pelayanan" class="form-control"
+                                        value="{{ date('H:i') }}">
                                 </div>
                             </div>
 
@@ -45,7 +49,9 @@
                                 <select id="program" class="form-select select2">
                                     <option value="">--Pilih Tindakan--</option>
                                     @foreach ($produk as $item)
-                                        <option value='{"kd_produk" : "{{ $item->kd_produk }}", "tarif" : "{{ $item->tarif }}", "tgl_berlaku" : "{{ date('Y-m-d', strtotime($item->tgl_berlaku)) }}"}'>{{ $item->deskripsi }}</option>
+                                        <option
+                                            value='{"kd_produk" : "{{ $item->kd_produk }}", "tarif" : "{{ $item->tarif }}", "tgl_berlaku" : "{{ date('Y-m-d', strtotime($item->tgl_berlaku)) }}"}'>
+                                            {{ $item->deskripsi }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -67,7 +73,6 @@
             </form>
         </div>
     </div>
-
 @endsection
 
 @push('js')

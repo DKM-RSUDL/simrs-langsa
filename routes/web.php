@@ -163,6 +163,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\TransferPasienAntarRuang as Raw
 use App\Http\Controllers\UnitPelayanan\RawatInap\EchocardiographyController as RawatInapEchocardiographyController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenPengkajianAwalMedis as RawatInapAsesmenPengkajianAwalMedis;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenMedisAnakController as RawatInapAsesmenMedisAnakController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenMedisNeonatologiController as RawatInapAsesmenMedisNeonatologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PneumoniaCurb65Controller;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PneumoniaPsiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SurveilansA1Controller;
@@ -1529,6 +1530,19 @@ Route::middleware('ssoToken')->group(function () {
                                             Route::prefix('medis-anak')->group(function () {
                                                 Route::name('.medis-anak')->group(function () {
                                                     Route::controller(RawatInapAsesmenMedisAnakController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
+                                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                        Route::put('/{id}', 'update')->name('.update');
+                                                    });
+                                                });
+                                            });
+
+                                            // medis neonatologi
+                                            Route::prefix('medis-neonatologi')->group(function () {
+                                                Route::name('.medis-neonatologi')->group(function () {
+                                                    Route::controller(RawatInapAsesmenMedisNeonatologiController::class)->group(function () {
                                                         Route::get('/', 'index')->name('.index');
                                                         Route::post('/', 'store')->name('.store');
                                                         Route::get('/{id}', 'show')->name('.show');
