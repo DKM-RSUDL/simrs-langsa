@@ -189,7 +189,8 @@
                             <h6 class="dropdown-header"><i class="fas fa-user-nurse me-2"></i>Asesmen Keperawatan</h6>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="{{ route('rawat-jalan.asesmen-keperawatan.index', ['kd_unit' => request()->route('kd_unit'),'kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), 'urut_masuk' => request()->route('urut_masuk')]) }}">
+                            <a class="dropdown-item"
+                                href="{{ route('rawat-jalan.asesmen-keperawatan.index', ['kd_unit' => request()->route('kd_unit'), 'kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), 'urut_masuk' => request()->route('urut_masuk')]) }}">
                                 <i class="fas fa-user-nurse me-2"></i>Keperawatan
                             </a>
                         </li>
@@ -221,7 +222,8 @@
                         <h6 class="dropdown-header"><i class="fas fa-stethoscope me-2"></i>Asesmen Medis</h6>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="{{ route('rawat-jalan.asesmen.medis.awal.index', ['kd_unit' => request()->route('kd_unit'),'kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), 'urut_masuk' => request()->route('urut_masuk')]) }}">
+                        <a class="dropdown-item"
+                            href="{{ route('rawat-jalan.asesmen.medis.awal.index', ['kd_unit' => request()->route('kd_unit'), 'kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), 'urut_masuk' => request()->route('urut_masuk')]) }}">
                             <i class="fas fa-play me-2"></i>Asesmen Awal
                         </a>
                     </li>
@@ -231,7 +233,8 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="{{ route('rawat-jalan.asesmen.medis.geriatri.index', ['kd_unit' => request()->route('kd_unit'),'kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), 'urut_masuk' => request()->route('urut_masuk')]) }}">
+                        <a class="dropdown-item"
+                            href="{{ route('rawat-jalan.asesmen.medis.geriatri.index', ['kd_unit' => request()->route('kd_unit'), 'kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), 'urut_masuk' => request()->route('urut_masuk')]) }}">
                             <i class="fas fa-walking me-2"></i>Geriatri
                         </a>
                     </li>
@@ -241,7 +244,8 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="{{ route('rawat-jalan.asesmen.medis.paru.index', ['kd_unit' => request()->route('kd_unit'),'kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), 'urut_masuk' => request()->route('urut_masuk')]) }}">
+                        <a class="dropdown-item"
+                            href="{{ route('rawat-jalan.asesmen.medis.paru.index', ['kd_unit' => request()->route('kd_unit'), 'kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), 'urut_masuk' => request()->route('urut_masuk')]) }}">
                             <i class="fas fa-lungs me-2"></i>Paru
                         </a>
                     </li>
@@ -251,17 +255,20 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="{{ route('rawat-jalan.asesmen.medis.kulit-kelamin.index', ['kd_unit' => request()->route('kd_unit'),'kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), 'urut_masuk' => request()->route('urut_masuk')]) }}">
+                        <a class="dropdown-item"
+                            href="{{ route('rawat-jalan.asesmen.medis.kulit-kelamin.index', ['kd_unit' => request()->route('kd_unit'), 'kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), 'urut_masuk' => request()->route('urut_masuk')]) }}">
                             <i class="fas fa-hand-paper me-2"></i>Kulit dan Kelamin
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="{{ route('rawat-jalan.asesmen.medis.ginekologik.index', ['kd_unit' => request()->route('kd_unit'),'kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), 'urut_masuk' => request()->route('urut_masuk')]) }}">
+                        <a class="dropdown-item"
+                            href="{{ route('rawat-jalan.asesmen.medis.ginekologik.index', ['kd_unit' => request()->route('kd_unit'), 'kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), 'urut_masuk' => request()->route('urut_masuk')]) }}">
                             <i class="fas fa-venus me-2"></i>Ginekologik
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="{{ route('rawat-jalan.asesmen.medis.psikiatri.index', ['kd_unit' => request()->route('kd_unit'),'kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), 'urut_masuk' => request()->route('urut_masuk')]) }}">
+                        <a class="dropdown-item"
+                            href="{{ route('rawat-jalan.asesmen.medis.psikiatri.index', ['kd_unit' => request()->route('kd_unit'), 'kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), 'urut_masuk' => request()->route('urut_masuk')]) }}">
                             <i class="fas fa-user-md me-2"></i>Psikiatri
                         </a>
                     </li>
@@ -326,23 +333,28 @@
                         <i class="fas fa-edit"></i> Edit
                     </button> --}}
                     {{-- @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen.edit') --}}
-
                 @elseif($item->kategori == 2 && $item->sub_kategori == 1)
-                    <button type="button"
-                        onclick="showAsesmenKeperawatanJalan('{{ $item->id }}', '{{ $dataMedis->kd_unit }}', '{{ $dataMedis->kd_pasien }}', '{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') }}', '{{ $dataMedis->urut_masuk }}')"
-                        class="btn btn-info btn-sm px-3">
+                    <a href="{{ route('rawat-jalan.asesmen-keperawatan.show', [
+                        'kd_unit' => $dataMedis->kd_unit,
+                        'kd_pasien' => $dataMedis->kd_pasien,
+                        'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
+                        'urut_masuk' => $dataMedis->urut_masuk,
+                        'id' => $item->id,
+                    ]) }}"
+                        class="btn btn-info btn-sm px-3 ">
                         <i class="fas fa-eye me-1"></i> Lihat
-                    </button>
+                    </a>
 
-                        <a href="{{ route('rawat-jalan.asesmen-keperawatan.edit', [
-                            'kd_unit' => $dataMedis->kd_unit,
-                            'kd_pasien' => $dataMedis->kd_pasien,
-                            'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
-                            'urut_masuk' => $dataMedis->urut_masuk,
-                            'id' => $item->id
-                        ]) }}" class="btn btn-sm btn-secondary">
-                            <i class="fas fa-edit"></i> Edit
-                        </a>
+                    <a href="{{ route('rawat-jalan.asesmen-keperawatan.edit', [
+                        'kd_unit' => $dataMedis->kd_unit,
+                        'kd_pasien' => $dataMedis->kd_pasien,
+                        'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
+                        'urut_masuk' => $dataMedis->urut_masuk,
+                        'id' => $item->id,
+                    ]) }}"
+                        class="btn btn-sm btn-secondary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
                 @endif
 
                 @if ($item->kategori == 2 && $item->sub_kategori == 11)
@@ -414,7 +426,7 @@
 
 @push('js')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Get all filter elements
             const startDateInput = document.getElementById('start_date');
             const endDateInput = document.getElementById('end_date');
@@ -439,7 +451,8 @@
                     const itemDate = item.getAttribute('data-date');
                     const itemName = item.getAttribute('data-name').toLowerCase();
 
-                    const dateMatch = (!startDate || itemDate >= startDate) && (!endDate || itemDate <= endDate);
+                    const dateMatch = (!startDate || itemDate >= startDate) && (!endDate || itemDate <=
+                        endDate);
                     const searchMatch = itemName.includes(search);
 
                     // Filter berdasarkan episode jika bukan "semua"
@@ -461,7 +474,7 @@
             // Optional: Add smooth scroll untuk dropdown items yang panjang
             const dropdownMenu = document.querySelector('.dropdown-menu');
             if (dropdownMenu) {
-                dropdownMenu.addEventListener('scroll', function () {
+                dropdownMenu.addEventListener('scroll', function() {
                     // Handle scroll events jika diperlukan
                 });
             }
@@ -469,9 +482,10 @@
             // Optional: Close dropdown saat mengklik item (untuk mobile)
             const dropdownItems = document.querySelectorAll('.dropdown-item');
             dropdownItems.forEach(item => {
-                item.addEventListener('click', function () {
+                item.addEventListener('click', function() {
                     // Close dropdown after selection (optional)
-                    const dropdown = bootstrap.Dropdown.getInstance(document.getElementById('dropdownMenuButton'));
+                    const dropdown = bootstrap.Dropdown.getInstance(document.getElementById(
+                        'dropdownMenuButton'));
                     if (dropdown) {
                         dropdown.hide();
                     }

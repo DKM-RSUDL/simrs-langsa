@@ -536,7 +536,7 @@ Route::middleware('ssoToken')->group(function () {
                                                     });
                                                 });
                                             });
-                                            
+
                                             // Awal
                                             Route::prefix('awal')->group(function () {
                                                 Route::name('.awal')->group(function () {

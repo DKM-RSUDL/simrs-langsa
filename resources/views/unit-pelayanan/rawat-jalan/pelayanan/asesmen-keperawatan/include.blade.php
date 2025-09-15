@@ -743,18 +743,20 @@
                 const semuaTerisi = Array.from(selects).every(select => select.value !== '');
 
                 if (semuaTerisi) {
-                    // Menghitung berapa banyak jawaban "ya"
-                    const jumlahYa = Array.from(selects).filter(select => select.value === 'ya').length;
+                    // Menghitung berapa banyak jawaban "ya" (bisa berupa 'ya', '1', atau 1)
+                    const jumlahYa = Array.from(selects).filter(select => 
+                        select.value === 'ya' || select.value === '1' || select.value === 1
+                    ).length;
 
                     // Jika ada minimal satu jawaban "ya", maka butuh rencana khusus
                     if (jumlahYa > 0) {
                         kesimpulanKhusus.style.display = 'block';
                         kesimpulanTidakKhusus.style.display = 'none';
-                        kesimpulanValue.value = 'butuh_rencana_khusus';
+                        kesimpulanValue.value = 'Membutuhkan rencana pulang khusus';
                     } else {
                         kesimpulanKhusus.style.display = 'none';
                         kesimpulanTidakKhusus.style.display = 'block';
-                        kesimpulanValue.value = 'tidak_butuh_rencana_khusus';
+                        kesimpulanValue.value = 'Tidak membutuhkan rencana pulang khusus';
                     }
                 } else {
                     // Jika belum semua terisi, sembunyikan kedua kesimpulan
@@ -786,11 +788,11 @@
         // 15.Masalah Keperawatan
         document.addEventListener('DOMContentLoaded', function() {
             // Mendapatkan data dari database dan membuat array options yang siap digunakan
-            const dbData = {!! json_encode($rmeAsesmenKepUmum) !!};
+            const dbData = {!! json_encode($rmeAsesmenKepRajal) !!};
             // Tambahkan pengecekan
-            console.log('RME Asesmen Data:', {!! isset($rmeAsesmenKepUmum) ? json_encode($rmeAsesmenKepUmum) : '[]' !!});
+            console.log('RME Asesmen Data:', {!! isset($rmeAsesmenKepRajal) ? json_encode($rmeAsesmenKepRajal) : '[]' !!});
 
-            // const dbData = {!! isset($rmeAsesmenKepUmum) ? json_encode($rmeAsesmenKepUmum) : '[]' !!};
+            // const dbData = {!! isset($rmeAsesmenKepRajal) ? json_encode($rmeAsesmenKepRajal) : '[]' !!};
 
             // Set untuk menyimpan unique values
             const masalahSet = new Set();

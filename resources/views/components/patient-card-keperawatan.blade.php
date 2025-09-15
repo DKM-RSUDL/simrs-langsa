@@ -34,56 +34,41 @@
     <div class="card-body">
         <ol class="list-group list-group-flush assessment-list">
             <li class="list-group-item d-flex align-items-center">
-                <a href="#status-airway" class="text-decoration-none assessment-link">1. Status Air way</a>
+                <a href="#riwayat-kesehatan" class="text-decoration-none assessment-link">1. Riwayat Kesehatan</a>
                 <!-- Ikon check akan ditambahkan secara dinamis jika section terisi -->
             </li>
             <li class="list-group-item d-flex align-items-center">
-                <a href="#status-breathing" class="text-decoration-none assessment-link">2. Status Breathing</a>
+                <a href="#pemeriksaan-fisik" class="text-decoration-none assessment-link">2. Pemeriksaan Fisik</a>
             </li>
             <li class="list-group-item d-flex align-items-center">
-                <a href="#status-circulation" class="text-decoration-none assessment-link">3. Status Circulation</a>
+                <a href="#status-psikologi" class="text-decoration-none assessment-link">3. Status Psikologis</a>
             </li>
             <li class="list-group-item d-flex align-items-center">
-                <a href="#status-disability" class="text-decoration-none assessment-link">4. Status Disability</a>
+                <a href="#status-sosial-budaya" class="text-decoration-none assessment-link">4. Status Sosial Budaya</a>
             </li>
             <li class="list-group-item d-flex align-items-center">
-                <a href="#status-exposure" class="text-decoration-none assessment-link">5. Status Exposure</a>
+                <a href="#status-spiritual" class="text-decoration-none assessment-link">5. Status Spiritual</a>
             </li>
             <li class="list-group-item d-flex align-items-center">
-                <a href="#skala-nyeri" class="text-decoration-none assessment-link">6. Skala Nyeri</a>
+                <a href="#risiko-jatuh" class="text-decoration-none assessment-link">6. Risiko Jatuh</a>
             </li>
             <li class="list-group-item d-flex align-items-center">
-                <a href="#risiko-jatuh" class="text-decoration-none assessment-link">7. Risiko Jatuh</a>
+                <a href="#skrining-batuk" class="text-decoration-none assessment-link">7. Skrining Batuk</a>
             </li>
             <li class="list-group-item d-flex align-items-center">
-                <a href="#status-psikologis" class="text-decoration-none assessment-link">8. Status Psikologis</a>
+                <a href="#status-gizi" class="text-decoration-none assessment-link">8. Status Gizi</a>
             </li>
             <li class="list-group-item d-flex align-items-center">
-                <a href="#status-spiritual" class="text-decoration-none assessment-link">9. Status Spiritual</a>
+                <a href="#status-fungsional" class="text-decoration-none assessment-link">9. Status Fungsional</a>
             </li>
             <li class="list-group-item d-flex align-items-center">
-                <a href="#status-sosial" class="text-decoration-none assessment-link">10. Status Sosial Ekonomi</a>
+                <a href="#kebutuhan-edukasi" class="text-decoration-none assessment-link">10. Edukasi/Pendidikan Dan Pengajaran</a>
             </li>
             <li class="list-group-item d-flex align-items-center">
-                <a href="#status-gizi" class="text-decoration-none assessment-link">11. Status Gizi</a>
+                <a href="#rencana-pemulangan" class="text-decoration-none assessment-link">11. Perencanaan Pemulangan Pasien/Discharge Planning</a>
             </li>
             <li class="list-group-item d-flex align-items-center">
-                <a href="#status-fungsional" class="text-decoration-none assessment-link">12. Status Fungsional</a>
-            </li>
-            <li class="list-group-item d-flex align-items-center">
-                <a href="#edukasi" class="text-decoration-none assessment-link">13. Edukasi</a>
-            </li>
-            <li class="list-group-item d-flex align-items-center">
-                <a href="#discharge-planning" class="text-decoration-none assessment-link">14. Discharge Planning</a>
-            </li>
-            <li class="list-group-item d-flex align-items-center">
-                <a href="#masalah-keperawatan" class="text-decoration-none assessment-link">15. Masalah Keperawatan</a>
-            </li>
-            <li class="list-group-item d-flex align-items-center">
-                <a href="#implementasi" class="text-decoration-none assessment-link">16. Implementasi</a>
-            </li>
-            <li class="list-group-item d-flex align-items-center">
-                <a href="#evaluasi" class="text-decoration-none assessment-link">17. Evaluasi</a>
+                <a href="#keperawatan" class="text-decoration-none assessment-link">12. Daftar Masalah dan Rencana Keperawatan</a>
             </li>
         </ol>
     </div>
