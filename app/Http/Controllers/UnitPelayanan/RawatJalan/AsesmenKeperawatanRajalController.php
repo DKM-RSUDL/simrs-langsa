@@ -508,7 +508,7 @@ class AsesmenKeperawatanRajalController extends Controller
         );
     }
 
-     public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         $user = auth()->user();
         // Mengambil data kunjungan dan tanggal triase terkait
@@ -558,9 +558,8 @@ class AsesmenKeperawatanRajalController extends Controller
 
         $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
 
-        return view(
-            'unit-pelayanan.rawat-jalan.pelayanan.asesmen-keperawatan.show',
-            array_merge([
+        $data = array_merge(
+            [
                 'kd_unit' => $kd_unit,
                 'kd_pasien' => $kd_pasien,
                 'tgl_masuk' => $tgl_masuk,
@@ -568,8 +567,11 @@ class AsesmenKeperawatanRajalController extends Controller
                 'dataMedis' => $dataMedis,
                 'asesmen' => $asesmen,
                 'rmeAsesmenKepRajal' => $rmeAsesmenKepRajal,
-            ], $masterData)
+            ],
+            $masterData
         );
+
+        return view('unit-pelayanan.rawat-jalan.pelayanan.asesmen-keperawatan.show', $data);
     }
 
     public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
@@ -929,5 +931,4 @@ class AsesmenKeperawatanRajalController extends Controller
         // Reset lainnya
         $model->resiko_jatuh_lainnya = null;
     }
-
 }

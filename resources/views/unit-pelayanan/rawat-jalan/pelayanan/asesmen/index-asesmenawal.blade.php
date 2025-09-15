@@ -421,8 +421,6 @@
         </li>
     @endforeach
 </ul>
-@include('unit-pelayanan.rawat-jalan.pelayanan.asesmen.create-asesmen')
-@include('unit-pelayanan.rawat-jalan.pelayanan.asesmen-keperawatan.show')
 
 @push('js')
     <script>

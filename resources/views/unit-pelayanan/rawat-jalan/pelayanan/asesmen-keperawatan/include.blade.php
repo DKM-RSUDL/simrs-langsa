@@ -744,7 +744,7 @@
 
                 if (semuaTerisi) {
                     // Menghitung berapa banyak jawaban "ya" (bisa berupa 'ya', '1', atau 1)
-                    const jumlahYa = Array.from(selects).filter(select => 
+                    const jumlahYa = Array.from(selects).filter(select =>
                         select.value === 'ya' || select.value === '1' || select.value === 1
                     ).length;
 
