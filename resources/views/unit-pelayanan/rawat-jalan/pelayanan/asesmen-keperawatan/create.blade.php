@@ -78,14 +78,15 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr id="no-alergi-row">
-                                                        <td colspan="5" class="text-center text-muted">Tidak ada data alergi</td>
+                                                        <td colspan="5" class="text-center text-muted">Tidak ada data
+                                                            alergi</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
                                         </div>
 
                                         @push('modals')
-                                        @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen-keperawatan.modal-create-alergi')
+                                            @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen-keperawatan.modal-create-alergi')
                                         @endpush
 
                                     </div>
@@ -112,7 +113,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Suhu</label>
-                                            <input class="form-control" type="number" name="suhu" />
+                                            <input class="form-control" type="text" name="suhu" />
                                         </div>
 
                                         <h5 class="section-title mt-5">Status Nyeri</h5>
@@ -285,7 +286,7 @@
 
                                         <div class="form-group mb-3">
                                             <label style="min-width: 300px;">Pekerjaan</label>
-                                            <select class="form-select" name="sosial_budaya_pekerjaan"
+                                            <select class="form-select select2" name="sosial_budaya_pekerjaan"
                                                 id="sosial_pekerjaan">
                                                 <option value="">--Pilih Pekerjaan--</option>
                                                 @foreach ($pekerjaan as $kerjaan)
@@ -320,7 +321,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Tingkat pendidikan</label>
-                                            <select class="form-select" name="sosial_budaya_status_pendidikan">
+                                            <select class="form-select select2" name="sosial_budaya_status_pendidikan">
                                                 <option value="">--Pilih--</option>
                                                 @foreach ($pendidikan as $didikan)
                                                     <option value="{{ $didikan->kd_pendidikan }}">
@@ -826,7 +827,7 @@
                                             <h6 class="mb-3">Intervensi Risiko Jatuh</h6>
                                             <p class="mb-2">Tambah tindakan intervensi risiko jatuh:</p>
 
-                                           <button type="button"
+                                            <button type="button"
                                                 class="btn btn-sm btn-outline-secondary btn-tindakan-keperawatan mb-3"
                                                 data-bs-target="#tindakanKeperawatanRisikoJatuhModal">
                                                 <i class="ti-plus"></i> Tambah
@@ -1507,14 +1508,14 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Diagnosis medis</label>
-                                            <input type="text" class="form-control"
-                                                name="diagnosis_medis" id="diagnosis_medis">
+                                            <input type="text" class="form-control" name="diagnosis_medis"
+                                                id="diagnosis_medis">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Usia lanjut</label>
-                                            <select class="form-select discharge-select"
-                                                name="usia_lanjut" id="usia_lanjut">
+                                            <select class="form-select discharge-select" name="usia_lanjut"
+                                                id="usia_lanjut">
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="1">Ya</option>
                                                 <option value="0">Tidak</option>
@@ -1523,8 +1524,8 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Hambatan mobilisasi</label>
-                                            <select class="form-select discharge-select"
-                                                name="hambatan_mobilisasi" id="hambatan_mobilisasi">
+                                            <select class="form-select discharge-select" name="hambatan_mobilisasi"
+                                                id="hambatan_mobilisasi">
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="1">Ya</option>
                                                 <option value="0">Tidak</option>
@@ -1534,8 +1535,7 @@
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Membutuhkan pelayanan medis
                                                 berkelanjutan</label>
-                                            <select class="form-select discharge-select"
-                                                name="layanan_medis_lanjutan"
+                                            <select class="form-select discharge-select" name="layanan_medis_lanjutan"
                                                 id="pelayanan_medis_berkelanjutan">
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="1">Ya</option>
@@ -1547,8 +1547,7 @@
                                             <label style="min-width: 300px;">Ketergantungan dengan orang lain dalam
                                                 aktivitas harian</label>
                                             <select class="form-select discharge-select"
-                                                name="ketergantungan_orang_lain"
-                                                id="ketergantungan_orang_lain">
+                                                name="ketergantungan_orang_lain" id="ketergantungan_orang_lain">
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="1">Ya</option>
                                                 <option value="0">Tidak</option>
@@ -1557,7 +1556,8 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Rencana Pulang</label>
-                                            <input type="date" name="rencana_pulang" class="form-control" id="rencana_pulang_input">
+                                            <input type="date" name="rencana_pulang" class="form-control"
+                                                id="rencana_pulang_input">
                                         </div>
 
                                         <div class="form-group mt-4">
@@ -1572,8 +1572,7 @@
                                                     Tidak membutuhkan rencana pulang khusus
                                                 </div>
                                             </div>
-                                            <input type="hidden" name="kesimpulan"
-                                                id="kesimpulan_value">
+                                            <input type="hidden" name="kesimpulan" id="kesimpulan_value">
                                         </div>
                                     </div>
 

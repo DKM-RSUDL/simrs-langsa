@@ -111,7 +111,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Suhu</label>
-                                            <input class="form-control" type="number" name="suhu"
+                                            <input class="form-control" type="text" name="suhu"
                                                 value="{{ old('suhu', $asesmen->asesmenKepRajalTtv->suhu ?? '') }}"
                                                 disabled />
                                         </div>

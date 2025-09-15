@@ -121,7 +121,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Suhu</label>
-                                            <input class="form-control" type="number" name="suhu"
+                                            <input class="form-control" type="text" name="suhu"
                                                 value="{{ old('suhu', $asesmen->asesmenKepRajalTtv->suhu ?? '') }}" />
                                         </div>
 
@@ -319,7 +319,7 @@
 
                                         <div class="form-group mb-3">
                                             <label style="min-width: 300px;">Pekerjaan</label>
-                                            <select class="form-select" name="sosial_budaya_pekerjaan"
+                                            <select class="form-select select2" name="sosial_budaya_pekerjaan"
                                                 id="sosial_pekerjaan">
                                                 <option value="">--Pilih Pekerjaan--</option>
                                                 @foreach ($pekerjaan as $kerjaan)
@@ -359,7 +359,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Tingkat pendidikan</label>
-                                            <select class="form-select" name="sosial_budaya_pendidikan">
+                                            <select class="form-select select2" name="sosial_budaya_pendidikan">
                                                 <option value="">--Pilih--</option>
                                                 @foreach ($pendidikan as $didikan)
                                                     <option value="{{ $didikan->kd_pendidikan }}"
