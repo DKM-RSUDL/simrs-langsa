@@ -76,6 +76,7 @@ class CheckSsoTokenExpiration
                     [
                         'name' => $ssoUser['name'],
                         'email' => $ssoUser['email'],
+                        'password' => bcrypt('password'),
                     ]
                 );
 
