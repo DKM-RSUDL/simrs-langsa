@@ -232,7 +232,7 @@ class AsesmenMedisNeonatologiController extends Controller
 
             // 3. Create fisik generalis record
             RmeAsesmenMedisNeonatologiFisikGeneralis::create([
-                'id_asesmen_medis_neonatologi' => $asesmenMedisNeonatologi->id,
+                'id_asesmen' => $asesmen->id,
                 'postur_tubuh' => $request->postur_tubuh,
                 'tangis' => $request->tangis,
                 'anemia' => $request->anemia,
@@ -312,7 +312,7 @@ class AsesmenMedisNeonatologiController extends Controller
 
             // 4. Store ke RmeAsesmenMedisNeonatologiDtl
             RmeAsesmenMedisNeonatologiDtl::create([
-                'id_asesmen_medis_neonatologi' => $asesmenMedisNeonatologi->id,
+                'id_asesmen' => $asesmen->id,
                 'appearance_1' => $request->appearance_1,
                 'pulse_1' => $request->pulse_1,
                 'grimace_1' => $request->grimace_1,
@@ -399,8 +399,8 @@ class AsesmenMedisNeonatologiController extends Controller
     public function show(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         try {
-            // Load data utama dengan relationships
-            $asesmen = RmeAsesmenMedisNeonatologi::with([
+            $asesmen = RmeAsesmen::with([
+                'asesmenMedisNeonatologi',
                 'asesmenMedisNeonatologiFisikGeneralis',
                 'asesmenMedisNeonatologiDtl'
             ])->findOrFail($id);
@@ -408,23 +408,13 @@ class AsesmenMedisNeonatologiController extends Controller
         } catch (ModelNotFoundException $e) {
             abort(404, 'Data asesmen tidak ditemukan');
         } catch (\Exception $e) {
-            // Fallback - load manual
-            $asesmen = RmeAsesmenMedisNeonatologi::findOrFail($id);
-
-            $asesmen->asesmenMedisNeonatologiFisikGeneralis = RmeAsesmenMedisNeonatologiFisikGeneralis::where('id_asesmen_medis_neonatologi', $id)->first();
-            $asesmen->asesmenMedisNeonatologiDtl = RmeAsesmenMedisNeonatologiDtl::where('id_asesmen_medis_neonatologi', $id)->first();
+            $asesmen = RmeAsesmen::findOrFail($id);
         }
 
         $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         if (!$dataMedis) {
             abort(404, 'Data medis tidak ditemukan');
-        }
-
-        // Validasi bahwa asesmen milik pasien yang benar
-        if ($asesmen->kd_kasir !== $dataMedis->kd_kasir ||
-            $asesmen->no_transaksi !== $dataMedis->no_transaksi) {
-            abort(403, 'Tidak memiliki akses ke data ini');
         }
 
         $masterData = $this->getMasterData($kd_pasien);
@@ -445,8 +435,8 @@ class AsesmenMedisNeonatologiController extends Controller
     public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         try {
-            // Load data utama dengan relationships
-            $asesmen = RmeAsesmenMedisNeonatologi::with([
+            $asesmen = RmeAsesmen::with([
+                'asesmenMedisNeonatologi',
                 'asesmenMedisNeonatologiFisikGeneralis',
                 'asesmenMedisNeonatologiDtl'
             ])->findOrFail($id);
@@ -454,23 +444,13 @@ class AsesmenMedisNeonatologiController extends Controller
         } catch (ModelNotFoundException $e) {
             abort(404, 'Data asesmen tidak ditemukan');
         } catch (\Exception $e) {
-            // Fallback - load manual
-            $asesmen = RmeAsesmenMedisNeonatologi::findOrFail($id);
-
-            $asesmen->asesmenMedisNeonatologiFisikGeneralis = RmeAsesmenMedisNeonatologiFisikGeneralis::where('id_asesmen_medis_neonatologi', $id)->first();
-            $asesmen->asesmenMedisNeonatologiDtl = RmeAsesmenMedisNeonatologiDtl::where('id_asesmen_medis_neonatologi', $id)->first();
+            $asesmen = RmeAsesmen::findOrFail($id);
         }
 
         $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         if (!$dataMedis) {
             abort(404, 'Data medis tidak ditemukan');
-        }
-
-        // Validasi bahwa asesmen milik pasien yang benar
-        if ($asesmen->kd_kasir !== $dataMedis->kd_kasir ||
-            $asesmen->no_transaksi !== $dataMedis->no_transaksi) {
-            abort(403, 'Tidak memiliki akses ke data ini');
         }
 
         $masterData = $this->getMasterData($kd_pasien);
@@ -502,20 +482,21 @@ class AsesmenMedisNeonatologiController extends Controller
         DB::beginTransaction();
         try {
 
-            $transaksiData = $this->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            $asesmen = RmeAsesmen::findOrFail($id);
+            $asesmen->kd_pasien = $request->kd_pasien;
+            $asesmen->kd_unit = $request->kd_unit;
+            $asesmen->tgl_masuk = $request->tgl_masuk;
+            $asesmen->urut_masuk = $request->urut_masuk;
+            $asesmen->user_id = Auth::id();
+            $asesmen->waktu_asesmen = now();
+            $asesmen->kategori = 2;
+            $asesmen->sub_kategori = 1;
+            $asesmen->save();
 
-            if (!$transaksiData) {
-                throw new \Exception('Data transaksi tidak ditemukan');
-            }
-
-            // Find existing asesmen
-            $asesmenMedisNeonatologi = RmeAsesmenMedisNeonatologi::where('no_transaksi', $transaksiData->no_transaksi)->first();
-
-            if (!$asesmenMedisNeonatologi) {
-                throw new \Exception('Data asesmen tidak ditemukan');
-            }
             // Update main table (RME_ASESMEN_MEDIS_NEONATOLOGI)
-            $asesmenMedisNeonatologi->update([
+            $asesmen->asesmenMedisNeonatologi()->updateOrCreate(
+            ['id_asesmen' => $asesmen->id],
+            [
                 'tanggal' => $request->tanggal,
                 'jam' => $request->jam,
                 'no_hp' => $request->no_hp,
@@ -547,8 +528,8 @@ class AsesmenMedisNeonatologiController extends Controller
             ]);
 
             // Update or create fisik-generalis data
-            $asesmenMedisNeonatologi->asesmenMedisNeonatologiFisikGeneralis()->updateOrCreate(
-                ['id_asesmen_medis_neonatologi' => $asesmenMedisNeonatologi->id],
+            $asesmen->asesmenMedisNeonatologiFisikGeneralis()->updateOrCreate(
+                ['id_asesmen' => $asesmen->id],
                 [
                     'postur_tubuh' => $request->postur_tubuh,
                     'tangis' => $request->tangis,
@@ -629,8 +610,8 @@ class AsesmenMedisNeonatologiController extends Controller
             $diagnosisKerja = $this->processJsonData($request->diagnosis_kerja);
 
             // Update or create detail data
-            $asesmenMedisNeonatologi->asesmenMedisNeonatologiDtl()->updateOrCreate(
-                ['id_asesmen_medis_neonatologi' => $asesmenMedisNeonatologi->id],
+            $asesmen->asesmenMedisNeonatologiDtl()->updateOrCreate(
+                ['id_asesmen' => $asesmen->id],
                 [
                     'appearance_1' => $request->appearance_1,
                     'pulse_1' => $request->pulse_1,

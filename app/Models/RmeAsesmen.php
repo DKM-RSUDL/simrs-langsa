@@ -502,6 +502,17 @@ class RmeAsesmen extends Model
     public function asesmenMedisNeonatologi()
     {
         return $this->hasOne(RmeAsesmenMedisNeonatologi::class, 'id_asesmen', 'id');
+        
+    }
+    public function asesmenMedisNeonatologiFisikGeneralis()
+    {
+        return $this->hasOne(RmeAsesmenMedisNeonatologiFisikGeneralis::class, 'id_asesmen', 'id');
+        
+    }
+    public function asesmenMedisNeonatologiDtl()
+    {
+        return $this->hasOne(RmeAsesmenMedisNeonatologiDtl::class, 'id_asesmen', 'id');
+
     }
 
     // asesmen Ket Dewasa Ranap
