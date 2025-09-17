@@ -603,6 +603,3 @@ class RmeAsesmen extends Model
         return $this->hasOne(RmeAsesmenKetDewasaRanapDiagnosisKeperawatan::class, 'id_asesmen', 'id');
     }
 }
-
-    }
-}
