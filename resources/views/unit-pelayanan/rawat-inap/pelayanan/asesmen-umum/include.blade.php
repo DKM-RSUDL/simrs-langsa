@@ -188,7 +188,7 @@
         .score-display {
             font-size: 2rem;
             font-weight: bold;
-            color: #0d6efd;
+            color: white;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         .factor-card {
@@ -354,6 +354,7 @@
             });
         });
 
+        // 5. PENGKAJIAN STATUS NUTRISI
         // Script untuk menghitung total skor otomatis
         document.addEventListener('DOMContentLoaded', function() {
             const radioInputs = document.querySelectorAll('input[type="radio"]');
@@ -381,6 +382,7 @@
                     total += parseInt(nafsuMakanRadio.value);
                 }
 
+                // Update total score input and display
                 totalSkorInput.value = total;
                 totalSkorDisplay.textContent = total;
 
@@ -910,17 +912,24 @@
 
         // Discharge Planning
         document.addEventListener('DOMContentLoaded', function () {
-            const ageSelect = document.querySelector('select[name="usia_lanjut"]');
-            const mobilitySelect = document.querySelector('select[name="hambatan_mobilisasi"]');
-            const medServiceSelect = document.querySelector('select[name="penggunaan_media_berkelanjutan"]');
-            const medicationSelect = document.querySelector('select[name="ketergantungan_aktivitas"]');
+            const selectElements = {
+                age: document.querySelector('select[name="usia_lanjut"]'),
+                mobility: document.querySelector('select[name="hambatan_mobilisasi"]'),
+                medService: document.querySelector('select[name="penggunaan_media_berkelanjutan"]'),
+                medication: document.querySelector('select[name="ketergantungan_aktivitas"]')
+            };
 
-            const infoAlert = document.querySelector('.alert-info');
-            const warningAlert = document.querySelector('.alert-warning');
-            const successAlert = document.querySelector('.alert-success');
+            const alerts = {
+                info: document.querySelector('#reason-alert'),
+                warning: document.querySelector('#special-plan-alert'),
+                success: document.querySelector('#no-special-plan-alert')
+            };
+
             const hiddenInput = document.querySelector('#kesimpulan');
 
-            if (!ageSelect || !mobilitySelect || !medServiceSelect || !medicationSelect) {
+            // Check if all required elements exist
+            if (!Object.values(selectElements).every(el => el) || !Object.values(alerts).every(el => el) || !hiddenInput) {
+                console.error('One or more required elements are missing');
                 return;
             }
 
@@ -928,53 +937,48 @@
                 let needsSpecialPlan = false;
                 let reasons = [];
 
-                if (ageSelect.value === '0') {
+                // Check each condition
+                if (selectElements.age.value === 'ya') {
                     needsSpecialPlan = true;
                     reasons.push('Pasien berusia lanjut (>60 tahun)');
                 }
-
-                if (mobilitySelect.value === '0') {
+                if (selectElements.mobility.value === 'ya') {
                     needsSpecialPlan = true;
                     reasons.push('Terdapat hambatan mobilitas');
                 }
-
-                if (medServiceSelect.value === 'ya') {
+                if (selectElements.medService.value === 'ya') {
                     needsSpecialPlan = true;
                     reasons.push('Membutuhkan pelayanan medis berkelanjutan');
                 }
-
-                if (medicationSelect.value === 'ya') {
+                if (selectElements.medication.value === 'ya') {
                     needsSpecialPlan = true;
                     reasons.push('Membutuhkan bantuan dalam konsumsi obat dan aktivitas harian');
                 }
 
-                if (infoAlert) infoAlert.classList.add('d-none');
-                if (warningAlert) warningAlert.classList.add('d-none');
-                if (successAlert) successAlert.classList.add('d-none');
+                // Reset alerts
+                Object.values(alerts).forEach(alert => alert.classList.add('d-none'));
 
+                // Update UI based on conditions
                 if (needsSpecialPlan) {
-                    if (warningAlert) warningAlert.classList.remove('d-none');
-                    if (infoAlert) {
-                        infoAlert.classList.remove('d-none');
-                        infoAlert.innerHTML = '<strong>Alasan:</strong><br>- ' + reasons.join('<br>- ');
-                    }
-                    if (hiddenInput) hiddenInput.value = 'Membutuhkan rencana pulang khusus';
+                    alerts.warning.classList.remove('d-none');
+                    alerts.info.classList.remove('d-none');
+                    alerts.info.innerHTML = '<strong>Alasan:</strong><br>- ' + (reasons.length > 0 ? reasons.join('<br>- ') : 'Tidak ada alasan spesifik');
+                    hiddenInput.value = 'Membutuhkan rencana pulang khusus';
                 } else {
-                    if (successAlert) successAlert.classList.remove('d-none');
-                    if (hiddenInput) hiddenInput.value = 'Tidak membutuhkan rencana pulang khusus';
+                    alerts.success.classList.remove('d-none');
+                    hiddenInput.value = 'Tidak membutuhkan rencana pulang khusus';
                 }
             }
 
-            ageSelect.addEventListener('change', calculateConclusion);
-            mobilitySelect.addEventListener('change', calculateConclusion);
-            medServiceSelect.addEventListener('change', calculateConclusion);
-            medicationSelect.addEventListener('change', calculateConclusion);
+            // Add event listeners to all select elements
+            Object.values(selectElements).forEach(select => {
+                select.addEventListener('change', calculateConclusion);
+            });
 
+            // Initial calculation
             calculateConclusion();
         });
 
-
-        
 
         $('.rencana-perawatan-row-1').change(function() {
             let rowCount = $('.rencana-perawatan-row-1:checked').length > 0;
@@ -984,14 +988,14 @@
             } else {
                 $('#rencana_bersihan_jalan_nafas').css('display', 'none');
             }
-            
+
         });
 
-        // 
+        // 13. MASALAH/ DIAGNOSIS KEPERAWATAN
         function toggleRencana(diagnosisType) {
             const checkbox = document.getElementById('diag_' + diagnosisType);
             const rencanaDiv = document.getElementById('rencana_' + diagnosisType);
-            
+
             if (checkbox && rencanaDiv) {
                 if (checkbox.checked) {
                     rencanaDiv.style.display = 'block';
@@ -1009,10 +1013,10 @@
             const now = new Date();
             const today = now.toISOString().split('T')[0];
             const currentTime = now.toTimeString().split(' ')[0].substring(0, 5);
-            
+
             const tanggalInput = document.querySelector('input[name="tanggal_diagnosis"]');
             const jamInput = document.querySelector('input[name="jam_diagnosis"]');
-            
+
             if (tanggalInput) tanggalInput.value = today;
             if (jamInput) jamInput.value = currentTime;
         });
