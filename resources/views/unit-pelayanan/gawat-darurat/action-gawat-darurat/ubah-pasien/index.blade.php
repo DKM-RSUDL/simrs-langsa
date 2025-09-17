@@ -25,7 +25,7 @@
 
                     {{-- START : DATA UPDATE --}}
                     <div class="text-center mt-1 mb-2">
-                        <h5 class="text-secondary fw-bold">Transfer Pasien Ke Rawat Inap</h5>
+                        <h5 class="text-secondary fw-bold">Cari dan Update Data Pasien</h5>
                     </div>
                     <div class="row g-3 mb-3">
                         <div class="col-12">
@@ -53,8 +53,8 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                                <select name="jenis_kelamin" id="jenis_kelamin" class="form-select">
-                                    <option value="" disabled>--Pilih Jenis Kelamin--</option>
+                                <select name="jenis_kelamin" id="jenis_kelamin" class="form-select" disabled>
+                                    <option value="">--Pilih Jenis Kelamin--</option>
                                     <option value="1">Laki-laki</option>
                                     <option value="0">Perempuan</option>
                                 </select>
@@ -63,8 +63,8 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
-                                <input class="form-control" name="tanggal_lahir" type="date" id="tanggal_lahir"
-                                    value="0">
+                                <input class="form-control date" name="tanggal_lahir" type="text" id="tanggal_lahir"
+                                    placeholder="yyyy-mm-dd" readonly>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -88,7 +88,7 @@
 
                     {{-- START : DATA ASLI --}}
                     <div class="text-center mt-1 mb-2 mt-4">
-                        <h5 class="text-secondary fw-bold">Transfer Pasien Ke Rawat Inap</h5>
+                        <h5 class="text-secondary fw-bold">Identitas Pasien Sebelumnya</h5>
                     </div>
                     <div class="d-flex gap-4 mb-1">
                         <div style="width: auth; height:150px">
@@ -117,7 +117,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                                <select readonly name="jenis_kelamin" id="jenis_kelamin" class="form-select">
+                                <select readonly name="jenis_kelamin" id="jenis_kelamin" class="form-select" disabled>
                                     <option value="" disabled>--Pilih Jenis Kelamin--</option>
                                     <option value="1">Laki-laki</option>
                                     <option value="0">Perempuan</option>
@@ -127,8 +127,8 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
-                                <input readonly class="form-control" name="tanggal_lahir" type="date"
-                                    id="tanggal_lahir" value="0">
+                                <input readonly class="form-control date" name="tanggal_lahir" type="text"
+                                    id="tanggal_lahir" placeholder="yyyy-mm-dd" readonly>
                             </div>
                         </div>
                         <div class="col-md-6">
