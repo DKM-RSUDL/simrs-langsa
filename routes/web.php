@@ -63,6 +63,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\StatusFungsionalController a
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\PersetujuanTransfusiDarahController as GawatDaruratPersetujuanTransfusiDarahController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\Covid19Controller as GawatDaruratCovid19Controller;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\EchocardiographyController as GawatDaruratEchocardiographyController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\UpdatePasienController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenHemodialisaKeperawatanController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenMedisController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\BeratBadanKeringController;
@@ -2436,6 +2437,16 @@ Route::middleware('ssoToken')->group(function () {
 
                 Route::prefix('pelayanan')->group(function () {
                     Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {
+
+                        // Update Pasien
+                        Route::prefix('{urut_masuk}/ubah-pasien')->group(function () {
+                            Route::name('ubah-pasien')->group(function () {
+                                Route::controller(UpdatePasienController::class)->group(function () {
+                                    Route::get('/', 'index');
+                                    Route::post('/', 'storeTransferInap')->name('.store');
+                                });
+                            });
+                        });
 
                         // general consent
                         Route::prefix('{urut_masuk}/general-consent')->group(function () {
