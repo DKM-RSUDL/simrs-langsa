@@ -159,13 +159,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span class="badge bg-primary">${obat.frekuensi}</span>
                         <br><small class="text-muted">${obat.keterangan}</small>
                     </td>
-                    `
-                    <td>
-                        <button type="button" class="btn btn-sm btn-outline-danger delete-obat" data-index="${index}" title="Hapus">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                    ` : ''}
                 </tr>
             `).join('');
         }

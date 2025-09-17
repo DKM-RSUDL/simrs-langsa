@@ -244,7 +244,7 @@ class AsesmenMedisAnakController extends Controller
 
             // 3. Store ke RME_ASESMEN_MEDIS_ANAK_FISIK
             RmeAsesmenMedisAnakFisik::create([
-                'id_asesmen_medis_anak' => $asesmenMedisAnak->id,
+                'id_asesmen' => $asesmen->id,
                 'kepala_bentuk' => $request->kepala_bentuk,
                 'kepala_uub' => $request->kepala_uub,
                 'kepala_rambut' => $request->kepala_rambut,
@@ -300,7 +300,7 @@ class AsesmenMedisAnakController extends Controller
 
             // 4. Store ke RME_ASESMEN_MEDIS_ANAK_DTL
             RmeAsesmenMedisAnakDtl::create([
-                'id_asesmen_medis_anak' => $asesmenMedisAnak->id,
+                'id_asesmen' => $asesmen->id,
                 // Riwayat Prenatal
                 'lama_kehamilan' => $request->lama_kehamilan,
                 'komplikasi' => $request->komplikasi === '1' ? 1 : 0, // Perbaiki ini
@@ -404,18 +404,16 @@ class AsesmenMedisAnakController extends Controller
     {
         try {
             // Load data utama dengan relationships
-            $asesmen = RmeAsesmenMedisAnak::with([
+            $asesmen = RmeAsesmen::with([
+                'asesmenMedisAnak',
                 'asesmenMedisAnakFisik',
                 'asesmenMedisAnakDtl'
             ])->findOrFail($id);
 
         } catch (\Exception $e) {
-            // Fallback jika dengan relationship gagal
-            $asesmen = RmeAsesmenMedisAnak::findOrFail($id);
-
-            $asesmen->asesmenMedisAnakFisik = RmeAsesmenMedisAnakFisik::where('id_asesmen_medis_anak', $id)->first();
-            $asesmen->asesmenMedisAnakDtl = RmeAsesmenMedisAnakDtl::where('id_asesmen_medis_anak', $id)->first();
+            $asesmen = RmeAsesmen::findOrFail($id);
         }
+
 
         $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
@@ -442,17 +440,14 @@ class AsesmenMedisAnakController extends Controller
     {
         try {
             // Load data utama dengan relationships
-            $asesmen = RmeAsesmenMedisAnak::with([
+            $asesmen = RmeAsesmen::with([
+                'asesmenMedisAnak',
                 'asesmenMedisAnakFisik',
                 'asesmenMedisAnakDtl'
             ])->findOrFail($id);
 
         } catch (\Exception $e) {
-            // Fallback jika dengan relationship gagal
-            $asesmen = RmeAsesmenMedisAnak::findOrFail($id);
-
-            $asesmen->asesmenMedisAnakFisik = RmeAsesmenMedisAnakFisik::where('id_asesmen_medis_anak', $id)->first();
-            $asesmen->asesmenMedisAnakDtl = RmeAsesmenMedisAnakDtl::where('id_asesmen_medis_anak', $id)->first();
+            $asesmen = RmeAsesmen::findOrFail($id);
         }
 
         $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
@@ -476,7 +471,7 @@ class AsesmenMedisAnakController extends Controller
         );
     }
 
-    public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         $request->validate([
             'kd_pasien' => 'required',
@@ -503,13 +498,6 @@ class AsesmenMedisAnakController extends Controller
                 throw new \Exception('Data transaksi tidak ditemukan');
             }
 
-            // Find existing asesmen
-            $asesmenMedisAnak = RmeAsesmenMedisAnak::where('no_transaksi', $transaksiData->no_transaksi)->first();
-
-            if (!$asesmenMedisAnak) {
-                throw new \Exception('Data asesmen tidak ditemukan');
-            }
-
             // Process JSON data dengan format yang benar
             $riwayatObat = $this->processJsonData($request->riwayat_penggunaan_obat);
             $riwayatImunisasi = $request->input('riwayat_imunisasi', []);
@@ -526,8 +514,21 @@ class AsesmenMedisAnakController extends Controller
                 'tinggi_badan' => $request->tinggi_badan
             ];
 
+            $asesmen = RmeAsesmen::findOrFail($id);
+            $asesmen->kd_pasien = $request->kd_pasien;
+            $asesmen->kd_unit = $request->kd_unit;
+            $asesmen->tgl_masuk = $request->tgl_masuk;
+            $asesmen->urut_masuk = $request->urut_masuk;
+            $asesmen->user_id = Auth::id();
+            $asesmen->waktu_asesmen = now();
+            $asesmen->kategori = 2;
+            $asesmen->sub_kategori = 1;
+            $asesmen->save();
+
             // Update main table (RME_ASESMEN_MEDIS_ANAK)
-            $asesmenMedisAnak->update([
+            $asesmen->asesmenMedisAnak()->updateOrCreate(
+                ['id_asesmen' => $asesmen->id],
+        [
                 'tanggal' => $request->tanggal ?? date('Y-m-d'),
                 'jam' => $request->jam_masuk ?? date('H:i:s'),
                 'anamnesis' => $request->anamnesis,
@@ -547,10 +548,8 @@ class AsesmenMedisAnakController extends Controller
                 'tinggi_badan' => $request->tinggi_badan,
                 'user_edit' => Auth::id()
             ]);
-
-            // Update or create fisik data - DIPERBAIKI
-            $asesmenMedisAnak->asesmenMedisAnakFisik()->updateOrCreate(
-                ['id_asesmen_medis_anak' => $asesmenMedisAnak->id],
+            $asesmen->asesmenMedisAnakFisik()->updateOrCreate(
+            ['id_asesmen' => $asesmen->id],
                 [
                     'kepala_bentuk' => $request->kepala_bentuk,
                     'kepala_uub' => $request->kepala_uub,
@@ -609,8 +608,8 @@ class AsesmenMedisAnakController extends Controller
             $diagnosisKerja = $this->processJsonData($request->diagnosis_kerja);
 
             // Update or create detail data - DIPERBAIKI
-            $asesmenMedisAnak->asesmenMedisAnakDtl()->updateOrCreate(
-                ['id_asesmen_medis_anak' => $asesmenMedisAnak->id],
+            $asesmen->asesmenMedisAnakDtl()->updateOrCreate(
+            ['id_asesmen' => $asesmen->id],
                 [
                     // Riwayat Prenatal - PERBAIKI LOGIKA RADIO
                     'lama_kehamilan' => $request->lama_kehamilan,

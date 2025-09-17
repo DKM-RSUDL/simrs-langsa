@@ -98,7 +98,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepOpthamologyController
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepThtController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenObstetriMaternitas;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepPerinatologyController;
-use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepUmumController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKetDewasaRanapController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKulitKelaminController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenParuController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenPsikiatriController;
@@ -537,7 +537,7 @@ Route::middleware('ssoToken')->group(function () {
                                                     });
                                                 });
                                             });
-                                            
+
                                             // Awal
                                             Route::prefix('awal')->group(function () {
                                                 Route::name('.awal')->group(function () {
@@ -1561,8 +1561,8 @@ Route::middleware('ssoToken')->group(function () {
 
                                             Route::prefix('umum')->group(function () {
                                                 Route::name('.umum')->group(function () {
-                                                    Route::controller(AsesmenKepUmumController::class)->group(function () {
-                                                        Route::get('/', 'index')->name('.index');
+                                                    Route::controller(AsesmenKetDewasaRanapController::class)->group(function () {
+                                                        Route::get('/', 'create')->name('.create');
                                                         Route::post('/', 'store')->name('.store');
                                                         Route::get('/{id}', 'show')->name('.show');
                                                         Route::get('/{id}/edit', 'edit')->name('.edit');

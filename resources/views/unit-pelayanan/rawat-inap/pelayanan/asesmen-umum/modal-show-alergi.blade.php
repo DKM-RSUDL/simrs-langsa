@@ -67,7 +67,6 @@
                                         <th width="25%">Alergen</th>
                                         <th width="25%">Reaksi</th>
                                         <th width="20%">Tingkat Keparahan</th>
-                                        <th width="10%">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody id="modalAlergiList">
@@ -245,13 +244,6 @@
                                     ${item.tingkat_keparahan}
                                 </span>
                             </td>
-                            @if(!($readonly ?? false))
-                            <td>
-                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeAlergiFromMain(${index})">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                            @endif
                         `;
                         tbody.appendChild(row);
                     });

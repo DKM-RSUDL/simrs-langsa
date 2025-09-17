@@ -489,10 +489,68 @@ class RmeAsesmen extends Model
     {
         return $this->hasOne(RmeAsesmenMedisAnak::class, 'id_asesmen', 'id');
     }
+    public function asesmenMedisAnakFisik()
+    {
+        return $this->hasOne(RmeAsesmenMedisAnakFisik::class, 'id_asesmen', 'id');
+    }
+    public function asesmenMedisAnakDtl()
+    {
+        return $this->hasOne(RmeAsesmenMedisAnakDtl::class, 'id_asesmen', 'id');
+    }
 
     // asesmen medis Neonatologi
     public function asesmenMedisNeonatologi()
     {
         return $this->hasOne(RmeAsesmenMedisNeonatologi::class, 'id_asesmen', 'id');
+    }
+    public function asesmenMedisNeonatologiFisikGeneralis()
+    {
+        return $this->hasOne(RmeAsesmenMedisNeonatologiFisikGeneralis::class, 'id_asesmen', 'id');
+    }
+    public function asesmenMedisNeonatologiDtl()
+    {
+        return $this->hasOne(RmeAsesmenMedisNeonatologiDtl::class, 'id_asesmen', 'id');
+    }
+
+    // asesmen Ket Dewasa Ranap
+    public function asesmenKetDewasaRanap()
+    {
+        return $this->hasOne(RmeAsesmenKetDewasaRanap::class, 'id_asesmen', 'id');
+    }
+    public function asesmenKetDewasaRanapRiwayatPasien()
+    {
+        return $this->hasOne(RmeAsesmenKetDewasaRanapRiwayatPasien::class, 'id_asesmen', 'id');
+    }
+    public function asesmenKetDewasaRanapFisik()
+    {
+        return $this->hasOne(RmeAsesmenKetDewasaRanapFisik::class, 'id_asesmen', 'id');
+    }
+    public function asesmenKetDewasaRanapStatusNutrisi()
+    {
+        return $this->hasOne(RmeAsesmenKetDewasaRanapStatusNutrisi::class, 'id_asesmen', 'id');
+    }
+    public function asesmenKetDewasaRanapSkalaNyeri()
+    {
+        return $this->hasOne(RmeAsesmenKetDewasaRanapSkalaNyeri::class, 'id_asesmen', 'id');
+    }
+    public function asesmenKetDewasaRanapResikoJatuh()
+    {
+        return $this->hasOne(RmeAsesmenKetDewasaRanapResikoJatuh::class, 'id_asesmen', 'id');
+    }
+    public function asesmenKetDewasaRanapPengkajianEdukasi()
+    {
+        return $this->hasOne(RmeAsesmenKetDewasaRanapPengkajianEdukasi::class, 'id_asesmen', 'id');
+    }
+    public function asesmenKetDewasaRanapDischargePlanning()
+    {
+        return $this->hasOne(RmeAsesmenKetDewasaRanapDischargePlanning::class, 'id_asesmen', 'id');
+    }
+    public function asesmenKetDewasaRanapDietKhusus()
+    {
+        return $this->hasOne(RmeAsesmenKetDewasaRanapDietKhusus::class, 'id_asesmen', 'id');
+    }
+    public function asesmenKetDewasaRanapDiagnosisKeperawatan()
+    {
+        return $this->hasOne(RmeAsesmenKetDewasaRanapDiagnosisKeperawatan::class, 'id_asesmen', 'id');
     }
 }

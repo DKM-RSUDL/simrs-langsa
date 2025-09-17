@@ -95,6 +95,10 @@ class RmeAsesmenMedisAnakDtl extends Model
         return $this->belongsTo(User::class, 'user_edit', 'id');
     }
 
+    public function asesmen()
+    {
+        return $this->belongsTo(RmeAsesmen::class, 'id_asesmen', 'id');
+    }
     public function asesmenMedisAnak()
     {
         return $this->belongsTo(RmeAsesmenMedisAnak::class, 'id_asesmen_medis_anak', 'id');

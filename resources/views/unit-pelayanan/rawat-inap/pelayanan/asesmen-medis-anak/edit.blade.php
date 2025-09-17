@@ -50,9 +50,9 @@
                                     <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
                                     <div class="d-flex gap-3" style="width: 100%;">
                                         <input type="date" class="form-control" name="tanggal"
-                                        value="{{ $asesmen->tanggal ? date('Y-m-d', strtotime($asesmen->tanggal)) : date('Y-m-d') }}">
+                                        value="{{ $asesmen->asesmenMedisAnak->tanggal ? date('Y-m-d', strtotime($asesmen->asesmenMedisAnak->tanggal)) : date('Y-m-d') }}">
                                         <input type="time" class="form-control" name="jam_masuk"
-                                        value="{{ $asesmen->jam_masuk ? \Carbon\Carbon::parse($asesmen->jam_masuk)->format('H:i') : date('H:i') }}">
+                                        value="{{ $asesmen->asesmenMedisAnak->jam_masuk ? \Carbon\Carbon::parse($asesmen->asesmenMedisAnak->jam_masuk)->format('H:i') : date('H:i') }}">
                                     </div>
                                 </div>
                             </div>
@@ -62,30 +62,30 @@
 
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Anamnesis</label>
-                                    <textarea class="form-control" name="anamnesis" rows="3" placeholder="Anamnesis">{{ $asesmen->anamnesis ?? '' }}</textarea>
+                                    <textarea class="form-control" name="anamnesis" rows="3" placeholder="Anamnesis">{{ $asesmen->asesmenMedisAnak->anamnesis ?? '' }}</textarea>
                                 </div>
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Keluhan Utama</label>
                                     <textarea class="form-control" name="keluhan_utama" rows="3"
-                                        placeholder="Keluhan utama pasien">{{ $asesmen->keluhan_utama ?? '' }}</textarea>
+                                        placeholder="Keluhan utama pasien">{{ $asesmen->asesmenMedisAnak->keluhan_utama ?? '' }}</textarea>
                                 </div>
 
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Riwayat penyakit terdahulu</label>
                                     <textarea class="form-control" name="riwayat_penyakit_terdahulu" rows="4"
-                                        placeholder="Riwayat penyakit terdahulu">{{ $asesmen->riwayat_penyakit_terdahulu ?? '' }}</textarea>
+                                        placeholder="Riwayat penyakit terdahulu">{{ $asesmen->asesmenMedisAnak->riwayat_penyakit_terdahulu ?? '' }}</textarea>
                                 </div>
 
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Riwayat penyakit dalam keluarga</label>
                                     <textarea class="form-control" name="riwayat_penyakit_keluarga" rows="4"
-                                        placeholder="Riwayat penyakit dalam keluarga">{{ $asesmen->riwayat_penyakit_keluarga ?? '' }}</textarea>
+                                        placeholder="Riwayat penyakit dalam keluarga">{{ $asesmen->asesmenMedisAnak->riwayat_penyakit_keluarga ?? '' }}</textarea>
                                 </div>
 
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Keadaan umum</label>
                                     <textarea class="form-control" name="riwayat_penyakit_sekarang" rows="4"
-                                        placeholder="Riwayat penyakit sekarang">{{ $asesmen->riwayat_penyakit_sekarang ?? '' }}</textarea>
+                                        placeholder="Riwayat penyakit sekarang">{{ $asesmen->asesmenMedisAnak->riwayat_penyakit_sekarang ?? '' }}</textarea>
                                 </div>
                             </div>
 
@@ -97,7 +97,7 @@
                                 </button>
 
                                 <input type="hidden" name="riwayat_penggunaan_obat" id="riwayatObatData"
-                                    value="{{ old('riwayat_penggunaan_obat', isset($asesmen) && $asesmen->riwayat_penggunaan_obat ? (is_array($asesmen->riwayat_penggunaan_obat) ? json_encode($asesmen->riwayat_penggunaan_obat) : $asesmen->riwayat_penggunaan_obat) : '[]') }}">
+                                    value="{{ old('riwayat_penggunaan_obat', isset($asesmen->asesmenMedisAnak) && $asesmen->asesmenMedisAnak->riwayat_penggunaan_obat ? (is_array($asesmen->asesmenMedisAnak->riwayat_penggunaan_obat) ? json_encode($asesmen->asesmenMedisAnak->riwayat_penggunaan_obat) : $asesmen->asesmenMedisAnak->riwayat_penggunaan_obat) : '[]') }}">
 
                                 <div class="table-responsive">
                                     <table class="table" id="createRiwayatObatTable">
@@ -158,12 +158,12 @@
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Kesadaran</label>
                                     <select class="form-select" name="kesadaran">
-                                        <option value="" {{ old('kesadaran', $asesmen->kesadaran ?? '') === '' ? 'selected' : '' }} disabled>--Pilih--</option>
-                                        <option value="Compos Mentis" {{ old('kesadaran', $asesmen->kesadaran ?? '') === 'Compos Mentis' ? 'selected' : '' }}>Compos Mentis</option>
-                                        <option value="Apatis" {{ old('kesadaran', $asesmen->kesadaran ?? '') === 'Apatis' ? 'selected' : '' }}>Apatis</option>
-                                        <option value="Sopor" {{ old('kesadaran', $asesmen->kesadaran ?? '') === 'Sopor' ? 'selected' : '' }}>Sopor</option>
-                                        <option value="Coma" {{ old('kesadaran', $asesmen->kesadaran ?? '') === 'Coma' ? 'selected' : '' }}>Coma</option>
-                                        <option value="Somnolen" {{ old('kesadaran', $asesmen->kesadaran ?? '') === 'Somnolen' ? 'selected' : '' }}>Somnolen</option>
+                                        <option value="" {{ old('kesadaran', $asesmen->asesmenMedisAnak->kesadaran ?? '') === '' ? 'selected' : '' }} disabled>--Pilih--</option>
+                                        <option value="Compos Mentis" {{ old('kesadaran', $asesmen->asesmenMedisAnak->kesadaran ?? '') === 'Compos Mentis' ? 'selected' : '' }}>Compos Mentis</option>
+                                        <option value="Apatis" {{ old('kesadaran', $asesmen->asesmenMedisAnak->kesadaran ?? '') === 'Apatis' ? 'selected' : '' }}>Apatis</option>
+                                        <option value="Sopor" {{ old('kesadaran', $asesmen->asesmenMedisAnak->kesadaran ?? '') === 'Sopor' ? 'selected' : '' }}>Sopor</option>
+                                        <option value="Coma" {{ old('kesadaran', $asesmen->asesmenMedisAnak->kesadaran ?? '') === 'Coma' ? 'selected' : '' }}>Coma</option>
+                                        <option value="Somnolen" {{ old('kesadaran', $asesmen->asesmenMedisAnak->kesadaran ?? '') === 'Somnolen' ? 'selected' : '' }}>Somnolen</option>
                                     </select>
                                 </div>
 
@@ -173,7 +173,7 @@
                                         @php
                                             // Ambil data GCS dari database
                                             $gcsValue = '';
-                                            if (isset($asesmen) && $asesmen) {
+                                            if (isset($asesmen->asesmenMedisAnak) && $asesmen) {
                                                 // Periksa apakah vital_sign sudah array atau masih string JSON
                                                 $vitalSigns = is_array($asesmen->vital_sign)
                                                     ? $asesmen->vital_sign
@@ -203,529 +203,529 @@
                                         <div class="flex-grow-1">
                                             <label class="form-label">Sistole</label>
                                             <input type="number" class="form-control" name="sistole"
-                                                placeholder="Sistole" value="{{ $asesmen->sistole ?? '' }}">
+                                                placeholder="Sistole" value="{{ $asesmen->asesmenMedisAnak->sistole ?? '' }}">
                                         </div>
 
                                         <div class="flex-grow-1">
                                             <label class="form-label">Diastole</label>
                                             <input type="number" class="form-control" name="diastole"
-                                                placeholder="Diastole" value="{{ $asesmen->diastole ?? '' }}">
+                                                placeholder="Diastole" value="{{ $asesmen->asesmenMedisAnak->diastole ?? '' }}">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Nadi (x/menit)</label>
                                     <input type="number" class="form-control" name="nadi"
-                                        placeholder="Nadi" value="{{ $asesmen->nadi ?? '' }}">
+                                        placeholder="Nadi" value="{{ $asesmen->asesmenMedisAnak->nadi ?? '' }}">
                                 </div>
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Suhu (C)</label>
                                     <input type="text" class="form-control" name="suhu"
-                                        placeholder="Suhu" value="{{ $asesmen->suhu ?? '' }}">
+                                        placeholder="Suhu" value="{{ $asesmen->asesmenMedisAnak->suhu ?? '' }}">
                                 </div>
                                 <div class="form-group">
                                     <label style="min-width: 200px;">RR (x/menit)</label>
                                     <input type="number" class="form-control" name="rr"
-                                        placeholder="rr" value="{{ $asesmen->rr ?? '' }}">
+                                        placeholder="rr" value="{{ $asesmen->asesmenMedisAnak->rr ?? '' }}">
                                 </div>
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Berat Badan Kg</label>
                                     <input type="number" class="form-control" name="berat_badan"
-                                        placeholder="Berat Badan" value="{{ $asesmen->berat_badan ?? '' }}">
+                                        placeholder="Berat Badan" value="{{ $asesmen->asesmenMedisAnak->berat_badan ?? '' }}">
                                 </div>
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Tinggi Badan Cm</label>
                                     <input type="number" class="form-control" name="tinggi_badan"
-                                        placeholder="Tinggi Badan" value="{{ $asesmen->tinggi_badan ?? '' }}">
+                                        placeholder="Tinggi Badan" value="{{ $asesmen->asesmenMedisAnak->tinggi_badan ?? '' }}">
                                 </div>
 
                             </div>
 
                             <!-- 6. Pemeriksaan Fisik -->
-                        <div class="section-separator" id="pemeriksaan-fisik">
-                            <h5 class="section-title">6. Pemeriksaan Fisik</h5>
-                            <div class="card-body">
-                                @php
-                                    // Ambil data asesmen fisik
-                                    $fisik = $asesmen->asesmenMedisAnakFisik ?? new \App\Models\RmeAsesmenMedisAnakFisik();
+                            <div class="section-separator" id="pemeriksaan-fisik">
+                                <h5 class="section-title">6. Pemeriksaan Fisik</h5>
+                                <div class="card-body">
+                                    @php
+                                        // Ambil data asesmen fisik
+                                        $fisik = $asesmen->asesmenMedisAnakFisik ?? '';
 
-                                    // Parse JSON untuk field kulit dan kuku
-                                    $kulit = $fisik->kulit ?? [];
-                                    $kuku = $fisik->kuku ?? [];
-                                @endphp
+                                        // Parse JSON untuk field kulit dan kuku
+                                        $kulit = $fisik->kulit ?? [];
+                                        $kuku = $fisik->kuku ?? [];
+                                    @endphp
 
-                                <!-- 1. Kepala -->
-                                <div class="row mb-4">
-                                    <div class="col-12">
-                                        <h6 class="text-primary mb-3">1. Kepala</h6>
+                                    <!-- 1. Kepala -->
+                                    <div class="row mb-4">
+                                        <div class="col-12">
+                                            <h6 class="text-primary mb-3">1. Kepala</h6>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label class="form-label">a. Bentuk:</label>
+                                            <input type="text" class="form-control" name="kepala_bentuk" placeholder="Isi keterangan bentuk"
+                                                value="{{ old('kepala_bentuk', $fisik->kepala_bentuk ?? '') }}">
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label class="form-label">b. UUB:</label>
+                                            <input type="text" class="form-control" name="kepala_uub" placeholder="Isi keterangan UUB"
+                                                value="{{ old('kepala_uub', $fisik->kepala_uub ?? '') }}">
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label class="form-label">c. Rambut:</label>
+                                            <input type="text" class="form-control" name="kepala_rambut" placeholder="Isi keterangan rambut"
+                                                value="{{ old('kepala_rambut', $fisik->kepala_rambut ?? '') }}">
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label class="form-label">d. Lain-lain:</label>
+                                            <input type="text" class="form-control" name="kepala_lain" placeholder="Isi keterangan lain-lain"
+                                                value="{{ old('kepala_lain', $fisik->kepala_lain ?? '') }}">
+                                        </div>
                                     </div>
-                                    <div class="col-md-3 mb-3">
-                                        <label class="form-label">a. Bentuk:</label>
-                                        <input type="text" class="form-control" name="kepala_bentuk" placeholder="Isi keterangan bentuk"
-                                            value="{{ old('kepala_bentuk', $fisik->kepala_bentuk ?? '') }}">
-                                    </div>
-                                    <div class="col-md-3 mb-3">
-                                        <label class="form-label">b. UUB:</label>
-                                        <input type="text" class="form-control" name="kepala_uub" placeholder="Isi keterangan UUB"
-                                            value="{{ old('kepala_uub', $fisik->kepala_uub ?? '') }}">
-                                    </div>
-                                    <div class="col-md-3 mb-3">
-                                        <label class="form-label">c. Rambut:</label>
-                                        <input type="text" class="form-control" name="kepala_rambut" placeholder="Isi keterangan rambut"
-                                            value="{{ old('kepala_rambut', $fisik->kepala_rambut ?? '') }}">
-                                    </div>
-                                    <div class="col-md-3 mb-3">
-                                        <label class="form-label">d. Lain-lain:</label>
-                                        <input type="text" class="form-control" name="kepala_lain" placeholder="Isi keterangan lain-lain"
-                                            value="{{ old('kepala_lain', $fisik->kepala_lain ?? '') }}">
-                                    </div>
-                                </div>
 
-                                <hr>
+                                    <hr>
 
-                                <!-- 2. Mata -->
-                                <div class="row mb-4">
-                                    <div class="col-12">
-                                        <h6 class="text-primary mb-3">2. Mata</h6>
+                                    <!-- 2. Mata -->
+                                    <div class="row mb-4">
+                                        <div class="col-12">
+                                            <h6 class="text-primary mb-3">2. Mata</h6>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Kondisi mata:</label>
+                                            <div class="d-flex flex-wrap gap-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="mata_pucat" id="mata_pucat" value="1"
+                                                        {{ old('mata_pucat', $fisik->mata_pucat ?? false) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="mata_pucat">Pucat</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="mata_ikterik" id="mata_ikterik" value="1"
+                                                    {{ old('mata_ikterik', $fisik->mata_ikterik ?? false) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="mata_ikterik">Ikterik</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Pupil:</label>
+                                            <select class="form-select" name="pupil_isokor">
+                                                <option value="" {{ old('pupil_isokor', $fisik->pupil_isokor ?? '') === '' ? 'selected' : '' }} disabled>--Pilih--</option>
+                                                <option value="Isokor" {{ old('pupil_isokor', $fisik->pupil_isokor ?? '') === 'Isokor' ? 'selected' : '' }}>Isokor</option>
+                                                <option value="Anisokor" {{ old('pupil_isokor', $fisik->pupil_isokor ?? '') === 'Anisokor' ? 'selected' : '' }}>Anisokor</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Refleks Cahaya:</label>
+                                            <input type="text" class="form-control" name="refleks_cahaya" placeholder="( ... / ... )"
+                                                value="{{ old('refleks_cahaya', $fisik->refleks_cahaya ?? '') }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Refleks Kornea:</label>
+                                            <input type="text" class="form-control" name="refleks_kornea" placeholder="( ... / ... )"
+                                                value="{{ old('refleks_kornea', $fisik->refleks_kornea ?? '') }}">
+                                        </div>
+                                        <div class="col-12 mb-3">
+                                            <label class="form-label">Lain-lain:</label>
+                                            <input type="text" class="form-control" name="mata_lain" placeholder="Isi keterangan lain-lain mata"
+                                                value="{{ old('mata_lain', $fisik->mata_lain ?? '') }}">
+                                        </div>
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Kondisi mata:</label>
+
+                                    <hr>
+
+                                    <!-- 3. Hidung -->
+                                    <div class="row mb-4">
+                                        <div class="col-12">
+                                            <h6 class="text-primary mb-3">3. Hidung</h6>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Nafas cuping hidung:</label>
+                                            <div class="d-flex flex-wrap gap-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="nafas_cuping" id="nafas_cuping_ya" value="ya"
+                                                        {{ old('nafas_cuping', $fisik->nafas_cuping ? 'ya' : 'tidak') === 'ya' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="nafas_cuping_ya">Ya</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="nafas_cuping" id="nafas_cuping_tidak" value="tidak"
+                                                        {{ old('nafas_cuping', $fisik->nafas_cuping ? 'ya' : 'tidak') === 'tidak' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="nafas_cuping_tidak">Tidak</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Lain-lain:</label>
+                                            <input type="text" class="form-control" name="hidung_lain" placeholder="Isi keterangan lain-lain hidung"
+                                                value="{{ old('hidung_lain', $fisik->hidung_lain ?? '') }}">
+                                        </div>
+                                    </div>
+
+                                    <hr>
+
+                                    <!-- 4. Telinga -->
+                                    <div class="row mb-4">
+                                        <div class="col-12">
+                                            <h6 class="text-primary mb-3">4. Telinga</h6>
+                                        </div>
                                         <div class="d-flex flex-wrap gap-3">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="mata_pucat" id="mata_pucat" value="1"
-                                                    {{ old('mata_pucat', $fisik->mata_pucat ?? false) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="mata_pucat">Pucat</label>
+                                                <input class="form-check-input" type="radio" name="telinga_cairan" id="telinga_cairan_ya" value="ya"
+                                                    {{ old('telinga_cairan', $fisik->telinga_cairan ? 'ya' : 'tidak') === 'ya' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="telinga_cairan_ya">Ya</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="mata_ikterik" id="mata_ikterik" value="1"
-                                                {{ old('mata_ikterik', $fisik->mata_ikterik ?? false) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="mata_ikterik">Ikterik</label>
+                                                <input class="form-check-input" type="radio" name="telinga_cairan" id="telinga_cairan_tidak" value="tidak"
+                                                    {{ old('telinga_cairan', $fisik->telinga_cairan ? 'ya' : 'tidak') === 'tidak' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="telinga_cairan_tidak">Tidak</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Lain-lain:</label>
+                                            <input type="text" class="form-control" name="telinga_lain" placeholder="Isi keterangan lain-lain telinga"
+                                                value="{{ old('telinga_lain', $fisik->telinga_lain ?? '') }}">
+                                        </div>
+                                    </div>
+
+                                    <hr>
+
+                                    <!-- 5. Mulut -->
+                                    <div class="row mb-4">
+                                        <div class="col-12">
+                                            <h6 class="text-primary mb-3">5. Mulut</h6>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Bibir/lidah sianosis:</label>
+                                            <div class="d-flex flex-wrap gap-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="mulut_sianosis" id="mulut_sianosis_ya" value="ya"
+                                                        {{ old('mulut_sianosis', $fisik->mulut_sianosis ? 'ya' : 'tidak') === 'ya' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="mulut_sianosis_ya">Ya</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="mulut_sianosis" id="mulut_sianosis_tidak" value="tidak"
+                                                        {{ old('mulut_sianosis', $fisik->mulut_sianosis ? 'ya' : 'tidak') === 'tidak' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="mulut_sianosis_tidak">Tidak</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Lidah:</label>
+                                            <input type="text" class="form-control" name="mulut_lidah" placeholder="Isi keterangan lidah"
+                                                value="{{ old('mulut_lidah', $fisik->mulut_lidah ?? '') }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Tenggorokan:</label>
+                                            <input type="text" class="form-control" name="mulut_tenggorokan" placeholder="Isi keterangan tenggorokan"
+                                                value="{{ old('mulut_tenggorokan', $fisik->mulut_tenggorokan ?? '') }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Lain-lain:</label>
+                                            <input type="text" class="form-control" name="mulut_lain" placeholder="Isi keterangan lain-lain mulut"
+                                                value="{{ old('mulut_lain', $fisik->mulut_lain ?? '') }}">
+                                        </div>
+                                    </div>
+
+                                    <hr>
+
+                                    <!-- 6. Leher -->
+                                    <div class="row mb-4">
+                                        <div class="col-12">
+                                            <h6 class="text-primary mb-3">6. Leher</h6>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Pembesaran Kelenjar Getah Bening:</label>
+                                            <div class="d-flex flex-wrap gap-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="leher_kelenjar" id="leher_kelenjar_ya" value="ya"
+                                                        {{ old('leher_kelenjar', $fisik->leher_kelenjar ? 'ya' : 'tidak') === 'ya' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="leher_kelenjar_ya">Ya</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="leher_kelenjar" id="leher_kelenjar_tidak" value="tidak"
+                                                        {{ old('leher_kelenjar', $fisik->leher_kelenjar ? 'ya' : 'tidak') === 'tidak' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="leher_kelenjar_tidak">Tidak</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Peningkatan Tekanan Vena Jugular:</label>
+                                            <div class="d-flex flex-wrap gap-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="leher_vena" id="leher_vena_ya" value="ya"
+                                                        {{ old('leher_vena', $fisik->leher_vena ? 'ya' : 'tidak') === 'ya' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="leher_vena_ya">Ya</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="leher_vena" id="leher_vena_tidak" value="tidak"
+                                                        {{ old('leher_vena', $fisik->leher_vena ? 'ya' : 'tidak') === 'tidak' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="leher_vena_tidak">Tidak</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 mb-3">
+                                            <label class="form-label">Lain-lain:</label>
+                                            <input type="text" class="form-control" name="leher_lain" placeholder="Isi keterangan lain-lain leher"
+                                                value="{{ old('leher_lain', $fisik->leher_lain ?? '') }}">
+                                        </div>
+                                    </div>
+
+                                    <hr>
+
+                                    <!-- 7. Thoraks -->
+                                    <div class="row mb-4">
+                                        <div class="col-12">
+                                            <h6 class="text-primary mb-3">7. Thoraks</h6>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">a. Bentuk:</label>
+                                            <div class="d-flex flex-wrap gap-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="thoraks_bentuk[]" id="thoraks_simetris" value="simetris"
+                                                        {{ old('thoraks_simetris', $fisik->thoraks_simetris ?? false) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="thoraks_simetris">Simetris</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="thoraks_bentuk[]" id="thoraks_asimetris" value="asimetris"
+                                                        {{ old('thoraks_asimetris', $fisik->thoraks_asimetris ?? false) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="thoraks_asimetris">Asimetris</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">c. Paru - Retraksi:</label>
+                                            <input type="text" class="form-control" name="thoraks_retraksi" placeholder="Isi keterangan retraksi"
+                                                value="{{ old('thoraks_retraksi', $fisik->thoraks_retraksi ?? '') }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">b. Jantung - HR:</label>
+                                            <input type="text" class="form-control" name="thoraks_hr" placeholder="Heart Rate"
+                                                value="{{ old('thoraks_hr', $fisik->thoraks_hr ?? '') }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Merintih:</label>
+                                            <input type="text" class="form-control" name="thoraks_merintih" placeholder="Isi keterangan merintih"
+                                                value="{{ old('thoraks_merintih', $fisik->thoraks_merintih ?? '') }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Bunyi jantung:</label>
+                                            <input type="text" class="form-control" name="thoraks_bunyi_jantung" placeholder="Bunyi jantung"
+                                                value="{{ old('thoraks_bunyi_jantung', $fisik->thoraks_bunyi_jantung ?? '') }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">RR:</label>
+                                            <input type="text" class="form-control" name="thoraks_rr" placeholder="Respiratory Rate"
+                                                value="{{ old('thoraks_rr', $fisik->thoraks_rr ?? '') }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Murmur:</label>
+                                            <input type="text" class="form-control" name="thoraks_murmur" placeholder="Isi keterangan murmur"
+                                                value="{{ old('thoraks_murmur', $fisik->thoraks_murmur ?? '') }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Suara pernafasan:</label>
+                                            <input type="text" class="form-control" name="thoraks_suara_nafas" placeholder="Suara pernafasan"
+                                                value="{{ old('thoraks_suara_nafas', $fisik->thoraks_suara_nafas ?? '') }}">
+                                        </div>
+                                        <div class="col-12 mb-3">
+                                            <label class="form-label">Suara nafas tambahan:</label>
+                                            <input type="text" class="form-control" name="thoraks_suara_tambahan" placeholder="Suara nafas tambahan"
+                                                value="{{ old('thoraks_suara_tambahan', $fisik->thoraks_suara_tambahan ?? '') }}">
+                                        </div>
+                                    </div>
+
+                                    <hr>
+
+                                    <!-- 8. Abdomen -->
+                                    <div class="row mb-4">
+                                        <div class="col-12">
+                                            <h6 class="text-primary mb-3">8. Abdomen</h6>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">a. Distensi:</label>
+                                            <input type="text" class="form-control" name="abdomen_distensi" placeholder="Isi keterangan distensi"
+                                                value="{{ old('abdomen_distensi', $fisik->abdomen_distensi ?? '') }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">b. Bising usus:</label>
+                                            <input type="text" class="form-control" name="abdomen_bising_usus" placeholder="Isi keterangan bising usus"
+                                                value="{{ old('abdomen_bising_usus', $fisik->abdomen_bising_usus ?? '') }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">c. Venekasi:</label>
+                                            <div class="d-flex flex-wrap gap-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="abdomen_venekasi" id="abdomen_venekasi_ya" value="ya"
+                                                        {{ old('abdomen_venekasi', $fisik->abdomen_venekasi ? 'ya' : 'tidak') === 'ya' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="abdomen_venekasi_ya">Ya</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="abdomen_venekasi" id="abdomen_venekasi_tidak" value="tidak"
+                                                        {{ old('abdomen_venekasi', $fisik->abdomen_venekasi ? 'ya' : 'tidak') === 'tidak' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="abdomen_venekasi_tidak">Tidak</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label class="form-label">d. Hepar:</label>
+                                            <input type="text" class="form-control" name="abdomen_hepar" placeholder="Hepar"
+                                                value="{{ old('abdomen_hepar', $fisik->abdomen_hepar ?? '') }}">
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label class="form-label">Lien:</label>
+                                            <input type="text" class="form-control" name="abdomen_lien" placeholder="Lien"
+                                                value="{{ old('abdomen_lien', $fisik->abdomen_lien ?? '') }}">
+                                        </div>
+                                    </div>
+
+                                    <hr>
+
+                                    <!-- 9. Genetalia -->
+                                    <div class="row mb-4">
+                                        <div class="col-12">
+                                            <h6 class="text-primary mb-3">9. Genetalia</h6>
+                                        </div>
+                                        <div class="col-12 mb-3">
+                                            <div class="d-flex flex-wrap gap-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="genetalia" id="genetalia_laki" value="laki-laki"
+                                                        {{ old('genetalia', $fisik->genetalia ?? '') === 'laki-laki' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="genetalia_laki">Laki-laki</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="genetalia" id="genetalia_perempuan" value="perempuan"
+                                                        {{ old('genetalia', $fisik->genetalia ?? '') === 'perempuan' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="genetalia_perempuan">Perempuan</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="genetalia" id="genetalia_ambigus" value="ambigus"
+                                                        {{ old('genetalia', $fisik->genetalia ?? '') === 'ambigus' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="genetalia_ambigus">Ambigus</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Pupil:</label>
-                                        <select class="form-select" name="pupil_isokor">
-                                            <option value="" {{ old('pupil_isokor', $fisik->pupil_isokor ?? '') === '' ? 'selected' : '' }} disabled>--Pilih--</option>
-                                            <option value="Isokor" {{ old('pupil_isokor', $fisik->pupil_isokor ?? '') === 'Isokor' ? 'selected' : '' }}>Isokor</option>
-                                            <option value="Anisokor" {{ old('pupil_isokor', $fisik->pupil_isokor ?? '') === 'Anisokor' ? 'selected' : '' }}>Anisokor</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Refleks Cahaya:</label>
-                                        <input type="text" class="form-control" name="refleks_cahaya" placeholder="( ... / ... )"
-                                            value="{{ old('refleks_cahaya', $fisik->refleks_cahaya ?? '') }}">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Refleks Kornea:</label>
-                                        <input type="text" class="form-control" name="refleks_kornea" placeholder="( ... / ... )"
-                                            value="{{ old('refleks_kornea', $fisik->refleks_kornea ?? '') }}">
-                                    </div>
-                                    <div class="col-12 mb-3">
-                                        <label class="form-label">Lain-lain:</label>
-                                        <input type="text" class="form-control" name="mata_lain" placeholder="Isi keterangan lain-lain mata"
-                                            value="{{ old('mata_lain', $fisik->mata_lain ?? '') }}">
-                                    </div>
-                                </div>
 
-                                <hr>
+                                    <hr>
 
-                                <!-- 3. Hidung -->
-                                <div class="row mb-4">
-                                    <div class="col-12">
-                                        <h6 class="text-primary mb-3">3. Hidung</h6>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Nafas cuping hidung:</label>
-                                        <div class="d-flex flex-wrap gap-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="nafas_cuping" id="nafas_cuping_ya" value="ya"
-                                                    {{ old('nafas_cuping', $fisik->nafas_cuping ? 'ya' : 'tidak') === 'ya' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="nafas_cuping_ya">Ya</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="nafas_cuping" id="nafas_cuping_tidak" value="tidak"
-                                                    {{ old('nafas_cuping', $fisik->nafas_cuping ? 'ya' : 'tidak') === 'tidak' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="nafas_cuping_tidak">Tidak</label>
-                                            </div>
+                                    <!-- 10. Anus -->
+                                    <div class="row mb-4">
+                                        <div class="col-12">
+                                            <h6 class="text-primary mb-3">10. Anus</h6>
+                                        </div>
+                                        <div class="col-12 mb-3">
+                                            <input type="text" class="form-control" name="anus_keterangan" placeholder="Isi keterangan anus"
+                                                value="{{ old('anus_keterangan', $fisik->anus_keterangan ?? '') }}">
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Lain-lain:</label>
-                                        <input type="text" class="form-control" name="hidung_lain" placeholder="Isi keterangan lain-lain hidung"
-                                            value="{{ old('hidung_lain', $fisik->hidung_lain ?? '') }}">
-                                    </div>
-                                </div>
 
-                                <hr>
+                                    <hr>
 
-                                <!-- 4. Telinga -->
-                                <div class="row mb-4">
-                                    <div class="col-12">
-                                        <h6 class="text-primary mb-3">4. Telinga</h6>
-                                    </div>
-                                    <div class="d-flex flex-wrap gap-3">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="telinga_cairan" id="telinga_cairan_ya" value="ya"
-                                                {{ old('telinga_cairan', $fisik->telinga_cairan ? 'ya' : 'tidak') === 'ya' ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="telinga_cairan_ya">Ya</label>
+                                    <!-- 11. Ekstremitas -->
+                                    <div class="row mb-4">
+                                        <div class="col-12">
+                                            <h6 class="text-primary mb-3">11. Ekstremitas</h6>
                                         </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="telinga_cairan" id="telinga_cairan_tidak" value="tidak"
-                                                {{ old('telinga_cairan', $fisik->telinga_cairan ? 'ya' : 'tidak') === 'tidak' ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="telinga_cairan_tidak">Tidak</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Lain-lain:</label>
-                                        <input type="text" class="form-control" name="telinga_lain" placeholder="Isi keterangan lain-lain telinga"
-                                            value="{{ old('telinga_lain', $fisik->telinga_lain ?? '') }}">
-                                    </div>
-                                </div>
-
-                                <hr>
-
-                                <!-- 5. Mulut -->
-                                <div class="row mb-4">
-                                    <div class="col-12">
-                                        <h6 class="text-primary mb-3">5. Mulut</h6>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Bibir/lidah sianosis:</label>
-                                        <div class="d-flex flex-wrap gap-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="mulut_sianosis" id="mulut_sianosis_ya" value="ya"
-                                                    {{ old('mulut_sianosis', $fisik->mulut_sianosis ? 'ya' : 'tidak') === 'ya' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="mulut_sianosis_ya">Ya</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="mulut_sianosis" id="mulut_sianosis_tidak" value="tidak"
-                                                    {{ old('mulut_sianosis', $fisik->mulut_sianosis ? 'ya' : 'tidak') === 'tidak' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="mulut_sianosis_tidak">Tidak</label>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Waktu pengisian Kapiler:</label>
+                                            <div class="d-flex flex-wrap gap-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="kapiler" id="kapiler_2" value="< 2"
+                                                        {{ old('kapiler', $fisik->kapiler ?? '') === '< 2' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="kapiler_2">< 2"</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="kapiler" id="kapiler_lebih2" value=">2"
+                                                        {{ old('kapiler', $fisik->kapiler ?? '') === '>2' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="kapiler_lebih2">>2"</label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Lidah:</label>
-                                        <input type="text" class="form-control" name="mulut_lidah" placeholder="Isi keterangan lidah"
-                                            value="{{ old('mulut_lidah', $fisik->mulut_lidah ?? '') }}">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Tenggorokan:</label>
-                                        <input type="text" class="form-control" name="mulut_tenggorokan" placeholder="Isi keterangan tenggorokan"
-                                            value="{{ old('mulut_tenggorokan', $fisik->mulut_tenggorokan ?? '') }}">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Lain-lain:</label>
-                                        <input type="text" class="form-control" name="mulut_lain" placeholder="Isi keterangan lain-lain mulut"
-                                            value="{{ old('mulut_lain', $fisik->mulut_lain ?? '') }}">
-                                    </div>
-                                </div>
-
-                                <hr>
-
-                                <!-- 6. Leher -->
-                                <div class="row mb-4">
-                                    <div class="col-12">
-                                        <h6 class="text-primary mb-3">6. Leher</h6>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Pembesaran Kelenjar Getah Bening:</label>
-                                        <div class="d-flex flex-wrap gap-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="leher_kelenjar" id="leher_kelenjar_ya" value="ya"
-                                                    {{ old('leher_kelenjar', $fisik->leher_kelenjar ? 'ya' : 'tidak') === 'ya' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="leher_kelenjar_ya">Ya</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="leher_kelenjar" id="leher_kelenjar_tidak" value="tidak"
-                                                    {{ old('leher_kelenjar', $fisik->leher_kelenjar ? 'ya' : 'tidak') === 'tidak' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="leher_kelenjar_tidak">Tidak</label>
-                                            </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Refleks:</label>
+                                            <input type="text" class="form-control" name="ekstremitas_refleks" placeholder="Isi keterangan refleks"
+                                                value="{{ old('ekstremitas_refleks', $fisik->ekstremitas_refleks ?? '') }}">
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Peningkatan Tekanan Vena Jugular:</label>
-                                        <div class="d-flex flex-wrap gap-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="leher_vena" id="leher_vena_ya" value="ya"
-                                                    {{ old('leher_vena', $fisik->leher_vena ? 'ya' : 'tidak') === 'ya' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="leher_vena_ya">Ya</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="leher_vena" id="leher_vena_tidak" value="tidak"
-                                                    {{ old('leher_vena', $fisik->leher_vena ? 'ya' : 'tidak') === 'tidak' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="leher_vena_tidak">Tidak</label>
+
+                                    <hr>
+
+                                    <!-- 12. Kulit -->
+                                    <div class="row mb-4">
+                                        <div class="col-12">
+                                            <h6 class="text-primary mb-3">12. Kulit</h6>
+                                        </div>
+                                        <div class="col-12 mb-3">
+                                            <div class="d-flex flex-wrap gap-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="kulit[]" id="kulit_pucat" value="pucat"
+                                                        {{ in_array('pucat', (array) old('kulit', $kulit)) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="kulit_pucat">Pucat</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="kulit[]" id="kulit_ptekie" value="ptekie"
+                                                        {{ in_array('ptekie', (array) old('kulit', $kulit)) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="kulit_ptekie">Ptekie</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="kulit[]" id="kulit_ekimosis" value="ekimosis"
+                                                        {{ in_array('ekimosis', (array) old('kulit', $kulit)) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="kulit_ekimosis">Ekimosis</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="kulit[]" id="kulit_ikterik" value="ikterik"
+                                                        {{ in_array('ikterik', (array) old('kulit', $kulit)) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="kulit_ikterik">Ikterik</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="kulit[]" id="kulit_mottled" value="mottled"
+                                                        {{ in_array('mottled', (array) old('kulit', $kulit)) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="kulit_mottled">Mottled</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="kulit[]" id="kulit_sklerema" value="sklerema"
+                                                        {{ in_array('sklerema', (array) old('kulit', $kulit)) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="kulit_sklerema">Sklerema</label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-12 mb-3">
-                                        <label class="form-label">Lain-lain:</label>
-                                        <input type="text" class="form-control" name="leher_lain" placeholder="Isi keterangan lain-lain leher"
-                                            value="{{ old('leher_lain', $fisik->leher_lain ?? '') }}">
-                                    </div>
-                                </div>
-
-                                <hr>
-
-                                <!-- 7. Thoraks -->
-                                <div class="row mb-4">
-                                    <div class="col-12">
-                                        <h6 class="text-primary mb-3">7. Thoraks</h6>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">a. Bentuk:</label>
-                                        <div class="d-flex flex-wrap gap-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="thoraks_bentuk[]" id="thoraks_simetris" value="simetris"
-                                                    {{ old('thoraks_simetris', $fisik->thoraks_simetris ?? false) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="thoraks_simetris">Simetris</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="thoraks_bentuk[]" id="thoraks_asimetris" value="asimetris"
-                                                    {{ old('thoraks_asimetris', $fisik->thoraks_asimetris ?? false) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="thoraks_asimetris">Asimetris</label>
-                                            </div>
+                                        <div class="col-12 mb-3">
+                                            <label class="form-label">Lainnya:</label>
+                                            <input type="text" class="form-control" name="kulit_lainnya" placeholder="Isi keterangan lainnya untuk kulit"
+                                                value="{{ old('kulit_lainnya', $fisik->kulit_lainnya ?? '') }}">
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">c. Paru - Retraksi:</label>
-                                        <input type="text" class="form-control" name="thoraks_retraksi" placeholder="Isi keterangan retraksi"
-                                            value="{{ old('thoraks_retraksi', $fisik->thoraks_retraksi ?? '') }}">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">b. Jantung - HR:</label>
-                                        <input type="text" class="form-control" name="thoraks_hr" placeholder="Heart Rate"
-                                            value="{{ old('thoraks_hr', $fisik->thoraks_hr ?? '') }}">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Merintih:</label>
-                                        <input type="text" class="form-control" name="thoraks_merintih" placeholder="Isi keterangan merintih"
-                                            value="{{ old('thoraks_merintih', $fisik->thoraks_merintih ?? '') }}">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Bunyi jantung:</label>
-                                        <input type="text" class="form-control" name="thoraks_bunyi_jantung" placeholder="Bunyi jantung"
-                                            value="{{ old('thoraks_bunyi_jantung', $fisik->thoraks_bunyi_jantung ?? '') }}">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">RR:</label>
-                                        <input type="text" class="form-control" name="thoraks_rr" placeholder="Respiratory Rate"
-                                            value="{{ old('thoraks_rr', $fisik->thoraks_rr ?? '') }}">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Murmur:</label>
-                                        <input type="text" class="form-control" name="thoraks_murmur" placeholder="Isi keterangan murmur"
-                                            value="{{ old('thoraks_murmur', $fisik->thoraks_murmur ?? '') }}">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Suara pernafasan:</label>
-                                        <input type="text" class="form-control" name="thoraks_suara_nafas" placeholder="Suara pernafasan"
-                                            value="{{ old('thoraks_suara_nafas', $fisik->thoraks_suara_nafas ?? '') }}">
-                                    </div>
-                                    <div class="col-12 mb-3">
-                                        <label class="form-label">Suara nafas tambahan:</label>
-                                        <input type="text" class="form-control" name="thoraks_suara_tambahan" placeholder="Suara nafas tambahan"
-                                            value="{{ old('thoraks_suara_tambahan', $fisik->thoraks_suara_tambahan ?? '') }}">
-                                    </div>
-                                </div>
 
-                                <hr>
+                                    <hr>
 
-                                <!-- 8. Abdomen -->
-                                <div class="row mb-4">
-                                    <div class="col-12">
-                                        <h6 class="text-primary mb-3">8. Abdomen</h6>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">a. Distensi:</label>
-                                        <input type="text" class="form-control" name="abdomen_distensi" placeholder="Isi keterangan distensi"
-                                            value="{{ old('abdomen_distensi', $fisik->abdomen_distensi ?? '') }}">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">b. Bising usus:</label>
-                                        <input type="text" class="form-control" name="abdomen_bising_usus" placeholder="Isi keterangan bising usus"
-                                            value="{{ old('abdomen_bising_usus', $fisik->abdomen_bising_usus ?? '') }}">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">c. Venekasi:</label>
-                                        <div class="d-flex flex-wrap gap-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="abdomen_venekasi" id="abdomen_venekasi_ya" value="ya"
-                                                    {{ old('abdomen_venekasi', $fisik->abdomen_venekasi ? 'ya' : 'tidak') === 'ya' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="abdomen_venekasi_ya">Ya</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="abdomen_venekasi" id="abdomen_venekasi_tidak" value="tidak"
-                                                    {{ old('abdomen_venekasi', $fisik->abdomen_venekasi ? 'ya' : 'tidak') === 'tidak' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="abdomen_venekasi_tidak">Tidak</label>
+                                    <!-- 13. Kuku -->
+                                    <div class="row mb-4">
+                                        <div class="col-12">
+                                            <h6 class="text-primary mb-3">13. Kuku</h6>
+                                        </div>
+                                        <div class="col-12 mb-3">
+                                            <div class="d-flex flex-wrap gap-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="kuku[]" id="kuku_sianosis" value="sianosis"
+                                                        {{ in_array('sianosis', (array) old('kuku', $kuku)) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="kuku_sianosis">Sianosis</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="kuku[]" id="kuku_meconium" value="meconium stain"
+                                                        {{ in_array('meconium stain', (array) old('kuku', $kuku)) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="kuku_meconium">Meconium stain</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="kuku[]" id="kuku_panjang" value="panjang"
+                                                        {{ in_array('panjang', (array) old('kuku', $kuku)) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="kuku_panjang">Panjang</label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-3 mb-3">
-                                        <label class="form-label">d. Hepar:</label>
-                                        <input type="text" class="form-control" name="abdomen_hepar" placeholder="Hepar"
-                                            value="{{ old('abdomen_hepar', $fisik->abdomen_hepar ?? '') }}">
-                                    </div>
-                                    <div class="col-md-3 mb-3">
-                                        <label class="form-label">Lien:</label>
-                                        <input type="text" class="form-control" name="abdomen_lien" placeholder="Lien"
-                                            value="{{ old('abdomen_lien', $fisik->abdomen_lien ?? '') }}">
-                                    </div>
-                                </div>
-
-                                <hr>
-
-                                <!-- 9. Genetalia -->
-                                <div class="row mb-4">
-                                    <div class="col-12">
-                                        <h6 class="text-primary mb-3">9. Genetalia</h6>
-                                    </div>
-                                    <div class="col-12 mb-3">
-                                        <div class="d-flex flex-wrap gap-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="genetalia" id="genetalia_laki" value="laki-laki"
-                                                    {{ old('genetalia', $fisik->genetalia ?? '') === 'laki-laki' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="genetalia_laki">Laki-laki</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="genetalia" id="genetalia_perempuan" value="perempuan"
-                                                    {{ old('genetalia', $fisik->genetalia ?? '') === 'perempuan' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="genetalia_perempuan">Perempuan</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="genetalia" id="genetalia_ambigus" value="ambigus"
-                                                    {{ old('genetalia', $fisik->genetalia ?? '') === 'ambigus' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="genetalia_ambigus">Ambigus</label>
-                                            </div>
+                                        <div class="col-12 mb-3">
+                                            <label class="form-label">Lainnya:</label>
+                                            <input type="text" class="form-control" name="kuku_lainnya" placeholder="Isi keterangan lainnya untuk kuku"
+                                                value="{{ old('kuku_lainnya', $fisik->kuku_lainnya ?? '') }}">
                                         </div>
-                                    </div>
-                                </div>
-
-                                <hr>
-
-                                <!-- 10. Anus -->
-                                <div class="row mb-4">
-                                    <div class="col-12">
-                                        <h6 class="text-primary mb-3">10. Anus</h6>
-                                    </div>
-                                    <div class="col-12 mb-3">
-                                        <input type="text" class="form-control" name="anus_keterangan" placeholder="Isi keterangan anus"
-                                            value="{{ old('anus_keterangan', $fisik->anus_keterangan ?? '') }}">
-                                    </div>
-                                </div>
-
-                                <hr>
-
-                                <!-- 11. Ekstremitas -->
-                                <div class="row mb-4">
-                                    <div class="col-12">
-                                        <h6 class="text-primary mb-3">11. Ekstremitas</h6>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Waktu pengisian Kapiler:</label>
-                                        <div class="d-flex flex-wrap gap-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="kapiler" id="kapiler_2" value="< 2"
-                                                    {{ old('kapiler', $fisik->kapiler ?? '') === '< 2' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="kapiler_2">< 2"</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="kapiler" id="kapiler_lebih2" value=">2"
-                                                    {{ old('kapiler', $fisik->kapiler ?? '') === '>2' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="kapiler_lebih2">>2"</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Refleks:</label>
-                                        <input type="text" class="form-control" name="ekstremitas_refleks" placeholder="Isi keterangan refleks"
-                                            value="{{ old('ekstremitas_refleks', $fisik->ekstremitas_refleks ?? '') }}">
-                                    </div>
-                                </div>
-
-                                <hr>
-
-                                <!-- 12. Kulit -->
-                                <div class="row mb-4">
-                                    <div class="col-12">
-                                        <h6 class="text-primary mb-3">12. Kulit</h6>
-                                    </div>
-                                    <div class="col-12 mb-3">
-                                        <div class="d-flex flex-wrap gap-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="kulit[]" id="kulit_pucat" value="pucat"
-                                                    {{ in_array('pucat', (array) old('kulit', $kulit)) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="kulit_pucat">Pucat</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="kulit[]" id="kulit_ptekie" value="ptekie"
-                                                    {{ in_array('ptekie', (array) old('kulit', $kulit)) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="kulit_ptekie">Ptekie</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="kulit[]" id="kulit_ekimosis" value="ekimosis"
-                                                    {{ in_array('ekimosis', (array) old('kulit', $kulit)) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="kulit_ekimosis">Ekimosis</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="kulit[]" id="kulit_ikterik" value="ikterik"
-                                                    {{ in_array('ikterik', (array) old('kulit', $kulit)) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="kulit_ikterik">Ikterik</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="kulit[]" id="kulit_mottled" value="mottled"
-                                                    {{ in_array('mottled', (array) old('kulit', $kulit)) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="kulit_mottled">Mottled</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="kulit[]" id="kulit_sklerema" value="sklerema"
-                                                    {{ in_array('sklerema', (array) old('kulit', $kulit)) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="kulit_sklerema">Sklerema</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 mb-3">
-                                        <label class="form-label">Lainnya:</label>
-                                        <input type="text" class="form-control" name="kulit_lainnya" placeholder="Isi keterangan lainnya untuk kulit"
-                                            value="{{ old('kulit_lainnya', $fisik->kulit_lainnya ?? '') }}">
-                                    </div>
-                                </div>
-
-                                <hr>
-
-                                <!-- 13. Kuku -->
-                                <div class="row mb-4">
-                                    <div class="col-12">
-                                        <h6 class="text-primary mb-3">13. Kuku</h6>
-                                    </div>
-                                    <div class="col-12 mb-3">
-                                        <div class="d-flex flex-wrap gap-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="kuku[]" id="kuku_sianosis" value="sianosis"
-                                                    {{ in_array('sianosis', (array) old('kuku', $kuku)) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="kuku_sianosis">Sianosis</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="kuku[]" id="kuku_meconium" value="meconium stain"
-                                                    {{ in_array('meconium stain', (array) old('kuku', $kuku)) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="kuku_meconium">Meconium stain</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="kuku[]" id="kuku_panjang" value="panjang"
-                                                    {{ in_array('panjang', (array) old('kuku', $kuku)) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="kuku_panjang">Panjang</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 mb-3">
-                                        <label class="form-label">Lainnya:</label>
-                                        <input type="text" class="form-control" name="kuku_lainnya" placeholder="Isi keterangan lainnya untuk kuku"
-                                            value="{{ old('kuku_lainnya', $fisik->kuku_lainnya ?? '') }}">
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
                             <div class="section-separator">
                                 <h5 class="section-title">7. Pengkajian Khusus Pediatrik ( < 5 tahun)</h5>
@@ -751,7 +751,7 @@
                                                                     <div class="col-md-6">
                                                                         <div class="input-group input-group-sm">
                                                                             <input type="number" class="form-control" name="lama_kehamilan" placeholder="..."
-                                                                            value="{{ old('lama_kehamilan', $asesmen->asesmenMedisAnakDtl->lama_kehamilan ?? '') }}">
+                                                                            value="{{ $asesmen->asesmenMedisAnakDtl->lama_kehamilan ?? '' }}">
                                                                             <span class="input-group-text">bln/mggu</span>
                                                                         </div>
                                                                     </div>
@@ -1101,12 +1101,16 @@
                                                 <div class="col-md-4">
                                                     <label class="form-label small">Tanggal:</label>
                                                     <input type="date" class="form-control form-control-sm" name="tanggal_dirawat"
-                                                        value="{{ old('tanggal_dirawat', $asesmen->asesmenMedisAnakDtl->tanggal_dirawat ? $asesmen->asesmenMedisAnakDtl->tanggal_dirawat->format('Y-m-d') : '') }}">
+                                                        value="{{ isset($asesmen->asesmenMedisAnakDtl->tanggal_dirawat) 
+                                                            ? \Carbon\Carbon::parse($asesmen->asesmenMedisAnakDtl->tanggal_dirawat)->format('Y-m-d') 
+                                                            : \Carbon\Carbon::today()->format('Y-m-d') }}">
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="form-label small">Jam:</label>
                                                     <input type="time" class="form-control form-control-sm" name="jam_dirawat"
-                                                    value="{{ $asesmen->asesmenMedisAnakDtl->jam_masuk ? \Carbon\Carbon::parse($asesmen->asesmenMedisAnakDtl->jam_masuk)->format('H:i') : date('H:i') }}">
+                                                        value="{{ isset($asesmen->asesmenMedisAnakDtl->jam_masuk) 
+                                                            ? \Carbon\Carbon::parse($asesmen->asesmenMedisAnakDtl->jam_masuk)->format('H:i') 
+                                                            : \Carbon\Carbon::now('Asia/Jakarta')->format('H:i') }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -1377,7 +1381,9 @@
                                 <div class="mb-4">
                                     <label class="form-label">Rencana Tanggal Pulang</label>
                                     <input type="date" class="form-control" name="rencana_tgl_pulang"
-                                        value="{{ old('rencana_tgl_pulang', $asesmen->asesmenMedisAnakDtl->rencana_tgl_pulang ? $asesmen->asesmenMedisAnakDtl->rencana_tgl_pulang->format('Y-m-d') : '') }}">
+                                        value="{{ old('rencana_tgl_pulang', isset($asesmen->asesmenMedisAnakDtl->rencana_tgl_pulang) 
+                                            ? \Carbon\Carbon::parse($asesmen->asesmenMedisAnakDtl->rencana_tgl_pulang)->format('Y-m-d') 
+                                            : '') }}">
                                 </div>
 
                                 <div class="mt-4">

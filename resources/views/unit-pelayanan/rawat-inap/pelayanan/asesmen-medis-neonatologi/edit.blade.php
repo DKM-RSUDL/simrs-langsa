@@ -49,14 +49,14 @@
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
                                     <div class="d-flex gap-3" style="width: 100%;">
-                                        <input type="date" class="form-control" name="tanggal" value="{{ $asesmen->tanggal ? $asesmen->tanggal->format('Y-m-d') : date('Y-m-d') }}">
-                                        <input type="time" class="form-control" name="jam" value="{{ $asesmen->jam ? date('H:i', strtotime($asesmen->jam)) : date('H:i') }}">
+                                        <input type="date" class="form-control" name="tanggal" value="{{ $asesmen->asesmenMedisNeonatologi->tanggal ? $asesmen->asesmenMedisNeonatologi->tanggal->format('Y-m-d') : date('Y-m-d') }}">
+                                        <input type="time" class="form-control" name="jam" value="{{ $asesmen->asesmenMedisNeonatologi->jam ? date('H:i', strtotime($asesmen->asesmenMedisNeonatologi->jam)) : date('H:i') }}">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Nama keluarga yang bisa </br> dihubungi No Hp/ Telp</label>
                                     <div class="d-flex gap-3" style="width: 100%;">
-                                        <input type="number" class="form-control" name="no_hp" value="{{ $asesmen->no_hp }}">
+                                        <input type="number" class="form-control" name="no_hp" value="{{ $asesmen->asesmenMedisNeonatologi->no_hp }}">
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -65,7 +65,7 @@
                                             <label style="min-width: 200px; vertical-align: top;">Transportasi waktu datang:</label>
                                             <div class="mt-2">
                                                 @php
-                                                    $transportasi = is_array($asesmen->transportasi) ? $asesmen->transportasi : [];
+                                                    $transportasi = is_array($asesmen->asesmenMedisNeonatologi->transportasi) ? $asesmen->asesmenMedisNeonatologi->transportasi : [];
                                                 @endphp
                                                 <div class="form-check mb-2">
                                                     <input class="form-check-input" type="checkbox" name="transportasi[]" id="kendaraan_pribadi" value="kendaraan_pribadi"
@@ -88,7 +88,7 @@
                                                         Kendaraan lainnya:
                                                     </label>
                                                     <input type="text" class="form-control mt-2" name="kendaraan_lainnya_detail"
-                                                        value="{{ $asesmen->kendaraan_lainnya_detail }}" placeholder="Sebutkan lainnya">
+                                                        value="{{ $asesmen->asesmenMedisNeonatologi->kendaraan_lainnya_detail }}" placeholder="Sebutkan lainnya">
                                                 </div>
                                             </div>
                                         </div>
@@ -132,7 +132,7 @@
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Anamnesis</label>
                                     <textarea class="form-control" name="anamnesis" rows="3"
-                                        placeholder="Anamnesis">{{ $asesmen->anamnesis }}</textarea>
+                                        placeholder="Anamnesis">{{ $asesmen->asesmenMedisNeonatologi->anamnesis }}</textarea>
                                 </div>
 
                                 <div class="row mb-3">
@@ -143,20 +143,20 @@
                                             <div class="mt-2">
                                                 <div class="form-check mb-2">
                                                     <input class="form-check-input" type="radio" name="lahir" id="lahir_rsudlangsa" value="1"
-                                                        {{ $asesmen->lahir == '1' ? 'checked' : '' }}>
+                                                        {{ $asesmen->asesmenMedisNeonatologi->lahir == '1' ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="lahir_rsudlangsa">
                                                         Lahir di RSU Langsa
                                                     </label>
                                                 </div>
                                                 <div class="form-check mb-2">
                                                     <input class="form-check-input" type="radio" name="lahir" id="lahir_rs_lain" value="0"
-                                                        {{ $asesmen->lahir == '0' ? 'checked' : '' }}>
+                                                        {{ $asesmen->asesmenMedisNeonatologi->lahir == '0' ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="lahir_rs_lain">
                                                         Luar RSU Langsa:
                                                     </label>
                                                 </div>
                                                 <input type="text" class="form-control mt-2" name="lahir_rs_lain"
-                                                    value="{{ $asesmen->lahir_rs_lain ?? '' }}" placeholder="Sebutkan lainnya">
+                                                    value="{{ $asesmen->asesmenMedisNeonatologi->lahir_rs_lain ?? '' }}" placeholder="Sebutkan lainnya">
                                             </div>
                                         </div>
                                     </div>
@@ -164,7 +164,7 @@
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Keluhan Bayi</label>
                                     <textarea class="form-control" name="keluahan_bayi" rows="3"
-                                        placeholder="Keluhan Bayi">{{ $asesmen->keluahan_bayi }}</textarea>
+                                        placeholder="Keluhan Bayi">{{ $asesmen->asesmenMedisNeonatologi->keluahan_bayi }}</textarea>
                                 </div>
 
                             </div>
@@ -179,7 +179,7 @@
                                             <label class="form-label">Anak ke:</label>
                                         </div>
                                         <div class="col-md-9">
-                                            <input type="number" class="form-control" name="anak_ke" min="1" placeholder="1" value="{{ $asesmen->anak_ke }}">
+                                            <input type="number" class="form-control" name="anak_ke" min="1" placeholder="1" value="{{ $asesmen->asesmenMedisNeonatologi->anak_ke }}">
                                         </div>
                                     </div>
 
@@ -190,11 +190,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="anc" id="anc_tidak" value="0" {{ $asesmen->anc == '0' ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="anc" id="anc_tidak" value="0" {{ $asesmen->asesmenMedisNeonatologi->anc == '0' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="anc_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="anc" id="anc_ya" value="1" {{ $asesmen->anc == '1' ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="anc" id="anc_ya" value="1" {{ $asesmen->asesmenMedisNeonatologi->anc == '1' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="anc_ya">Ya</label>
                                             </div>
                                         </div>
@@ -206,7 +206,7 @@
                                             <label class="form-label">USG:</label>
                                         </div>
                                         <div class="col-md-9">
-                                            <input type="text" class="form-control" name="usg_kali" placeholder="Berapa kali" value="{{ $asesmen->usg_kali }}">
+                                            <input type="text" class="form-control" name="usg_kali" placeholder="Berapa kali" value="{{ $asesmen->asesmenMedisNeonatologi->usg_kali }}">
                                         </div>
                                     </div>
 
@@ -216,7 +216,7 @@
                                             <label class="form-label">HPHT:</label>
                                         </div>
                                         <div class="col-md-4">
-                                            <input type="date" class="form-control" name="hpht_tanggal" value="{{ $asesmen->hpht_tanggal ? $asesmen->hpht_tanggal->format('Y-m-d') : date('Y-m-d') }}">
+                                            <input type="date" class="form-control" name="hpht_tanggal" value="{{ $asesmen->asesmenMedisNeonatologi->hpht_tanggal ? $asesmen->asesmenMedisNeonatologi->hpht_tanggal->format('Y-m-d') : date('Y-m-d') }}">
                                         </div>
                                     </div>
 
@@ -226,7 +226,7 @@
                                             <label class="form-label">Taksiran persalinan:</label>
                                         </div>
                                         <div class="col-md-4">
-                                            <input type="date" class="form-control" name="taksiran_tanggal" value="{{ $asesmen->taksiran_tanggal ? $asesmen->taksiran_tanggal->format('Y-m-d') : date('Y-m-d') }}">
+                                            <input type="date" class="form-control" name="taksiran_tanggal" value="{{ $asesmen->asesmenMedisNeonatologi->taksiran_tanggal ? $asesmen->asesmenMedisNeonatologi->taksiran_tanggal->format('Y-m-d') : date('Y-m-d') }}">
                                         </div>
                                     </div>
 
@@ -238,12 +238,12 @@
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="nyeri_bak" id="nyeri_bak_tidak" value="0"
-                                                {{ $asesmen->nyeri_bak == '0' ? 'checked' : '' }}>
+                                                {{ $asesmen->asesmenMedisNeonatologi->nyeri_bak == '0' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="nyeri_bak_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="nyeri_bak" id="nyeri_bak_ya" value="1"
-                                                {{ $asesmen->nyeri_bak == '1' ? 'checked' : '' }}>
+                                                {{ $asesmen->asesmenMedisNeonatologi->nyeri_bak == '1' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="nyeri_bak_ya">Ya</label>
                                             </div>
                                         </div>
@@ -257,12 +257,12 @@
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="keputihan" id="keputihan_tidak" value="0"
-                                                {{ $asesmen->keputihan == '0' ? 'checked' : '' }}>
+                                                {{ $asesmen->asesmenMedisNeonatologi->keputihan == '0' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="keputihan_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="keputihan" id="keputihan_ya" value="1"
-                                                {{ $asesmen->keputihan == '1' ? 'checked' : '' }}>
+                                                {{ $asesmen->asesmenMedisNeonatologi->keputihan == '1' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="keputihan_ya">Ya</label>
                                             </div>
                                         </div>
@@ -283,12 +283,12 @@
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="perdarahan" id="perdarahan_tidak" value="0"
-                                                {{ $asesmen->perdarahan == '0' ? 'checked' : '' }}>
+                                                {{ $asesmen->asesmenMedisNeonatologi->perdarahan == '0' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="perdarahan_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="perdarahan" id="perdarahan_ya" value="1"
-                                                {{ $asesmen->perdarahan == '1' ? 'checked' : '' }}>
+                                                {{ $asesmen->asesmenMedisNeonatologi->perdarahan == '1' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="perdarahan_ya">Ya</label>
                                             </div>
                                         </div>
@@ -302,17 +302,17 @@
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="ketuban_pecah" id="ketuban_tidak" value="0"
-                                                {{ $asesmen->ketuban_pecah == '0' ? 'checked' : '' }}>
+                                                {{ $asesmen->asesmenMedisNeonatologi->ketuban_pecah == '0' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="ketuban_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="ketuban_pecah" id="ketuban_ya" value="1"
-                                                {{ $asesmen->ketuban_pecah == '1' ? 'checked' : '' }}>
+                                                {{ $asesmen->asesmenMedisNeonatologi->ketuban_pecah == '1' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="ketuban_ya">Ya</label>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-                                            <input type="time" class="form-control" name="ketuban_jam" placeholder="Jam" value="{{ $asesmen->ketuban_jam ? date('H:i', strtotime($asesmen->ketuban_jam)) : '' }}">
+                                            <input type="time" class="form-control" name="ketuban_jam" placeholder="Jam" value="{{ $asesmen->asesmenMedisNeonatologi->ketuban_jam ? date('H:i', strtotime($asesmen->asesmenMedisNeonatologi->ketuban_jam)) : '' }}">
                                         </div>
                                     </div>
 
@@ -324,12 +324,12 @@
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="gawat_janin" id="gawat_janin_tidak" value="0"
-                                                {{ $asesmen->gawat_janin == '0' ? 'checked' : '' }}>
+                                                {{ $asesmen->asesmenMedisNeonatologi->gawat_janin == '0' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="gawat_janin_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="gawat_janin" id="gawat_janin_ya" value="1"
-                                                {{ $asesmen->gawat_janin == '1' ? 'checked' : '' }}>
+                                                {{ $asesmen->asesmenMedisNeonatologi->gawat_janin == '1' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="gawat_janin_ya">Ya</label>
                                             </div>
                                         </div>
@@ -343,18 +343,18 @@
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="demam" id="demam_tidak" value="0"
-                                                {{ $asesmen->demam == '0' ? 'checked' : '' }}>
+                                                {{ $asesmen->asesmenMedisNeonatologi->demam == '0' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="demam_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="demam" id="demam_ya" value="1"
-                                                {{ $asesmen->demam == '1' ? 'checked' : '' }}>
+                                                {{ $asesmen->asesmenMedisNeonatologi->demam == '1' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="demam_ya">Ya</label>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="input-group">
-                                                <input type="text" class="form-control" name="demam_suhu" step="0.1" min="35" max="45" placeholder="36.5" value="{{ $asesmen->demam_suhu }}">
+                                                <input type="text" class="form-control" name="demam_suhu" step="0.1" min="35" max="45" placeholder="36.5" value="{{ $asesmen->asesmenMedisNeonatologi->demam_suhu }}">
                                                 <span class="input-group-text">°C</span>
                                             </div>
                                         </div>
@@ -368,18 +368,18 @@
                                         <div class="col-md-6">
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="terapi_deksametason" id="deksametason_tidak" value="0"
-                                                {{ $asesmen->terapi_deksametason == '0' ? 'checked' : '' }}>
+                                                {{ $asesmen->asesmenMedisNeonatologi->terapi_deksametason == '0' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="deksametason_tidak">Tidak</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="terapi_deksametason" id="deksametason_ya" value="1"
-                                                {{ $asesmen->terapi_deksametason == '1' ? 'checked' : '' }}>
+                                                {{ $asesmen->asesmenMedisNeonatologi->terapi_deksametason == '1' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="deksametason_ya">Ya</label>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="input-group">
-                                                <input type="number" class="form-control" name="deksametason_kali" min="0" placeholder="0" value="{{ $asesmen->deksametason_kali }}">
+                                                <input type="number" class="form-control" name="deksametason_kali" min="0" placeholder="0" value="{{ $asesmen->asesmenMedisNeonatologi->deksametason_kali }}">
                                                 <span class="input-group-text">kali</span>
                                             </div>
                                         </div>
@@ -391,7 +391,7 @@
                                             <label class="form-label">Riwayat terapi lain:</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <textarea class="form-control" name="terapi_lain" rows="3" placeholder="Sebutkan riwayat terapi lainnya jika ada...">{{ $asesmen->terapi_lain }}</textarea>
+                                            <textarea class="form-control" name="terapi_lain" rows="3" placeholder="Sebutkan riwayat terapi lainnya jika ada...">{{ $asesmen->asesmenMedisNeonatologi->terapi_lain }}</textarea>
                                         </div>
                                     </div>
 
@@ -404,7 +404,7 @@
 
                                     <div class="col-12 mb-3">
                                         @php
-                                            $riwayatPenyakitIbu = is_array($asesmen->riwayat_penyakit_ibu) ? $asesmen->riwayat_penyakit_ibu : [];
+                                            $riwayatPenyakitIbu = is_array($asesmen->asesmenMedisNeonatologi->riwayat_penyakit_ibu) ? $asesmen->asesmenMedisNeonatologi->riwayat_penyakit_ibu : [];
                                         @endphp
                                         <div class="d-flex flex-wrap gap-3">
                                             <div class="form-check">
@@ -449,7 +449,7 @@
                                             </div>
                                         </div>
                                         <label class="form-check-label mt-2" for="riwayat_penyakit_ibu_lain">Lainnya</label>
-                                        <input type="text" class="form-control" name="riwayat_penyakit_ibu_lain" id="riwayat_penyakit_ibu_lain" placeholder="Lainnya" value="{{ $asesmen->riwayat_penyakit_ibu_lain ?? '' }}">
+                                        <input type="text" class="form-control" name="riwayat_penyakit_ibu_lain" id="riwayat_penyakit_ibu_lain" placeholder="Lainnya" value="{{ $asesmen->asesmenMedisNeonatologi->riwayat_penyakit_ibu_lain ?? '' }}">
                                     </div>
 
                                 </div>
