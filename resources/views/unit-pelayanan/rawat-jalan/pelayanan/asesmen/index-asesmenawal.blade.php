@@ -334,11 +334,16 @@
                     </button> --}}
                     {{-- @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen.edit') --}}
                 @elseif($item->kategori == 2 && $item->sub_kategori == 1)
-                    <button type="button"
-                        onclick="showAsesmenKeperawatanJalan('{{ $item->id }}', '{{ $dataMedis->kd_unit }}', '{{ $dataMedis->kd_pasien }}', '{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') }}', '{{ $dataMedis->urut_masuk }}')"
-                        class="btn btn-info btn-sm px-3">
+                    <a href="{{ route('rawat-jalan.asesmen-keperawatan.show', [
+                        'kd_unit' => $dataMedis->kd_unit,
+                        'kd_pasien' => $dataMedis->kd_pasien,
+                        'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
+                        'urut_masuk' => $dataMedis->urut_masuk,
+                        'id' => $item->id,
+                    ]) }}"
+                        class="btn btn-info btn-sm px-3 ">
                         <i class="fas fa-eye me-1"></i> Lihat
-                    </button>
+                    </a>
 
                     <a href="{{ route('rawat-jalan.asesmen-keperawatan.edit', [
                         'kd_unit' => $dataMedis->kd_unit,
@@ -416,8 +421,6 @@
         </li>
     @endforeach
 </ul>
-@include('unit-pelayanan.rawat-jalan.pelayanan.asesmen.create-asesmen')
-@include('unit-pelayanan.rawat-jalan.pelayanan.asesmen-keperawatan.show')
 
 @push('js')
     <script>
