@@ -489,8 +489,8 @@ class AsesmenMedisNeonatologiController extends Controller
             $asesmen->urut_masuk = $request->urut_masuk;
             $asesmen->user_id = Auth::id();
             $asesmen->waktu_asesmen = now();
-            $asesmen->kategori = 2;
-            $asesmen->sub_kategori = 1;
+            $asesmen->kategori = 1;
+            $asesmen->sub_kategori = 14;
             $asesmen->save();
 
             // Update main table (RME_ASESMEN_MEDIS_NEONATOLOGI)

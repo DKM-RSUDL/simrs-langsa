@@ -513,6 +513,10 @@ class RmeAsesmen extends Model
     {
         return $this->hasOne(RmeAsesmenMedisRanap::class, 'id_asesmen', 'id');
     }
+    public function asesmenMedisRanapFisik()
+    {
+        return $this->hasOne(RmeAsesmenMedisRanapFisik::class, 'id_asesmen', 'id');
+    }
 
     // Scope untuk filter berdasarkan kategori
     public function scopeByKategori($query, $kategori)

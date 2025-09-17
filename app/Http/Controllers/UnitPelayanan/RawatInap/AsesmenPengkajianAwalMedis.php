@@ -215,7 +215,7 @@ class AsesmenPengkajianAwalMedis extends Controller
 
             // 3. Buat record pemeriksaan fisik
             RmeAsesmenMedisRanapFisik::create([
-                'id_asesmen_medis_ranap' => $asesmenMedis->id,
+                'id_asesmen' => $asesmen->id,
                 'pengkajian_kepala' => $request->pengkajian_kepala ?? 1,
                 'pengkajian_kepala_keterangan' => $request->pengkajian_kepala_keterangan,
                 'pengkajian_mata' => $request->pengkajian_mata ?? 1,
@@ -281,7 +281,17 @@ class AsesmenPengkajianAwalMedis extends Controller
 
     public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-        $asesmen = RmeAsesmenMedisRanap::with('fisikExamination')->findOrFail($id);
+        try {
+            // Load data utama dengan relationships
+            $asesmen = RmeAsesmen::with([
+                'asesmenMedisRanap',
+                'asesmenMedisRanapFisik',
+            ])->findOrFail($id);
+
+        } catch (\Exception $e) {
+            $asesmen = RmeAsesmen::findOrFail($id);
+        }
+
         $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         if (!$dataMedis) {
@@ -307,13 +317,14 @@ class AsesmenPengkajianAwalMedis extends Controller
     public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         try {
-            $asesmen = RmeAsesmenMedisRanap::with('fisikExamination')->findOrFail($id);
-        } catch (\Exception $e) {
-            $asesmen = RmeAsesmenMedisRanap::findOrFail($id);
+            // Load data utama dengan relationships
+            $asesmen = RmeAsesmen::with([
+                'asesmenMedisRanap',
+                'asesmenMedisRanapFisik',
+            ])->findOrFail($id);
 
-            $asesmen->fisikExamination = RmeAsesmenMedisRanapFisik::where('id_asesmen_medis_ranap', $id)
-                ->orWhere('asesmen_medis_ranap', $id)
-                ->first();
+        } catch (\Exception $e) {
+            $asesmen = RmeAsesmen::findOrFail($id);
         }
 
         $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
@@ -340,6 +351,7 @@ class AsesmenPengkajianAwalMedis extends Controller
 
     public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
+
         $request->validate([
             'tanggal' => 'required|date',
             'jam_masuk' => 'required',
@@ -352,57 +364,62 @@ class AsesmenPengkajianAwalMedis extends Controller
             'skala_nyeri' => 'nullable|numeric|min:0|max:10',
         ]);
 
-        $asesmenMedis = RmeAsesmenMedisRanap::findOrFail($id);
 
         DB::beginTransaction();
         try {
             $tanggal = \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d');
             $jam = \Carbon\Carbon::createFromFormat('H:i', $request->jam_masuk)->format('H:i:s');
 
-            if ($asesmenMedis->id_asesmen) {
-                RmeAsesmen::where('id', $asesmenMedis->id_asesmen)->update([
-                    'user_id' => Auth::id(),
-                    'waktu_asesmen' => now(),
-                ]);
-            }
+            $asesmen = RmeAsesmen::findOrFail($id);
+            $asesmen->kd_pasien = $request->kd_pasien;
+            $asesmen->kd_unit = $request->kd_unit;
+            $asesmen->tgl_masuk = $request->tgl_masuk;
+            $asesmen->urut_masuk = $request->urut_masuk;
+            $asesmen->user_id = Auth::id();
+            $asesmen->waktu_asesmen = now();
+            $asesmen->kategori = 1;
+            $asesmen->sub_kategori = 1;
+            $asesmen->save();
 
             // Update main assessment record
-            $asesmenMedis->update([
-                'user_edit' => Auth::id(),
-                'tanggal' => $tanggal,
-                'jam' => $jam,
-                'keluhan_utama' => $request->keluhan_utama,
-                'riwayat_penyakit_sekarang' => $request->riwayat_penyakit_sekarang,
-                'riwayat_penyakit_terdahulu' => $request->riwayat_penyakit_terdahulu,
-                'riwayat_penyakit_keluarga' => $request->riwayat_penyakit_keluarga,
-                'riwayat_penggunaan_obat' => $request->riwayat_penggunaan_obat,
-                'sistole' => $request->sistole,
-                'diastole' => $request->diastole,
-                'respirasi' => $request->respirasi,
-                'suhu' => $request->suhu,
-                'nadi' => $request->nadi,
-                'skala_nyeri_nilai' => $request->skala_nyeri,
-                'paru_prognosis' => $request->paru_prognosis,
-                'diagnosis_banding' => $request->diagnosis_banding,
-                'diagnosis_kerja' => $request->diagnosis_kerja,
-                'rencana_pengobatan' => $request->rencana_pengobatan,
-                'diagnosis_medis' => $request->diagnosis_medis,
-                'usia_lanjut' => $request->usia_lanjut,
-                'hambatan_mobilisasi' => $request->hambatan_mobilisasi,
-                'penggunaan_media_berkelanjutan' => $request->penggunaan_media_berkelanjutan,
-                'ketergantungan_aktivitas' => $request->ketergantungan_aktivitas,
-                'rencana_pulang_khusus' => $request->rencana_pulang_khusus,
-                'rencana_lama_perawatan' => $request->rencana_lama_perawatan,
-                'rencana_tgl_pulang' => $request->rencana_tgl_pulang,
-                'kesimpulan_planing' => $request->kesimpulan_planing,
-                'alergis' => $request->alergis,
+            $asesmen->asesmenMedisRanap()->updateOrCreate(
+            ['id_asesmen' => $asesmen->id],
+            [
+                    'user_edit' => Auth::id(),
+                    'tanggal' => $tanggal,
+                    'jam' => $jam,
+                    'keluhan_utama' => $request->keluhan_utama,
+                    'riwayat_penyakit_sekarang' => $request->riwayat_penyakit_sekarang,
+                    'riwayat_penyakit_terdahulu' => $request->riwayat_penyakit_terdahulu,
+                    'riwayat_penyakit_keluarga' => $request->riwayat_penyakit_keluarga,
+                    'riwayat_penggunaan_obat' => $request->riwayat_penggunaan_obat,
+                    'sistole' => $request->sistole,
+                    'diastole' => $request->diastole,
+                    'respirasi' => $request->respirasi,
+                    'suhu' => $request->suhu,
+                    'nadi' => $request->nadi,
+                    'skala_nyeri_nilai' => $request->skala_nyeri,
+                    'paru_prognosis' => $request->paru_prognosis,
+                    'diagnosis_banding' => $request->diagnosis_banding,
+                    'diagnosis_kerja' => $request->diagnosis_kerja,
+                    'rencana_pengobatan' => $request->rencana_pengobatan,
+                    'diagnosis_medis' => $request->diagnosis_medis,
+                    'usia_lanjut' => $request->usia_lanjut,
+                    'hambatan_mobilisasi' => $request->hambatan_mobilisasi,
+                    'penggunaan_media_berkelanjutan' => $request->penggunaan_media_berkelanjutan,
+                    'ketergantungan_aktivitas' => $request->ketergantungan_aktivitas,
+                    'rencana_pulang_khusus' => $request->rencana_pulang_khusus,
+                    'rencana_lama_perawatan' => $request->rencana_lama_perawatan,
+                    'rencana_tgl_pulang' => $request->rencana_tgl_pulang,
+                    'kesimpulan_planing' => $request->kesimpulan_planing,
+                    'alergis' => $request->alergis,
             ]);
 
             $foreignKeyColumn = 'id_asesmen_medis_ranap';
 
             // Update or create physical examination record
-            RmeAsesmenMedisRanapFisik::updateOrCreate(
-                [$foreignKeyColumn => $asesmenMedis->id],
+            $asesmen->asesmenMedisRanapFisik()->updateOrCreate(
+                ['id_asesmen' => $asesmen->id],
                 [
                     'pengkajian_kepala' => $request->pengkajian_kepala ?? 1,
                     'pengkajian_kepala_keterangan' => $request->pengkajian_kepala_keterangan,
@@ -441,7 +458,6 @@ class AsesmenPengkajianAwalMedis extends Controller
                 'kd_pasien' => $kd_pasien,
                 'tgl_masuk' => $tgl_masuk,
                 'urut_masuk' => $urut_masuk,
-                'id' => $asesmenMedis->id
             ])->with('success', 'Asesmen pengkajian awal medis berhasil diperbarui.');
 
         } catch (\Exception $e) {
