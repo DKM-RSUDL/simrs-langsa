@@ -134,11 +134,11 @@ class KonsultasiController extends Controller
             ->first();
 
         $diagnosis = json_decode($asesmen->diagnosis, true);
-        $asesmenCreate = implode(',', $diagnosis);
+        $asesmenCreate = implode(',', $diagnosis ?? []);
 
         $subjectiveCreate = $asesmen->anamnesis;
 
-        $vitalSign = json_decode($asesmen->vital_sign, true);
+        $vitalSign = json_decode($asesmen->vital_sign ?? '{}', true);
 
         $backgroundCreate = '';
 
