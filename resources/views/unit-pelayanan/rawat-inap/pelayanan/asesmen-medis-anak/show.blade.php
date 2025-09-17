@@ -42,10 +42,10 @@
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
                                     <div class="d-flex gap-3" style="width: 100%;">
-                                        <input type="date" class="form-control" name="tanggal"
-                                        value="{{ $asesmen->tanggal ? date('Y-m-d', strtotime($asesmen->tanggal)) : date('Y-m-d') }}" disabled>
-                                        <input type="time" class="form-control" name="jam_masuk"
-                                        value="{{ $asesmen->jam_masuk ? \Carbon\Carbon::parse($asesmen->jam_masuk)->format('H:i') : date('H:i') }}" disabled>
+                                        <input disabled type="date" class="form-control" name="tanggal"
+                                        value="{{ $asesmen->asesmenMedisAnak->tanggal ? date('Y-m-d', strtotime($asesmen->asesmenMedisAnak->tanggal)) : date('Y-m-d') }}">
+                                        <input disabled type="time" class="form-control" name="jam_masuk"
+                                        value="{{ $asesmen->asesmenMedisAnak->jam_masuk ? \Carbon\Carbon::parse($asesmen->asesmenMedisAnak->jam_masuk)->format('H:i') : date('H:i') }}">
                                     </div>
                                 </div>
                             </div>
@@ -60,25 +60,25 @@
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Keluhan Utama</label>
                                     <textarea class="form-control" name="keluhan_utama" rows="3"
-                                        placeholder="Keluhan utama pasien" disabled>{{ $asesmen->keluhan_utama ?? '' }}</textarea>
+                                        placeholder="Keluhan utama pasien" disabled>{{ $asesmen->asesmenMedisAnak->keluhan_utama ?? '' }}</textarea>
                                 </div>
 
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Riwayat penyakit terdahulu</label>
                                     <textarea class="form-control" name="riwayat_penyakit_terdahulu" rows="4"
-                                        placeholder="Riwayat penyakit terdahulu" disabled>{{ $asesmen->riwayat_penyakit_terdahulu ?? '' }}</textarea>
+                                        placeholder="Riwayat penyakit terdahulu" disabled>{{ $asesmen->asesmenMedisAnak->riwayat_penyakit_terdahulu ?? '' }}</textarea>
                                 </div>
 
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Riwayat penyakit dalam keluarga</label>
                                     <textarea class="form-control" name="riwayat_penyakit_keluarga" rows="4"
-                                        placeholder="Riwayat penyakit dalam keluarga" disabled>{{ $asesmen->riwayat_penyakit_keluarga ?? '' }}</textarea>
+                                        placeholder="Riwayat penyakit dalam keluarga" disabled>{{ $asesmen->asesmenMedisAnak->riwayat_penyakit_keluarga ?? '' }}</textarea>
                                 </div>
 
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Keadaan umum</label>
                                     <textarea class="form-control" name="riwayat_penyakit_sekarang" rows="4"
-                                        placeholder="Riwayat penyakit sekarang" disabled>{{ $asesmen->riwayat_penyakit_sekarang ?? '' }}</textarea>
+                                        placeholder="Riwayat penyakit sekarang" disabled>{{ $asesmen->asesmenMedisAnak->riwayat_penyakit_sekarang ?? '' }}</textarea>
                                 </div>
                             </div>
 
@@ -86,7 +86,7 @@
                                 <h5 class="section-title">3. Riwayat Penggunaan Obat</h5>
 
                                 <input type="hidden" name="riwayat_penggunaan_obat" id="riwayatObatData"
-                                    value="{{ old('riwayat_penggunaan_obat', isset($asesmen) && $asesmen->riwayat_penggunaan_obat ? (is_array($asesmen->riwayat_penggunaan_obat) ? json_encode($asesmen->riwayat_penggunaan_obat) : $asesmen->riwayat_penggunaan_obat) : '[]') }}">
+                                    value="{{ old('riwayat_penggunaan_obat', isset($asesmen->asesmenMedisAnak) && $asesmen->asesmenMedisAnak->riwayat_penggunaan_obat ? (is_array($asesmen->asesmenMedisAnak->riwayat_penggunaan_obat) ? json_encode($asesmen->asesmenMedisAnak->riwayat_penggunaan_obat) : $asesmen->asesmenMedisAnak->riwayat_penggunaan_obat) : '[]') }}">
 
                                 <div class="table-responsive">
                                     <table class="table" id="createRiwayatObatTable">
@@ -139,12 +139,12 @@
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Kesadaran</label>
                                     <select class="form-select" name="kesadaran" disabled>
-                                        <option value="" {{ old('kesadaran', $asesmen->kesadaran ?? '') === '' ? 'selected' : '' }} disabled>--Pilih--</option>
-                                        <option value="Compos Mentis" {{ old('kesadaran', $asesmen->kesadaran ?? '') === 'Compos Mentis' ? 'selected' : '' }}>Compos Mentis</option>
-                                        <option value="Apatis" {{ old('kesadaran', $asesmen->kesadaran ?? '') === 'Apatis' ? 'selected' : '' }}>Apatis</option>
-                                        <option value="Sopor" {{ old('kesadaran', $asesmen->kesadaran ?? '') === 'Sopor' ? 'selected' : '' }}>Sopor</option>
-                                        <option value="Coma" {{ old('kesadaran', $asesmen->kesadaran ?? '') === 'Coma' ? 'selected' : '' }}>Coma</option>
-                                        <option value="Somnolen" {{ old('kesadaran', $asesmen->kesadaran ?? '') === 'Somnolen' ? 'selected' : '' }}>Somnolen</option>
+                                        <option value="" {{ old('kesadaran', $asesmen->asesmenMedisAnak->kesadaran ?? '') === '' ? 'selected' : '' }} disabled>--Pilih--</option>
+                                        <option value="Compos Mentis" {{ old('kesadaran', $asesmen->asesmenMedisAnak->kesadaran ?? '') === 'Compos Mentis' ? 'selected' : '' }}>Compos Mentis</option>
+                                        <option value="Apatis" {{ old('kesadaran', $asesmen->asesmenMedisAnak->kesadaran ?? '') === 'Apatis' ? 'selected' : '' }}>Apatis</option>
+                                        <option value="Sopor" {{ old('kesadaran', $asesmen->asesmenMedisAnak->kesadaran ?? '') === 'Sopor' ? 'selected' : '' }}>Sopor</option>
+                                        <option value="Coma" {{ old('kesadaran', $asesmen->asesmenMedisAnak->kesadaran ?? '') === 'Coma' ? 'selected' : '' }}>Coma</option>
+                                        <option value="Somnolen" {{ old('kesadaran', $asesmen->asesmenMedisAnak->kesadaran ?? '') === 'Somnolen' ? 'selected' : '' }}>Somnolen</option>
                                     </select>
                                 </div>
 
@@ -154,7 +154,7 @@
                                         @php
                                             // Ambil data GCS dari database
                                             $gcsValue = '';
-                                            if (isset($asesmen) && $asesmen) {
+                                            if (isset($asesmen->asesmenMedisAnak) && $asesmen->asesmenMedisAnak) {
                                                 // Periksa apakah vital_sign sudah array atau masih string JSON
                                                 $vitalSigns = is_array($asesmen->vital_sign)
                                                     ? $asesmen->vital_sign
@@ -184,40 +184,40 @@
                                         <div class="flex-grow-1">
                                             <label class="form-label">Sistole</label>
                                             <input type="number" class="form-control" name="sistole"
-                                                placeholder="Sistole" value="{{ $asesmen->sistole ?? '' }}" disabled>
+                                                placeholder="Sistole" value="{{ $asesmen->asesmenMedisAnak->sistole ?? '' }}" disabled>
                                         </div>
 
                                         <div class="flex-grow-1">
                                             <label class="form-label">Diastole</label>
                                             <input type="number" class="form-control" name="diastole"
-                                                placeholder="Diastole" value="{{ $asesmen->diastole ?? '' }}" disabled>
+                                                placeholder="Diastole" value="{{ $asesmen->asesmenMedisAnak->diastole ?? '' }}" disabled>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Nadi (x/menit)</label>
                                     <input type="number" class="form-control" name="nadi"
-                                        placeholder="Nadi" value="{{ $asesmen->nadi ?? '' }}" disabled>
+                                        placeholder="Nadi" value="{{ $asesmen->asesmenMedisAnak->nadi ?? '' }}" disabled>
                                 </div>
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Suhu (C)</label>
                                     <input type="text" class="form-control" name="suhu"
-                                        placeholder="Suhu" value="{{ $asesmen->suhu ?? '' }}" disabled>
+                                        placeholder="Suhu" value="{{ $asesmen->asesmenMedisAnak->suhu ?? '' }}" disabled>
                                 </div>
                                 <div class="form-group">
                                     <label style="min-width: 200px;">RR (x/menit)</label>
                                     <input type="number" class="form-control" name="rr"
-                                        placeholder="rr" value="{{ $asesmen->rr ?? '' }}" disabled>
+                                        placeholder="rr" value="{{ $asesmen->asesmenMedisAnak->rr ?? '' }}" disabled>
                                 </div>
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Berat Badan Kg</label>
                                     <input type="number" class="form-control" name="berat_badan"
-                                        placeholder="Berat Badan" value="{{ $asesmen->berat_badan ?? '' }}" disabled>
+                                        placeholder="Berat Badan" value="{{ $asesmen->asesmenMedisAnak->berat_badan ?? '' }}" disabled>
                                 </div>
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Tinggi Badan Cm</label>
                                     <input type="number" class="form-control" name="tinggi_badan"
-                                        placeholder="Tinggi Badan" value="{{ $asesmen->tinggi_badan ?? '' }}" disabled>
+                                        placeholder="Tinggi Badan" value="{{ $asesmen->asesmenMedisAnak->tinggi_badan ?? '' }}" disabled>
                                 </div>
 
                             </div>
@@ -228,7 +228,7 @@
                             <div class="card-body">
                                 @php
                                     // Ambil data asesmen fisik
-                                    $fisik = $asesmen->asesmenMedisAnakFisik ?? new \App\Models\RmeAsesmenMedisAnakFisik();
+                                    $fisik = $asesmen->asesmenMedisAnakFisik;
 
                                     // Parse JSON untuk field kulit dan kuku
                                     $kulit = $fisik->kulit ?? [];

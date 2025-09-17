@@ -489,6 +489,14 @@ class RmeAsesmen extends Model
     {
         return $this->hasOne(RmeAsesmenMedisAnak::class, 'id_asesmen', 'id');
     }
+    public function asesmenMedisAnakFisik()
+    {
+        return $this->hasOne(RmeAsesmenMedisAnakFisik::class, 'id_asesmen', 'id');
+    }
+    public function asesmenMedisAnakDtl()
+    {
+        return $this->hasOne(RmeAsesmenMedisAnakDtl::class, 'id_asesmen', 'id');
+    }
 
     // asesmen medis Neonatologi
     public function asesmenMedisNeonatologi()
