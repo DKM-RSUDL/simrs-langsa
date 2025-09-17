@@ -133,10 +133,10 @@ class KonsultasiController extends Controller
             ->orderBy('id', 'DESC')
             ->first();
 
-        $diagnosis = json_decode($asesmen->diagnosis, true);
+        $diagnosis = json_decode($asesmen->diagnosis ?? '{}', true);
         $asesmenCreate = implode(',', $diagnosis ?? []);
 
-        $subjectiveCreate = $asesmen->anamnesis;
+        $subjectiveCreate = $asesmen->anamnesis ?? '';
 
         $vitalSign = json_decode($asesmen->vital_sign ?? '{}', true);
 
