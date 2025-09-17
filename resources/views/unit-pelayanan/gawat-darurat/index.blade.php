@@ -309,6 +309,8 @@
                                             </button>
 
                                             <ul class="dropdown-menu shadow-lg">
+                                                <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/ubah-pasien">Ubah Data Pasien</a></li>
+
                                                 <li><a class="dropdown-item m-1 btn-foto-triase" href="#" data-kasir="${row.kd_kasir}" data-transaksi="${row.no_transaksi}">Ubah Foto Triase</a></li>
 
                                                 <li class="dropdown-submenu">

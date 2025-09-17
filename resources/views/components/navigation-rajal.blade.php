@@ -269,6 +269,26 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
+        [
+            'icon' => 'tools.png',
+            'label' => 'L. Rehab Medik',
+            'link' => route('rawat-jalan.layanan-rehab-medik.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
+        [
+            'icon' => 'tools.png',
+            'label' => 'KFR Rehab Medik',
+            'link' => route('rawat-jalan.tindakan-rehab-medik.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
     ];
 
 @endphp

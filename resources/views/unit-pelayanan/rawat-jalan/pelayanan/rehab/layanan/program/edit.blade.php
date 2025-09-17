@@ -22,9 +22,10 @@
             </a>
 
             <form
-                action="{{ route('rehab-medis.pelayanan.layanan.program.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                action="{{ route('rawat-jalan.layanan-rehab-medik.program.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($program->id)]) }}"
                 method="post">
                 @csrf
+                @method('put')
 
                 <div class="d-flex justify-content-center">
                     <div class="card w-100 h-100">
@@ -38,9 +39,9 @@
                                 <label style="max-width: 200px;">Waktu pelayanan</label>
                                 <div class="d-flex">
                                     <input type="date" name="tgl_pelayanan" class="form-control me-3"
-                                        value="{{ date('Y-m-d') }}">
+                                        value="{{ date('Y-m-d', strtotime($program->tgl_pelayanan)) }}">
                                     <input type="time" name="jam_pelayanan" class="form-control"
-                                        value="{{ date('H:i') }}">
+                                        value="{{ date('H:i', strtotime($program->jam_pelayanan)) }}">
                                 </div>
                             </div>
 
@@ -57,7 +58,17 @@
                             </div>
 
                             <div class="w-50 mt-3 rounded-2 p-2" id="program-container">
-
+                                @foreach ($program->detail as $item)
+                                    <div
+                                        class="d-flex justify-content-between border-bottom border-secondary align-items-center mb-3">
+                                        <p class="fw-bold text-primary m-0">{{ $item->produk->deskripsi }}</p>
+                                        <input type="hidden" name="program[]"
+                                            value='{"kd_produk" : "{{ $item->kd_produk }}", "tarif" : "{{ $item->tarif }}", "tgl_berlaku" : "{{ date('Y-m-d', strtotime($item->tgl_berlaku)) }}"}'>
+                                        <button type="button" class="btn-del-list text-danger border-0">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                @endforeach
                             </div>
 
                             <!-- Form Actions -->

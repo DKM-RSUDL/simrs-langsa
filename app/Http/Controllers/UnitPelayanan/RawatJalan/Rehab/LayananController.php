@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan;
+namespace App\Http\Controllers\UnitPelayanan\RawatJalan\Rehab;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
@@ -18,15 +18,12 @@ use Illuminate\Support\Facades\Validator;
 
 class LayananController extends Controller
 {
-    private $kdUnitDef_;
-
     public function __construct()
     {
-        $this->middleware('can:read unit-pelayanan/rehab-medis');
-        $this->kdUnitDef_ = 74;
+        $this->middleware('can:read unit-pelayanan/rawat-jalan');
     }
 
-    public function index(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -35,7 +32,7 @@ class LayananController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -55,29 +52,29 @@ class LayananController extends Controller
 
         $layanan = RmeRehabMedikLayanan::with(['userCreate'])
             ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $this->kdUnitDef_)
+            ->where('kd_unit', $kd_unit)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->get();
 
         $programs = RmeRehabMedikProgram::with(['detail'])
             ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $this->kdUnitDef_)
+            ->where('kd_unit', $kd_unit)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->get();
 
         $tindakan = RmeRehabMedikTindakan::with(['karyawan'])
             ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $this->kdUnitDef_)
+            ->where('kd_unit', $kd_unit)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->get();
 
-        return view('unit-pelayanan.rehab-medis.pelayanan.layanan.index', compact('dataMedis', 'layanan', 'programs', 'tindakan'));
+        return view('unit-pelayanan.rawat-jalan.pelayanan.rehab.layanan.index', compact('dataMedis', 'layanan', 'programs', 'tindakan'));
     }
 
-    public function create($kd_pasien, $tgl_masuk, $urut_masuk)
+    public function create($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -86,7 +83,7 @@ class LayananController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -104,10 +101,10 @@ class LayananController extends Controller
             abort(404, 'Data not found');
         }
 
-        return view('unit-pelayanan.rehab-medis.pelayanan.layanan.pelayanan-medis.create', compact('dataMedis'));
+        return view('unit-pelayanan.rawat-jalan.pelayanan.rehab.layanan.pelayanan-medis.create', compact('dataMedis'));
     }
 
-    public function store($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         DB::beginTransaction();
 
@@ -119,7 +116,7 @@ class LayananController extends Controller
                     $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                 })
-                ->where('kunjungan.kd_unit', $this->kdUnitDef_)
+                ->where('kunjungan.kd_unit', $kd_unit)
                 ->where('kunjungan.kd_pasien', $kd_pasien)
                 ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                 ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -132,7 +129,7 @@ class LayananController extends Controller
             // store
             $layanan = new RmeRehabMedikLayanan();
             $layanan->kd_pasien             = $kd_pasien;
-            $layanan->kd_unit               = $this->kdUnitDef_;
+            $layanan->kd_unit               = $kd_unit;
             $layanan->tgl_masuk             = $tgl_masuk;
             $layanan->urut_masuk            = $urut_masuk;
             $layanan->tgl_pelayanan         = $request->tgl_pelayanan;
@@ -145,6 +142,8 @@ class LayananController extends Controller
             $layanan->tatalaksana           = $request->tatalaksana;
             $layanan->suspek_penyakit       = $request->suspek_penyakit;
             $layanan->suspek_penyakit_ket   = $request->suspek_penyakit_ket;
+            $layanan->anjuran               = $request->anjuran;
+            $layanan->evaluasi              = $request->evaluasi;
             $layanan->diagnosa              = $request->diagnosa;
             $layanan->permintaan_terapi     = $request->permintaan_terapi;
             $layanan->user_create           = Auth::id();
@@ -152,14 +151,14 @@ class LayananController extends Controller
 
 
             DB::commit();
-            return to_route('rehab-medis.pelayanan.layanan', [$kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Layanan berhasil ditambah !');
+            return to_route('rawat-jalan.layanan-rehab-medik.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Layanan berhasil ditambah !');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
         }
     }
 
-    public function edit($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -168,7 +167,7 @@ class LayananController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -190,10 +189,10 @@ class LayananController extends Controller
 
         if (empty($layanan)) abort(404, 'Data layanan tidak ditemukan !');
 
-        return view('unit-pelayanan.rehab-medis.pelayanan.layanan.pelayanan-medis.edit', compact('dataMedis', 'layanan'));
+        return view('unit-pelayanan.rawat-jalan.pelayanan.rehab.layanan.pelayanan-medis.edit', compact('dataMedis', 'layanan'));
     }
 
-    public function update($kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt, Request $request)
+    public function update($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt, Request $request)
     {
         DB::beginTransaction();
 
@@ -205,7 +204,7 @@ class LayananController extends Controller
                     $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                 })
-                ->where('kunjungan.kd_unit', $this->kdUnitDef_)
+                ->where('kunjungan.kd_unit', $kd_unit)
                 ->where('kunjungan.kd_pasien', $kd_pasien)
                 ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                 ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -229,6 +228,8 @@ class LayananController extends Controller
             $layanan->tatalaksana           = $request->tatalaksana;
             $layanan->suspek_penyakit       = $request->suspek_penyakit;
             $layanan->suspek_penyakit_ket   = $request->suspek_penyakit_ket;
+            $layanan->anjuran              = $request->anjuran;
+            $layanan->evaluasi              = $request->evaluasi;
             $layanan->diagnosa              = $request->diagnosa;
             $layanan->permintaan_terapi     = $request->permintaan_terapi;
             $layanan->user_edit             = Auth::id();
@@ -236,14 +237,14 @@ class LayananController extends Controller
 
 
             DB::commit();
-            return to_route('rehab-medis.pelayanan.layanan', [$kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Layanan berhasil diubah !');
+            return to_route('rawat-jalan.layanan-rehab-medik.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Layanan berhasil diubah !');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
         }
     }
 
-    public function show($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -252,7 +253,7 @@ class LayananController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -274,10 +275,10 @@ class LayananController extends Controller
         $layanan = RmeRehabMedikLayanan::find($id);
         if (empty($layanan)) abort(404, 'Data layanan tidak ditemukan !');
 
-        return view('unit-pelayanan.rehab-medis.pelayanan.layanan.pelayanan-medis.show', compact('dataMedis', 'layanan'));
+        return view('unit-pelayanan.rawat-jalan.pelayanan.rehab.layanan.pelayanan-medis.show', compact('dataMedis', 'layanan'));
     }
 
-    public function destroy($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    public function destroy($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         DB::beginTransaction();
 
@@ -290,7 +291,7 @@ class LayananController extends Controller
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                 })
                 ->where('kunjungan.kd_pasien', $kd_pasien)
-                ->where('kunjungan.kd_unit', $this->kdUnitDef_)
+                ->where('kunjungan.kd_unit', $kd_unit)
                 ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                 ->where('kunjungan.urut_masuk', $urut_masuk)
                 ->first();
@@ -335,7 +336,7 @@ class LayananController extends Controller
                 PROGRAM
     ================================*/
 
-    public function createProgram($kd_pasien, $tgl_masuk, $urut_masuk)
+    public function createProgram($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -344,7 +345,7 @@ class LayananController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -400,10 +401,10 @@ class LayananController extends Controller
             ->distinct()
             ->get();
 
-        return view('unit-pelayanan.rehab-medis.pelayanan.layanan.program.create', compact('dataMedis', 'produk'));
+        return view('unit-pelayanan.rawat-jalan.pelayanan.rehab.layanan.program.create', compact('dataMedis', 'produk'));
     }
 
-    public function storeProgram($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    public function storeProgram($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         DB::beginTransaction();
 
@@ -421,7 +422,7 @@ class LayananController extends Controller
                     $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                 })
-                ->where('kunjungan.kd_unit', $this->kdUnitDef_)
+                ->where('kunjungan.kd_unit', $kd_unit)
                 ->where('kunjungan.kd_pasien', $kd_pasien)
                 ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                 ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -441,7 +442,7 @@ class LayananController extends Controller
             // store program
             $program = new RmeRehabMedikProgram();
             $program->kd_pasien     = $kd_pasien;
-            $program->kd_unit       = $this->kdUnitDef_;
+            $program->kd_unit       = $kd_unit;
             $program->tgl_masuk     = $tgl_masuk;
             $program->urut_masuk    = $urut_masuk;
             $program->tgl_pelayanan = $request->tgl_pelayanan;
@@ -464,7 +465,7 @@ class LayananController extends Controller
 
 
             DB::commit();
-            return to_route('rehab-medis.pelayanan.layanan', [$kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Program berhasil ditambah !');
+            return to_route('rawat-jalan.layanan-rehab-medik.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Program berhasil ditambah !');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
@@ -472,7 +473,7 @@ class LayananController extends Controller
     }
 
 
-    public function editProgram($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function editProgram($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -481,7 +482,7 @@ class LayananController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -539,10 +540,10 @@ class LayananController extends Controller
 
         $program = RmeRehabMedikProgram::find($id);
 
-        return view('unit-pelayanan.rehab-medis.pelayanan.layanan.program.edit', compact('dataMedis', 'produk', 'program'));
+        return view('unit-pelayanan.rawat-jalan.pelayanan.rehab.layanan.program.edit', compact('dataMedis', 'produk', 'program'));
     }
 
-    public function updateProgram($kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt, Request $request)
+    public function updateProgram($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt, Request $request)
     {
         DB::beginTransaction();
 
@@ -560,7 +561,7 @@ class LayananController extends Controller
                     $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                 })
-                ->where('kunjungan.kd_unit', $this->kdUnitDef_)
+                ->where('kunjungan.kd_unit', $kd_unit)
                 ->where('kunjungan.kd_pasien', $kd_pasien)
                 ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                 ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -603,7 +604,7 @@ class LayananController extends Controller
 
 
             DB::commit();
-            return to_route('rehab-medis.pelayanan.layanan', [$kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Program berhasil diubah !');
+            return to_route('rawat-jalan.layanan-rehab-medik.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Program berhasil diubah !');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
@@ -611,7 +612,7 @@ class LayananController extends Controller
     }
 
 
-    public function destroyProgram($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    public function destroyProgram($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         DB::beginTransaction();
 
@@ -624,7 +625,7 @@ class LayananController extends Controller
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                 })
                 ->where('kunjungan.kd_pasien', $kd_pasien)
-                ->where('kunjungan.kd_unit', $this->kdUnitDef_)
+                ->where('kunjungan.kd_unit', $kd_unit)
                 ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                 ->where('kunjungan.urut_masuk', $urut_masuk)
                 ->first();

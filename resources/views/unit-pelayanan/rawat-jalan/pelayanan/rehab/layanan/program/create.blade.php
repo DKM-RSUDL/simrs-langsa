@@ -22,7 +22,7 @@
             </a>
 
             <form
-                action="{{ route('rehab-medis.pelayanan.layanan.program.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                action="{{ route('rawat-jalan.layanan-rehab-medik.program.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                 method="post">
                 @csrf
 
