@@ -44,18 +44,17 @@
                     <i class="fas fa-plus me-2"></i>Tambah Asesmen
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                    <li>
-                        <h6 class="dropdown-header"><i class="fas fa-user-nurse me-2"></i>Asesmen Keperawatan</h6>
-                    </li>
                     @canany(['is-admin', 'is-perawat', 'is-bidan'])
+                        <li class="bg-light">
+                            <h6 class="dropdown-header"><i class="fas fa-user-nurse me-2"></i>Asesmen Keperawatan</h6>
+                        </li>
                         <li><a class="custom__dropdown__item"
                                 href="{{ route('rawat-inap.asesmen.keperawatan.umum.create', [
                                     'kd_unit' => request()->route('kd_unit'),
                                     'kd_pasien' => request()->route('kd_pasien'),
                                     'tgl_masuk' => request()->route('tgl_masuk'),
                                     'urut_masuk' => request()->route('urut_masuk'),
-                                ]) }}">Keperawatan
-                                Umum/Dewasa</a>
+                                ]) }}">Umum/Dewasa</a>
                         </li>
                         <li><a class="custom__dropdown__item"
                                 href="{{ route('rawat-inap.asesmen.keperawatan.anak.index', [
@@ -65,17 +64,45 @@
                                     'urut_masuk' => request()->route('urut_masuk'),
                                 ]) }}">Anak</a>
                         </li>
+                        <li><a class="custom__dropdown__item"
+                                href="{{ route('rawat-inap.asesmen.keperawatan.perinatology.index', [
+                                    'kd_unit' => request()->route('kd_unit'),
+                                    'kd_pasien' => request()->route('kd_pasien'),
+                                    'tgl_masuk' => request()->route('tgl_masuk'),
+                                    'urut_masuk' => request()->route('urut_masuk'),
+                                ]) }}">Perinatology</a>
+                        </li>
+                        <li><a class="custom__dropdown__item"
+                                href="{{ route('rawat-inap.asesmen.keperawatan.terminal.index', [
+                                    'kd_unit' => request()->route('kd_unit'),
+                                    'kd_pasien' => request()->route('kd_pasien'),
+                                    'tgl_masuk' => request()->route('tgl_masuk'),
+                                    'urut_masuk' => request()->route('urut_masuk'),
+                                ]) }}">Terminal</a>
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                     @endcanany
 
+
+                    <li class="bg-light">
+                        <h6 class="dropdown-header"><i class="fas fa-stethoscope me-2"></i>Asesmen Medis</h6>
+                    </li>
+                    {{-- <li><a class="custom__dropdown__item" href="#" data-bs-toggle="modal"
+                            data-bs-target="#detailPasienModal">Medis Umum/Dewasa</a></li> --}}
+
                     <li><a class="custom__dropdown__item"
-                            href="{{ route('rawat-inap.asesmen.keperawatan.perinatology.index', [
+                            href="{{ route('rawat-inap.asesmen.medis.pengkajian-awal-medis.index', [
                                 'kd_unit' => request()->route('kd_unit'),
                                 'kd_pasien' => request()->route('kd_pasien'),
                                 'tgl_masuk' => request()->route('tgl_masuk'),
                                 'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">Perinatology</a>
+                            ]) }}">Awal
+                            Medis</a>
                     </li>
-                     <li><a class="custom__dropdown__item"
+                    <li><a class="custom__dropdown__item"
                             href="{{ route('rawat-inap.asesmen.keperawatan.opthamology.index', [
                                 'kd_unit' => request()->route('kd_unit'),
                                 'kd_pasien' => request()->route('kd_pasien'),
@@ -83,23 +110,6 @@
                                 'urut_masuk' => request()->route('urut_masuk'),
                             ]) }}">Mata/Opthamologi</a>
                     </li>
-
-                    <li><a class="custom__dropdown__item"
-                            href="{{ route('rawat-inap.asesmen.keperawatan.terminal.index', [
-                                'kd_unit' => request()->route('kd_unit'),
-                                'kd_pasien' => request()->route('kd_pasien'),
-                                'tgl_masuk' => request()->route('tgl_masuk'),
-                                'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">Terminal</a>
-                    </li>
-
-
-                    <li>
-                        <h6 class="dropdown-header"><i class="fas fa-stethoscope me-2"></i>Asesmen Medis</h6>
-                    </li>
-                    {{-- <li><a class="custom__dropdown__item" href="#" data-bs-toggle="modal"
-                            data-bs-target="#detailPasienModal">Medis Umum/Dewasa</a></li> --}}
-
                     <li><a class="custom__dropdown__item"
                             href="{{ route('rawat-inap.asesmen.medis.medis-anak.index', [
                                 'kd_unit' => request()->route('kd_unit'),
@@ -114,7 +124,7 @@
                                 'kd_pasien' => request()->route('kd_pasien'),
                                 'tgl_masuk' => request()->route('tgl_masuk'),
                                 'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">Obstetri/Maternitas</a>
+                            ]) }}">Obstetrik</a>
                     </li>
                     <li><a class="custom__dropdown__item"
                             href="{{ route('rawat-inap.asesmen.medis.tht.index', [
@@ -172,15 +182,6 @@
                                 'tgl_masuk' => request()->route('tgl_masuk'),
                                 'urut_masuk' => request()->route('urut_masuk'),
                             ]) }}">Geriatri</a>
-                    </li>
-                    <li><a class="custom__dropdown__item"
-                            href="{{ route('rawat-inap.asesmen.medis.pengkajian-awal-medis.index', [
-                                'kd_unit' => request()->route('kd_unit'),
-                                'kd_pasien' => request()->route('kd_pasien'),
-                                'tgl_masuk' => request()->route('tgl_masuk'),
-                                'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">Pengkajian
-                            Awal Medis</a>
                     </li>
                     <li><a class="custom__dropdown__item"
                             href="{{ route('rawat-inap.asesmen.medis.medis-neonatologi.index', [
