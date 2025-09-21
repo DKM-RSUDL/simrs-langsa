@@ -60,7 +60,7 @@ class FarmasiController extends Controller
 
         // dd($riwayatObatHariIni);
 
-        $dokters = Dokter::all();
+        $dokters = Dokter::where('status', 1)->get();
 
         return view(
             'unit-pelayanan.rawat-inap.pelayanan.farmasi.index',

@@ -1,3 +1,12 @@
+@push('css')
+    <style>
+        trix-toolbar {
+            display: none;
+        }
+    </style>
+@endpush
+
+
 <div class="modal fade" id="addKonsulModal" tabindex="-1" aria-labelledby="addKonsulModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -87,9 +96,11 @@
 
                             <div class="form-group mt-3">
                                 <label for="instruksi" class="fw-bold text-primary">Instruksi Dokter Spesialis</label>
-                                <label for="" class="form-label text-dark">Tuliskan instruksi dengan TBAK (Tulis
+                                <label class="form-label text-dark">Tuliskan instruksi dengan TBAK (Tulis
                                     instruksi, bacakan kembali untuk konfirmasi)</label>
-                                <textarea name="instruksi" id="instruksi" class="form-control" rows="5"></textarea>
+                                {{-- <textarea name="instruksi" id="instruksi" class="form-control" rows="5"></textarea> --}}
+                                <input id="instruksi" type="hidden" name="instruksi">
+                                <trix-editor input="instruksi"></trix-editor>
                             </div>
                         </div>
                     </div>
@@ -201,7 +212,9 @@
                                 <label for="instruksi" class="fw-bold text-primary">Instruksi Dokter Spesialis</label>
                                 <label for="" class="form-label text-dark">Tuliskan instruksi dengan TBAK
                                     (Tulis instruksi, bacakan kembali untuk konfirmasi)</label>
-                                <textarea name="instruksi" id="instruksi" class="form-control" rows="5"></textarea>
+                                {{-- <textarea name="instruksi" id="instruksi" class="form-control" rows="5"></textarea> --}}
+                                <input id="instruksi-edit" type="hidden" name="instruksi">
+                                <trix-editor input="instruksi-edit"></trix-editor>
                             </div>
                         </div>
                     </div>
