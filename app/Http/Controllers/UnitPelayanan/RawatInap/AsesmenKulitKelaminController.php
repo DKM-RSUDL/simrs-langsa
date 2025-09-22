@@ -146,6 +146,7 @@ class AsesmenKulitKelaminController extends Controller
             $dataKulitKelamin->respirasi = $request->respirasi;
             $dataKulitKelamin->nadi = $request->nadi;
             $dataKulitKelamin->site_marking_data = $request->site_marking_data;
+            $dataKulitKelamin->rencana_pengobatan = $request->rencana_pengobatan;
             $dataKulitKelamin->save();
 
             //Simpan Diagnosa ke Master
@@ -205,7 +206,7 @@ class AsesmenKulitKelaminController extends Controller
 
                 // Simpan data alergi baru
                 foreach ($alergiData as $alergi) {
-                    // Skip data yang sudah ada di database (is_existing = true) 
+                    // Skip data yang sudah ada di database (is_existing = true)
                     // kecuali jika ingin update
                     RmeAlergiPasien::create([
                         'kd_pasien' => $kd_pasien,
@@ -372,6 +373,8 @@ class AsesmenKulitKelaminController extends Controller
 
         $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
 
+        $satsetPrognosis = SatsetPrognosis::all();
+
         // Ambil data asesmen
         $asesmen = RmeAsesmen::where('id', $id) // Gunakan ID spesifik
             ->where('kd_pasien', $kd_pasien)
@@ -438,6 +441,7 @@ class AsesmenKulitKelaminController extends Controller
             'terapeutik',
             'edukasi',
             'kolaborasi',
+            'satsetPrognosis',
             'riwayatPenggunaanObat',
             'riwayatKesehatanKeluarga',
             'siteMarkingData',
@@ -604,6 +608,7 @@ class AsesmenKulitKelaminController extends Controller
             $dataKulitKelamin->respirasi = $request->respirasi;
             $dataKulitKelamin->nadi = $request->nadi;
             $dataKulitKelamin->site_marking_data = $request->site_marking_data;
+            $dataKulitKelamin->rencana_pengobatan = $request->rencana_pengobatan;
             $dataKulitKelamin->save();
 
             // Update Diagnosa ke Master (sama seperti store)
@@ -749,5 +754,4 @@ class AsesmenKulitKelaminController extends Controller
             return redirect()->back()->with('error', 'Gagal memperbarui data asesmen: ' . $e->getMessage());
         }
     }
-
 }

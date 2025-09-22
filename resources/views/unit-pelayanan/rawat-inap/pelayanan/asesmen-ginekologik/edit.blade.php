@@ -62,13 +62,14 @@
                         </div>
 
                         {{-- FORM ASESMEN MEDIS GINEKOLOGIK --}}
-                        <form method="POST" enctype="multipart/form-data" action="{{ route('rawat-inap.asesmen.medis.ginekologik.update', [
-        'kd_unit' => request()->route('kd_unit'),
-        'kd_pasien' => request()->route('kd_pasien'),
-        'tgl_masuk' => request()->route('tgl_masuk'),
-        'urut_masuk' => request()->route('urut_masuk'),
-        'id' => $asesmen->id
-    ]) }}">
+                        <form method="POST" enctype="multipart/form-data"
+                            action="{{ route('rawat-inap.asesmen.medis.ginekologik.update', [
+                                'kd_unit' => request()->route('kd_unit'),
+                                'kd_pasien' => request()->route('kd_pasien'),
+                                'tgl_masuk' => request()->route('tgl_masuk'),
+                                'urut_masuk' => request()->route('urut_masuk'),
+                                'id' => $asesmen->id,
+                            ]) }}">
                             @csrf
                             @method('PUT')
                             <div class="px-3">
@@ -91,10 +92,18 @@
                                             <label style="min-width: 200px;">Kondisi Masuk</label>
                                             <select class="form-select" name="kondisi_masuk">
                                                 <option selected disabled>Pilih</option>
-                                                <option value="Mandiri" {{ ($asesmen->rmeAsesmenGinekologik->kondisi_masuk ?? '') == 'Mandiri' ? 'selected' : '' }}>Mandiri</option>
-                                                <option value="Jalan Kaki" {{ ($asesmen->rmeAsesmenGinekologik->kondisi_masuk ?? '') == 'Jalan Kaki' ? 'selected' : '' }}>Jalan Kaki</option>
-                                                <option value="Kursi Roda" {{ ($asesmen->rmeAsesmenGinekologik->kondisi_masuk ?? '') == 'Kursi Roda' ? 'selected' : '' }}>Kursi Roda</option>
-                                                <option value="Brankar" {{ ($asesmen->rmeAsesmenGinekologik->kondisi_masuk ?? '') == 'Brankar' ? 'selected' : '' }}>Brankar</option>
+                                                <option value="Mandiri"
+                                                    {{ ($asesmen->rmeAsesmenGinekologik->kondisi_masuk ?? '') == 'Mandiri' ? 'selected' : '' }}>
+                                                    Mandiri</option>
+                                                <option value="Jalan Kaki"
+                                                    {{ ($asesmen->rmeAsesmenGinekologik->kondisi_masuk ?? '') == 'Jalan Kaki' ? 'selected' : '' }}>
+                                                    Jalan Kaki</option>
+                                                <option value="Kursi Roda"
+                                                    {{ ($asesmen->rmeAsesmenGinekologik->kondisi_masuk ?? '') == 'Kursi Roda' ? 'selected' : '' }}>
+                                                    Kursi Roda</option>
+                                                <option value="Brankar"
+                                                    {{ ($asesmen->rmeAsesmenGinekologik->kondisi_masuk ?? '') == 'Brankar' ? 'selected' : '' }}>
+                                                    Brankar</option>
                                             </select>
                                         </div>
 
@@ -113,24 +122,24 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>G</label>
-                                                    <input type="number" class="form-control" name="gravida" placeholder="0"
-                                                        min="0" max="20"
+                                                    <input type="number" class="form-control" name="gravida"
+                                                        placeholder="0" min="0" max="20"
                                                         value="{{ $asesmen->rmeAsesmenGinekologik->gravida ?? '' }}">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>P</label>
-                                                    <input type="number" class="form-control" name="para" placeholder="0"
-                                                        min="0" max="20"
+                                                    <input type="number" class="form-control" name="para"
+                                                        placeholder="0" min="0" max="20"
                                                         value="{{ $asesmen->rmeAsesmenGinekologik->para ?? '' }}">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>A</label>
-                                                    <input type="number" class="form-control" name="abortus" placeholder="0"
-                                                        min="0" max="20"
+                                                    <input type="number" class="form-control" name="abortus"
+                                                        placeholder="0" min="0" max="20"
                                                         value="{{ $asesmen->rmeAsesmenGinekologik->abortus ?? '' }}">
                                                 </div>
                                             </div>
@@ -171,7 +180,8 @@
                                                 <!-- HPHT -->
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">HPHT</label>
-                                                    <input type="date" class="form-control" name="hpht" id="hpht"
+                                                    <input type="date" class="form-control" name="hpht"
+                                                        id="hpht"
                                                         value="{{ $asesmen->rmeAsesmenGinekologik->hpht ?? date('Y-m-d') }}"
                                                         onchange="hitungUsiaKehamilan()">
                                                 </div>
@@ -182,8 +192,9 @@
                                                     <div class="row g-2">
                                                         <div class="col-6">
                                                             <div class="input-group">
-                                                                <input type="number" class="form-control" name="usia_minggu"
-                                                                    id="usiaMinggu" placeholder="0" min="0" max="42"
+                                                                <input type="number" class="form-control"
+                                                                    name="usia_minggu" id="usiaMinggu" placeholder="0"
+                                                                    min="0" max="42"
                                                                     value="{{ $asesmen->rmeAsesmenGinekologik->usia_minggu ?? '' }}"
                                                                     readonly>
                                                                 <span class="input-group-text">Minggu</span>
@@ -191,8 +202,9 @@
                                                         </div>
                                                         <div class="col-6">
                                                             <div class="input-group">
-                                                                <input type="number" class="form-control" name="usia_hari"
-                                                                    id="usiaHari" placeholder="0" min="0" max="6"
+                                                                <input type="number" class="form-control"
+                                                                    name="usia_hari" id="usiaHari" placeholder="0"
+                                                                    min="0" max="6"
                                                                     value="{{ $asesmen->rmeAsesmenGinekologik->usia_hari ?? '' }}"
                                                                     readonly>
                                                                 <span class="input-group-text">Hari</span>
@@ -228,9 +240,15 @@
                                                     <label class="form-label">Dengan Suami Sekarang</label>
                                                     <div class="input-group">
                                                         <select class="form-select" name="tahun">
-                                                            <option disabled {{ empty($asesmen->rmeAsesmenGinekologik->tahun) ? 'selected' : '' }}>Pilih</option>
-                                                            <option value="bulan" {{ ($asesmen->rmeAsesmenGinekologik->tahun ?? '') == 'bulan' ? 'selected' : '' }}>Bulan</option>
-                                                            <option value="tahun" {{ ($asesmen->rmeAsesmenGinekologik->tahun ?? '') == 'tahun' ? 'selected' : '' }}>Tahun</option>
+                                                            <option disabled
+                                                                {{ empty($asesmen->rmeAsesmenGinekologik->tahun) ? 'selected' : '' }}>
+                                                                Pilih</option>
+                                                            <option value="bulan"
+                                                                {{ ($asesmen->rmeAsesmenGinekologik->tahun ?? '') == 'bulan' ? 'selected' : '' }}>
+                                                                Bulan</option>
+                                                            <option value="tahun"
+                                                                {{ ($asesmen->rmeAsesmenGinekologik->tahun ?? '') == 'tahun' ? 'selected' : '' }}>
+                                                                Tahun</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -252,7 +270,8 @@
                                         <h5 class="section-title">4. Riwayat Obstetrik</h5>
 
                                         <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <button type="button" class="btn btn-sm btn-primary" id="openObstetrikModal">
+                                            <button type="button" class="btn btn-sm btn-primary"
+                                                id="openObstetrikModal">
                                                 <i class="fas fa-plus"></i> Tambah Riwayat Obstetrik
                                             </button>
                                             <small class="text-muted">Total: <span id="totalObstetrik">0</span>
@@ -301,12 +320,14 @@
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Sistole</label>
-                                                    <input type="number" class="form-control" name="tekanan_darah_sistole"
+                                                    <input type="number" class="form-control"
+                                                        name="tekanan_darah_sistole"
                                                         value="{{ $asesmen->rmeAsesmenGinekologikTandaVital->tekanan_darah_sistole ?? '' }}">
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Diastole</label>
-                                                    <input type="number" class="form-control" name="tekanan_darah_diastole"
+                                                    <input type="number" class="form-control"
+                                                        name="tekanan_darah_diastole"
                                                         value="{{ $asesmen->rmeAsesmenGinekologikTandaVital->tekanan_darah_diastole ?? '' }}">
                                                 </div>
                                             </div>
@@ -359,14 +380,27 @@
                                                     <span class="fw-medium">Kesadaran</span>
                                                 </div>
                                                 <div class="col-10">
-                                                    <select class="form-select" name="paru_kesadaran" style="width: 200px;">
-                                                        <option value="" {{ empty($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_kesadaran) ? 'selected' : '' }}>--pilih--</option>
-                                                        <option value="Compos Mentis" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_kesadaran ?? '') == 'Compos Mentis' ? 'selected' : '' }}>Compos Mentis
+                                                    <select class="form-select" name="paru_kesadaran"
+                                                        style="width: 200px;">
+                                                        <option value=""
+                                                            {{ empty($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_kesadaran) ? 'selected' : '' }}>
+                                                            --pilih--</option>
+                                                        <option value="Compos Mentis"
+                                                            {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_kesadaran ?? '') == 'Compos Mentis' ? 'selected' : '' }}>
+                                                            Compos Mentis
                                                         </option>
-                                                        <option value="Apatis" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_kesadaran ?? '') == 'Apatis' ? 'selected' : '' }}>Apatis</option>
-                                                        <option value="Sopor" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_kesadaran ?? '') == 'Sopor' ? 'selected' : '' }}>Sopor</option>
-                                                        <option value="Coma" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_kesadaran ?? '') == 'Coma' ? 'selected' : '' }}>Coma</option>
-                                                        <option value="Somnolen" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_kesadaran ?? '') == 'Somnolen' ? 'selected' : '' }}>Somnolen</option>
+                                                        <option value="Apatis"
+                                                            {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_kesadaran ?? '') == 'Apatis' ? 'selected' : '' }}>
+                                                            Apatis</option>
+                                                        <option value="Sopor"
+                                                            {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_kesadaran ?? '') == 'Sopor' ? 'selected' : '' }}>
+                                                            Sopor</option>
+                                                        <option value="Coma"
+                                                            {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_kesadaran ?? '') == 'Coma' ? 'selected' : '' }}>
+                                                            Coma</option>
+                                                        <option value="Somnolen"
+                                                            {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_kesadaran ?? '') == 'Somnolen' ? 'selected' : '' }}>
+                                                            Somnolen</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -380,20 +414,23 @@
                                                     <div class="d-flex gap-3 align-items-center">
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="kepala"
-                                                                value="1" id="kepala_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kepala ?? 1) == 1 ? 'checked' : '' }}>
+                                                                value="1" id="kepala_normal"
+                                                                {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kepala ?? 1) == 1 ? 'checked' : '' }}>
                                                             <label class="form-check-label"
                                                                 for="kepala_normal">Normal</label>
                                                         </div>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="kepala"
-                                                                value="0" id="kepala_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kepala ?? 1) == 0 ? 'checked' : '' }}>
+                                                                value="0" id="kepala_abnormal"
+                                                                {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kepala ?? 1) == 0 ? 'checked' : '' }}>
                                                             <label class="form-check-label"
                                                                 for="kepala_abnormal">Abnormal:</label>
                                                         </div>
-                                                        <input type="text" class="form-control" name="kepala_keterangan"
-                                                            id="kepala_keterangan"
+                                                        <input type="text" class="form-control"
+                                                            name="kepala_keterangan" id="kepala_keterangan"
                                                             value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kepala_keterangan ?? '' }}"
-                                                            placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kepala ?? 1) == 1 ? 'disabled' : '' }}>
+                                                            placeholder="Keterangan..."
+                                                            {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kepala ?? 1) == 1 ? 'disabled' : '' }}>
                                                     </div>
                                                 </div>
                                             </div>
@@ -407,20 +444,23 @@
                                                     <div class="d-flex gap-3 align-items-center">
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="hidung"
-                                                                value="1" id="hidung_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hidung ?? 1) == 1 ? 'checked' : '' }}>
+                                                                value="1" id="hidung_normal"
+                                                                {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hidung ?? 1) == 1 ? 'checked' : '' }}>
                                                             <label class="form-check-label"
                                                                 for="hidung_normal">Normal</label>
                                                         </div>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="hidung"
-                                                                value="0" id="hidung_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hidung ?? 1) == 0 ? 'checked' : '' }}>
+                                                                value="0" id="hidung_abnormal"
+                                                                {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hidung ?? 1) == 0 ? 'checked' : '' }}>
                                                             <label class="form-check-label"
                                                                 for="hidung_abnormal">Abnormal:</label>
                                                         </div>
-                                                        <input type="text" class="form-control" name="hidung_keterangan"
-                                                            id="hidung_keterangan"
+                                                        <input type="text" class="form-control"
+                                                            name="hidung_keterangan" id="hidung_keterangan"
                                                             value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hidung_keterangan ?? '' }}"
-                                                            placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hidung ?? 1) == 1 ? 'disabled' : '' }}>
+                                                            placeholder="Keterangan..."
+                                                            {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hidung ?? 1) == 1 ? 'disabled' : '' }}>
                                                     </div>
                                                 </div>
                                             </div>
@@ -434,19 +474,23 @@
                                                     <div class="d-flex gap-3 align-items-center">
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="mata"
-                                                                value="1" id="mata_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mata ?? 1) == 1 ? 'checked' : '' }}>
-                                                            <label class="form-check-label" for="mata_normal">Normal</label>
+                                                                value="1" id="mata_normal"
+                                                                {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mata ?? 1) == 1 ? 'checked' : '' }}>
+                                                            <label class="form-check-label"
+                                                                for="mata_normal">Normal</label>
                                                         </div>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="mata"
-                                                                value="0" id="mata_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mata ?? 1) == 0 ? 'checked' : '' }}>
+                                                                value="0" id="mata_abnormal"
+                                                                {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mata ?? 1) == 0 ? 'checked' : '' }}>
                                                             <label class="form-check-label"
                                                                 for="mata_abnormal">Abnormal:</label>
                                                         </div>
                                                         <input type="text" class="form-control" name="mata_keterangan"
                                                             id="mata_keterangan"
                                                             value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mata_keterangan ?? '' }}"
-                                                            placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mata ?? 1) == 1 ? 'disabled' : '' }}>
+                                                            placeholder="Keterangan..."
+                                                            {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mata ?? 1) == 1 ? 'disabled' : '' }}>
                                                     </div>
                                                 </div>
                                             </div>
@@ -460,20 +504,23 @@
                                                     <div class="d-flex gap-3 align-items-center">
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="leher"
-                                                                value="1" id="leher_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->leher ?? 1) == 1 ? 'checked' : '' }}>
+                                                                value="1" id="leher_normal"
+                                                                {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->leher ?? 1) == 1 ? 'checked' : '' }}>
                                                             <label class="form-check-label"
                                                                 for="leher_normal">Normal</label>
                                                         </div>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="leher"
-                                                                value="0" id="leher_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->leher ?? 1) == 0 ? 'checked' : '' }}>
+                                                                value="0" id="leher_abnormal"
+                                                                {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->leher ?? 1) == 0 ? 'checked' : '' }}>
                                                             <label class="form-check-label"
                                                                 for="leher_abnormal">Abnormal:</label>
                                                         </div>
-                                                        <input type="text" class="form-control" name="leher_keterangan"
-                                                            id="leher_keterangan"
+                                                        <input type="text" class="form-control"
+                                                            name="leher_keterangan" id="leher_keterangan"
                                                             value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->leher_keterangan ?? '' }}"
-                                                            placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->leher ?? 1) == 1 ? 'disabled' : '' }}>
+                                                            placeholder="Keterangan..."
+                                                            {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->leher ?? 1) == 1 ? 'disabled' : '' }}>
                                                     </div>
                                                 </div>
                                             </div>
@@ -486,21 +533,25 @@
                                                 <div class="col-10">
                                                     <div class="d-flex gap-3 align-items-center">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="tenggorokan"
-                                                                value="1" id="tenggorokan_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->tenggorokan ?? 1) == 1 ? 'checked' : '' }}>
+                                                            <input class="form-check-input" type="radio"
+                                                                name="tenggorokan" value="1" id="tenggorokan_normal"
+                                                                {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->tenggorokan ?? 1) == 1 ? 'checked' : '' }}>
                                                             <label class="form-check-label"
                                                                 for="tenggorokan_normal">Normal</label>
                                                         </div>
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="tenggorokan"
-                                                                value="0" id="tenggorokan_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->tenggorokan ?? 1) == 0 ? 'checked' : '' }}>
+                                                            <input class="form-check-input" type="radio"
+                                                                name="tenggorokan" value="0"
+                                                                id="tenggorokan_abnormal"
+                                                                {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->tenggorokan ?? 1) == 0 ? 'checked' : '' }}>
                                                             <label class="form-check-label"
                                                                 for="tenggorokan_abnormal">Abnormal:</label>
                                                         </div>
                                                         <input type="text" class="form-control"
                                                             name="tenggorokan_keterangan" id="tenggorokan_keterangan"
                                                             value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->tenggorokan_keterangan ?? '' }}"
-                                                            placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->tenggorokan ?? 1) == 1 ? 'disabled' : '' }}>
+                                                            placeholder="Keterangan..."
+                                                            {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->tenggorokan ?? 1) == 1 ? 'disabled' : '' }}>
                                                     </div>
                                                 </div>
                                             </div>
@@ -520,20 +571,24 @@
                                                             <div class="d-flex gap-3 align-items-center">
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
-                                                                        name="jantung" value="1" id="jantung_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->jantung ?? 1) == 1 ? 'checked' : '' }}>
+                                                                        name="jantung" value="1" id="jantung_normal"
+                                                                        {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->jantung ?? 1) == 1 ? 'checked' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="jantung_normal">Normal</label>
                                                                 </div>
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
-                                                                        name="jantung" value="0" id="jantung_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->jantung ?? 1) == 0 ? 'checked' : '' }}>
+                                                                        name="jantung" value="0"
+                                                                        id="jantung_abnormal"
+                                                                        {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->jantung ?? 1) == 0 ? 'checked' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="jantung_abnormal">Abnormal:</label>
                                                                 </div>
                                                                 <input type="text" class="form-control"
                                                                     name="jantung_keterangan" id="jantung_keterangan"
                                                                     value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->jantung_keterangan ?? '' }}"
-                                                                    placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->jantung ?? 1) == 1 ? 'disabled' : '' }}>
+                                                                    placeholder="Keterangan..."
+                                                                    {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->jantung ?? 1) == 1 ? 'disabled' : '' }}>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -545,21 +600,24 @@
                                                         <div class="col-10">
                                                             <div class="d-flex gap-3 align-items-center">
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="radio" name="paru"
-                                                                        value="1" id="paru_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru ?? 1) == 1 ? 'checked' : '' }}>
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="paru" value="1" id="paru_normal"
+                                                                        {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru ?? 1) == 1 ? 'checked' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="paru_normal">Normal</label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="radio" name="paru"
-                                                                        value="0" id="paru_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru ?? 1) == 0 ? 'checked' : '' }}>
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="paru" value="0" id="paru_abnormal"
+                                                                        {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru ?? 1) == 0 ? 'checked' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="paru_abnormal">Abnormal:</label>
                                                                 </div>
                                                                 <input type="text" class="form-control"
                                                                     name="paru_keterangan" id="paru_keterangan"
                                                                     value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_keterangan ?? '' }}"
-                                                                    placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru ?? 1) == 1 ? 'disabled' : '' }}>
+                                                                    placeholder="Keterangan..."
+                                                                    {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru ?? 1) == 1 ? 'disabled' : '' }}>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -580,21 +638,24 @@
                                                         <div class="col-10">
                                                             <div class="d-flex gap-3 align-items-center">
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="radio" name="hati"
-                                                                        value="1" id="hati_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hati ?? 1) == 1 ? 'checked' : '' }}>
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="hati" value="1" id="hati_normal"
+                                                                        {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hati ?? 1) == 1 ? 'checked' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="hati_normal">Normal</label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="radio" name="hati"
-                                                                        value="0" id="hati_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hati ?? 1) == 0 ? 'checked' : '' }}>
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="hati" value="0" id="hati_abnormal"
+                                                                        {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hati ?? 1) == 0 ? 'checked' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="hati_abnormal">Abnormal:</label>
                                                                 </div>
                                                                 <input type="text" class="form-control"
                                                                     name="hati_keterangan" id="hati_keterangan"
                                                                     value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hati_keterangan ?? '' }}"
-                                                                    placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hati ?? 1) == 1 ? 'disabled' : '' }}>
+                                                                    placeholder="Keterangan..."
+                                                                    {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hati ?? 1) == 1 ? 'disabled' : '' }}>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -607,20 +668,23 @@
                                                             <div class="d-flex gap-3 align-items-center">
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
-                                                                        name="limpa" value="1" id="limpa_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->limpa ?? 1) == 1 ? 'checked' : '' }}>
+                                                                        name="limpa" value="1" id="limpa_normal"
+                                                                        {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->limpa ?? 1) == 1 ? 'checked' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="limpa_normal">Normal</label>
                                                                 </div>
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
-                                                                        name="limpa" value="0" id="limpa_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->limpa ?? 1) == 0 ? 'checked' : '' }}>
+                                                                        name="limpa" value="0" id="limpa_abnormal"
+                                                                        {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->limpa ?? 1) == 0 ? 'checked' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="limpa_abnormal">Abnormal:</label>
                                                                 </div>
                                                                 <input type="text" class="form-control"
                                                                     name="limpa_keterangan" id="limpa_keterangan"
                                                                     value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->limpa_keterangan ?? '' }}"
-                                                                    placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->limpa ?? 1) == 1 ? 'disabled' : '' }}>
+                                                                    placeholder="Keterangan..."
+                                                                    {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->limpa ?? 1) == 1 ? 'disabled' : '' }}>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -636,20 +700,23 @@
                                                     <div class="d-flex gap-3 align-items-center">
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="kulit"
-                                                                value="1" id="kulit_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kulit ?? 1) == 1 ? 'checked' : '' }}>
+                                                                value="1" id="kulit_normal"
+                                                                {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kulit ?? 1) == 1 ? 'checked' : '' }}>
                                                             <label class="form-check-label"
                                                                 for="kulit_normal">Normal</label>
                                                         </div>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="kulit"
-                                                                value="0" id="kulit_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kulit ?? 1) == 0 ? 'checked' : '' }}>
+                                                                value="0" id="kulit_abnormal"
+                                                                {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kulit ?? 1) == 0 ? 'checked' : '' }}>
                                                             <label class="form-check-label"
                                                                 for="kulit_abnormal">Abnormal:</label>
                                                         </div>
-                                                        <input type="text" class="form-control" name="kulit_keterangan"
-                                                            id="kulit_keterangan"
+                                                        <input type="text" class="form-control"
+                                                            name="kulit_keterangan" id="kulit_keterangan"
                                                             value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kulit_keterangan ?? '' }}"
-                                                            placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kulit ?? 1) == 1 ? 'disabled' : '' }}>
+                                                            placeholder="Keterangan..."
+                                                            {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kulit ?? 1) == 1 ? 'disabled' : '' }}>
                                                     </div>
                                                 </div>
                                             </div>
@@ -662,21 +729,24 @@
                                                 <div class="col-10">
                                                     <div class="d-flex gap-3 align-items-center">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="mulut_gigi"
-                                                                value="1" id="mulut_gigi_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mulut_gigi ?? 1) == 1 ? 'checked' : '' }}>
+                                                            <input class="form-check-input" type="radio"
+                                                                name="mulut_gigi" value="1" id="mulut_gigi_normal"
+                                                                {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mulut_gigi ?? 1) == 1 ? 'checked' : '' }}>
                                                             <label class="form-check-label"
                                                                 for="mulut_gigi_normal">Normal</label>
                                                         </div>
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="mulut_gigi"
-                                                                value="0" id="mulut_gigi_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mulut_gigi ?? 1) == 0 ? 'checked' : '' }}>
+                                                            <input class="form-check-input" type="radio"
+                                                                name="mulut_gigi" value="0" id="mulut_gigi_abnormal"
+                                                                {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mulut_gigi ?? 1) == 0 ? 'checked' : '' }}>
                                                             <label class="form-check-label"
                                                                 for="mulut_gigi_abnormal">Abnormal:</label>
                                                         </div>
-                                                        <input type="text" class="form-control" name="mulut_gigi_keterangan"
-                                                            id="mulut_gigi_keterangan"
+                                                        <input type="text" class="form-control"
+                                                            name="mulut_gigi_keterangan" id="mulut_gigi_keterangan"
                                                             value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mulut_gigi_keterangan ?? '' }}"
-                                                            placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mulut_gigi ?? 1) == 1 ? 'disabled' : '' }}>
+                                                            placeholder="Keterangan..."
+                                                            {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mulut_gigi ?? 1) == 1 ? 'disabled' : '' }}>
                                                     </div>
                                                 </div>
                                             </div>
@@ -763,7 +833,9 @@
                                                             <div class="d-flex gap-3">
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
-                                                                        name="edema_atas" id="edema_atas_ada" value="ada" {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->edema_atas ?? '') == 'ada' ? 'checked' : '' }}>
+                                                                        name="edema_atas" id="edema_atas_ada"
+                                                                        value="ada"
+                                                                        {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->edema_atas ?? '') == 'ada' ? 'checked' : '' }}>
                                                                     <label class="form-check-label" for="edema_atas_ada">
                                                                         Ada
                                                                     </label>
@@ -771,8 +843,10 @@
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="edema_atas" id="edema_atas_tidak"
-                                                                        value="tidak" {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->edema_atas ?? '') == 'tidak' ? 'checked' : '' }}>
-                                                                    <label class="form-check-label" for="edema_atas_tidak">
+                                                                        value="tidak"
+                                                                        {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->edema_atas ?? '') == 'tidak' ? 'checked' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="edema_atas_tidak">
                                                                         Tidak
                                                                     </label>
                                                                 </div>
@@ -785,15 +859,18 @@
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="varises_atas" id="varises_atas_ada"
-                                                                        value="ada" {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->varises_atas ?? '') == 'ada' ? 'checked' : '' }}>
-                                                                    <label class="form-check-label" for="varises_atas_ada">
+                                                                        value="ada"
+                                                                        {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->varises_atas ?? '') == 'ada' ? 'checked' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="varises_atas_ada">
                                                                         Ada
                                                                     </label>
                                                                 </div>
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="varises_atas" id="varises_atas_tidak"
-                                                                        value="tidak" {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->varises_atas ?? '') == 'tidak' ? 'checked' : '' }}>
+                                                                        value="tidak"
+                                                                        {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->varises_atas ?? '') == 'tidak' ? 'checked' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="varises_atas_tidak">
                                                                         Tidak
@@ -808,7 +885,8 @@
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="refleks_atas" id="refleks_atas_positif"
-                                                                        value="positif" {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->refleks_atas ?? '') == 'positif' ? 'checked' : '' }}>
+                                                                        value="positif"
+                                                                        {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->refleks_atas ?? '') == 'positif' ? 'checked' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="refleks_atas_positif">
                                                                         Positif
@@ -817,7 +895,8 @@
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="refleks_atas" id="refleks_atas_negatif"
-                                                                        value="negatif" {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->refleks_atas ?? '') == 'negatif' ? 'checked' : '' }}>
+                                                                        value="negatif"
+                                                                        {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->refleks_atas ?? '') == 'negatif' ? 'checked' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="refleks_atas_negatif">
                                                                         Negatif
@@ -841,7 +920,8 @@
                                                             <div class="d-flex gap-3">
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
-                                                                        name="edema_bawah" id="edema_bawah_ada" value="ada"
+                                                                        name="edema_bawah" id="edema_bawah_ada"
+                                                                        value="ada"
                                                                         {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->edema_bawah ?? '') == 'ada' ? 'checked' : '' }}>
                                                                     <label class="form-check-label" for="edema_bawah_ada">
                                                                         Ada
@@ -850,8 +930,10 @@
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="edema_bawah" id="edema_bawah_tidak"
-                                                                        value="tidak" {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->edema_bawah ?? '') == 'tidak' ? 'checked' : '' }}>
-                                                                    <label class="form-check-label" for="edema_bawah_tidak">
+                                                                        value="tidak"
+                                                                        {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->edema_bawah ?? '') == 'tidak' ? 'checked' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="edema_bawah_tidak">
                                                                         Tidak
                                                                     </label>
                                                                 </div>
@@ -864,7 +946,8 @@
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="varises_bawah" id="varises_bawah_tidak"
-                                                                        value="tidak" {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->varises_bawah ?? '') == 'tidak' ? 'checked' : '' }}>
+                                                                        value="tidak"
+                                                                        {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->varises_bawah ?? '') == 'tidak' ? 'checked' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="varises_bawah_tidak">
                                                                         Tidak
@@ -879,7 +962,8 @@
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="refleks_bawah" id="refleks_bawah_positif"
-                                                                        value="positif" {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->refleks_bawah ?? '') == 'positif' ? 'checked' : '' }}>
+                                                                        value="positif"
+                                                                        {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->refleks_bawah ?? '') == 'positif' ? 'checked' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="refleks_bawah_positif">
                                                                         Positif
@@ -888,7 +972,8 @@
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="refleks_bawah" id="refleks_bawah_negatif"
-                                                                        value="negatif" {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->refleks_bawah ?? '') == 'negatif' ? 'checked' : '' }}>
+                                                                        value="negatif"
+                                                                        {{ ($asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->refleks_bawah ?? '') == 'negatif' ? 'checked' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="refleks_bawah_negatif">
                                                                         Negatif
@@ -929,7 +1014,8 @@
                                                     <div class="card-body">
                                                         <div class="mb-3">
                                                             <label class="form-label fw-semibold">Keadaan Umum</label>
-                                                            <input type="text" class="form-control" name="keadaan_umum"
+                                                            <input type="text" class="form-control"
+                                                                name="keadaan_umum"
                                                                 value="{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->keadaan_umum ?? '' }}"
                                                                 placeholder="Masukkan keadaan umum pasien">
                                                         </div>
@@ -951,24 +1037,21 @@
 
                                                         <div class="mb-3">
                                                             <label class="form-label fw-semibold">Inspekulo</label>
-                                                            <textarea class="form-control" name="inspekulo" rows="4"
-                                                                placeholder="Hasil pemeriksaan inspekulo...">{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->inspekulo ?? '' }}</textarea>
+                                                            <textarea class="form-control" name="inspekulo" rows="4" placeholder="Hasil pemeriksaan inspekulo...">{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->inspekulo ?? '' }}</textarea>
                                                             <small class="text-muted">Pemeriksaan dengan spekulum</small>
                                                         </div>
 
                                                         <div class="mb-3">
                                                             <label class="form-label fw-semibold">VT (Vaginal
                                                                 Toucher)</label>
-                                                            <textarea class="form-control" name="vt" rows="4"
-                                                                placeholder="Hasil pemeriksaan VT/vaginal toucher...">{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->vt ?? '' }}</textarea>
+                                                            <textarea class="form-control" name="vt" rows="4" placeholder="Hasil pemeriksaan VT/vaginal toucher...">{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->vt ?? '' }}</textarea>
                                                             <small class="text-muted">Pemeriksaan dalam per vagina</small>
                                                         </div>
 
                                                         <div class="mb-0">
                                                             <label class="form-label fw-semibold">RT (Rectal
                                                                 Toucher)</label>
-                                                            <textarea class="form-control" name="rt" rows="4"
-                                                                placeholder="Hasil pemeriksaan RT/rectal toucher...">{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->rt ?? '' }}</textarea>
+                                                            <textarea class="form-control" name="rt" rows="4" placeholder="Hasil pemeriksaan RT/rectal toucher...">{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->rt ?? '' }}</textarea>
                                                             <small class="text-muted">Pemeriksaan dalam per rektal</small>
                                                         </div>
                                                     </div>
@@ -995,8 +1078,7 @@
                                         <div class="row mb-4">
                                             <div class="col-12">
                                                 <label class="form-label fw-semibold">2. USG</label>
-                                                <textarea class="form-control" name="usg" rows="6"
-                                                    placeholder="Masukkan hasil pemeriksaan USG...">{{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->usg ?? '' }}</textarea>
+                                                <textarea class="form-control" name="usg" rows="6" placeholder="Masukkan hasil pemeriksaan USG...">{{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->usg ?? '' }}</textarea>
                                                 <small class="text-muted">Hasil USG abdomen, transvaginal, atau USG
                                                     lainnya</small>
                                             </div>
@@ -1023,7 +1105,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="section-separator" id="discharge-planning">
+                                    {{-- <div class="section-separator" id="discharge-planning">
                                         <h5 class="section-title">11. Discharge Planning</h5>
 
                                         <div class="mb-4">
@@ -1131,10 +1213,32 @@
                                             <input type="hidden" id="kesimpulan" name="kesimpulan_planing"
                                                 value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->kesimpulan_planing ?? 'Tidak membutuhkan rencana pulang khusus' }}">
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                     <div class="section-separator" id="diagnosis">
-                                        <h5 class="fw-semibold mb-4">12. Diagnosis</h5>
+                                        <h5 class="fw-semibold mb-4">11. Diagnosis</h5>
+
+                                        <div class="mb-4">
+                                            <label class="text-primary fw-semibold mb-2">Prognosis</label>
+                                            <select class="form-select" name="paru_prognosis">
+                                                <option value="" disabled
+                                                    {{ !old('paru_prognosis', isset($asesmen->rmeAsesmenGinekologik) ? $asesmen->rmeAsesmenGinekologik->paru_prognosis : '')
+                                                        ? 'selected'
+                                                        : '' }}>
+                                                    --Pilih Prognosis--</option>
+                                                @forelse ($satsetPrognosis as $item)
+                                                    <option value="{{ $item->prognosis_id }}"
+                                                        {{ old('paru_prognosis', isset($asesmen->rmeAsesmenGinekologik) ? $asesmen->rmeAsesmenGinekologik->paru_prognosis : '') ==
+                                                        $item->prognosis_id
+                                                            ? 'selected'
+                                                            : '' }}>
+                                                        {{ $item->value ?? 'Field tidak ditemukan' }}
+                                                    </option>
+                                                @empty
+                                                    <option value="" disabled>Tidak ada data</option>
+                                                @endforelse
+                                            </select>
+                                        </div>
 
                                         <!-- Diagnosis Banding -->
                                         <div class="mb-4">
@@ -1194,7 +1298,7 @@
                                     </div>
 
                                     <div class="section-separator" id="implemetasi" style="margin-bottom: 2rem;">
-                                        <h5 class="fw-semibold mb-4">13. Implementasi</h5>
+                                        <h5 class="fw-semibold mb-4">12. Implementasi</h5>
 
                                         <!-- Rencana Penatalaksanaan dan Pengobatan -->
                                         <div class="mb-4">
@@ -1293,31 +1397,11 @@
                                                 value="{{ $asesmen->rmeAsesmenGinekologikDiagnosisImplementasi->kolaborasi ?? '[]' }}">
                                         </div>
 
-                                        <!-- Prognosis Section -->
-                                        <div class="mb-4">
-                                            <label class="text-primary fw-semibold">Prognosis</label>
-                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
-                                                Prognosis yang tidak ditemukan.</small>
-                                            <!-- sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis -->
-                                            <div class="input-group mb-3">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="rencana-input"
-                                                    class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Rencana Penatalaksanaan">
-                                                <span class="input-group-text bg-white" id="add-rencana">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-
-                                            <div id="rencana-list" class="list-group mb-3">
-                                                <!-- Items will be added here dynamically -->
-                                            </div>
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="rencana_penatalaksanaan" name="prognosis"
-                                                value="{{ $asesmen->rmeAsesmenGinekologikDiagnosisImplementasi->prognosis ?? '[]' }}">
+                                        <div class="form-group mb-4">
+                                            <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan
+                                                Pengobatan</label>
+                                            <textarea class="form-control" name="rencana_pengobatan" rows="4"
+                                                placeholder="Rencana Penatalaksanaan Dan Pengobatan">{{ old('rencana_pengobatan', isset($asesmen->rmeAsesmenGinekologik) ? $asesmen->rmeAsesmenGinekologik->rencana_pengobatan : '') }}</textarea>
                                         </div>
                                     </div>
 
@@ -1342,17 +1426,17 @@
 
 @push('js')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Function untuk mengatur warna card berdasarkan selection
             function updateCardStatus() {
                 const cards = document.querySelectorAll('#pemeriksaan-ekstremitas .card');
 
-                cards.forEach(function (card) {
+                cards.forEach(function(card) {
                     const radioButtons = card.querySelectorAll('input[type="radio"]');
                     let hasSelection = false;
                     let hasAbnormal = false;
 
-                    radioButtons.forEach(function (radio) {
+                    radioButtons.forEach(function(radio) {
                         if (radio.checked) {
                             hasSelection = true;
                             // Check jika ada nilai abnormal (ada, positif)
@@ -1378,7 +1462,7 @@
 
             // Add event listeners to all radio buttons
             const allRadios = document.querySelectorAll('#pemeriksaan-ekstremitas input[type="radio"]');
-            allRadios.forEach(function (radio) {
+            allRadios.forEach(function(radio) {
                 radio.addEventListener('change', updateCardStatus);
             });
 
@@ -1391,7 +1475,7 @@
 
                 let incompleteFields = [];
 
-                requiredGroups.forEach(function (groupName) {
+                requiredGroups.forEach(function(groupName) {
                     const checked = document.querySelector(`input[name="${groupName}"]:checked`);
                     if (!checked) {
                         incompleteFields.push(groupName.replace('_', ' ').toUpperCase());
@@ -1441,7 +1525,7 @@
             }
 
             // Update summary on radio change
-            allRadios.forEach(function (radio) {
+            allRadios.forEach(function(radio) {
                 radio.addEventListener('change', updateSummary);
             });
 
@@ -1454,21 +1538,21 @@
 
             // Apply auto-resize to all textareas in ginekologik section
             const textareas = document.querySelectorAll('#status-ginekologik textarea');
-            textareas.forEach(function (textarea) {
+            textareas.forEach(function(textarea) {
                 // Initial resize
                 autoResize(textarea);
 
                 // Add event listener for dynamic resizing
-                textarea.addEventListener('input', function () {
+                textarea.addEventListener('input', function() {
                     autoResize(this);
                 });
 
                 // Add focus effect
-                textarea.addEventListener('focus', function () {
+                textarea.addEventListener('focus', function() {
                     this.parentNode.querySelector('.form-label').classList.add('text-primary');
                 });
 
-                textarea.addEventListener('blur', function () {
+                textarea.addEventListener('blur', function() {
                     this.parentNode.querySelector('.form-label').classList.remove('text-primary');
                 });
             });
@@ -1476,34 +1560,34 @@
             // Function untuk validation
             function validateGinekologik() {
                 const fields = [{
-                    name: 'keadaan_umum',
-                    label: 'Keadaan Umum'
-                },
-                {
-                    name: 'status_ginekologik',
-                    label: 'Status Ginekologik'
-                },
-                {
-                    name: 'pemeriksaan',
-                    label: 'Pemeriksaan'
-                },
-                {
-                    name: 'inspekulo',
-                    label: 'Inspekulo'
-                },
-                {
-                    name: 'vt',
-                    label: 'VT'
-                },
-                {
-                    name: 'rt',
-                    label: 'RT'
-                }
+                        name: 'keadaan_umum',
+                        label: 'Keadaan Umum'
+                    },
+                    {
+                        name: 'status_ginekologik',
+                        label: 'Status Ginekologik'
+                    },
+                    {
+                        name: 'pemeriksaan',
+                        label: 'Pemeriksaan'
+                    },
+                    {
+                        name: 'inspekulo',
+                        label: 'Inspekulo'
+                    },
+                    {
+                        name: 'vt',
+                        label: 'VT'
+                    },
+                    {
+                        name: 'rt',
+                        label: 'RT'
+                    }
                 ];
 
                 let emptyFields = [];
 
-                fields.forEach(function (field) {
+                fields.forEach(function(field) {
                     const element = document.querySelector(`[name="${field.name}"]`);
                     if (element && !element.value.trim()) {
                         emptyFields.push(field.label);
@@ -1518,8 +1602,8 @@
 
             // Add validation indicators
             const inputs = document.querySelectorAll('#status-ginekologik input, #status-ginekologik textarea');
-            inputs.forEach(function (input) {
-                input.addEventListener('input', function () {
+            inputs.forEach(function(input) {
+                input.addEventListener('input', function() {
                     if (this.value.trim()) {
                         this.classList.remove('border-warning');
                         this.classList.add('border-success');
@@ -1558,7 +1642,7 @@
             }
 
             // Add character counters to textareas
-            textareas.forEach(function (textarea) {
+            textareas.forEach(function(textarea) {
                 if (textarea.name !== 'catatan_ginekologik') {
                     addCharCounter(textarea);
                 }
@@ -1569,8 +1653,8 @@
 
             // Auto-capitalize first letter untuk text inputs
             const textInputs = document.querySelectorAll('#status-ginekologik input[type="text"]');
-            textInputs.forEach(function (input) {
-                input.addEventListener('input', function () {
+            textInputs.forEach(function(input) {
+                input.addEventListener('input', function() {
                     let value = this.value;
                     if (value.length > 0) {
                         this.value = value.charAt(0).toUpperCase() + value.slice(1);
@@ -1584,14 +1668,14 @@
         const isEditMode = @json(isset($asesmen->rmeAsesmenGinekologik) && $asesmen->rmeAsesmenGinekologik);
 
         // Set tanggal dan hitung usia kehamilan saat halaman load
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Jika mode edit dan ada data tersimpan
             if (isEditMode) {
                 // Ambil data dari database
-                const savedHpht = '{{ $asesmen->rmeAsesmenGinekologik->hpht ?? "" }}';
-                const savedUsiaMinggu = '{{ $asesmen->rmeAsesmenGinekologik->usia_minggu ?? "" }}';
-                const savedUsiaHari = '{{ $asesmen->rmeAsesmenGinekologik->usia_hari ?? "" }}';
-                const savedUsiaDisplay = '{{ $asesmen->rmeAsesmenGinekologik->usia_kehamilan_display ?? "" }}';
+                const savedHpht = '{{ $asesmen->rmeAsesmenGinekologik->hpht ?? '' }}';
+                const savedUsiaMinggu = '{{ $asesmen->rmeAsesmenGinekologik->usia_minggu ?? '' }}';
+                const savedUsiaHari = '{{ $asesmen->rmeAsesmenGinekologik->usia_hari ?? '' }}';
+                const savedUsiaDisplay = '{{ $asesmen->rmeAsesmenGinekologik->usia_kehamilan_display ?? '' }}';
 
                 if (savedHpht) {
                     document.getElementById('hpht').value = savedHpht;

@@ -170,7 +170,7 @@
                                     <input type="number" class="form-control" name="nadi"
                                         placeholder="Nadi">
                                 </div>
-                                
+
                             </div>
 
                             <!-- 6. Pemeriksaan Fisik -->
@@ -495,40 +495,40 @@
                                                 <!-- Input utama untuk skala nyeri -->
                                                 <input type="number"
                                                     class="form-control @error('skala_nyeri') is-invalid @enderror"
-                                                    name="skala_nyeri" 
+                                                    name="skala_nyeri"
                                                     style="width: 100px;"
-                                                    value="{{ old('skala_nyeri', 0) }}" 
-                                                    min="0" 
+                                                    value="{{ old('skala_nyeri', 0) }}"
+                                                    min="0"
                                                     max="10"
                                                     placeholder="0-10">
-                                                
+
                                                 @error('skala_nyeri')
                                                     <div class="invalid-feedback">
                                                         {{ $message }}
                                                     </div>
                                                 @enderror
-                                                
+
                                                 <!-- Button status nyeri -->
-                                                <button type="button" 
-                                                    class="btn btn-sm btn-success" 
+                                                <button type="button"
+                                                    class="btn btn-sm btn-success"
                                                     id="skalaNyeriBtn"
                                                     style="min-width: 150px;">
                                                     Tidak Nyeri
                                                 </button>
                                             </div>
                                         </div>
-                                        
+
                                         <!-- Hidden input untuk nilai skala nyeri (jika diperlukan backend) -->
-                                        <input type="hidden" 
-                                            name="skala_nyeri_nilai" 
+                                        <input type="hidden"
+                                            name="skala_nyeri_nilai"
                                             value="{{ old('skala_nyeri_nilai', 0) }}">
                                     </div>
-                                    
+
                                     <div class="col-md-6">
                                         <!-- Pain Scale Images - Tampil langsung -->
                                         <div id="wongBakerScale" class="pain-scale-image">
                                             <img src="{{ asset('assets/img/asesmen/asesmen.jpeg') }}"
-                                                alt="Wong Baker Pain Scale" 
+                                                alt="Wong Baker Pain Scale"
                                                 class="img-fluid"
                                                 style="max-width: auto; height: auto;">
                                         </div>
@@ -619,7 +619,7 @@
                             </div>
 
                             <!-- 9. Perencanaan Pulang Pasien -->
-                            <div class="section-separator" id="discharge-planning">
+                            {{-- <div class="section-separator" id="discharge-planning">
                                 <h5 class="section-title">9. Perencanaan Pulang Pasien (Discharge Planning)</h5>
 
                                 <div class="mb-4">
@@ -704,7 +704,7 @@
                                         Reset Discharge Planning
                                     </button>
                                 </div>
-                            </div>
+                            </div> --}}
 
                         </div>
 
@@ -859,7 +859,7 @@
         function updateCheckboxJSON(checkboxClass, hiddenInputId) {
             const checkboxes = document.querySelectorAll('.' + checkboxClass);
             const hiddenInput = document.getElementById(hiddenInputId);
-            
+
             // Cek apakah element ada sebelum diproses
             if (!hiddenInput || checkboxes.length === 0) return;
 
@@ -905,7 +905,7 @@
         // Trigger saat pertama kali load
         const initialValue = parseInt(input.val()) || 0;
         updateButton(initialValue);
-        
+
         // Sinkronkan hidden input dengan input utama
         hiddenInput.val(initialValue);
 
@@ -916,7 +916,7 @@
             // Batasi nilai antara 0-10
             nilai = Math.min(Math.max(nilai, 0), 10);
             $(this).val(nilai);
-            
+
             // Sinkronkan dengan hidden input
             hiddenInput.val(nilai);
 
@@ -930,7 +930,7 @@
             // Batasi nilai antara 0-10
             nilai = Math.min(Math.max(nilai, 0), 10);
             $(this).val(nilai);
-            
+
             // Sinkronkan dengan input utama
             input.val(nilai);
 

@@ -101,8 +101,10 @@
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Tek. Darah (mmHg) :</label>
                                                 <p class="form-control-plaintext border-bottom">
-                                                    Sistole: {{ $asesmen->rmeAsesmenKepOphtamologyFisik->sistole ?? '-' }} mmHg<br>
-                                                    Diastole: {{ $asesmen->rmeAsesmenKepOphtamologyFisik->diastole ?? '-' }} mmHg
+                                                    Sistole: {{ $asesmen->rmeAsesmenKepOphtamologyFisik->sistole ?? '-' }}
+                                                    mmHg<br>
+                                                    Diastole: {{ $asesmen->rmeAsesmenKepOphtamologyFisik->diastole ?? '-' }}
+                                                    mmHg
                                                 </p>
                                             </div>
                                             <div class="mb-3">
@@ -291,7 +293,7 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <h5>4. Pemeriksaan Mata Komprehensif</h5>
-                                        
+
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">RPT :</label>
@@ -318,7 +320,7 @@
                                                 </p>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">TIO TOD :</label>
@@ -361,15 +363,21 @@
                                                     <tbody>
                                                         <tr>
                                                             <td><strong>Oculi Dextra</strong></td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->sph_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->cyl_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->menjadi_oculi_dextra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->sph_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->cyl_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->menjadi_oculi_dextra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td><strong>Oculi Sinistra</strong></td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->sph_oculi_sinistra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->cyl_oculi_sinistra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->menjadi_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->sph_oculi_sinistra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->cyl_oculi_sinistra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->menjadi_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -390,113 +398,157 @@
                                                     <tbody>
                                                         <tr>
                                                             <td>Visus</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->visus_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->visus_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->visus_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->visus_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Koreksi</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->koreksi_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->koreksi_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->koreksi_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->koreksi_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Subyektif</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->subyektif_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->subyektif_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->subyektif_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->subyektif_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Obyektif</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->obyektif_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->obyektif_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->obyektif_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->obyektif_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>TIO</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->tio_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->tio_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->tio_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->tio_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Posisi</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->posisi_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->posisi_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->posisi_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->posisi_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Palpebra</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->palpebra_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->palpebra_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->palpebra_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->palpebra_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Inferior</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->inferior_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->inferior_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->inferior_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->inferior_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Tars Superior</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->tars_superior_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->tars_superior_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->tars_superior_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->tars_superior_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Tars Inferior</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->tars_inferior_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->tars_inferior_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->tars_inferior_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->tars_inferior_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Bulbi</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->bulbi_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->bulbi_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->bulbi_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->bulbi_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Sclera</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->sclera_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->sclera_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->sclera_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->sclera_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Cornea</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->cornea_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->cornea_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->cornea_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->cornea_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Anterior</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->anterior_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->anterior_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->anterior_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->anterior_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Pupil</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->pupil_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->pupil_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->pupil_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->pupil_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Iris</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->iris_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->iris_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->iris_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->iris_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Lensa</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->lensa_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->lensa_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->lensa_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->lensa_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Vitreous</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->vitreous_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->vitreous_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->vitreous_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->vitreous_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Media</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->media_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->media_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->media_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->media_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Papil</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->papil_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->papil_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->papil_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->papil_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Macula</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->macula_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->macula_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->macula_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->macula_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Retina</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->retina_oculi_dextra ?? '-' }}</td>
-                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->retina_oculi_sinistra ?? '-' }}</td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->retina_oculi_dextra ?? '-' }}
+                                                            </td>
+                                                            <td>{{ $asesmen->rmeAsesmenKepOphtamologyKomprehensif->retina_oculi_sinistra ?? '-' }}
+                                                            </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -519,8 +571,8 @@
                                                 <p class="form-control-plaintext border-bottom">
                                                     @php
                                                         $jenisSkala =
-                                                            $asesmen->rmeAsesmenKepOphtamologyStatusNyeri->jenis_skala_nyeri ??
-                                                            '';
+                                                            $asesmen->rmeAsesmenKepOphtamologyStatusNyeri
+                                                                ->jenis_skala_nyeri ?? '';
                                                         $skalaText = '';
                                                         switch ($jenisSkala) {
                                                             case 1:
@@ -578,7 +630,9 @@
                                                 <label class="form-label fw-bold">Jenis Nyeri :</label>
                                                 <p class="form-control-plaintext border-bottom">
                                                     @php
-                                                        $statusNyeri = optional($asesmen->rmeAsesmenKepOphtamologyStatusNyeri);
+                                                        $statusNyeri = optional(
+                                                            $asesmen->rmeAsesmenKepOphtamologyStatusNyeri,
+                                                        );
                                                         $jenisNyeriId = $statusNyeri->jenis_nyeri ?? null;
                                                     @endphp
 
@@ -597,7 +651,9 @@
                                                 <label class="form-label fw-bold">Frekuensi :</label>
                                                 <p class="form-control-plaintext border-bottom">
                                                     @php
-                                                        $statusNyeri = optional($asesmen->rmeAsesmenKepOphtamologyStatusNyeri);
+                                                        $statusNyeri = optional(
+                                                            $asesmen->rmeAsesmenKepOphtamologyStatusNyeri,
+                                                        );
                                                         $frekuensiId = $statusNyeri->frekuensi ?? null;
                                                     @endphp
 
@@ -734,7 +790,8 @@
                                                 <label class="form-label fw-bold">Penyakit Yang Pernah Diderita :</label>
                                                 @php
                                                     $penyakitDiderita = json_decode(
-                                                        $asesmen->rmeAsesmenKepOphtamology->penyakit_yang_diderita ?? '[]',
+                                                        $asesmen->rmeAsesmenKepOphtamology->penyakit_yang_diderita ??
+                                                            '[]',
                                                         true,
                                                     );
                                                 @endphp
@@ -769,7 +826,8 @@
                                                 <label class="form-label fw-bold">Riwayat Kesehatan Keluarga :</label>
                                                 @php
                                                     $riwayatKeluarga = json_decode(
-                                                        $asesmen->rmeAsesmenKepOphtamology->riwayat_penyakit_keluarga ?? '[]',
+                                                        $asesmen->rmeAsesmenKepOphtamology->riwayat_penyakit_keluarga ??
+                                                            '[]',
                                                         true,
                                                     );
                                                 @endphp
@@ -804,7 +862,8 @@
                                                 <label class="form-label fw-bold">Riwayat Penggunaan Obat :</label>
                                                 @php
                                                     $riwayatObat = json_decode(
-                                                        $asesmen->rmeAsesmenKepOphtamology->riwayat_penggunaan_obat ?? '[]',
+                                                        $asesmen->rmeAsesmenKepOphtamology->riwayat_penggunaan_obat ??
+                                                            '[]',
                                                         true,
                                                     );
                                                 @endphp
@@ -849,10 +908,7 @@
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Riwayat Alergi :</label>
                                                 @php
-                                                    $alergis = json_decode(
-                                                        $asesmen->riwayat_alergi ?? '[]',
-                                                        true,
-                                                    );
+                                                    $alergis = json_decode($asesmen->riwayat_alergi ?? '[]', true);
                                                 @endphp
 
                                                 @if (!empty($alergis))
@@ -890,7 +946,7 @@
                             </div>
                         </div>
 
-                        <!-- 8. Discharge Planning -->
+                        {{-- <!-- 8. Discharge Planning -->
                         <div class="tab-pane fade show">
                             <div class="card">
                                 <div class="card-body">
@@ -907,10 +963,7 @@
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Usia Lanjut</label>
                                                 <p class="form-control-plaintext border-bottom">
-                                                    @if(
-                                                        isset($asesmen->rmeAsesmenKepOphtamologyRencanaPulang->usia_lanjut) 
-                                                        && $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->usia_lanjut !== null
-                                                    )
+                                                    @if (isset($asesmen->rmeAsesmenKepOphtamologyRencanaPulang->usia_lanjut) && $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->usia_lanjut !== null)
                                                         {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->usia_lanjut == 0 ? 'Ya' : 'Tidak' }}
                                                     @else
                                                         -
@@ -983,7 +1036,7 @@
                                                     Hari
                                                     @else
                                                     -
-                                                    @endif                                           
+                                                    @endif
                                                 </p>
                                             </div>
                                         </div>
@@ -1010,14 +1063,14 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <!-- 9. Diagnosis -->
                         <div class="tab-pane fade show">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
-                                        <h5>9. Diagnosis</h5>
+                                        <h5>8. Diagnosis</h5>
                                         <div class="col-md-12">
                                             <!-- Diagnosis Banding -->
                                             <div class="mb-4">
@@ -1091,7 +1144,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
-                                        <h5>10. Implementasi</h5>
+                                        <h5>9. Implementasi</h5>
                                         <div class="col-md-12">
                                             <!-- Observasi -->
                                             <div class="mb-4">
@@ -1199,6 +1252,12 @@
                                                         Tidak ada kolaborasi
                                                     </p>
                                                 @endif
+                                            </div>
+                                            <div class="form-group">
+                                                <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan
+                                                    Pengobatan</label>
+                                                <textarea class="form-control" name="rencana_pengobatan" rows="4"
+                                                    placeholder="Rencana Penatalaksanaan Dan Pengobatan" readonly>{{ old('rencana_pengobatan', isset($asesmen->rmeAsesmenKepOphtamology) ? $asesmen->rmeAsesmenKepOphtamology->rencana_pengobatan : '') }}</textarea>
                                             </div>
                                         </div>
                                     </div>

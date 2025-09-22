@@ -23,6 +23,7 @@ use App\Models\RmeMasterImplementasi;
 use App\Models\RmeMenjalar;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
+use App\Models\SatsetPrognosis;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -49,6 +50,7 @@ class AsesmenKepOpthamologyController extends Controller
         $jenisnyeri = RmeJenisNyeri::all();
         $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
         $rmeMasterImplementasi = RmeMasterImplementasi::all();
+        $satsetPrognosis = SatsetPrognosis::all();
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -100,6 +102,7 @@ class AsesmenKepOpthamologyController extends Controller
             'faktorperingan',
             'efeknyeri',
             'jenisnyeri',
+            'satsetPrognosis',
             'rmeMasterDiagnosis',
             'rmeMasterImplementasi',
             'user'
@@ -154,6 +157,7 @@ class AsesmenKepOpthamologyController extends Controller
             $dataOphtamology->penyakit_yang_diderita = $request->penyakit_diderita ?? '[]';
             $dataOphtamology->riwayat_penyakit_keluarga = $request->riwayat_kesehatan_keluarga ?? '[]';
             $dataOphtamology->riwayat_penggunaan_obat = $request->riwayat_penggunaan_obat ?? '[]';
+            $dataOphtamology->paru_prognosis = $request->paru_prognosis;
             $dataOphtamology->save();
 
             //Simpan Diagnosa ke Master
@@ -396,7 +400,7 @@ class AsesmenKepOpthamologyController extends Controller
                 'pemeriksaanFisik.itemFisik'
             ])->findOrFail($id);
 
-            dd($asesmen);
+            // dd($asesmen);
 
             // Mengambil data medis pasien
             $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -444,6 +448,7 @@ class AsesmenKepOpthamologyController extends Controller
             $jenisnyeri = RmeJenisNyeri::all();
             $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
             $rmeMasterImplementasi = RmeMasterImplementasi::all();
+            $satsetPrognosis = SatsetPrognosis::all();
             $user = auth()->user();
 
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-opthamology.show', compact(
@@ -457,6 +462,7 @@ class AsesmenKepOpthamologyController extends Controller
                 'faktorperingan',
                 'efeknyeri',
                 'jenisnyeri',
+                'satsetPrognosis',
                 'rmeMasterDiagnosis',
                 'rmeMasterImplementasi',
                 'user'
@@ -555,6 +561,7 @@ class AsesmenKepOpthamologyController extends Controller
             $jenisnyeri = RmeJenisNyeri::all();
             $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
             $rmeMasterImplementasi = RmeMasterImplementasi::all();
+            $satsetPrognosis = SatsetPrognosis::all();
             $user = auth()->user();
 
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-opthamology.edit', compact(
@@ -570,6 +577,7 @@ class AsesmenKepOpthamologyController extends Controller
                 'jenisnyeri',
                 'rmeMasterDiagnosis',
                 'rmeMasterImplementasi',
+                'satsetPrognosis',
                 'user',
                 'kd_unit',
                 'kd_pasien',
@@ -628,6 +636,7 @@ class AsesmenKepOpthamologyController extends Controller
             $asesmenKepOpthamology->penyakit_yang_diderita = $request->penyakit_diderita ?? '[]';
             $asesmenKepOpthamology->riwayat_penyakit_keluarga = $request->riwayat_kesehatan_keluarga ?? '[]';
             $asesmenKepOpthamology->riwayat_penggunaan_obat = $request->riwayat_penggunaan_obat ?? '[]';
+            $asesmenKepOpthamology->paru_prognosis = $request->paru_prognosis;
             $asesmenKepOpthamology->save();
 
             // Simpan Diagnosa ke Master (opsional, hanya jika ada perubahan baru)

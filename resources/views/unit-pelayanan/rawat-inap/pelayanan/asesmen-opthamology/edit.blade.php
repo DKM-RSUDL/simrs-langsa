@@ -1016,7 +1016,7 @@
                                 </div>
 
                                 {{-- 8. Alergi sectio --}}
-                                <div class="section-separator" id="discharge-planning">
+                                {{-- <div class="section-separator" id="discharge-planning">
                                     <h5 class="section-title">8. Discharge Planning</h5>
 
                                     <div class="mb-4">
@@ -1160,11 +1160,34 @@
                                         <input type="hidden" id="kesimpulan" name="kesimpulan_planing"
                                             value="{{ isset($asesmen->rmeAsesmenKepOphtamologyRencanaPulang) ? $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->kesimpulan : 'Tidak mebutuhkan rencana pulang khusus' }}">
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <!-- 16. Diagnosa -->
                                 <div class="section-separator" id="diagnosis">
-                                    <h5 class="fw-semibold mb-4">9. Diagnosis</h5>
+                                    <h5 class="fw-semibold mb-4">8. Diagnosis</h5>
+                                      <div class="mb-4">
+                                        <label class="text-primary fw-semibold mb-2">Prognosis</label>
+                                    <select class="form-select" name="paru_prognosis">
+                                        <option value="" disabled
+                                            {{ !old('paru_prognosis', isset($asesmen->rmeAsesmenKepOphtamology) ? $asesmen->rmeAsesmenKepOphtamology->paru_prognosis : '')
+                                                ? 'selected'
+                                                : '' }}>
+                                            --Pilih Prognosis--</option>
+                                        @forelse ($satsetPrognosis as $item)
+                                            <option value="{{ $item->prognosis_id }}"
+                                                {{ old(
+                                                    'paru_prognosis',
+                                                    isset($asesmen->rmeAsesmenKepOphtamology) ? $asesmen->rmeAsesmenKepOphtamology->paru_prognosis : '',
+                                                ) == $item->prognosis_id
+                                                    ? 'selected'
+                                                    : '' }}>
+                                                {{ $item->value ?? 'Field tidak ditemukan' }}
+                                            </option>
+                                        @empty
+                                            <option value="" disabled>Tidak ada data</option>
+                                        @endforelse
+                                    </select>
+                                </div>
 
                                     @php
                                         // Parse existing diagnosis data from database
@@ -1239,7 +1262,7 @@
 
                                 <!-- 17. Implementasi -->
                                 <div class="section-separator" style="margin-bottom: 2rem;">
-                                    <h5 class="fw-semibold mb-4">10. Implementasi</h5>
+                                    <h5 class="fw-semibold mb-4">9. Implementasi</h5>
 
                                     @php
                                         // Parse existing implementation data
@@ -1356,8 +1379,16 @@
                                             value="{{ json_encode($implementationData['kolaborasi']) }}">
                                     </div>
 
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan
+                                            Pengobatan</label>
+                                        <textarea class="form-control" name="rencana_pengobatan" rows="4"
+                                            placeholder="Rencana Penatalaksanaan Dan Pengobatan"
+                                            >{{ old('rencana_pengobatan', isset($asesmen->rmeAsesmenKepOphtamology) ? $asesmen->rmeAsesmenKepOphtamology->rencana_pengobatan : '') }}</textarea>
+                                    </div>
+
                                     <!-- Prognosis Section -->
-                                    <div class="mb-4">
+                                    {{-- <div class="mb-4">
                                         <label class="text-primary fw-semibold">Prognosis</label>
                                         <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
                                             Prognosis,
@@ -1379,17 +1410,19 @@
                                         </div>
                                         <input type="hidden" id="prognosis" name="prognosis"
                                             value="{{ json_encode($implementationData['prognosis']) }}">
-                                    </div>
+                                    </div> --}}
                                 </div>
 
                                 <!-- 18. Evaluasi -->
-                                <div class="section-separator" style="margin-bottom: 2rem;" id="evaluasi">
+                                {{-- <div class="section-separator" style="margin-bottom: 2rem;" id="evaluasi">
                                     <h5 class="fw-semibold mb-4">18. Evaluasi</h5>
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Tambah Evaluasi Keperawatan</label>
                                         <textarea class="form-control" name="evaluasi_keperawatan" rows="4" placeholder="Evaluasi Keperawaran">{{ $asesmen->rmeAsesmenKepOphtamology->evaluasi ?? '' }}</textarea>
                                     </div>
-                                </div>
+                                </div> --}}
+
+
 
 
                                 {{-- Final section - Submit button --}}

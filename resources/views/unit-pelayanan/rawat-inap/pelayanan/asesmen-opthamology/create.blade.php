@@ -45,8 +45,10 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
-                                                <input type="date" class="form-control" name="tanggal_masuk" id="tanggal_masuk" value="{{ date('Y-m-d') }}">
-                                                <input type="time" class="form-control" name="jam_masuk" id="jam_masuk" value="{{ date('H:i') }}">
+                                                <input type="date" class="form-control" name="tanggal_masuk"
+                                                    id="tanggal_masuk" value="{{ date('Y-m-d') }}">
+                                                <input type="time" class="form-control" name="jam_masuk" id="jam_masuk"
+                                                    value="{{ date('H:i') }}">
                                             </div>
                                         </div>
 
@@ -875,36 +877,43 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Penyakit Yang Pernah Diderita</label>
                                             <div class="w-100">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3" data-bs-toggle="modal" data-bs-target="#penyakitModal">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
+                                                    data-bs-toggle="modal" data-bs-target="#penyakitModal">
                                                     <i class="ti-plus"></i> Tambah
                                                 </button>
                                                 <div id="selectedPenyakitList" class="d-flex flex-column gap-2">
                                                     <!-- Empty state message -->
-                                                    <div id="emptyState" class="border border-dashed border-secondary rounded p-3 text-center text-muted">
+                                                    <div id="emptyState"
+                                                        class="border border-dashed border-secondary rounded p-3 text-center text-muted">
                                                         <i class="ti-info-circle mb-2"></i>
                                                         <p class="mb-0">Belum ada penyakit yang ditambahkan</p>
                                                     </div>
                                                 </div>
                                                 <!-- Hidden input to store the JSON data -->
-                                                <input type="hidden" name="penyakit_diderita" id="penyakitDideritaInput">
+                                                <input type="hidden" name="penyakit_diderita"
+                                                    id="penyakitDideritaInput">
                                             </div>
                                         </div>
 
-                                         <div class="form-group">
+                                        <div class="form-group">
                                             <label style="min-width: 200px;">Riwayat Kesehatan Keluarga</label>
                                             <div class="w-100">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3" data-bs-toggle="modal" data-bs-target="#riwayatKeluargaModal">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
+                                                    data-bs-toggle="modal" data-bs-target="#riwayatKeluargaModal">
                                                     <i class="ti-plus"></i> Tambah
                                                 </button>
                                                 <div id="selectedRiwayatList" class="d-flex flex-column gap-2">
                                                     <!-- Empty state message -->
-                                                    <div id="emptyStateRiwayat" class="border border-dashed border-secondary rounded p-3 text-center text-muted">
+                                                    <div id="emptyStateRiwayat"
+                                                        class="border border-dashed border-secondary rounded p-3 text-center text-muted">
                                                         <i class="ti-info-circle mb-2"></i>
-                                                        <p class="mb-0">Belum ada riwayat kesehatan keluarga yang ditambahkan.</p>
+                                                        <p class="mb-0">Belum ada riwayat kesehatan keluarga yang
+                                                            ditambahkan.</p>
                                                     </div>
                                                 </div>
                                                 <!-- Hidden input to store the JSON data -->
-                                                <input type="hidden" name="riwayat_kesehatan_keluarga" id="riwayatKesehatanInput">
+                                                <input type="hidden" name="riwayat_kesehatan_keluarga"
+                                                    id="riwayatKesehatanInput">
                                             </div>
                                         </div>
 
@@ -913,10 +922,12 @@
                                     <div class="section-separator" id="riwayatObat">
                                         <h5 class="section-title">6. Riwayat Penggunaan Obat</h5>
 
-                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openObatModal">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
+                                            id="openObatModal">
                                             <i class="ti-plus"></i> Tambah
                                         </button>
-                                        <input type="hidden" name="riwayat_penggunaan_obat" id="riwayatObatData" value="[]">
+                                        <input type="hidden" name="riwayat_penggunaan_obat" id="riwayatObatData"
+                                            value="[]">
                                         <div class="table-responsive">
                                             <table class="table" id="createRiwayatObatTable">
                                                 <thead>
@@ -937,7 +948,8 @@
                                     <div class="section-separator" id="alergi">
                                         <h5 class="section-title">7. Alergi</h5>
 
-                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openAlergiModal">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
+                                            id="openAlergiModal">
                                             <i class="fa fa-plus"></i> Tambah
                                         </button>
                                         <input type="hidden" name="alergis" id="alergisInput">
@@ -959,7 +971,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="section-separator" id="discharge-planning">
+                                    {{-- <div class="section-separator" id="discharge-planning">
                                         <h5 class="section-title">8. Discharge Planning</h5>
 
                                         <div class="mb-4">
@@ -1063,10 +1075,25 @@
                                             </div>
                                             <input type="hidden" id="kesimpulan" name="kesimpulan_planing" value="Tidak mebutuhkan rencana pulang khusus">
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                     <div class="section-separator" id="diagnosis">
-                                        <h5 class="fw-semibold mb-4">9. Diagnosis</h5>
+                                        <h5 class="fw-semibold mb-4">8. Diagnosis</h5>
+
+                                        <div class="mb-4">
+                                            <label class="text-primary fw-semibold">Prognosis</label>
+
+                                            <select class="form-select" name="paru_prognosis">
+                                                <option value="" selected disabled>--Pilih Prognosis--</option>
+                                                @forelse ($satsetPrognosis as $item)
+                                                    <option value="{{ $item->prognosis_id }}">
+                                                        {{ $item->value ?? 'Field tidak ditemukan' }}
+                                                    </option>
+                                                @empty
+                                                    <option value="" disabled>Tidak ada data</option>
+                                                @endforelse
+                                            </select>
+                                        </div>
 
                                         <!-- Diagnosis Banding -->
                                         <div class="mb-4">
@@ -1079,7 +1106,8 @@
                                                 <span class="input-group-text bg-white border-end-0">
                                                     <i class="bi bi-search text-secondary"></i>
                                                 </span>
-                                                <input type="text" id="diagnosis-banding-input" class="form-control border-start-0 ps-0"
+                                                <input type="text" id="diagnosis-banding-input"
+                                                    class="form-control border-start-0 ps-0"
                                                     placeholder="Cari dan tambah Diagnosis Banding">
                                                 <span class="input-group-text bg-white" id="add-diagnosis-banding">
                                                     <i class="bi bi-plus-circle text-primary"></i>
@@ -1091,7 +1119,8 @@
                                             </div>
 
                                             <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="diagnosis_banding" name="diagnosis_banding" value="[]">
+                                            <input type="hidden" id="diagnosis_banding" name="diagnosis_banding"
+                                                value="[]">
                                         </div>
 
                                         <!-- Diagnosis Kerja -->
@@ -1105,7 +1134,8 @@
                                                 <span class="input-group-text bg-white border-end-0">
                                                     <i class="bi bi-search text-secondary"></i>
                                                 </span>
-                                                <input type="text" id="diagnosis-kerja-input" class="form-control border-start-0 ps-0"
+                                                <input type="text" id="diagnosis-kerja-input"
+                                                    class="form-control border-start-0 ps-0"
                                                     placeholder="Cari dan tambah Diagnosis Kerja">
                                                 <span class="input-group-text bg-white" id="add-diagnosis-kerja">
                                                     <i class="bi bi-plus-circle text-primary"></i>
@@ -1117,16 +1147,18 @@
                                             </div>
 
                                             <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja" value="[]">
+                                            <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja"
+                                                value="[]">
                                         </div>
                                     </div>
 
                                     <div class="section-separator" id="implemetasi" style="margin-bottom: 2rem;">
-                                        <h5 class="fw-semibold mb-4">10. Implementasi</h5>
+                                        <h5 class="fw-semibold mb-4">9. Implementasi</h5>
 
                                         <!-- Rencana Penatalaksanaan dan Pengobatan -->
                                         <div class="mb-4">
-                                            <label class="text-primary fw-semibold">Rencana Penatalaksanaan dan Pengobatan</label>
+                                            <label class="text-primary fw-semibold">Rencana Penatalaksanaan dan
+                                                Pengobatan</label>
                                             <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
                                                 rencana, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
                                                 rencana Penatalaksanaan dan Pengobatan kerja yang tidak ditemukan.</small>
@@ -1139,7 +1171,8 @@
                                                 <span class="input-group-text bg-white border-end-0">
                                                     <i class="bi bi-search text-secondary"></i>
                                                 </span>
-                                                <input type="text" id="observasi-input" class="form-control border-start-0 ps-0"
+                                                <input type="text" id="observasi-input"
+                                                    class="form-control border-start-0 ps-0"
                                                     placeholder="Cari dan tambah Observasi">
                                                 <span class="input-group-text bg-white" id="add-observasi">
                                                     <i class="bi bi-plus-circle text-primary"></i>
@@ -1159,7 +1192,8 @@
                                                 <span class="input-group-text bg-white border-end-0">
                                                     <i class="bi bi-search text-secondary"></i>
                                                 </span>
-                                                <input type="text" id="terapeutik-input" class="form-control border-start-0 ps-0"
+                                                <input type="text" id="terapeutik-input"
+                                                    class="form-control border-start-0 ps-0"
                                                     placeholder="Cari dan tambah Terapeutik">
                                                 <span class="input-group-text bg-white" id="add-terapeutik">
                                                     <i class="bi bi-plus-circle text-primary"></i>
@@ -1179,7 +1213,8 @@
                                                 <span class="input-group-text bg-white border-end-0">
                                                     <i class="bi bi-search text-secondary"></i>
                                                 </span>
-                                                <input type="text" id="edukasi-input" class="form-control border-start-0 ps-0"
+                                                <input type="text" id="edukasi-input"
+                                                    class="form-control border-start-0 ps-0"
                                                     placeholder="Cari dan tambah Edukasi">
                                                 <span class="input-group-text bg-white" id="add-edukasi">
                                                     <i class="bi bi-plus-circle text-primary"></i>
@@ -1199,7 +1234,8 @@
                                                 <span class="input-group-text bg-white border-end-0">
                                                     <i class="bi bi-search text-secondary"></i>
                                                 </span>
-                                                <input type="text" id="kolaborasi-input" class="form-control border-start-0 ps-0"
+                                                <input type="text" id="kolaborasi-input"
+                                                    class="form-control border-start-0 ps-0"
                                                     placeholder="Cari dan tambah Kolaborasi">
                                                 <span class="input-group-text bg-white" id="add-kolaborasi">
                                                     <i class="bi bi-plus-circle text-primary"></i>
@@ -1214,32 +1250,16 @@
 
                                         <!-- Kolaborasi Section -->
                                         <div class="mb-4">
-                                            <label class="text-primary fw-semibold">Prognosis</label>
-                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                keterangan
-                                                Prognosis yang tidak ditemukan.</small>
-                                                <!-- sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis -->
-                                            <div class="input-group mb-3">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="rencana-input" class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Rencana Penatalaksanaan">
-                                                <span class="input-group-text bg-white" id="add-rencana">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
+                                            <!-- sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis -->
+                                            <div class="form-group">
+                                                <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan Pengobatan</label>
+                                                <textarea class="form-control" name="rencana_pengobatan" rows="4"
+                                                    placeholder="Rencana Penatalaksanaan Dan Pengobatan"></textarea>
                                             </div>
-
-                                            <div id="rencana-list" class="list-group mb-3">
-                                                <!-- Items will be added here dynamically -->
-                                            </div>
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="rencana_penatalaksanaan" name="prognosis" value="[]">
                                         </div>
                                     </div>
 
-                                    <div class="section-separator" id="implementasi-evaluasi">
+                                    {{-- <div class="section-separator" id="implementasi-evaluasi">
                                         <h5 class="section-title">11. Evaluasi</h5>
 
                                         <div class="mb-4">
@@ -1247,7 +1267,7 @@
                                             <textarea class="form-control" rows="4" name="evaluasi_keperawatan"
                                                 placeholder="Tambah evaluasi keperawatan..."></textarea>
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                     <div class="text-end">
                                         <button type="submit" class="btn btn-primary">Simpan</button>

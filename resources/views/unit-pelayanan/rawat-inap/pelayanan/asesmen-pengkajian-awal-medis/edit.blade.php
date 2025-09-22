@@ -489,7 +489,7 @@
                         </div>
 
                         <!-- 9. Perencanaan Pulang Pasien -->
-                        <div class="section-separator" id="discharge-planning">
+                        {{-- <div class="section-separator" id="discharge-planning">
                             <h5 class="section-title">9. Perencanaan Pulang Pasien (Discharge Planning)</h5>
 
                             <div class="mb-4">
@@ -684,7 +684,7 @@
                                 </button>
                             </div>
                             @endif
-                        </div>
+                        </div> --}}
                     </div>
 
                     <!-- Submit Button -->
