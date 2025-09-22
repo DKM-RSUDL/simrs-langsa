@@ -1088,24 +1088,6 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">Diagnosis Banding :</label>
-                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk
-                                                    mencari
-                                                    diagnosis banding, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                    keterangan diagnosis banding yang tidak ditemukan.</small>
-                                                @if ($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->diagnosis_banding)
-                                                    <ul class="ms-3">
-                                                        @foreach (json_decode($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->diagnosis_banding, true) as $efek)
-                                                            <li>{{ $efek }}</li>
-                                                        @endforeach
-                                                    </ul>
-                                                @else
-                                                    -
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">Diagnosis Kerja :</label>
                                                 <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk
                                                     mencari
@@ -1122,79 +1104,8 @@
                                                 @endif
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- 8. Implementasi -->
-                        <div class="tab-pane fade show">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <h5>8. Implementasi</h5>
-                                        <p>Rencana Penatalaksanaan dan Pengobatan</p>
-                                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                            rencana, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
-                                            rencana Penatalaksanaan dan Pengobatan kerja yang tidak ditemukan.</small>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Observasi :</label>
-                                                @if ($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->observasi)
-                                                    <ul class="ms-3">
-                                                        @foreach (json_decode($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->observasi, true) as $efek)
-                                                            <li>{{ $efek }}</li>
-                                                        @endforeach
-                                                    </ul>
-                                                @else
-                                                    -
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Terapeutik :</label>
-                                                @if ($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->terapeutik)
-                                                    <ul class="ms-3">
-                                                        @foreach (json_decode($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->terapeutik, true) as $efek)
-                                                            <li>{{ $efek }}</li>
-                                                        @endforeach
-                                                    </ul>
-                                                @else
-                                                    -
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Edukasi :</label>
-                                                @if ($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->edukasi)
-                                                    <ul class="ms-3">
-                                                        @foreach (json_decode($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->edukasi, true) as $efek)
-                                                            <li>{{ $efek }}</li>
-                                                        @endforeach
-                                                    </ul>
-                                                @else
-                                                    -
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Kolaborasi :</label>
-                                                @if ($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->kolaborasi)
-                                                    <ul class="ms-3">
-                                                        @foreach (json_decode($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->kolaborasi, true) as $efek)
-                                                            <li>{{ $efek }}</li>
-                                                        @endforeach
-                                                    </ul>
-                                                @else
-                                                    -
-                                                @endif
-                                            </div>
-                                        </div>
+
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan
@@ -1203,51 +1114,13 @@
                                                     placeholder="Rencana Penatalaksanaan Dan Pengobatan" readonly>{{ old('rencana_pengobatan', isset($asesmen->asesmenObstetri) ? $asesmen->asesmenObstetri->rencana_pengobatan : '') }}</textarea>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                {{-- <div class="row"> --}}
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Prognosis :</label>
-                                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk
-                                            mencari
-                                            Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                            keterangan
-                                            Prognosis yang tidak ditemukan.</small>
-                                        @if ($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->prognosis)
-                                            <ul class="ms-3">
-                                                @foreach (json_decode($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->prognosis, true) as $efek)
-                                                    <li>{{ $efek }}</li>
-                                                @endforeach
-                                            </ul>
-                                        @else
-                                            -
-                                        @endif
+
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- 9. Evaluasi -->
-                {{-- <div class="tab-pane fade show">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <h5>9. Evaluasi</h5>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Diagnosis medis :</label>
-                                                <p class="form-control-plaintext form-control-plaintext border-bottom">
-                                                    {{ $asesmen->asesmenObstetri->evaluasi_evaluasi ?? '-' }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> --}}
 
             </div>
         </div>

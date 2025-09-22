@@ -676,7 +676,7 @@
                                                 <option value="Puncak Kepala"
                                                     {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_presentasi ?? '') ==
                                                     'Puncak
-                                                                                                    Kepala'
+                                                                                                                                                                                                                                                                                                                    Kepala'
                                                         ? 'selected'
                                                         : '' }}>
                                                     Puncak Kepala</option>
@@ -866,7 +866,7 @@
                                             <div id="kesimpulanNyeri" class="p-3 bg-success text-white rounded">
                                                 {{ $asesmen->rmeAsesmenObstetriStatusNyeri->kesimpulan_nyeri ??
                                                     'Nyeri
-                                                                                            Ringan' }}
+                                                                                                                                                                                                                                                                                            Ringan' }}
                                             </div>
                                             <input type="hidden" name="kesimpulan_nyeri" id="kesimpulanNyeriInput"
                                                 value="{{ $asesmen->rmeAsesmenObstetriStatusNyeri->kesimpulan_nyeri ?? 'Nyeri Ringan' }}">
@@ -1493,160 +1493,6 @@
                                         </div>
                                     </div>
 
-                                    {{-- <div class="section-separator" style="margin-bottom: 2rem;">
-                                    <h5 class="fw-semibold mb-4">7. Discharge Planning</h5>
-                                    <div class="mb-3 row align-items-center">
-                                        <label class="col-md-3 text-secondary">Diagnosis medis</label>
-                                        <div class="col-md-9">
-                                            <select class="form-select bg-light" id="diagnosisMedis"
-                                                name="dp_diagnosis_medis">
-                                                <option value="">Lokalis nyeri</option>
-                                                <option value="Penyakit jantung" {{ ($asesmen->
-                                                    rmeAsesmenObstetriDischargePlanning->dp_diagnosis_medis ?? '') ==
-                                                    'Penyakit jantung' ? 'selected' : '' }}>Penyakit jantung
-                                                </option>
-                                                <option value="Penyakit paru" {{ ($asesmen->
-                                                    rmeAsesmenObstetriDischargePlanning->dp_diagnosis_medis ?? '') ==
-                                                    'Penyakit paru' ? 'selected' : '' }}>Penyakit paru
-                                                </option>
-                                                <option value="Lainnya" {{ ($asesmen->
-                                                    rmeAsesmenObstetriDischargePlanning->dp_diagnosis_medis ?? '') ==
-                                                    'Lainnya' ? 'selected' : '' }}>Lainnya</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3 row align-items-center">
-                                        <label class="col-md-3 text-secondary">Usia lanjut</label>
-                                        <div class="col-md-9">
-                                            <select class="form-select bg-light risk-factor" id="usiaLanjut"
-                                                name="dp_usia_lanjut">
-                                                <option value="">--pilih--</option>
-                                                <option value="1" {{ ($asesmen->
-                                                    rmeAsesmenObstetriDischargePlanning->dp_usia_lanjut ?? '') == '1' ?
-                                                    'selected' : '' }}>Ya</option>
-                                                <option value="0" {{ ($asesmen->
-                                                    rmeAsesmenObstetriDischargePlanning->dp_usia_lanjut ?? '') == '0' ?
-                                                    'selected' : '' }}>Tidak</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3 row align-items-center">
-                                        <label class="col-md-3 text-secondary">Hambatan mobilisasi</label>
-                                        <div class="col-md-9">
-                                            <select class="form-select bg-light risk-factor" id="hambatanMobilisasi"
-                                                name="dp_hambatan_mobilisasi">
-                                                <option value="">--pilih--</option>
-                                                <option value="1" {{ ($asesmen->
-                                                    rmeAsesmenObstetriDischargePlanning->dp_hambatan_mobilisasi ?? '')
-                                                    == '1' ? 'selected' : '' }}>Ya</option>
-                                                <option value="0" {{ ($asesmen->
-                                                    rmeAsesmenObstetriDischargePlanning->dp_hambatan_mobilisasi ?? '')
-                                                    == '0' ? 'selected' : '' }}>Tidak</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3 row align-items-center">
-                                        <label class="col-md-3 text-secondary">Membutuhkan pelayanan medis
-                                            berkelanjutan</label>
-                                        <div class="col-md-9">
-                                            <select class="form-select bg-light risk-factor" id="layananMedisLanjutan"
-                                                name="dp_layanan_medis_lanjutan">
-                                                <option value="">--pilih--</option>
-                                                <option value="1" {{ ($asesmen->
-                                                    rmeAsesmenObstetriDischargePlanning->dp_layanan_medis_lanjutan ??
-                                                    '') == '1' ? 'selected' : '' }}>Ya</option>
-                                                <option value="0" {{ ($asesmen->
-                                                    rmeAsesmenObstetriDischargePlanning->dp_layanan_medis_lanjutan ??
-                                                    '') == '0' ? 'selected' : '' }}>Tidak</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3 row align-items-center">
-                                        <label class="col-md-3 text-secondary">Ketergantungan dengan orang lain dalam
-                                            aktivitas harian</label>
-                                        <div class="col-md-9">
-                                            <select class="form-select bg-light risk-factor" id="ketergantungan"
-                                                name="dp_tergantung_orang_lain">
-                                                <option value="">--pilih--</option>
-                                                <option value="1" {{ ($asesmen->
-                                                    rmeAsesmenObstetriDischargePlanning->dp_tergantung_orang_lain ?? '')
-                                                    == '1' ? 'selected' : '' }}>Ya</option>
-                                                <option value="0" {{ ($asesmen->
-                                                    rmeAsesmenObstetriDischargePlanning->dp_tergantung_orang_lain ?? '')
-                                                    == '0' ? 'selected' : '' }}>Tidak</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-4 row align-items-center">
-                                        <label class="col-md-3 text-secondary">Perkiraan lama hari dirawat</label>
-                                        <div class="col-md-3">
-                                            <div class="input-group">
-                                                <input type="number" id="lamaDirawat" name="dp_lama_dirawat"
-                                                    class="form-control bg-light" placeholder="Hari" min="1"
-                                                    value="{{ $asesmen->rmeAsesmenObstetriDischargePlanning->dp_lama_dirawat ?? '' }}">
-                                                <span class="input-group-text bg-light">Hari</span>
-                                            </div>
-                                        </div>
-                                        <label class="col-md-2 text-secondary text-end">Rencana Pulang</label>
-                                        <div class="col-md-4">
-                                            <div class="input-group">
-                                                <input type="text" id="rencanaPulang" name="dp_rencana_pulang"
-                                                    class="form-control bg-light" value="{{ isset($asesmen->rmeAsesmenObstetriDischargePlanning->dp_rencana_pulang) ?
-        \Carbon\Carbon::parse($asesmen->rmeAsesmenObstetriDischargePlanning->dp_rencana_pulang)->format('d M Y') :
-        \Carbon\Carbon::now()->addDays(7)->format('d M Y') }}">
-                                                <span class="input-group-text bg-light date-picker-toggle"
-                                                    id="datePickerToggle">
-                                                    <i class="bi bi-calendar"></i>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-2" id="conclusionContainer">
-                                        @php
-                                        $currentConclusion =
-                                        $asesmen->rmeAsesmenObstetriDischargePlanning->dp_kesimpulan ?? '';
-                                        @endphp
-                                        <div class="alert alert-warning mb-2" id="needSpecialPlanAlert"
-                                            style="background-color: #fff3cd; display: {{ $currentConclusion == 'Membutuhkan rencana pulang khusus' ? 'block' : 'none' }};">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="dp_kesimpulan"
-                                                    id="need_special" value="Membutuhkan rencana pulang khusus" {{
-                                                    $currentConclusion=='Membutuhkan rencana pulang khusus' ? 'checked'
-                                                    : '' }}>
-                                                <label class="form-check-label" for="need_special">
-                                                    Membutuhkan rencana pulang khusus
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="alert alert-success mb-2" id="noSpecialPlanAlert"
-                                            style="background-color: #d1e7dd; display: {{ $currentConclusion == 'Tidak membutuhkan rencana pulang khusus' ? 'block' : 'none' }};">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="dp_kesimpulan"
-                                                    id="no_special" value="Tidak membutuhkan rencana pulang khusus" {{
-                                                    $currentConclusion=='Tidak membutuhkan rencana pulang khusus'
-                                                    ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="no_special">
-                                                    Tidak membutuhkan rencana pulang khusus
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" id="dp_kesimpulan_hidden" name="dp_kesimpulan"
-                                            value="{{ $currentConclusion }}">
-                                    </div>
-
-                                    <div id="conclusionSection" class="mt-4 p-3 border rounded"
-                                        style="display: {{ $currentConclusion ? 'block' : 'none' }};">
-                                        <h6 class="fw-bold">Kesimpulan:</h6>
-                                        <p id="conclusionText" class="mb-0">{{ $currentConclusion }}</p>
-                                    </div>
-                                </div> --}}
-
                                     <div class="section-separator" id="diagnosis">
                                         <h5 class="fw-semibold mb-4">7. Diagnosis</h5>
                                         <div class="mb-4">
@@ -1747,9 +1593,176 @@
                                                 value="{{ json_encode($diagnosisKerja) }}">
                                         </div>
 
+                                        <div class="form-group mb-4">
+                                            <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan
+                                                Pengobatan</label>
+                                            <textarea class="form-control" name="rencana_pengobatan" rows="4"
+                                                placeholder="Rencana Penatalaksanaan Dan Pengobatan">{{ old('rencana_pengobatan', isset($asesmen->asesmenObstetri) ? $asesmen->asesmenObstetri->rencana_pengobatan : '') }}</textarea>
+                                        </div>
+
                                     </div>
 
-                                    @php
+                                    <div class="section-separator" style="margin-bottom: 2rem;">
+                                        <h5 class="fw-semibold mb-4">8. Discharge Planning</h5>
+                                        {{-- <div class="mb-3 row align-items-center">
+                                            <label class="col-md-3 text-secondary">Diagnosis medis</label>
+                                            <div class="col-md-9">
+                                                <select class="form-select bg-light" id="diagnosisMedis"
+                                                    name="dp_diagnosis_medis">
+                                                    <option value="">Lokalis nyeri</option>
+                                                    <option value="Penyakit jantung"
+                                                        {{ ($asesmen->rmeAsesmenObstetriDischargePlanning->dp_diagnosis_medis ?? '') == 'Penyakit jantung'
+                                                            ? 'selected'
+                                                            : '' }}>
+                                                        Penyakit jantung
+                                                    </option>
+                                                    <option value="Penyakit paru"
+                                                        {{ ($asesmen->rmeAsesmenObstetriDischargePlanning->dp_diagnosis_medis ?? '') == 'Penyakit paru'
+                                                            ? 'selected'
+                                                            : '' }}>
+                                                        Penyakit paru
+                                                    </option>
+                                                    <option value="Lainnya"
+                                                        {{ ($asesmen->rmeAsesmenObstetriDischargePlanning->dp_diagnosis_medis ?? '') == 'Lainnya' ? 'selected' : '' }}>
+                                                        Lainnya</option>
+                                                </select>
+                                            </div>
+                                        </div> --}}
+
+                                        <div class="mb-3 row align-items-center">
+                                            <label class="col-md-3 text-secondary">Usia lanjut</label>
+                                            <div class="col-md-9">
+                                                <select class="form-select bg-light risk-factor" id="usiaLanjut"
+                                                    name="dp_usia_lanjut">
+                                                    <option value="">--pilih--</option>
+                                                    <option value="1"
+                                                        {{ ($asesmen->rmeAsesmenObstetriDischargePlanning->dp_usia_lanjut ?? '') == '1' ? 'selected' : '' }}>
+                                                        Ya</option>
+                                                    <option value="0"
+                                                        {{ ($asesmen->rmeAsesmenObstetriDischargePlanning->dp_usia_lanjut ?? '') == '0' ? 'selected' : '' }}>
+                                                        Tidak</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 row align-items-center">
+                                            <label class="col-md-3 text-secondary">Hambatan mobilisasi</label>
+                                            <div class="col-md-9">
+                                                <select class="form-select bg-light risk-factor" id="hambatanMobilisasi"
+                                                    name="dp_hambatan_mobilisasi">
+                                                    <option value="">--pilih--</option>
+                                                    <option value="1"
+                                                        {{ ($asesmen->rmeAsesmenObstetriDischargePlanning->dp_hambatan_mobilisasi ?? '') == '1' ? 'selected' : '' }}>
+                                                        Ya</option>
+                                                    <option value="0"
+                                                        {{ ($asesmen->rmeAsesmenObstetriDischargePlanning->dp_hambatan_mobilisasi ?? '') == '0' ? 'selected' : '' }}>
+                                                        Tidak</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 row align-items-center">
+                                            <label class="col-md-3 text-secondary">Membutuhkan pelayanan medis
+                                                berkelanjutan</label>
+                                            <div class="col-md-9">
+                                                <select class="form-select bg-light risk-factor"
+                                                    id="layananMedisLanjutan" name="dp_layanan_medis_lanjutan">
+                                                    <option value="">--pilih--</option>
+                                                    <option value="1"
+                                                        {{ ($asesmen->rmeAsesmenObstetriDischargePlanning->dp_layanan_medis_lanjutan ?? '') == '1' ? 'selected' : '' }}>
+                                                        Ya</option>
+                                                    <option value="0"
+                                                        {{ ($asesmen->rmeAsesmenObstetriDischargePlanning->dp_layanan_medis_lanjutan ?? '') == '0' ? 'selected' : '' }}>
+                                                        Tidak</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 row align-items-center">
+                                            <label class="col-md-3 text-secondary">Ketergantungan dengan orang lain dalam
+                                                aktivitas harian</label>
+                                            <div class="col-md-9">
+                                                <select class="form-select bg-light risk-factor" id="ketergantungan"
+                                                    name="dp_tergantung_orang_lain">
+                                                    <option value="">--pilih--</option>
+                                                    <option value="1"
+                                                        {{ ($asesmen->rmeAsesmenObstetriDischargePlanning->dp_tergantung_orang_lain ?? '') == '1' ? 'selected' : '' }}>
+                                                        Ya</option>
+                                                    <option value="0"
+                                                        {{ ($asesmen->rmeAsesmenObstetriDischargePlanning->dp_tergantung_orang_lain ?? '') == '0' ? 'selected' : '' }}>
+                                                        Tidak</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-4 row align-items-center">
+                                            <label class="col-md-3 text-secondary">Perkiraan lama hari dirawat</label>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <input type="number" id="lamaDirawat" name="dp_lama_dirawat"
+                                                        class="form-control bg-light" placeholder="Hari"
+                                                        min="1"
+                                                        value="{{ $asesmen->rmeAsesmenObstetriDischargePlanning->dp_lama_dirawat ?? '' }}">
+                                                    <span class="input-group-text bg-light">Hari</span>
+                                                </div>
+                                            </div>
+                                            <label class="col-md-2 text-secondary text-end">Rencana Pulang</label>
+                                            <div class="col-md-4">
+                                                <div class="input-group">
+                                                    <input type="text" id="rencanaPulang" name="dp_rencana_pulang"
+                                                        class="form-control bg-light"
+                                                        value="{{ isset($asesmen->rmeAsesmenObstetriDischargePlanning->dp_rencana_pulang)
+                                                            ? \Carbon\Carbon::parse($asesmen->rmeAsesmenObstetriDischargePlanning->dp_rencana_pulang)->format('d M Y')
+                                                            : \Carbon\Carbon::now()->addDays(7)->format('d M Y') }}">
+                                                    <span class="input-group-text bg-light date-picker-toggle"
+                                                        id="datePickerToggle">
+                                                        <i class="bi bi-calendar"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-2" id="conclusionContainer">
+                                            @php
+                                                $currentConclusion =
+                                                    $asesmen->rmeAsesmenObstetriDischargePlanning->dp_kesimpulan ?? '';
+                                            @endphp
+                                            <div class="alert alert-warning mb-2" id="needSpecialPlanAlert"
+                                                style="background-color: #fff3cd; display: {{ $currentConclusion == 'Membutuhkan rencana pulang khusus' ? 'block' : 'none' }};">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="dp_kesimpulan" id="need_special"
+                                                        value="Membutuhkan rencana pulang khusus"
+                                                        {{ $currentConclusion == 'Membutuhkan rencana pulang khusus' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="need_special">
+                                                        Membutuhkan rencana pulang khusus
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="alert alert-success mb-2" id="noSpecialPlanAlert"
+                                                style="background-color: #d1e7dd; display: {{ $currentConclusion == 'Tidak membutuhkan rencana pulang khusus' ? 'block' : 'none' }};">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="dp_kesimpulan" id="no_special"
+                                                        value="Tidak membutuhkan rencana pulang khusus"
+                                                        {{ $currentConclusion == 'Tidak membutuhkan rencana pulang khusus' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="no_special">
+                                                        Tidak membutuhkan rencana pulang khusus
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" id="dp_kesimpulan_hidden" name="dp_kesimpulan"
+                                                value="{{ $currentConclusion }}">
+                                        </div>
+
+                                        <div id="conclusionSection" class="mt-4 p-3 border rounded"
+                                            style="display: {{ $currentConclusion ? 'block' : 'none' }};">
+                                            <h6 class="fw-bold">Kesimpulan:</h6>
+                                            <p id="conclusionText" class="mb-0">{{ $currentConclusion }}</p>
+                                        </div>
+                                    </div>
+
+                                    {{-- @php
                                         // Parse existing diagnosis data from database
                                         $diagnosisBanding = !empty(
                                             $asesmen->rmeAsesmenObstetriDiagnosisImplementasi->diagnosis_banding
@@ -1825,181 +1838,6 @@
                                         <!-- Hidden input for form submission -->
                                         <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja"
                                             value="{{ json_encode($diagnosisKerja) }}">
-                                    </div>
-                                </div>
-
-                                <div class="section-separator" style="margin-bottom: 2rem;">
-                                    <h5 class="fw-semibold mb-4">8. Implementasi</h5>
-
-                                    @php
-                                        // Parse existing implementation data
-                                        $implementationData = [
-                                            'observasi' => !empty(
-                                                $asesmen->rmeAsesmenObstetriDiagnosisImplementasi->observasi
-                                            )
-                                                ? json_decode(
-                                                    $asesmen->rmeAsesmenObstetriDiagnosisImplementasi->observasi,
-                                                    true,
-                                                )
-                                                : [],
-                                            'terapeutik' => !empty(
-                                                $asesmen->rmeAsesmenObstetriDiagnosisImplementasi->terapeutik
-                                            )
-                                                ? json_decode(
-                                                    $asesmen->rmeAsesmenObstetriDiagnosisImplementasi->terapeutik,
-                                                    true,
-                                                )
-                                                : [],
-                                            'edukasi' => !empty(
-                                                $asesmen->rmeAsesmenObstetriDiagnosisImplementasi->edukasi
-                                            )
-                                                ? json_decode(
-                                                    $asesmen->rmeAsesmenObstetriDiagnosisImplementasi->edukasi,
-                                                    true,
-                                                )
-                                                : [],
-                                            'kolaborasi' => !empty(
-                                                $asesmen->rmeAsesmenObstetriDiagnosisImplementasi->kolaborasi
-                                            )
-                                                ? json_decode(
-                                                    $asesmen->rmeAsesmenObstetriDiagnosisImplementasi->kolaborasi,
-                                                    true,
-                                                )
-                                                : [],
-                                            'prognosis' => !empty(
-                                                $asesmen->rmeAsesmenObstetriDiagnosisImplementasi->prognosis
-                                            )
-                                                ? json_decode(
-                                                    $asesmen->rmeAsesmenObstetriDiagnosisImplementasi->prognosis,
-                                                    true,
-                                                )
-                                                : [],
-                                        ];
-                                    @endphp
-
-                                    <!-- Rencana Penatalaksanaan dan Pengobatan -->
-                                    <div class="mb-4">
-                                        <label class="text-primary fw-semibold">Rencana Penatalaksanaan dan
-                                            Pengobatan</label>
-                                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                            rencana, apabila tidak ada,
-                                            Pilih tanda tambah untuk menambah keterangan rencana yang tidak
-                                            ditemukan.</small>
-                                    </div>
-
-                                    <!-- Observasi Section -->
-                                    <div class="mb-4">
-                                        <label class="fw-semibold mb-2">Observasi</label>
-                                        <div class="input-group mt-2">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="observasi-input"
-                                                class="form-control border-start-0 ps-0"
-                                                placeholder="Cari dan tambah Observasi">
-                                            <span class="input-group-text bg-white" id="add-observasi">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
-                                        </div>
-                                        <div id="observasi-list" class="list-group mb-2 mt-2 bg-light p-3 rounded">
-                                            <!-- Items will be added here dynamically -->
-                                        </div>
-                                        <input type="hidden" id="observasi" name="observasi"
-                                            value="{{ json_encode($implementationData['observasi']) }}">
-                                    </div>
-
-                                    <!-- Terapeutik Section -->
-                                    <div class="mb-4">
-                                        <label class="fw-semibold mb-2">Terapeutik</label>
-                                        <div class="input-group mt-2">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="terapeutik-input"
-                                                class="form-control border-start-0 ps-0"
-                                                placeholder="Cari dan tambah Terapeutik">
-                                            <span class="input-group-text bg-white" id="add-terapeutik">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
-                                        </div>
-                                        <div id="terapeutik-list" class="list-group mb-2 mt-2 bg-light p-3 rounded">
-                                            <!-- Items will be added here dynamically -->
-                                        </div>
-                                        <input type="hidden" id="terapeutik" name="terapeutik"
-                                            value="{{ json_encode($implementationData['terapeutik']) }}">
-                                    </div>
-
-                                    <!-- Edukasi Section -->
-                                    <div class="mb-4">
-                                        <label class="fw-semibold mb-2">Edukasi</label>
-                                        <div class="input-group mt-2">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="edukasi-input"
-                                                class="form-control border-start-0 ps-0"
-                                                placeholder="Cari dan tambah Edukasi">
-                                            <span class="input-group-text bg-white" id="add-edukasi">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
-                                        </div>
-                                        <div id="edukasi-list" class="list-group mb-2 mt-2 bg-light p-3 rounded">
-                                            <!-- Items will be added here dynamically -->
-                                        </div>
-                                        <input type="hidden" id="edukasi" name="edukasi"
-                                            value="{{ json_encode($implementationData['edukasi']) }}">
-                                    </div>
-
-                                    <!-- Kolaborasi Section -->
-                                    <div class="mb-4">
-                                        <label class="fw-semibold mb-2">Kolaborasi</label>
-                                        <div class="input-group mt-2">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="kolaborasi-input"
-                                                class="form-control border-start-0 ps-0"
-                                                placeholder="Cari dan tambah Kolaborasi">
-                                            <span class="input-group-text bg-white" id="add-kolaborasi">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
-                                        </div>
-                                        <div id="kolaborasi-list" class="list-group mb-2 mt-2 bg-light p-3 rounded">
-                                            <!-- Items will be added here dynamically -->
-                                        </div>
-                                        <input type="hidden" id="kolaborasi" name="kolaborasi"
-                                            value="{{ json_encode($implementationData['kolaborasi']) }}">
-                                    </div>
-                                    <div class="form-group mb-4">
-                                        <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan
-                                            Pengobatan</label>
-                                        <textarea class="form-control" name="rencana_pengobatan" rows="4"
-                                            placeholder="Rencana Penatalaksanaan Dan Pengobatan">{{ old('rencana_pengobatan', isset($asesmen->asesmenObstetri) ? $asesmen->asesmenObstetri->rencana_pengobatan : '') }}</textarea>
-                                    </div>
-
-                                    <!-- Prognosis Section -->
-                                    {{-- <div class="mb-4">
-                                        <label class="text-primary fw-semibold">Prognosis</label>
-                                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                            Prognosis,
-                                            apabila tidak ada, Pilih tanda tambah untuk menambah keterangan Prognosis
-                                            yang tidak ditemukan.</small>
-                                        <div class="input-group mt-2">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="prognosis-input"
-                                                class="form-control border-start-0 ps-0"
-                                                placeholder="Cari dan tambah Prognosis">
-                                            <span class="input-group-text bg-white" id="add-prognosis">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
-                                        </div>
-                                        <div id="prognosis-list" class="list-group mb-2 mt-2 bg-light p-3 rounded">
-                                            <!-- Items will be added here dynamically -->
-                                        </div>
-                                        <input type="hidden" id="prognosis" name="prognosis"
-                                            value="{{ json_encode($implementationData['prognosis']) }}">
                                     </div> --}}
                                 </div>
 
