@@ -360,8 +360,8 @@ class NeurologiController extends Controller
             // Ambil data pendukung
             $itemFisik = MrItemFisik::orderby('urut')->get();
             $pemeriksaanFisik = RmeAsesmenPemeriksaanFisik::where('id_asesmen', $asesmen->id)
-            ->get()
-            ->keyBy('id_item_fisik');
+                ->get()
+                ->keyBy('id_item_fisik');
             $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
             $rmeMasterImplementasi = RmeMasterImplementasi::all();
             $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();

@@ -521,7 +521,7 @@
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <div class="form-group">
-                                                                    <label for="berat_badan">BB (cm)</label>
+                                                                    <label for="berat_badan">BB (Kg)</label>
                                                                     <input type="number" name="berat_badan"
                                                                         id="berat_badan" class="form-control">
                                                                 </div>

@@ -20,7 +20,7 @@
                         <div class="px-3">
                             <div class="row g-3">
                                 <div class="col-md-12">
-                                    <h4 class="header-asesmen">Asesmen Awal Keperawatan Opthamology</h4>
+                                    <h4 class="header-asesmen">Asesmen Awal Medis Opthamology</h4>
                                     <p>
                                         Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan
                                     </p>
@@ -1041,7 +1041,7 @@
                                                 <label class="form-label">Perkiraan lama hari dirawat</label>
                                                 <input type="text" class="form-control" name="perkiraan_hari" placeholder="hari">
                                             </div>
-                                            
+
                                             <div class="col-md-6">
                                                 <label class="form-label">Rencana Tanggal Pulang</label>
                                                 <input type="date" class="form-control" name="tanggal_pulang">
@@ -1089,7 +1089,7 @@
                                             <div id="diagnosis-banding-list" class="diagnosis-list bg-light p-3 rounded">
                                                 <!-- Diagnosis items will be added here dynamically -->
                                             </div>
-                                            
+
                                             <!-- Hidden input to store JSON data -->
                                             <input type="hidden" id="diagnosis_banding" name="diagnosis_banding" value="[]">
                                         </div>
@@ -1115,7 +1115,7 @@
                                             <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
                                                 <!-- Diagnosis items will be added here dynamically -->
                                             </div>
-                                            
+
                                             <!-- Hidden input to store JSON data -->
                                             <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja" value="[]">
                                         </div>

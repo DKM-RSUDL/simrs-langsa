@@ -71,7 +71,7 @@
                 <th>Tanggal</th>
                 <th>Dari</th>
                 <th>Konsulen</th>
-                <th>Konsul yang diminta</th>
+                {{-- <th>Konsul yang diminta</th> --}}
                 <th>Status Konsul</th>
                 <th>Aksi</th>
             </tr>
@@ -85,9 +85,9 @@
                     </td>
                     <td>{{ $konsul->dokterAsal->nama_lengkap }}</td>
                     <td>{{ $konsul->dokterTujuan->nama_lengkap }}</td>
-                    <td>
+                    {{-- <td>
                         <p class="m-0 p-0" id="konsulDimintaLabel">{{ $konsul->konsultasi }}</p>
-                    </td>
+                    </td> --}}
                     <td>
                         @if (empty($konsul->instruksi))
                             <p class="text-warning fw-bold m-0 p-0" id="konsulenStatusLabel">Di kirim</p>
@@ -97,15 +97,15 @@
                     </td>
                     <td>
                         <div class="d-flex">
-                            <a href="{{ route('konsultasi.pdf', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, encrypt($konsul->id)]) }}" class="btn btn-sm btn-info btn-print-konsultasi" target="_blank">
+                            <a href="{{ route('konsultasi.pdf', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, encrypt($konsul->id)]) }}"
+                                class="btn btn-sm btn-info btn-print-konsultasi" target="_blank">
                                 <i class="fas fa-print"></i>
                             </a>
-                            <button class="btn btn-sm btn-warning btn-edit-konsultasi mx-2" data-bs-target="#editKonsulModal"
-                                data-konsul="{{ encrypt($konsul->id) }}">
+                            <button class="btn btn-sm btn-warning btn-edit-konsultasi mx-2"
+                                data-bs-target="#editKonsulModal" data-konsul="{{ encrypt($konsul->id) }}">
                                 <i class="bi bi-pencil-square"></i>
                             </button>
-                            <button class="btn btn-sm btn-delete-konsultasi"
-                                data-konsul="{{ encrypt($konsul->id) }}">
+                            <button class="btn btn-sm btn-delete-konsultasi" data-konsul="{{ encrypt($konsul->id) }}">
                                 <i class="bi bi-x-circle-fill text-danger"></i>
                             </button>
                         </div>

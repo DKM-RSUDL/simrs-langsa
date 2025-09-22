@@ -106,7 +106,7 @@ class AsesmenKeperawatanController extends Controller
             ->orderBy('id', 'DESC')
             ->first();
 
-        $vitalSignMedis = json_decode($asesmenMedis->vital_sign, true);
+        $vitalSignMedis = json_decode($asesmenMedis->vital_sign ?? '{}', true);
 
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.create', compact(
@@ -342,6 +342,7 @@ class AsesmenKeperawatanController extends Controller
                 // Simpan nilai berdasarkan radio button yang dipilih
                 $asesmenKepUmumExposure->exposure_diagnosis_mobilitasi = $mobilitasi_type ? (int)$mobilitasi_type : null;
             }
+
             // exposure_diagosis_integritas
             if ($request->has('exposure_diagosis_integritas')) {
                 $integritas_type = $request->exposure_diagosis_integritas_type;
@@ -518,7 +519,8 @@ class AsesmenKeperawatanController extends Controller
 
             return redirect()->route('asesmen.index', [
                 'kd_pasien' => $kd_pasien,
-                'tgl_masuk' => $tgl_masuk
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $request->urut_masuk
             ])->with(['success' => 'Berhasil menambah asesmen keperawatan umum !']);
         } catch (Exception $e) {
             DB::rollBack();
@@ -544,10 +546,10 @@ class AsesmenKeperawatanController extends Controller
                 'asesmenKepUmumSosialEkonomi',
                 'asesmenKepUmumGizi'
             ])
-            ->where('id', $id)
-            ->where('kd_pasien', $kd_pasien)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->firstOrFail();
+                ->where('id', $id)
+                ->where('kd_pasien', $kd_pasien)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->firstOrFail();
 
             // Ambil data medis pasien
             $dataMedis = Kunjungan::with('pasien')
@@ -588,7 +590,6 @@ class AsesmenKeperawatanController extends Controller
 
             // Return ke view
             return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show', $data);
-
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data asesmen tidak ditemukan.');
         } catch (\Exception $e) {
@@ -1075,7 +1076,8 @@ class AsesmenKeperawatanController extends Controller
 
             return redirect()->route('asesmen.index', [
                 'kd_pasien' => $kd_pasien,
-                'tgl_masuk' => $tgl_masuk
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $request->urut_masuk
             ])->with(['success' => 'Berhasil mengupdate asesmen keperawatan umum!']);
         } catch (\Exception $e) {
             DB::rollBack();

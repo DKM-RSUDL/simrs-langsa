@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -77,7 +78,8 @@
             border-collapse: collapse;
         }
 
-        main table th, main table td {
+        main table th,
+        main table td {
             text-align: left;
             border: 1px solid black;
             padding: 8px;
@@ -111,9 +113,9 @@
         footer div .identity-num {
             margin: 0;
         }
-
     </style>
 </head>
+
 <body>
     <header>
         <div class="left-column">
@@ -140,8 +142,12 @@
                         @php
                             $gender = '-';
 
-                            if($konsultasi->pasien->jenis_kelamin == 1) $gender = 'Laki-Laki';
-                            if($konsultasi->pasien->jenis_kelamin == 0) $gender = 'Perempuan';
+                            if ($konsultasi->pasien->jenis_kelamin == 1) {
+                                $gender = 'Laki-Laki';
+                            }
+                            if ($konsultasi->pasien->jenis_kelamin == 0) {
+                                $gender = 'Perempuan';
+                            }
 
                             echo $gender;
                         @endphp
@@ -201,7 +207,7 @@
             </tr>
             <tr>
                 <th>Instruksi Konsulen</th>
-                <td>{{ $konsultasi->instruksi ?? '-' }}</td>
+                <td>{!! $konsultasi->instruksi ?? '-' !!}</td>
             </tr>
         </table>
     </main>
@@ -213,7 +219,9 @@
             <p class="identity-num">
                 @php
                     $identityNum = 'Id Peg. ' . $konsultasi->dokterAsal->kd_karyawan;
-                    if(!empty($konsultasi->dokterAsal->detail->nip_baru)) $identityNum = 'NIP. ' . $konsultasi->dokterAsal->detail->nip_baru;
+                    if (!empty($konsultasi->dokterAsal->detail->nip_baru)) {
+                        $identityNum = 'NIP. ' . $konsultasi->dokterAsal->detail->nip_baru;
+                    }
                     echo $identityNum;
                 @endphp
             </p>
@@ -225,11 +233,14 @@
             <p class="identity-num">
                 @php
                     $identityNum = 'Id Peg. ' . $konsultasi->dokterTujuan->kd_karyawan;
-                    if(!empty($konsultasi->dokterTujuan->detail->nip_baru)) $identityNum = 'NIP. ' . $konsultasi->dokterTujuan->detail->nip_baru;
+                    if (!empty($konsultasi->dokterTujuan->detail->nip_baru)) {
+                        $identityNum = 'NIP. ' . $konsultasi->dokterTujuan->detail->nip_baru;
+                    }
                     echo $identityNum;
                 @endphp
             </p>
         </div>
     </footer>
 </body>
+
 </html>

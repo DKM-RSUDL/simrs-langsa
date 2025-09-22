@@ -1,3 +1,12 @@
+@push('css')
+    <style>
+        trix-toolbar {
+            display: none;
+        }
+    </style>
+@endpush
+
+
 <div class="modal fade" id="addKonsulModal" tabindex="-1" aria-labelledby="addKonsulModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -14,7 +23,7 @@
 
                     <div class="row">
                         <div class="col-md-6 border p-3">
-                            <p class="fw-bold h5">SBAR</p>
+                            <p class="fw-bold h5">SOAP</p>
 
                             <div class="form-group mt-4">
                                 <label for="subjective">Subjective</label>
@@ -22,7 +31,7 @@
                             </div>
 
                             <div class="form-group mt-3">
-                                <label for="background">Backgroud</label>
+                                <label for="background">Objective</label>
                                 <textarea name="background" id="background" class="form-control">{{ $backgroundCreate ?? '' }}</textarea>
                             </div>
 
@@ -32,7 +41,7 @@
                             </div>
 
                             <div class="form-group mt-3">
-                                <label for="recomendation">Recomendation</label>
+                                <label for="recomendation">Planning</label>
                                 <textarea name="recomendation" id="recomendation" class="form-control"></textarea>
                             </div>
                         </div>
@@ -80,16 +89,18 @@
                                 </select>
                             </div>
 
-                            <div class="form-group mt-3">
+                            {{-- <div class="form-group mt-3">
                                 <label for="konsultasi" class="fw-bold text-primary">Konsul Yang Diminta</label>
-                                <textarea name="konsultasi" id="konsultasi" class="form-control" rows="5" required></textarea>
-                            </div>
+                                <textarea name="konsultasi" id="konsultasi" class="form-control" rows="5"></textarea>
+                            </div> --}}
 
                             <div class="form-group mt-3">
                                 <label for="instruksi" class="fw-bold text-primary">Instruksi Dokter Spesialis</label>
-                                <label for="" class="form-label text-dark">Tuliskan instruksi dengan TBAK (Tulis
+                                <label class="form-label text-dark">Tuliskan instruksi dengan TBAK (Tulis
                                     instruksi, bacakan kembali untuk konfirmasi)</label>
-                                <textarea name="instruksi" id="instruksi" class="form-control" rows="5"></textarea>
+                                {{-- <textarea name="instruksi" id="instruksi" class="form-control" rows="5"></textarea> --}}
+                                <input id="instruksi" type="hidden" name="instruksi">
+                                <trix-editor input="instruksi"></trix-editor>
                             </div>
                         </div>
                     </div>
@@ -124,7 +135,7 @@
 
                     <div class="row">
                         <div class="col-md-6 border p-3">
-                            <p class="fw-bold h5">SBAR</p>
+                            <p class="fw-bold h5">SOAP</p>
 
                             <div class="form-group mt-4">
                                 <label for="subjective">Subjective</label>
@@ -132,7 +143,7 @@
                             </div>
 
                             <div class="form-group mt-3">
-                                <label for="background">Backgroud</label>
+                                <label for="background">Objective</label>
                                 <textarea name="background" id="background" class="form-control"></textarea>
                             </div>
 
@@ -142,7 +153,7 @@
                             </div>
 
                             <div class="form-group mt-3">
-                                <label for="recomendation">Recomendation</label>
+                                <label for="recomendation">Planning</label>
                                 <textarea name="recomendation" id="recomendation" class="form-control"></textarea>
                             </div>
                         </div>
@@ -192,16 +203,18 @@
                                 </select>
                             </div>
 
-                            <div class="form-group mt-3">
+                            {{-- <div class="form-group mt-3">
                                 <label for="konsultasi" class="fw-bold text-primary">Konsul Yang Diminta</label>
-                                <textarea name="konsultasi" id="konsultasi" class="form-control" rows="5" required></textarea>
-                            </div>
+                                <textarea name="konsultasi" id="konsultasi" class="form-control" rows="5"></textarea>
+                            </div> --}}
 
                             <div class="form-group mt-3">
                                 <label for="instruksi" class="fw-bold text-primary">Instruksi Dokter Spesialis</label>
                                 <label for="" class="form-label text-dark">Tuliskan instruksi dengan TBAK
                                     (Tulis instruksi, bacakan kembali untuk konfirmasi)</label>
-                                <textarea name="instruksi" id="instruksi" class="form-control" rows="5"></textarea>
+                                {{-- <textarea name="instruksi" id="instruksi" class="form-control" rows="5"></textarea> --}}
+                                <input id="instruksi-edit" type="hidden" name="instruksi">
+                                <trix-editor input="instruksi-edit"></trix-editor>
                             </div>
                         </div>
                     </div>
