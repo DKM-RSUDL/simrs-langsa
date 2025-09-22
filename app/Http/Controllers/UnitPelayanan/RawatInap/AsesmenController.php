@@ -112,13 +112,19 @@ class AsesmenController extends Controller
 
         // GET ASAL IGD
         $asalIGD = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)->where('no_transaksi', $dataMedis->no_transaksi)->first();
-        $transaksiIGD = Transaksi::where('kd_kasir', $asalIGD->kd_kasir_asal)->where('no_transaksi', $asalIGD->no_transaksi_asal)->first();
 
-        $asesmenIGD = RmeAsesmen::where('kd_pasien', $transaksiIGD->kd_pasien)
-            ->where('kd_unit', $transaksiIGD->kd_unit)
-            ->where('tgl_masuk', $transaksiIGD->tgl_transaksi)
-            ->where('urut_masuk', $transaksiIGD->urut_masuk)
-            ->get();
+        if (!empty($asalIGD)) {
+            $transaksiIGD = Transaksi::where('kd_kasir', $asalIGD->kd_kasir_asal)->where('no_transaksi', $asalIGD->no_transaksi_asal)->first();
+
+            $asesmenIGD = RmeAsesmen::where('kd_pasien', $transaksiIGD->kd_pasien)
+                ->where('kd_unit', $transaksiIGD->kd_unit)
+                ->where('tgl_masuk', $transaksiIGD->tgl_transaksi)
+                ->where('urut_masuk', $transaksiIGD->urut_masuk)
+                ->get();
+        } else {
+            $asesmenIGD = [];
+            $transaksiIGD = [];
+        }
 
 
         return view('unit-pelayanan.rawat-inap.pelayanan.asesmen.index', compact(
