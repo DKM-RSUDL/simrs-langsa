@@ -443,7 +443,61 @@
             </div>
         </li>
     @endforeach
+
+    {{-- ASESMEN IGD --}}
+    @foreach ($asesmenIGD as $itemIGD)
+        <li class="list-group-item d-flex justify-content-between align-items-center" data-id="{{ $itemIGD->id }}"
+            data-date="{{ \Carbon\Carbon::parse($itemIGD->waktu_asesmen)->format('Y-m-d') }}"
+            data-name="{{ $itemIGD->user->name }}">
+
+            <div class="d-flex align-items-center gap-4">
+                <!-- Tanggal -->
+                <div class="text-center px-3">
+                    <div class="fw-bold fs-4 mb-0 text-primary">
+                        {{ \Carbon\Carbon::parse($itemIGD->waktu_asesmen)->format('d') }}
+                    </div>
+                    <div class="text-muted" style="font-size: 0.85rem;">
+                        {{ \Carbon\Carbon::parse($itemIGD->waktu_asesmen)->format('M-y') }}
+                    </div>
+                    <div class="text-muted" style="font-size: 0.85rem;">
+                        {{ \Carbon\Carbon::parse($itemIGD->waktu_asesmen)->format('H:i') }}
+                    </div>
+                </div>
+
+                <!-- Avatar dan Info -->
+                <div class="d-flex align-items-center gap-3">
+                    <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle border border-2"
+                        alt="Foto Pasien" width="60" height="60">
+                    <div>
+                        <div class="text-primary fw-bold mb-1">
+                            Asesmen {{ getKategoriAsesmen($itemIGD->kategori, $itemIGD->sub_kategori, 3) }}
+                        </div>
+                        <div class="text-muted">
+                            By: <span class="fw-semibold">{{ $itemIGD->user->name }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex gap-2">
+                @if ($itemIGD->kategori == 1)
+                    <button type="button" onclick="showAsesmen('{{ $itemIGD->id }}')" {{-- data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $transaksiIGD->kd_pasien . '/' . \Carbon\Carbon::parse($transaksiIGD->tgl_transaksi)->format('Y-m-d') . '/' . $transaksiIGD->urut_masuk . '/asesmen/' . $itemIGD->id) }}" --}}
+                        data-url="{{ route('rawat-inap.asesmen.medis.umum.medis-igd', [$dataMedis->kd_unit, $transaksiIGD->kd_pasien, date('Y-m-d', strtotime($transaksiIGD->tgl_transaksi)), $transaksiIGD->urut_masuk, $itemIGD->id]) }}"
+                        class="btn btn-info btn-sm px-3">
+                        <i class="fas fa-eye me-1"></i> Lihat
+                    </button>
+                @elseif($itemIGD->kategori == 2)
+                    <a href="{{ route('rawat-inap.asesmen.keperawatan.umum.keperawatan-igd', [$dataMedis->kd_unit, $transaksiIGD->kd_pasien, date('Y-m-d', strtotime($transaksiIGD->tgl_transaksi)), $transaksiIGD->urut_masuk, $itemIGD->id]) }}"
+                        class="btn btn-sm btn-info">
+                        <i class="fas fa-eye me-1"></i> Lihat
+                    </a>
+                @endif
+            </div>
+        </li>
+    @endforeach
 </ul>
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.show')
 @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.create-asesmen')
 
 @push('js')

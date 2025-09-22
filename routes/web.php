@@ -1442,6 +1442,7 @@ Route::middleware('ssoToken')->group(function () {
                                                         Route::get('/{id}', 'show')->name('.show');
                                                         Route::put('/{id}', 'update')->name('.update');
                                                         Route::get('/{id}/print', 'print')->name('.print');
+                                                        Route::get('/igd/medis/{id}', 'showMedisIGD')->name('.medis-igd');
                                                     });
                                                 });
                                             });
@@ -1611,6 +1612,7 @@ Route::middleware('ssoToken')->group(function () {
                                                         Route::get('/{id}', 'show')->name('.show');
                                                         Route::get('/{id}/edit', 'edit')->name('.edit');
                                                         Route::put('/{id}', 'update')->name('.update');
+                                                        Route::get('/igd/keperawatan/{id}', 'showKepIGD')->name('.keperawatan-igd');
                                                     });
                                                 });
                                             });
@@ -2424,7 +2426,6 @@ Route::middleware('ssoToken')->group(function () {
 
         // Rute untuk Gawat Darurat
         Route::middleware(['check.igd'])->group(function () {
-
             Route::prefix('gawat-darurat')->group(function () {
                 Route::get('/', [GawatDaruratController::class, 'index'])->name('gawat-darurat.index');
                 Route::get('/triase', [GawatDaruratController::class, 'triaseIndex'])->name('gawat-darurat.triase');

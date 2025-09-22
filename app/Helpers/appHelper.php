@@ -33,7 +33,7 @@ if (!function_exists('getRoles')) {
 }
 
 if (!function_exists('getKategoriAsesmen')) {
-    function getKategoriAsesmen($kategori, $subKategori)
+    function getKategoriAsesmen($kategori, $subKategori, $kd_unit = null)
     {
         $kategoriLabel = '';
         $subKategoriLabel = '';
@@ -50,6 +50,7 @@ if (!function_exists('getKategoriAsesmen')) {
         switch ($subKategori) {
             case 1:
                 $subKategoriLabel = 'Umum/Dewasa';
+                if ($kd_unit == 3) $subKategoriLabel = 'Gawat Darurat';
                 break;
             case 2:
                 $subKategoriLabel = 'Perinatologi';
