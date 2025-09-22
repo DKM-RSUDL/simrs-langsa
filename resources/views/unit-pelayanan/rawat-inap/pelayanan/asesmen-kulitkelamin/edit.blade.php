@@ -363,55 +363,63 @@
                                         <div class="row">
                                             <div class="col-md-8">
                                                 <div class="site-marking-container position-relative">
-                                                    <img src="{{ asset('assets/images/sitemarking/kulit-kelamin.png') }}" 
-                                                         id="anatomyImage" 
-                                                         class="img-fluid" 
-                                                         style="max-width: 100%;">
-                                                    <canvas id="markingCanvas" 
-                                                            class="position-absolute top-0 start-0" 
-                                                            style="cursor: crosshair; z-index: 10;">
+                                                    <img src="{{ asset('assets/images/sitemarking/kulit-kelamin.png') }}"
+                                                        id="anatomyImage" class="img-fluid" style="max-width: 100%;">
+                                                    <canvas id="markingCanvas" class="position-absolute top-0 start-0"
+                                                        style="cursor: crosshair; z-index: 10;">
                                                     </canvas>
                                                 </div>
                                                 <div class="mt-2">
                                                     <small class="text-muted">
-                                                        <strong>Cara Pakai:</strong> Pilih warna, klik dan drag untuk membuat panah di area yang ingin ditandai.
+                                                        <strong>Cara Pakai:</strong> Pilih warna, klik dan drag untuk
+                                                        membuat panah di area yang ingin ditandai.
                                                     </small>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="marking-controls">
                                                     <h6>Kontrol Penandaan</h6>
-                                                    
+
                                                     <!-- Pilihan Warna -->
                                                     <div class="mb-3">
                                                         <label class="form-label">Pilih Warna:</label>
                                                         <div class="d-flex flex-wrap gap-2">
-                                                            <button type="button" class="color-btn active" data-color="#dc3545" style="background: #dc3545;"></button>
-                                                            <button type="button" class="color-btn" data-color="#198754" style="background: #198754;"></button>
-                                                            <button type="button" class="color-btn" data-color="#0d6efd" style="background: #0d6efd;"></button>
-                                                            <button type="button" class="color-btn" data-color="#fd7e14" style="background: #fd7e14;"></button>
-                                                            <button type="button" class="color-btn" data-color="#6f42c1" style="background: #6f42c1;"></button>
-                                                            <button type="button" class="color-btn" data-color="#000000" style="background: #000000;"></button>
+                                                            <button type="button" class="color-btn active"
+                                                                data-color="#dc3545"
+                                                                style="background: #dc3545;"></button>
+                                                            <button type="button" class="color-btn" data-color="#198754"
+                                                                style="background: #198754;"></button>
+                                                            <button type="button" class="color-btn" data-color="#0d6efd"
+                                                                style="background: #0d6efd;"></button>
+                                                            <button type="button" class="color-btn" data-color="#fd7e14"
+                                                                style="background: #fd7e14;"></button>
+                                                            <button type="button" class="color-btn" data-color="#6f42c1"
+                                                                style="background: #6f42c1;"></button>
+                                                            <button type="button" class="color-btn" data-color="#000000"
+                                                                style="background: #000000;"></button>
                                                         </div>
                                                     </div>
-                                                    
+
                                                     <!-- Keterangan -->
                                                     <div class="mb-3">
                                                         <label class="form-label">Keterangan (opsional):</label>
-                                                        <input type="text" id="markingNote" class="form-control" placeholder="Contoh: Ruam merah">
+                                                        <input type="text" id="markingNote" class="form-control"
+                                                            placeholder="Contoh: Ruam merah">
                                                     </div>
-                                                    
+
                                                     <!-- Tombol Kontrol -->
                                                     <div class="d-grid gap-2">
-                                                        <button type="button" class="btn btn-outline-danger" id="clearAllMarking">
+                                                        <button type="button" class="btn btn-outline-danger"
+                                                            id="clearAllMarking">
                                                             <i class="ti-trash"></i> Hapus Semua Penandaan
                                                         </button>
                                                     </div>
-                                                    
+
                                                     <!-- Daftar Penandaan -->
                                                     <div class="marking-list mt-3">
                                                         <h6>Daftar Penandaan (<span id="markingCount">0</span>):</h6>
-                                                        <div id="markingsList" class="list-group" style="max-height: 250px; overflow-y: auto;">
+                                                        <div id="markingsList" class="list-group"
+                                                            style="max-height: 250px; overflow-y: auto;">
                                                             <div class="text-muted text-center py-3" id="emptyState">
                                                                 <i class="ti-info-alt"></i> Belum ada penandaan
                                                             </div>
@@ -420,7 +428,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <input type="hidden" name="site_marking_data" id="siteMarkingData" value="{{ $asesmenKulitKelamin->site_marking_data ?? '[]' }}">
+                                        <input type="hidden" name="site_marking_data" id="siteMarkingData"
+                                            value="{{ $asesmenKulitKelamin->site_marking_data ?? '[]' }}">
                                     </div>
 
                                     <div class="section-separator" id="discharge-planning">
@@ -665,7 +674,7 @@
                                                 <!-- Items will be added here dynamically -->
                                             </div>
                                             <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="observasi" name="observasi" 
+                                            <input type="hidden" id="observasi" name="observasi"
                                                 value="{{ $asesmenKulitKelamin->observasi ?? '[]' }}">
                                         </div>
 
@@ -687,7 +696,7 @@
                                                 <!-- Items will be added here dynamically -->
                                             </div>
                                             <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="terapeutik" name="terapeutik" 
+                                            <input type="hidden" id="terapeutik" name="terapeutik"
                                                 value="{{ $asesmenKulitKelamin->terapeutik ?? '[]' }}">
                                         </div>
 
@@ -709,7 +718,7 @@
                                                 <!-- Items will be added here dynamically -->
                                             </div>
                                             <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="edukasi" name="edukasi" 
+                                            <input type="hidden" id="edukasi" name="edukasi"
                                                 value="{{ $asesmenKulitKelamin->edukasi ?? '[]' }}">
                                         </div>
 
@@ -731,18 +740,18 @@
                                                 <!-- Items will be added here dynamically -->
                                             </div>
                                             <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="kolaborasi" name="kolaborasi" 
+                                            <input type="hidden" id="kolaborasi" name="kolaborasi"
                                                 value="{{ $asesmenKulitKelamin->kolaborasi ?? '[]' }}">
                                         </div>
 
                                         {{-- prognosis --}}
                                         <div class="mb-4">
                                             <label class="text-primary fw-semibold">Prognosis</label>
-                                            
+
                                             <select class="form-select" name="prognosis">
                                                 <option value="">--Pilih Prognosis--</option>
-                                                @forelse ($satsetPrognosis as $item)                                            
-                                                    <option value="{{ $item->prognosis_id }}" 
+                                                @forelse ($satsetPrognosis as $item)
+                                                    <option value="{{ $item->prognosis_id }}"
                                                         {{ isset($asesmenKulitKelamin->prognosis) && $asesmenKulitKelamin->prognosis == $item->prognosis_id ? 'selected' : '' }}>
                                                         {{ $item->value ?? 'Field tidak ditemukan' }}
                                                     </option>
@@ -750,6 +759,13 @@
                                                     <option value="" disabled>Tidak ada data</option>
                                                 @endforelse
                                             </select>
+                                        </div>
+
+                                        <div class="form-group mb-4">
+                                            <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan
+                                                Pengobatan</label>
+                                            <textarea class="form-control" name="rencana_pengobatan" rows="4"
+                                                placeholder="Rencana Penatalaksanaan Dan Pengobatan">{{ old('rencana_pengobatan', isset($asesmenKulitKelamin) ? $asesmenKulitKelamin->rencana_pengobatan : '') }}</textarea>
                                         </div>
 
                                     </div>
@@ -1193,7 +1209,7 @@
             background-color: #f8f9fa !important;
             border-color: #097dd6 !important;
             transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
         }
 
         #implementasi .input-group-text {
@@ -1318,7 +1334,7 @@
 
         .color-btn.active {
             border-color: #fff;
-            box-shadow: 0 0 0 3px rgba(0,0,0,0.3);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.3);
             transform: scale(1.1);
         }
 
@@ -1344,7 +1360,6 @@
             max-width: 100%;
             height: auto;
         }
-
     </style>
 @endpush
 
@@ -1936,7 +1951,8 @@
 
                 if (hasError) {
                     alert(
-                        'Mohon lengkapi semua pemeriksaan fisik. Pilih "Normal" atau isi keterangan untuk setiap item.');
+                        'Mohon lengkapi semua pemeriksaan fisik. Pilih "Normal" atau isi keterangan untuk setiap item.'
+                    );
                     // Scroll ke pemeriksaan fisik
                     document.getElementById('pemeriksaan-fisik').scrollIntoView({
                         behavior: 'smooth',
@@ -2471,7 +2487,8 @@
                             const newOptionItem = document.createElement('div');
                             newOptionItem.className = 'suggestion-item p-2 cursor-pointer text-primary';
                             newOptionItem.style.cursor = 'pointer';
-                            newOptionItem.innerHTML = `<i class="bi bi-plus-circle me-1"></i> Tambah "${inputValue}"`;
+                            newOptionItem.innerHTML =
+                                `<i class="bi bi-plus-circle me-1"></i> Tambah "${inputValue}"`;
                             newOptionItem.addEventListener('click', () => {
                                 addItem(inputValue);
                                 suggestionsList.style.display = 'none';
@@ -2534,10 +2551,13 @@
                         suggestionsList.style.display = 'none';
 
                         // Show success feedback
-                        showImplementationFeedback(`"${itemText}" berhasil ditambahkan ke ${getDisplayName(prefix)}`, 'success', listContainer);
+                        showImplementationFeedback(
+                            `"${itemText}" berhasil ditambahkan ke ${getDisplayName(prefix)}`, 'success',
+                            listContainer);
                     } else {
                         // Show duplicate feedback
-                        showImplementationFeedback(`"${itemText}" sudah ada dalam daftar ${getDisplayName(prefix)}`, 'warning', listContainer);
+                        showImplementationFeedback(`"${itemText}" sudah ada dalam daftar ${getDisplayName(prefix)}`,
+                            'warning', listContainer);
                     }
                 }
 
@@ -2550,12 +2570,14 @@
                     if (itemsList.length === 0) {
                         const emptyMessage = document.createElement('div');
                         emptyMessage.className = 'text-muted text-center py-3';
-                        emptyMessage.innerHTML = `<i class="bi bi-info-circle me-2"></i>Belum ada data ${getDisplayName(prefix)}`;
+                        emptyMessage.innerHTML =
+                            `<i class="bi bi-info-circle me-2"></i>Belum ada data ${getDisplayName(prefix)}`;
                         listContainer.appendChild(emptyMessage);
                     } else {
                         itemsList.forEach((item, index) => {
                             const itemElement = document.createElement('div');
-                            itemElement.className = 'list-group-item d-flex justify-content-between align-items-center border-0 ps-0 bg-white rounded mb-2 shadow-sm';
+                            itemElement.className =
+                                'list-group-item d-flex justify-content-between align-items-center border-0 ps-0 bg-white rounded mb-2 shadow-sm';
                             itemElement.style.border = '1px solid #e3e6f0';
                             itemElement.style.padding = '12px';
 
@@ -2571,7 +2593,9 @@
                                 itemsList.splice(index, 1);
                                 renderItemsList();
                                 updateHiddenInput();
-                                showImplementationFeedback(`Item "${item}" berhasil dihapus dari ${getDisplayName(prefix)}`, 'info', listContainer);
+                                showImplementationFeedback(
+                                    `Item "${item}" berhasil dihapus dari ${getDisplayName(prefix)}`,
+                                    'info', listContainer);
                             });
 
                             itemElement.appendChild(itemSpan);
@@ -2612,7 +2636,7 @@
                     <small>${message}</small>
                     <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert"></button>
                 `;
-                
+
                 // Insert after container
                 container.parentNode.insertBefore(feedback, container.nextSibling);
 
@@ -2646,23 +2670,23 @@
                 const clearAllBtn = document.getElementById('clearAllMarking');
                 const markingCount = document.getElementById('markingCount');
                 const emptyState = document.getElementById('emptyState');
-                
+
                 let markings = [];
                 let markingCounter = 1;
                 let currentColor = '#dc3545';
                 let isDrawing = false;
                 let startX = 0;
                 let startY = 0;
-                
+
                 // Initialize color selection
                 initColorSelectionEdit();
-                
+
                 // Setup canvas
                 setupCanvasEdit();
-                
+
                 // Load existing data
                 loadExistingDataEdit();
-                
+
                 function setupCanvasEdit() {
                     function updateCanvasSize() {
                         const rect = image.getBoundingClientRect();
@@ -2670,23 +2694,23 @@
                         canvas.height = image.offsetHeight;
                         canvas.style.width = image.offsetWidth + 'px';
                         canvas.style.height = image.offsetHeight + 'px';
-                        
+
                         // Redraw all markings
                         redrawCanvasEdit();
                     }
-                    
+
                     // Update canvas size when image loads
                     image.onload = updateCanvasSize;
-                    
+
                     // Update canvas size when window resizes
                     window.addEventListener('resize', updateCanvasSize);
-                    
+
                     // Initial setup
                     if (image.complete) {
                         updateCanvasSize();
                     }
                 }
-                
+
                 function initColorSelectionEdit() {
                     document.querySelectorAll('.color-btn').forEach(btn => {
                         btn.addEventListener('click', function() {
@@ -2695,18 +2719,18 @@
                         });
                     });
                 }
-                
+
                 function updateColorSelectionEdit() {
                     document.querySelectorAll('.color-btn').forEach(btn => {
                         btn.classList.remove('active');
                     });
-                    
+
                     const selectedBtn = document.querySelector(`[data-color="${currentColor}"]`);
                     if (selectedBtn) {
                         selectedBtn.classList.add('active');
                     }
                 }
-                
+
                 // Mouse events for drawing
                 canvas.addEventListener('mousedown', function(e) {
                     isDrawing = true;
@@ -2714,47 +2738,47 @@
                     startX = e.clientX - rect.left;
                     startY = e.clientY - rect.top;
                 });
-                
+
                 canvas.addEventListener('mousemove', function(e) {
                     if (!isDrawing) return;
-                    
+
                     const rect = canvas.getBoundingClientRect();
                     const endX = e.clientX - rect.left;
                     const endY = e.clientY - rect.top;
-                    
+
                     // Clear canvas and redraw all markings
                     redrawCanvasEdit();
-                    
+
                     // Draw preview arrow
                     drawArrowEdit(ctx, startX, startY, endX, endY, currentColor, true);
                 });
-                
+
                 canvas.addEventListener('mouseup', function(e) {
                     if (!isDrawing) return;
-                    
+
                     const rect = canvas.getBoundingClientRect();
                     const endX = e.clientX - rect.left;
                     const endY = e.clientY - rect.top;
-                    
+
                     // Only create arrow if there's actual movement
                     const distance = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
                     if (distance > 10) { // Minimum distance
                         addMarkingEdit(startX, startY, endX, endY);
                     }
-                    
+
                     isDrawing = false;
                     redrawCanvasEdit();
                 });
-                
+
                 function addMarkingEdit(startX, startY, endX, endY) {
                     const note = markingNote.value.trim() || `Penandaan ${markingCounter}`;
-                    
+
                     // Convert to percentage for responsiveness
                     const startXPercent = (startX / canvas.width) * 100;
                     const startYPercent = (startY / canvas.height) * 100;
                     const endXPercent = (endX / canvas.width) * 100;
                     const endYPercent = (endY / canvas.height) * 100;
-                    
+
                     const marking = {
                         id: `mark_${Date.now()}`,
                         startX: startXPercent,
@@ -2765,41 +2789,41 @@
                         note: note,
                         timestamp: new Date().toISOString()
                     };
-                    
+
                     markings.push(marking);
-                    
+
                     // Add to list
                     addToMarkingsListEdit(marking);
-                    
+
                     // Update hidden input and counter
                     updateHiddenInputEdit();
                     updateMarkingCountEdit();
-                    
+
                     // Clear note input
                     markingNote.value = '';
                     markingCounter++;
-                    
+
                     // Redraw canvas
                     redrawCanvasEdit();
                 }
-                
+
                 function drawArrowEdit(ctx, startX, startY, endX, endY, color, isPreview = false) {
                     ctx.strokeStyle = color;
                     ctx.fillStyle = color;
                     ctx.lineWidth = isPreview ? 2 : 3;
                     ctx.lineCap = 'round';
-                    
+
                     // Draw line
                     ctx.beginPath();
                     ctx.moveTo(startX, startY);
                     ctx.lineTo(endX, endY);
                     ctx.stroke();
-                    
+
                     // Calculate arrow head
                     const angle = Math.atan2(endY - startY, endX - startX);
                     const arrowLength = 15;
                     const arrowAngle = Math.PI / 6;
-                    
+
                     // Draw arrow head
                     ctx.beginPath();
                     ctx.moveTo(endX, endY);
@@ -2814,30 +2838,30 @@
                     );
                     ctx.stroke();
                 }
-                
+
                 function redrawCanvasEdit() {
                     // Clear canvas
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    
+
                     // Draw all markings
                     markings.forEach(marking => {
                         const startX = (marking.startX / 100) * canvas.width;
                         const startY = (marking.startY / 100) * canvas.height;
                         const endX = (marking.endX / 100) * canvas.width;
                         const endY = (marking.endY / 100) * canvas.height;
-                        
+
                         drawArrowEdit(ctx, startX, startY, endX, endY, marking.color);
                     });
                 }
-                
+
                 function addToMarkingsListEdit(marking) {
                     // Hide empty state
                     emptyState.style.display = 'none';
-                    
+
                     const listItem = document.createElement('div');
                     listItem.className = 'marking-list-item';
                     listItem.setAttribute('data-marking-id', marking.id);
-                    
+
                     listItem.innerHTML = `
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
@@ -2852,13 +2876,13 @@
                             </button>
                         </div>
                     `;
-                    
+
                     markingsList.appendChild(listItem);
                 }
-                
+
                 function updateMarkingCountEdit() {
                     markingCount.textContent = markings.length;
-                    
+
                     // Show/hide empty state
                     if (markings.length === 0) {
                         emptyState.style.display = 'block';
@@ -2866,26 +2890,27 @@
                         emptyState.style.display = 'none';
                     }
                 }
-                
+
                 function updateHiddenInputEdit() {
                     siteMarkingData.value = JSON.stringify(markings);
                 }
-                
+
                 function loadExistingDataEdit() {
                     try {
                         const existingData = JSON.parse(siteMarkingData.value || '[]');
                         if (existingData.length > 0) {
                             markings = existingData;
                             markingCounter = markings.length + 1;
-                            
+
                             // Rebuild list
-                            markingsList.innerHTML = '<div class="text-muted text-center py-3" id="emptyState"><i class="ti-info-alt"></i> Belum ada penandaan</div>';
+                            markingsList.innerHTML =
+                                '<div class="text-muted text-center py-3" id="emptyState"><i class="ti-info-alt"></i> Belum ada penandaan</div>';
                             markings.forEach(marking => {
                                 addToMarkingsListEdit(marking);
                             });
-                            
+
                             updateMarkingCountEdit();
-                            
+
                             // Redraw canvas after a short delay
                             setTimeout(() => {
                                 redrawCanvasEdit();
@@ -2895,33 +2920,34 @@
                         console.error('Error loading existing marking data:', e);
                     }
                 }
-                
+
                 // Clear all markings
                 clearAllBtn.addEventListener('click', function() {
                     if (markings.length === 0) return;
-                    
+
                     if (confirm('Hapus semua penandaan?')) {
                         markings = [];
-                        markingsList.innerHTML = '<div class="text-muted text-center py-3" id="emptyState"><i class="ti-info-alt"></i> Belum ada penandaan</div>';
+                        markingsList.innerHTML =
+                            '<div class="text-muted text-center py-3" id="emptyState"><i class="ti-info-alt"></i> Belum ada penandaan</div>';
                         updateHiddenInputEdit();
                         updateMarkingCountEdit();
                         redrawCanvasEdit();
                         markingCounter = 1;
                     }
                 });
-                
+
                 // Global function for delete
                 window.deleteMarkingEdit = function(markingId) {
                     if (confirm('Hapus penandaan ini?')) {
                         // Remove from array
                         markings = markings.filter(m => m.id !== markingId);
-                        
+
                         // Remove from list
                         const listElement = markingsList.querySelector(`[data-marking-id="${markingId}"]`);
                         if (listElement) {
                             markingsList.removeChild(listElement);
                         }
-                        
+
                         updateHiddenInputEdit();
                         updateMarkingCountEdit();
                         redrawCanvasEdit();

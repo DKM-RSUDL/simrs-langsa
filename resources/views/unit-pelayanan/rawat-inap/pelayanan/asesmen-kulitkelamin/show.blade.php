@@ -271,7 +271,7 @@
                             @endif
 
                             <!-- 7. Discharge Planning -->
-                            @if ($rencanaPulang)
+                            {{-- @if ($rencanaPulang)
                                 <div class="section-separator" id="discharge-planning">
                                     <h5 class="section-title">7. Discharge Planning</h5>
 
@@ -333,11 +333,11 @@
                                         </div>
                                     </div>
                                 </div>
-                            @endif
+                            @endif --}}
 
                             <!-- 8. Diagnosis -->
                             <div class="section-separator" id="diagnosis">
-                                <h5 class="section-title">8. Diagnosis</h5>
+                                <h5 class="section-title">7. Diagnosis</h5>
 
                                 <div class="row mb-4">
                                     <div class="col-md-6">
@@ -369,14 +369,23 @@
 
                             <!-- 9. Implementasi -->
                             <div class="section-separator" id="implementasi">
-                                <h5 class="section-title">9. Implementasi</h5>
+                                <h5 class="section-title">8. Implementasi</h5>
 
                                 <div class="row mb-3">
                                     <div class="mb-4">
                                         <label class="text-primary fw-semibold">Prognosis</label>
-                                        <div class="form-control bg-light" style="min-height: 38px; display: flex; align-items: center;">
-                                                <span class="text-dark">{{ $asesmenKulitKelamin->prognosisValue->value ?? "Belum ada Prognosis" }}</span>
-                                        </div>
+
+                                        <select class="form-select" name="prognosis" disabled>
+                                            <option value="">--Pilih Prognosis--</option>
+                                            @forelse ($satsetPrognosis as $item)
+                                                <option value="{{ $item->prognosis_id }}"
+                                                    {{ isset($asesmenKulitKelamin->prognosis) && $asesmenKulitKelamin->prognosis == $item->prognosis_id ? 'selected' : '' }}>
+                                                    {{ $item->value ?? 'Field tidak ditemukan' }}
+                                                </option>
+                                            @empty
+                                                <option value="" disabled>Tidak ada data</option>
+                                            @endforelse
+                                        </select>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Observasi</label>
@@ -431,6 +440,14 @@
                                         @else
                                             <p class="text-muted">Tidak ada data kolaborasi</p>
                                         @endif
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan
+                                            Pengobatan</label>
+                                        <textarea class="form-control" name="rencana_pengobatan" rows="4"
+                                            placeholder="Rencana Penatalaksanaan Dan Pengobatan" readonly>{{ old('rencana_pengobatan', isset($asesmenKulitKelamin) ? $asesmenKulitKelamin->rencana_pengobatan : '') }}</textarea>
                                     </div>
                                 </div>
                             </div>

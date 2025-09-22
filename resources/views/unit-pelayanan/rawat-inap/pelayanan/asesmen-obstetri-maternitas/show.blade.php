@@ -28,8 +28,9 @@
                         $asesmen->pasien->kd_pasien,
                         \Carbon\Carbon::parse($asesmen->tgl_masuk)->format('Y-m-d'),
                         $asesmen->urut_masuk,
-                        $asesmen->id
-                    ]) }}" class="btn btn-outline-primary" target="_blank">
+                        $asesmen->id,
+                    ]) }}"
+                        class="btn btn-outline-primary" target="_blank">
                         <i class="bi bi-printer"></i>
                         Print PDF
                     </a>
@@ -543,21 +544,25 @@
                                                             $itemId = $item->id_item_fisik;
                                                             $namaItem = $itemFisikNames[$itemId] ?? 'Item #' . $itemId;
                                                         @endphp
-                                                        <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                                                        <div
+                                                            class="d-flex justify-content-between align-items-center border-bottom py-2">
                                                             <span>{{ $namaItem }}</span>
                                                             <div class="d-flex align-items-center">
                                                                 @if ($status == '0' || $status == 0)
-                                                                    <span class="badge bg-warning text-dark me-2">Tidak Normal</span>
+                                                                    <span class="badge bg-warning text-dark me-2">Tidak
+                                                                        Normal</span>
                                                                 @elseif ($status == '1' || $status == 1)
                                                                     <span class="badge bg-success me-2">Normal</span>
                                                                 @else
-                                                                    <span class="badge bg-secondary me-2">Tidak Diperiksa</span>
+                                                                    <span class="badge bg-secondary me-2">Tidak
+                                                                        Diperiksa</span>
                                                                 @endif
                                                             </div>
                                                         </div>
                                                         @if ($keterangan && ($status == '0' || $status == 0))
                                                             <div class="mt-1 mb-2">
-                                                                <small class="text-muted">Keterangan: {{ $keterangan }}</small>
+                                                                <small class="text-muted">Keterangan:
+                                                                    {{ $keterangan }}</small>
                                                             </div>
                                                         @endif
                                                     @endforeach
@@ -570,21 +575,25 @@
                                                             $itemId = $item->id_item_fisik;
                                                             $namaItem = $itemFisikNames[$itemId] ?? 'Item #' . $itemId;
                                                         @endphp
-                                                        <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                                                        <div
+                                                            class="d-flex justify-content-between align-items-center border-bottom py-2">
                                                             <span>{{ $namaItem }}</span>
                                                             <div class="d-flex align-items-center">
                                                                 @if ($status == '0' || $status == 0)
-                                                                    <span class="badge bg-warning text-dark me-2">Tidak Normal</span>
+                                                                    <span class="badge bg-warning text-dark me-2">Tidak
+                                                                        Normal</span>
                                                                 @elseif ($status == '1' || $status == 1)
                                                                     <span class="badge bg-success me-2">Normal</span>
                                                                 @else
-                                                                    <span class="badge bg-secondary me-2">Tidak Diperiksa</span>
+                                                                    <span class="badge bg-secondary me-2">Tidak
+                                                                        Diperiksa</span>
                                                                 @endif
                                                             </div>
                                                         </div>
                                                         @if ($keterangan && ($status == '0' || $status == 0))
                                                             <div class="mt-1 mb-2">
-                                                                <small class="text-muted">Keterangan: {{ $keterangan }}</small>
+                                                                <small class="text-muted">Keterangan:
+                                                                    {{ $keterangan }}</small>
                                                             </div>
                                                         @endif
                                                     @endforeach
@@ -1038,6 +1047,47 @@
                                         <h5>7. Diagnosis</h5>
                                         <div class="col-md-6">
                                             <div class="mb-3">
+                                                <label class="text-primary fw-semibold mb-2">Prognosis</label>
+                                                <select class="form-select" name="paru_prognosis" disabled>
+                                                    <option value="" disabled
+                                                        {{ !old('paru_prognosis', isset($asesmen->asesmenObstetri) ? $asesmen->asesmenObstetri->paru_prognosis : '')
+                                                            ? 'selected'
+                                                            : '' }}>
+                                                        --Pilih Prognosis--</option>
+                                                    @forelse ($satsetPrognosis as $item)
+                                                        <option value="{{ $item->prognosis_id }}"
+                                                            {{ old('paru_prognosis', isset($asesmen->asesmenObstetri) ? $asesmen->asesmenObstetri->paru_prognosis : '') ==
+                                                            $item->prognosis_id
+                                                                ? 'selected'
+                                                                : '' }}>
+                                                            {{ $item->value ?? 'Field tidak ditemukan' }}
+                                                        </option>
+                                                    @empty
+                                                        <option value="" disabled>Tidak ada data</option>
+                                                    @endforelse
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Diagnosis Banding :</label>
+                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk
+                                                    mencari
+                                                    diagnosis banding, apabila tidak ada, Pilih tanda tambah untuk menambah
+                                                    keterangan diagnosis banding yang tidak ditemukan.</small>
+                                                @if ($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->diagnosis_banding)
+                                                    <ul class="ms-3">
+                                                        @foreach (json_decode($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->diagnosis_banding, true) as $efek)
+                                                            <li>{{ $efek }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                @else
+                                                    -
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">Diagnosis Banding :</label>
                                                 <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk
                                                     mencari
@@ -1145,34 +1195,43 @@
                                                 @endif
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">Prognosis :</label>
-                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk
-                                                    mencari
-                                                    Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                    keterangan
-                                                    Prognosis yang tidak ditemukan.</small>
-                                                @if ($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->prognosis)
-                                                    <ul class="ms-3">
-                                                        @foreach (json_decode($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->prognosis, true) as $efek)
-                                                            <li>{{ $efek }}</li>
-                                                        @endforeach
-                                                    </ul>
-                                                @else
-                                                    -
-                                                @endif
+                                                <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan
+                                                    Pengobatan</label>
+                                                <textarea class="form-control" name="rencana_pengobatan" rows="4"
+                                                    placeholder="Rencana Penatalaksanaan Dan Pengobatan" readonly>{{ old('rencana_pengobatan', isset($asesmen->asesmenObstetri) ? $asesmen->asesmenObstetri->rencana_pengobatan : '') }}</textarea>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                {{-- <div class="row"> --}}
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Prognosis :</label>
+                                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk
+                                            mencari
+                                            Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
+                                            keterangan
+                                            Prognosis yang tidak ditemukan.</small>
+                                        @if ($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->prognosis)
+                                            <ul class="ms-3">
+                                                @foreach (json_decode($asesmen->rmeAsesmenObstetriDiagnosisImplementasi->prognosis, true) as $efek)
+                                                    <li>{{ $efek }}</li>
+                                                @endforeach
+                                            </ul>
+                                        @else
+                                            -
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        <!-- 9. Evaluasi -->
-                        <div class="tab-pane fade show">
+                <!-- 9. Evaluasi -->
+                {{-- <div class="tab-pane fade show">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
@@ -1188,11 +1247,11 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
-                    </div>
-                </div>
             </div>
         </div>
+    </div>
+    </div>
     </div>
 @endsection

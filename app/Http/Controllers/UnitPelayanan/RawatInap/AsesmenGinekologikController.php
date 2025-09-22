@@ -24,6 +24,7 @@ use App\Models\RmeMasterImplementasi;
 use App\Models\RmeMenjalar;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
+use App\Models\SatsetPrognosis;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -51,6 +52,7 @@ class AsesmenGinekologikController extends Controller
         $jenisnyeri = RmeJenisNyeri::all();
         $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
         $rmeMasterImplementasi = RmeMasterImplementasi::all();
+        $satsetPrognosis = SatsetPrognosis::all();
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -103,6 +105,7 @@ class AsesmenGinekologikController extends Controller
             'efeknyeri',
             'jenisnyeri',
             'rmeMasterDiagnosis',
+            'satsetPrognosis',
             'rmeMasterImplementasi',
             'user'
         ));
@@ -150,6 +153,8 @@ class AsesmenGinekologikController extends Controller
             $asesmenGinekologik->riwayat_obstetrik = $request->riwayat_obstetrik;
             $asesmenGinekologik->riwayat_penyakit_dahulu = $request->riwayat_penyakit_dahulu;
             $asesmenGinekologik->jumlah_suami = $request->jumlah_suami;
+            $asesmenGinekologik->rencana_pengobatan = $request->rencana_pengobatan;
+            $asesmenGinekologik->paru_prognosis = $request->paru_prognosis;
             $asesmenGinekologik->save();
 
             // 3. Simpan data tanda vital
@@ -338,11 +343,13 @@ class AsesmenGinekologikController extends Controller
                 ->firstOrFail();
 
             $itemFisik = MrItemFisik::orderBy('urut')->get();
+            $satsetPrognosis = SatsetPrognosis::all();
 
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-ginekologik.show', compact(
                 'asesmen',
                 'dataMedis',
-                'itemFisik'
+                'itemFisik',
+                'satsetPrognosis'
             ));
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
@@ -377,11 +384,14 @@ class AsesmenGinekologikController extends Controller
                 ->firstOrFail();
 
             $itemFisik = MrItemFisik::orderBy('urut')->get();
+            $satsetPrognosis = SatsetPrognosis::all();
+
 
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-ginekologik.edit', compact(
                 'asesmen',
                 'dataMedis',
-                'itemFisik'
+                'itemFisik',
+                'satsetPrognosis'
             ));
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
@@ -432,6 +442,8 @@ class AsesmenGinekologikController extends Controller
             $asesmenGinekologik->riwayat_obstetrik = $request->riwayat_obstetrik;
             $asesmenGinekologik->riwayat_penyakit_dahulu = $request->riwayat_penyakit_dahulu;
             $asesmenGinekologik->jumlah_suami = $request->jumlah_suami;
+            $asesmenGinekologik->paru_prognosis = $request->paru_prognosis;
+            $asesmenGinekologik->rencana_pengobatan = $request->rencana_pengobatan;
             $asesmenGinekologik->save();
 
             // 3. Simpan data tanda vital
@@ -608,8 +620,8 @@ class AsesmenGinekologikController extends Controller
                 'rmeAlergiPasien',
                 'rmeAsesmenGinekologikPemeriksaanFisik',
                 'pemeriksaanFisik' => function ($query) {
-                $query->orderBy('id_item_fisik');
-            },
+                    $query->orderBy('id_item_fisik');
+                },
             ])->findOrFail($id);
 
             $dataMedis = Kunjungan::with('pasien')
