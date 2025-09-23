@@ -1172,7 +1172,7 @@
                                 </div>
 
                                 <!-- 8. Waktu kontrol dan penggunaan obat-obatan di rumah -->
-                                <div class="card edukasi-card mb-4">
+                                {{-- <div class="card edukasi-card mb-4">
                                     <div class="card-body">
                                         <h6 class="card-title">8. Waktu kontrol dan penggunaan obat-obatan di rumah</h6>
                                         <div class="form-group">
@@ -1308,7 +1308,7 @@
                                                 readonly>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <!-- 9. Teknik Rehabilitasi -->
                                 <div class="card edukasi-card mb-4">

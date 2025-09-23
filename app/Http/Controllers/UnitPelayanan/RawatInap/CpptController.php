@@ -4,8 +4,10 @@ namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cppt;
+use App\Models\CpptInstruksiPpa;
 use App\Models\CpptPenyakit;
 use App\Models\CpptTindakLanjut;
+use App\Models\HrdKaryawan;
 use App\Models\Kunjungan;
 use App\Models\MrAnamnesis;
 use App\Models\MrKondisiFisik;
@@ -55,6 +57,7 @@ class CpptController extends Controller
         $frekuensiNyeri = RmeFrekuensiNyeri::all();
         $menjalar = RmeMenjalar::all();
         $jenisNyeri = RmeJenisNyeri::all();
+        $karyawan = HrdKaryawan::orderBy('kd_karyawan', 'asc')->get();
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
@@ -140,6 +143,7 @@ class CpptController extends Controller
 
         $cppt = $getCppt->groupBy(['urut_total'])->map(function ($item) {
 
+            $instruksiPpa = CpptInstruksiPpa::where('urut_total_cppt', $item->first()->urut_total)->get();
             return [
                 'kd_pasien'             => $item->first()->kd_pasien,
                 'no_transaksi'          => $item->first()->no_transaksi,
@@ -196,7 +200,8 @@ class CpptController extends Controller
                         'kd_penyakit'   => $penyakit->first()->kd_penyakit,
                         'nama_penyakit' => $penyakit->first()->penyakit,
                     ];
-                })
+                }),
+                'instruksi_ppa'         => $instruksiPpa
             ];
         });
 
@@ -209,7 +214,8 @@ class CpptController extends Controller
             'frekuensiNyeri'    => $frekuensiNyeri,
             'menjalar'          => $menjalar,
             'jenisNyeri'        => $jenisNyeri,
-            'cppt'              => $cppt
+            'cppt'              => $cppt,
+            'karyawan'          => $karyawan
         ]);
     }
 
@@ -326,6 +332,7 @@ class CpptController extends Controller
                 ->get();
 
             $cppt = $getCppt->groupBy(['urut_total'])->map(function ($item) {
+                $instruksiPpa = CpptInstruksiPpa::where('urut_total_cppt', $item->first()->urut_total)->get();
                 return [
                     'kd_pasien'             => $item->first()->kd_pasien,
                     'no_transaksi'          => $item->first()->no_transaksi,
@@ -382,7 +389,8 @@ class CpptController extends Controller
                             'kd_penyakit'   => $penyakit->first()->kd_penyakit,
                             'nama_penyakit' => $penyakit->first()->penyakit,
                         ];
-                    })
+                    }),
+                    'instruksi_ppa'         => $instruksiPpa
                 ];
             });
 
@@ -428,7 +436,7 @@ class CpptController extends Controller
             // 'pemeriksaan_fisik.required'    => 'Pemeriksaan fisik harus di isi!',
             // 'data_objektif.required'        => 'Data objektif harus di isi!',
             // 'planning.required'             => 'Planning harus di isi!',
-            'tindak_lanjut'                 => 'Tindak lanjut harus di isi!'
+            // 'tindak_lanjut'                 => 'Tindak lanjut harus di isi!'
         ];
 
         $validatedData = $request->validate([
@@ -445,7 +453,7 @@ class CpptController extends Controller
             // 'pemeriksaan_fisik' => 'required',
             // 'data_objektif'     => 'required',
             // 'planning'          => 'required',
-            'tindak_lanjut'     => 'required'
+            'tindak_lanjut'     => 'nullable'
         ], $validatorMessage);
 
         if (empty($request->diagnose_name)) return back()->with('error', 'Diagnosis harus di tambah minimal 1!');
@@ -673,6 +681,32 @@ class CpptController extends Controller
 
             $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
 
+            // Ganti bagian ini:
+            $cpptInstruksiPpa = [
+                'urut_total_cppt'   => $lastUrutTotalCppt,
+                'ppa'               => $request->ppa,
+                'instruksi'         => $request->instruksi
+            ];
+            CpptInstruksiPpa::create($cpptInstruksiPpa);
+
+            if ($request->has('perawat_kode') && is_array($request->perawat_kode)) {
+                $perawatKodes = $request->perawat_kode;
+                $perawatNamas = $request->perawat_nama ?? [];
+                $instruksis = $request->instruksi_text ?? [];
+
+                foreach ($perawatKodes as $index => $perawatKode) {
+                    if (!empty($perawatKode) && !empty($instruksis[$index])) {
+                        $cpptInstruksiPpa = [
+                            'urut_total_cppt'   => $lastUrutTotalCppt,
+                            'ppa'               => $perawatKode,
+                            'instruksi'         => $instruksis[$index]
+                        ];
+
+                        CpptInstruksiPpa::create($cpptInstruksiPpa);
+                    }
+                }
+            }
+
             DB::commit();
             return back()->with('success', 'CPPT berhasil ditambah!');
         } catch (Exception $e) {
@@ -718,7 +752,7 @@ class CpptController extends Controller
             // 'pemeriksaan_fisik' => 'required',
             // 'data_objektif'     => 'required',
             // 'planning'          => 'required',
-            'tindak_lanjut'     => 'required'
+            'tindak_lanjut'     => 'nullable'
         ], $validatorMessage);
 
         if (empty($request->diagnose_name)) return back()->with('error', 'Diagnosis harus di tambah minimal 1!');
@@ -907,11 +941,51 @@ class CpptController extends Controller
 
             $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
 
+            CpptInstruksiPpa::where('urut_total_cppt', $cppt->urut_total)->delete();
+
+            // instruksi PPA baru
+            if ($request->has('perawat_kode') && is_array($request->perawat_kode)) {
+                $perawatKodes = $request->perawat_kode;
+                $perawatNamas = $request->perawat_nama ?? [];
+                $instruksis = $request->instruksi_text ?? [];
+
+                foreach ($perawatKodes as $index => $perawatKode) {
+                    if (!empty($perawatKode) && !empty($instruksis[$index])) {
+                        $cpptInstruksiPpa = [
+                            'urut_total_cppt'   => $cppt->urut_total,
+                            'ppa'               => $perawatKode,
+                            'instruksi'         => $instruksis[$index]
+                        ];
+
+                        CpptInstruksiPpa::create($cpptInstruksiPpa);
+                    }
+                }
+            }
+
             DB::commit();
             return back()->with('success', 'CPPT berhasil diubah!');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function getInstruksiPpaAjax(Request $request)
+    {
+        try {
+            $urutTotal = $request->urut_total;
+
+            $instruksiPpa = CpptInstruksiPpa::where('urut_total_cppt', $urutTotal)->get();
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $instruksiPpa
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
         }
     }
 

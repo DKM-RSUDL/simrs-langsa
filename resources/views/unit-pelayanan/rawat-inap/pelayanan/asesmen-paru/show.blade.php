@@ -14,13 +14,13 @@
                 </a>
                 <div class="d-flex justify-content-end">
                     <a href="{{ route('rawat-inap.asesmen.medis.paru.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $asesmen->id]) }}"
-                    class="btn btn-sm btn-info">
-                    <i class="fas fa-print"></i> print
-                </a>
-                <a href="{{ route('rawat-inap.asesmen.medis.paru.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $asesmen->id]) }}"
-                    class="btn btn-sm btn-secondary ms-2">
-                    <i class="fas fa-edit"></i> Edit
-                </a>
+                        class="btn btn-sm btn-info">
+                        <i class="fas fa-print"></i> print
+                    </a>
+                    <a href="{{ route('rawat-inap.asesmen.medis.paru.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $asesmen->id]) }}"
+                        class="btn btn-sm btn-secondary ms-2">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
                 </div>
             </div>
 
@@ -83,7 +83,7 @@
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <label class="form-label fw-bold">Alergi:</label>
-                                            @if($asesmen->rmeAlergiPasien->isNotEmpty())
+                                            @if ($asesmen->rmeAlergiPasien->isNotEmpty())
                                                 <div class="table-responsive">
                                                     <table class="table table-bordered table-sm">
                                                         <thead class="table-light">
@@ -95,7 +95,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @foreach($asesmen->rmeAlergiPasien as $alergi)
+                                                            @foreach ($asesmen->rmeAlergiPasien as $alergi)
                                                                 <tr>
                                                                     <td>{{ $alergi->jenis_alergi ?? '-' }}</td>
                                                                     <td>{{ $alergi->nama_alergi ?? '-' }}</td>
@@ -158,7 +158,7 @@
                                             <tr>
                                                 <td class="label-col fw-bold">a. Merokok</td>
                                                 <td>
-                                                    @if($asesmen->rmeAsesmenParu->merokok == 'ya')
+                                                    @if ($asesmen->rmeAsesmenParu->merokok == 'ya')
                                                         <span class="badge bg-warning">Ya</span>
                                                         - Jumlah: {{ $asesmen->rmeAsesmenParu->merokok_jumlah ?? 0 }}
                                                         batang/hari
@@ -171,7 +171,7 @@
                                             <tr>
                                                 <td class="label-col fw-bold">b. Alkohol</td>
                                                 <td>
-                                                    @if($asesmen->rmeAsesmenParu->alkohol == 'ya')
+                                                    @if ($asesmen->rmeAsesmenParu->alkohol == 'ya')
                                                         <span class="badge bg-warning">Ya</span>
                                                         - Jumlah: {{ $asesmen->rmeAsesmenParu->alkohol_jumlah ?? '-' }}
                                                     @else
@@ -182,7 +182,7 @@
                                             <tr>
                                                 <td class="label-col fw-bold">c. Obat-obatan</td>
                                                 <td>
-                                                    @if($asesmen->rmeAsesmenParu->obat_obatan == 'ya')
+                                                    @if ($asesmen->rmeAsesmenParu->obat_obatan == 'ya')
                                                         <span class="badge bg-warning">Ya</span>
                                                         - Jenis: {{ $asesmen->rmeAsesmenParu->obat_jenis ?? '-' }}
                                                     @else
@@ -246,7 +246,7 @@
                                                             {{ $asesmen->rmeAsesmenParu->frekuensi_pernafasan ?? '-' }}
                                                             x/menit
                                                             ({{ ucfirst($asesmen->rmeAsesmenParu->pernafasan_tipe ?? '-') }})
-                                                        </div>                                                        
+                                                        </div>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -266,7 +266,7 @@
                                                     <div class="row">
                                                         <div class="col-lg-4">
                                                             {{ $asesmen->rmeAsesmenParu->saturasi_oksigen ?? '-' }}%
-                                                        </div>                                                        
+                                                        </div>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -287,7 +287,7 @@
                                                 <td class="label-col fw-bold">Dyspnea</td>
                                                 <td>
                                                     <div class="row">
-                                                        <div class="col-lg-6">                                                            
+                                                        <div class="col-lg-6">
                                                             <span
                                                                 class="badge {{ $asesmen->rmeAsesmenParu->dyspnoe == 'ya' ? 'bg-warning' : 'bg-success' }}">
                                                                 {{ ucfirst($asesmen->rmeAsesmenParu->dyspnoe ?? 'Tidak') }}
@@ -295,7 +295,7 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                            </tr>                                            
+                                            </tr>
                                             <tr>
                                                 <td class="label-col fw-bold">Oedema</td>
                                                 <td>
@@ -318,7 +318,7 @@
                                                                 class="badge {{ $asesmen->rmeAsesmenParu->icterus == 'ya' ? 'bg-warning' : 'bg-success' }}">
                                                                 {{ ucfirst($asesmen->rmeAsesmenParu->icterus ?? 'Tidak') }}
                                                             </span>
-                                                        </div>                                                        
+                                                        </div>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -331,7 +331,7 @@
                                                                 class="badge {{ $asesmen->rmeAsesmenParu->anemia == 'ya' ? 'bg-warning' : 'bg-success' }}">
                                                                 {{ ucfirst($asesmen->rmeAsesmenParu->anemia ?? 'Tidak') }}
                                                             </span>
-                                                        </div>                                                      
+                                                        </div>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -352,9 +352,9 @@
                                     $pemeriksaanFisikParu = $asesmen->rmeAsesmenParuPemeriksaanFisik->first();
                                 @endphp
 
-                                @if($pemeriksaanFisikParu)
+                                @if ($pemeriksaanFisikParu)
                                     <div class="table-responsive">
-                                        <table class="table table-bordered">                                            
+                                        <table class="table table-bordered">
                                             <tbody>
                                                 <!-- Kepala -->
                                                 <tr>
@@ -365,12 +365,14 @@
                                                             </div>
                                                             <div class="col-md-10">
                                                                 <div class="d-flex align-items-center gap-3">
-                                                                    @if($pemeriksaanFisikParu->paru_kepala == 1)
+                                                                    @if ($pemeriksaanFisikParu->paru_kepala == 1)
                                                                         <span class="badge bg-success">Normal</span>
                                                                     @else
-                                                                        <span class="badge bg-warning text-dark">Tidak Normal</span>
-                                                                        @if($pemeriksaanFisikParu->paru_kepala_keterangan)
-                                                                            <span class="text-muted">- {{ $pemeriksaanFisikParu->paru_kepala_keterangan }}</span>
+                                                                        <span class="badge bg-warning text-dark">Tidak
+                                                                            Normal</span>
+                                                                        @if ($pemeriksaanFisikParu->paru_kepala_keterangan)
+                                                                            <span class="text-muted">-
+                                                                                {{ $pemeriksaanFisikParu->paru_kepala_keterangan }}</span>
                                                                         @endif
                                                                     @endif
                                                                 </div>
@@ -388,12 +390,14 @@
                                                             </div>
                                                             <div class="col-md-10">
                                                                 <div class="d-flex align-items-center gap-3">
-                                                                    @if($pemeriksaanFisikParu->paru_mata == 1)
+                                                                    @if ($pemeriksaanFisikParu->paru_mata == 1)
                                                                         <span class="badge bg-success">Normal</span>
                                                                     @else
-                                                                        <span class="badge bg-warning text-dark">Tidak Normal</span>
-                                                                        @if($pemeriksaanFisikParu->paru_mata_keterangan)
-                                                                            <span class="text-muted">- {{ $pemeriksaanFisikParu->paru_mata_keterangan }}</span>
+                                                                        <span class="badge bg-warning text-dark">Tidak
+                                                                            Normal</span>
+                                                                        @if ($pemeriksaanFisikParu->paru_mata_keterangan)
+                                                                            <span class="text-muted">-
+                                                                                {{ $pemeriksaanFisikParu->paru_mata_keterangan }}</span>
                                                                         @endif
                                                                     @endif
                                                                 </div>
@@ -411,12 +415,14 @@
                                                             </div>
                                                             <div class="col-md-10">
                                                                 <div class="d-flex align-items-center gap-3">
-                                                                    @if($pemeriksaanFisikParu->paru_tht == 1)
+                                                                    @if ($pemeriksaanFisikParu->paru_tht == 1)
                                                                         <span class="badge bg-success">Normal</span>
                                                                     @else
-                                                                        <span class="badge bg-warning text-dark">Tidak Normal</span>
-                                                                        @if($pemeriksaanFisikParu->paru_tht_keterangan)
-                                                                            <span class="text-muted">- {{ $pemeriksaanFisikParu->paru_tht_keterangan }}</span>
+                                                                        <span class="badge bg-warning text-dark">Tidak
+                                                                            Normal</span>
+                                                                        @if ($pemeriksaanFisikParu->paru_tht_keterangan)
+                                                                            <span class="text-muted">-
+                                                                                {{ $pemeriksaanFisikParu->paru_tht_keterangan }}</span>
                                                                         @endif
                                                                     @endif
                                                                 </div>
@@ -434,12 +440,14 @@
                                                             </div>
                                                             <div class="col-md-10">
                                                                 <div class="d-flex align-items-center gap-3">
-                                                                    @if($pemeriksaanFisikParu->paru_leher == 1)
+                                                                    @if ($pemeriksaanFisikParu->paru_leher == 1)
                                                                         <span class="badge bg-success">Normal</span>
                                                                     @else
-                                                                        <span class="badge bg-warning text-dark">Tidak Normal</span>
-                                                                        @if($pemeriksaanFisikParu->paru_leher_keterangan)
-                                                                            <span class="text-muted">- {{ $pemeriksaanFisikParu->paru_leher_keterangan }}</span>
+                                                                        <span class="badge bg-warning text-dark">Tidak
+                                                                            Normal</span>
+                                                                        @if ($pemeriksaanFisikParu->paru_leher_keterangan)
+                                                                            <span class="text-muted">-
+                                                                                {{ $pemeriksaanFisikParu->paru_leher_keterangan }}</span>
                                                                         @endif
                                                                     @endif
                                                                 </div>
@@ -464,12 +472,16 @@
                                                                         </div>
                                                                         <div class="col-md-10">
                                                                             <div class="d-flex align-items-center gap-3">
-                                                                                @if($pemeriksaanFisikParu->paru_jantung == 1)
-                                                                                    <span class="badge bg-success">Normal</span>
+                                                                                @if ($pemeriksaanFisikParu->paru_jantung == 1)
+                                                                                    <span
+                                                                                        class="badge bg-success">Normal</span>
                                                                                 @else
-                                                                                    <span class="badge bg-warning text-dark">Tidak Normal</span>
-                                                                                    @if($pemeriksaanFisikParu->paru_jantung_keterangan)
-                                                                                        <span class="text-muted">- {{ $pemeriksaanFisikParu->paru_jantung_keterangan }}</span>
+                                                                                    <span
+                                                                                        class="badge bg-warning text-dark">Tidak
+                                                                                        Normal</span>
+                                                                                    @if ($pemeriksaanFisikParu->paru_jantung_keterangan)
+                                                                                        <span class="text-muted">-
+                                                                                            {{ $pemeriksaanFisikParu->paru_jantung_keterangan }}</span>
                                                                                     @endif
                                                                                 @endif
                                                                             </div>
@@ -487,17 +499,22 @@
                                                                             <!-- Inspeksi -->
                                                                             <div class="row mb-2">
                                                                                 <div class="col-md-3">
-                                                                                    <label class="text-muted">Inspeksi:</label>
+                                                                                    <label
+                                                                                        class="text-muted">Inspeksi:</label>
                                                                                 </div>
                                                                                 <div class="col-md-9">
-                                                                                    <div class="d-flex align-items-center gap-2">
-                                                                                        @if($pemeriksaanFisikParu->paru_inspeksi == 'simetris' || $pemeriksaanFisikParu->paru_inspeksi == 1)
-                                                                                            <span class="badge bg-success">Simetris</span>
+                                                                                    <div
+                                                                                        class="d-flex align-items-center gap-2">
+                                                                                        @if ($pemeriksaanFisikParu->paru_inspeksi == 'simetris' || $pemeriksaanFisikParu->paru_inspeksi == 1)
+                                                                                            <span
+                                                                                                class="badge bg-success">Simetris</span>
                                                                                         @else
-                                                                                            <span class="badge bg-warning text-dark">Asimetris</span>
+                                                                                            <span
+                                                                                                class="badge bg-warning text-dark">Asimetris</span>
                                                                                         @endif
-                                                                                        @if($pemeriksaanFisikParu->paru_inspeksi_keterangan)
-                                                                                            <span class="text-muted">- {{ $pemeriksaanFisikParu->paru_inspeksi_keterangan }}</span>
+                                                                                        @if ($pemeriksaanFisikParu->paru_inspeksi_keterangan)
+                                                                                            <span class="text-muted">-
+                                                                                                {{ $pemeriksaanFisikParu->paru_inspeksi_keterangan }}</span>
                                                                                         @endif
                                                                                     </div>
                                                                                 </div>
@@ -506,7 +523,8 @@
                                                                             <!-- Palpasi -->
                                                                             <div class="row mb-2">
                                                                                 <div class="col-md-3">
-                                                                                    <label class="text-muted">Palpasi:</label>
+                                                                                    <label
+                                                                                        class="text-muted">Palpasi:</label>
                                                                                 </div>
                                                                                 <div class="col-md-9">
                                                                                     <span>{{ $pemeriksaanFisikParu->paru_palpasi ?: '-' }}</span>
@@ -516,7 +534,8 @@
                                                                             <!-- Perkusi -->
                                                                             <div class="row mb-2">
                                                                                 <div class="col-md-3">
-                                                                                    <label class="text-muted">Perkusi:</label>
+                                                                                    <label
+                                                                                        class="text-muted">Perkusi:</label>
                                                                                 </div>
                                                                                 <div class="col-md-9">
                                                                                     <span>{{ $pemeriksaanFisikParu->paru_perkusi ?: '-' }}</span>
@@ -526,7 +545,8 @@
                                                                             <!-- Auskultasi -->
                                                                             <div class="row mb-3">
                                                                                 <div class="col-md-3">
-                                                                                    <label class="text-muted">Auskultasi:</label>
+                                                                                    <label
+                                                                                        class="text-muted">Auskultasi:</label>
                                                                                 </div>
                                                                                 <div class="col-md-9">
                                                                                     <span>{{ $pemeriksaanFisikParu->paru_auskultasi ?: '-' }}</span>
@@ -536,19 +556,29 @@
                                                                             <!-- Suara Pernafasan (SP) -->
                                                                             <div class="row mb-2">
                                                                                 <div class="col-md-3">
-                                                                                    <label class="text-muted">Suara Pernafasan:</label>
+                                                                                    <label class="text-muted">Suara
+                                                                                        Pernafasan:</label>
                                                                                 </div>
                                                                                 <div class="col-md-9">
                                                                                     @php
                                                                                         $suaraPernafasanData = [];
-                                                                                        if($pemeriksaanFisikParu->paru_suara_pernafasan) {
-                                                                                            $suaraPernafasanData = json_decode($pemeriksaanFisikParu->paru_suara_pernafasan, true) ?: [];
+                                                                                        if (
+                                                                                            $pemeriksaanFisikParu->paru_suara_pernafasan
+                                                                                        ) {
+                                                                                            $suaraPernafasanData =
+                                                                                                json_decode(
+                                                                                                    $pemeriksaanFisikParu->paru_suara_pernafasan,
+                                                                                                    true,
+                                                                                                ) ?:
+                                                                                                [];
                                                                                         }
                                                                                     @endphp
-                                                                                    @if(!empty($suaraPernafasanData))
-                                                                                        <div class="d-flex flex-wrap gap-2">
-                                                                                            @foreach($suaraPernafasanData as $suara)
-                                                                                                <span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $suara)) }}</span>
+                                                                                    @if (!empty($suaraPernafasanData))
+                                                                                        <div
+                                                                                            class="d-flex flex-wrap gap-2">
+                                                                                            @foreach ($suaraPernafasanData as $suara)
+                                                                                                <span
+                                                                                                    class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $suara)) }}</span>
                                                                                             @endforeach
                                                                                         </div>
                                                                                     @else
@@ -560,19 +590,29 @@
                                                                             <!-- Suara Tambahan (ST) -->
                                                                             <div class="row mb-2">
                                                                                 <div class="col-md-3">
-                                                                                    <label class="text-muted">Suara Tambahan:</label>
+                                                                                    <label class="text-muted">Suara
+                                                                                        Tambahan:</label>
                                                                                 </div>
                                                                                 <div class="col-md-9">
                                                                                     @php
                                                                                         $suaraTambahanData = [];
-                                                                                        if($pemeriksaanFisikParu->paru_suara_tambahan) {
-                                                                                            $suaraTambahanData = json_decode($pemeriksaanFisikParu->paru_suara_tambahan, true) ?: [];
+                                                                                        if (
+                                                                                            $pemeriksaanFisikParu->paru_suara_tambahan
+                                                                                        ) {
+                                                                                            $suaraTambahanData =
+                                                                                                json_decode(
+                                                                                                    $pemeriksaanFisikParu->paru_suara_tambahan,
+                                                                                                    true,
+                                                                                                ) ?:
+                                                                                                [];
                                                                                         }
                                                                                     @endphp
-                                                                                    @if(!empty($suaraTambahanData))
-                                                                                        <div class="d-flex flex-wrap gap-2">
-                                                                                            @foreach($suaraTambahanData as $suara)
-                                                                                                <span class="badge bg-warning text-dark">{{ ucfirst(str_replace('_', ' ', $suara)) }}</span>
+                                                                                    @if (!empty($suaraTambahanData))
+                                                                                        <div
+                                                                                            class="d-flex flex-wrap gap-2">
+                                                                                            @foreach ($suaraTambahanData as $suara)
+                                                                                                <span
+                                                                                                    class="badge bg-warning text-dark">{{ ucfirst(str_replace('_', ' ', $suara)) }}</span>
                                                                                             @endforeach
                                                                                         </div>
                                                                                     @else
@@ -602,57 +642,61 @@
                         <!-- Site Marking Paru -->
                         <div class="mt-4">
                             <h6 class="fw-semibold mb-3">Site Marking - Penandaan Anatomi Paru</h6>
-                            
+
                             @php
                                 $siteMarkingParuData = [];
                                 if ($asesmen->rmeAsesmenParu && $asesmen->rmeAsesmenParu->site_marking_paru_data) {
                                     try {
-                                        $siteMarkingParuData = json_decode($asesmen->rmeAsesmenParu->site_marking_paru_data, true) ?: [];
+                                        $siteMarkingParuData =
+                                            json_decode($asesmen->rmeAsesmenParu->site_marking_paru_data, true) ?: [];
                                     } catch (Exception $e) {
                                         $siteMarkingParuData = [];
                                     }
                                 }
                             @endphp
-                            
-                            @if(!empty($siteMarkingParuData))
+
+                            @if (!empty($siteMarkingParuData))
                                 <div class="row">
                                     <div class="col-md-8">
-                                        <div class="site-marking-container position-relative border rounded" style="background: #f8f9fa;">
-                                            <img src="{{ asset('assets/images/sitemarking/paru.jpg') }}" 
-                                                id="showParuAnatomyImage" 
-                                                class="img-fluid" 
-                                                style="max-width: 100%;">
-                                            <canvas id="showParuMarkingCanvas" 
-                                                    class="position-absolute top-0 start-0" 
-                                                    style="z-index: 10; pointer-events: none;">
+                                        <div class="site-marking-container position-relative border rounded"
+                                            style="background: #f8f9fa;">
+                                            <img src="{{ asset('assets/images/sitemarking/paru.jpg') }}"
+                                                id="showParuAnatomyImage" class="img-fluid" style="max-width: 100%;">
+                                            <canvas id="showParuMarkingCanvas" class="position-absolute top-0 start-0"
+                                                style="z-index: 10; pointer-events: none;">
                                             </canvas>
                                         </div>
                                         <div class="mt-2">
                                             <small class="text-muted">
-                                                <strong>Keterangan:</strong> Gambar menampilkan penandaan yang telah dibuat oleh dokter.
+                                                <strong>Keterangan:</strong> Gambar menampilkan penandaan yang telah dibuat
+                                                oleh dokter.
                                             </small>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h6 class="mb-0">Daftar Penandaan ({{ count($siteMarkingParuData) }})</h6>
+                                                <h6 class="mb-0">Daftar Penandaan ({{ count($siteMarkingParuData) }})
+                                                </h6>
                                             </div>
                                             <div class="card-body" style="max-height: 400px; overflow-y: auto;">
-                                                @foreach($siteMarkingParuData as $index => $marking)
+                                                @foreach ($siteMarkingParuData as $index => $marking)
                                                     <div class="marking-item border rounded p-2 mb-2 bg-light">
                                                         <div class="d-flex justify-content-between align-items-start">
                                                             <div class="flex-grow-1">
-                                                                <div class="fw-semibold text-primary">{{ $marking['note'] ?? "Penandaan " . ($index + 1) }}</div>
+                                                                <div class="fw-semibold text-primary">
+                                                                    {{ $marking['note'] ?? 'Penandaan ' . ($index + 1) }}
+                                                                </div>
                                                                 <div class="d-flex align-items-center gap-2 mt-1">
-                                                                    <span class="badge bg-secondary" style="font-size: 10px;">CORET</span>
-                                                                    @if(isset($marking['timestamp']))
+                                                                    <span class="badge bg-secondary"
+                                                                        style="font-size: 10px;">CORET</span>
+                                                                    @if (isset($marking['timestamp']))
                                                                         <small class="text-muted">
                                                                             {{ \Carbon\Carbon::parse($marking['timestamp'])->format('d/m/Y H:i') }}
                                                                         </small>
                                                                     @endif
                                                                 </div>
-                                                                @if(isset($marking['strokes']) && count($marking['strokes']) > 0)
+                                                                @if (isset($marking['strokes']) && count($marking['strokes']) > 0)
                                                                     <small class="text-muted">
                                                                         Jumlah stroke: {{ count($marking['strokes']) }}
                                                                     </small>
@@ -671,51 +715,55 @@
                                     document.addEventListener('DOMContentLoaded', function() {
                                         displayParuSiteMarking();
                                     });
-                                    
+
                                     function displayParuSiteMarking() {
                                         const image = document.getElementById('showParuAnatomyImage');
                                         const canvas = document.getElementById('showParuMarkingCanvas');
-                                        
+
                                         if (!image || !canvas) {
                                             return; // Elements not found, no site marking to display
                                         }
-                                        
+
                                         const ctx = canvas.getContext('2d');
-                                        
+
                                         // Data dari database - ambil langsung dari sumber
-                                        const markingsData = @json($asesmen->rmeAsesmenParu->site_marking_paru_data ? json_decode($asesmen->rmeAsesmenParu->site_marking_paru_data, true) : []);
-                                        
+                                        const markingsData = @json(
+                                            $asesmen->rmeAsesmenParu->site_marking_paru_data
+                                                ? json_decode($asesmen->rmeAsesmenParu->site_marking_paru_data, true)
+                                                : []
+                                        );
+
                                         function setupCanvas() {
                                             function updateCanvasSize() {
                                                 canvas.width = image.offsetWidth;
                                                 canvas.height = image.offsetHeight;
                                                 canvas.style.width = image.offsetWidth + 'px';
                                                 canvas.style.height = image.offsetHeight + 'px';
-                                                
+
                                                 // Redraw markings
                                                 drawAllMarkings();
                                             }
-                                            
+
                                             // Update canvas size when image loads
                                             image.onload = updateCanvasSize;
-                                            
+
                                             // Update canvas size when window resizes
                                             window.addEventListener('resize', updateCanvasSize);
-                                            
+
                                             // Initial setup
                                             if (image.complete) {
                                                 updateCanvasSize();
                                             }
                                         }
-                                        
+
                                         function drawAllMarkings() {
                                             // Clear canvas
                                             ctx.clearRect(0, 0, canvas.width, canvas.height);
-                                            
+
                                             if (!markingsData || markingsData.length === 0) {
                                                 return;
                                             }
-                                            
+
                                             // Draw each marking
                                             markingsData.forEach(marking => {
                                                 if (marking.strokes && marking.strokes.length > 0) {
@@ -723,40 +771,40 @@
                                                 }
                                             });
                                         }
-                                        
+
                                         function drawStrokesOnCanvas(strokesArray) {
                                             strokesArray.forEach(stroke => {
                                                 if (stroke.length < 2) return;
-                                                
+
                                                 ctx.strokeStyle = stroke[0].color || '#dc3545';
                                                 ctx.lineWidth = stroke[0].size || 2;
                                                 ctx.lineCap = 'round';
                                                 ctx.lineJoin = 'round';
                                                 ctx.globalAlpha = 0.8;
-                                                
+
                                                 ctx.beginPath();
                                                 const firstPoint = stroke[0];
                                                 ctx.moveTo(
                                                     (firstPoint.x / 100) * canvas.width,
                                                     (firstPoint.y / 100) * canvas.height
                                                 );
-                                                
+
                                                 // Draw smooth curves
                                                 for (let i = 1; i < stroke.length - 1; i++) {
                                                     const currentPoint = stroke[i];
                                                     const nextPoint = stroke[i + 1];
-                                                    
+
                                                     const currentX = (currentPoint.x / 100) * canvas.width;
                                                     const currentY = (currentPoint.y / 100) * canvas.height;
                                                     const nextX = (nextPoint.x / 100) * canvas.width;
                                                     const nextY = (nextPoint.y / 100) * canvas.height;
-                                                    
+
                                                     const midX = (currentX + nextX) / 2;
                                                     const midY = (currentY + nextY) / 2;
-                                                    
+
                                                     ctx.quadraticCurveTo(currentX, currentY, midX, midY);
                                                 }
-                                                
+
                                                 // Draw to last point
                                                 if (stroke.length > 1) {
                                                     const lastPoint = stroke[stroke.length - 1];
@@ -765,17 +813,16 @@
                                                         (lastPoint.y / 100) * canvas.height
                                                     );
                                                 }
-                                                
+
                                                 ctx.stroke();
                                                 ctx.globalAlpha = 1;
                                             });
                                         }
-                                        
+
                                         // Initialize
                                         setupCanvas();
                                     }
                                 </script>
-                                
                             @else
                                 <div class="alert alert-info">
                                     <i class="bi bi-info-circle me-2"></i>
@@ -792,7 +839,7 @@
                                     tidak dilakukan.
                                 </p>
 
-                                @if($asesmen->pemeriksaanFisik->count() > 0 && $itemFisik->count() > 0)
+                                @if ($asesmen->pemeriksaanFisik->count() > 0 && $itemFisik->count() > 0)
                                     <div class="row">
                                         @php
                                             // Buat mapping pemeriksaan fisik berdasarkan id_item_fisik
@@ -895,7 +942,7 @@
                         <h5 class="section-title">7. Rencana Kerja Dan Penatalaksanaan</h5>
                         <div class="card">
                             <div class="card-body">
-                                @if($asesmen->rmeAsesmenParuRencanaKerja)
+                                @if ($asesmen->rmeAsesmenParuRencanaKerja)
                                     @php $rencanaKerja = $asesmen->rmeAsesmenParuRencanaKerja; @endphp
                                     <div class="row">
                                         <div class="col-md-6">
@@ -915,7 +962,8 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label class="fw-bold">c. Pemeriksaan LED:</label>
-                                                <span class="badge {{ $rencanaKerja->led ? 'bg-success' : 'bg-secondary' }}">
+                                                <span
+                                                    class="badge {{ $rencanaKerja->led ? 'bg-success' : 'bg-secondary' }}">
                                                     {{ $rencanaKerja->led ? 'Ya' : 'Tidak' }}
                                                 </span>
                                             </div>
@@ -928,7 +976,8 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label class="fw-bold">e. Pemeriksaan KGDS:</label>
-                                                <span class="badge {{ $rencanaKerja->kgds ? 'bg-success' : 'bg-secondary' }}">
+                                                <span
+                                                    class="badge {{ $rencanaKerja->kgds ? 'bg-success' : 'bg-secondary' }}">
                                                     {{ $rencanaKerja->kgds ? 'Ya' : 'Tidak' }}
                                                 </span>
                                             </div>
@@ -1020,11 +1069,12 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label class="fw-bold">r. Mantoux Tes:</label>
-                                                <span class="badge {{ $rencanaKerja->mantoux_tes ? 'bg-success' : 'bg-secondary' }}">
+                                                <span
+                                                    class="badge {{ $rencanaKerja->mantoux_tes ? 'bg-success' : 'bg-secondary' }}">
                                                     {{ $rencanaKerja->mantoux_tes ? 'Ya' : 'Tidak' }}
                                                 </span>
                                             </div>
-                                            @if($rencanaKerja->lainnya)
+                                            @if ($rencanaKerja->lainnya)
                                                 <div class="mb-3">
                                                     <label class="fw-bold">s. Lainnya:</label>
                                                     <p class="form-control-plaintext border-bottom">
@@ -1046,16 +1096,16 @@
                         <h5 class="section-title">8. Perencanaan Pulang Pasien (Discharge Planning)</h5>
                         <div class="card">
                             <div class="card-body">
-                                @if($asesmen->rmeAsesmenParuPerencanaanPulang)
+                                @if ($asesmen->rmeAsesmenParuPerencanaanPulang)
                                     @php $dischargePlanning = $asesmen->rmeAsesmenParuPerencanaanPulang; @endphp
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <div class="mb-3">
+                                            {{-- <div class="mb-3">
                                                 <label class="form-label fw-bold">Diagnosis medis:</label>
                                                 <p class="form-control-plaintext border-bottom">
                                                     {{ $dischargePlanning->diagnosis_medis ?? '-' }}
                                                 </p>
-                                            </div>
+                                            </div> --}}
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Usia lanjut (>60 th):</label>
                                                 <span
@@ -1124,33 +1174,37 @@
 
                     <!-- 9. Diagnosis -->
                     <div class="section-separator mb-4">
-                        <h5 class="section-title">9. Diagnosis</h5>                        
+                        <h5 class="section-title">9. Diagnosis</h5>
                         <div class="card">
                             <div class="card-body">
 
                                 <div class="mb-4">
                                     <label class="text-primary fw-semibold">Prognosis</label>
-                                    
+
                                     @php
                                         $prognosisValue = null;
                                         $prognosisId = null;
-                                        
+
                                         // Ambil ID prognosis yang tersimpan
                                         if (isset($asesmen->rmeAsesmenParu)) {
-                                            $prognosisId = $asesmen->rmeAsesmenParu->paru_prognosis ?? 
-                                                        $asesmen->rmeAsesmenParu->prognosis ?? 
-                                                        $asesmen->rmeAsesmenParu->prognosis_id ?? null;
+                                            $prognosisId =
+                                                $asesmen->rmeAsesmenParu->paru_prognosis ??
+                                                ($asesmen->rmeAsesmenParu->prognosis ??
+                                                    ($asesmen->rmeAsesmenParu->prognosis_id ?? null));
                                         }
-                                        
+
                                         // Cari nilai prognosis berdasarkan ID
                                         if ($prognosisId && isset($satsetPrognosis)) {
-                                            $selectedPrognosis = $satsetPrognosis->where('prognosis_id', $prognosisId)->first();
+                                            $selectedPrognosis = $satsetPrognosis
+                                                ->where('prognosis_id', $prognosisId)
+                                                ->first();
                                             $prognosisValue = $selectedPrognosis->value ?? null;
                                         }
                                     @endphp
-                                    
-                                    <div class="form-control bg-light" style="min-height: 38px; display: flex; align-items: center;">
-                                        @if($prognosisValue)
+
+                                    <div class="form-control bg-light"
+                                        style="min-height: 38px; display: flex; align-items: center;">
+                                        @if ($prognosisValue)
                                             <span class="text-dark">{{ $prognosisValue }}</span>
                                         @else
                                             <span class="text-muted">Belum ada data prognosis</span>
@@ -1176,8 +1230,14 @@
 
                                                 if ($asesmen->rmeAsesmenParuDiagnosisImplementasi) {
                                                     $implementasi = $asesmen->rmeAsesmenParuDiagnosisImplementasi;
-                                                    $diagnosisBanding = json_decode($implementasi->diagnosis_banding ?? '[]', true);
-                                                    $diagnosisKerja = json_decode($implementasi->diagnosis_kerja ?? '[]', true);
+                                                    $diagnosisBanding = json_decode(
+                                                        $implementasi->diagnosis_banding ?? '[]',
+                                                        true,
+                                                    );
+                                                    $diagnosisKerja = json_decode(
+                                                        $implementasi->diagnosis_kerja ?? '[]',
+                                                        true,
+                                                    );
                                                     $observasi = json_decode($implementasi->observasi ?? '[]', true);
                                                     $terapeutik = json_decode($implementasi->terapeutik ?? '[]', true);
                                                     $edukasi = json_decode($implementasi->edukasi ?? '[]', true);
@@ -1250,7 +1310,9 @@
                                     </div>
                                 </div>
 
-                                @if($asesmen->rmeAsesmenParuDiagnosisImplementasi && $asesmen->rmeAsesmenParuDiagnosisImplementasi->gambar_radiologi_paru)
+                                @if (
+                                    $asesmen->rmeAsesmenParuDiagnosisImplementasi &&
+                                        $asesmen->rmeAsesmenParuDiagnosisImplementasi->gambar_radiologi_paru)
                                     <div class="row mt-4">
                                         <div class="col-md-12">
                                             <div class="mb-3">

@@ -103,7 +103,8 @@
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Tekanan Darah</label>
-                                        <p>{{ $asesmenGeriatri->sistole && $asesmenGeriatri->diastole ? $asesmenGeriatri->sistole . '/' . $asesmenGeriatri->diastole . ' mmHg' : '-' }}</p>
+                                        <p>{{ $asesmenGeriatri->sistole && $asesmenGeriatri->diastole ? $asesmenGeriatri->sistole . '/' . $asesmenGeriatri->diastole . ' mmHg' : '-' }}
+                                        </p>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Suhu</label>
@@ -114,7 +115,8 @@
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Respirasi</label>
-                                        <p>{{ $asesmenGeriatri->respirasi ? $asesmenGeriatri->respirasi . ' x/menit' : '-' }}</p>
+                                        <p>{{ $asesmenGeriatri->respirasi ? $asesmenGeriatri->respirasi . ' x/menit' : '-' }}
+                                        </p>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Nadi</label>
@@ -126,11 +128,13 @@
                                 <div class="row mb-3">
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Berat Badan</label>
-                                        <p>{{ $asesmenGeriatri->berat_badan ? $asesmenGeriatri->berat_badan . ' kg' : '-' }}</p>
+                                        <p>{{ $asesmenGeriatri->berat_badan ? $asesmenGeriatri->berat_badan . ' kg' : '-' }}
+                                        </p>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Tinggi Badan</label>
-                                        <p>{{ $asesmenGeriatri->tinggi_badan ? $asesmenGeriatri->tinggi_badan . ' cm' : '-' }}</p>
+                                        <p>{{ $asesmenGeriatri->tinggi_badan ? $asesmenGeriatri->tinggi_badan . ' cm' : '-' }}
+                                        </p>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">IMT</label>
@@ -161,7 +165,8 @@
                                 <div class="row mb-3">
                                     <div class="col-md-12">
                                         <label class="form-label fw-bold">Riwayat Penyakit Sekarang</label>
-                                        <p class="text-justify">{{ $asesmenGeriatri->riwayat_penyakit_sekarang ?: '-' }}</p>
+                                        <p class="text-justify">{{ $asesmenGeriatri->riwayat_penyakit_sekarang ?: '-' }}
+                                        </p>
                                     </div>
                                 </div>
 
@@ -211,7 +216,8 @@
                                         @if ($kognitif && count($kognitif) > 0)
                                             <div class="d-flex gap-2 flex-wrap">
                                                 @foreach ($kognitif as $item)
-                                                    <span class="badge {{ $item == 'Normal' ? 'bg-success' : 'bg-warning' }}">{{ $item }}</span>
+                                                    <span
+                                                        class="badge {{ $item == 'Normal' ? 'bg-success' : 'bg-warning' }}">{{ $item }}</span>
                                                 @endforeach
                                             </div>
                                         @else
@@ -226,7 +232,8 @@
                                         @if ($depresi && count($depresi) > 0)
                                             <div class="d-flex gap-2 flex-wrap">
                                                 @foreach ($depresi as $item)
-                                                    <span class="badge {{ $item == 'Normal' ? 'bg-success' : 'bg-warning' }}">{{ $item }}</span>
+                                                    <span
+                                                        class="badge {{ $item == 'Normal' ? 'bg-success' : 'bg-warning' }}">{{ $item }}</span>
                                                 @endforeach
                                             </div>
                                         @else
@@ -238,7 +245,8 @@
                                         @if ($inkontinensia && count($inkontinensia) > 0)
                                             <div class="d-flex gap-2 flex-wrap">
                                                 @foreach ($inkontinensia as $item)
-                                                    <span class="badge {{ $item == 'Tidak Ada Inkontinensia' ? 'bg-success' : 'bg-warning' }}">{{ $item }}</span>
+                                                    <span
+                                                        class="badge {{ $item == 'Tidak Ada Inkontinensia' ? 'bg-success' : 'bg-warning' }}">{{ $item }}</span>
                                                 @endforeach
                                             </div>
                                         @else
@@ -253,7 +261,8 @@
                                         @if ($insomnia && count($insomnia) > 0)
                                             <div class="d-flex gap-2 flex-wrap">
                                                 @foreach ($insomnia as $item)
-                                                    <span class="badge {{ $item == 'Normal' ? 'bg-success' : 'bg-warning' }}">{{ $item }}</span>
+                                                    <span
+                                                        class="badge {{ $item == 'Normal' ? 'bg-success' : 'bg-warning' }}">{{ $item }}</span>
                                                 @endforeach
                                             </div>
                                         @else
@@ -287,8 +296,9 @@
                                                         <td>{{ $alergi->nama_alergi }}</td>
                                                         <td>{{ $alergi->reaksi }}</td>
                                                         <td>
-                                                            <span class="badge 
-                                                                @if($alergi->tingkat_keparahan == 'Ringan') bg-success
+                                                            <span
+                                                                class="badge 
+                                                                @if ($alergi->tingkat_keparahan == 'Ringan') bg-success
                                                                 @elseif($alergi->tingkat_keparahan == 'Sedang') bg-warning  
                                                                 @elseif($alergi->tingkat_keparahan == 'Berat') bg-danger
                                                                 @else bg-secondary @endif">
@@ -345,10 +355,10 @@
                                     <h5 class="section-title">8. Discharge Planning</h5>
 
                                     <div class="row mb-3">
-                                        <div class="col-md-6">
+                                        {{-- <div class="col-md-6">
                                             <label class="form-label fw-bold">Diagnosis Medis</label>
                                             <p>{{ $rencanaPulang->diagnosis_medis ?: '-' }}</p>
-                                        </div>
+                                        </div> --}}
                                         <div class="col-md-6">
                                             <label class="form-label fw-bold">Usia Lanjut</label>
                                             <p>{{ $rencanaPulang->usia_lanjut == 0 ? 'Ya' : 'Tidak' }}</p>
@@ -361,7 +371,8 @@
                                             <p>{{ $rencanaPulang->hambatan_mobilisasi == 0 ? 'Ya' : 'Tidak' }}</p>
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label fw-bold">Membutuhkan Pelayanan Medis Berkelanjutan</label>
+                                            <label class="form-label fw-bold">Membutuhkan Pelayanan Medis
+                                                Berkelanjutan</label>
                                             <p>{{ ucfirst($rencanaPulang->membutuhkan_pelayanan_medis ?: '-') }}</p>
                                         </div>
                                     </div>
@@ -391,11 +402,13 @@
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <label class="form-label fw-bold">Perkiraan Lama Dirawat</label>
-                                            <p>{{ $rencanaPulang->perkiraan_lama_dirawat ? $rencanaPulang->perkiraan_lama_dirawat . ' hari' : '-' }}</p>
+                                            <p>{{ $rencanaPulang->perkiraan_lama_dirawat ? $rencanaPulang->perkiraan_lama_dirawat . ' hari' : '-' }}
+                                            </p>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label fw-bold">Rencana Tanggal Pulang</label>
-                                            <p>{{ $rencanaPulang->rencana_pulang ? Carbon\Carbon::parse($rencanaPulang->rencana_pulang)->format('d/m/Y') : '-' }}</p>
+                                            <p>{{ $rencanaPulang->rencana_pulang ? Carbon\Carbon::parse($rencanaPulang->rencana_pulang)->format('d/m/Y') : '-' }}
+                                            </p>
                                         </div>
                                     </div>
 
@@ -404,11 +417,14 @@
                                             <label class="form-label fw-bold">Kesimpulan</label>
                                             @if ($rencanaPulang->kesimpulan)
                                                 @if (str_contains($rencanaPulang->kesimpulan, 'Mebutuhkan rencana pulang khusus'))
-                                                    <span class="badge bg-warning fs-6">{{ $rencanaPulang->kesimpulan }}</span>
+                                                    <span
+                                                        class="badge bg-warning fs-6">{{ $rencanaPulang->kesimpulan }}</span>
                                                 @elseif (str_contains($rencanaPulang->kesimpulan, 'Tidak mebutuhkan rencana pulang khusus'))
-                                                    <span class="badge bg-success fs-6">{{ $rencanaPulang->kesimpulan }}</span>
+                                                    <span
+                                                        class="badge bg-success fs-6">{{ $rencanaPulang->kesimpulan }}</span>
                                                 @else
-                                                    <span class="badge bg-info fs-6">{{ $rencanaPulang->kesimpulan }}</span>
+                                                    <span
+                                                        class="badge bg-info fs-6">{{ $rencanaPulang->kesimpulan }}</span>
                                                 @endif
                                             @else
                                                 <p>-</p>

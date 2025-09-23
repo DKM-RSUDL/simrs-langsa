@@ -946,125 +946,6 @@
                             </div>
                         </div>
 
-                        {{-- <!-- 8. Discharge Planning -->
-                        <div class="tab-pane fade show">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <h5>8. Discharge Planning</h5>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Diagnosis Medis</label>
-                                                <p class="form-control-plaintext border-bottom">
-                                                    {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->diagnosis_medis ?? '-' }}
-                                                </p>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Usia Lanjut</label>
-                                                <p class="form-control-plaintext border-bottom">
-                                                    @if (isset($asesmen->rmeAsesmenKepOphtamologyRencanaPulang->usia_lanjut) && $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->usia_lanjut !== null)
-                                                        {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->usia_lanjut == 0 ? 'Ya' : 'Tidak' }}
-                                                    @else
-                                                        -
-                                                    @endif
-                                                </p>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Hambatan Mobilisasi</label>
-                                                <p class="form-control-plaintext border-bottom">
-                                                    @if (isset($asesmen->rmeAsesmenKepOphtamologyRencanaPulang->hambatan_mobilisasi) && $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->hambatan_mobilisasi !== null)
-                                                    {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->hambatan_mobilisasi == 0 ? 'Ya' : 'Tidak' }}
-                                                    @else
-                                                    -
-                                                    @endif
-                                                </p>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Membutuhkan Pelayanan Medis</label>
-                                                <p class="form-control-plaintext border-bottom">
-                                                    @if (isset($asesmen->rmeAsesmenKepOphtamologyRencanaPulang->membutuhkan_pelayanan_medis) && $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->membutuhkan_pelayanan_medis !== null)
-                                                    {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->membutuhkan_pelayanan_medis == 0 ? 'Ya' : 'Tidak' }}
-                                                    @else
-                                                    -
-                                                    @endif
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Keterampilan Khusus</label>
-                                                <p class="form-control-plaintext border-bottom">
-                                                    @if (isset($asesmen->rmeAsesmenKepOphtamologyRencanaPulang->memerlukan_keterampilan_khusus) && $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->memerlukan_keterampilan_khusus !== null)
-                                                    {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->memerlukan_keterampilan_khusus == 0 ? 'Ya' : 'Tidak' }}
-                                                    @else
-                                                    -
-                                                    @endif
-                                                </p>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Alat Bantu</label>
-                                                <p class="form-control-plaintext border-bottom">
-                                                    @if (isset($asesmen->rmeAsesmenKepOphtamologyRencanaPulang->memerlukan_alat_bantu) && $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->memerlukan_alat_bantu !== null)
-                                                    {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->memerlukan_alat_bantu == 0 ? 'Ya' : 'Tidak' }}
-                                                    @else
-                                                    -
-                                                    @endif
-                                                </p>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Nyeri Kronis</label>
-                                                <p class="form-control-plaintext border-bottom">
-                                                    @if (isset($asesmen->rmeAsesmenKepOphtamologyRencanaPulang->memiliki_nyeri_kronis) && $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->memiliki_nyeri_kronis !== null)
-                                                    {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->memiliki_nyeri_kronis == 0 ? 'Ya' : 'Tidak' }}
-                                                    @else
-                                                    -
-                                                    @endif
-                                                </p>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Perkiraan Lama Dirawat</label>
-                                                <p class="form-control-plaintext border-bottom">
-                                                    @if (isset($asesmen->rmeAsesmenKepOphtamologyRencanaPulang->perkiraan_lama_dirawat) && $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->perkiraan_lama_dirawat !== null)
-                                                        {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->perkiraan_lama_dirawat ?? '-' }}
-                                                    Hari
-                                                    @else
-                                                    -
-                                                    @endif
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Rencana Tanggal Pulang</label>
-                                                <p class="form-control-plaintext border-bottom">
-                                                    @if (isset($asesmen->rmeAsesmenKepOphtamologyRencanaPulang->rencana_pulang) && $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->rencana_pulang !== null)
-                                                    {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->rencana_pulang ? \Carbon\Carbon::parse($asesmen->rmeAsesmenKepOphtamologyRencanaPulang->rencana_pulang)->format('d M Y') : '-' }}
-                                                    @else
-                                                    -
-                                                    @endif
-                                                </p>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Kesimpulan</label>
-                                                <p class="form-control-plaintext border-bottom">
-                                                    {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->kesimpulan ?? '-' }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> --}}
-
                         <!-- 9. Diagnosis -->
                         <div class="tab-pane fade show">
                             <div class="card">
@@ -1133,126 +1014,8 @@
                                                     {{ $asesmen->rmeAsesmenKepOphtamology->prognosis ?? '-' }}
                                                 </p>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- 10. Implementasi -->
-                        <div class="tab-pane fade show">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <h5>9. Implementasi</h5>
-                                        <div class="col-md-12">
-                                            <!-- Observasi -->
-                                            <div class="mb-4">
-                                                <label class="form-label fw-bold">Observasi</label>
-                                                @php
-                                                    $observasi = json_decode(
-                                                        $asesmen->rmeAsesmenKepOphtamology->observasi ?? '[]',
-                                                        true,
-                                                    );
-                                                @endphp
-                                                @if (!empty($observasi))
-                                                    <div class="bg-light p-3 rounded">
-                                                        <ul class="list-unstyled mb-0">
-                                                            @foreach ($observasi as $item)
-                                                                <li class="mb-2">
-                                                                    <span
-                                                                        class="badge bg-primary">{{ $item }}</span>
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </div>
-                                                @else
-                                                    <p class="form-control-plaintext border-bottom text-muted">
-                                                        Tidak ada observasi
-                                                    </p>
-                                                @endif
-                                            </div>
 
-                                            <!-- Terapeutik -->
-                                            <div class="mb-4">
-                                                <label class="form-label fw-bold">Terapeutik</label>
-                                                @php
-                                                    $terapeutik = json_decode(
-                                                        $asesmen->rmeAsesmenKepOphtamology->terapeutik ?? '[]',
-                                                        true,
-                                                    );
-                                                @endphp
-                                                @if (!empty($terapeutik))
-                                                    <div class="bg-light p-3 rounded">
-                                                        <ul class="list-unstyled mb-0">
-                                                            @foreach ($terapeutik as $item)
-                                                                <li class="mb-2">
-                                                                    <span
-                                                                        class="badge bg-success">{{ $item }}</span>
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </div>
-                                                @else
-                                                    <p class="form-control-plaintext border-bottom text-muted">
-                                                        Tidak ada terapeutik
-                                                    </p>
-                                                @endif
-                                            </div>
-
-                                            <!-- Edukasi -->
-                                            <div class="mb-4">
-                                                <label class="form-label fw-bold">Edukasi</label>
-                                                @php
-                                                    $edukasi = json_decode(
-                                                        $asesmen->rmeAsesmenKepOphtamology->edukasi ?? '[]',
-                                                        true,
-                                                    );
-                                                @endphp
-                                                @if (!empty($edukasi))
-                                                    <div class="bg-light p-3 rounded">
-                                                        <ul class="list-unstyled mb-0">
-                                                            @foreach ($edukasi as $item)
-                                                                <li class="mb-2">
-                                                                    <span
-                                                                        class="badge bg-warning">{{ $item }}</span>
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </div>
-                                                @else
-                                                    <p class="form-control-plaintext border-bottom text-muted">
-                                                        Tidak ada edukasi
-                                                    </p>
-                                                @endif
-                                            </div>
-
-                                            <!-- Kolaborasi -->
-                                            <div class="mb-4">
-                                                <label class="form-label fw-bold">Kolaborasi</label>
-                                                @php
-                                                    $kolaborasi = json_decode(
-                                                        $asesmen->rmeAsesmenKepOphtamology->kolaborasi ?? '[]',
-                                                        true,
-                                                    );
-                                                @endphp
-                                                @if (!empty($kolaborasi))
-                                                    <div class="bg-light p-3 rounded">
-                                                        <ul class="list-unstyled mb-0">
-                                                            @foreach ($kolaborasi as $item)
-                                                                <li class="mb-2">
-                                                                    <span
-                                                                        class="badge bg-info">{{ $item }}</span>
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </div>
-                                                @else
-                                                    <p class="form-control-plaintext border-bottom text-muted">
-                                                        Tidak ada kolaborasi
-                                                    </p>
-                                                @endif
-                                            </div>
                                             <div class="form-group">
                                                 <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan
                                                     Pengobatan</label>
@@ -1265,17 +1028,125 @@
                             </div>
                         </div>
 
-                        <!-- 11. Evaluasi -->
+                        <!-- 8. Discharge Planning -->
                         <div class="tab-pane fade show">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
-                                        <h5>11. Evaluasi</h5>
-                                        <div class="col-md-12">
-                                            <div class="mb-4">
-                                                <label class="form-label fw-bold">Evaluasi Keperawatan</label>
+                                        <h5>9. Discharge Planning</h5>
+                                        <div class="col-md-6">
+                                            {{-- <div class="mb-3">
+                                                <label class="form-label fw-bold">Diagnosis Medis</label>
                                                 <p class="form-control-plaintext border-bottom">
-                                                    {{ $asesmen->rmeAsesmenKepOphtamology->evaluasi ?? '-' }}
+                                                    {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->diagnosis_medis ?? '-' }}
+                                                </p>
+                                            </div> --}}
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Usia Lanjut</label>
+                                                <p class="form-control-plaintext border-bottom">
+                                                    @if (isset($asesmen->rmeAsesmenKepOphtamologyRencanaPulang->usia_lanjut) &&
+                                                            $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->usia_lanjut !== null)
+                                                        {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->usia_lanjut == 0 ? 'Ya' : 'Tidak' }}
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </p>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Hambatan Mobilisasi</label>
+                                                <p class="form-control-plaintext border-bottom">
+                                                    @if (isset($asesmen->rmeAsesmenKepOphtamologyRencanaPulang->hambatan_mobilisasi) &&
+                                                            $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->hambatan_mobilisasi !== null)
+                                                        {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->hambatan_mobilisasi == 0 ? 'Ya' : 'Tidak' }}
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </p>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Membutuhkan Pelayanan Medis</label>
+                                                <p class="form-control-plaintext border-bottom">
+                                                    @if (isset($asesmen->rmeAsesmenKepOphtamologyRencanaPulang->membutuhkan_pelayanan_medis) &&
+                                                            $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->membutuhkan_pelayanan_medis !== null)
+                                                        {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->membutuhkan_pelayanan_medis == 0 ? 'Ya' : 'Tidak' }}
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Keterampilan Khusus</label>
+                                                <p class="form-control-plaintext border-bottom">
+                                                    @if (isset($asesmen->rmeAsesmenKepOphtamologyRencanaPulang->memerlukan_keterampilan_khusus) &&
+                                                            $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->memerlukan_keterampilan_khusus !== null)
+                                                        {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->memerlukan_keterampilan_khusus == 0 ? 'Ya' : 'Tidak' }}
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </p>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Alat Bantu</label>
+                                                <p class="form-control-plaintext border-bottom">
+                                                    @if (isset($asesmen->rmeAsesmenKepOphtamologyRencanaPulang->memerlukan_alat_bantu) &&
+                                                            $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->memerlukan_alat_bantu !== null)
+                                                        {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->memerlukan_alat_bantu == 0 ? 'Ya' : 'Tidak' }}
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </p>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Nyeri Kronis</label>
+                                                <p class="form-control-plaintext border-bottom">
+                                                    @if (isset($asesmen->rmeAsesmenKepOphtamologyRencanaPulang->memiliki_nyeri_kronis) &&
+                                                            $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->memiliki_nyeri_kronis !== null)
+                                                        {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->memiliki_nyeri_kronis == 0 ? 'Ya' : 'Tidak' }}
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </p>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Perkiraan Lama Dirawat</label>
+                                                <p class="form-control-plaintext border-bottom">
+                                                    @if (isset($asesmen->rmeAsesmenKepOphtamologyRencanaPulang->perkiraan_lama_dirawat) &&
+                                                            $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->perkiraan_lama_dirawat !== null)
+                                                        {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->perkiraan_lama_dirawat ?? '-' }}
+                                                        Hari
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Rencana Tanggal Pulang</label>
+                                                <p class="form-control-plaintext border-bottom">
+                                                    @if (isset($asesmen->rmeAsesmenKepOphtamologyRencanaPulang->rencana_pulang) &&
+                                                            $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->rencana_pulang !== null)
+                                                        {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->rencana_pulang ? \Carbon\Carbon::parse($asesmen->rmeAsesmenKepOphtamologyRencanaPulang->rencana_pulang)->format('d M Y') : '-' }}
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </p>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Kesimpulan</label>
+                                                <p class="form-control-plaintext border-bottom">
+                                                    {{ $asesmen->rmeAsesmenKepOphtamologyRencanaPulang->kesimpulan ?? '-' }}
                                                 </p>
                                             </div>
                                         </div>
@@ -1283,6 +1154,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>

@@ -626,125 +626,127 @@
     </div>
 </div>
 
-<style>
-    /* Custom styles untuk modal */
-    .modal-body::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    .modal-body::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 4px;
-    }
-
-    .modal-body::-webkit-scrollbar-thumb {
-        background: #c1c1c1;
-        border-radius: 4px;
-    }
-
-    .modal-body::-webkit-scrollbar-thumb:hover {
-        background: #a8a8a8;
-    }
-
-    /* Style untuk badges dan alerts */
-    .badge {
-        padding: 0.5em 0.8em;
-        font-weight: 500;
-    }
-
-    /* Style untuk tables */
-    .table> :not(caption)>*>* {
-        padding: 0.75rem 1rem;
-    }
-
-    .table-hover tbody tr:hover {
-        background-color: rgba(0, 0, 0, .02);
-    }
-
-    /* Style untuk inputs */
-    .form-control:read-only {
-        background-color: #f8f9fa;
-        cursor: default;
-    }
-
-    .form-control:read-only:focus {
-        box-shadow: none;
-    }
-
-    /* Style untuk cards */
-    .card {
-        border: none;
-        transition: box-shadow 0.2s ease-in-out;
-    }
-
-    .card:hover {
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, .075);
-    }
-
-    .card-header {
-        border-bottom: 1px solid rgba(0, 0, 0, .125);
-    }
-
-    /* Style untuk section titles */
-    .section-title {
-        font-size: 1rem;
-        color: #344767;
-    }
-
-    /* Style untuk icons */
-    .bi {
-        line-height: 1;
-        vertical-align: -0.125em;
-    }
-
-    /* Style untuk vital signs display */
-    .vital-signs-container ul {
-        margin-bottom: 0;
-        padding-left: 0;
-        list-style: none;
-    }
-
-    .vital-signs-container li {
-        margin-bottom: 0.25rem;
-    }
-
-    /* Custom style untuk Tindak Lanjut card */
-    #showTindakLanjutInfo .card {
-        background-color: transparent;
-        border: 1px solid rgba(0, 0, 0, .125);
-    }
-
-    /* Style untuk pemeriksaan fisik items */
-    .pemeriksaan-item {
-        border: 1px solid rgba(0, 0, 0, .125);
-        padding: 0.5rem;
-        border-radius: 0.375rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .pemeriksaan-item:last-child {
-        margin-bottom: 0;
-    }
-
-    /* Style untuk read-only inputs */
-    input[readonly],
-    textarea[readonly] {
-        background-color: #f8f9fa !important;
-        opacity: 1 !important;
-    }
-
-    /* Style untuk modal dialog */
-    .modal-xl {
-        max-width: 80%;
-    }
-
-    @media (max-width: 992px) {
-        .modal-xl {
-            max-width: 100%;
-            margin: 0.5rem;
+@push('css')
+    <style>
+        /* Custom styles untuk modal */
+        .modal-body::-webkit-scrollbar {
+            width: 8px;
         }
-    }
-</style>
+
+        .modal-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        /* Style untuk badges dan alerts */
+        .badge {
+            padding: 0.5em 0.8em;
+            font-weight: 500;
+        }
+
+        /* Style untuk tables */
+        .table> :not(caption)>*>* {
+            padding: 0.75rem 1rem;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 0, 0, .02);
+        }
+
+        /* Style untuk inputs */
+        .form-control:read-only {
+            background-color: #f8f9fa;
+            cursor: default;
+        }
+
+        .form-control:read-only:focus {
+            box-shadow: none;
+        }
+
+        /* Style untuk cards */
+        .card {
+            border: none;
+            transition: box-shadow 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, .075);
+        }
+
+        .card-header {
+            border-bottom: 1px solid rgba(0, 0, 0, .125);
+        }
+
+        /* Style untuk section titles */
+        .section-title {
+            font-size: 1rem;
+            color: #344767;
+        }
+
+        /* Style untuk icons */
+        .bi {
+            line-height: 1;
+            vertical-align: -0.125em;
+        }
+
+        /* Style untuk vital signs display */
+        .vital-signs-container ul {
+            margin-bottom: 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .vital-signs-container li {
+            margin-bottom: 0.25rem;
+        }
+
+        /* Custom style untuk Tindak Lanjut card */
+        #showTindakLanjutInfo .card {
+            background-color: transparent;
+            border: 1px solid rgba(0, 0, 0, .125);
+        }
+
+        /* Style untuk pemeriksaan fisik items */
+        .pemeriksaan-item {
+            border: 1px solid rgba(0, 0, 0, .125);
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .pemeriksaan-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Style untuk read-only inputs */
+        input[readonly],
+        textarea[readonly] {
+            background-color: #f8f9fa !important;
+            opacity: 1 !important;
+        }
+
+        /* Style untuk modal dialog */
+        .modal-xl {
+            max-width: 80%;
+        }
+
+        @media (max-width: 992px) {
+            .modal-xl {
+                max-width: 100%;
+                margin: 0.5rem;
+            }
+        }
+    </style>
+@endpush
 
 @push('js')
     <script>
@@ -1338,17 +1340,17 @@
                             <div class="d-flex align-items-center gap-1">
                                 <span class="badge badge-sm ${isNormal === '1' ? 'bg-success' : 'bg-danger'}">${statusText}</span>
                                 ${keterangan ? `<button class="btn btn-sm btn-link p-0 text-muted" type="button" data-bs-toggle="collapse" data-bs-target="#show_keterangan_${itemFisik.id}" title="Lihat keterangan">
-                                        <i class="bi bi-info-circle" style="font-size: 0.875rem;"></i>
-                                    </button>` : ''}
+                                                        <i class="bi bi-info-circle" style="font-size: 0.875rem;"></i>
+                                                    </button>` : ''}
                             </div>
                         </div>
                         ${keterangan ? `
-                                <div id="show_keterangan_${itemFisik.id}" class="collapse mt-1">
-                                    <div class="alert alert-warning py-2 px-3 mb-0 small">
-                                        <strong>Keterangan:</strong> ${keterangan}
-                                    </div>
-                                </div>
-                            ` : ''}
+                                                <div id="show_keterangan_${itemFisik.id}" class="collapse mt-1">
+                                                    <div class="alert alert-warning py-2 px-3 mb-0 small">
+                                                        <strong>Keterangan:</strong> ${keterangan}
+                                                    </div>
+                                                </div>
+                                            ` : ''}
                     </div>
                 `;
                 container.append(itemHtml);

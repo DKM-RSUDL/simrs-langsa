@@ -971,112 +971,6 @@
                                         </div>
                                     </div>
 
-                                    {{-- <div class="section-separator" id="discharge-planning">
-                                        <h5 class="section-title">8. Discharge Planning</h5>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Diagnosis medis</label>
-                                            <input type="text" class="form-control" name="diagnosis_medis"
-                                                placeholder="Diagnosis">
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Usia lanjut</label>
-                                            <select class="form-select" name="usia_lanjut">
-                                                <option value="" selected disabled>--Pilih--</option>
-                                                <option value="0">Ya</option>
-                                                <option value="1">Tidak</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Hambatan mobilisasi</label>
-                                            <select class="form-select" name="hambatan_mobilisasi">
-                                                <option value="" selected disabled>--Pilih--</option>
-                                                <option value="0">Ya</option>
-                                                <option value="1">Tidak</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Membutuhkan penggunaan media berkelanjutan</label>
-                                            <select class="form-select" name="penggunaan_media_berkelanjutan">
-                                                <option value="" selected disabled>--Pilih--</option>
-                                                <option value="ya">Ya</option>
-                                                <option value="tidak">Tidak</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Ketergantungan dengan orang lain dalam aktivitas
-                                                harian</label>
-                                            <select class="form-select" name="ketergantungan_aktivitas">
-                                                <option value="" selected disabled>--Pilih--</option>
-                                                <option value="ya">Ya</option>
-                                                <option value="tidak">Tidak</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Pasien / Keluarga Memerlukan Keterampilan Khusus
-                                                Setelah
-                                                Pulang</label>
-                                            <select class="form-select" name="keterampilan_khusus">
-                                                <option value="" selected disabled>--Pilih--</option>
-                                                <option value="ya">Ya</option>
-                                                <option value="tidak">Tidak</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Pasien Memerlukan Alat Bantu Setelah Keluar Rumah
-                                                Sakit</label>
-                                            <select class="form-select" name="alat_bantu">
-                                                <option value="" selected disabled>--Pilih--</option>
-                                                <option value="ya">Ya</option>
-                                                <option value="tidak">Tidak</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Pasien Memiliki Nyeri Kronis Dan / Kebiasaan Setelah
-                                                Pulang</label>
-                                            <select class="form-select" name="nyeri_kronis">
-                                                <option value="" selected disabled>--Pilih--</option>
-                                                <option value="ya">Ya</option>
-                                                <option value="tidak">Tidak</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="row mb-4">
-                                            <div class="col-md-6">
-                                                <label class="form-label">Perkiraan lama hari dirawat</label>
-                                                <input type="text" class="form-control" name="perkiraan_hari" placeholder="hari">
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <label class="form-label">Rencana Tanggal Pulang</label>
-                                                <input type="date" class="form-control" name="tanggal_pulang">
-                                            </div>
-                                        </div>
-
-                                        <div class="mt-4">
-                                            <label class="form-label">KESIMPULAN</label>
-                                            <div class="d-flex flex-column gap-2">
-                                                <div class="alert alert-info">
-                                                    Pilih semua Planning
-                                                </div>
-                                                <div class="alert alert-warning">
-                                                    Mebutuhkan rencana pulang khusus
-                                                </div>
-                                                <div class="alert alert-success">
-                                                    Tidak mebutuhkan rencana pulang khusus
-                                                </div>
-                                            </div>
-                                            <input type="hidden" id="kesimpulan" name="kesimpulan_planing" value="Tidak mebutuhkan rencana pulang khusus">
-                                        </div>
-                                    </div> --}}
-
                                     <div class="section-separator" id="diagnosis">
                                         <h5 class="fw-semibold mb-4">8. Diagnosis</h5>
 
@@ -1150,124 +1044,125 @@
                                             <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja"
                                                 value="[]">
                                         </div>
-                                    </div>
 
-                                    <div class="section-separator" id="implemetasi" style="margin-bottom: 2rem;">
-                                        <h5 class="fw-semibold mb-4">9. Implementasi</h5>
-
-                                        <!-- Rencana Penatalaksanaan dan Pengobatan -->
-                                        <div class="mb-4">
-                                            <label class="text-primary fw-semibold">Rencana Penatalaksanaan dan
-                                                Pengobatan</label>
-                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                rencana, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
-                                                rencana Penatalaksanaan dan Pengobatan kerja yang tidak ditemukan.</small>
-                                        </div>
-
-                                        <!-- Observasi Section -->
-                                        <div class="mb-4">
-                                            <label class="fw-semibold mb-2">Observasi</label>
-                                            <div class="input-group mt-2">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="observasi-input"
-                                                    class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Observasi">
-                                                <span class="input-group-text bg-white" id="add-observasi">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-                                            <div id="observasi-list" class="list-group mb-2 bg-light">
-                                                <!-- Items will be added here dynamically -->
-                                            </div>
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="observasi" name="observasi" value="[]">
-                                        </div>
-
-                                        <!-- Terapeutik Section -->
-                                        <div class="mb-4">
-                                            <label class="fw-semibold mb-2">Terapeutik</label>
-                                            <div class="input-group mt-2">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="terapeutik-input"
-                                                    class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Terapeutik">
-                                                <span class="input-group-text bg-white" id="add-terapeutik">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-                                            <div id="terapeutik-list" class="list-group mb-2">
-                                                <!-- Items will be added here dynamically -->
-                                            </div>
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="terapeutik" name="terapeutik" value="[]">
-                                        </div>
-
-                                        <!-- Edukasi Section -->
-                                        <div class="mb-4">
-                                            <label class="fw-semibold mb-2">Edukasi</label>
-                                            <div class="input-group mt-2">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="edukasi-input"
-                                                    class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Edukasi">
-                                                <span class="input-group-text bg-white" id="add-edukasi">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-                                            <div id="edukasi-list" class="list-group mb-2">
-                                                <!-- Items will be added here dynamically -->
-                                            </div>
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="edukasi" name="edukasi" value="[]">
-                                        </div>
-
-                                        <!-- Kolaborasi Section -->
-                                        <div class="mb-4">
-                                            <label class="fw-semibold mb-2">Kolaborasi</label>
-                                            <div class="input-group mt-2">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="kolaborasi-input"
-                                                    class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Kolaborasi">
-                                                <span class="input-group-text bg-white" id="add-kolaborasi">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-                                            <div id="kolaborasi-list" class="list-group mb-2">
-                                                <!-- Items will be added here dynamically -->
-                                            </div>
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="kolaborasi" name="kolaborasi" value="[]">
-                                        </div>
-
-                                        <!-- Kolaborasi Section -->
                                         <div class="mb-4">
                                             <!-- sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis -->
                                             <div class="form-group">
-                                                <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan Pengobatan</label>
+                                                <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan
+                                                    Pengobatan</label>
                                                 <textarea class="form-control" name="rencana_pengobatan" rows="4"
                                                     placeholder="Rencana Penatalaksanaan Dan Pengobatan"></textarea>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {{-- <div class="section-separator" id="implementasi-evaluasi">
-                                        <h5 class="section-title">11. Evaluasi</h5>
+                                    <div class="section-separator" id="discharge-planning">
+                                        <h5 class="section-title">9. Discharge Planning</h5>
+
+                                        {{-- <div class="mb-4">
+                                            <label class="form-label">Diagnosis medis</label>
+                                            <input type="text" class="form-control" name="diagnosis_medis"
+                                                placeholder="Diagnosis">
+                                        </div> --}}
 
                                         <div class="mb-4">
-                                            <label class="form-label">Tambah Evaluasi Keperawatan</label>
-                                            <textarea class="form-control" rows="4" name="evaluasi_keperawatan"
-                                                placeholder="Tambah evaluasi keperawatan..."></textarea>
+                                            <label class="form-label">Usia lanjut</label>
+                                            <select class="form-select" name="usia_lanjut">
+                                                <option value="" selected disabled>--Pilih--</option>
+                                                <option value="0">Ya</option>
+                                                <option value="1">Tidak</option>
+                                            </select>
                                         </div>
-                                    </div> --}}
+
+                                        <div class="mb-4">
+                                            <label class="form-label">Hambatan mobilisasi</label>
+                                            <select class="form-select" name="hambatan_mobilisasi">
+                                                <option value="" selected disabled>--Pilih--</option>
+                                                <option value="0">Ya</option>
+                                                <option value="1">Tidak</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label class="form-label">Membutuhkan penggunaan media berkelanjutan</label>
+                                            <select class="form-select" name="penggunaan_media_berkelanjutan">
+                                                <option value="" selected disabled>--Pilih--</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label class="form-label">Ketergantungan dengan orang lain dalam aktivitas
+                                                harian</label>
+                                            <select class="form-select" name="ketergantungan_aktivitas">
+                                                <option value="" selected disabled>--Pilih--</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label class="form-label">Pasien / Keluarga Memerlukan Keterampilan Khusus
+                                                Setelah
+                                                Pulang</label>
+                                            <select class="form-select" name="keterampilan_khusus">
+                                                <option value="" selected disabled>--Pilih--</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label class="form-label">Pasien Memerlukan Alat Bantu Setelah Keluar Rumah
+                                                Sakit</label>
+                                            <select class="form-select" name="alat_bantu">
+                                                <option value="" selected disabled>--Pilih--</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label class="form-label">Pasien Memiliki Nyeri Kronis Dan / Kebiasaan Setelah
+                                                Pulang</label>
+                                            <select class="form-select" name="nyeri_kronis">
+                                                <option value="" selected disabled>--Pilih--</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="row mb-4">
+                                            <div class="col-md-6">
+                                                <label class="form-label">Perkiraan lama hari dirawat</label>
+                                                <input type="text" class="form-control" name="perkiraan_hari"
+                                                    placeholder="hari">
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label class="form-label">Rencana Tanggal Pulang</label>
+                                                <input type="date" class="form-control" name="tanggal_pulang">
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-4">
+                                            <label class="form-label">KESIMPULAN</label>
+                                            <div class="d-flex flex-column gap-2">
+                                                <div class="alert alert-info">
+                                                    Pilih semua Planning
+                                                </div>
+                                                <div class="alert alert-warning">
+                                                    Mebutuhkan rencana pulang khusus
+                                                </div>
+                                                <div class="alert alert-success">
+                                                    Tidak mebutuhkan rencana pulang khusus
+                                                </div>
+                                            </div>
+                                            <input type="hidden" id="kesimpulan" name="kesimpulan_planing"
+                                                value="Tidak mebutuhkan rencana pulang khusus">
+                                        </div>
+                                    </div>
 
                                     <div class="text-end">
                                         <button type="submit" class="btn btn-primary">Simpan</button>

@@ -53,7 +53,9 @@
                                             <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 @php
-                                                    $waktuMasuk = $asesmenGeriatri->waktu_masuk ? Carbon\Carbon::parse($asesmenGeriatri->waktu_masuk) : Carbon\Carbon::parse($asesmen->waktu_asesmen);
+                                                    $waktuMasuk = $asesmenGeriatri->waktu_masuk
+                                                        ? Carbon\Carbon::parse($asesmenGeriatri->waktu_masuk)
+                                                        : Carbon\Carbon::parse($asesmen->waktu_asesmen);
                                                 @endphp
                                                 <input type="date" class="form-control" name="tanggal_masuk"
                                                     id="tanggal_masuk" value="{{ $waktuMasuk->format('Y-m-d') }}">
@@ -106,8 +108,8 @@
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Sensorium</label>
                                             <select class="form-select" name="sensorium">
-                                                <option value=""
-                                                    {{ !$asesmenGeriatri->sensorium ? 'selected' : '' }} disabled>
+                                                <option value="" {{ !$asesmenGeriatri->sensorium ? 'selected' : '' }}
+                                                    disabled>
                                                     --Pilih--</option>
                                                 <option value="Compos Mentis"
                                                     {{ $asesmenGeriatri->sensorium == 'Compos Mentis' ? 'selected' : '' }}>
@@ -155,8 +157,7 @@
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Respirasi (Per Menit)</label>
                                             <input type="number" class="form-control" name="respirasi" placeholder="20"
-                                                min="10" max="50"
-                                                value="{{ $asesmenGeriatri->respirasi }}">
+                                                min="10" max="50" value="{{ $asesmenGeriatri->respirasi }}">
                                         </div>
 
                                         <div class="form-group">
@@ -191,38 +192,44 @@
                                             <label style="min-width: 220px;">Kategori IMT</label>
                                             <div class="d-flex flex-column gap-2" style="width: 100%;">
                                                 @php
-                                                    $kategoriImt = $asesmenGeriatri->kategori_imt ? json_decode($asesmenGeriatri->kategori_imt, true) : [];
+                                                    $kategoriImt = $asesmenGeriatri->kategori_imt
+                                                        ? json_decode($asesmenGeriatri->kategori_imt, true)
+                                                        : [];
                                                 @endphp
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="kategori_imt[]" value="Underweight" id="underweight"
+                                                    <input class="form-check-input" type="checkbox" name="kategori_imt[]"
+                                                        value="Underweight" id="underweight"
                                                         {{ in_array('Underweight', $kategoriImt) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="underweight">
-                                                        Underweight (< 18,0)
-                                                    </label>
+                                                        Underweight (< 18,0) </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="kategori_imt[]" value="Normoweight" id="normoweight"
+                                                    <input class="form-check-input" type="checkbox" name="kategori_imt[]"
+                                                        value="Normoweight" id="normoweight"
                                                         {{ in_array('Normoweight', $kategoriImt) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="normoweight">
                                                         Normoweight (18,0 - 22,9)
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="kategori_imt[]" value="Overweight" id="overweight"
+                                                    <input class="form-check-input" type="checkbox" name="kategori_imt[]"
+                                                        value="Overweight" id="overweight"
                                                         {{ in_array('Overweight', $kategoriImt) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="overweight">
                                                         Overweight (23,0 - 24,9)
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="kategori_imt[]" value="Obese" id="obese"
+                                                    <input class="form-check-input" type="checkbox" name="kategori_imt[]"
+                                                        value="Obese" id="obese"
                                                         {{ in_array('Obese', $kategoriImt) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="obese">
                                                         Obese (25,0 - 30,0)
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="kategori_imt[]" value="Morbid Obese" id="morbid_obese"
+                                                    <input class="form-check-input" type="checkbox" name="kategori_imt[]"
+                                                        value="Morbid Obese" id="morbid_obese"
                                                         {{ in_array('Morbid Obese', $kategoriImt) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="morbid_obese">
                                                         Morbid Obese (> 30)
@@ -258,20 +265,36 @@
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Kondisi Psikologi</label>
                                             <select class="form-select" name="kondisi_psikologi">
-                                                <option value="" {{ !$asesmenGeriatri->kondisi_psikologi ? 'selected' : '' }} disabled>--Pilih--</option>
-                                                <option value="Tenang" {{ $asesmenGeriatri->kondisi_psikologi == 'Tenang' ? 'selected' : '' }}>Tenang</option>
-                                                <option value="Cemas" {{ $asesmenGeriatri->kondisi_psikologi == 'Cemas' ? 'selected' : '' }}>Cemas</option>
-                                                <option value="Agitasi" {{ $asesmenGeriatri->kondisi_psikologi == 'Agitasi' ? 'selected' : '' }}>Agitasi</option>
+                                                <option value=""
+                                                    {{ !$asesmenGeriatri->kondisi_psikologi ? 'selected' : '' }} disabled>
+                                                    --Pilih--</option>
+                                                <option value="Tenang"
+                                                    {{ $asesmenGeriatri->kondisi_psikologi == 'Tenang' ? 'selected' : '' }}>
+                                                    Tenang</option>
+                                                <option value="Cemas"
+                                                    {{ $asesmenGeriatri->kondisi_psikologi == 'Cemas' ? 'selected' : '' }}>
+                                                    Cemas</option>
+                                                <option value="Agitasi"
+                                                    {{ $asesmenGeriatri->kondisi_psikologi == 'Agitasi' ? 'selected' : '' }}>
+                                                    Agitasi</option>
                                             </select>
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Kondisi Sosial Ekonomi</label>
                                             <select class="form-select" name="kondisi_sosial_ekonomi">
-                                                <option value="" {{ !$asesmenGeriatri->kondisi_sosial_ekonomi ? 'selected' : '' }} disabled>--Pilih--</option>
-                                                <option value="Kurang" {{ $asesmenGeriatri->kondisi_sosial_ekonomi == 'Kurang' ? 'selected' : '' }}>Kurang</option>
-                                                <option value="Cukup" {{ $asesmenGeriatri->kondisi_sosial_ekonomi == 'Cukup' ? 'selected' : '' }}>Cukup</option>
-                                                <option value="Baik" {{ $asesmenGeriatri->kondisi_sosial_ekonomi == 'Baik' ? 'selected' : '' }}>Baik</option>
+                                                <option value=""
+                                                    {{ !$asesmenGeriatri->kondisi_sosial_ekonomi ? 'selected' : '' }}
+                                                    disabled>--Pilih--</option>
+                                                <option value="Kurang"
+                                                    {{ $asesmenGeriatri->kondisi_sosial_ekonomi == 'Kurang' ? 'selected' : '' }}>
+                                                    Kurang</option>
+                                                <option value="Cukup"
+                                                    {{ $asesmenGeriatri->kondisi_sosial_ekonomi == 'Cukup' ? 'selected' : '' }}>
+                                                    Cukup</option>
+                                                <option value="Baik"
+                                                    {{ $asesmenGeriatri->kondisi_sosial_ekonomi == 'Baik' ? 'selected' : '' }}>
+                                                    Baik</option>
                                             </select>
                                         </div>
 
@@ -282,25 +305,37 @@
                                         <h5 class="section-title">5. Asesmen Geriatri</h5>
 
                                         @php
-                                            $adl = $asesmenGeriatri->adl ? json_decode($asesmenGeriatri->adl, true) : [];
-                                            $kognitif = $asesmenGeriatri->kognitif ? json_decode($asesmenGeriatri->kognitif, true) : [];
-                                            $depresi = $asesmenGeriatri->depresi ? json_decode($asesmenGeriatri->depresi, true) : [];
-                                            $inkontinensia = $asesmenGeriatri->inkontinensia ? json_decode($asesmenGeriatri->inkontinensia, true) : [];
-                                            $insomnia = $asesmenGeriatri->insomnia ? json_decode($asesmenGeriatri->insomnia, true) : [];
+                                            $adl = $asesmenGeriatri->adl
+                                                ? json_decode($asesmenGeriatri->adl, true)
+                                                : [];
+                                            $kognitif = $asesmenGeriatri->kognitif
+                                                ? json_decode($asesmenGeriatri->kognitif, true)
+                                                : [];
+                                            $depresi = $asesmenGeriatri->depresi
+                                                ? json_decode($asesmenGeriatri->depresi, true)
+                                                : [];
+                                            $inkontinensia = $asesmenGeriatri->inkontinensia
+                                                ? json_decode($asesmenGeriatri->inkontinensia, true)
+                                                : [];
+                                            $insomnia = $asesmenGeriatri->insomnia
+                                                ? json_decode($asesmenGeriatri->insomnia, true)
+                                                : [];
                                         @endphp
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">ADL (Activities of Daily Living)</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="adl[]" value="Mandiri" id="adl_mandiri"
+                                                    <input class="form-check-input" type="checkbox" name="adl[]"
+                                                        value="Mandiri" id="adl_mandiri"
                                                         {{ in_array('Mandiri', $adl) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="adl_mandiri">
                                                         Mandiri
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="adl[]" value="Ketergantungan" id="adl_ketergantungan"
+                                                    <input class="form-check-input" type="checkbox" name="adl[]"
+                                                        value="Ketergantungan" id="adl_ketergantungan"
                                                         {{ in_array('Ketergantungan', $adl) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="adl_ketergantungan">
                                                         Ketergantungan
@@ -313,14 +348,16 @@
                                             <label style="min-width: 220px;">Kognitif</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="kognitif[]" value="Normal" id="kognitif_normal"
+                                                    <input class="form-check-input" type="checkbox" name="kognitif[]"
+                                                        value="Normal" id="kognitif_normal"
                                                         {{ in_array('Normal', $kognitif) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="kognitif_normal">
                                                         Normal
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="kognitif[]" value="Gangguan Kognitif" id="kognitif_gangguan"
+                                                    <input class="form-check-input" type="checkbox" name="kognitif[]"
+                                                        value="Gangguan Kognitif" id="kognitif_gangguan"
                                                         {{ in_array('Gangguan Kognitif', $kognitif) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="kognitif_gangguan">
                                                         Gangguan Kognitif
@@ -333,14 +370,16 @@
                                             <label style="min-width: 220px;">Depresi</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="depresi[]" value="Normal" id="depresi_normal"
+                                                    <input class="form-check-input" type="checkbox" name="depresi[]"
+                                                        value="Normal" id="depresi_normal"
                                                         {{ in_array('Normal', $depresi) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="depresi_normal">
                                                         Normal
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="depresi[]" value="Depresi" id="depresi_ada"
+                                                    <input class="form-check-input" type="checkbox" name="depresi[]"
+                                                        value="Depresi" id="depresi_ada"
                                                         {{ in_array('Depresi', $depresi) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="depresi_ada">
                                                         Depresi
@@ -353,14 +392,18 @@
                                             <label style="min-width: 220px;">Inkontinensia</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="inkontinensia[]" value="Tidak Ada Inkontinensia" id="inkontinensia_tidak"
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="inkontinensia[]" value="Tidak Ada Inkontinensia"
+                                                        id="inkontinensia_tidak"
                                                         {{ in_array('Tidak Ada Inkontinensia', $inkontinensia) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="inkontinensia_tidak">
                                                         Tidak Ada Inkontinensia
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="inkontinensia[]" value="Inkontinensia" id="inkontinensia_ada"
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="inkontinensia[]" value="Inkontinensia"
+                                                        id="inkontinensia_ada"
                                                         {{ in_array('Inkontinensia', $inkontinensia) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="inkontinensia_ada">
                                                         Inkontinensia
@@ -373,14 +416,16 @@
                                             <label style="min-width: 220px;">Insomnia</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="insomnia[]" value="Normal" id="insomnia_normal"
+                                                    <input class="form-check-input" type="checkbox" name="insomnia[]"
+                                                        value="Normal" id="insomnia_normal"
                                                         {{ in_array('Normal', $insomnia) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="insomnia_normal">
                                                         Normal
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="insomnia[]" value="Insomnia" id="insomnia_ada"
+                                                    <input class="form-check-input" type="checkbox" name="insomnia[]"
+                                                        value="Insomnia" id="insomnia_ada"
                                                         {{ in_array('Insomnia', $insomnia) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="insomnia_ada">
                                                         Insomnia
@@ -492,12 +537,12 @@
                                     <div class="section-separator" id="discharge-planning">
                                         <h5 class="section-title">8. Discharge Planning</h5>
 
-                                        <div class="mb-4">
+                                        {{-- <div class="mb-4">
                                             <label class="form-label">Diagnosis medis</label>
                                             <input type="text" class="form-control" name="diagnosis_medis"
                                                 placeholder="Diagnosis"
                                                 value="{{ $rencanaPulang->diagnosis_medis ?? '' }}">
-                                        </div>
+                                        </div> --}}
 
                                         <div class="mb-4">
                                             <label class="form-label">Usia lanjut</label>

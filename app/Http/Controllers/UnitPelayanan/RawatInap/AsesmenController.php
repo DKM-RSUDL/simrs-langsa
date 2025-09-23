@@ -3,10 +3,15 @@
 namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
+use App\Models\Agama;
+use App\Models\AsalIGD;
 use App\Models\DataTriase;
 use App\Models\Dokter;
 use App\Models\Kunjungan;
 use App\Models\MrItemFisik;
+use App\Models\Pekerjaan;
+use App\Models\Pendidikan;
+use App\Models\RmeAlergiPasien;
 use App\Models\RmeAsesmen;
 use App\Models\RmeAsesmenDtl;
 use App\Models\RmeAsesmenPemeriksaanFisik;
@@ -14,12 +19,16 @@ use App\Models\RmeEfekNyeri;
 use App\Models\RmeFaktorPemberat;
 use App\Models\RmeFaktorPeringan;
 use App\Models\RmeFrekuensiNyeri;
+use App\Models\RmeJenisNyeri;
 use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMenjalar;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
+use App\Models\Transaksi;
+use App\Models\Unit;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -81,6 +90,7 @@ class AsesmenController extends Controller
         $faktorpemberat = RmeFaktorPemberat::all();
         $faktorperingan = RmeFaktorPeringan::all();
         $efeknyeri = RmeEfekNyeri::all();
+        $unitPoli = Unit::where('kd_bagian', '2')->where('aktif', 1)->get();
 
         // Mengambil asesmen dengan join ke data_triase untuk mendapatkan tanggal_triase
         $asesmen = RmeAsesmen::with(['user'])
@@ -100,6 +110,23 @@ class AsesmenController extends Controller
             ->orderBy('RME_ASESMEN.waktu_asesmen', 'desc')
             ->get();
 
+        // GET ASAL IGD
+        $asalIGD = AsalIGD::where('kd_kasir', $dataMedis->kd_kasir)->where('no_transaksi', $dataMedis->no_transaksi)->first();
+
+        if (!empty($asalIGD)) {
+            $transaksiIGD = Transaksi::where('kd_kasir', $asalIGD->kd_kasir_asal)->where('no_transaksi', $asalIGD->no_transaksi_asal)->first();
+
+            $asesmenIGD = RmeAsesmen::where('kd_pasien', $transaksiIGD->kd_pasien)
+                ->where('kd_unit', $transaksiIGD->kd_unit)
+                ->where('tgl_masuk', $transaksiIGD->tgl_transaksi)
+                ->where('urut_masuk', $transaksiIGD->urut_masuk)
+                ->get();
+        } else {
+            $asesmenIGD = [];
+            $transaksiIGD = [];
+        }
+
+
         return view('unit-pelayanan.rawat-inap.pelayanan.asesmen.index', compact(
             'dataMedis',
             'dokter',
@@ -114,7 +141,10 @@ class AsesmenController extends Controller
             'faktorpemberat',
             'faktorperingan',
             'efeknyeri',
-            'asesmen'
+            'asesmen',
+            'asesmenIGD',
+            'transaksiIGD',
+            'unitPoli'
         ));
     }
 
@@ -782,5 +812,139 @@ class AsesmenController extends Controller
                 $resumeDtl->save();
             }
         }
+    }
+
+
+    // ASESMEN GAWAT DARURAT
+    public function showMedisIGD($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            // Cek apakah asesmen dengan ID ini ada
+            $asesmenExists = RmeAsesmen::where('id', $id)->first();
+
+            if (!$asesmenExists) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => "Asesmen dengan ID {$id} tidak ditemukan"
+                ], 404);
+            }
+
+            // Cek data kunjungan
+            $date = Carbon::parse($tgl_masuk)->format('Y-m-d');
+
+            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+                ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+                ->where('kunjungan.kd_unit', 3)
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->first();
+
+            if (!$dataMedis) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Data kunjungan tidak ditemukan'
+                ], 404);
+            }
+
+            // Query asesmen dengan relasi
+            $asesmen = RmeAsesmen::with([
+                'menjalar',
+                'frekuensiNyeri',
+                'kualitasNyeri',
+                'faktorPemberat',
+                'faktorPeringan',
+                'efekNyeri',
+                'tindaklanjut',
+                'tindaklanjut.spri'
+            ])->where('id', $id)->first();
+
+            if (!$asesmen) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => "Data asesmen tidak ditemukan"
+                ], 404);
+            }
+
+            // Parse JSON data
+            $tindakanResusitasi = $this->parseJsonSafely($asesmen->tindakan_resusitasi);
+            $vitalSign = $this->parseJsonSafely($asesmen->vital_sign);
+            $antropometri = $this->parseJsonSafely($asesmen->antropometri);
+            $diagnosis = $this->parseJsonSafely($asesmen->diagnosis);
+            $alatTerpasang = $this->parseJsonSafely($asesmen->alat_terpasang);
+
+            // Ambil data alergi dari tabel RmeAlergiPasien
+            $riwayatAlergi = RmeAlergiPasien::where('kd_pasien', $asesmen->kd_pasien)->get();
+
+            // Ambil data retriase
+            $retriaseData = DataTriase::where('id_asesmen', $id)->get();
+
+            // Ambil pemeriksaan fisik
+            $pemeriksaanFisik = RmeAsesmenPemeriksaanFisik::with('itemFisik')
+                ->where('id_asesmen', $id)
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'id_item_fisik' => $item->id_item_fisik,
+                        'nama_item' => $item->itemFisik->nama ?? 'Tidak Diketahui',
+                        'is_normal' => $item->is_normal,
+                        'keterangan' => $item->keterangan
+                    ];
+                });
+
+            return response()->json([
+                'status' => 'success',
+                'data' => [
+                    'asesmen' => [
+                        'asesmen' => $asesmen,
+                        'tindakan_resusitasi' => $tindakanResusitasi,
+                        'anamnesis' => $asesmen->anamnesis,
+                        'riwayat_penyakit' => $asesmen->riwayat_penyakit,
+                        'riwayat_penyakit_keluarga' => $asesmen->riwayat_penyakit_keluarga,
+                        'riwayat_pengobatan' => $asesmen->riwayat_pengobatan,
+                        'riwayat_alergi' => $riwayatAlergi,
+                        'vital_sign' => $vitalSign,
+                        'antropometri' => $antropometri,
+                        'show_skala_nyeri' => $asesmen->skala_nyeri,
+                        'show_lokasi' => $asesmen->lokasi,
+                        'show_durasi' => $asesmen->durasi,
+                        'show_menjalar' => $asesmen->menjalar ? $asesmen->menjalar->name : null,
+                        'show_frekuensi' => $asesmen->frekuensiNyeri ? $asesmen->frekuensiNyeri->name : null,
+                        'show_kualitas' => $asesmen->kualitasNyeri ? $asesmen->kualitasNyeri->name : null,
+                        'show_faktor_pemberat' => $asesmen->faktorPemberat ? $asesmen->faktorPemberat->name : null,
+                        'show_faktor_peringan' => $asesmen->faktorPeringan ? $asesmen->faktorPeringan->name : null,
+                        'show_efek_nyeri' => $asesmen->efekNyeri ? $asesmen->efekNyeri->name : null,
+                        'show_diagnosis' => $diagnosis,
+                        'retriase_data' => $retriaseData,
+                        'alat_terpasang' => $alatTerpasang,
+                        'show_kondisi_pasien' => $asesmen->kondisi_pasien,
+                        'tindaklanjut' => $asesmen->tindaklanjut,
+                        'pemeriksaan_fisik' => $pemeriksaanFisik
+                    ],
+                    'dataMedis' => $dataMedis
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    private function parseJsonSafely($data)
+    {
+        if (is_string($data)) {
+            $decoded = json_decode($data, true);
+            return $decoded !== null ? $decoded : [];
+        }
+        return $data ?: [];
     }
 }

@@ -2966,12 +2966,12 @@
                             <div class="section-separator" id="discharge-planning">
                                 <h5 class="section-title">15. Discharge Planning</h5>
 
-                                <div class="mb-4">
+                                {{-- <div class="mb-4">
                                     <label class="form-label">Diagnosis medis</label>
                                     <input type="text" class="form-control" name="diagnosis_medis"
                                         placeholder="Diagnosis"
                                         value="{{ $asesmen->rmeAsesmenKepAnakRencanaPulang->diagnosis_medis ?? '' }}">
-                                </div>
+                                </div> --}}
 
                                 <div class="mb-4">
                                     <label class="form-label">Usia lanjut</label>

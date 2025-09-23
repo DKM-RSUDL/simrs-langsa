@@ -132,21 +132,21 @@ class AsesmenPengkajianAwalMedis extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'kd_pasien' => 'required',
-            'kd_unit' => 'required',
-            'tgl_masuk' => 'required|date',
-            'urut_masuk' => 'required',
-            'tanggal' => 'required|date',
-            'jam_masuk' => 'required',
-            'keluhan_utama' => 'nullable|string',
-            'sistole' => 'nullable|numeric',
-            'diastole' => 'nullable|numeric',
-            'respirasi' => 'nullable|numeric',
-            'suhu' => 'nullable|numeric',
-            'nadi' => 'nullable|numeric',
-            'skala_nyeri' => 'nullable|numeric|min:0|max:10',
-        ]);
+        // $request->validate([
+        //     'kd_pasien' => 'required',
+        //     'kd_unit' => 'required',
+        //     'tgl_masuk' => 'required|date',
+        //     'urut_masuk' => 'required',
+        //     'tanggal' => 'required|date',
+        //     'jam_masuk' => 'required',
+        //     'keluhan_utama' => 'nullable|string',
+        //     'sistole' => 'nullable|numeric',
+        //     'diastole' => 'nullable|numeric',
+        //     'respirasi' => 'nullable|numeric',
+        //     'suhu' => 'nullable|numeric',
+        //     'nadi' => 'nullable|numeric',
+        //     'skala_nyeri' => 'nullable|numeric|min:0|max:10',
+        // ]);
 
         DB::beginTransaction();
         try {
@@ -275,7 +275,8 @@ class AsesmenPengkajianAwalMedis extends Controller
             ])->with('success', 'Asesmen pengkajian awal medis berhasil disimpan.');
         } catch (\Exception $e) {
             DB::rollback();
-            return back()->withInput()->withErrors(['error' => 'Gagal menyimpan data: ' . $e->getMessage()]);
+            // return back()->withInput()->withErrors(['error' => 'Gagal menyimpan data: ' . $e->getMessage()]);
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -287,7 +288,6 @@ class AsesmenPengkajianAwalMedis extends Controller
                 'asesmenMedisRanap',
                 'asesmenMedisRanapFisik',
             ])->findOrFail($id);
-
         } catch (\Exception $e) {
             $asesmen = RmeAsesmen::findOrFail($id);
         }
@@ -322,7 +322,6 @@ class AsesmenPengkajianAwalMedis extends Controller
                 'asesmenMedisRanap',
                 'asesmenMedisRanapFisik',
             ])->findOrFail($id);
-
         } catch (\Exception $e) {
             $asesmen = RmeAsesmen::findOrFail($id);
         }
@@ -352,17 +351,17 @@ class AsesmenPengkajianAwalMedis extends Controller
     public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
 
-        $request->validate([
-            'tanggal' => 'required|date',
-            'jam_masuk' => 'required',
-            'keluhan_utama' => 'nullable|string',
-            'sistole' => 'nullable|numeric',
-            'diastole' => 'nullable|numeric',
-            'respirasi' => 'nullable|numeric',
-            'suhu' => 'nullable|numeric',
-            'nadi' => 'nullable|numeric',
-            'skala_nyeri' => 'nullable|numeric|min:0|max:10',
-        ]);
+        // $request->validate([
+        //     'tanggal' => 'required|date',
+        //     'jam_masuk' => 'required',
+        //     'keluhan_utama' => 'nullable|string',
+        //     'sistole' => 'nullable|numeric',
+        //     'diastole' => 'nullable|numeric',
+        //     'respirasi' => 'nullable|numeric',
+        //     'suhu' => 'nullable|numeric',
+        //     'nadi' => 'nullable|numeric',
+        //     'skala_nyeri' => 'nullable|numeric|min:0|max:10',
+        // ]);
 
 
         DB::beginTransaction();
@@ -383,8 +382,8 @@ class AsesmenPengkajianAwalMedis extends Controller
 
             // Update main assessment record
             $asesmen->asesmenMedisRanap()->updateOrCreate(
-            ['id_asesmen' => $asesmen->id],
-            [
+                ['id_asesmen' => $asesmen->id],
+                [
                     'user_edit' => Auth::id(),
                     'tanggal' => $tanggal,
                     'jam' => $jam,
@@ -413,7 +412,8 @@ class AsesmenPengkajianAwalMedis extends Controller
                     'rencana_tgl_pulang' => $request->rencana_tgl_pulang,
                     'kesimpulan_planing' => $request->kesimpulan_planing,
                     'alergis' => $request->alergis,
-            ]);
+                ]
+            );
 
             $foreignKeyColumn = 'id_asesmen_medis_ranap';
 
@@ -459,10 +459,10 @@ class AsesmenPengkajianAwalMedis extends Controller
                 'tgl_masuk' => $tgl_masuk,
                 'urut_masuk' => $urut_masuk,
             ])->with('success', 'Asesmen pengkajian awal medis berhasil diperbarui.');
-
         } catch (\Exception $e) {
             DB::rollback();
-            return back()->withInput()->withErrors(['error' => 'Gagal memperbarui data: ' . $e->getMessage()]);
+            // return back()->withInput()->withErrors(['error' => 'Gagal memperbarui data: ' . $e->getMessage()]);
+            return back()->with('error', $e->getMessage());
         }
     }
 

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
+use App\Models\Agama;
 use App\Models\Dokter;
 use App\Models\Kunjungan;
+use App\Models\Pekerjaan;
+use App\Models\Pendidikan;
 use App\Models\RmeAlergiPasien;
 use App\Models\RmeAsesmen;
 use App\Models\RmeAsesmenKetDewasaRanap;
@@ -17,13 +20,20 @@ use App\Models\RmeAsesmenKetDewasaRanapResikoJatuh;
 use App\Models\RmeAsesmenKetDewasaRanapRiwayatPasien;
 use App\Models\RmeAsesmenKetDewasaRanapSkalaNyeri;
 use App\Models\RmeAsesmenKetDewasaRanapStatusNutrisi;
+use App\Models\RmeFaktorPemberat;
+use App\Models\RmeFaktorPeringan;
+use App\Models\RmeFrekuensiNyeri;
+use App\Models\RmeJenisNyeri;
+use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMasterDiagnosis;
 use App\Models\RmeMasterImplementasi;
+use App\Models\RmeMenjalar;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SatsetPrognosis;
 use App\Models\Transaksi;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -487,7 +497,6 @@ class AsesmenKetDewasaRanapController extends Controller
                     'urut_masuk' => $urut_masuk
                 ])
                 ->with('success', 'Data Asesmen Awal Keperawatan Rawat Inap Dewasa');
-
         } catch (\Exception $e) {
             DB::rollback();
             return back()
@@ -512,7 +521,7 @@ class AsesmenKetDewasaRanapController extends Controller
                     'asesmenKetDewasaRanapDietKhusus',
                     'asesmenKetDewasaRanapDiagnosisKeperawatan'
                 ]
-                )->findOrFail($id);
+            )->findOrFail($id);
         } catch (\Exception $e) {
             $asesmen = RmeAsesmen::findOrFail($id);
         }
@@ -554,7 +563,7 @@ class AsesmenKetDewasaRanapController extends Controller
                     'asesmenKetDewasaRanapDietKhusus',
                     'asesmenKetDewasaRanapDiagnosisKeperawatan'
                 ]
-                )->findOrFail($id);
+            )->findOrFail($id);
         } catch (\Exception $e) {
             $asesmen = RmeAsesmen::findOrFail($id);
         }
@@ -898,7 +907,6 @@ class AsesmenKetDewasaRanapController extends Controller
                     'urut_masuk' => $urut_masuk
                 ])
                 ->with('success', 'Data asesmen medis anak berhasil diperbarui');
-
         } catch (\Exception $e) {
             DB::rollback();
             return back()
@@ -964,6 +972,73 @@ class AsesmenKetDewasaRanapController extends Controller
                 $resumeDtl->rs_rujuk_bagian     = $data['rs_rujuk_bagian'];
                 $resumeDtl->save();
             }
+        }
+    }
+
+    public function showKepIGD($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            // Ambil data asesmen beserta relasinya
+            $asesmen = RmeAsesmen::with([
+                'user',
+                'asesmenKepUmum',
+                'asesmenKepUmumBreathing',
+                'asesmenKepUmumCirculation',
+                'asesmenKepUmumDisability',
+                'asesmenKepUmumExposure',
+                'asesmenKepUmumSkalaNyeri',
+                'asesmenKepUmumRisikoJatuh',
+                'asesmenKepUmumSosialEkonomi',
+                'asesmenKepUmumGizi'
+            ])
+                ->where('id', $id)
+                ->where('kd_pasien', $kd_pasien)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->firstOrFail();
+
+            // Ambil data medis pasien
+            $dataMedis = Kunjungan::with('pasien')
+                ->where('kd_pasien', $kd_pasien)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->first();
+
+            if (!$dataMedis) {
+                return back()->with('error', 'Data medis tidak ditemukan untuk pasien ini.');
+            }
+
+            // Ambil data master yang diperlukan
+            $pekerjaan = Pekerjaan::all();
+            $faktorPemberat = RmeFaktorPemberat::all();
+            $faktorPeringan = RmeFaktorPeringan::all();
+            $kualitasNyeri = RmeKualitasNyeri::all();
+            $frekuensiNyeri = RmeFrekuensiNyeri::all();
+            $menjalar = RmeMenjalar::all();
+            $jenisNyeri = RmeJenisNyeri::all();
+            $agama = Agama::all();
+            $pendidikan = Pendidikan::all();
+
+            // Siapkan data untuk view
+            $data = [
+                'asesmen' => $asesmen,
+                'pasien' => $dataMedis->pasien ?? null,
+                'dataMedis' => $dataMedis ?? null,
+                'pekerjaan' => $pekerjaan,
+                'faktorPemberat' => $faktorPemberat,
+                'faktorPeringan' => $faktorPeringan,
+                'kualitasNyeri' => $kualitasNyeri,
+                'frekuensiNyeri' => $frekuensiNyeri,
+                'menjalar' => $menjalar,
+                'jenisNyeri' => $jenisNyeri,
+                'agama' => $agama,
+                'pendidikan' => $pendidikan,
+            ];
+
+            // Return ke view
+            return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show', $data);
+        } catch (ModelNotFoundException $e) {
+            return back()->with('error', 'Data asesmen tidak ditemukan.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan saat memuat data asesmen.');
         }
     }
 }

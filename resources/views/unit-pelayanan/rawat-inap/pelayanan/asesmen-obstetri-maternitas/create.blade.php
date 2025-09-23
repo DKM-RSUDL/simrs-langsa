@@ -1120,133 +1120,6 @@
                                         </div>
                                     </div>
 
-                                    {{-- <div class="section-separator" style="margin-bottom: 2rem;" id="discharge-planning">
-                                            <h5 class="fw-semibold mb-4">7. Discharge Planning</h5>
-
-                                            <form id="dischargePlanningForm">
-                                                <div class="mb-3 row align-items-center">
-                                                    <label class="col-md-3 text-secondary">Diagnosis medis</label>
-                                                    <div class="col-md-9">
-                                                        <select class="form-select bg-light" id="diagnosisMedis"
-                                                            name="dp_diagnosis_medis">
-                                                            <option selected value="Lokalis nyeri">Lokalis nyeri</option>
-                                                            <option value="Penyakit jantung">Penyakit jantung</option>
-                                                            <option value="Penyakit paru">Penyakit paru</option>
-                                                            <option value="Lainnya">Lainnya</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="mb-3 row align-items-center">
-                                                    <label class="col-md-3 text-secondary">Usia lanjut</label>
-                                                    <div class="col-md-9">
-                                                        <select class="form-select bg-light risk-factor" id="usiaLanjut"
-                                                            name="dp_usia_lanjut">
-                                                            <option selected value="">--pilih--</option>
-                                                            <option value="1">Ya</option>
-                                                            <option value="0">Tidak</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="mb-3 row align-items-center">
-                                                    <label class="col-md-3 text-secondary">Hambatan mobilisasi</label>
-                                                    <div class="col-md-9">
-                                                        <select class="form-select bg-light risk-factor"
-                                                            id="hambatanMobilisasi" name="dp_hambatan_mobilisasi">
-                                                            <option selected value="">--pilih--</option>
-                                                            <option value="1">Ya</option>
-                                                            <option value="0">Tidak</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="mb-3 row align-items-center">
-                                                    <label class="col-md-3 text-secondary">Membutuhkan pelayanan medis
-                                                        berkelanjutan</label>
-                                                    <div class="col-md-9">
-                                                        <select class="form-select bg-light risk-factor" id="pelayananMedis"
-                                                            name="dp_layanan_medis_lanjutan">
-                                                            <option selected value="">--pilih--</option>
-                                                            <option value="1">Ya</option>
-                                                            <option value="0">Tidak</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="mb-3 row align-items-center">
-                                                    <label class="col-md-3 text-secondary">Ketergantungan dengan orang lain
-                                                        dalam aktivitas harian</label>
-                                                    <div class="col-md-9">
-                                                        <select class="form-select bg-light risk-factor" id="ketergantungan"
-                                                            name="dp_tergantung_orang_lain">
-                                                            <option selected value="">--pilih--</option>
-                                                            <option value="1">Ya</option>
-                                                            <option value="0">Tidak</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="mb-4 row align-items-center">
-                                                    <label class="col-md-3 text-secondary">Perkiraan lama hari
-                                                        dirawat</label>
-                                                    <div class="col-md-3">
-                                                        <div class="input-group">
-                                                            <input type="number" id="lamaDirawat" name="dp_lama_dirawat"
-                                                                class="form-control bg-light" placeholder="Hari" min="1">
-                                                            <span class="input-group-text bg-light">Hari</span>
-                                                        </div>
-                                                    </div>
-                                                    <label class="col-md-2 text-secondary text-end">Rencana Pulang</label>
-                                                    <div class="col-md-4">
-                                                        <div class="input-group">
-                                                            <input type="text" id="rencanaPulang" name="dp_rencana_pulang"
-                                                                class="form-control bg-light"
-                                                                value="{{ \Carbon\Carbon::now()->addDays(7)->format('d M Y') }}">
-                                                            <span class="input-group-text bg-light date-picker-toggle"
-                                                                id="datePickerToggle">
-                                                                <i class="bi bi-calendar"></i>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="mb-2" id="conclusionContainer">
-                                                    <div class="alert alert-warning mb-2" id="needSpecialPlanAlert"
-                                                        style="background-color: #fff3cd; display: none;">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="dp_kesimpulan" id="need_special"
-                                                                value="Membutuhkan rencana pulang khusus" readonly>
-                                                            <label class="form-check-label" for="need_special">
-                                                                Membutuhkan rencana pulang khusus
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="alert alert-success mb-2" id="noSpecialPlanAlert"
-                                                        style="background-color: #d1e7dd; display: none;">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="dp_kesimpulan" id="no_special"
-                                                                value="Tidak membutuhkan rencana pulang khusus" readonly>
-                                                            <label class="form-check-label" for="no_special">
-                                                                Tidak membutuhkan rencana pulang khusus
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Hidden input yang akan selalu terkirim ke database -->
-                                                    <input type="hidden" id="dp_kesimpulan_hidden" name="dp_kesimpulan"
-                                                        value="">
-                                                </div>
-
-                                                <div id="conclusionSection" class="mt-4 p-3 border rounded"
-                                                    style="display: none;">
-                                                    <h6 class="fw-bold">Kesimpulan:</h6>
-                                                    <p id="conclusionText" class="mb-0"></p>
-                                                </div>
-                                            </form>
-                                        </div> --}}
-
                                     <div class="section-separator" id="diagnosis">
                                         <h5 class="fw-semibold mb-4">7. Diagnosis</h5>
 
@@ -1321,104 +1194,6 @@
                                             <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja"
                                                 value="[]">
                                         </div>
-                                    </div>
-
-                                    <div class="section-separator" style="margin-bottom: 2rem;" id="implementasi">
-                                        <h5 class="fw-semibold mb-4">8. Implementasi</h5>
-
-                                        <!-- Rencana Penatalaksanaan dan Pengobatan -->
-                                        <div class="mb-4">
-                                            <label class="text-primary fw-semibold">Rencana Penatalaksanaan dan
-                                                Pengobatan</label>
-                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                rencana, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
-                                                rencana Penatalaksanaan dan Pengobatan kerja yang tidak
-                                                ditemukan.</small>
-                                        </div>
-
-                                        <!-- Observasi Section -->
-                                        <div class="mb-4">
-                                            <label class="fw-semibold mb-2">Observasi</label>
-                                            <div class="input-group mt-2">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="observasi-input"
-                                                    class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Observasi">
-                                                <span class="input-group-text bg-white" id="add-observasi">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-                                            <div id="observasi-list" class="list-group mb-2">
-                                                <!-- Items will be added here dynamically -->
-                                            </div>
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="observasi" name="observasi" value="[]">
-                                        </div>
-
-                                        <!-- Terapeutik Section -->
-                                        <div class="mb-4">
-                                            <label class="fw-semibold mb-2">Terapeutik</label>
-                                            <div class="input-group mt-2">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="terapeutik-input"
-                                                    class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Terapeutik">
-                                                <span class="input-group-text bg-white" id="add-terapeutik">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-                                            <div id="terapeutik-list" class="list-group mb-2">
-                                                <!-- Items will be added here dynamically -->
-                                            </div>
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="terapeutik" name="terapeutik" value="[]">
-                                        </div>
-
-                                        <!-- Edukasi Section -->
-                                        <div class="mb-4">
-                                            <label class="fw-semibold mb-2">Edukasi</label>
-                                            <div class="input-group mt-2">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="edukasi-input"
-                                                    class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Edukasi">
-                                                <span class="input-group-text bg-white" id="add-edukasi">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-                                            <div id="edukasi-list" class="list-group mb-2">
-                                                <!-- Items will be added here dynamically -->
-                                            </div>
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="edukasi" name="edukasi" value="[]">
-                                        </div>
-
-                                        <!-- Kolaborasi Section -->
-                                        <div class="mb-4">
-                                            <label class="fw-semibold mb-2">Kolaborasi</label>
-                                            <div class="input-group mt-2">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="kolaborasi-input"
-                                                    class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Kolaborasi">
-                                                <span class="input-group-text bg-white" id="add-kolaborasi">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-                                            <div id="kolaborasi-list" class="list-group mb-2">
-                                                <!-- Items will be added here dynamically -->
-                                            </div>
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="kolaborasi" name="kolaborasi" value="[]">
-                                        </div>
 
                                         <div class="mb-4">
                                             <!-- sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis -->
@@ -1429,49 +1204,139 @@
                                                     placeholder="Rencana Penatalaksanaan Dan Pengobatan"></textarea>
                                             </div>
                                         </div>
-
-                                        <!-- Kolaborasi Section -->
-                                        {{-- <div class="mb-4">
-                                                <label class="text-primary fw-semibold">Prognosis</label>
-                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                    Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                    keterangan
-                                                    Prognosis yang tidak ditemukan.</small>
-                                                <!-- sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis -->
-                                                <div class="input-group mb-3">
-                                                    <span class="input-group-text bg-white border-end-0">
-                                                        <i class="bi bi-search text-secondary"></i>
-                                                    </span>
-                                                    <input type="text" id="rencana-input"
-                                                        class="form-control border-start-0 ps-0"
-                                                        placeholder="Cari dan tambah Rencana Penatalaksanaan">
-                                                    <span class="input-group-text bg-white" id="add-rencana">
-                                                        <i class="bi bi-plus-circle text-primary"></i>
-                                                    </span>
-                                                </div>
-
-                                                <div id="rencana-list" class="list-group mb-3">
-                                                    <!-- Items will be added here dynamically -->
-                                                </div>
-                                                <!-- Hidden input to store JSON data -->
-                                                <input type="hidden" id="rencana_penatalaksanaan" name="prognosis"
-                                                    value="[]">
-                                            </div> --}}
                                     </div>
 
-                                    {{-- <div class="section-separator" style="margin-bottom: 2rem;">
-                                        <h5 class="fw-semibold mb-4">10. Evaluasi</h5>
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Tambah Evaluasi Keperawatan</label>
-                                            <textarea class="form-control" name="evaluasi_evaluasi" rows="4"
-                                                placeholder="Evaluasi Keperawaran"></textarea>
-                                        </div>
-                                    </div> --}}
+                                    <div class="section-separator" style="margin-bottom: 2rem;" id="discharge-planning">
+                                        <h5 class="fw-semibold mb-4">8. Discharge Planning</h5>
+
+                                        <form id="dischargePlanningForm">
+                                            {{-- <div class="mb-3 row align-items-center">
+                                                <label class="col-md-3 text-secondary">Diagnosis medis</label>
+                                                <div class="col-md-9">
+                                                    <select class="form-select bg-light" id="diagnosisMedis"
+                                                        name="dp_diagnosis_medis">
+                                                        <option selected value="Lokalis nyeri">Lokalis nyeri</option>
+                                                        <option value="Penyakit jantung">Penyakit jantung</option>
+                                                        <option value="Penyakit paru">Penyakit paru</option>
+                                                        <option value="Lainnya">Lainnya</option>
+                                                    </select>
+                                                </div>
+                                            </div> --}}
+
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-md-3 text-secondary">Usia lanjut</label>
+                                                <div class="col-md-9">
+                                                    <select class="form-select bg-light risk-factor" id="usiaLanjut"
+                                                        name="dp_usia_lanjut">
+                                                        <option selected value="">--pilih--</option>
+                                                        <option value="1">Ya</option>
+                                                        <option value="0">Tidak</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-md-3 text-secondary">Hambatan mobilisasi</label>
+                                                <div class="col-md-9">
+                                                    <select class="form-select bg-light risk-factor"
+                                                        id="hambatanMobilisasi" name="dp_hambatan_mobilisasi">
+                                                        <option selected value="">--pilih--</option>
+                                                        <option value="1">Ya</option>
+                                                        <option value="0">Tidak</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-md-3 text-secondary">Membutuhkan pelayanan medis
+                                                    berkelanjutan</label>
+                                                <div class="col-md-9">
+                                                    <select class="form-select bg-light risk-factor" id="pelayananMedis"
+                                                        name="dp_layanan_medis_lanjutan">
+                                                        <option selected value="">--pilih--</option>
+                                                        <option value="1">Ya</option>
+                                                        <option value="0">Tidak</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-md-3 text-secondary">Ketergantungan dengan orang lain
+                                                    dalam aktivitas harian</label>
+                                                <div class="col-md-9">
+                                                    <select class="form-select bg-light risk-factor" id="ketergantungan"
+                                                        name="dp_tergantung_orang_lain">
+                                                        <option selected value="">--pilih--</option>
+                                                        <option value="1">Ya</option>
+                                                        <option value="0">Tidak</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-4 row align-items-center">
+                                                <label class="col-md-3 text-secondary">Perkiraan lama hari
+                                                    dirawat</label>
+                                                <div class="col-md-3">
+                                                    <div class="input-group">
+                                                        <input type="number" id="lamaDirawat" name="dp_lama_dirawat"
+                                                            class="form-control bg-light" placeholder="Hari"
+                                                            min="1">
+                                                        <span class="input-group-text bg-light">Hari</span>
+                                                    </div>
+                                                </div>
+                                                <label class="col-md-2 text-secondary text-end">Rencana Pulang</label>
+                                                <div class="col-md-4">
+                                                    <div class="input-group">
+                                                        <input type="text" id="rencanaPulang"
+                                                            name="dp_rencana_pulang" class="form-control bg-light"
+                                                            value="{{ \Carbon\Carbon::now()->addDays(7)->format('d M Y') }}">
+                                                        <span class="input-group-text bg-light date-picker-toggle"
+                                                            id="datePickerToggle">
+                                                            <i class="bi bi-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-2" id="conclusionContainer">
+                                                <div class="alert alert-warning mb-2" id="needSpecialPlanAlert"
+                                                    style="background-color: #fff3cd; display: none;">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="dp_kesimpulan" id="need_special"
+                                                            value="Membutuhkan rencana pulang khusus" readonly>
+                                                        <label class="form-check-label" for="need_special">
+                                                            Membutuhkan rencana pulang khusus
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="alert alert-success mb-2" id="noSpecialPlanAlert"
+                                                    style="background-color: #d1e7dd; display: none;">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="dp_kesimpulan" id="no_special"
+                                                            value="Tidak membutuhkan rencana pulang khusus" readonly>
+                                                        <label class="form-check-label" for="no_special">
+                                                            Tidak membutuhkan rencana pulang khusus
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <!-- Hidden input yang akan selalu terkirim ke database -->
+                                                <input type="hidden" id="dp_kesimpulan_hidden" name="dp_kesimpulan"
+                                                    value="">
+                                            </div>
+
+                                            <div id="conclusionSection" class="mt-4 p-3 border rounded"
+                                                style="display: none;">
+                                                <h6 class="fw-bold">Kesimpulan:</h6>
+                                                <p id="conclusionText" class="mb-0"></p>
+                                            </div>
+                                        </form>
+                                    </div>
 
                                     <div class="d-flex justify-content-end">
                                         <button type="submit" class="btn btn-primary">Simpan</button>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
