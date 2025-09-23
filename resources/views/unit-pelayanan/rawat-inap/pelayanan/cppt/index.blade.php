@@ -282,69 +282,88 @@
         });
 
         $('#addDiagnosisModal #btnSaveDiagnose').click(function(e) {
-
             var dignoseListContent = '';
             let diagnoses = $('#addDiagnosisModal #listDiagnosa li');
 
             $(diagnoses).each(function(i, e) {
-                dignoseListContent += `<div>
-                                        <a href="#" class="fw-bold">${$(e).text()}</a>
-                                        <input type="hidden" name="diagnose_name[]" value="${$(e).text()}"
+                dignoseListContent += `<div class="diag-item-wrap">
+                                        <a href="#" class="fw-bold text-decoration-none">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <p class="m-0 p-0">${$(e).text()}</p>
+                                                <span class="btnListDiagnose">
+                                                    <i class="ti-close text-danger"></i>
+                                                </span>
+                                            </div>
+                                        </a>
+                                        <input type="hidden" name="diagnose_name[]" value="${$(e).text()}">
                                     </div>`;
-
             });
 
-            $('#addCpptModal #diagnoseList').html(dignoseListContent);
-            $('#addDiagnosisModal .btn-close').trigger('click');
-        });
+            // $('#addCpptModal #diagnoseList').html(dignoseListContent);
+            // $('#addDiagnosisModal .btn-close').trigger('click');
 
-        $('#addCpptModal input[name="skala_nyeri"]').change(function(e) {
-            var $this = $(this);
-            var skalaValue = $this.val();
+            $('#addCpptModal input[name="skala_nyeri"]').change(function(e) {
+                var $this = $(this);
+                var skalaValue = $this.val();
 
-            if (skalaValue > 10) {
-                skalaValue = 10;
-                $this.val(10);
-            }
+                if (skalaValue > 10) {
+                    skalaValue = 10;
+                    $this.val(10);
+                }
 
-            if (skalaValue < 0) {
-                skalaValue = 0;
-                $this.val(0);
-            }
+                if (skalaValue < 0) {
+                    skalaValue = 0;
+                    $this.val(0);
+                }
 
-            var valColor = 'btn-success';
-            let skalaLabel = 'Tidak Nyeri'
+                var valColor = 'btn-success';
+                let skalaLabel = 'Tidak Nyeri'
 
-            if (skalaValue > 1 && skalaValue <= 3) skalaLabel = "Nyeri Ringan";
-            if (skalaValue > 3 && skalaValue <= 5) skalaLabel = "Nyeri Sedang";
-            if (skalaValue > 5 && skalaValue <= 7) skalaLabel = "Nyeri Parah";
-            if (skalaValue > 7 && skalaValue <= 9) skalaLabel = "Nyeri Sangat Parah";
-            if (skalaValue > 9) skalaLabel = "Nyeri Terburuk";
+                if (skalaValue > 1 && skalaValue <= 3) skalaLabel = "Nyeri Ringan";
+                if (skalaValue > 3 && skalaValue <= 5) skalaLabel = "Nyeri Sedang";
+                if (skalaValue > 5 && skalaValue <= 7) skalaLabel = "Nyeri Parah";
+                if (skalaValue > 7 && skalaValue <= 9) skalaLabel = "Nyeri Sangat Parah";
+                if (skalaValue > 9) skalaLabel = "Nyeri Terburuk";
 
-            if (skalaValue > 3 && skalaValue <= 7) valColor = 'btn-warning';
-            if (skalaValue > 7 && skalaValue <= 10) valColor = 'btn-danger';
+                if (skalaValue > 3 && skalaValue <= 7) valColor = 'btn-warning';
+                if (skalaValue > 7 && skalaValue <= 10) valColor = 'btn-danger';
 
-            $('#addCpptModal #skalaNyeriBtn').removeClass('btn-success');
-            $('#addCpptModal #skalaNyeriBtn').removeClass('btn-warning');
-            $('#addCpptModal #skalaNyeriBtn').removeClass('btn-danger');
-            $('#addCpptModal #skalaNyeriBtn').addClass(valColor);
-            $('#addCpptModal #skalaNyeriBtn').text(skalaLabel);
-        });
+                $('#addCpptModal #skalaNyeriBtn').removeClass('btn-success');
+                $('#addCpptModal #skalaNyeriBtn').removeClass('btn-warning');
+                $('#addCpptModal #skalaNyeriBtn').removeClass('btn-danger');
+                $('#addCpptModal #skalaNyeriBtn').addClass(valColor);
+                $('#addCpptModal #skalaNyeriBtn').text(skalaLabel);
+            });
 
-        $('#formAddCppt').submit(function(e) {
-            let $this = $(this);
-            let diagnoseNameEl = $this.find('input[name="diagnose_name[]"]');
+            $('#formAddCppt').submit(function(e) {
+                let $this = $(this);
+                let diagnoseNameEl = $this.find('input[name="diagnose_name[]"]');
 
+                if (diagnoseNameEl.length < 1) {
+                    showToast('error', 'Diagnosa harus di tambah minimal 1!');
+                    return false;
+                }
+            });
+
+            <<
+            <<
+            <<
+            <
+            HEAD
+            // edit
+            var tanggal, urut, unit, button;
+            var editDataListDiagnose = $('#editDiagnosisModal #dataList');
+            var editSearchInputDiagnose = $('#editDiagnosisModal #searchInput'); ===
+            ===
+            =
             if (diagnoseNameEl.length < 1) {
                 showToast('error', 'Diagnosa harus di tambah minimal 1!');
                 return false;
             }
-        });
-
-        // edit
-        var tanggal, urut, unit, button;
-        var editDataListDiagnose = $('#editDiagnosisModal #dataList');
-        var editSearchInputDiagnose = $('#editDiagnosisModal #searchInput');
+        }); >>>
+        >>>
+        >
+        7 a058d95a8ec5f9fcd0ed8f3a3bc51840bcf2c58
 
         // GANTI KODE EDIT CPPT YANG SUDAH ADA DENGAN INI
         $('.btn-edit-cppt').click(function(e) {
@@ -543,9 +562,31 @@
             }
         });
 
+        <<
+        <<
+        <<
+        <
+        HEAD
         $('#editDiagnosisModal #btnSaveDiagnose').click(function(e) {
             var dignoseListContent = '';
-            let diagnoses = $('#editDiagnosisModal #listDiagnosa li');
+            let diagnoses = $('#editDiagnosisModal #listDiagnosa li'); ===
+            ===
+            =
+            // delete old diagnose list
+            $(document).on('click', '#editCpptModal .btnListDiagnose', function(e) {
+                e.preventDefault();
+                var $this = $(this);
+                $(this).closest('.diag-item-wrap').remove();
+            });
+
+            $(document).on('click', '#addCpptModal .btnListDiagnose', function(e) {
+                e.preventDefault();
+                var $this = $(this);
+                $(this).closest('.diag-item-wrap').remove();
+            }); >>>
+            >>>
+            >
+            7 a058d95a8ec5f9fcd0ed8f3a3bc51840bcf2c58
 
             $(diagnoses).each(function(i, e) {
                 dignoseListContent += `<div class="diag-item-wrap">
@@ -558,12 +599,21 @@
                                             </div>
                                         </a>
                                         <input type="hidden" name="diagnose_name[]" value="${$(e).text()}">
-                                    </div>`;
+                                    </div>`; <<
+                <<
+                <<
+                <
+                HEAD
 
             });
 
             $('#editCpptModal #diagnoseList').html(dignoseListContent);
-            $('#editDiagnosisModal .btn-close').trigger('click');
+            $('#editDiagnosisModal .btn-close').trigger('click'); ===
+            ===
+            = >>>
+            >>>
+            >
+            7 a058d95a8ec5f9fcd0ed8f3a3bc51840bcf2c58
         });
 
         // Button add diagnosis from edit cppt modal
