@@ -267,19 +267,25 @@
             $('#listDiagnosa').append(`<li>${searchInputValue}</li>`);
             $(searchInputDiagnose).val('');
         }
+        
     });
 
     $('#addDiagnosisModal #btnSaveDiagnose').click(function(e) {
-
         var dignoseListContent = '';
         let diagnoses = $('#addDiagnosisModal #listDiagnosa li');
 
         $(diagnoses).each(function (i, e) {
-            dignoseListContent += `<div>
-                                        <a href="#" class="fw-bold">${$(e).text()}</a>
-                                        <input type="hidden" name="diagnose_name[]" value="${$(e).text()}"
+            dignoseListContent += `<div class="diag-item-wrap">
+                                        <a href="#" class="fw-bold text-decoration-none">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <p class="m-0 p-0">${$(e).text()}</p>
+                                                <span class="btnListDiagnose">
+                                                    <i class="ti-close text-danger"></i>
+                                                </span>
+                                            </div>
+                                        </a>
+                                        <input type="hidden" name="diagnose_name[]" value="${$(e).text()}">
                                     </div>`;
-
         });
 
         $('#addCpptModal #diagnoseList').html(dignoseListContent);
@@ -319,11 +325,13 @@
         $('#addCpptModal #skalaNyeriBtn').text(skalaLabel);
     });
 
+   
+
     $('#formAddCppt').submit(function(e) {
         let $this = $(this);
         let diagnoseNameEl = $this.find('input[name="diagnose_name[]"]');
 
-        if(diagnoseNameEl.length < 1) {
+        if (diagnoseNameEl.length < 1) {
             showToast('error', 'Diagnosa harus di tambah minimal 1!');
             return false;
         }
@@ -497,7 +505,13 @@
         e.preventDefault();
         var $this = $(this);
         $(this).closest('.diag-item-wrap').remove();
-    })
+    });
+
+    $(document).on('click', '#addCpptModal .btnListDiagnose', function(e) {
+        e.preventDefault();
+        var $this = $(this);
+        $(this).closest('.diag-item-wrap').remove();
+    });
 
     $('#editDiagnosisModal #btnAddListDiagnosa').click(function(e) {
         e.preventDefault();
@@ -525,7 +539,6 @@
                                         </a>
                                         <input type="hidden" name="diagnose_name[]" value="${$(e).text()}">
                                     </div>`;
-
         });
 
         $('#editCpptModal #diagnoseList').html(dignoseListContent);

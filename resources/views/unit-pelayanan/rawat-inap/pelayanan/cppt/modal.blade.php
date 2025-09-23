@@ -226,15 +226,15 @@
                                 <div class="col-sm-6">
                                     <!-- Modal 2 -->
                                     @include('unit-pelayanan.rawat-inap.pelayanan.cppt.create-diagnosis')
-                                    {{-- <a href="#" class="btn btn-sm"><i class="bi bi-plus-square"></i>
-                                        ICD-10</a> --}}
+                                    <!-- <a href="#" class="btn btn-sm"><i class="bi bi-plus-square"></i>
+                                        ICD-10</a> -->
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="bg-secondary-subtle rounded-2 p-3" id="diagnoseList">
-                                            {{-- <a href="#" class="fw-bold">HYPERTENSI KRONIS</a> <br>
+                                            <!-- <a href="#" class="fw-bold">HYPERTENSI KRONIS</a> <br>
                                             <a href="#" class="fw-bold">DYSPEPSIA</a> <br>
-                                            <a href="#" class="fw-bold">DEPRESIVE EPISODE</a> <br> --}}
+                                            <a href="#" class="fw-bold">DEPRESIVE EPISODE</a> <br> -->
                                         </div>
                                     </div>
                                 </div>
