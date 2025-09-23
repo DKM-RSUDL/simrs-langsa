@@ -33,6 +33,7 @@
                     <th>No</th>
                     <th>Tanggal dan Jam</th>
                     <th>Nama Obat</th>
+                    <th>Frekuensi</th>
                     <th>Dosis</th>
                     <th>Petugas</th>
                     <th>Keterangan</th>
@@ -49,6 +50,7 @@
                             <td>{{ $index + 1 }}</td>
                             <td>{{ \Carbon\Carbon::parse($catatan->tanggal)->format('d/m/Y H:i') }}</td>
                             <td>{{ $catatan->nama_obat }}</td>
+                            <td>{{ $catatan->frekuensi }}</td>
                             <td>{{ $catatan->dosis }} {{ $catatan->satuan }}</td>
                             <td>
                                 {{ $catatan->petugas->karyawan->nama ?? ($catatan->kd_petugas ?? 'Tidak Diketahui') }}

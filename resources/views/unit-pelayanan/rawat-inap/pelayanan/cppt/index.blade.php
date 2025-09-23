@@ -31,7 +31,6 @@
             <div class="patient-card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h6 class="text-primary mb-0">Catatan Perkembangan Pasien Terintegrasi</h6>
-                    <h6 class="text-secondary mb-0">Grafik</h6>
                 </div>
 
                 <div class="row g-3">

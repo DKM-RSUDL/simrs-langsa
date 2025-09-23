@@ -31,11 +31,7 @@
 
                             <div class="col-md-6">
                                 <label class="form-label small">Keterangan</label>
-                                <select class="form-select form-select-sm" id="keterangan" name="keterangan" required>
-                                    <option value="Sebelum Makan">Sebelum Makan</option>
-                                    <option value="Sesudah Makan" selected>Sesudah Makan</option>
-                                    <option value="Saat Makan">Saat Makan</option>
-                                </select>
+                                <textarea name="keterangan" id="keterangan" class="form-control"></textarea>
                             </div>
                         </div>
                     </div>
