@@ -235,7 +235,7 @@
                                                 <button type="submit" class="btn btn-primary">Verifikasi DPJP</button>
                                             </form>
                                         @endif
-                    
+
                                         <button class="btn btn-primary btn-edit-cppt" data-bs-target="#editCpptModal" data-tgl="{{ $value['tanggal'] }}" data-urut="{{ $value['urut'] }}" data-unit="{{ $value['kd_unit'] }}" data-transaksi="{{ $value['no_transaksi'] }}" data-urut-total="{{ $value['urut_total'] }}">Edit</button>
                                     </div>
                                 </div>
@@ -270,7 +270,7 @@
     });
 
     $('#addDiagnosisModal #btnSaveDiagnose').click(function(e) {
-        
+
         var dignoseListContent = '';
         let diagnoses = $('#addDiagnosisModal #listDiagnosa li');
 
@@ -279,7 +279,7 @@
                                         <a href="#" class="fw-bold">${$(e).text()}</a>
                                         <input type="hidden" name="diagnose_name[]" value="${$(e).text()}"
                                     </div>`;
-            
+
         });
 
         $('#addCpptModal #diagnoseList').html(dignoseListContent);
@@ -322,7 +322,7 @@
     $('#formAddCppt').submit(function(e) {
         let $this = $(this);
         let diagnoseNameEl = $this.find('input[name="diagnose_name[]"]');
-        
+
         if(diagnoseNameEl.length < 1) {
             showToast('error', 'Diagnosa harus di tambah minimal 1!');
             return false;
@@ -334,6 +334,7 @@
     var editDataListDiagnose = $('#editDiagnosisModal #dataList');
     var editSearchInputDiagnose = $('#editDiagnosisModal #searchInput');
 
+    // GANTI KODE EDIT CPPT YANG SUDAH ADA DENGAN INI
     $('.btn-edit-cppt').click(function(e) {
         e.preventDefault();
 
@@ -352,8 +353,7 @@
 
         // Ubah teks tombol dan tambahkan spinner
         $this.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Proses...');
-        $this.prop('disabled', true); // Nonaktifkan tombol selama proses berlangsung
-
+        $this.prop('disabled', true);
 
         let url = "{{ route('rawat-inap.cppt.get-cppt-ajax', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}";
 
@@ -370,16 +370,14 @@
             },
             dataType: "json",
             success: function (response) {
-
                 if(response.status == 'success') {
                     var data = response.data;
-                    
 
                     for (let key in data) {
                         if (data.hasOwnProperty(key)) {
                             let patient = data[key];
 
-                            //set key to input
+                            // Set key to input
                             $(target).find('input[name="tgl_cppt"]').val(tanggalData);
                             $(target).find('input[name="urut_cppt"]').val(urutData);
                             $(target).find('input[name="urut_total_cppt"]').val(urutTotalData);
@@ -421,7 +419,6 @@
                             for(let i in konpas) {
                                 if(konpas.hasOwnProperty(i)) {
                                     let kondisi = konpas[i];
-
                                     $(target).find(`#kondisi${kondisi.id_kondisi}`).val(kondisi.hasil);
                                 }
                             }
@@ -438,14 +435,13 @@
                             // diagnosis set value
                             var penyakit = patient.cppt_penyakit;
                             var dignoseListContent = '';
-                            
+
                             for(let d in penyakit) {
                                 if(penyakit.hasOwnProperty(d)) {
                                     let diag = penyakit[d];
-
                                     dignoseListContent += `<div class="diag-item-wrap">
                                                                 <a href="#" class="fw-bold text-decoration-none">
-                                                                    <div class="d-flex align-items-center justify-content-between">                            
+                                                                    <div class="d-flex align-items-center justify-content-between">
                                                                         <p class="m-0 p-0">${diag.nama_penyakit}</p>
                                                                         <span class="btnListDiagnose">
                                                                             <i class="ti-close text-danger"></i>
@@ -454,27 +450,44 @@
                                                                 </a>
                                                                 <input type="hidden" name="diagnose_name[]" value="${diag.nama_penyakit}">
                                                             </div>`;
-
                                 }
                             }
-                            
+
                             $(target).find('#diagnoseList').html(dignoseListContent);
+
+                            // PERBAIKAN: Simpan data instruksi PPA untuk edit modal
+                            console.log('Patient instruksi_ppa data:', patient.instruksi_ppa);
+                            window.currentEditInstruksiPpaData = patient.instruksi_ppa || [];
                         }
                     }
                 }
 
+                // Tampilkan modal dulu
                 $(target).modal('show');
+
+                // PENTING: Initialize Instruksi PPA SETELAH modal ditampilkan
+                setTimeout(() => {
+                    console.log('Initializing edit PPA system...');
+                    initEditInstruksiPpaSearchableSelect();
+                    
+                    // Load data PPA yang sudah disimpan
+                    if (window.currentEditInstruksiPpaData && Array.isArray(window.currentEditInstruksiPpaData)) {
+                        console.log('Loading PPA data:', window.currentEditInstruksiPpaData);
+                        loadEditInstruksiPpaFromAjaxData(window.currentEditInstruksiPpaData);
+                    } else {
+                        console.log('No PPA data found, using empty array');
+                        loadEditInstruksiPpaFromAjaxData([]);
+                    }
+                }, 800); // Delay lebih lama untuk memastikan modal benar-benar terbuka
+
                 // Ubah teks tombol jadi edit
                 button.html('Edit');
                 button.prop('disabled', false);
             },
             error: function (xhr, status, error) {
-                // Penanganan jika terjadi error
-                // console.log("Error:", error);
-                // console.log("Status:", status);
-                // console.log("XHR Object:", xhr);
-                // alert("Terjadi kesalahan: " + error);
                 showToast('error', 'internal server error');
+                button.html('Edit');
+                button.prop('disabled', false);
             }
         });
     });
@@ -503,7 +516,7 @@
         $(diagnoses).each(function (i, e) {
             dignoseListContent += `<div class="diag-item-wrap">
                                         <a href="#" class="fw-bold text-decoration-none">
-                                            <div class="d-flex align-items-center justify-content-between">                            
+                                            <div class="d-flex align-items-center justify-content-between">
                                                 <p class="m-0 p-0">${$(e).text()}</p>
                                                 <span class="btnListDiagnose">
                                                     <i class="ti-close text-danger"></i>
@@ -512,7 +525,7 @@
                                         </a>
                                         <input type="hidden" name="diagnose_name[]" value="${$(e).text()}">
                                     </div>`;
-            
+
         });
 
         $('#editCpptModal #diagnoseList').html(dignoseListContent);
@@ -537,7 +550,7 @@
         var penyakitList = $('#editCpptModal #diagnoseList p');
         let listNamaPenyakitHtml = '';
 
-        $.each(penyakitList, function (i, el) { 
+        $.each(penyakitList, function (i, el) {
             var nmDiag = $(el).text();
 
             if(nmDiag != '') {
@@ -584,12 +597,803 @@
     $('#formEditCppt').submit(function(e) {
         let $this = $(this);
         let diagnoseNameEl = $this.find('input[name="diagnose_name[]"]');
-        
+
         if(diagnoseNameEl.length < 1) {
             showToast('error', 'Diagnosa harus di tambah minimal 1!');
             return false;
         }
     });
 
+
+    // ===========================================
+    // SISTEM INSTRUKSI PPA - FIXED VERSION
+    // Untuk Add Modal dan Edit Modal (Terpisah)
+    // ===========================================
+
+    // Data instruksi PPA untuk setiap CPPT (dari blade)
+    const cpptInstruksiPpaData = {
+        @foreach ($cppt as $key => $value)
+            '{{ $value["urut_total"] }}': [
+                @if(isset($value['instruksi_ppa']) && count($value['instruksi_ppa']) > 0)
+                    @foreach ($value['instruksi_ppa'] as $instruksi)
+                        {
+                            ppa: '{{ $instruksi->ppa }}',
+                            instruksi: '{{ addslashes($instruksi->instruksi) }}'
+                        },
+                    @endforeach
+                @endif
+            ],
+        @endforeach
+    };
+
+    // Data karyawan
+    const instruksiPpaKaryawanData = {
+        @if(isset($karyawan) && count($karyawan) > 0)
+            @foreach ($karyawan as $item)
+                @php
+                    $nama_lengkap = '';
+                    if(!empty($item->gelar_depan)) $nama_lengkap .= $item->gelar_depan . ' ';
+                    $nama_lengkap .= $item->nama;
+                    if(!empty($item->gelar_belakang)) $nama_lengkap .= ', ' . $item->gelar_belakang;
+                    $nama_lengkap_escaped = str_replace("'", "\\'", $nama_lengkap);
+                @endphp
+                '{{ $item->kd_karyawan }}': '{{ $nama_lengkap_escaped }}',
+            @endforeach
+        @endif
+    };
+
+    // Convert ke array untuk pencarian
+    const karyawanArray = Object.keys(instruksiPpaKaryawanData).map(kode => ({
+        kode: kode,
+        nama: instruksiPpaKaryawanData[kode]
+    }));
+
+    // Global Variables untuk ADD Modal
+    let addInstruksiPpaCounter = 0;
+    let addInstruksiPpaData = [];
+    let addSelectedPerawat = null;
+
+    // Global Variables untuk EDIT Modal
+    let editInstruksiPpaCounter = 0;
+    let editInstruksiPpaData = [];
+    let editSelectedPerawat = null;
+
+    // ===========================================
+    // HELPER FUNCTIONS
+    // ===========================================
+
+    // Helper function untuk get nama perawat dari kode
+    function getPerawatNamaByKode(kode) {
+        return instruksiPpaKaryawanData[kode] || kode;
+    }
+
+    // Escape HTML
+    function escapeHtml(text) {
+        if (!text) return '';
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return text.toString().replace(/[&<>"']/g, function(m) {
+            return map[m];
+        });
+    }
+
+    // Show alert (optional - bisa disesuaikan dengan sistem alert yang ada)
+    function showInstruksiAlert(type, message) {
+        // Bisa disesuaikan dengan sistem alert yang sudah ada
+        console.log(`${type.toUpperCase()}: ${message}`);
+        
+        // Atau menggunakan sistem toast yang sudah ada
+        if (typeof showToast === 'function') {
+            showToast(type, message);
+        }
+    }
+
+    // ===========================================
+    // ADD MODAL FUNCTIONS
+    // ===========================================
+
+    // Initialize searchable select untuk ADD modal
+    function initAddInstruksiPpaSearchableSelect() {
+        const searchInput = $('#instruksi_ppa_search_input');
+        const dropdown = $('#instruksi_ppa_dropdown');
+        const hiddenInput = $('#instruksi_ppa_selected_value');
+
+        // Clear previous events
+        searchInput.off('input focus blur keydown');
+        dropdown.off('click mouseenter');
+
+        // Event ketik di input
+        searchInput.on('input', function() {
+            const query = $(this).val().toLowerCase();
+            filterAddKaryawan(query);
+        });
+
+        // Event focus - tampilkan dropdown
+        searchInput.on('focus', function() {
+            dropdown.show();
+            filterAddKaryawan($(this).val().toLowerCase());
+        });
+
+        // Event blur - sembunyikan dropdown setelah delay
+        searchInput.on('blur', function() {
+            setTimeout(() => {
+                dropdown.hide();
+            }, 200);
+        });
+
+        // Event keydown untuk navigasi
+        searchInput.on('keydown', function(e) {
+            const items = dropdown.find('.dropdown-item:visible');
+            const active = dropdown.find('.dropdown-item.active');
+
+            if (e.keyCode === 40) { // Arrow down
+                e.preventDefault();
+                if (active.length === 0) {
+                    items.first().addClass('active');
+                } else {
+                    active.removeClass('active');
+                    const next = active.nextAll('.dropdown-item:visible').first();
+                    if (next.length > 0) {
+                        next.addClass('active');
+                    } else {
+                        items.first().addClass('active');
+                    }
+                }
+            } else if (e.keyCode === 38) { // Arrow up
+                e.preventDefault();
+                if (active.length === 0) {
+                    items.last().addClass('active');
+                } else {
+                    active.removeClass('active');
+                    const prev = active.prevAll('.dropdown-item:visible').first();
+                    if (prev.length > 0) {
+                        prev.addClass('active');
+                    } else {
+                        items.last().addClass('active');
+                    }
+                }
+            } else if (e.keyCode === 13) { // Enter
+                e.preventDefault();
+                if (active.length > 0) {
+                    active.click();
+                }
+            }
+        });
+
+        // Generate dropdown items untuk ADD
+        generateAddDropdownItems();
+    }
+
+    // Generate dropdown items untuk ADD modal
+    function generateAddDropdownItems() {
+        const dropdown = $('#instruksi_ppa_dropdown');
+        dropdown.empty();
+
+        // Tambah opsi kosong
+        dropdown.append(`
+            <div class="dropdown-item" data-kode="" data-nama="">
+                <span class="text-muted">-- Pilih Perawat/PPA --</span>
+            </div>
+        `);
+
+        // Tambah opsi karyawan
+        karyawanArray.forEach(item => {
+            dropdown.append(`
+                <div class="dropdown-item" data-kode="${item.kode}" data-nama="${escapeHtml(item.nama)}">
+                    <i class="bi bi-person-badge text-primary me-2"></i>
+                    ${escapeHtml(item.nama)}
+                </div>
+            `);
+        });
+
+        // Event click pada item
+        dropdown.on('click', '.dropdown-item', function() {
+            const kode = $(this).data('kode');
+            const nama = $(this).data('nama');
+            selectAddPerawat(kode, nama);
+            dropdown.hide();
+        });
+
+        // Hover effect
+        dropdown.on('mouseenter', '.dropdown-item', function() {
+            dropdown.find('.dropdown-item.active').removeClass('active');
+            $(this).addClass('active');
+        });
+    }
+
+    // Filter karyawan untuk ADD modal
+    function filterAddKaryawan(query) {
+        const dropdown = $('#instruksi_ppa_dropdown');
+        const items = dropdown.find('.dropdown-item');
+
+        if (query === '') {
+            items.show();
+            return;
+        }
+
+        items.each(function() {
+            const nama = $(this).text().toLowerCase();
+            if (nama.includes(query)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+
+        dropdown.find('.dropdown-item.active').removeClass('active');
+    }
+
+    // Select perawat untuk ADD modal
+    function selectAddPerawat(kode, nama) {
+        const searchInput = $('#instruksi_ppa_search_input');
+        const hiddenInput = $('#instruksi_ppa_selected_value');
+
+        addSelectedPerawat = kode ? { kode: kode, nama: nama } : null;
+
+        searchInput.val(nama || '');
+        hiddenInput.val(kode || '');
+
+        if (kode) {
+            searchInput.removeClass('is-invalid').addClass('is-valid');
+        } else {
+            searchInput.removeClass('is-valid is-invalid');
+        }
+    }
+
+    // Update tabel untuk ADD modal
+    function updateAddInstruksiPpaTable() {
+        const tbody = $('#instruksi_ppa_table_body');
+        tbody.empty();
+
+        if (addInstruksiPpaData.length === 0) {
+            tbody.append(`
+                <tr>
+                    <td colspan="4" class="text-center text-muted py-4">
+                        <i class="bi bi-inbox fs-1 d-block mb-2 opacity-50"></i>
+                        Belum ada instruksi yang ditambahkan
+                    </td>
+                </tr>
+            `);
+        } else {
+            addInstruksiPpaData.forEach((item, index) => {
+                tbody.append(`
+                    <tr>
+                        <td class="text-center fw-bold">${index + 1}</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-person-badge text-primary me-2"></i>
+                                <div>
+                                    <strong>${escapeHtml(item.perawat_nama)}</strong><br>
+                                    <small class="text-muted">${escapeHtml(item.perawat_kode)}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="mb-2">${escapeHtml(item.instruksi)}</div>
+                        </td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-sm btn-outline-danger"
+                                    onclick="hapusAddInstruksiPpa(${item.id})"
+                                    title="Hapus Instruksi">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `);
+            });
+        }
+    }
+
+    // Update hidden inputs untuk ADD modal
+    function updateAddInstruksiPpaHiddenInputs() {
+        const container = $('#instruksi_ppa_hidden_inputs');
+        container.empty();
+
+        // Generate hidden inputs dalam format array
+        addInstruksiPpaData.forEach((item, index) => {
+            container.append(`
+                <input type="hidden" name="perawat_kode[]" value="${escapeHtml(item.perawat_kode)}">
+                <input type="hidden" name="perawat_nama[]" value="${escapeHtml(item.perawat_nama)}">
+                <input type="hidden" name="instruksi_text[]" value="${escapeHtml(item.instruksi)}">
+            `);
+        });
+    }
+
+    // Update count badge untuk ADD modal
+    function updateAddInstruksiPpaCountBadge() {
+        const count = addInstruksiPpaData.length;
+        const badge = $('#instruksi_ppa_count_badge');
+
+        badge.text(count);
+        badge.removeClass('bg-primary bg-success bg-warning bg-danger bg-secondary');
+
+        if (count === 0) {
+            badge.addClass('bg-secondary');
+        } else if (count <= 2) {
+            badge.addClass('bg-success');
+        } else if (count <= 5) {
+            badge.addClass('bg-primary');
+        } else {
+            badge.addClass('bg-warning');
+        }
+    }
+
+    // Reset data untuk ADD modal
+    function resetAddInstruksiPpaData() {
+        addInstruksiPpaData = [];
+        addInstruksiPpaCounter = 0;
+        addSelectedPerawat = null;
+        
+        updateAddInstruksiPpaTable();
+        updateAddInstruksiPpaCountBadge();
+
+        // Clear form
+        selectAddPerawat('', '');
+        $('#instruksi_ppa_text_input').val('');
+    }
+
+    // Hapus instruksi untuk ADD modal
+    function hapusAddInstruksiPpa(id) {
+        const instruksi = addInstruksiPpaData.find(item => item.id === id);
+        if (!instruksi) return;
+
+        if (confirm(`Apakah Anda yakin ingin menghapus instruksi untuk: ${instruksi.perawat_nama}?`)) {
+            addInstruksiPpaData = addInstruksiPpaData.filter(item => item.id !== id);
+            updateAddInstruksiPpaTable();
+            updateAddInstruksiPpaHiddenInputs();
+            updateAddInstruksiPpaCountBadge();
+            showInstruksiAlert('success', 'Instruksi berhasil dihapus!');
+        }
+    }
+
+    // ===========================================
+    // EDIT MODAL FUNCTIONS
+    // ===========================================
+
+    // Initialize searchable select untuk EDIT modal
+    function initEditInstruksiPpaSearchableSelect() {
+        const searchInput = $('#edit_instruksi_ppa_search_input');
+        const dropdown = $('#edit_instruksi_ppa_dropdown');
+        const hiddenInput = $('#edit_instruksi_ppa_selected_value');
+
+        // Clear previous events
+        searchInput.off('input focus blur keydown');
+        dropdown.off('click mouseenter');
+
+        // Event ketik di input
+        searchInput.on('input', function() {
+            const query = $(this).val().toLowerCase();
+            filterEditKaryawan(query);
+        });
+
+        // Event focus - tampilkan dropdown
+        searchInput.on('focus', function() {
+            dropdown.show();
+            filterEditKaryawan($(this).val().toLowerCase());
+        });
+
+        // Event blur - sembunyikan dropdown setelah delay
+        searchInput.on('blur', function() {
+            setTimeout(() => {
+                dropdown.hide();
+            }, 200);
+        });
+
+        // Event keydown untuk navigasi
+        searchInput.on('keydown', function(e) {
+            const items = dropdown.find('.dropdown-item:visible');
+            const active = dropdown.find('.dropdown-item.active');
+
+            if (e.keyCode === 40) { // Arrow down
+                e.preventDefault();
+                if (active.length === 0) {
+                    items.first().addClass('active');
+                } else {
+                    active.removeClass('active');
+                    const next = active.nextAll('.dropdown-item:visible').first();
+                    if (next.length > 0) {
+                        next.addClass('active');
+                    } else {
+                        items.first().addClass('active');
+                    }
+                }
+            } else if (e.keyCode === 38) { // Arrow up
+                e.preventDefault();
+                if (active.length === 0) {
+                    items.last().addClass('active');
+                } else {
+                    active.removeClass('active');
+                    const prev = active.prevAll('.dropdown-item:visible').first();
+                    if (prev.length > 0) {
+                        prev.addClass('active');
+                    } else {
+                        items.last().addClass('active');
+                    }
+                }
+            } else if (e.keyCode === 13) { // Enter
+                e.preventDefault();
+                if (active.length > 0) {
+                    active.click();
+                }
+            }
+        });
+
+        // Generate dropdown items untuk EDIT
+        generateEditDropdownItems();
+    }
+
+    // Generate dropdown items untuk EDIT modal
+    function generateEditDropdownItems() {
+        const dropdown = $('#edit_instruksi_ppa_dropdown');
+        dropdown.empty();
+
+        // Tambah opsi kosong
+        dropdown.append(`
+            <div class="dropdown-item" data-kode="" data-nama="">
+                <span class="text-muted">-- Pilih Perawat/PPA --</span>
+            </div>
+        `);
+
+        // Tambah opsi karyawan
+        karyawanArray.forEach(item => {
+            dropdown.append(`
+                <div class="dropdown-item" data-kode="${item.kode}" data-nama="${escapeHtml(item.nama)}">
+                    <i class="bi bi-person-badge text-primary me-2"></i>
+                    ${escapeHtml(item.nama)}
+                </div>
+            `);
+        });
+
+        // Event click pada item
+        dropdown.on('click', '.dropdown-item', function() {
+            const kode = $(this).data('kode');
+            const nama = $(this).data('nama');
+            selectEditPerawat(kode, nama);
+            dropdown.hide();
+        });
+
+        // Hover effect
+        dropdown.on('mouseenter', '.dropdown-item', function() {
+            dropdown.find('.dropdown-item.active').removeClass('active');
+            $(this).addClass('active');
+        });
+    }
+
+    // Filter karyawan untuk EDIT modal
+    function filterEditKaryawan(query) {
+        const dropdown = $('#edit_instruksi_ppa_dropdown');
+        const items = dropdown.find('.dropdown-item');
+
+        if (query === '') {
+            items.show();
+            return;
+        }
+
+        items.each(function() {
+            const nama = $(this).text().toLowerCase();
+            if (nama.includes(query)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+
+        dropdown.find('.dropdown-item.active').removeClass('active');
+    }
+
+    // Select perawat untuk EDIT modal
+    function selectEditPerawat(kode, nama) {
+        const searchInput = $('#edit_instruksi_ppa_search_input');
+        const hiddenInput = $('#edit_instruksi_ppa_selected_value');
+
+        editSelectedPerawat = kode ? { kode: kode, nama: nama } : null;
+
+        searchInput.val(nama || '');
+        hiddenInput.val(kode || '');
+
+        if (kode) {
+            searchInput.removeClass('is-invalid').addClass('is-valid');
+        } else {
+            searchInput.removeClass('is-valid is-invalid');
+        }
+    }
+
+    // Update tabel untuk EDIT modal
+    function updateEditInstruksiPpaTable() {
+        const tbody = $('#edit_instruksi_ppa_table_body');
+        tbody.empty();
+
+        if (editInstruksiPpaData.length === 0) {
+            tbody.append(`
+                <tr>
+                    <td colspan="4" class="text-center text-muted py-4">
+                        <i class="bi bi-inbox fs-1 d-block mb-2 opacity-50"></i>
+                        Belum ada instruksi yang ditambahkan
+                    </td>
+                </tr>
+            `);
+        } else {
+            editInstruksiPpaData.forEach((item, index) => {
+                tbody.append(`
+                    <tr>
+                        <td class="text-center fw-bold">${index + 1}</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-person-badge text-primary me-2"></i>
+                                <div>
+                                    <strong>${escapeHtml(item.perawat_nama)}</strong><br>
+                                    <small class="text-muted">${escapeHtml(item.perawat_kode)}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="mb-2">${escapeHtml(item.instruksi)}</div>
+                        </td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-sm btn-outline-danger"
+                                    onclick="hapusEditInstruksiPpa(${item.id})"
+                                    title="Hapus Instruksi">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `);
+            });
+        }
+    }
+
+    // Update hidden inputs untuk EDIT modal
+    function updateEditInstruksiPpaHiddenInputs() {
+        const container = $('#edit_instruksi_ppa_hidden_inputs');
+        container.empty();
+
+        // Generate hidden inputs dalam format array
+        editInstruksiPpaData.forEach((item, index) => {
+            container.append(`
+                <input type="hidden" name="perawat_kode[]" value="${escapeHtml(item.perawat_kode)}">
+                <input type="hidden" name="perawat_nama[]" value="${escapeHtml(item.perawat_nama)}">
+                <input type="hidden" name="instruksi_text[]" value="${escapeHtml(item.instruksi)}">
+            `);
+        });
+    }
+
+    // Update count badge untuk EDIT modal
+    function updateEditInstruksiPpaCountBadge() {
+        const count = editInstruksiPpaData.length;
+        const badge = $('#edit_instruksi_ppa_count_badge');
+
+        badge.text(count);
+        badge.removeClass('bg-primary bg-success bg-warning bg-danger bg-secondary');
+
+        if (count === 0) {
+            badge.addClass('bg-secondary');
+        } else if (count <= 2) {
+            badge.addClass('bg-success');
+        } else if (count <= 5) {
+            badge.addClass('bg-primary');
+        } else {
+            badge.addClass('bg-warning');
+        }
+    }
+
+    // Load instruksi PPA dari AJAX response untuk EDIT modal
+    function loadEditInstruksiPpaFromAjaxData(instruksiPpaArray) {
+        // Reset data
+        editInstruksiPpaData = [];
+        editInstruksiPpaCounter = 0;
+
+        // instruksiPpaArray sudah dalam format yang benar dari AJAX response
+        if (instruksiPpaArray && Array.isArray(instruksiPpaArray)) {
+            instruksiPpaArray.forEach(function(item) {
+                editInstruksiPpaCounter++;
+                editInstruksiPpaData.push({
+                    id: editInstruksiPpaCounter,
+                    perawat_kode: item.ppa,
+                    perawat_nama: getPerawatNamaByKode(item.ppa),
+                    instruksi: item.instruksi,
+                    created_at: new Date().toLocaleString('id-ID')
+                });
+            });
+        }
+
+        // Update tampilan
+        updateEditInstruksiPpaTable();
+        updateEditInstruksiPpaHiddenInputs();
+        updateEditInstruksiPpaCountBadge();
+    }
+
+    // Backward compatibility - untuk hardcode data (bisa dihapus nanti)
+    function loadEditInstruksiPpaFromHardcode(urutTotal) {
+        const instruksiList = cpptInstruksiPpaData[urutTotal] || [];
+        loadEditInstruksiPpaFromAjaxData(instruksiList);
+    }
+
+    // Reset data untuk EDIT modal
+    function resetEditInstruksiPpaData() {
+        editInstruksiPpaData = [];
+        editInstruksiPpaCounter = 0;
+        editSelectedPerawat = null;
+        
+        updateEditInstruksiPpaTable();
+        updateEditInstruksiPpaCountBadge();
+
+        // Clear form
+        selectEditPerawat('', '');
+        $('#edit_instruksi_ppa_text_input').val('');
+    }
+
+    // Hapus instruksi untuk EDIT modal
+    function hapusEditInstruksiPpa(id) {
+        const instruksi = editInstruksiPpaData.find(item => item.id === id);
+        if (!instruksi) return;
+
+        if (confirm(`Apakah Anda yakin ingin menghapus instruksi untuk: ${instruksi.perawat_nama}?`)) {
+            editInstruksiPpaData = editInstruksiPpaData.filter(item => item.id !== id);
+            updateEditInstruksiPpaTable();
+            updateEditInstruksiPpaHiddenInputs();
+            updateEditInstruksiPpaCountBadge();
+            showInstruksiAlert('success', 'Instruksi berhasil dihapus!');
+        }
+    }
+
+    // ===========================================
+    // EVENT HANDLERS
+    // ===========================================
+
+    // Initialize saat document ready
+    $(document).ready(function() {
+        console.log('Inisialisasi PPA Instruction System...');
+        
+        // Initialize ADD modal
+        initAddInstruksiPpaSearchableSelect();
+    });
+
+    // Event handler untuk button tambah di ADD modal
+    $(document).on('click', '#instruksi_ppa_tambah_btn', function() {
+        const perawatKode = $('#instruksi_ppa_selected_value').val();
+        const perawatNama = addSelectedPerawat ? addSelectedPerawat.nama : '';
+        const instruksi = $('#instruksi_ppa_text_input').val().trim();
+
+        // Validasi
+        if (!perawatKode || perawatKode === '') {
+            showInstruksiAlert('warning', 'Silakan pilih nama perawat terlebih dahulu!');
+            $('#instruksi_ppa_search_input').removeClass('is-valid').addClass('is-invalid').focus();
+            return;
+        }
+
+        if (!instruksi) {
+            showInstruksiAlert('warning', 'Silakan isi instruksi terlebih dahulu!');
+            $('#instruksi_ppa_text_input').focus();
+            return;
+        }
+
+        // Tambah data
+        addInstruksiPpaCounter++;
+        const newInstruksi = {
+            id: addInstruksiPpaCounter,
+            perawat_kode: perawatKode,
+            perawat_nama: perawatNama,
+            instruksi: instruksi,
+            created_at: new Date().toLocaleString('id-ID')
+        };
+
+        addInstruksiPpaData.push(newInstruksi);
+
+        // Update tampilan
+        updateAddInstruksiPpaTable();
+        updateAddInstruksiPpaHiddenInputs();
+        updateAddInstruksiPpaCountBadge();
+
+        // Clear form
+        selectAddPerawat('', '');
+        $('#instruksi_ppa_text_input').val('');
+        $('#instruksi_ppa_search_input').focus();
+
+        showInstruksiAlert('success', `Instruksi untuk ${perawatNama} berhasil ditambahkan!`);
+    });
+
+    // Event handler untuk button tambah di EDIT modal
+    $(document).on('click', '#edit_instruksi_ppa_tambah_btn', function() {
+        const perawatKode = $('#edit_instruksi_ppa_selected_value').val();
+        const perawatNama = editSelectedPerawat ? editSelectedPerawat.nama : '';
+        const instruksi = $('#edit_instruksi_ppa_text_input').val().trim();
+
+        // Validasi
+        if (!perawatKode || perawatKode === '') {
+            showInstruksiAlert('warning', 'Silakan pilih nama perawat terlebih dahulu!');
+            $('#edit_instruksi_ppa_search_input').removeClass('is-valid').addClass('is-invalid').focus();
+            return;
+        }
+
+        if (!instruksi) {
+            showInstruksiAlert('warning', 'Silakan isi instruksi terlebih dahulu!');
+            $('#edit_instruksi_ppa_text_input').focus();
+            return;
+        }
+
+        // Tambah data
+        editInstruksiPpaCounter++;
+        const newInstruksi = {
+            id: editInstruksiPpaCounter,
+            perawat_kode: perawatKode,
+            perawat_nama: perawatNama,
+            instruksi: instruksi,
+            created_at: new Date().toLocaleString('id-ID')
+        };
+
+        editInstruksiPpaData.push(newInstruksi);
+
+        // Update tampilan
+        updateEditInstruksiPpaTable();
+        updateEditInstruksiPpaHiddenInputs();
+        updateEditInstruksiPpaCountBadge();
+
+        // Clear form
+        selectEditPerawat('', '');
+        $('#edit_instruksi_ppa_text_input').val('');
+        $('#edit_instruksi_ppa_search_input').focus();
+
+        showInstruksiAlert('success', `Instruksi untuk ${perawatNama} berhasil ditambahkan!`);
+    });
+
+    // Event handler untuk enter key di ADD modal
+    $(document).on('keypress', '#instruksi_ppa_text_input', function(e) {
+        if (e.which === 13 && !e.shiftKey) {
+            e.preventDefault();
+            $('#instruksi_ppa_tambah_btn').click();
+        }
+    });
+
+    // Event handler untuk enter key di EDIT modal
+    $(document).on('keypress', '#edit_instruksi_ppa_text_input', function(e) {
+        if (e.which === 13 && !e.shiftKey) {
+            e.preventDefault();
+            $('#edit_instruksi_ppa_tambah_btn').click();
+        }
+    });
+
+    // ===========================================
+    // MODAL EVENT HANDLERS
+    // ===========================================
+
+    // Event saat modal ADD dibuka
+    $('#addCpptModal').on('show.bs.modal', function() {
+        resetAddInstruksiPpaData();
+        initAddInstruksiPpaSearchableSelect();
+    });
+
+    // Event saat modal ADD ditutup
+    $('#addCpptModal').on('hidden.bs.modal', function() {
+        resetAddInstruksiPpaData();
+    });
+
+    // Event saat modal EDIT dibuka
+    $('#editCpptModal').on('show.bs.modal', function() {
+        initEditInstruksiPpaSearchableSelect();
+    });
+
+    // Event saat modal EDIT ditutup
+    $('#editCpptModal').on('hidden.bs.modal', function() {
+        resetEditInstruksiPpaData();
+    });
+
+    // ===========================================
+    // INTEGRATION DENGAN KODE YANG SUDAH ADA
+    // ===========================================
+
+    // Modifikasi event click edit CPPT yang sudah ada
+    // Tambahkan ini ke dalam success callback AJAX yang sudah ada
+    function initEditModalWithPpaData(urutTotalData) {
+        // Set timeout untuk memastikan modal sudah terbuka
+        setTimeout(() => {
+            initEditInstruksiPpaSearchableSelect();
+            loadEditInstruksiPpaFromHardcode(urutTotalData);
+        }, 100);
+    }
 </script>
 @endpush
