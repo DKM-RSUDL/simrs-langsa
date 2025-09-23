@@ -200,7 +200,7 @@
 
                                         <div class="form-group mb-3">
                                             <label class="d-block mb-2" style="min-width: 200px;">Suhu (C)</label>
-                                            <input type="number" class="form-control" name="suhu"
+                                            <input type="text" class="form-control" name="suhu"
                                                 placeholder="suhu dalam celcius"
                                                 value="{{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->suhu ?? '' }}">
                                         </div>

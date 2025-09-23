@@ -199,7 +199,7 @@
 
                                             <div class="form-group">
                                                 <label style="min-width: 200px;">Suhu (C)</label>
-                                                <input type="number" class="form-control" name="suhu"
+                                                <input type="text" class="form-control" name="suhu"
                                                     placeholder="suhu dalam celcius">
                                             </div>
 
@@ -1142,7 +1142,7 @@
 
                                             <select class="form-select" name="tht_prognosis">
                                                 <option value="" selected disabled>--Pilih Prognosis--</option>
-                                                @forelse ($satsetPrognosis as $item)                                            
+                                                @forelse ($satsetPrognosis as $item)
                                                     <option value="{{ $item->prognosis_id }}">
                                                         {{ $item->value ?? 'Field tidak ditemukan' }}
                                                     </option>

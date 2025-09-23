@@ -147,7 +147,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Suhu (°C)</label>
-                                            <input type="number" class="form-control" name="suhu" step="0.1"
+                                            <input type="text" class="form-control" name="suhu" step="0.1"
                                                 placeholder="36.5" min="30" max="45"
                                                 value="{{ $asesmenGeriatri->suhu }}">
                                         </div>
@@ -168,21 +168,21 @@
                                         {{-- TAMBAHAN VITAL SIGN: BB, TB, IMT --}}
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Berat Badan (Kg)</label>
-                                            <input type="number" class="form-control" name="berat_badan" id="berat_badan" 
+                                            <input type="number" class="form-control" name="berat_badan" id="berat_badan"
                                                 placeholder="70" step="0.1" min="10" max="300"
                                                 value="{{ $asesmenGeriatri->berat_badan }}">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Tinggi Badan (Cm)</label>
-                                            <input type="number" class="form-control" name="tinggi_badan" id="tinggi_badan" 
+                                            <input type="number" class="form-control" name="tinggi_badan" id="tinggi_badan"
                                                 placeholder="170" step="0.1" min="50" max="250"
                                                 value="{{ $asesmenGeriatri->tinggi_badan }}">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">IMT (Kg/m²)</label>
-                                            <input type="number" class="form-control" name="imt" id="imt" 
+                                            <input type="number" class="form-control" name="imt" id="imt"
                                                 placeholder="Otomatis terhitung" step="0.1" readonly
                                                 value="{{ $asesmenGeriatri->imt }}">
                                         </div>
@@ -945,12 +945,12 @@
                 const beratBadanInput = document.getElementById('berat_badan');
                 const tinggiBadanInput = document.getElementById('tinggi_badan');
                 const imtField = document.getElementById('imt');
-                
+
                 if (!beratBadanInput || !tinggiBadanInput || !imtField) return;
-                
+
                 const beratBadan = parseFloat(beratBadanInput.value);
                 const tinggiBadan = parseFloat(tinggiBadanInput.value);
-                
+
                 // Reset semua checkbox kategori IMT
                 const kategoriCheckboxes = document.querySelectorAll('input[name="kategori_imt[]"]');
                 kategoriCheckboxes.forEach(checkbox => checkbox.checked = false);
@@ -959,7 +959,7 @@
                     // Konversi tinggi badan dari cm ke meter
                     const tinggiBadanMeter = tinggiBadan / 100;
                     const imt = beratBadan / (tinggiBadanMeter * tinggiBadanMeter);
-                    
+
                     // Tampilkan hasil IMT dengan 2 desimal
                     imtField.value = imt.toFixed(2);
 
@@ -988,7 +988,7 @@
             // Event listener untuk kalkulasi BMI
             const beratBadanInput = document.getElementById('berat_badan');
             const tinggiBadanInput = document.getElementById('tinggi_badan');
-            
+
             if (beratBadanInput) {
                 beratBadanInput.addEventListener('input', calculateBMI);
             }
@@ -1003,7 +1003,7 @@
             // Fungsi untuk membuat checkbox saling eksklusif dalam grup yang sama
             function setupMutualExclusiveCheckboxes(groupName) {
                 const checkboxes = document.querySelectorAll(`input[name="${groupName}[]"]`);
-                
+
                 checkboxes.forEach(checkbox => {
                     checkbox.addEventListener('change', function() {
                         if (this.checked) {

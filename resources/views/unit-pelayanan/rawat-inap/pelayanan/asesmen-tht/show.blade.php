@@ -176,7 +176,7 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    
+
                                     @push('modals')
                                         @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.modal-show-alergi')
                                     @endpush
@@ -217,7 +217,7 @@
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Suhu (C)</label>
-                                        <input type="number" class="form-control" name="suhu"
+                                        <input type="text" class="form-control" name="suhu"
                                             placeholder="suhu dalam celcius"
                                             value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->suhu ?? '' }}" disabled>
                                     </div>
@@ -494,7 +494,7 @@
                                                 <input type="text" class="form-control"
                                                     name="tes_pendengaran_weber_tes_kanan" placeholder="jelaskan"
                                                     value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->tes_pendengaran_weber_tes_kanan ?? '' }}" disabled>
-                                            </div> 
+                                            </div>
                                         </div>
                                         <div class="col-5">
                                             <div class="input-group">
@@ -965,7 +965,7 @@
                                                     <span class="input-group-text">Kanan</span>
                                                     <input type="text" class="form-control"
                                                         name="plica_vokalis_warna_kanan" placeholder="jelaskan"
-                                                        value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->plica_vokalis_warna_kanan ?? '' }}" disabled> 
+                                                        value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->plica_vokalis_warna_kanan ?? '' }}" disabled>
                                                 </div>
                                             </div>
                                             <div class="col-5">
@@ -1182,7 +1182,7 @@
                                         <label style="min-width: 200px;">Darah</label>
                                         <input type="text" class="form-control" name="darah"
                                             placeholder="darah"
-                                            value="{{ $asesmen->rmeAsesmenTht->darah ?? '' }}" disabled> 
+                                            value="{{ $asesmen->rmeAsesmenTht->darah ?? '' }}" disabled>
                                     </div>
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Urine</label>
@@ -1435,7 +1435,7 @@
                                     <select class="form-select" name="tht_prognosis" disabled>
                                         <option value="" disabled>--Pilih Prognosis--</option>
                                         @forelse ($satsetPrognosis as $item)
-                                            <option value="{{ $item->prognosis_id }}" 
+                                            <option value="{{ $item->prognosis_id }}"
                                                 {{ old('tht_prognosis', $asesmen->rmeAsesmenThtDiagnosisImplementasi[0]->tht_prognosis ?? '') == $item->prognosis_id ? 'selected' : '' }}>
                                                 {{ $item->value ?? 'Field tidak ditemukan' }}
                                             </option>

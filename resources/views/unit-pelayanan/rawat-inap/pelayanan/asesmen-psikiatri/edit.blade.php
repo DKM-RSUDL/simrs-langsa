@@ -144,7 +144,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Suhu (°C)</label>
-                                            <input type="number" class="form-control" name="suhu" step="0.1"
+                                            <input type="text" class="form-control" name="suhu" step="0.1"
                                                 placeholder="36.5" min="30" max="45"
                                                 value="{{ $asesmenPsikiatri ? $asesmenPsikiatri->suhu : '' }}">
                                         </div>
@@ -427,11 +427,11 @@
 
                                     <div class="mb-4">
                                         <label class="text-primary fw-semibold">Prognosis</label>
-                                        
+
                                         <select class="form-select" name="prognosis">
                                             <option value="">--Pilih Prognosis--</option>
-                                            @forelse ($satsetPrognosis as $item)                                            
-                                                <option value="{{ $item->prognosis_id }}" 
+                                            @forelse ($satsetPrognosis as $item)
+                                                <option value="{{ $item->prognosis_id }}"
                                                     {{ isset($asesmenPsikiatriDtl->prognosis) && $asesmenPsikiatriDtl->prognosis == $item->prognosis_id ? 'selected' : '' }}>
                                                     {{ $item->value ?? 'Field tidak ditemukan' }}
                                                 </option>
@@ -746,7 +746,7 @@
                 // GANTI dari riwayat_penyakit_keluarga menjadi riwayat_kesehatan_keluarga
                 const existingRiwayatKeluarga = @json(json_decode($asesmenPsikiatriDtl->riwayat_kesehatan_keluarga ?? '[]', true));
                 console.log('Raw data from PHP:', existingRiwayatKeluarga); // Debug log
-                
+
                 if (Array.isArray(existingRiwayatKeluarga)) {
                     riwayatList = existingRiwayatKeluarga;
                 }

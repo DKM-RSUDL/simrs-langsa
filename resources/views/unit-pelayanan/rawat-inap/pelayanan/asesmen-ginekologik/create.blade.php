@@ -345,7 +345,7 @@
 
                                     <div class="form-group">
                                         <label style="min-width: 220px;">Suhu (°C)</label>
-                                        <input type="number" class="form-control" name="suhu" step="0.1">
+                                        <input type="text" class="form-control" name="suhu" step="0.1">
                                     </div>
 
                                     <div class="form-group">

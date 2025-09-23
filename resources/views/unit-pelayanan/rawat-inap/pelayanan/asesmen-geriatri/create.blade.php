@@ -112,7 +112,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Suhu (°C)</label>
-                                            <input type="number" class="form-control" name="suhu" step="0.1"
+                                            <input type="text" class="form-control" name="suhu" step="0.1"
                                                 placeholder="36.5" min="30" max="45">
                                         </div>
 
@@ -131,19 +131,19 @@
                                         {{-- TAMBAHAN VITAL SIGN: BB, TB, IMT --}}
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Berat Badan (Kg)</label>
-                                            <input type="number" class="form-control" name="berat_badan" id="berat_badan" 
+                                            <input type="number" class="form-control" name="berat_badan" id="berat_badan"
                                                 placeholder="70" step="0.1" min="10" max="300">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Tinggi Badan (Cm)</label>
-                                            <input type="number" class="form-control" name="tinggi_badan" id="tinggi_badan" 
+                                            <input type="number" class="form-control" name="tinggi_badan" id="tinggi_badan"
                                                 placeholder="170" step="0.1" min="50" max="250">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">IMT (Kg/m²)</label>
-                                            <input type="number" class="form-control" name="imt" id="imt" 
+                                            <input type="number" class="form-control" name="imt" id="imt"
                                                 placeholder="Otomatis terhitung" step="0.1" readonly>
                                         </div>
 
