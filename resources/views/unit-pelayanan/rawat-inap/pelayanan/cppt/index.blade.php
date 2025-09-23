@@ -325,8 +325,6 @@
         $('#addCpptModal #skalaNyeriBtn').text(skalaLabel);
     });
 
-   
-
     $('#formAddCppt').submit(function(e) {
         let $this = $(this);
         let diagnoseNameEl = $this.find('input[name="diagnose_name[]"]');
