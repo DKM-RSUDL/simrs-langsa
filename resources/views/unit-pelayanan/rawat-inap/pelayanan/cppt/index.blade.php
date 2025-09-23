@@ -31,6 +31,7 @@
             <div class="patient-card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h6 class="text-primary mb-0">Catatan Perkembangan Pasien Terintegrasi</h6>
+                    <h6 class="text-secondary mb-0">Grafik</h6>
                 </div>
 
                 <div class="row g-3">
@@ -191,7 +192,7 @@
                                             <h6><strong>A</strong></h6>
                                         </div>
                                         <div class="col-11">
-                                            <ul>
+                                            <ul class="ms-3">
                                                 @foreach ($value['cppt_penyakit'] as $p => $v)
                                                     <li>{{ $v['nama_penyakit'] }}</li>
                                                 @endforeach
@@ -209,7 +210,7 @@
                                             <h6><strong>P</strong></h6>
                                         </div>
                                         <div class="col-11">
-                                            <ul>
+                                            <ul class="ms-3">
                                                 <li>{{ $value['planning'] }}</li>
 
                                                 {{-- @foreach ($content['plan'] as $plan)
@@ -279,6 +280,7 @@
                 $('#listDiagnosa').append(`<li>${searchInputValue}</li>`);
                 $(searchInputDiagnose).val('');
             }
+
         });
 
         $('#addDiagnosisModal #btnSaveDiagnose').click(function(e) {
@@ -299,71 +301,57 @@
                                     </div>`;
             });
 
-            // $('#addCpptModal #diagnoseList').html(dignoseListContent);
-            // $('#addDiagnosisModal .btn-close').trigger('click');
+            $('#addCpptModal #diagnoseList').html(dignoseListContent);
+            $('#addDiagnosisModal .btn-close').trigger('click');
+        });
 
-            $('#addCpptModal input[name="skala_nyeri"]').change(function(e) {
-                var $this = $(this);
-                var skalaValue = $this.val();
+        $('#addCpptModal input[name="skala_nyeri"]').change(function(e) {
+            var $this = $(this);
+            var skalaValue = $this.val();
 
-                if (skalaValue > 10) {
-                    skalaValue = 10;
-                    $this.val(10);
-                }
+            if (skalaValue > 10) {
+                skalaValue = 10;
+                $this.val(10);
+            }
 
-                if (skalaValue < 0) {
-                    skalaValue = 0;
-                    $this.val(0);
-                }
+            if (skalaValue < 0) {
+                skalaValue = 0;
+                $this.val(0);
+            }
 
-                var valColor = 'btn-success';
-                let skalaLabel = 'Tidak Nyeri'
+            var valColor = 'btn-success';
+            let skalaLabel = 'Tidak Nyeri'
 
-                if (skalaValue > 1 && skalaValue <= 3) skalaLabel = "Nyeri Ringan";
-                if (skalaValue > 3 && skalaValue <= 5) skalaLabel = "Nyeri Sedang";
-                if (skalaValue > 5 && skalaValue <= 7) skalaLabel = "Nyeri Parah";
-                if (skalaValue > 7 && skalaValue <= 9) skalaLabel = "Nyeri Sangat Parah";
-                if (skalaValue > 9) skalaLabel = "Nyeri Terburuk";
+            if (skalaValue > 1 && skalaValue <= 3) skalaLabel = "Nyeri Ringan";
+            if (skalaValue > 3 && skalaValue <= 5) skalaLabel = "Nyeri Sedang";
+            if (skalaValue > 5 && skalaValue <= 7) skalaLabel = "Nyeri Parah";
+            if (skalaValue > 7 && skalaValue <= 9) skalaLabel = "Nyeri Sangat Parah";
+            if (skalaValue > 9) skalaLabel = "Nyeri Terburuk";
 
-                if (skalaValue > 3 && skalaValue <= 7) valColor = 'btn-warning';
-                if (skalaValue > 7 && skalaValue <= 10) valColor = 'btn-danger';
+            if (skalaValue > 3 && skalaValue <= 7) valColor = 'btn-warning';
+            if (skalaValue > 7 && skalaValue <= 10) valColor = 'btn-danger';
 
-                $('#addCpptModal #skalaNyeriBtn').removeClass('btn-success');
-                $('#addCpptModal #skalaNyeriBtn').removeClass('btn-warning');
-                $('#addCpptModal #skalaNyeriBtn').removeClass('btn-danger');
-                $('#addCpptModal #skalaNyeriBtn').addClass(valColor);
-                $('#addCpptModal #skalaNyeriBtn').text(skalaLabel);
-            });
+            $('#addCpptModal #skalaNyeriBtn').removeClass('btn-success');
+            $('#addCpptModal #skalaNyeriBtn').removeClass('btn-warning');
+            $('#addCpptModal #skalaNyeriBtn').removeClass('btn-danger');
+            $('#addCpptModal #skalaNyeriBtn').addClass(valColor);
+            $('#addCpptModal #skalaNyeriBtn').text(skalaLabel);
+        });
 
-            $('#formAddCppt').submit(function(e) {
-                let $this = $(this);
-                let diagnoseNameEl = $this.find('input[name="diagnose_name[]"]');
+        $('#formAddCppt').submit(function(e) {
+            let $this = $(this);
+            let diagnoseNameEl = $this.find('input[name="diagnose_name[]"]');
 
-                if (diagnoseNameEl.length < 1) {
-                    showToast('error', 'Diagnosa harus di tambah minimal 1!');
-                    return false;
-                }
-            });
-
-            <<
-            <<
-            <<
-            <
-            HEAD
-            // edit
-            var tanggal, urut, unit, button;
-            var editDataListDiagnose = $('#editDiagnosisModal #dataList');
-            var editSearchInputDiagnose = $('#editDiagnosisModal #searchInput'); ===
-            ===
-            =
             if (diagnoseNameEl.length < 1) {
                 showToast('error', 'Diagnosa harus di tambah minimal 1!');
                 return false;
             }
-        }); >>>
-        >>>
-        >
-        7 a058d95a8ec5f9fcd0ed8f3a3bc51840bcf2c58
+        });
+
+        // edit
+        var tanggal, urut, unit, button;
+        var editDataListDiagnose = $('#editDiagnosisModal #dataList');
+        var editSearchInputDiagnose = $('#editDiagnosisModal #searchInput');
 
         // GANTI KODE EDIT CPPT YANG SUDAH ADA DENGAN INI
         $('.btn-edit-cppt').click(function(e) {
@@ -506,7 +494,6 @@
                                 $(target).find('#diagnoseList').html(dignoseListContent);
 
                                 // PERBAIKAN: Simpan data instruksi PPA untuk edit modal
-                                console.log('Patient instruksi_ppa data:', patient.instruksi_ppa);
                                 window.currentEditInstruksiPpaData = patient.instruksi_ppa || [];
                             }
                         }
@@ -517,18 +504,14 @@
 
                     // PENTING: Initialize Instruksi PPA SETELAH modal ditampilkan
                     setTimeout(() => {
-                        console.log('Initializing edit PPA system...');
                         initEditInstruksiPpaSearchableSelect();
 
                         // Load data PPA yang sudah disimpan
                         if (window.currentEditInstruksiPpaData && Array.isArray(window
                                 .currentEditInstruksiPpaData)) {
-                            console.log('Loading PPA data:', window
-                                .currentEditInstruksiPpaData);
                             loadEditInstruksiPpaFromAjaxData(window
                                 .currentEditInstruksiPpaData);
                         } else {
-                            console.log('No PPA data found, using empty array');
                             loadEditInstruksiPpaFromAjaxData([]);
                         }
                     }, 800); // Delay lebih lama untuk memastikan modal benar-benar terbuka
@@ -550,7 +533,13 @@
             e.preventDefault();
             var $this = $(this);
             $(this).closest('.diag-item-wrap').remove();
-        })
+        });
+
+        $(document).on('click', '#addCpptModal .btnListDiagnose', function(e) {
+            e.preventDefault();
+            var $this = $(this);
+            $(this).closest('.diag-item-wrap').remove();
+        });
 
         $('#editDiagnosisModal #btnAddListDiagnosa').click(function(e) {
             e.preventDefault();
@@ -562,31 +551,9 @@
             }
         });
 
-        <<
-        <<
-        <<
-        <
-        HEAD
         $('#editDiagnosisModal #btnSaveDiagnose').click(function(e) {
             var dignoseListContent = '';
-            let diagnoses = $('#editDiagnosisModal #listDiagnosa li'); ===
-            ===
-            =
-            // delete old diagnose list
-            $(document).on('click', '#editCpptModal .btnListDiagnose', function(e) {
-                e.preventDefault();
-                var $this = $(this);
-                $(this).closest('.diag-item-wrap').remove();
-            });
-
-            $(document).on('click', '#addCpptModal .btnListDiagnose', function(e) {
-                e.preventDefault();
-                var $this = $(this);
-                $(this).closest('.diag-item-wrap').remove();
-            }); >>>
-            >>>
-            >
-            7 a058d95a8ec5f9fcd0ed8f3a3bc51840bcf2c58
+            let diagnoses = $('#editDiagnosisModal #listDiagnosa li');
 
             $(diagnoses).each(function(i, e) {
                 dignoseListContent += `<div class="diag-item-wrap">
@@ -599,21 +566,11 @@
                                             </div>
                                         </a>
                                         <input type="hidden" name="diagnose_name[]" value="${$(e).text()}">
-                                    </div>`; <<
-                <<
-                <<
-                <
-                HEAD
-
+                                    </div>`;
             });
 
             $('#editCpptModal #diagnoseList').html(dignoseListContent);
-            $('#editDiagnosisModal .btn-close').trigger('click'); ===
-            ===
-            = >>>
-            >>>
-            >
-            7 a058d95a8ec5f9fcd0ed8f3a3bc51840bcf2c58
+            $('#editDiagnosisModal .btn-close').trigger('click');
         });
 
         // Button add diagnosis from edit cppt modal
@@ -773,7 +730,6 @@
         // Show alert (optional - bisa disesuaikan dengan sistem alert yang ada)
         function showInstruksiAlert(type, message) {
             // Bisa disesuaikan dengan sistem alert yang sudah ada
-            console.log(`${type.toUpperCase()}: ${message}`);
 
             // Atau menggunakan sistem toast yang sudah ada
             if (typeof showToast === 'function') {
@@ -1341,7 +1297,6 @@
 
         // Initialize saat document ready
         $(document).ready(function() {
-            console.log('Inisialisasi PPA Instruction System...');
 
             // Initialize ADD modal
             initAddInstruksiPpaSearchableSelect();
