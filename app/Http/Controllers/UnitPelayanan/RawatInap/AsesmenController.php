@@ -25,6 +25,8 @@ use App\Models\RmeMenjalar;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
+use App\Models\Transaksi;
+use App\Models\Unit;
 use App\Services\AsesmenService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;

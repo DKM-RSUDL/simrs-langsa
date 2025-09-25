@@ -12,6 +12,7 @@ use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
 use App\Models\SegalaOrderDet;
 use App\Models\Transaksi;
+use App\Services\CheckResumeService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -19,9 +20,11 @@ use Illuminate\Support\Facades\DB;
 
 class RawatInapLabPatologiKlinikController extends Controller
 {
+    protected $checkResumeService;
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->checkResumeService = new CheckResumeService();
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -339,8 +342,8 @@ class RawatInapLabPatologiKlinikController extends Controller
                 ]);
             }
 
-            // Buat atau dapatkan resume
-            $resume = $this->checkAndCreateResume([
+           // Panggil ResumeService
+            $resume = $this->checkResumeService->checkAndCreateResume([
                 'kd_pasien' => $validatedData['kd_pasien'],
                 'kd_unit' => $validatedData['kd_unit'],
                 'tgl_masuk' => $validatedData['tgl_masuk'],
@@ -459,6 +462,14 @@ class RawatInapLabPatologiKlinikController extends Controller
                 ]);
             }
 
+            // Panggil ResumeService
+            $resume = $this->checkResumeService->checkAndCreateResume([
+                'kd_pasien' => $validatedData['kd_pasien'],
+                'kd_unit' => $validatedData['kd_unit'],
+                'tgl_masuk' => $validatedData['tgl_masuk'],
+                'urut_masuk' => $validatedData['urut_masuk']
+            ]);
+
             DB::commit();
 
             return redirect()->route('rawat-inap.lab-patologi-klinik.index', [
@@ -497,52 +508,6 @@ class RawatInapLabPatologiKlinikController extends Controller
                 'tgl_masuk' => $tgl_masuk,
                 'urut_masuk' => $urut_masuk
             ])->with(['error' => 'Ada kesalahan sistem. Silakan coba lagi.']);
-        }
-    }
-
-    private function checkAndCreateResume($data)
-    {
-        try {
-            // Cek apakah resume sudah ada
-            $resume = RMEResume::where('kd_pasien', $data['kd_pasien'])
-                ->where('kd_unit', $data['kd_unit'])
-                ->where('tgl_masuk', $data['tgl_masuk'])
-                ->where('urut_masuk', $data['urut_masuk'])
-                ->first();
-
-            if (!$resume) {
-                // Jika belum ada
-                $resume = RMEResume::create([
-                    'kd_pasien' => $data['kd_pasien'],
-                    'kd_unit' => $data['kd_unit'],
-                    'tgl_masuk' => $data['tgl_masuk'],
-                    'urut_masuk' => $data['urut_masuk'],
-                    'status' => 0,
-                ]);
-
-                $resume = RMEResume::where('kd_pasien', $data['kd_pasien'])
-                    ->where('kd_unit', $data['kd_unit'])
-                    ->where('tgl_masuk', $data['tgl_masuk'])
-                    ->where('urut_masuk', $data['urut_masuk'])
-                    ->first();
-            }
-
-            // Entri di RMEResumeDtl
-            if ($resume) {
-                $resumeDetail = RmeResumeDtl::where('id_resume', $resume->id)->first();
-
-                if (!$resumeDetail) {
-                    DB::table('RME_RESUME_DTL')->insert([
-                        'id_resume' => $resume->id
-                    ]);
-                }
-
-                DB::commit();
-                return $resume;
-            }
-            throw new \Exception('Gagal membuat atau mendapatkan data resume');
-        } catch (\Exception $e) {
-            throw $e;
         }
     }
 }
