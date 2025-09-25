@@ -22,6 +22,7 @@ use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SatsetPrognosis;
 use App\Models\Unit;
+use App\Services\AsesmenService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +30,10 @@ use Illuminate\Support\Facades\DB;
 
 class AsesmenPsikiatriController extends Controller
 {
+    protected $asesmenService;
+    public function __construct(){
+        $this->asesmenService = new AsesmenService();
+    }
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $user = auth()->user();
@@ -122,6 +127,30 @@ class AsesmenPsikiatriController extends Controller
             $dataAsesmen->anamnesis = $request->anamnesis;
             $dataAsesmen->skala_nyeri = $request->skala_nyeri;
             $dataAsesmen->save();
+
+            $vitalSignData = [
+                'sistole'      => $request->sistole ? (int)$request->sistole : null,
+                'diastole'     => $request->diastole ? (int)$request->diastole : null,
+                'nadi'         => $request->nadi ? (int)$request->nadi : null,
+                'respiration'  => $request->pernafasan ? (int)$request->pernafasan : null,
+                'suhu'         => $request->suhu ? (float)$request->suhu : null,
+                'tinggi_badan' => $request->tb ? (int)$request->tb : null,
+                'berat_badan'  => $request->bb ? (int)$request->bb : null,
+            ];
+
+            $lastTransaction = $this->asesmenService->getTransaksiData(
+                $kd_unit,
+                $kd_pasien,
+                $tgl_masuk,
+                $urut_masuk
+            );
+
+            $this->asesmenService->store(
+                $vitalSignData,
+                $kd_pasien,
+                $lastTransaction->no_transaction,
+                $lastTransaction->kd_kasir
+            );
 
             $asesmenPsikiatri = new RmeAsesmenPsikiatri();
             $asesmenPsikiatri->id_asesmen = $dataAsesmen->id;

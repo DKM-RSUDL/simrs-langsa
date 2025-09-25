@@ -17,6 +17,7 @@ use App\Models\RmeMasterDiagnosis;
 use App\Models\RmeMasterImplementasi;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
+use App\Services\AsesmenService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -28,9 +29,12 @@ use Illuminate\Support\Facades\DB;
 
 class AsesmenObstetriMaternitas extends Controller
 {
+    protected $asesmenService;
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->asesmenService = new AsesmenService();
+
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -112,17 +116,7 @@ class AsesmenObstetriMaternitas extends Controller
                 'hasil_pemeriksaan_penunjang_histopatology' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048'
             ]);
 
-            // 1. Buat record RmeAsesmen
-        $asesmen = new RmeAsesmen();
-        $asesmen->kd_pasien = $request->kd_pasien;
-        $asesmen->kd_unit = $request->kd_unit;
-        $asesmen->tgl_masuk = $request->tgl_masuk;
-        $asesmen->urut_masuk = $request->urut_masuk;
-        $asesmen->user_id = Auth::id();
-        $asesmen->waktu_asesmen = now();
-        $asesmen->kategori = 1;
-        $asesmen->sub_kategori = 4;
-        $asesmen->save();
+            
 
         // 2. Data vital sign untuk disimpan
         $vitalSignData = [

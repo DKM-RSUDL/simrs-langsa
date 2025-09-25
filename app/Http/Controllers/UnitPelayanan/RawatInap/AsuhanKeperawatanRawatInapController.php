@@ -8,6 +8,7 @@ use App\Models\Kunjungan;
 use App\Models\RmeAsuhanKeperawatan;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
+use App\Services\AsesmenService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -16,9 +17,11 @@ use Illuminate\Support\Facades\DB;
 
 class AsuhanKeperawatanRawatInapController extends Controller
 {
+    protected $asesmenService;
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->asesmenService = new AsesmenService();
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -94,8 +97,7 @@ class AsuhanKeperawatanRawatInapController extends Controller
         return view('unit-pelayanan.rawat-inap.pelayanan.asuhan-keperawatan.create',  compact('dataMedis'));
     }
 
-    public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
-    {
+    public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request){
         DB::beginTransaction();
 
         try {
@@ -115,7 +117,6 @@ class AsuhanKeperawatanRawatInapController extends Controller
             if (empty($dataMedis)) {
                 return back()->with('error', 'Kunjungan pasien tidak ditemukan !');
             }
-
 
             // data
             $asuhan = new RmeAsuhanKeperawatan();
@@ -139,6 +140,31 @@ class AsuhanKeperawatanRawatInapController extends Controller
             $asuhan->lainnya = $request->lainnya;
             $asuhan->user_create = Auth::id();
             $asuhan->save();
+
+            // $vitalSignData = [
+            //     'sistole'      => $request->sistole ? (int)$request->sistole : null,
+            //     'diastole'     => $request->diastole ? (int)$request->diastole : null,
+            //     'nadi'         => $request->nadi ? (int)$request->nadi : null,
+            //     'respiration'  => $request->pernafasan ? (int)$request->pernafasan : null,
+            //     'suhu'         => $request->suhu ? (float)$request->suhu : null,
+            //     'tinggi_badan' => $request->tb ? (int)$request->tb : null,
+            //     'berat_badan'  => $request->bb ? (int)$request->bb : null,
+            // ];
+
+            // $lastTransaction = $this->asesmenService->getTransaksiData(
+            //     $kd_unit,
+            //     $kd_pasien,
+            //     $tgl_masuk,
+            //     $urut_masuk
+            // );
+
+            // $this->asesmenService->store(
+            //     $vitalSignData,
+            //     $kd_pasien,
+            //     $lastTransaction->no_transaction,
+            //     $lastTransaction->kd_kasir
+            // );
+            // // --- End Vital Sign ---
 
             // RESUME
             $resumeData = [
@@ -178,12 +204,14 @@ class AsuhanKeperawatanRawatInapController extends Controller
             $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
 
             DB::commit();
-            return to_route('rawat-inap.asuhan-keperawatan.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Data berhasil di tambah !');
+            return to_route('rawat-inap.asuhan-keperawatan.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])
+                ->with('success', 'Data berhasil di tambah !');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
         }
     }
+
 
 
     public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)

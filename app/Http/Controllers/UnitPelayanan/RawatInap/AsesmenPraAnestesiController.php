@@ -10,6 +10,7 @@ use App\Models\RmeAsesmenPraAnestesiKppKs;
 use App\Models\RmeAsesmenPraAnestesiKuPfLaboratorium;
 use App\Models\RmeAsesmenPraAnestesiRiwayatKeluarga;
 use App\Models\RmeAsesmenPraAnestesiRppRml;
+use App\Services\AsesmenService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -19,8 +20,10 @@ use Illuminate\Support\Facades\Auth;
 
 class AsesmenPraAnestesiController extends Controller
 {
+    protected $asesmenService;
     public function __construct()
     {
+        $this->asesmenService = new AsesmenService();
         $this->middleware('can:read unit-pelayanan/rawat-inap');
     }
 
@@ -113,6 +116,29 @@ class AsesmenPraAnestesiController extends Controller
     {
         DB::beginTransaction();
         try {
+        $vitalSignData = [
+            'sistole'      => $request->sistole ? (int)$request->sistole : null,
+            'diastole'     => $request->distole ? (int)$request->distole : null,
+            'nadi'         => $request->nadi ? (int)$request->nadi : null,
+            'respiration'  => $request->pernafasan ? (int)$request->pernafasan : null,
+            'suhu'         => $request->suhu ? (float)$request->suhu : null,
+            'tinggi_badan' => $request->tb ? (int)$request->tb : null,
+            'berat_badan'  => $request->bb ? (int)$request->bb : null,
+        ];
+
+        $lastTransaction = $this->asesmenService->getTransaksiData(
+            $kd_unit,
+            $kd_pasien,
+            $tgl_masuk,
+            $urut_masuk
+        );
+
+        $this->asesmenService->store(
+            $vitalSignData,
+            $kd_pasien,
+            $lastTransaction->no_transaction,
+            $lastTransaction->kd_kasir
+        );
             $asesmenPraAnestesi = new RmeAsesmenPraAnestesi();
 
             // parameter dari method signature, bukan dari request

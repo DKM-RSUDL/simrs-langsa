@@ -3,25 +3,28 @@
 namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
 use App\Models\Kunjungan;
 use App\Models\RmeAlergiPasien;
 use App\Models\RmeAsesmen;
+use App\Models\RmeAsesmenMedisRanap;
+use App\Models\RmeAsesmenMedisRanapFisik;
 use App\Models\RmeMasterDiagnosis;
 use App\Models\RmeMasterImplementasi;
 use App\Models\SatsetPrognosis;
-use App\Models\RmeAsesmenMedisRanap;
-use App\Models\RmeAsesmenMedisRanapFisik;
-use App\Models\Transaksi;
-use Illuminate\Support\Facades\DB;
+use App\Services\AsesmenService;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AsesmenPengkajianAwalMedis extends Controller
 {
+    protected $asesmenService;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->asesmenService = new AsesmenService;
     }
 
     private function getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -50,38 +53,29 @@ class AsesmenPengkajianAwalMedis extends Controller
         return $dataMedis;
     }
 
-    private function getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        return Transaksi::select('kd_kasir', 'no_transaksi')
-            ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
-            ->whereDate('tgl_transaksi', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->first();
-    }
-
     private function getMasterData($kd_pasien)
     {
         return [
             'rmeMasterDiagnosis' => RmeMasterDiagnosis::all(),
             'rmeMasterImplementasi' => RmeMasterImplementasi::all(),
             'satsetPrognosis' => SatsetPrognosis::all(),
-            'alergiPasien' => RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get()
+            'alergiPasien' => RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get(),
         ];
     }
 
     private function saveDiagnosisToMaster($diagnosisList)
     {
         foreach ($diagnosisList as $diagnosa) {
-            if (!empty($diagnosa)) {
+            if (! empty($diagnosa)) {
                 RmeMasterDiagnosis::firstOrCreate(['nama_diagnosis' => $diagnosa]);
             }
         }
     }
+
     private function saveImplementasiToMaster($dataList, $column)
     {
         foreach ($dataList as $item) {
-            if (!empty($item)) {
+            if (! empty($item)) {
                 RmeMasterImplementasi::firstOrCreate([$column => $item]);
             }
         }
@@ -91,17 +85,17 @@ class AsesmenPengkajianAwalMedis extends Controller
     {
         $alergiData = json_decode($request->alergis, true);
 
-        if (!empty($alergiData)) {
+        if (! empty($alergiData)) {
             RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
 
             foreach ($alergiData as $alergi) {
-                if (!empty($alergi['jenis_alergi']) || !empty($alergi['alergen'])) {
+                if (! empty($alergi['jenis_alergi']) || ! empty($alergi['alergen'])) {
                     RmeAlergiPasien::create([
                         'kd_pasien' => $kd_pasien,
                         'jenis_alergi' => $alergi['jenis_alergi'],
                         'nama_alergi' => $alergi['alergen'],
                         'reaksi' => $alergi['reaksi'],
-                        'tingkat_keparahan' => $alergi['tingkat_keparahan']
+                        'tingkat_keparahan' => $alergi['tingkat_keparahan'],
                     ]);
                 }
             }
@@ -112,7 +106,7 @@ class AsesmenPengkajianAwalMedis extends Controller
     {
         $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
-        if (!$dataMedis) {
+        if (! $dataMedis) {
             abort(404, 'Data tidak ditemukan');
         }
 
@@ -150,19 +144,19 @@ class AsesmenPengkajianAwalMedis extends Controller
 
         DB::beginTransaction();
         try {
-            $transaksi = $this->getTransaksiData(
+            $transaksi = $this->asesmenService->getTransaksiData(
                 $request->kd_unit,
                 $request->kd_pasien,
                 $request->tgl_masuk,
                 $request->urut_masuk
             );
 
-            if (!$transaksi) {
+            if (! $transaksi) {
                 throw new \Exception('Data transaksi tidak ditemukan');
             }
 
             // 1. Buat record RmeAsesmen
-            $asesmen = new RmeAsesmen();
+            $asesmen = new RmeAsesmen;
             $asesmen->kd_pasien = $request->kd_pasien;
             $asesmen->kd_unit = $request->kd_unit;
             $asesmen->tgl_masuk = $request->tgl_masuk;
@@ -173,7 +167,24 @@ class AsesmenPengkajianAwalMedis extends Controller
             $asesmen->sub_kategori = 1;
             $asesmen->save();
 
-            // 2. Buat record RmeAsesmenMedisRanap dengan id_asesmen
+            // 2. Simpan vital sign (pakai service, mirip Obstetri)
+            $vitalSignData = [
+                'sistole' => $request->sistole ? (int) $request->sistole : null,
+                'diastole' => $request->diastole ? (int) $request->diastole : null,
+                'nadi' => $request->nadi ? (int) $request->nadi : null,
+                'respiration' => $request->respirasi ? (int) $request->respirasi : null,
+                'suhu' => $request->suhu ? (float) $request->suhu : null,
+                'skala_nyeri' => $request->skala_nyeri ? (int) $request->skala_nyeri : null,
+            ];
+
+            $this->asesmenService->store(
+                $vitalSignData,
+                $request->kd_pasien,
+                $transaksi->no_transaksi,
+                $transaksi->kd_kasir
+            );
+
+            // 3. Buat record RmeAsesmenMedisRanap dengan id_asesmen
             $asesmenMedis = RmeAsesmenMedisRanap::create([
                 'id_asesmen' => $asesmen->id,
                 'kd_kasir' => $transaksi->kd_kasir,
@@ -213,7 +224,7 @@ class AsesmenPengkajianAwalMedis extends Controller
                 'alergis' => $request->alergis,
             ]);
 
-            // 3. Buat record pemeriksaan fisik
+            // 4. Buat record pemeriksaan fisik
             RmeAsesmenMedisRanapFisik::create([
                 'id_asesmen' => $asesmen->id,
                 'pengkajian_kepala' => $request->pengkajian_kepala ?? 1,
@@ -242,16 +253,15 @@ class AsesmenPengkajianAwalMedis extends Controller
                 'pengkajian_status_lokasi_keterangan' => $request->pengkajian_status_lokasi_keterangan,
             ]);
 
-            // 4. Handle data alergi
+            // 5. Handle data alergi
             $this->handleAlergiData($request, $request->kd_pasien);
 
-            // 5. Simpan diagnosis dan implementasi ke master
+            // 6. Simpan diagnosis dan implementasi ke master
             $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
             $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true);
             $allDiagnoses = array_merge($diagnosisBandingList, $diagnosisKerjaList);
             $this->saveDiagnosisToMaster($allDiagnoses);
 
-            // Simpan implementasi
             $implementasiData = [
                 'prognosis' => json_decode($request->prognosis ?? '[]', true),
                 'observasi' => json_decode($request->observasi ?? '[]', true),
@@ -271,11 +281,12 @@ class AsesmenPengkajianAwalMedis extends Controller
                 'kd_pasien' => $request->kd_pasien,
                 'tgl_masuk' => $request->tgl_masuk,
                 'urut_masuk' => $request->urut_masuk,
-                'id' => $asesmenMedis->id
+                'id' => $asesmenMedis->id,
             ])->with('success', 'Asesmen pengkajian awal medis berhasil disimpan.');
         } catch (\Exception $e) {
             DB::rollback();
-            return back()->withInput()->withErrors(['error' => 'Gagal menyimpan data: ' . $e->getMessage()]);
+
+            return back()->withInput()->withErrors(['error' => 'Gagal menyimpan data: '.$e->getMessage()]);
         }
     }
 
@@ -294,7 +305,7 @@ class AsesmenPengkajianAwalMedis extends Controller
 
         $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
-        if (!$dataMedis) {
+        if (! $dataMedis) {
             abort(404, 'Data tidak ditemukan');
         }
 
@@ -309,7 +320,7 @@ class AsesmenPengkajianAwalMedis extends Controller
                 'urut_masuk' => $urut_masuk,
                 'dataMedis' => $dataMedis,
                 'asesmen' => $asesmen,
-                'readonly' => true
+                'readonly' => true,
             ], $masterData)
         );
     }
@@ -329,7 +340,7 @@ class AsesmenPengkajianAwalMedis extends Controller
 
         $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
-        if (!$dataMedis) {
+        if (! $dataMedis) {
             abort(404, 'Data tidak ditemukan');
         }
 
@@ -344,7 +355,7 @@ class AsesmenPengkajianAwalMedis extends Controller
                 'urut_masuk' => $urut_masuk,
                 'dataMedis' => $dataMedis,
                 'asesmen' => $asesmen,
-                'readonly' => false
+                'readonly' => false,
             ], $masterData)
         );
     }
@@ -364,7 +375,6 @@ class AsesmenPengkajianAwalMedis extends Controller
             'skala_nyeri' => 'nullable|numeric|min:0|max:10',
         ]);
 
-
         DB::beginTransaction();
         try {
             $tanggal = \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d');
@@ -383,8 +393,8 @@ class AsesmenPengkajianAwalMedis extends Controller
 
             // Update main assessment record
             $asesmen->asesmenMedisRanap()->updateOrCreate(
-            ['id_asesmen' => $asesmen->id],
-            [
+                ['id_asesmen' => $asesmen->id],
+                [
                     'user_edit' => Auth::id(),
                     'tanggal' => $tanggal,
                     'jam' => $jam,
@@ -413,7 +423,7 @@ class AsesmenPengkajianAwalMedis extends Controller
                     'rencana_tgl_pulang' => $request->rencana_tgl_pulang,
                     'kesimpulan_planing' => $request->kesimpulan_planing,
                     'alergis' => $request->alergis,
-            ]);
+                ]);
 
             $foreignKeyColumn = 'id_asesmen_medis_ranap';
 
@@ -462,7 +472,8 @@ class AsesmenPengkajianAwalMedis extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
-            return back()->withInput()->withErrors(['error' => 'Gagal memperbarui data: ' . $e->getMessage()]);
+
+            return back()->withInput()->withErrors(['error' => 'Gagal memperbarui data: '.$e->getMessage()]);
         }
     }
 
@@ -486,11 +497,12 @@ class AsesmenPengkajianAwalMedis extends Controller
                 'kd_unit' => $kd_unit,
                 'kd_pasien' => $kd_pasien,
                 'tgl_masuk' => $tgl_masuk,
-                'urut_masuk' => $urut_masuk
+                'urut_masuk' => $urut_masuk,
             ])->with('success', 'Asesmen pengkajian awal medis berhasil dihapus.');
         } catch (\Exception $e) {
             DB::rollback();
-            return back()->withErrors(['error' => 'Gagal menghapus data: ' . $e->getMessage()]);
+
+            return back()->withErrors(['error' => 'Gagal menghapus data: '.$e->getMessage()]);
         }
     }
 }

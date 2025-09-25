@@ -29,9 +29,11 @@ use Illuminate\Support\Facades\Storage;
 
 class AsesmenParuController extends Controller
 {
+    protected $asesmenService;
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->esmenService = new AsesmenController();
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -83,9 +85,6 @@ class AsesmenParuController extends Controller
 
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-
-        // dd($request);
-
         DB::beginTransaction();
 
         try {
@@ -105,11 +104,38 @@ class AsesmenParuController extends Controller
             $asesmen->sub_kategori = 8;
             $asesmen->save();
 
-            // 2. Buat record RmeAsesmenParu
+            /**
+             * 2. Data vital sign untuk disimpan (sesuai pola vital sign)
+             * mapping dari request -> array yang akan dikirim ke service
+             */
+            $vitalSignData = [
+                'sistole'       => $request->darah_sistole ? (int) $request->darah_sistole : null,
+                'diastole'      => $request->darah_diastole ? (int) $request->darah_diastole : null,
+                'nadi'          => $request->nadi ? (int) $request->nadi : null,
+                // beberapa form menggunakan pernafasan / frekuensi_pernafasan
+                'respiration'   => $request->frekuensi_pernafasan ? (int) $request->frekuensi_pernafasan :
+                                    ($request->pernafasan ? (int) $request->pernafasan : null),
+                'suhu'          => $request->temperatur ? (float) $request->temperatur : null,
+                'spo2_tanpa_o2' => $request->saturasi_oksigen ? (int) $request->saturasi_oksigen : null,
+                // optional jika form mengirim tb/bb
+                'tinggi_badan'  => $request->tb ? (int) $request->tb : null,
+                'berat_badan'   => $request->bb ? (int) $request->bb : null,
+            ];
+
+            // 3. Ambil transaksi terakhir untuk pasien
+            $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+            $noTransaction = $lastTransaction->no_transaction ?? null;
+            $kdKasir = $lastTransaction->kd_kasir ?? null;
+
+            // 4. Simpan vital sign menggunakan service (boleh menerima null jika transaksi tidak ada)
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $noTransaction, $kdKasir);
+
+            // 5. Buat record RmeAsesmenParu
             $asesmenParu = new RmeAsesmenParu();
             $asesmenParu->id_asesmen = $asesmen->id;
             $asesmenParu->user_create = Auth::id();
-            $asesmenParu->tanggal = Carbon::parse($request->tanggal);
+            $asesmenParu->tanggal = $request->tanggal ? Carbon::parse($request->tanggal) : null;
             $asesmenParu->jam_masuk = $request->jam_masuk;
             $asesmenParu->anamnesa = $request->anamnesa;
             $asesmenParu->riwayat_penyakit = $request->riwayat_penyakit;
@@ -140,7 +166,7 @@ class AsesmenParuController extends Controller
             $asesmenParu->site_marking_paru_data = $request->input('site_marking_paru_data');
             $asesmenParu->save();
 
-            // 3-5. Records lainnya tetap sama...
+            // 6. Rencana Kerja
             $asesmenParuRencanaKerja = new RmeAsesmenParuRencanaKerja();
             $asesmenParuRencanaKerja->id_asesmen = $asesmen->id;
             $asesmenParuRencanaKerja->foto_thoraks = $request->has('foto_thoraks') ? 1 : 0;
@@ -165,7 +191,7 @@ class AsesmenParuController extends Controller
             $asesmenParuRencanaKerja->lainnya = $request->lainnya;
             $asesmenParuRencanaKerja->save();
 
-            // Perbaikan Controller untuk Asesmen Paru Pemeriksaan Fisik
+            // 7. Pemeriksaan Fisik Paru (tetap manual seperti sebelumnya)
             $asesmenParuPemeriksaanFisik = new RmeAsesmenParuPemeriksaanFisik();
             $asesmenParuPemeriksaanFisik->id_asesmen = $asesmen->id;
             $asesmenParuPemeriksaanFisik->paru_kepala = $request->paru_kepala;
@@ -183,12 +209,11 @@ class AsesmenParuController extends Controller
             $asesmenParuPemeriksaanFisik->paru_palpasi = $request->paru_palpasi;
             $asesmenParuPemeriksaanFisik->paru_perkusi = $request->paru_perkusi;
             $asesmenParuPemeriksaanFisik->paru_auskultasi = $request->paru_auskultasi;
-
             $asesmenParuPemeriksaanFisik->paru_suara_pernafasan = $request->paru_suara_pernafasan ?: null;
             $asesmenParuPemeriksaanFisik->paru_suara_tambahan = $request->paru_suara_tambahan ?: null;
-
             $asesmenParuPemeriksaanFisik->save();
 
+            // 8. Perencanaan pulang
             $asesmenParuPerencanaanPulang = new RmeAsesmenParuPerencanaanPulang();
             $asesmenParuPerencanaanPulang->id_asesmen = $asesmen->id;
             $asesmenParuPerencanaanPulang->diagnosis_medis = $request->diagnosis_medis;
@@ -202,6 +227,7 @@ class AsesmenParuController extends Controller
             $asesmenParuPerencanaanPulang->kesimpulan_planing = $request->kesimpulan_planing;
             $asesmenParuPerencanaanPulang->save();
 
+            // 9. Diagnosis & Implementasi Paru
             $paruDiagnosisImplementasi = new RmeAsesmenParuDiagnosisImplementasi();
             $paruDiagnosisImplementasi->id_asesmen = $asesmen->id;
             $paruDiagnosisImplementasi->diagnosis_banding = $request->diagnosis_banding;
@@ -233,13 +259,13 @@ class AsesmenParuController extends Controller
                 return null;
             };
 
-            // Upload files
+            // Upload files (tetap seperti sebelumnya)
             $paruDiagnosisImplementasi->gambar_radiologi_paru = $uploadFile('gambar_radiologi_paru');
 
             $paruDiagnosisImplementasi->save();
 
-            // Validasi data alergi
-            $alergiData = json_decode($request->alergis, true);
+            // 10. Validasi dan simpan data alergi
+            $alergiData = json_decode($request->alergis ?? '[]', true) ?? [];
 
             if (!empty($alergiData)) {
                 // Hapus data alergi lama untuk pasien ini
@@ -247,19 +273,17 @@ class AsesmenParuController extends Controller
 
                 // Simpan data alergi baru
                 foreach ($alergiData as $alergi) {
-                    // Skip data yang sudah ada di database (is_existing = true) 
-                    // kecuali jika ingin update
                     RmeAlergiPasien::create([
                         'kd_pasien' => $kd_pasien,
-                        'jenis_alergi' => $alergi['jenis_alergi'],
-                        'nama_alergi' => $alergi['alergen'],
-                        'reaksi' => $alergi['reaksi'],
-                        'tingkat_keparahan' => $alergi['tingkat_keparahan']
+                        'jenis_alergi' => $alergi['jenis_alergi'] ?? null,
+                        'nama_alergi' => $alergi['alergen'] ?? null,
+                        'reaksi' => $alergi['reaksi'] ?? null,
+                        'tingkat_keparahan' => $alergi['tingkat_keparahan'] ?? null
                     ]);
                 }
             }
 
-            // PERBAIKAN UTAMA: Simpan data pemeriksaan fisik dengan ID yang benar
+            // 11. Simpan ke table RmePemeriksaanFisik (item fisik umum)
             $itemFisik = MrItemFisik::all();
             foreach ($itemFisik as $item) {
                 $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
@@ -270,21 +294,21 @@ class AsesmenParuController extends Controller
                     $keterangan = '';
                 }
 
-                // PERBAIKAN: Gunakan $asesmen->id bukan $asesmenParu->id
                 RmeAsesmenPemeriksaanFisik::create([
-                    'id_asesmen' => $asesmen->id, // ← INI YANG DIPERBAIKI!
+                    'id_asesmen' => $asesmen->id,
                     'id_item_fisik' => $item->id,
                     'is_normal' => $isNormal,
                     'keterangan' => $keterangan
                 ]);
             }
 
-            // Simpan diagnosis dan implementasi ke master - tetap sama...
-            $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
-            $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true);
+            // 12. Simpan diagnosis ke Master (banding + kerja)
+            $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true) ?? [];
+            $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true) ?? [];
             $allDiagnoses = array_merge($diagnosisBandingList, $diagnosisKerjaList);
 
             foreach ($allDiagnoses as $diagnosa) {
+                if (empty($diagnosa)) continue;
                 $existingDiagnosa = RmeMasterDiagnosis::where('nama_diagnosis', $diagnosa)->first();
                 if (!$existingDiagnosa) {
                     RmeMasterDiagnosis::create([
@@ -293,9 +317,11 @@ class AsesmenParuController extends Controller
                 }
             }
 
-            // Fungsi helper untuk menyimpan implementasi
+            // 13. Fungsi helper untuk menyimpan implementasi (closure)
             $saveToColumn = function ($dataList, $column) {
+                $dataList = $dataList ?? [];
                 foreach ($dataList as $item) {
+                    if (empty($item)) continue;
                     $existingImplementasi = RmeMasterImplementasi::where($column, $item)->first();
                     if (!$existingImplementasi) {
                         RmeMasterImplementasi::create([
@@ -306,17 +332,57 @@ class AsesmenParuController extends Controller
             };
 
             // Simpan implementasi
-            $rppList = json_decode($request->prognosis ?? '[]', true);
-            $observasiList = json_decode($request->observasi ?? '[]', true);
-            $terapeutikList = json_decode($request->terapeutik ?? '[]', true);
-            $edukasiList = json_decode($request->edukasi ?? '[]', true);
-            $kolaborasiList = json_decode($request->kolaborasi ?? '[]', true);
+            $rppList = json_decode($request->prognosis ?? '[]', true) ?? [];
+            $observasiList = json_decode($request->observasi ?? '[]', true) ?? [];
+            $terapeutikList = json_decode($request->terapeutik ?? '[]', true) ?? [];
+            $edukasiList = json_decode($request->edukasi ?? '[]', true) ?? [];
+            $kolaborasiList = json_decode($request->kolaborasi ?? '[]', true) ?? [];
 
             $saveToColumn($rppList, 'prognosis');
             $saveToColumn($observasiList, 'observasi');
             $saveToColumn($terapeutikList, 'terapeutik');
             $saveToColumn($edukasiList, 'edukasi');
             $saveToColumn($kolaborasiList, 'kolaborasi');
+
+            // 14. RESUME (masukkan hasil vital sign ke resume juga)
+            $resumeData = [
+                'anamnesis'             => $request->anamnesa,
+                'diagnosis'             => [],
+                'tindak_lanjut_code'    => null,
+                'tindak_lanjut_name'    => null,
+                'tgl_kontrol_ulang'     => null,
+                'unit_rujuk_internal'   => null,
+                'rs_rujuk'              => null,
+                'rs_rujuk_bagian'       => null,
+                'konpas'                => [
+                    'sistole'   => [
+                        'hasil' => $request->darah_sistole
+                    ],
+                    'distole'   => [
+                        'hasil' => $request->darah_diastole
+                    ],
+                    'respiration_rate'   => [
+                        'hasil' => $request->frekuensi_pernafasan ?? $request->pernafasan ?? ''
+                    ],
+                    'suhu'   => [
+                        'hasil' => $request->temperatur
+                    ],
+                    'nadi'   => [
+                        'hasil' => $request->nadi
+                    ],
+                    'tinggi_badan'   => [
+                        'hasil' => $request->tb ?? ''
+                    ],
+                    'berat_badan'   => [
+                        'hasil' => $request->bb ?? ''
+                    ],
+                    'spo2' => [
+                        'hasil' => $request->saturasi_oksigen ?? ''
+                    ]
+                ]
+            ];
+
+            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
 
             DB::commit();
 
@@ -326,11 +392,12 @@ class AsesmenParuController extends Controller
                 'tgl_masuk' => $tgl_masuk,
                 'urut_masuk' => $urut_masuk
             ])->with('success', 'Data berhasil disimpan');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage())->withInput();
         }
     }
+
 
     public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {

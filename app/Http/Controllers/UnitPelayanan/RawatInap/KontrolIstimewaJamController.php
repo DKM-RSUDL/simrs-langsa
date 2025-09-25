@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
 use App\Models\RmeKontrolIstimewaJam;
+use App\Services\AsesmenService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Exception;
@@ -15,8 +16,10 @@ use Illuminate\Support\Facades\DB;
 
 class KontrolIstimewaJamController extends Controller
 {
+    protected $asesmenService;
     public function __construct()
     {
+        $this->asesmenService = new AsesmenService();
         $this->middleware('can:read unit-pelayanan/rawat-inap');
     }
 
@@ -84,7 +87,33 @@ class KontrolIstimewaJamController extends Controller
                 'user_create'       => Auth::id(),
             ];
 
+            // Simpan Kontrol Istimewa Jam
             RmeKontrolIstimewaJam::create($data);
+
+            // --- Tambahkan transaksi vital sign setelah create ---
+            $vitalSignData = [
+                'sistole'      => $request->sistole ? (int)$request->sistole : null,
+                'diastole'     => $request->diastole ? (int)$request->diastole : null,
+                'nadi'         => $request->nadi ? (int)$request->nadi : null,
+                'respiration'  => $request->nafas ? (int)$request->nafas : null,
+                'suhu'         => $request->suhu ? (float)$request->suhu : null,
+                'tinggi_badan' => $request->tb ? (int)$request->tb : null,
+                'berat_badan'  => $request->bb ? (int)$request->bb : null,
+            ];
+
+            $lastTransaction = $this->asesmenService->getTransaksiData(
+                $kd_unit,
+                $kd_pasien,
+                $tgl_masuk,
+                $urut_masuk
+            );
+
+            $this->asesmenService->store(
+                $vitalSignData,
+                $kd_pasien,
+                $lastTransaction->no_transaction,
+                $lastTransaction->kd_kasir
+            );
 
             DB::commit();
             return to_route('rawat-inap.kontrol-istimewa.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])
@@ -94,6 +123,7 @@ class KontrolIstimewaJamController extends Controller
             return back()->with('error', $e->getMessage());
         }
     }
+
 
     public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt)
     {

@@ -7,6 +7,7 @@ use App\Models\Kunjungan;
 use App\Models\Pasien;
 use App\Models\RmeKontrolIstimewa;
 use App\Models\RmeKontrolIstimewaJam;
+use App\Services\AsesmenService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Exception;
@@ -16,8 +17,10 @@ use Illuminate\Support\Facades\DB;
 
 class KontrolIstimewaController extends Controller
 {
+    protected $asesmenService;
     public function __construct()
     {
+        $this->asesmenService = new AsesmenService();
         $this->middleware('can:read unit-pelayanan/rawat-inap');
     }
 
@@ -36,7 +39,7 @@ class KontrolIstimewaController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-        if (!$dataMedis) {
+        if (! $dataMedis) {
             abort(404, 'Data not found');
         }
 
@@ -88,7 +91,9 @@ class KontrolIstimewaController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-        if (empty($dataMedis)) return back()->with('error', 'Data kunjungan tidak dapat ditemukan !');
+        if (empty($dataMedis)) {
+            return back()->with('error', 'Data kunjungan tidak dapat ditemukan !');
+        }
 
         return view('unit-pelayanan.rawat-inap.pelayanan.kontrol-istimewa.create', compact('dataMedis'));
     }
@@ -99,28 +104,59 @@ class KontrolIstimewaController extends Controller
 
         try {
             $pasien = Pasien::where('kd_pasien', $kd_pasien)->first();
-            if (empty($pasien)) throw new Exception('Data pasien tidak ditemukan !');
+            if (empty($pasien)) {
+                throw new Exception('Data pasien tidak ditemukan !');
+            }
 
             $data = [
-                'kd_pasien'     => $kd_pasien,
-                'kd_unit'     => $kd_unit,
-                'tgl_masuk'     => $tgl_masuk,
-                'urut_masuk'     => $urut_masuk,
-                'tanggal'       => $request->tanggal,
-                'jam'       => $request->jam,
-                'nadi'       => $request->nadi,
-                'nafas'       => $request->nafas,
-                'sistole'       => $request->sistole,
-                'diastole'       => $request->diastole,
-                'user_create'       => Auth::id(),
+                'kd_pasien' => $kd_pasien,
+                'kd_unit' => $kd_unit,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk,
+                'tanggal' => $request->tanggal,
+                'jam' => $request->jam,
+                'nadi' => $request->nadi,
+                'nafas' => $request->nafas,
+                'sistole' => $request->sistole,
+                'diastole' => $request->diastole,
+                'user_create' => Auth::id(),
             ];
 
-            RmeKontrolIstimewa::create($data);
+            $kontrol = RmeKontrolIstimewa::create($data);
+
+            // --- Tambahkan transaksi vital sign ---
+            $vitalSignData = [
+                'sistole' => $request->sistole ? (int) $request->sistole : null,
+                'diastole' => $request->diastole ? (int) $request->diastole : null,
+                'nadi' => $request->nadi ? (int) $request->nadi : null,
+                'respiration' => $request->nafas ? (int) $request->nafas : null,
+                'suhu' => $request->suhu ? (float) $request->suhu : null,
+                'tinggi_badan' => $request->tb ? (int) $request->tb : null,
+                'berat_badan' => $request->bb ? (int) $request->bb : null,
+            ];
+
+            $lastTransaction = $this->asesmenService->getTransaksiData(
+                $kd_unit,
+                $kd_pasien,
+                $tgl_masuk,
+                $urut_masuk
+            );
+
+            $this->asesmenService->store(
+                $vitalSignData,
+                $kd_pasien,
+                $lastTransaction->no_transaction,
+                $lastTransaction->kd_kasir
+            );
+            // --- End Vital Sign ---
 
             DB::commit();
-            return to_route('rawat-inap.kontrol-istimewa.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Kontrol Istimewa berhasil di tambah !');
+
+            return to_route('rawat-inap.kontrol-istimewa.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])
+                ->with('success', 'Kontrol Istimewa berhasil di tambah !');
         } catch (Exception $e) {
             DB::rollBack();
+
             return back()->with('error', $e->getMessage());
         }
     }
@@ -140,7 +176,9 @@ class KontrolIstimewaController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-        if (empty($dataMedis)) return back()->with('error', 'Data kunjungan tidak dapat ditemukan !');
+        if (empty($dataMedis)) {
+            return back()->with('error', 'Data kunjungan tidak dapat ditemukan !');
+        }
 
         $id = decrypt($idEncrypt);
         $kontrol = RmeKontrolIstimewa::find($id);
@@ -154,28 +192,34 @@ class KontrolIstimewaController extends Controller
 
         try {
             $pasien = Pasien::where('kd_pasien', $kd_pasien)->first();
-            if (empty($pasien)) throw new Exception('Data pasien tidak ditemukan !');
+            if (empty($pasien)) {
+                throw new Exception('Data pasien tidak ditemukan !');
+            }
 
             $id = decrypt($idEncrypt);
             $kontrol = RmeKontrolIstimewa::find($id);
-            if (empty($kontrol)) throw new Exception('Data kontrol istimewa tidak ditemukan !');
+            if (empty($kontrol)) {
+                throw new Exception('Data kontrol istimewa tidak ditemukan !');
+            }
 
             $data = [
-                'tanggal'       => $request->tanggal,
-                'jam'       => $request->jam,
-                'nadi'       => $request->nadi,
-                'nafas'       => $request->nafas,
-                'sistole'       => $request->sistole,
-                'diastole'       => $request->diastole,
-                'user_edit'       => Auth::id(),
+                'tanggal' => $request->tanggal,
+                'jam' => $request->jam,
+                'nadi' => $request->nadi,
+                'nafas' => $request->nafas,
+                'sistole' => $request->sistole,
+                'diastole' => $request->diastole,
+                'user_edit' => Auth::id(),
             ];
 
             RmeKontrolIstimewa::where('id', $kontrol->id)->update($data);
 
             DB::commit();
+
             return to_route('rawat-inap.kontrol-istimewa.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Kontrol Istimewa berhasil di ubah !');
         } catch (Exception $e) {
             DB::rollBack();
+
             return back()->with('error', $e->getMessage());
         }
     }
@@ -188,13 +232,17 @@ class KontrolIstimewaController extends Controller
             $id = decrypt($request->id_kontrol);
             $kontrol = RmeKontrolIstimewa::find($id);
 
-            if (empty($kontrol)) throw new Exception('Data kontrol istimewa tidak ditemukan !');
+            if (empty($kontrol)) {
+                throw new Exception('Data kontrol istimewa tidak ditemukan !');
+            }
             $kontrol->delete();
 
             DB::commit();
+
             return back()->with('success', 'Data kontrol istimewa berhasil dihapus !');
         } catch (Exception $e) {
             DB::rollBack();
+
             return back()->with('error', $e->getMessage());
         }
     }
@@ -214,7 +262,9 @@ class KontrolIstimewaController extends Controller
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->first();
 
-        if (empty($dataMedis)) return back()->with('error', 'Gagal menemukan data kunjungan !');
+        if (empty($dataMedis)) {
+            return back()->with('error', 'Gagal menemukan data kunjungan !');
+        }
 
         $tglPrint = $request->tgl_print;
 
@@ -233,6 +283,7 @@ class KontrolIstimewaController extends Controller
             'tglPrint'
         ))
             ->setPaper('a4', 'potrait');
-        return $pdf->stream('kontrolIstimewa_' . $dataMedis->kd_pasien . '_' . $dataMedis->tgl_masuk . '.pdf');
+
+        return $pdf->stream('kontrolIstimewa_'.$dataMedis->kd_pasien.'_'.$dataMedis->tgl_masuk.'.pdf');
     }
 }
