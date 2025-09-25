@@ -49,29 +49,32 @@
                             <div class="tab-pane fade show active">
                                 {{-- TAB 1. List Data Skala Morse --}}
                                 <div class="row">
-                                    <div class="d-flex justify-content-between m-3">
-                                        <div class="row">
+                                    <div class="d-flex justify-content-between my-3">
+                                        <div class="row d-flex justify-content-between w-100">
                                             <!-- Start Date -->
-                                            <div class="col-md-2">
-                                                <input type="date" name="start_date" id="start_date" class="form-control"
-                                                    placeholder="Dari Tanggal" value="{{ request('start_date') }}">
-                                            </div>
+                                                <div class="col-md-2">
+                                                    <input type="date" name="start_date" id="start_date"
+                                                        class="form-control" placeholder="Dari Tanggal"
+                                                        value="{{ request('start_date') }}">
+                                                </div>
 
-                                            <!-- End Date -->
-                                            <div class="col-md-2">
-                                                <input type="date" name="end_date" id="end_date" class="form-control"
-                                                    placeholder="S.d Tanggal" value="{{ request('end_date') }}">
-                                            </div>
-                                            <div class="col-md-2">
-                                                <a href="#" class="btn btn-secondary rounded-3" id="filterButton"><i
-                                                        class="bi bi-funnel-fill"></i></a>
-                                            </div>
+                                                <!-- End Date -->
+                                                <div class="col-md-2">
+                                                    <input type="date" name="end_date" id="end_date"
+                                                        class="form-control" placeholder="S.d Tanggal"
+                                                        value="{{ request('end_date') }}">
+                                                </div>
 
+                                                <div class="col-md-2">
+                                                    <a href="#" class="btn btn-secondary rounded-3"
+                                                        id="filterButton"><i class="bi bi-funnel-fill"></i></a>
+                                                </div>
                                             <!-- Search Bar -->
                                             <div class="col-md-4">
                                                 <form method="GET" action="{{ request()->fullUrl() }}">
-                                                    @foreach(request()->except(['search', 'page']) as $key => $value)
-                                                        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                                                    @foreach (request()->except(['search', 'page']) as $key => $value)
+                                                        <input type="hidden" name="{{ $key }}"
+                                                            value="{{ $value }}">
                                                     @endforeach
                                                     <div class="input-group">
                                                         <input type="text" name="search" class="form-control"
@@ -82,13 +85,13 @@
                                                 </form>
                                             </div>
 
-                                            <div class="col-md-2">
+                                            <div class="col-md-2 text-end" style="margin-right: -20px;">
+                                                {{-- Add New Button --}}
                                                 <a href="{{ route('rawat-inap.resiko-jatuh.morse.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                                     class="btn btn-primary">
                                                     <i class="ti-plus"></i> Tambah
                                                 </a>
                                             </div>
-
                                         </div>
                                     </div>
 
@@ -117,7 +120,8 @@
                                                             <span class="fw-bold fs-5">{{ $item->skor_total }}</span>
                                                         </td>
                                                         <td>{!! $item->kategori_resiko_with_badge !!}</td>
-                                                        <td>{{ str()->title($item->userCreate->name ?? 'Tidak Diketahui') }}</td>
+                                                        <td>{{ str()->title($item->userCreate->name ?? 'Tidak Diketahui') }}
+                                                        </td>
                                                         <td>
                                                             <div class="btn-group" role="group">
 
@@ -147,7 +151,8 @@
                                                     </tr>
                                                 @empty
                                                     <tr>
-                                                        <td colspan="8" class="text-center">Tidak ada data Skala Morse</td>
+                                                        <td colspan="8" class="text-center">Tidak ada data Skala Morse
+                                                        </td>
                                                     </tr>
                                                 @endforelse
                                             </tbody>

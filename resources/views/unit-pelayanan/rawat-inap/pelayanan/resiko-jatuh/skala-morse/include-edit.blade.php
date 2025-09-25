@@ -1,11 +1,9 @@
 @push('css')
     <style>
         .resiko_jatuh__header-asesmen {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 20px;
             border-radius: 10px;
-            margin-bottom: 30px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
@@ -13,26 +11,13 @@
             background: white;
             border-radius: 10px;
             padding: 25px;
-            margin-bottom: 20px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-left: 4px solid #667eea;
         }
 
         .resiko_jatuh__section-separator h5 {
-            color: #667eea;
-            font-weight: 600;
-            margin-bottom: 20px;
             display: flex;
+            font-weight: 600;
             align-items: center;
-        }
-
-        .resiko_jatuh__section-separator h5:before {
-            content: '';
-            width: 4px;
-            height: 25px;
-            background: #667eea;
-            margin-right: 10px;
-            border-radius: 2px;
         }
 
         .resiko_jatuh__form-group label {
@@ -50,7 +35,7 @@
         }
 
         .resiko_jatuh__form-control:focus {
-            border-color: #667eea;
+            border-color: #0d6efd;
             box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
             transform: translateY(-1px);
         }
@@ -66,22 +51,22 @@
         }
 
         .resiko_jatuh__form-check:hover {
-            border-color: #667eea;
+            border-color: #0d6efd;
             background: #f0f3ff;
             transform: translateX(5px);
         }
 
         .resiko_jatuh__form-check-input:checked~.resiko_jatuh__form-check-label {
-            color: #667eea;
+            color: #0d6efd;
             font-weight: 600;
         }
 
         .resiko_jatuh__form-check input:checked+label {
-            color: #667eea !important;
+            color: #0d6efd !important;
         }
 
         .resiko_jatuh__form-check.selected {
-            border-color: #667eea;
+            border-color: #0d6efd;
             background: #e8f0fe;
             box-shadow: 0 4px 8px rgba(102, 126, 234, 0.2);
         }
@@ -97,22 +82,22 @@
         }
 
         .resiko_jatuh__criteria-form-check:hover {
-            border-color: #667eea;
+            border-color: #0d6efd;
             background: #f0f3ff;
             transform: translateX(5px);
         }
 
         .resiko_jatuh__criteria-form-check-input:checked~.resiko_jatuh__criteria-form-check-label {
-            color: #667eea;
+            color: #0d6efd;
             font-weight: 600;
         }
 
         .resiko_jatuh__criteria-form-check input:checked+label {
-            color: #667eea !important;
+            color: #0d6efd !important;
         }
 
         .resiko_jatuh__criteria-form-check.selected {
-            border-color: #667eea;
+            border-color: #0d6efd;
             background: #e8f0fe;
             box-shadow: 0 4px 8px rgba(102, 126, 234, 0.2);
         }
@@ -125,7 +110,6 @@
         }
 
         .resiko_jatuh__badge-info {
-            background: linear-gradient(45deg, #667eea, #764ba2);
             color: white;
         }
 
@@ -152,15 +136,6 @@
             align-items: center;
         }
 
-        .resiko_jatuh__font-weight-bold:before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            background: #667eea;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
         .resiko_jatuh__card {
             border: none;
             border-radius: 15px;
@@ -176,7 +151,6 @@
         .resiko_jatuh__score-total {
             font-size: 3rem;
             font-weight: bold;
-            background: linear-gradient(45deg, #667eea, #764ba2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -215,7 +189,7 @@
         }
 
         .resiko_jatuh__btn-primary {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background-color: #0d6efd;
             border: none;
             border-radius: 25px;
             padding: 12px 30px;
@@ -227,7 +201,7 @@
         .resiko_jatuh__btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-            background: linear-gradient(45deg, #764ba2, #667eea);
+            background-color:#0d6efd;
         }
 
         .resiko_jatuh__criteria-section {
@@ -260,14 +234,14 @@
         }
 
         .resiko_jatuh__btn-outline-primary {
-            border-color: #667eea;
-            color: #667eea;
+            border-color: #0d6efd;
+            color: #0d6efd;
             transition: all 0.3s ease;
         }
 
         .resiko_jatuh__btn-outline-primary:hover {
-            background: #667eea;
-            border-color: #667eea;
+            background: #0d6efd;
+            border-color: #0d6efd;
             transform: translateX(-3px);
         }
 
@@ -278,7 +252,7 @@
         }
 
         .resiko_jatuh__keterangan-title {
-            color: #667eea;
+            color: #0d6efd;
             font-weight: 600;
             margin-bottom: 15px;
         }
@@ -293,11 +267,6 @@
 
         .resiko_jatuh__keterangan-list li {
             margin-bottom: 8px;
-        }
-
-        /* Style khusus untuk section intervensi */
-        .resiko_jatuh__intervensi-rr {
-            border-left: 4px solid #28a745;
         }
 
         .resiko_jatuh__intervensi-rr h5 {
@@ -345,9 +314,14 @@
             font-weight: 600;
         }
 
-        #duplicate-warning {
-            border-left: 4px solid #ffc107;
-            background: linear-gradient(45deg, #fff3cd, #ffeaa7);
+        .resiko_jatuh__criteria-form-check {
+            cursor: pointer;
+        }
+
+        .resiko_jatuh__criteria-form-check .form-check-label {
+            display: block;
+            width: 100%;
+            cursor: pointer;
         }
     </style>
 @endpush
@@ -420,11 +394,11 @@
             function checkDuplicateDateTime() {
                 const tanggal = $('#tanggal').val();
                 const shift = $('#shift').val();
-                
+
                 // Ambil ID record jika sedang edit (dari URL atau hidden input)
                 const currentId = window.location.pathname.split('/').pop(); // Ambil ID dari URL
                 // Atau bisa juga menggunakan hidden input jika ada
-                // const currentId = $('#record_id').val(); 
+                // const currentId = $('#record_id').val();
 
                 if (tanggal && shift) {
                     // AJAX call untuk mengecek duplikasi
