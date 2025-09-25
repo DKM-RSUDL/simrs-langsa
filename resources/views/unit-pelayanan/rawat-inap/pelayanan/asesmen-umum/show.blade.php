@@ -3089,11 +3089,11 @@
                                 <div class="row">
                                     <div class="col-md-4 mb-2">
                                         <div class="form-check">
-                                            <input disabled class="form-check-input" type="checkbox" name="pengaruh_perawatan[]" id="pelayanan" value="pelayanan"
-                                                {{ in_array('pelayanan', old('pengaruh_perawatan', is_array($asesmen->asesmenKetDewasaRanapDietKhusus->pengaruh_perawatan)
+                                            <input disabled class="form-check-input" type="checkbox" name="pengaruh_perawatan[]" id="pekerjaan" value="pekerjaan"
+                                                {{ in_array('pekerjaan', old('pengaruh_perawatan', is_array($asesmen->asesmenKetDewasaRanapDietKhusus->pengaruh_perawatan)
                                                     ? $asesmen->asesmenKetDewasaRanapDietKhusus->pengaruh_perawatan
                                                     : ($asesmen->asesmenKetDewasaRanapDietKhusus->pengaruh_perawatan ? json_decode($asesmen->asesmenKetDewasaRanapDietKhusus->pengaruh_perawatan, true) : []))) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="pelayanan">2. Pelayanan</label>
+                                            <label class="form-check-label" for="pelayanan">2. Pekerjaan</label>
                                         </div>
                                     </div>
                                     <div class="col-md-4 mb-2">

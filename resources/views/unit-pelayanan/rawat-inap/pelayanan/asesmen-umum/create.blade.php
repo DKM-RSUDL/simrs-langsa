@@ -2846,8 +2846,8 @@
                                 <div class="row">
                                     <div class="col-md-4 mb-2">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="pengaruh_perawatan[]" id="pelayanan" value="pelayanan">
-                                            <label class="form-check-label" for="pelayanan">2. Pelayanan</label>
+                                            <input class="form-check-input" type="checkbox" name="pengaruh_perawatan[]" id="pekerjaan" value="pekerjaan">
+                                            <label class="form-check-label" for="pekerjaan">2. Pekerjaan</label>
                                         </div>
                                     </div>
                                     <div class="col-md-4 mb-2">
