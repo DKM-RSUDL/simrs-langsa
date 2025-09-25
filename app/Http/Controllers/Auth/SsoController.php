@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 
-class SsoController extends Controller
+class SsoController extends Controller 
 {
     private $ssoUrl_;
     private $clientId_;

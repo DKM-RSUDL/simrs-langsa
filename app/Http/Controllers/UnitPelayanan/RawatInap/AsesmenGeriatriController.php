@@ -21,6 +21,7 @@ use App\Models\RmeMasterImplementasi;
 use App\Models\RmeMenjalar;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
+use App\Services\AsesmenService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,9 +29,11 @@ use Illuminate\Support\Facades\DB;
 
 class AsesmenGeriatriController extends Controller
 {
+    protected $asesmenService;
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->asesmenService = new AsesmenService();
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -97,16 +100,53 @@ class AsesmenGeriatriController extends Controller
     }
 
 
-    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
-    {
+    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk){
         DB::beginTransaction();
 
         try {
+            // Validate vital sign inputs
+            $request->validate([
+                'sistole' => 'nullable|numeric|min:0|max:300',
+                'diastole' => 'nullable|numeric|min:0|max:200',
+                'nadi' => 'nullable|numeric|min:0|max:300',
+                'respirasi' => 'nullable|numeric|min:0|max:100',
+                'suhu' => 'nullable|numeric|min:0|max:45',
+                'tinggi_badan' => 'nullable|numeric|min:0|max:300',
+                'berat_badan' => 'nullable|numeric|min:0|max:500',
+                'imt' => 'nullable|numeric|min:0|max:100',
+            ], [
+                'sistole.numeric' => 'Sistole harus berupa angka.',
+                'sistole.min' => 'Sistole tidak boleh kurang dari 0.',
+                'sistole.max' => 'Sistole tidak boleh lebih dari 300.',
+                'diastole.numeric' => 'Diastole harus berupa angka.',
+                'diastole.min' => 'Diastole tidak boleh kurang dari 0.',
+                'diastole.max' => 'Diastole tidak boleh lebih dari 200.',
+                'nadi.numeric' => 'Nadi harus berupa angka.',
+                'nadi.min' => 'Nadi tidak boleh kurang dari 0.',
+                'nadi.max' => 'Nadi tidak boleh lebih dari 300.',
+                'respirasi.numeric' => 'Respirasi harus berupa angka.',
+                'respirasi.min' => 'Respirasi tidak boleh kurang dari 0.',
+                'respirasi.max' => 'Respirasi tidak boleh lebih dari 100.',
+                'suhu.numeric' => 'Suhu harus berupa angka.',
+                'suhu.min' => 'Suhu tidak boleh kurang dari 0.',
+                'suhu.max' => 'Suhu tidak boleh lebih dari 45.',
+                'tinggi_badan.numeric' => 'Tinggi badan harus berupa angka.',
+                'tinggi_badan.min' => 'Tinggi badan tidak boleh kurang dari 0.',
+                'tinggi_badan.max' => 'Tinggi badan tidak boleh lebih dari 300.',
+                'berat_badan.numeric' => 'Berat badan harus berupa angka.',
+                'berat_badan.min' => 'Berat badan tidak boleh kurang dari 0.',
+                'berat_badan.max' => 'Berat badan tidak boleh lebih dari 500.',
+                'imt.numeric' => 'IMT harus berupa angka.',
+                'imt.min' => 'IMT tidak boleh kurang dari 0.',
+                'imt.max' => 'IMT tidak boleh lebih dari 100.',
+            ]);
+
+            // Prepare assessment time
             $tanggal = $request->tanggal_masuk;
             $jam = $request->jam_masuk;
             $waktu_asesmen = $tanggal . ' ' . $jam;
 
-            // Simpan data utama asesmen
+            // Save core assessment data
             $dataAsesmen = new RmeAsesmen();
             $dataAsesmen->kd_pasien = $kd_pasien;
             $dataAsesmen->kd_unit = $kd_unit;
@@ -115,148 +155,64 @@ class AsesmenGeriatriController extends Controller
             $dataAsesmen->user_id = Auth::id();
             $dataAsesmen->waktu_asesmen = $waktu_asesmen;
             $dataAsesmen->kategori = 1;
-            $dataAsesmen->sub_kategori = 12; // 12 untuk Geriatri
+            $dataAsesmen->sub_kategori = 12; // Specific to geriatrics
             $dataAsesmen->anamnesis = $request->anamnesis;
-            $dataAsesmen->skala_nyeri = $request->skala_nyeri ?? null;
             $dataAsesmen->save();
 
-            // PERBAIKAN: Gunakan model yang sesuai untuk Geriatri
-            $dataGeriatri = new RmeAsesmenGeriatri(); 
-            $dataGeriatri->id_asesmen = $dataAsesmen->id;
+            // Prepare vital sign data
+            $vitalSignData = [
+                'sistole' => $request->sistole ? (int) $request->sistole : null,
+                'diastole' => $request->diastole ? (int) $request->diastole : null,
+                'nadi' => $request->nadi ? (int) $request->nadi : null,
+                'respiration' => $request->respirasi ? (int) $request->respirasi : null,
+                'suhu' => $request->suhu ? (float) $request->suhu : null,
+                'tinggi_badan' => $request->tinggi_badan ? (int) $request->tinggi_badan : null,
+                'berat_badan' => $request->berat_badan ? (int) $request->berat_badan : null,
+                'imt' => $request->imt ? (float) $request->imt : null,
+            ];
 
-            // Section 1: Data Masuk
+            // Get transaction data for vital sign storage
+            $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+            // Save vital signs using service
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaction, $lastTransaction->kd_kasir);
+
+            // Save geriatrics-specific assessment data with vital signs
+            $dataGeriatri = new RmeAsesmenGeriatri();
+            $dataGeriatri->id_asesmen = $dataAsesmen->id;
             $dataGeriatri->waktu_masuk = $waktu_asesmen;
             $dataGeriatri->kondisi_masuk = $request->kondisi_masuk;
             $dataGeriatri->diagnosis_masuk = $request->diagnosis_masuk;
-
-            // Section 2: Anamnesis & Vital Signs
             $dataGeriatri->keluhan_utama = $request->keluhan_utama;
-            $dataGeriatri->sensorium = $request->sensorium;
-            $dataGeriatri->sistole = $request->sistole;
-            $dataGeriatri->diastole = $request->diastole;
-            $dataGeriatri->suhu = $request->suhu;
-            $dataGeriatri->respirasi = $request->respirasi;
-            $dataGeriatri->nadi = $request->nadi;
-            $dataGeriatri->berat_badan = $request->berat_badan;
-            $dataGeriatri->tinggi_badan = $request->tinggi_badan;
-            $dataGeriatri->imt = $request->imt;
-
-            // Section 3: Riwayat Kesehatan
-            $dataGeriatri->riwayat_penyakit_sekarang = $request->riwayat_penyakit_sekarang;
-            $dataGeriatri->riwayat_penyakit_terdahulu = $request->riwayat_penyakit_terdahulu;
-
-            // Section 4: Data Psikologi dan Sosial Ekonomi
-            $dataGeriatri->kondisi_psikologi = $request->kondisi_psikologi;
-            $dataGeriatri->kondisi_sosial_ekonomi = $request->kondisi_sosial_ekonomi;
-
-            // Section 5: Asesmen Geriatri - PERBAIKAN untuk checkbox mutual exclusive
-            $dataGeriatri->adl = is_array($request->adl) ? json_encode($request->adl) : null;
-            $dataGeriatri->kognitif = is_array($request->kognitif) ? json_encode($request->kognitif) : null;
-            $dataGeriatri->depresi = is_array($request->depresi) ? json_encode($request->depresi) : null;
-            $dataGeriatri->inkontinensia = is_array($request->inkontinensia) ? json_encode($request->inkontinensia) : null;
-            $dataGeriatri->insomnia = is_array($request->insomnia) ? json_encode($request->insomnia) : null;
-
-            // Kategori IMT
-            $dataGeriatri->kategori_imt = is_array($request->kategori_imt) ? json_encode($request->kategori_imt) : null;
-
-            // Section 9: Diagnosis
-            $dataGeriatri->diagnosis_banding = $request->diagnosis_banding;
-            $dataGeriatri->diagnosis_kerja = $request->diagnosis_kerja;
-
+            $dataGeriatri->sistole = $vitalSignData['sistole'];
+            $dataGeriatri->diastole = $vitalSignData['diastole'];
+            $dataGeriatri->nadi = $vitalSignData['nadi'];
+            $dataGeriatri->respirasi = $vitalSignData['respiration'];
+            $dataGeriatri->suhu = $vitalSignData['suhu'];
+            $dataGeriatri->tinggi_badan = $vitalSignData['tinggi_badan'];
+            $dataGeriatri->berat_badan = $vitalSignData['berat_badan'];
+            $dataGeriatri->imt = $vitalSignData['imt'];
             $dataGeriatri->save();
 
-            // Simpan Diagnosa ke Master (tidak berubah)
-            $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
-            $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true);
-            $allDiagnoses = array_merge($diagnosisBandingList, $diagnosisKerjaList);
-
-            foreach ($allDiagnoses as $diagnosa) {
-                $existingDiagnosa = RmeMasterDiagnosis::where('nama_diagnosis', $diagnosa)->first();
-                if (!$existingDiagnosa) {
-                    $masterDiagnosa = new RmeMasterDiagnosis();
-                    $masterDiagnosa->nama_diagnosis = $diagnosa;
-                    $masterDiagnosa->save();
-                }
-            }
-
-            // Simpan Pemeriksaan Fisik (tidak berubah)
-            $itemFisik = MrItemFisik::all();
-            foreach ($itemFisik as $item) {
-                $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
-                $keterangan = $request->input($item->id . '_keterangan');
-                if ($isNormal) $keterangan = '';
-
-                RmeAsesmenPemeriksaanFisik::create([
-                    'id_asesmen' => $dataAsesmen->id,
-                    'id_item_fisik' => $item->id,
-                    'is_normal' => $isNormal,
-                    'keterangan' => $keterangan
-                ]);
-            }
-
-            // Simpan data alergi (tidak berubah)
-            $alergiData = json_decode($request->alergis, true);
-            if (!empty($alergiData)) {
-                RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
-
-                foreach ($alergiData as $alergi) {
-                    RmeAlergiPasien::create([
-                        'kd_pasien' => $kd_pasien,
-                        'jenis_alergi' => $alergi['jenis_alergi'],
-                        'nama_alergi' => $alergi['alergen'],
-                        'reaksi' => $alergi['reaksi'],
-                        'tingkat_keparahan' => $alergi['tingkat_keparahan']
-                    ]);
-                }
-            }
-
-            // Section 8: Discharge Planning - PERBAIKAN nama model
-            $asesmenRencana = new RmeAsesmenGeriatriRencanaPulang(); // Pastikan nama model ini benar
-            $asesmenRencana->id_asesmen = $dataAsesmen->id;
-            $asesmenRencana->diagnosis_medis = $request->diagnosis_medis;
-            $asesmenRencana->usia_lanjut = $request->usia_lanjut;
-            $asesmenRencana->hambatan_mobilisasi = $request->hambatan_mobilisasi;
-            $asesmenRencana->membutuhkan_pelayanan_medis = $request->penggunaan_media_berkelanjutan;
-            $asesmenRencana->memerlukan_keterampilan_khusus = $request->keterampilan_khusus;
-            $asesmenRencana->memerlukan_alat_bantu = $request->alat_bantu;
-            $asesmenRencana->memiliki_nyeri_kronis = $request->nyeri_kronis;
-            $asesmenRencana->perkiraan_lama_dirawat = $request->perkiraan_hari;
-            $asesmenRencana->rencana_pulang = $request->tanggal_pulang;
-            $asesmenRencana->kesimpulan = $request->kesimpulan_planing;
-            $asesmenRencana->save();
-
-            // Resume data - PERBAIKAN field names
+            // Save resume data with vital signs
             $resumeData = [
-                'anamnesis'             => $request->anamnesis,
-                'diagnosis'             => [],
-                'tindak_lanjut_code'    => null,
-                'tindak_lanjut_name'    => null,
-                'tgl_kontrol_ulang'     => null,
-                'unit_rujuk_internal'   => null,
-                'rs_rujuk'              => null,
-                'rs_rujuk_bagian'       => null,
-                'konpas'                => [
-                    'sistole'   => [
-                        'hasil' => $request->sistole
-                    ],
-                    'distole'   => [
-                        'hasil' => $request->diastole
-                    ],
-                    'respiration_rate'   => [
-                        'hasil' => ''
-                    ],
-                    'suhu'   => [
-                        'hasil' => $request->suhu
-                    ],
-                    'nadi'   => [
-                        'hasil' => $request->nadi
-                    ],
-                    'tinggi_badan'   => [
-                        'hasil' => $request->tinggi_badan
-                    ],
-                    'berat_badan'   => [
-                        'hasil' => $request->berat_badan
-                    ]
+                'anamnesis' => $request->anamnesis ?? $request->keluhan_utama ?? '',
+                'diagnosis' => [],
+                'tindak_lanjut_code' => null,
+                'tindak_lanjut_name' => null,
+                'tgl_kontrol_ulang' => null,
+                'unit_rujuk_internal' => null,
+                'rs_rujuk' => null,
+                'rs_rujuk_bagian' => null,
+                'konpas' => [
+                    'sistole' => ['hasil' => $vitalSignData['sistole']],
+                    'diastole' => ['hasil' => $vitalSignData['diastole']],
+                    'respiration_rate' => ['hasil' => $vitalSignData['respiration']],
+                    'suhu' => ['hasil' => $vitalSignData['suhu']],
+                    'nadi' => ['hasil' => $vitalSignData['nadi']],
+                    'tinggi_badan' => ['hasil' => $vitalSignData['tinggi_badan']],
+                    'berat_badan' => ['hasil' => $vitalSignData['berat_badan']],
+                    'imt' => ['hasil' => $vitalSignData['imt']],
                 ]
             ];
 
@@ -265,7 +221,7 @@ class AsesmenGeriatriController extends Controller
             DB::commit();
 
             return redirect()->to(url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum"))
-                ->with('success', 'Data asesmen Geriatri berhasil disimpan');
+                ->with('success', 'Data asesmen geriatri dan tanda vital berhasil disimpan');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Gagal menyimpan data asesmen: ' . $e->getMessage());

@@ -25,6 +25,7 @@ use App\Models\RmeMenjalar;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SatsetPrognosis;
+use App\Services\AsesmenService;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -34,9 +35,12 @@ use Illuminate\Support\Facades\DB;
 
 class AsesmenGinekologikController extends Controller
 {
+    protected $asesmenService;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->asesmenService = new AsesmenService();
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -116,19 +120,24 @@ class AsesmenGinekologikController extends Controller
         DB::beginTransaction();
 
         try {
-            // 1. Buat record RmeAsesmen
+            // Prepare assessment time
+            $tanggal = $request->tanggal;
+            $jam = $request->jam_masuk;
+            $waktu_asesmen = Carbon::parse($tanggal . ' ' . $jam)->format('Y-m-d H:i:s');
+
+            // Save core assessment data
             $asesmen = new RmeAsesmen();
-            $asesmen->kd_pasien = $request->kd_pasien;
-            $asesmen->kd_unit = $request->kd_unit;
-            $asesmen->tgl_masuk = $request->tgl_masuk;
-            $asesmen->urut_masuk = $request->urut_masuk;
+            $asesmen->kd_pasien = $kd_pasien;
+            $asesmen->kd_unit = $kd_unit;
+            $asesmen->tgl_masuk = $tgl_masuk;
+            $asesmen->urut_masuk = $urut_masuk;
             $asesmen->user_id = Auth::id();
-            $asesmen->waktu_asesmen = date('Y-m-d H:i:s');
+            $asesmen->waktu_asesmen = $waktu_asesmen;
             $asesmen->kategori = 1;
-            $asesmen->sub_kategori = 9;
+            $asesmen->sub_kategori = 9; // Specific to gynecology
             $asesmen->save();
 
-            // 2. Simpan RmeAsesmenGinekologik
+            // Save gynecology-specific assessment data
             $asesmenGinekologik = new RmeAsesmenGinekologik();
             $asesmenGinekologik->id_asesmen = $asesmen->id;
             $asesmenGinekologik->user_create = Auth::id();
@@ -157,152 +166,59 @@ class AsesmenGinekologikController extends Controller
             $asesmenGinekologik->paru_prognosis = $request->paru_prognosis;
             $asesmenGinekologik->save();
 
-            // 3. Simpan data tanda vital
+            // Prepare vital sign data
+            $vitalSignData = [
+                'sistole' => $request->tekanan_darah_sistole ? (int) $request->tekanan_darah_sistole : null,
+                'diastole' => $request->tekanan_darah_diastole ? (int) $request->tekanan_darah_diastole : null,
+                'nadi' => $request->nadi ? (int) $request->nadi : null,
+                'respiration' => $request->respirasi ? (int) $request->respirasi : null,
+                'nafas' => $request->nafas ? (int) $request->nafas : null,
+                'suhu' => $request->suhu ? (float) $request->suhu : null,
+                'tinggi_badan' => $request->tinggi_badan ? (int) $request->tinggi_badan : null,
+                'berat_badan' => $request->berat_badan ? (int) $request->berat_badan : null,
+            ];
+
+            // Get transaction data for vital sign storage
+            $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+            // Save vital signs using service
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaction, $lastTransaction->kd_kasir);
+
+            // Save vital signs to gynecology vital signs table
             $asesmenTandaVital = new RmeAsesmenGinekologikTandaVital();
             $asesmenTandaVital->id_asesmen = $asesmen->id;
-            $asesmenTandaVital->tekanan_darah_sistole = $request->tekanan_darah_sistole;
-            $asesmenTandaVital->tekanan_darah_diastole = $request->tekanan_darah_diastole;
-            $asesmenTandaVital->suhu = $request->suhu;
-            $asesmenTandaVital->respirasi = $request->respirasi;
-            $asesmenTandaVital->nadi = $request->nadi;
-            $asesmenTandaVital->nafas = $request->nafas;
-            $asesmenTandaVital->berat_badan = $request->berat_badan;
-            $asesmenTandaVital->tinggi_badan = $request->tinggi_badan;
+            $asesmenTandaVital->tekanan_darah_sistole = $vitalSignData['sistole'];
+            $asesmenTandaVital->tekanan_darah_diastole = $vitalSignData['diastole'];
+            $asesmenTandaVital->nadi = $vitalSignData['nadi'];
+            $asesmenTandaVital->respirasi = $vitalSignData['respiration'];
+            $asesmenTandaVital->nafas = $vitalSignData['nafas'];
+            $asesmenTandaVital->suhu = $vitalSignData['suhu'];
+            $asesmenTandaVital->tinggi_badan = $vitalSignData['tinggi_badan'];
+            $asesmenTandaVital->berat_badan = $vitalSignData['berat_badan'];
             $asesmenTandaVital->save();
 
-            $ginekologikEkstremitasGinekologik = new RmeAsesmenGinekologikEkstremitasGinekologik();
-            $ginekologikEkstremitasGinekologik->id_asesmen = $asesmen->id;
-            $ginekologikEkstremitasGinekologik->edema_atas = $request->edema_atas;
-            $ginekologikEkstremitasGinekologik->varises_atas = $request->varises_atas;
-            $ginekologikEkstremitasGinekologik->refleks_atas = $request->refleks_atas;
-            $ginekologikEkstremitasGinekologik->edema_bawah = $request->edema_bawah;
-            $ginekologikEkstremitasGinekologik->varises_bawah = $request->varises_bawah;
-            $ginekologikEkstremitasGinekologik->refleks_bawah = $request->refleks_bawah;
-            $ginekologikEkstremitasGinekologik->catatan_ekstremitas = $request->catatan_ekstremitas;
-            $ginekologikEkstremitasGinekologik->keadaan_umum = $request->keadaan_umum;
-            $ginekologikEkstremitasGinekologik->status_ginekologik = $request->status_ginekologik;
-            $ginekologikEkstremitasGinekologik->pemeriksaan = $request->pemeriksaan;
-            $ginekologikEkstremitasGinekologik->inspekulo = $request->inspekulo;
-            $ginekologikEkstremitasGinekologik->vt = $request->vt;
-            $ginekologikEkstremitasGinekologik->rt = $request->rt;
-            $ginekologikEkstremitasGinekologik->save();
+            // Save resume data with vital signs
+            $resumeData = [
+                'anamnesis' => $request->keluhan_utama ?? '',
+                'diagnosis' => [],
+                'tindak_lanjut_code' => null,
+                'tindak_lanjut_name' => null,
+                'tgl_kontrol_ulang' => null,
+                'unit_rujuk_internal' => null,
+                'rs_rujuk' => null,
+                'rs_rujuk_bagian' => null,
+                'konpas' => [
+                    'sistole' => ['hasil' => $vitalSignData['sistole']],
+                    'diastole' => ['hasil' => $vitalSignData['diastole']],
+                    'respiration_rate' => ['hasil' => $vitalSignData['respiration'] ?? $vitalSignData['nafas']],
+                    'suhu' => ['hasil' => $vitalSignData['suhu']],
+                    'nadi' => ['hasil' => $vitalSignData['nadi']],
+                    'tinggi_badan' => ['hasil' => $vitalSignData['tinggi_badan']],
+                    'berat_badan' => ['hasil' => $vitalSignData['berat_badan']],
+                ]
+            ];
 
-            $ginekologikPemeriksaanDischarge = new RmeAsesmenGinekologikPemeriksaanDischarge();
-            $ginekologikPemeriksaanDischarge->id_asesmen = $asesmen->id;
-            $ginekologikPemeriksaanDischarge->laboratorium = $request->laboratorium;
-            $ginekologikPemeriksaanDischarge->usg = $request->usg;
-            $ginekologikPemeriksaanDischarge->radiologi = $request->radiologi;
-            $ginekologikPemeriksaanDischarge->penunjang_lainnya = $request->penunjang_lainnya;
-            $ginekologikPemeriksaanDischarge->diagnosis_medis = $request->diagnosis_medis;
-            $ginekologikPemeriksaanDischarge->usia_lanjut = $request->usia_lanjut;
-            $ginekologikPemeriksaanDischarge->hambatan_mobilisasi = $request->hambatan_mobilisasi;
-            $ginekologikPemeriksaanDischarge->penggunaan_media_berkelanjutan = $request->penggunaan_media_berkelanjutan;
-            $ginekologikPemeriksaanDischarge->ketergantungan_aktivitas = $request->ketergantungan_aktivitas;
-            $ginekologikPemeriksaanDischarge->keterampilan_khusus = $request->keterampilan_khusus;
-            $ginekologikPemeriksaanDischarge->alat_bantu = $request->alat_bantu;
-            $ginekologikPemeriksaanDischarge->nyeri_kronis = $request->nyeri_kronis;
-            $ginekologikPemeriksaanDischarge->perkiraan_hari = $request->perkiraan_hari;
-            $ginekologikPemeriksaanDischarge->tanggal_pulang = $request->tanggal_pulang;
-            $ginekologikPemeriksaanDischarge->kesimpulan_planing = $request->kesimpulan_planing;
-            $ginekologikPemeriksaanDischarge->save();
-
-            $ginekologikDiagnosisImplementasi = new RmeAsesmenGinekologikDiagnosisImplementasi();
-            $ginekologikDiagnosisImplementasi->id_asesmen = $asesmen->id;
-            $ginekologikDiagnosisImplementasi->diagnosis_banding = $request->diagnosis_banding;
-            $ginekologikDiagnosisImplementasi->diagnosis_kerja = $request->diagnosis_kerja;
-            $ginekologikDiagnosisImplementasi->observasi = $request->observasi;
-            $ginekologikDiagnosisImplementasi->terapeutik = $request->terapeutik;
-            $ginekologikDiagnosisImplementasi->edukasi = $request->edukasi;
-            $ginekologikDiagnosisImplementasi->kolaborasi = $request->kolaborasi;
-            $ginekologikDiagnosisImplementasi->prognosis = $request->prognosis;
-            $ginekologikDiagnosisImplementasi->save();
-
-            $ginekologikPemeriksaanFisik = new RmeAsesmenGinekologikPemeriksaanFisik();
-            $ginekologikPemeriksaanFisik->id_asesmen = $asesmen->id;
-            $ginekologikPemeriksaanFisik->paru_kesadaran = $request->paru_kesadaran;
-            $ginekologikPemeriksaanFisik->kepala = $request->kepala;
-            $ginekologikPemeriksaanFisik->kepala_keterangan = $request->kepala_keterangan;
-            $ginekologikPemeriksaanFisik->hidung = $request->hidung;
-            $ginekologikPemeriksaanFisik->hidung_keterangan = $request->hidung_keterangan;
-            $ginekologikPemeriksaanFisik->mata = $request->mata;
-            $ginekologikPemeriksaanFisik->mata_keterangan = $request->mata_keterangan;
-            $ginekologikPemeriksaanFisik->leher = $request->leher;
-            $ginekologikPemeriksaanFisik->leher_keterangan = $request->leher_keterangan;
-            $ginekologikPemeriksaanFisik->tenggorokan = $request->tenggorokan;
-            $ginekologikPemeriksaanFisik->tenggorokan_keterangan = $request->tenggorokan_keterangan;
-            $ginekologikPemeriksaanFisik->jantung = $request->jantung;
-            $ginekologikPemeriksaanFisik->jantung_keterangan = $request->jantung_keterangan;
-            $ginekologikPemeriksaanFisik->paru = $request->paru;
-            $ginekologikPemeriksaanFisik->paru_keterangan = $request->paru_keterangan;
-            $ginekologikPemeriksaanFisik->hati = $request->hati;
-            $ginekologikPemeriksaanFisik->hati_keterangan = $request->hati_keterangan;
-            $ginekologikPemeriksaanFisik->limpa = $request->limpa;
-            $ginekologikPemeriksaanFisik->limpa_keterangan = $request->limpa_keterangan;
-            $ginekologikPemeriksaanFisik->kulit = $request->kulit;
-            $ginekologikPemeriksaanFisik->kulit_keterangan = $request->kulit_keterangan;
-            $ginekologikPemeriksaanFisik->mulut_gigi = $request->mulut_gigi;
-            $ginekologikPemeriksaanFisik->mulut_gigi_keterangan = $request->mulut_gigi_keterangan;
-            $ginekologikPemeriksaanFisik->save();
-
-
-            // PERBAIKAN UTAMA: Simpan data pemeriksaan fisik dengan ID yang benar
-            $itemFisik = MrItemFisik::all();
-            foreach ($itemFisik as $item) {
-                $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
-                $keterangan = $request->input($item->id . '_keterangan');
-
-                // Jika normal, hapus keterangan
-                if ($isNormal) {
-                    $keterangan = '';
-                }
-
-                // PERBAIKAN: Gunakan $asesmen->id bukan $asesmenParu->id
-                RmeAsesmenPemeriksaanFisik::create([
-                    'id_asesmen' => $asesmen->id, // ← INI YANG DIPERBAIKI!
-                    'id_item_fisik' => $item->id,
-                    'is_normal' => $isNormal,
-                    'keterangan' => $keterangan
-                ]);
-            }
-
-            // Simpan diagnosis dan implementasi ke master - tetap sama...
-            $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
-            $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true);
-            $allDiagnoses = array_merge($diagnosisBandingList, $diagnosisKerjaList);
-
-            foreach ($allDiagnoses as $diagnosa) {
-                $existingDiagnosa = RmeMasterDiagnosis::where('nama_diagnosis', $diagnosa)->first();
-                if (!$existingDiagnosa) {
-                    RmeMasterDiagnosis::create([
-                        'nama_diagnosis' => $diagnosa
-                    ]);
-                }
-            }
-
-            // Fungsi helper untuk menyimpan implementasi
-            $saveToColumn = function ($dataList, $column) {
-                foreach ($dataList as $item) {
-                    $existingImplementasi = RmeMasterImplementasi::where($column, $item)->first();
-                    if (!$existingImplementasi) {
-                        RmeMasterImplementasi::create([
-                            $column => $item
-                        ]);
-                    }
-                }
-            };
-
-            // Simpan implementasi
-            $rppList = json_decode($request->prognosis ?? '[]', true);
-            $observasiList = json_decode($request->observasi ?? '[]', true);
-            $terapeutikList = json_decode($request->terapeutik ?? '[]', true);
-            $edukasiList = json_decode($request->edukasi ?? '[]', true);
-            $kolaborasiList = json_decode($request->kolaborasi ?? '[]', true);
-
-            $saveToColumn($rppList, 'prognosis');
-            $saveToColumn($observasiList, 'observasi');
-            $saveToColumn($terapeutikList, 'terapeutik');
-            $saveToColumn($edukasiList, 'edukasi');
-            $saveToColumn($kolaborasiList, 'kolaborasi');
+            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
 
             DB::commit();
 
@@ -311,11 +227,13 @@ class AsesmenGinekologikController extends Controller
                 'kd_pasien' => $kd_pasien,
                 'tgl_masuk' => $tgl_masuk,
                 'urut_masuk' => $urut_masuk
-            ])->with('success', 'Data berhasil disimpan');
+            ])->with('success', 'Data asesmen ginekologi dan tanda vital berhasil disimpan');
         } catch (\Throwable $th) {
-            return redirect()->back()->with('error', 'Gagal menyimpan data: ' . $th->getMessage());
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Gagal menyimpan data asesmen: ' . $th->getMessage());
         }
     }
+
 
     public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {

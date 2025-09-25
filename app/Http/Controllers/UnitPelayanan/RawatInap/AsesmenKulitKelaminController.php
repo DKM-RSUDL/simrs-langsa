@@ -22,6 +22,7 @@ use App\Models\RmeMenjalar;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SatsetPrognosis;
+use App\Services\AsesmenService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,9 +30,12 @@ use Illuminate\Support\Facades\DB;
 
 class AsesmenKulitKelaminController extends Controller
 {
+    protected $asesmenService;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->asesmenService = new AsesmenService();
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -104,10 +108,12 @@ class AsesmenKulitKelaminController extends Controller
         DB::beginTransaction();
 
         try {
+            // Prepare assessment time
             $tanggal = $request->tanggal_masuk;
             $jam = $request->jam_masuk;
             $waktu_asesmen = $tanggal . ' ' . $jam;
 
+            // Save core assessment data
             $dataAsesmen = new RmeAsesmen();
             $dataAsesmen->kd_pasien = $kd_pasien;
             $dataAsesmen->kd_unit = $kd_unit;
@@ -116,11 +122,18 @@ class AsesmenKulitKelaminController extends Controller
             $dataAsesmen->user_id = Auth::id();
             $dataAsesmen->waktu_asesmen = $waktu_asesmen;
             $dataAsesmen->kategori = 1;
-            $dataAsesmen->sub_kategori = 10;
+            $dataAsesmen->sub_kategori = 10; // Specific to dermatology/venereology
             $dataAsesmen->anamnesis = $request->anamnesis;
-            $dataAsesmen->skala_nyeri = $request->skala_nyeri;
             $dataAsesmen->save();
 
+            // Prepare vital sign data
+            $vitalSignData = [
+                'sistole' => $request->tekanan_darah_sistole ? (int) $request->tekanan_darah_sistole : null,
+                'diastole' => $request->tekanan_darah_diastole ? (int) $request->tekanan_darah_diastole : null,
+                'nadi' => $request->nadi ? (int) $request->nadi : null,
+                'respiration' => $request->respirasi ? (int) $request->respirasi : null,
+                'suhu' => $request->suhu ? (float) $request->suhu : null,
+            ];
 
             $dataKulitKelamin = new RmeAsesmenKulitKelamin();
             $dataKulitKelamin->id_asesmen = $dataAsesmen->id;
@@ -149,53 +162,25 @@ class AsesmenKulitKelaminController extends Controller
             $dataKulitKelamin->rencana_pengobatan = $request->rencana_pengobatan;
             $dataKulitKelamin->save();
 
-            //Simpan Diagnosa ke Master
-            $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
-            $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true);
-            $allDiagnoses = array_merge($diagnosisBandingList, $diagnosisKerjaList);
-            foreach ($allDiagnoses as $diagnosa) {
-                $existingDiagnosa = RmeMasterDiagnosis::where('nama_diagnosis', $diagnosa)->first();
-                if (!$existingDiagnosa) {
-                    $masterDiagnosa = new RmeMasterDiagnosis();
-                    $masterDiagnosa->nama_diagnosis = $diagnosa;
-                    $masterDiagnosa->save();
-                }
-            }
+            // Get transaction data for vital sign storage
+            $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
-            // Simpan Implementasi ke Master
-            $implementasiData = [
-                'observasi' => json_decode($request->observasi ?? '[]', true),
-                'terapeutik' => json_decode($request->terapeutik ?? '[]', true),
-                'edukasi' => json_decode($request->edukasi ?? '[]', true),
-                'kolaborasi' => json_decode($request->kolaborasi ?? '[]', true)
-            ];
+            // Save vital signs using service
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaction, $lastTransaction->kd_kasir);
 
-            foreach ($implementasiData as $column => $dataList) {
-                foreach ($dataList as $item) {
-                    $existingImplementasi = RmeMasterImplementasi::where($column, $item)->first();
-                    if (!$existingImplementasi) {
-                        $masterImplementasi = new RmeMasterImplementasi();
-                        $masterImplementasi->$column = $item;
-                        $masterImplementasi->save();
-                    }
-                }
-            }
-
-            //Simpan ke table RmePemeriksaanFisik
-            $itemFisik = MrItemFisik::all();
-            foreach ($itemFisik as $item) {
-                $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
-                $keterangan = $request->input($item->id . '_keterangan');
-                if ($isNormal) $keterangan = '';
-
-                RmeAsesmenPemeriksaanFisik::create([
-                    'id_asesmen' => $dataAsesmen->id,
-                    'id_item_fisik' => $item->id,
-                    'is_normal' => $isNormal,
-                    'keterangan' => $keterangan
-                ]);
-            }
-
+            // Save dermatology/venereology-specific assessment data with vital signs
+            $dataKulitKelamin = new RmeAsesmenKulitKelamin();
+            $dataKulitKelamin->id_asesmen = $dataAsesmen->id;
+            $dataKulitKelamin->waktu_masuk = $waktu_asesmen;
+            $dataKulitKelamin->diagnosis_masuk = $request->diagnosis_masuk;
+            $dataKulitKelamin->kondisi_masuk = $request->kondisi_masuk;
+            $dataKulitKelamin->keluhan_utama = $request->keluhan_utama;
+            $dataKulitKelamin->tekanan_darah_sistole = $vitalSignData['sistole'];
+            $dataKulitKelamin->tekanan_darah_diastole = $vitalSignData['diastole'];
+            $dataKulitKelamin->nadi = $vitalSignData['nadi'];
+            $dataKulitKelamin->respirasi = $vitalSignData['respiration'];
+            $dataKulitKelamin->suhu = $vitalSignData['suhu'];
+            $dataKulitKelamin->save();
 
             // Validasi data alergi
             $alergiData = json_decode($request->alergis, true);

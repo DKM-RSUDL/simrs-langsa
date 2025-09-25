@@ -38,7 +38,6 @@
                                 <span class="text-capitalize">{{ $menu->name }}</span>
                             </a>
                             <ul class="sub-menu {{ $isActiveParent ? 'expand' : '' }}">
-
                                 @foreach ($menu->subMenus as $submenu)
                                     @can('read ' . $submenu->url)
                                         <li class="{{ request()->is($submenu->url . '*') ? 'active' : '' }}">
