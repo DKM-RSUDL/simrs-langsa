@@ -39,8 +39,10 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tanggal dan Jam Masuk</label>
 
-                                            <input type="date" name="tgl_masuk" id="tgl_masuk" class="form-control me-3">
-                                            <input type="time" name="jam_masuk" id="jam_masuk" class="form-control">
+                                            <input type="date" name="tgl_masuk" id="tgl_masuk" class="form-control me-3"
+                                                value="{{ date('Y-m-d') }}">
+                                            <input type="time" name="jam_masuk" id="jam_masuk" class="form-control"
+                                                value="{{ date('H:i:s') }}">
                                         </div>
                                     </div>
 
