@@ -27,12 +27,15 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Services\AsesmenService;
 
 class CpptController extends Controller
 {
+    protected $asesmenService;
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->asesmenService = new AsesmenService();
     }
 
     public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -154,6 +157,7 @@ class CpptController extends Controller
                     'urut_total_cppt' => $instruksi->urut_total_cppt
                 ];
             });
+
             return [
                 'kd_pasien'             => $item->first()->kd_pasien,
                 'no_transaksi'          => $item->first()->no_transaksi,
@@ -432,17 +436,17 @@ class CpptController extends Controller
     {
         try {
             $urutTotal = $request->urut_total;
-            
+
             $instruksiPpa = CpptInstruksiPpa::where('urut_total_cppt', $urutTotal)
                 ->orderBy('id', 'asc')
                 ->get();
-                
+
             return response()->json([
                 'status' => 'success',
                 'data' => $instruksiPpa,
                 'count' => $instruksiPpa->count()
             ]);
-            
+
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -454,11 +458,11 @@ class CpptController extends Controller
     private function getNamaLengkapByKode($kode_ppa)
     {
         $karyawan = HrdKaryawan::where('kd_karyawan', $kode_ppa)->first();
-        
+
         if (!$karyawan) {
             return $kode_ppa;
         }
-        
+
         $nama_lengkap = '';
         if (!empty($karyawan->gelar_depan)) {
             $nama_lengkap .= $karyawan->gelar_depan . ' ';
@@ -467,7 +471,7 @@ class CpptController extends Controller
         if (!empty($karyawan->gelar_belakang)) {
             $nama_lengkap .= ', ' . $karyawan->gelar_belakang;
         }
-        
+
         return $nama_lengkap;
     }
     public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
@@ -733,6 +737,23 @@ class CpptController extends Controller
             ];
 
             $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+
+            // Prepare vital sign data
+            // $vitalSignData = [
+            //     'sistole' => $request->tekanan_darah_sistole ? (int) $request->tekanan_darah_sistole : null,
+            //     'diastole' => $request->tekanan_darah_diastole ? (int) $request->tekanan_darah_diastole : null,
+            //     'nadi' => $request->nadi ? (int) $request->nadi : null,
+            //     'respiration' => $request->respirasi ? (int) $request->respirasi : null,
+            //     'nafas' => $request->nafas ? (int) $request->nafas : null,
+            //     'suhu' => $request->suhu ? (float) $request->suhu : null,
+            //     'tinggi_badan' => $request->tinggi_badan ? (int) $request->tinggi_badan : null,
+            //     'berat_badan' => $request->berat_badan ? (int) $request->berat_badan : null,
+            // ];
+
+            // Get transaction data for vital sign storage
+            // $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            // Save vital signs using service
+            // $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaksi, $lastTransaction->kd_kasir);
 
             // Ganti bagian ini:
             $cpptInstruksiPpa = [

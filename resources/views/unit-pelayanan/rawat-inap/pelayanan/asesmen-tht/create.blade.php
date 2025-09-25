@@ -14,8 +14,6 @@
                 class="btn">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
-            {{-- <form method="POST"
-                action="{{ route('unit-pelayanan.rawat-inap.pelayanan.asesmen.keperawatan.tht.store') }}"> --}}
             <form method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
