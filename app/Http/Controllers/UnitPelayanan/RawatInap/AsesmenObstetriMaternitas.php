@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Support\Facades\DB;
-
+use App\Services\AsesmenService;
 class AsesmenObstetriMaternitas extends Controller
 {
     protected $asesmenService;
