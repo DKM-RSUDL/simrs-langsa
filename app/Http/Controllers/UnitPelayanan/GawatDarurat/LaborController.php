@@ -25,10 +25,10 @@ use App\Services\CheckResumeService;
 class LaborController extends Controller
 {
     protected $checkResumeService;
-    public function __construct(CheckResumeService $checkResumeService)
+    public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/gawat-darurat');
-        $this->checkResumeService = $checkResumeService;
+        $this->checkResumeService = new CheckResumeService();
     }
 
     public function index(Request $request, $kd_pasien, $tgl_masuk)
