@@ -10,7 +10,6 @@ use App\Services\RoleService;
 
 class RoleController extends Controller
 {
-
     protected $roleService;
 
     public function __construct(RoleService $roleService)

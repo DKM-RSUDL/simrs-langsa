@@ -17,12 +17,15 @@ use App\Models\RmeAsesmenMedisAnakDtl;
 use App\Models\RmeAsesmenMedisAnakFisik;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Services\AsesmenService;
 
 class AsesmenMedisAnakController extends Controller
 {
+    protected $asesmenService;
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->asesmenService = new AsesmenService();
     }
 
     private function getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -51,15 +54,7 @@ class AsesmenMedisAnakController extends Controller
         return $dataMedis;
     }
 
-    private function getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        return Transaksi::select('kd_kasir', 'no_transaksi')
-            ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
-            ->whereDate('tgl_transaksi', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->first();
-    }
+   
 
     private function getMasterData($kd_pasien)
     {
@@ -69,6 +64,245 @@ class AsesmenMedisAnakController extends Controller
             'satsetPrognosis' => SatsetPrognosis::all(),
             'alergiPasien' => RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get()
         ];
+    }
+
+    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        DB::beginTransaction();
+        try {
+            // Get transaksi data
+            $transaksiData = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            if (!$transaksiData) {
+                throw new \Exception('Data transaksi tidak ditemukan');
+            }
+
+            // 1. Buat record RmeAsesmen
+            $asesmen = new RmeAsesmen();
+            $asesmen->kd_pasien = $request->kd_pasien;
+            $asesmen->kd_unit = $request->kd_unit;
+            $asesmen->tgl_masuk = $request->tgl_masuk;
+            $asesmen->urut_masuk = $request->urut_masuk;
+            $asesmen->user_id = Auth::id();
+            $asesmen->waktu_asesmen = now();
+            $asesmen->kategori = 1;
+            $asesmen->sub_kategori = 7;
+            $asesmen->save();
+
+            // Process JSON data
+            $riwayatObat = $this->processJsonData($request->riwayat_penggunaan_obat);
+            $riwayatImunisasi = $request->input('riwayat_imunisasi', []);
+
+            // Process vital signs untuk disimpan via service
+            $vitalSignData = [
+                'sistole' => $request->sistole ? (int)$request->sistole : null,
+                'diastole' => $request->diastole ? (int)$request->diastole : null,
+                'nadi' => $request->nadi ? (int)$request->nadi : null,
+                'respiration' => $request->rr ? (int)$request->rr : null,
+                'suhu' => $request->suhu ? (float)$request->suhu : null,
+                'spo2_tanpa_o2' => null, // Tidak ada di pediatric, set null
+                'spo2_dengan_o2' => null, // Tidak ada di pediatric, set null
+                'tinggi_badan' => $request->tinggi_badan ? (int)$request->tinggi_badan : null,
+                'berat_badan' => $request->berat_badan ? (int)$request->berat_badan : null,
+            ];
+
+            // Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $transaksiData->no_transaction, $transaksiData->kd_kasir);
+
+            // Vital signs untuk kolom vital_sign JSON
+            $vitalSign = [
+                'gcs' => $request->input('vital_sign.gcs'),
+                'sistole' => $request->sistole,
+                'diastole' => $request->diastole,
+                'nadi' => $request->nadi,
+                'suhu' => $request->suhu,
+                'rr' => $request->rr,
+                'berat_badan' => $request->berat_badan,
+                'tinggi_badan' => $request->tinggi_badan
+            ];
+
+            // 2. Store ke RME_ASESMEN_MEDIS_ANAK (tabel utama)
+            $asesmenMedisAnak = RmeAsesmenMedisAnak::create([
+                'id_asesmen' => $asesmen->id,
+                'kd_kasir' => $transaksiData->kd_kasir,
+                'no_transaksi' => $transaksiData->no_transaksi,
+                'tanggal' => $request->tanggal ?? date('Y-m-d'),
+                'jam' => $request->jam_masuk ?? date('H:i:s'),
+                'anamnesis' => $request->anamnesis,
+                'keluhan_utama' => $request->keluhan_utama,
+                'riwayat_penyakit_terdahulu' => $request->riwayat_penyakit_terdahulu,
+                'riwayat_penyakit_keluarga' => $request->riwayat_penyakit_keluarga,
+                'riwayat_penyakit_sekarang' => $request->riwayat_penyakit_sekarang,
+                'riwayat_penggunaan_obat' => $this->formatJsonForDatabase($riwayatObat),
+                'kesadaran' => $request->kesadaran,
+                'vital_sign' => $this->formatJsonForDatabase($vitalSign),
+                'sistole' => $request->sistole,
+                'diastole' => $request->diastole,
+                'nadi' => $request->nadi,
+                'suhu' => $request->suhu,
+                'rr' => $request->rr,
+                'berat_badan' => $request->berat_badan,
+                'tinggi_badan' => $request->tinggi_badan,
+                'user_create' => Auth::id()
+            ]);
+
+            // 3. Store ke RME_ASESMEN_MEDIS_ANAK_FISIK
+            RmeAsesmenMedisAnakFisik::create([
+                'id_asesmen' => $asesmen->id,
+                'kepala_bentuk' => $request->kepala_bentuk,
+                'kepala_uub' => $request->kepala_uub,
+                'kepala_rambut' => $request->kepala_rambut,
+                'kepala_lain' => $request->kepala_lain,
+                'mata_pucat' => $request->has('mata_pucat') ? 1 : 0,
+                'mata_ikterik' => $request->has('mata_ikterik') ? 1 : 0,
+                'pupil_isokor' => $request->pupil_isokor,
+                'refleks_cahaya' => $request->refleks_cahaya,
+                'refleks_kornea' => $request->refleks_kornea,
+                'mata_lain' => $request->mata_lain,
+                'nafas_cuping' => $request->nafas_cuping === 'ya' ? 1 : 0,
+                'hidung_lain' => $request->hidung_lain,
+                'telinga_cairan' => $request->telinga_cairan === 'ya' ? 1 : 0,
+                'telinga_lain' => $request->telinga_lain,
+                'mulut_sianosis' => $request->mulut_sianosis === 'ya' ? 1 : 0,
+                'mulut_lidah' => $request->mulut_lidah,
+                'mulut_tenggorokan' => $request->mulut_tenggorokan,
+                'mulut_lain' => $request->mulut_lain,
+                'leher_kelenjar' => $request->leher_kelenjar === 'ya' ? 1 : 0,
+                'leher_vena' => $request->leher_vena === 'ya' ? 1 : 0,
+                'leher_lain' => $request->leher_lain,
+                'thoraks_simetris' => in_array('simetris', (array)$request->thoraks_bentuk) ? 1 : 0,
+                'thoraks_asimetris' => in_array('asimetris', (array)$request->thoraks_bentuk) ? 1 : 0,
+                'thoraks_retraksi' => $request->thoraks_retraksi,
+                'thoraks_hr' => $request->thoraks_hr,
+                'thoraks_merintih' => $request->thoraks_merintih,
+                'thoraks_bunyi_jantung' => $request->thoraks_bunyi_jantung,
+                'thoraks_rr' => $request->thoraks_rr,
+                'thoraks_murmur' => $request->thoraks_murmur,
+                'thoraks_suara_nafas' => $request->thoraks_suara_nafas,
+                'thoraks_suara_tambahan' => $request->thoraks_suara_tambahan,
+                'thoraks_bentuk' => is_array($request->thoraks_bentuk) ? $this->formatJsonForDatabase($request->thoraks_bentuk) : null,
+                'abdomen_distensi' => $request->abdomen_distensi,
+                'abdomen_bising_usus' => $request->abdomen_bising_usus,
+                'abdomen_venekasi' => $request->abdomen_venekasi === 'ya' ? 1 : 0,
+                'abdomen_hepar' => $request->abdomen_hepar,
+                'abdomen_lien' => $request->abdomen_lien,
+                'genetalia' => $request->genetalia,
+                'anus_keterangan' => $request->anus_keterangan,
+                'kapiler' => $request->kapiler,
+                'ekstremitas_refleks' => $request->ekstremitas_refleks,
+                'kulit' => is_array($request->kulit) ? $this->formatJsonForDatabase($request->kulit) : null,
+                'kulit_lainnya' => $request->kulit_lainnya,
+                'kuku' => is_array($request->kuku) ? $this->formatJsonForDatabase($request->kuku) : null,
+                'kuku_lainnya' => $request->kuku_lainnya,
+                'user_create' => Auth::id()
+            ]);
+
+            // Process diagnosis data
+            $diagnosisBanding = $this->processJsonData($request->diagnosis_banding);
+            $diagnosisKerja = $this->processJsonData($request->diagnosis_kerja);
+
+            // 4. Store ke RME_ASESMEN_MEDIS_ANAK_DTL
+            RmeAsesmenMedisAnakDtl::create([
+                'id_asesmen' => $asesmen->id,
+                'lama_kehamilan' => $request->lama_kehamilan,
+                'komplikasi' => $request->komplikasi === '1' ? 1 : 0,
+                'maternal' => $request->maternal === '1' ? 1 : 0,
+                'maternal_keterangan' => $request->maternal_keterangan,
+                'persalinan' => $request->has('persalinan') ? 1 : 0,
+                'penyulit_persalinan' => $request->has('penyulit_persalinan') ? 1 : 0,
+                'lainnya_sebukan' => $request->has('lainnya_sebukan') ? 1 : 0,
+                'lainnya_keterangan' => $request->lainnya_keterangan,
+                'prematur_aterm' => $request->has('prematur_aterm') ? 1 : 0,
+                'kmk_smk_bmk' => $request->has('kmk_smk_bmk') ? 1 : 0,
+                'pasca_nicu' => $request->has('pasca_nicu') ? 1 : 0,
+                'lahir_umur_kehamilan' => $request->lahir_umur_kehamilan,
+                'lk_saat_lahir' => $request->lk_saat_lahir,
+                'bb_saat_lahir' => $request->bb_saat_lahir,
+                'tb_saat_lahir' => $request->tb_saat_lahir,
+                'pernah_dirawat' => $request->pernah_dirawat === '1' ? 1 : 0,
+                'tanggal_dirawat' => $request->tanggal_dirawat,
+                'jam_dirawat' => $request->jam_dirawat,
+                'jaundice_rds_pjb' => $request->jaundice_rds_pjb,
+                'asi_sampai_umur' => $request->asi_sampai_umur,
+                'pemberian_susu_formula' => $request->pemberian_susu_formula,
+                'makanan_tambahan_umur' => $request->makanan_tambahan_umur,
+                'tengkurap_bulan' => $request->tengkurap_bulan,
+                'merangkak_bulan' => $request->merangkak_bulan,
+                'duduk_bulan' => $request->duduk_bulan,
+                'berdiri_bulan' => $request->berdiri_bulan,
+                'milestone_lainnya' => $request->milestone_lainnya,
+                'hasil_laboratorium' => $request->hasil_laboratorium,
+                'hasil_radiologi' => $request->hasil_radiologi,
+                'hasil_lainnya' => $request->hasil_lainnya,
+                'paru_prognosis' => $request->paru_prognosis,
+                'diagnosis_banding' => $this->formatJsonForDatabase($diagnosisBanding),
+                'diagnosis_kerja' => $this->formatJsonForDatabase($diagnosisKerja),
+                'diagnosis_medis' => $request->diagnosis_medis,
+                'rencana_pengobatan' => $request->rencana_pengobatan,
+                'usia_lanjut' => $request->usia_lanjut,
+                'hambatan_mobilisasi' => $request->hambatan_mobilisasi,
+                'penggunaan_media_berkelanjutan' => $request->penggunaan_media_berkelanjutan,
+                'ketergantungan_aktivitas' => $request->ketergantungan_aktivitas,
+                'rencana_pulang_khusus' => $request->rencana_pulang_khusus,
+                'rencana_lama_perawatan' => $request->rencana_lama_perawatan,
+                'rencana_tgl_pulang' => $request->rencana_tgl_pulang,
+                'kesimpulan_planing' => $request->kesimpulan_planing,
+                'riwayat_imunisasi' => $request->input('riwayat_imunisasi') ? json_encode($request->input('riwayat_imunisasi')) : null,
+                'user_create' => Auth::id()
+            ]);
+
+            // Handle diagnosis ke master
+            if (!empty($diagnosisBanding) && is_array($diagnosisBanding)) {
+                $this->saveDiagnosisToMaster($diagnosisBanding);
+            }
+
+            if (!empty($diagnosisKerja) && is_array($diagnosisKerja)) {
+                $this->saveDiagnosisToMaster($diagnosisKerja);
+            }
+
+            // Handle alergi
+            $this->handleAlergiData($request, $kd_pasien);
+
+            // Simpan resume
+            $resumeData = [
+                'anamnesis' => $request->anamnesis,
+                'diagnosis' => [],
+                'tindak_lanjut_code' => null,
+                'tindak_lanjut_name' => null,
+                'tgl_kontrol_ulang' => null,
+                'unit_rujuk_internal' => null,
+                'rs_rujuk' => null,
+                'rs_rujuk_bagian' => null,
+                'konpas' => [
+                    'sistole' => ['hasil' => $vitalSignData['sistole']],
+                    'diastole' => ['hasil' => $vitalSignData['diastole']],
+                    'respiration_rate' => ['hasil' => $vitalSignData['respiration']],
+                    'suhu' => ['hasil' => $vitalSignData['suhu']],
+                    'nadi' => ['hasil' => $vitalSignData['nadi']],
+                    'tinggi_badan' => ['hasil' => $vitalSignData['tinggi_badan']],
+                    'berat_badan' => ['hasil' => $vitalSignData['berat_badan']],
+                    'spo2_tanpa_o2' => ['hasil' => $vitalSignData['spo2_tanpa_o2']],
+                    'spo2_dengan_o2' => ['hasil' => $vitalSignData['spo2_dengan_o2']],
+                ],
+            ];
+
+            // $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+
+            DB::commit();
+
+            return redirect()
+                ->route('rawat-inap.asesmen.medis.umum.index', [
+                    'kd_unit' => $kd_unit,
+                    'kd_pasien' => $kd_pasien,
+                    'tgl_masuk' => $tgl_masuk,
+                    'urut_masuk' => $urut_masuk
+                ])
+                ->with('success', 'Data asesmen medis anak berhasil disimpan');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
     private function saveDiagnosisToMaster($diagnosisList)
@@ -161,245 +395,7 @@ class AsesmenMedisAnakController extends Controller
         );
     }
 
-    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        $request->validate([
-            'kd_pasien' => 'required',
-            'kd_unit' => 'required',
-            'tgl_masuk' => 'required|date',
-            'urut_masuk' => 'required',
-            'tanggal' => 'required|date',
-            'jam_masuk' => 'required',
-            'sistole' => 'nullable|numeric',
-            'diastole' => 'nullable|numeric',
-            'respirasi' => 'nullable|numeric',
-            'suhu' => 'nullable|numeric',
-            'nadi' => 'nullable|numeric',
-            'riwayat_imunisasi' => 'nullable|array',
-            'riwayat_imunisasi.*' => 'in:hep_b_ii,hep_b_iii,hep_b_iv,hep_b_v,dpt_ii,dpt_iii,bcg,booster_ii,booster_iii,hib_ii,hib_iii,hib_iv,mmr,varilrix,typhim',
-        ]);
-
-        DB::beginTransaction();
-        try {
-
-            // Get transaksi data
-            $transaksiData = $this->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-
-            if (!$transaksiData) {
-                throw new \Exception('Data transaksi tidak ditemukan');
-            }
-
-            // 1. Buat record RmeAsesmen
-            $asesmen = new RmeAsesmen();
-            $asesmen->kd_pasien = $request->kd_pasien;
-            $asesmen->kd_unit = $request->kd_unit;
-            $asesmen->tgl_masuk = $request->tgl_masuk;
-            $asesmen->urut_masuk = $request->urut_masuk;
-            $asesmen->user_id = Auth::id();
-            $asesmen->waktu_asesmen = now();
-            $asesmen->kategori = 1;
-            $asesmen->sub_kategori = 7;
-            $asesmen->save();
-
-            // Process JSON data
-            $riwayatObat = $this->processJsonData($request->riwayat_penggunaan_obat);
-            $riwayatImunisasi = $request->input('riwayat_imunisasi', []);
-
-            // Process vital signs
-            $vitalSign = [
-                'gcs' => $request->input('vital_sign.gcs'),
-                'sistole' => $request->sistole,
-                'diastole' => $request->diastole,
-                'nadi' => $request->nadi,
-                'suhu' => $request->suhu,
-                'rr' => $request->rr,
-                'berat_badan' => $request->berat_badan,
-                'tinggi_badan' => $request->tinggi_badan
-            ];
-
-            // 2. Store ke RME_ASESMEN_MEDIS_ANAK (tabel utama)
-            $asesmenMedisAnak = RmeAsesmenMedisAnak::create([
-                'id_asesmen' => $asesmen->id,
-                'kd_kasir' => $transaksiData->kd_kasir,
-                'no_transaksi' => $transaksiData->no_transaksi,
-                'tanggal' => $request->tanggal ?? date('Y-m-d'),
-                'jam' => $request->jam_masuk ?? date('H:i:s'),
-                'anamnesis' => $request->anamnesis,
-                'keluhan_utama' => $request->keluhan_utama,
-                'riwayat_penyakit_terdahulu' => $request->riwayat_penyakit_terdahulu,
-                'riwayat_penyakit_keluarga' => $request->riwayat_penyakit_keluarga,
-                'riwayat_penyakit_sekarang' => $request->riwayat_penyakit_sekarang,
-                'riwayat_penggunaan_obat' => $this->formatJsonForDatabase($riwayatObat),
-                'kesadaran' => $request->kesadaran,
-                'vital_sign' => $this->formatJsonForDatabase($vitalSign),
-                'sistole' => $request->sistole,
-                'diastole' => $request->diastole,
-                'nadi' => $request->nadi,
-                'suhu' => $request->suhu,
-                'rr' => $request->rr,
-                'berat_badan' => $request->berat_badan,
-                'tinggi_badan' => $request->tinggi_badan,
-                'user_create' => Auth::id()
-            ]);
-
-            // 3. Store ke RME_ASESMEN_MEDIS_ANAK_FISIK
-            RmeAsesmenMedisAnakFisik::create([
-                'id_asesmen' => $asesmen->id,
-                'kepala_bentuk' => $request->kepala_bentuk,
-                'kepala_uub' => $request->kepala_uub,
-                'kepala_rambut' => $request->kepala_rambut,
-                'kepala_lain' => $request->kepala_lain,
-                'mata_pucat' => $request->has('mata_pucat') ? 1 : 0,
-                'mata_ikterik' => $request->has('mata_ikterik') ? 1 : 0,
-                'pupil_isokor' => $request->pupil_isokor,
-                // 'pupil_anisokor' => $request->pupil_anisokor, // Field ini tidak ada di model/database
-                'refleks_cahaya' => $request->refleks_cahaya,
-                'refleks_kornea' => $request->refleks_kornea,
-                'mata_lain' => $request->mata_lain,
-                'nafas_cuping' => $request->nafas_cuping === 'ya' ? 1 : 0,
-                'hidung_lain' => $request->hidung_lain,
-                'telinga_cairan' => $request->telinga_cairan === 'ya' ? 1 : 0,
-                'telinga_lain' => $request->telinga_lain,
-                'mulut_sianosis' => $request->mulut_sianosis === 'ya' ? 1 : 0,
-                'mulut_lidah' => $request->mulut_lidah,
-                'mulut_tenggorokan' => $request->mulut_tenggorokan,
-                'mulut_lain' => $request->mulut_lain,
-                'leher_kelenjar' => $request->leher_kelenjar === 'ya' ? 1 : 0,
-                'leher_vena' => $request->leher_vena === 'ya' ? 1 : 0, // Perbaiki ini
-                'leher_lain' => $request->leher_lain,
-                'thoraks_simetris' => in_array('simetris', (array)$request->thoraks_bentuk) ? 1 : 0,
-                'thoraks_asimetris' => in_array('asimetris', (array)$request->thoraks_bentuk) ? 1 : 0,
-                'thoraks_retraksi' => $request->thoraks_retraksi,
-                'thoraks_hr' => $request->thoraks_hr,
-                'thoraks_merintih' => $request->thoraks_merintih,
-                'thoraks_bunyi_jantung' => $request->thoraks_bunyi_jantung,
-                'thoraks_rr' => $request->thoraks_rr,
-                'thoraks_murmur' => $request->thoraks_murmur,
-                'thoraks_suara_nafas' => $request->thoraks_suara_nafas,
-                'thoraks_suara_tambahan' => $request->thoraks_suara_tambahan, // Perbaiki ini
-                'thoraks_bentuk' => is_array($request->thoraks_bentuk) ? $this->formatJsonForDatabase($request->thoraks_bentuk) : null,
-                'abdomen_distensi' => $request->abdomen_distensi,
-                'abdomen_bising_usus' => $request->abdomen_bising_usus,
-                'abdomen_venekasi' => $request->abdomen_venekasi === 'ya' ? 1 : 0,
-                'abdomen_hepar' => $request->abdomen_hepar,
-                'abdomen_lien' => $request->abdomen_lien,
-                'genetalia' => $request->genetalia,
-                'anus_keterangan' => $request->anus_keterangan,
-                'kapiler' => $request->kapiler,
-                'ekstremitas_refleks' => $request->ekstremitas_refleks,
-                'kulit' => is_array($request->kulit) ? $this->formatJsonForDatabase($request->kulit) : null,
-                'kulit_lainnya' => $request->kulit_lainnya,
-                'kuku' => is_array($request->kuku) ? $this->formatJsonForDatabase($request->kuku) : null,
-                'kuku_lainnya' => $request->kuku_lainnya,
-                'user_create' => Auth::id()
-            ]);
-
-            // Process diagnosis data
-            $diagnosisBanding = $this->processJsonData($request->diagnosis_banding);
-            $diagnosisKerja = $this->processJsonData($request->diagnosis_kerja);
-
-            // 4. Store ke RME_ASESMEN_MEDIS_ANAK_DTL
-            RmeAsesmenMedisAnakDtl::create([
-                'id_asesmen' => $asesmen->id,
-                // Riwayat Prenatal
-                'lama_kehamilan' => $request->lama_kehamilan,
-                'komplikasi' => $request->komplikasi === '1' ? 1 : 0, // Perbaiki ini
-                'maternal' => $request->maternal === '1' ? 1 : 0, // Perbaiki ini
-                'maternal_keterangan' => $request->maternal_keterangan,
-
-                // Riwayat Natal
-                'persalinan' => $request->has('persalinan') ? 1 : 0,
-                'penyulit_persalinan' => $request->has('penyulit_persalinan') ? 1 : 0,
-                'lainnya_sebukan' => $request->has('lainnya_sebukan') ? 1 : 0,
-                'lainnya_keterangan' => $request->lainnya_keterangan,
-
-                // Riwayat Post Natal
-                'prematur_aterm' => $request->has('prematur_aterm') ? 1 : 0,
-                'kmk_smk_bmk' => $request->has('kmk_smk_bmk') ? 1 : 0,
-                'pasca_nicu' => $request->has('pasca_nicu') ? 1 : 0,
-
-                // Data Kelahiran
-                'lahir_umur_kehamilan' => $request->lahir_umur_kehamilan,
-                'lk_saat_lahir' => $request->lk_saat_lahir,
-                'bb_saat_lahir' => $request->bb_saat_lahir,
-                'tb_saat_lahir' => $request->tb_saat_lahir,
-
-                // Riwayat Perawatan
-                'pernah_dirawat' => $request->pernah_dirawat === '1' ? 1 : 0, // Perbaiki ini
-                'tanggal_dirawat' => $request->tanggal_dirawat,
-                'jam_dirawat' => $request->jam_dirawat,
-                'jaundice_rds_pjb' => $request->jaundice_rds_pjb,
-
-                // Riwayat Nutrisi
-                'asi_sampai_umur' => $request->asi_sampai_umur,
-                'pemberian_susu_formula' => $request->pemberian_susu_formula,
-                'makanan_tambahan_umur' => $request->makanan_tambahan_umur,
-
-                // Milestone Perkembangan
-                'tengkurap_bulan' => $request->tengkurap_bulan,
-                'merangkak_bulan' => $request->merangkak_bulan,
-                'duduk_bulan' => $request->duduk_bulan,
-                'berdiri_bulan' => $request->berdiri_bulan,
-                'milestone_lainnya' => $request->milestone_lainnya,
-
-                // Hasil Pemeriksaan Penunjang
-                'hasil_laboratorium' => $request->hasil_laboratorium,
-                'hasil_radiologi' => $request->hasil_radiologi,
-                'hasil_lainnya' => $request->hasil_lainnya,
-
-                // Diagnosis & Prognosis
-                'paru_prognosis' => $request->paru_prognosis,
-                'diagnosis_banding' => $this->formatJsonForDatabase($diagnosisBanding),
-                'diagnosis_kerja' => $this->formatJsonForDatabase($diagnosisKerja),
-                'diagnosis_medis' => $request->diagnosis_medis,
-                'rencana_pengobatan' => $request->rencana_pengobatan, // Tambahkan ini
-
-                // Discharge Planning
-                'usia_lanjut' => $request->usia_lanjut,
-                'hambatan_mobilisasi' => $request->hambatan_mobilisasi,
-                'penggunaan_media_berkelanjutan' => $request->penggunaan_media_berkelanjutan,
-                'ketergantungan_aktivitas' => $request->ketergantungan_aktivitas,
-                'rencana_pulang_khusus' => $request->rencana_pulang_khusus,
-                'rencana_lama_perawatan' => $request->rencana_lama_perawatan,
-                'rencana_tgl_pulang' => $request->rencana_tgl_pulang,
-                'kesimpulan_planing' => $request->kesimpulan_planing,
-
-                'riwayat_imunisasi' => $request->input('riwayat_imunisasi') ? json_encode($request->input('riwayat_imunisasi')) : null,
-
-                'user_create' => Auth::id()
-            ]);
-
-            // Handle diagnosis ke master
-            if (!empty($diagnosisBanding) && is_array($diagnosisBanding)) {
-                $this->saveDiagnosisToMaster($diagnosisBanding);
-            }
-
-            if (!empty($diagnosisKerja) && is_array($diagnosisKerja)) {
-                $this->saveDiagnosisToMaster($diagnosisKerja);
-            }
-
-            // Handle alergi
-            $this->handleAlergiData($request, $kd_pasien);
-
-            DB::commit();
-
-            return redirect()
-                ->route('rawat-inap.asesmen.medis.umum.index', [
-                    'kd_unit' => $kd_unit,
-                    'kd_pasien' => $kd_pasien,
-                    'tgl_masuk' => $tgl_masuk,
-                    'urut_masuk' => $urut_masuk
-                ])
-                ->with('success', 'Data asesmen medis anak berhasil disimpan');
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            return back()
-                ->withInput()
-                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
-        }
-    }
-
+    
     public function show(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         try {

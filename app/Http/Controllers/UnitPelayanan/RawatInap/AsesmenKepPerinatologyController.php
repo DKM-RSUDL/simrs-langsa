@@ -34,12 +34,15 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Services\AsesmenService;
 
 class AsesmenKepPerinatologyController extends Controller
 {
+    protected $asesmenService;
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->asesmenService = new AsesmenService();
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -114,8 +117,8 @@ class AsesmenKepPerinatologyController extends Controller
         ));
     }
 
-    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
-    {
+
+    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk){
         DB::beginTransaction();
 
         try {
@@ -135,12 +138,6 @@ class AsesmenKepPerinatologyController extends Controller
             $dataAsesmen->anamnesis = $request->anamnesis;
             $dataAsesmen->save();
 
-
-            //simpan ke table RmeAsesemnKepPerinatology
-            $tglLahir = $request->tanggal_lahir;
-            $jamLahir = $request->jam_lahir;
-            $waktuLahir = $tglLahir . ' ' . $jamLahir;
-
             // Validasi file yang diunggah
             $request->validate([
                 'sidik_kaki_kiri' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
@@ -157,6 +154,29 @@ class AsesmenKepPerinatologyController extends Controller
                 'sidik_jari_kanan.mimes' => 'Format file sidik jari kanan harus JPG, PNG, atau PDF',
                 'sidik_jari_kanan.max' => 'Ukuran file sidik jari kanan maksimal 10MB',
             ]);
+
+            // Data vital sign untuk disimpan via service
+            $vitalSignData = [
+                'sistole' => null, // Tidak ada di perinatology, set null
+                'diastole' => null, // Tidak ada di perinatology, set null
+                'nadi' => $request->frekuensi_nadi ? (int) $request->frekuensi_nadi : null,
+                'respiration' => $request->frekuensi_nafas ? (int) $request->frekuensi_nafas : null,
+                'suhu' => $request->suhu ? (float) $request->suhu : null,
+                'spo2_tanpa_o2' => $request->spo_tanpa_o2 ? (int) $request->spo_tanpa_o2 : null,
+                'spo2_dengan_o2' => $request->spo_dengan_o2 ? (int) $request->spo_dengan_o2 : null,
+                'tinggi_badan' => $request->tinggi_badan ? (int) $request->tinggi_badan : null,
+                'berat_badan' => $request->berat_badan ? (int) $request->berat_badan : null,
+            ];
+
+            $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+            // Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaction, $lastTransaction->kd_kasir);
+
+            // Simpan ke table RmeAsesmenKepPerinatology
+            $tglLahir = $request->tanggal_lahir;
+            $jamLahir = $request->jam_lahir;
+            $waktuLahir = $tglLahir . ' ' . $jamLahir;
 
             $asesmenPerinatology = new RmeAsesmenKepPerinatology();
             $asesmenPerinatology->id_asesmen = $dataAsesmen->id;
@@ -179,7 +199,6 @@ class AsesmenKepPerinatologyController extends Controller
             $asesmenPerinatology->sidik_jari_ibu_kanan = $pathSidikJariKanan;
 
             $asesmenPerinatology->alamat = $request->alamat;
-
             $asesmenPerinatology->gaya_bicara = $request->gaya_bicara;
             $asesmenPerinatology->bahasa = $request->bahasa_sehari_hari;
             $asesmenPerinatology->perlu_penerjemahan = $request->perlu_penerjemah;
@@ -203,26 +222,26 @@ class AsesmenKepPerinatologyController extends Controller
 
             $asesmenPerinatology->save();
 
-            //simpan ke table RmeAsesemnKepPerinatologyFisik
+            // Simpan ke table RmeAsesmenKepPerinatologyFisik dengan data vital sign
             $perinatologyFisik = new RmeAsesmenKepPerinatologyFisik();
             $perinatologyFisik->id_asesmen = $dataAsesmen->id;
             $perinatologyFisik->jenis_kelamin = $request->jenis_kelamin;
-            $perinatologyFisik->frekuensi_nadi = $request->frekuensi_nadi;
+            $perinatologyFisik->frekuensi_nadi = $request->frekuensi_nadi ? (int)$request->frekuensi_nadi : null;
             $perinatologyFisik->status_frekuensi = $request->status_frekuensi;
-            $perinatologyFisik->nafas = $request->frekuensi_nafas;
-            $perinatologyFisik->suhu = $request->suhu;
-            $perinatologyFisik->spo2_tanpa_bantuan = $request->spo_tanpa_o2;
-            $perinatologyFisik->spo2_dengan_bantuan = $request->spo_dengan_o2;
-            $perinatologyFisik->tinggi_badan = $request->tinggi_badan;
-            $perinatologyFisik->berat_badan = $request->berat_badan;
-            $perinatologyFisik->lingkar_kepala = $request->lingkar_kepala;
+            $perinatologyFisik->nafas = $request->frekuensi_nafas ? (int)$request->frekuensi_nafas : null;
+            $perinatologyFisik->suhu = $request->suhu ? (float)$request->suhu : null;
+            $perinatologyFisik->spo2_tanpa_bantuan = $request->spo_tanpa_o2 ? (int)$request->spo_tanpa_o2 : null;
+            $perinatologyFisik->spo2_dengan_bantuan = $request->spo_dengan_o2 ? (int)$request->spo_dengan_o2 : null;
+            $perinatologyFisik->tinggi_badan = $request->tinggi_badan ? (int)$request->tinggi_badan : null;
+            $perinatologyFisik->berat_badan = $request->berat_badan ? (int)$request->berat_badan : null;
+            $perinatologyFisik->lingkar_kepala = $request->lingkar_kepala ? (int)$request->lingkar_kepala : null;
             $perinatologyFisik->lingkar_dada = $request->lingkar_dada;
             $perinatologyFisik->lingkar_perut = $request->lingkar_perut;
             $perinatologyFisik->kesadaran = $request->kesadaran;
             $perinatologyFisik->avpu = $request->avpu;
             $perinatologyFisik->save();
 
-            //simpan ke table RmeAsesemnKepPerinatologyPemeriksaanLanjut
+            // Simpan ke table RmeAsesmenKepPerinatologyPemeriksaanLanjut
             $perinatologyPemeriksaanLanjut = new RmeAsesmenKepPerinatologyPemeriksaanLanjut();
             $perinatologyPemeriksaanLanjut->id_asesmen = $dataAsesmen->id;
             $perinatologyPemeriksaanLanjut->warna_kulit = $request->warna_kulit;
@@ -258,7 +277,7 @@ class AsesmenKepPerinatologyController extends Controller
             $perinatologyPemeriksaanLanjut->menangis = $request->menangis;
             $perinatologyPemeriksaanLanjut->save();
 
-            //Simpan ke table RmePemeriksaanFisik
+            // Simpan ke table RmePemeriksaanFisik
             $itemFisik = MrItemFisik::all();
             foreach ($itemFisik as $item) {
                 $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
@@ -282,8 +301,6 @@ class AsesmenKepPerinatologyController extends Controller
 
                 // Simpan data alergi baru
                 foreach ($alergiData as $alergi) {
-                    // Skip data yang sudah ada di database (is_existing = true) 
-                    // kecuali jika ingin update
                     RmeAlergiPasien::create([
                         'kd_pasien' => $kd_pasien,
                         'jenis_alergi' => $alergi['jenis_alergi'],
@@ -294,7 +311,7 @@ class AsesmenKepPerinatologyController extends Controller
                 }
             }
 
-            //simpan ke table RmeAsesemnKepPerinatologyRiwayatIbu
+            // Simpan ke table RmeAsesmenKepPerinatologyRiwayatIbu
             $riwayatIbu = new RmeAsesmenKepPerinatologyRiwayatIbu();
             $riwayatIbu->id_asesmen = $dataAsesmen->id;
             $riwayatIbu->pemeriksaan_kehamilan = $request->pemeriksaan_kehamilan;
@@ -317,7 +334,7 @@ class AsesmenKepPerinatologyController extends Controller
 
             $riwayatIbu->save();
 
-            //Simpan ke table RmeKepPerinatologyStatusNyeri
+            // Simpan ke table RmeKepPerinatologyStatusNyeri
             $statusNyeri = new RmeAsesmenKepPerinatologyStatusNyeri();
             $statusNyeri->id_asesmen = $dataAsesmen->id;
             if ($request->filled('jenis_skala_nyeri')) {
@@ -362,7 +379,7 @@ class AsesmenKepPerinatologyController extends Controller
             }
             $statusNyeri->save();
 
-            // Simpan ke table RmeAsesmenPerinatologyAnakRisikoJatuh
+            // Simpan ke table RmeAsesmenKepPerinatologyRisikoJatuh
             $asesmenKepAnakRisikoJatuh = new RmeAsesmenKepPerinatologyRisikoJatuh();
             $asesmenKepAnakRisikoJatuh->id_asesmen = $dataAsesmen->id;
             if ($request->filled('resiko_jatuh_jenis')) {
@@ -422,224 +439,53 @@ class AsesmenKepPerinatologyController extends Controller
                     $asesmenKepAnakRisikoJatuh->risiko_jatuh_lansia_transfer_mandiri = $request->risiko_jatuh_lansia_transfer_mandiri;
                     $asesmenKepAnakRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_sedikit = $request->risiko_jatuh_lansia_transfer_bantuan_sedikit;
                     $asesmenKepAnakRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_nyata = array_search($request->risiko_jatuh_lansia_transfer_bantuan_nyata, ['2' => 2, '0' => 0]);
-                    $asesmenKepAnakRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_total = array_search($request->risiko_jatuh_lansia_transfer_bantuan_total, ['3' => 2, '0' => 0]);
+                    $asesmenKepAnakRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_total = array_search($request->risiko_jatuh_lansia_transfer_bantuan_total, ['3' => 3, '0' => 0]);
                     $asesmenKepAnakRisikoJatuh->risiko_jatuh_lansia_mobilitas_mandiri = $request->risiko_jatuh_lansia_mobilitas_mandiri;
                     $asesmenKepAnakRisikoJatuh->risiko_jatuh_lansia_mobilitas_bantuan_1_orang = $request->risiko_jatuh_lansia_mobilitas_bantuan_1_orang;
                     $asesmenKepAnakRisikoJatuh->risiko_jatuh_lansia_mobilitas_kursi_roda = array_search($request->risiko_jatuh_lansia_mobilitas_kursi_roda, ['2' => 2, '0' => 0]);
-                    $asesmenKepAnakRisikoJatuh->risiko_jatuh_lansia_mobilitas_imobilisasi = array_search($request->risiko_jatuh_lansia_mobilitas_imobilisasi, ['3' => 2, '0' => 0]);
+                    $asesmenKepAnakRisikoJatuh->risiko_jatuh_lansia_mobilitas_imobilisasi = array_search($request->risiko_jatuh_lansia_mobilitas_imobilisasi, ['3' => 3, '0' => 0]);
                     $asesmenKepAnakRisikoJatuh->kesimpulan_skala_lansia = $request->risiko_jatuh_lansia_kesimpulan;
                 }
-
-                // Handle Skala Lainnya
-                if ($request->resiko_jatuh_jenis == 5) {
-                    $asesmenKepAnakRisikoJatuh->resiko_jatuh_lainnya = 'resiko jatuh lainnya';
-                }
-
-                $asesmenKepAnakRisikoJatuh->save();
             }
+            $asesmenKepAnakRisikoJatuh->save();
 
-            //Simpan ke table rmeAsesmenPerinatologyStatusDecubitus
-            $decubitusData = new RmeAsesmenKepPerinatologyResikoDekubitus();
-            $decubitusData->id_asesmen = $dataAsesmen->id;
-
-            $jenisSkala = $request->input('jenis_skala_dekubitus') === 'norton' ? 1 : 2;
-            $decubitusData->jenis_skala = $jenisSkala;
-
-            function getRiskConclusion($score)
-            {
-                if ($score <= 12) {
-                    return 'Risiko Tinggi';
-                } elseif ($score <= 14) {
-                    return 'Risiko Sedang';
-                }
-                return 'Risiko Rendah';
-            }
-
-            if ($jenisSkala === 1) {
-                // Norton
-                $decubitusData->norton_kondisi_fisik   = $request->input('kondisi_fisik');
-                $decubitusData->norton_kondisi_mental  = $request->input('kondisi_mental');
-                $decubitusData->norton_aktivitas       = $request->input('norton_aktivitas');
-                $decubitusData->norton_mobilitas       = $request->input('norton_mobilitas');
-                $decubitusData->norton_inkontenesia    = $request->input('inkontinensia');
-
-                $totalScore =
-                    (int)$request->input('kondisi_fisik') +
-                    (int)$request->input('kondisi_mental') +
-                    (int)$request->input('norton_aktivitas') +
-                    (int)$request->input('norton_mobilitas') +
-                    (int)$request->input('inkontinensia');
-
-                $decubitusData->decubitus_kesimpulan = getRiskConclusion($totalScore);
-            } else {
-                // Braden
-                $decubitusData->braden_persepsi       = $request->input('persepsi_sensori');
-                $decubitusData->braden_kelembapan     = $request->input('kelembapan');
-                $decubitusData->braden_aktivitas      = $request->input('braden_aktivitas');
-                $decubitusData->braden_mobilitas      = $request->input('braden_mobilitas');
-                $decubitusData->braden_nutrisi        = $request->input('nutrisi');
-                $decubitusData->braden_pergesekan     = $request->input('pergesekan');
-
-                $totalScore =
-                    (int)$request->input('persepsi_sensori') +
-                    (int)$request->input('kelembapan') +
-                    (int)$request->input('braden_aktivitas') +
-                    (int)$request->input('braden_mobilitas') +
-                    (int)$request->input('nutrisi') +
-                    (int)$request->input('pergesekan');
-
-                $decubitusData->decubitus_kesimpulan = getRiskConclusion($totalScore);
-            }
-            $decubitusData->save();
-
-
-            //Simpan ke table rmeAsesmenPerinatologyGizi
-            $asesmenKepPerinatologyStatusGizi = new RmeAsesmenKepPerinatologyGizi();
-            $asesmenKepPerinatologyStatusGizi->id_asesmen = $dataAsesmen->id;
-            $asesmenKepPerinatologyStatusGizi->gizi_jenis = (int)$request->gizi_jenis;
-
-            if (
-                $request->gizi_jenis == 1
-            ) {
-                $asesmenKepPerinatologyStatusGizi->gizi_mst_penurunan_bb = $request->gizi_mst_penurunan_bb;
-                $asesmenKepPerinatologyStatusGizi->gizi_mst_jumlah_penurunan_bb = $request->gizi_mst_jumlah_penurunan_bb;
-                $asesmenKepPerinatologyStatusGizi->gizi_mst_nafsu_makan_berkurang = $request->gizi_mst_nafsu_makan_berkurang;
-                $asesmenKepPerinatologyStatusGizi->gizi_mst_diagnosis_khusus = $request->gizi_mst_diagnosis_khusus;
-                $asesmenKepPerinatologyStatusGizi->gizi_mst_kesimpulan = $request->gizi_mst_kesimpulan;
-            } else if ($request->gizi_jenis == 2) {
-                $asesmenKepPerinatologyStatusGizi->gizi_mna_penurunan_asupan_3_bulan = (int)$request->gizi_mna_penurunan_asupan_3_bulan;
-                $asesmenKepPerinatologyStatusGizi->gizi_mna_kehilangan_bb_3_bulan = (int)$request->gizi_mna_kehilangan_bb_3_bulan;
-                $asesmenKepPerinatologyStatusGizi->gizi_mna_mobilisasi = (int)$request->gizi_mna_mobilisasi;
-                $asesmenKepPerinatologyStatusGizi->gizi_mna_stress_penyakit_akut = (int)$request->gizi_mna_stress_penyakit_akut;
-                $asesmenKepPerinatologyStatusGizi->gizi_mna_status_neuropsikologi = (int)$request->gizi_mna_status_neuropsikologi;
-                $asesmenKepPerinatologyStatusGizi->gizi_mna_berat_badan = (int)$request->gizi_mna_berat_badan;
-                $asesmenKepPerinatologyStatusGizi->gizi_mna_tinggi_badan = (int)$request->gizi_mna_tinggi_badan;
-
-                // Hitung dan simpan IMT
-                $heightInMeters = $request->gizi_mna_tinggi_badan / 100;
-                $imt = $request->gizi_mna_berat_badan / ($heightInMeters * $heightInMeters);
-                $asesmenKepPerinatologyStatusGizi->gizi_mna_imt = number_format($imt, 2, '.', '');
-
-                $asesmenKepPerinatologyStatusGizi->gizi_mna_kesimpulan = $request->gizi_mna_kesimpulan;
-            } else if ($request->gizi_jenis == 3) {
-                $asesmenKepPerinatologyStatusGizi->gizi_strong_status_kurus = $request->gizi_strong_status_kurus;
-                $asesmenKepPerinatologyStatusGizi->gizi_strong_penurunan_bb = $request->gizi_strong_penurunan_bb;
-                $asesmenKepPerinatologyStatusGizi->gizi_strong_gangguan_pencernaan = $request->gizi_strong_gangguan_pencernaan;
-                $asesmenKepPerinatologyStatusGizi->gizi_strong_penyakit_berisiko = $request->gizi_strong_penyakit_berisiko;
-                $asesmenKepPerinatologyStatusGizi->gizi_strong_kesimpulan = $request->gizi_strong_kesimpulan;
-            } else if ($request->gizi_jenis == 4) {
-                $asesmenKepPerinatologyStatusGizi->gizi_nrs_jatuh_saat_masuk_rs = $request->gizi_nrs_jatuh_saat_masuk_rs;
-                $asesmenKepPerinatologyStatusGizi->gizi_nrs_jatuh_2_bulan_terakhir = $request->gizi_nrs_jatuh_2_bulan_terakhir;
-                $asesmenKepPerinatologyStatusGizi->gizi_nrs_status_delirium = $request->gizi_nrs_status_delirium;
-                $asesmenKepPerinatologyStatusGizi->gizi_nrs_status_disorientasi = $request->gizi_nrs_status_disorientasi;
-                $asesmenKepPerinatologyStatusGizi->gizi_nrs_status_agitasi = $request->gizi_nrs_status_agitasi;
-                $asesmenKepPerinatologyStatusGizi->gizi_nrs_menggunakan_kacamata = $request->gizi_nrs_menggunakan_kacamata;
-                $asesmenKepPerinatologyStatusGizi->gizi_nrs_keluhan_penglihatan_buram = $request->gizi_nrs_keluhan_penglihatan_buram;
-                $asesmenKepPerinatologyStatusGizi->gizi_nrs_degenerasi_makula = $request->gizi_nrs_degenerasi_makula;
-                $asesmenKepPerinatologyStatusGizi->gizi_nrs_perubahan_berkemih = $request->gizi_nrs_perubahan_berkemih;
-                $asesmenKepPerinatologyStatusGizi->gizi_nrs_transfer_mandiri = $request->gizi_nrs_transfer_mandiri;
-                $asesmenKepPerinatologyStatusGizi->gizi_nrs_transfer_bantuan_1_orang = $request->gizi_nrs_transfer_bantuan_1_orang;
-                $asesmenKepPerinatologyStatusGizi->gizi_nrs_transfer_bantuan_2_orang = $request->gizi_nrs_transfer_bantuan_2_orang;
-                $asesmenKepPerinatologyStatusGizi->gizi_nrs_transfer_bantuan_total = $request->gizi_nrs_transfer_bantuan_total;
-                $asesmenKepPerinatologyStatusGizi->gizi_nrs_mobilitas_mandiri = $request->gizi_nrs_mobilitas_mandiri;
-                $asesmenKepPerinatologyStatusGizi->gizi_nrs_mobilitas_bantuan_1_orang = $request->gizi_nrs_mobilitas_bantuan_1_orang;
-                $asesmenKepPerinatologyStatusGizi->gizi_nrs_mobilitas_kursi_roda = $request->gizi_nrs_mobilitas_kursi_roda;
-                $asesmenKepPerinatologyStatusGizi->gizi_nrs_mobilitas_imobilisasi = $request->gizi_nrs_mobilitas_imobilisasi;
-                $asesmenKepPerinatologyStatusGizi->gizi_nrs_kesimpulan = $request->gizi_nrs_kesimpulan;
-            } else if ($request->gizi_jenis == 5) {
-                $asesmenKepPerinatologyStatusGizi->status_gizi_tidakada = 'tidak ada status gizi';
-            }
-
-            $asesmenKepPerinatologyStatusGizi->save();
-
-            //Simpan ke table rmeAsesmenPerinatologyStatusFungsional
-            $statusFungsional = new RmeAsesmenKepPerinatologyFungsional();
-            $statusFungsional->id_asesmen = $dataAsesmen->id;
-
-            if ($request->filled('skala_fungsional')) {
-
-                if ($request->filled('skala_fungsional')) {
-                    if ($request->skala_fungsional === 'Pengkajian Aktivitas') {
-                        $statusFungsional->jenis_skala = 1;
-                    } else if ($request->skala_fungsional === 'Lainnya') {
-                        $statusFungsional->jenis_skala = 2;
-                    }
-                } else {
-                    $statusFungsional->jenis_skala = 0;
-                }
-
-                // Simpan data ADL
-                $statusFungsional->makan = $request->adl_makan;
-                $statusFungsional->berjalan = $request->adl_berjalan;
-                $statusFungsional->mandi = $request->adl_mandi;
-                $statusFungsional->jumlah_skala = $request->filled('adl_total') ? (int)$request->adl_total : null;
-                $statusFungsional->kesimpulan = $request->adl_kesimpulan_value;
-                $statusFungsional->nilai_skala_adl = $request->filled('adl_total') ? (int)$request->adl_total : null;
-                $statusFungsional->kesimpulan_fungsional = $request->adl_kesimpulan_value;
-            }
-            $statusFungsional->save();
-
-
-            // Simpan ke table rmeAsesmenPerinatologyRencana
-            $asesmenRencana = new RmeAsesmenKepPerinatologyRencanaPulang();
-            $asesmenRencana->id_asesmen = $dataAsesmen->id;
-            $asesmenRencana->diagnosis_medis = $request->diagnosis_medis;
-            $asesmenRencana->usia_lanjut = $request->usia_lanjut;
-            $asesmenRencana->hambatan_mobilisasi = $request->hambatan_mobilisasi;
-            $asesmenRencana->membutuhkan_pelayanan_medis = $request->penggunaan_media_berkelanjutan;
-            $asesmenRencana->memerlukan_keterampilan_khusus = $request->keterampilan_khusus;
-            $asesmenRencana->memerlukan_alat_bantu = $request->alat_bantu;
-            $asesmenRencana->memiliki_nyeri_kronis = $request->nyeri_kronis;
-            $asesmenRencana->perkiraan_lama_dirawat = $request->perkiraan_hari;
-            $asesmenRencana->rencana_pulang = $request->tanggal_pulang;
-            $asesmenRencana->kesimpulan = $request->kesimpulan_planing;
-            $asesmenRencana->save();
-
-
-            // RESUME
+            // Simpan ke table RmeAsesmenKepPerinatologyResume
             $resumeData = [
-                'anamnesis'             => $request->anamnesis,
-                'diagnosis'             => [],
-                'tindak_lanjut_code'    => null,
-                'tindak_lanjut_name'    => null,
-                'tgl_kontrol_ulang'     => null,
-                'unit_rujuk_internal'   => null,
-                'rs_rujuk'              => null,
-                'rs_rujuk_bagian'       => null,
-                'konpas'                => [
-                    'sistole'   => [
-                        'hasil' => ''
-                    ],
-                    'distole'   => [
-                        'hasil' => ''
-                    ],
-                    'respiration_rate'   => [
-                        'hasil' => ''
-                    ],
-                    'suhu'   => [
-                        'hasil' => $request->suhu
-                    ],
-                    'nadi'   => [
-                        'hasil' => ''
-                    ],
-                    'tinggi_badan'   => [
-                        'hasil' => $request->tinggi_badan
-                    ],
-                    'berat_badan'   => [
-                        'hasil' => $request->berat_badan
-                    ]
-                ]
+                'anamnesis' => $request->anamnesis,
+                'diagnosis' => [],
+                'tindak_lanjut_code' => null,
+                'tindak_lanjut_name' => null,
+                'tgl_kontrol_ulang' => null,
+                'unit_rujuk_internal' => null,
+                'rs_rujuk' => null,
+                'rs_rujuk_bagian' => null,
+                'konpas' => [
+                    'sistole' => ['hasil' => $vitalSignData['sistole']],
+                    'diastole' => ['hasil' => $vitalSignData['diastole']],
+                    'respiration_rate' => ['hasil' => $vitalSignData['respiration']],
+                    'suhu' => ['hasil' => $vitalSignData['suhu']],
+                    'nadi' => ['hasil' => $vitalSignData['nadi']],
+                    'tinggi_badan' => ['hasil' => $vitalSignData['tinggi_badan']],
+                    'berat_badan' => ['hasil' => $vitalSignData['berat_badan']],
+                    'spo2_tanpa_o2' => ['hasil' => $vitalSignData['spo2_tanpa_o2']],
+                    'spo2_dengan_o2' => ['hasil' => $vitalSignData['spo2_dengan_o2']],
+                ],
             ];
 
             $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
 
             DB::commit();
 
-            return redirect()->to(url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum"))
-                ->with('success', 'Data asesmen anak berhasil disimpan');
+            return to_route('rawat-inap.asesmen.perinatology.index', [
+                'kd_unit' => $kd_unit,
+                'kd_pasien' => $kd_pasien,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk,
+            ])->with('success', 'Data asesmen perinatology berhasil disimpan');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal menyimpan data asesmen' . $e->getMessage());
+
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 

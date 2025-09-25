@@ -22,7 +22,6 @@ Route::middleware('guest')->group(function () {
     Route::get('/', function () {
         return view('auth.login');
     });
-
     Route::get('/login', [SsoController::class, 'redirectToSso'])->name('login');
     Route::get('/callback', [SsoController::class, 'handleCallback'])->name('callback');
 });
