@@ -31,7 +31,6 @@
             <div class="patient-card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h6 class="text-primary mb-0">Catatan Perkembangan Pasien Terintegrasi</h6>
-                    <h6 class="text-secondary mb-0">Grafik</h6>
                 </div>
 
                 <div class="row g-3">
@@ -220,6 +219,73 @@
                                         </div>
                                     </div>
 
+                                    <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <!-- Tabel List Instruksi -->
+                                                <div class="border rounded">
+                                                    <div class="d-flex justify-content-between align-items-center p-3 bg-light border-bottom">
+                                                        <h6 class="mb-0 fw-bold text-primary">
+                                                            <i class="bi bi-list-check me-2"></i>List Instruksi PPA
+                                                        </h6>
+                                                    </div>
+
+                                                    <div class="table-responsive">
+                                                        <table class="table table-hover mb-0">
+                                                            <thead class="table-light">
+                                                                <tr>
+                                                                    <th width="15%" class="text-center">No</th>
+                                                                    <th width="35%">Kode PPA</th>
+                                                                    <th width="50%">Instruksi</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach($value['instruksi_ppa_nama'] as $index => $instruksi)
+                                                                @php
+                                                                    // Ambil data karyawan berdasarkan kode PPA
+                                                                    $ppa_kode = is_array($instruksi) ? $instruksi['ppa'] : $instruksi->ppa;
+                                                                    $karyawan_ppa = $karyawan->where('kd_karyawan', $ppa_kode)->first();
+                                                                    
+                                                                    $nama_ppa = $ppa_kode; // default
+                                                                    if ($karyawan_ppa) {
+                                                                        $nama_ppa = '';
+                                                                        if (!empty($karyawan_ppa->gelar_depan)) {
+                                                                            $nama_ppa .= $karyawan_ppa->gelar_depan . ' ';
+                                                                        }
+                                                                        $nama_ppa .= $karyawan_ppa->nama;
+                                                                        if (!empty($karyawan_ppa->gelar_belakang)) {
+                                                                            $nama_ppa .= ', ' . $karyawan_ppa->gelar_belakang;
+                                                                        }
+                                                                    }
+                                                                @endphp
+                                                                
+                                                                <tr>
+                                                                    <td class="text-center fw-bold text-primary">{{ sprintf('%02d', $index + 1) }}</td>
+                                                                    <td>
+                                                                        <div class="d-flex align-items-center">
+                                                                            <span class="badge bg-info text-dark me-2">PPA</span>
+                                                                            <div>
+                                                                                <strong>{{ $nama_ppa }}</strong>
+                                                                                <br>
+                                                                                <small class="text-muted">{{ $ppa_kode }}</small>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="text-wrap">
+                                                                        {{ is_array($instruksi) ? $instruksi['instruksi'] : $instruksi->instruksi }}
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                     <!-- Button -->
                                     <div class="d-flex justify-content-between mt-4">
                                         @if ($value['verified'])
@@ -258,6 +324,7 @@
                                     $j++;
                                 @endphp
                             @endforeach
+
                         </div>
                     </div>
                 </div>
@@ -268,6 +335,52 @@
 
 @push('js')
     <script>
+
+        function loadInstruksiPpa(urutTotal, containerId) {
+            
+            $.ajax({
+                url: '{{ route("rawat-inap.cppt.get-instruksi-ppa", [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    urut_total: urutTotal
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        let html = '';
+                        if (response.data.length > 0) {
+                            response.data.forEach((item, index) => {
+                                html += `
+                                    <tr>
+                                        <td class="text-center fw-bold text-primary">${String(index + 1).padStart(2, '0')}</td>
+                                        <td>
+                                            <span class="badge bg-info text-dark me-2">PPA</span>
+                                            <strong>${item.ppa}</strong>
+                                        </td>
+                                        <td class="text-wrap">${item.instruksi}</td>
+                                    </tr>
+                                `;
+                            });
+                        } else {
+                            html = `
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted py-5">
+                                        <i class="bi bi-inbox-fill fs-2 d-block mb-3 text-secondary"></i>
+                                        <h6>Belum Ada Data Instruksi PPA</h6>
+                                        <small>Data instruksi akan muncul di sini ketika tersedia</small>
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                        $(`#${containerId} tbody`).html(html);
+                    }
+                },
+                error: function() {
+                    console.error('Error loading instruksi PPA');
+                }
+            });
+        }
+
         // add
         var searchInputDiagnose = $('#addDiagnosisModal #searchInput');
         var dataListDiagnose = $('#addDiagnosisModal #dataList');

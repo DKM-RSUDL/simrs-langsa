@@ -144,6 +144,16 @@ class CpptController extends Controller
         $cppt = $getCppt->groupBy(['urut_total'])->map(function ($item) {
 
             $instruksiPpa = CpptInstruksiPpa::where('urut_total_cppt', $item->first()->urut_total)->get();
+            // Transform instruksi PPA untuk menambahkan nama lengkap
+            $instruksiPpaWithNames = $instruksiPpa->map(function($instruksi) {
+                return [
+                    'id' => $instruksi->id,
+                    'ppa' => $instruksi->ppa,
+                    'instruksi' => $instruksi->instruksi,
+                    'nama_lengkap' => $this->getNamaLengkapByKode($instruksi->ppa),
+                    'urut_total_cppt' => $instruksi->urut_total_cppt
+                ];
+            });
             return [
                 'kd_pasien'             => $item->first()->kd_pasien,
                 'no_transaksi'          => $item->first()->no_transaksi,
@@ -201,7 +211,8 @@ class CpptController extends Controller
                         'nama_penyakit' => $penyakit->first()->penyakit,
                     ];
                 }),
-                'instruksi_ppa'         => $instruksiPpa
+                'instruksi_ppa'         => $instruksiPpa,
+                'instruksi_ppa_nama' => $instruksiPpaWithNames
             ];
         });
 
@@ -417,6 +428,48 @@ class CpptController extends Controller
         }
     }
 
+    public function getInstruksiPpaByUrutTotal(Request $request)
+    {
+        try {
+            $urutTotal = $request->urut_total;
+            
+            $instruksiPpa = CpptInstruksiPpa::where('urut_total_cppt', $urutTotal)
+                ->orderBy('id', 'asc')
+                ->get();
+                
+            return response()->json([
+                'status' => 'success',
+                'data' => $instruksiPpa,
+                'count' => $instruksiPpa->count()
+            ]);
+            
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    private function getNamaLengkapByKode($kode_ppa)
+    {
+        $karyawan = HrdKaryawan::where('kd_karyawan', $kode_ppa)->first();
+        
+        if (!$karyawan) {
+            return $kode_ppa;
+        }
+        
+        $nama_lengkap = '';
+        if (!empty($karyawan->gelar_depan)) {
+            $nama_lengkap .= $karyawan->gelar_depan . ' ';
+        }
+        $nama_lengkap .= $karyawan->nama;
+        if (!empty($karyawan->gelar_belakang)) {
+            $nama_lengkap .= ', ' . $karyawan->gelar_belakang;
+        }
+        
+        return $nama_lengkap;
+    }
     public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         // Validation Input
@@ -440,7 +493,7 @@ class CpptController extends Controller
         ];
 
         $validatedData = $request->validate([
-            'anamnesis'         => 'required',
+            'anamnesis'         => 'nullable',
             'skala_nyeri'       => 'min:0|max:10',
             // 'lokasi'            => 'required',
             // 'durasi'            => 'required',
