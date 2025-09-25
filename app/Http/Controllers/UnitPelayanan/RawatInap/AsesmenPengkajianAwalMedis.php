@@ -285,13 +285,8 @@ class AsesmenPengkajianAwalMedis extends Controller
             ])->with('success', 'Asesmen pengkajian awal medis berhasil disimpan.');
         } catch (\Exception $e) {
             DB::rollback();
-<<<<<<< HEAD
 
             return back()->withInput()->withErrors(['error' => 'Gagal menyimpan data: '.$e->getMessage()]);
-=======
-            // return back()->withInput()->withErrors(['error' => 'Gagal menyimpan data: ' . $e->getMessage()]);
-            return back()->with('error', $e->getMessage());
->>>>>>> 4fe83f679cffba81d985cf6e835b3ce0daeb2fe4
         }
     }
 
@@ -426,12 +421,8 @@ class AsesmenPengkajianAwalMedis extends Controller
                     'rencana_tgl_pulang' => $request->rencana_tgl_pulang,
                     'kesimpulan_planing' => $request->kesimpulan_planing,
                     'alergis' => $request->alergis,
-<<<<<<< HEAD
-                ]);
-=======
                 ]
             );
->>>>>>> 4fe83f679cffba81d985cf6e835b3ce0daeb2fe4
 
             $foreignKeyColumn = 'id_asesmen_medis_ranap';
 
@@ -479,13 +470,8 @@ class AsesmenPengkajianAwalMedis extends Controller
             ])->with('success', 'Asesmen pengkajian awal medis berhasil diperbarui.');
         } catch (\Exception $e) {
             DB::rollback();
-<<<<<<< HEAD
-
-            return back()->withInput()->withErrors(['error' => 'Gagal memperbarui data: '.$e->getMessage()]);
-=======
             // return back()->withInput()->withErrors(['error' => 'Gagal memperbarui data: ' . $e->getMessage()]);
             return back()->with('error', $e->getMessage());
->>>>>>> 4fe83f679cffba81d985cf6e835b3ce0daeb2fe4
         }
     }
 
