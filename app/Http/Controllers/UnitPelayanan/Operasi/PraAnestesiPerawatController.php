@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UnitPelayanan\Operasi;
 
 use App\Http\Controllers\Controller;
+use App\Models\HrdKaryawan;
 use App\Models\Kunjungan;
 use App\Models\OkAsesmen;
 use App\Models\OkPraOperasiPerawat;
@@ -47,10 +48,9 @@ class PraAnestesiPerawatController extends Controller
             abort(404, 'Data not found');
         }
 
-        $perawat = User::with(['karyawan'])
-            ->whereRelation('karyawan', 'status_peg', 1)
-            ->whereRelation('karyawan', 'kd_ruangan', 4)
-            ->whereRelation('karyawan', 'kd_jenis_tenaga', 2)
+        $perawat = HrdKaryawan::where('status_peg', 1)
+            ->where('kd_ruangan', 4)
+            ->where('kd_jenis_tenaga', 2)
             ->get();
 
         $jenisOperasi = DB::table('produk as p')
