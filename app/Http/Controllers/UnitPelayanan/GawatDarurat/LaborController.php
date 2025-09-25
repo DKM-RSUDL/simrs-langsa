@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Http\Controllers\Controller;
-use App\Models\Dokter;
 use App\Models\DokterKlinik;
 use App\Models\Kunjungan;
-use App\Models\LabHasil;
 use App\Models\LapLisItemPemeriksaan;
 use App\Models\Otoritas;
 use App\Models\RMEResume;
@@ -15,21 +13,22 @@ use App\Models\SegalaOrder;
 use App\Models\SegalaOrderDet;
 use App\Models\Transaksi;
 use App\Models\UnitAsal;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\File;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\View;
+
+use App\Services\CheckResumeService;
 
 class LaborController extends Controller
 {
+    protected $checkResumeService;
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/gawat-darurat');
+        $this->checkResumeService = new CheckResumeService();
     }
 
     public function index(Request $request, $kd_pasien, $tgl_masuk)
@@ -346,8 +345,8 @@ class LaborController extends Controller
                 ]);
             }
 
-            // Buat atau dapatkan resume
-            $resume = $this->checkAndCreateResume([
+            // Panggil ResumeService
+            $resume = $this->checkResumeService->checkAndCreateResume([
                 'kd_pasien' => $validatedData['kd_pasien'],
                 'kd_unit' => $validatedData['kd_unit'],
                 'tgl_masuk' => $validatedData['tgl_masuk'],
@@ -460,6 +459,14 @@ class LaborController extends Controller
                 ]);
             }
 
+            // Panggil ResumeService
+            $resume = $this->checkResumeService->checkAndCreateResume([
+                'kd_pasien' => $validatedData['kd_pasien'],
+                'kd_unit' => $validatedData['kd_unit'],
+                'tgl_masuk' => $validatedData['tgl_masuk'],
+                'urut_masuk' => $validatedData['urut_masuk']
+            ]);
+
             DB::commit();
 
             return redirect()->route('labor.index', [
@@ -493,52 +500,6 @@ class LaborController extends Controller
                 'kd_pasien' => $labPK->kd_pasien ?? 'default_kd_pasien',
                 'tgl_masuk' => $labPK->tgl_masuk ?? 'default_tgl_masuk'
             ])->with(['error' => 'Ada kesalahan sistem. Error: ' . $e->getMessage()]);
-        }
-    }
-
-    private function checkAndCreateResume($data)
-    {
-        try {
-            // Cek apakah resume sudah ada
-            $resume = RMEResume::where('kd_pasien', $data['kd_pasien'])
-                ->where('kd_unit', $data['kd_unit'])
-                ->where('tgl_masuk', $data['tgl_masuk'])
-                ->where('urut_masuk', $data['urut_masuk'])
-                ->first();
-
-            if (!$resume) {
-                // Jika belum ada
-                $resume = RMEResume::create([
-                    'kd_pasien' => $data['kd_pasien'],
-                    'kd_unit' => $data['kd_unit'],
-                    'tgl_masuk' => $data['tgl_masuk'],
-                    'urut_masuk' => $data['urut_masuk'],
-                    'status' => 0,
-                ]);
-
-                $resume = RMEResume::where('kd_pasien', $data['kd_pasien'])
-                    ->where('kd_unit', $data['kd_unit'])
-                    ->where('tgl_masuk', $data['tgl_masuk'])
-                    ->where('urut_masuk', $data['urut_masuk'])
-                    ->first();
-            }
-
-            // Entri di RMEResumeDtl
-            if ($resume) {
-                $resumeDetail = RmeResumeDtl::where('id_resume', $resume->id)->first();
-
-                if (!$resumeDetail) {
-                    DB::table('RME_RESUME_DTL')->insert([
-                        'id_resume' => $resume->id
-                    ]);
-                }
-
-                DB::commit();
-                return $resume;
-            }
-            throw new \Exception('Gagal membuat atau mendapatkan data resume');
-        } catch (\Exception $e) {
-            throw $e;
         }
     }
 

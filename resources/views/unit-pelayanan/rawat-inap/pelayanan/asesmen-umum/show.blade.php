@@ -46,7 +46,7 @@
                             <label class="col-sm-3 col-form-label">Nadi:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="number" class="form-control" name="nadi" placeholder="Nadi" value="{{ $asesmen->asesmenKetDewasaRanap->nadi}}" disabled>
+                                    <input type="number" class="form-control" name="nadi" value="{{ $asesmen->asesmenKetDewasaRanap->nadi}}" disabled>
                                     <span class="input-group-text">kali/mnt</span>
                                 </div>
                             </div>
@@ -55,7 +55,7 @@
                             <label class="col-sm-3 col-form-label">Sistole:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="number" class="form-control" name="sistole" placeholder="120" value="{{ $asesmen->asesmenKetDewasaRanap->sistole}}" disabled>
+                                    <input type="number" class="form-control" name="sistole" value="{{ $asesmen->asesmenKetDewasaRanap->sistole}}" disabled>
                                     <span class="input-group-text">mmHg</span>
                                 </div>
                             </div>
@@ -64,7 +64,7 @@
                             <label class="col-sm-3 col-form-label">Distole:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="number" class="form-control" name="distole" placeholder="80" value="{{ $asesmen->asesmenKetDewasaRanap->sistole}}" disabled>
+                                    <input type="number" class="form-control" name="distole" value="{{ $asesmen->asesmenKetDewasaRanap->sistole}}" disabled>
                                     <span class="input-group-text">mmHg</span>
                                 </div>
                             </div>
@@ -73,7 +73,7 @@
                             <label class="col-sm-3 col-form-label">Nafas:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="number" class="form-control" name="nafas" placeholder="Nafas" value="{{ $asesmen->asesmenKetDewasaRanap->nafas}}" disabled>
+                                    <input type="number" class="form-control" name="nafas" value="{{ $asesmen->asesmenKetDewasaRanap->nafas}}" disabled>
                                     <span class="input-group-text">kali/mnt</span>
                                 </div>
                             </div>
@@ -82,7 +82,7 @@
                             <label class="col-sm-3 col-form-label">Suhu:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="text" step="0.1" class="form-control" name="suhu" placeholder="36.5" value="{{ $asesmen->asesmenKetDewasaRanap->suhu}}" disabled>
+                                    <input type="text" step="0.1" class="form-control" name="suhu" value="{{ $asesmen->asesmenKetDewasaRanap->suhu}}" disabled>
                                     <span class="input-group-text">°C</span>
                                 </div>
                             </div>
@@ -91,7 +91,7 @@
                             <label class="col-sm-3 col-form-label">SaO2:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="number" class="form-control" name="sao2" placeholder="98" value="{{ $asesmen->asesmenKetDewasaRanap->sao2}}" disabled>
+                                    <input type="number" class="form-control" name="sao2" value="{{ $asesmen->asesmenKetDewasaRanap->sao2}}" disabled>
                                     <span class="input-group-text">%</span>
                                 </div>
                             </div>
@@ -100,7 +100,7 @@
                             <label class="col-sm-3 col-form-label">TB:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="number" class="form-control" name="tb" placeholder="170" value="{{ $asesmen->asesmenKetDewasaRanap->tb}}" disabled>
+                                    <input type="number" class="form-control" name="tb" value="{{ $asesmen->asesmenKetDewasaRanap->tb}}" disabled>
                                     <span class="input-group-text">cm</span>
                                 </div>
                             </div>
@@ -109,7 +109,7 @@
                             <label class="col-sm-3 col-form-label">BB:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="number" step="0.1" class="form-control" name="bb" placeholder="70" value="{{ $asesmen->asesmenKetDewasaRanap->bb}}" disabled>
+                                    <input type="number" step="0.1" class="form-control" name="bb" value="{{ $asesmen->asesmenKetDewasaRanap->bb}}" disabled>
                                     <span class="input-group-text">Kg</span>
                                 </div>
                             </div>
@@ -158,7 +158,6 @@
                                     <input type="text" class="form-control d-inline-block ms-2"
                                         name="kondisi_masuk_lainnya"
                                         style="width: 300px;"
-                                        placeholder="Sebutkan..."
                                         value="{{ old('kondisi_masuk_lainnya', $asesmen->asesmenKetDewasaRanap->kondisi_masuk_lainnya ?? '') }}" disabled>
                                 </div>
                             </div>
@@ -185,7 +184,7 @@
                             <label class="col-sm-3 col-form-label">Diagnosis masuk:</label>
                             <div class="col-sm-9">
                                 <textarea class="form-control" name="diagnosis_masuk" rows="3"
-                                        placeholder="Diagnosis masuk pasien" disabled>{{ old('diagnosis_masuk', $asesmen->asesmenKetDewasaRanap->diagnosis_masuk ?? '') }}</textarea>
+                                        disabled>{{ old('diagnosis_masuk', $asesmen->asesmenKetDewasaRanap->diagnosis_masuk ?? '') }}</textarea>
                             </div>
                         </div>
 
@@ -194,7 +193,7 @@
                             <label class="col-sm-3 col-form-label">Keluhan utama:</label>
                             <div class="col-sm-9">
                                 <textarea class="form-control" name="keluhan_utama" rows="3"
-                                        placeholder="Keluhan utama pasien" disabled>{{ old('keluhan_utama', $asesmen->asesmenKetDewasaRanap->keluhan_utama ?? '') }}</textarea>
+                                        disabled>{{ old('keluhan_utama', $asesmen->asesmenKetDewasaRanap->keluhan_utama ?? '') }}</textarea>
                             </div>
                         </div>
 
@@ -219,7 +218,6 @@
                                     <input type="text" class="form-control d-inline-block ms-2"
                                         name="barang_berharga_lainnya"
                                         style="width: 200px;"
-                                        placeholder="Sebutkan..."
                                         value="{{ old('barang_berharga_lainnya', $asesmen->asesmenKetDewasaRanap->barang_berharga_lainnya ?? '') }}" disabled>
                                 </div>
                             </div>
@@ -382,7 +380,7 @@
 
                             </div>
                             <label class="form-check-label mt-2" for="lainnya">Lainnya</label>
-                            <input type="text" class="form-control" name="riwayat_pasien_lain" placeholder="lainnya" value="{{ $asesmen->asesmenKetDewasaRanapRiwayatPasien->riwayat_pasien_lain }}" disabled>
+                            <input type="text" class="form-control" name="riwayat_pasien_lain" value="{{ $asesmen->asesmenKetDewasaRanapRiwayatPasien->riwayat_pasien_lain }}" disabled>
                         </div>
 
                         <!-- Riwayat Alkohol/Obat dan Merokok -->
@@ -420,13 +418,13 @@
                                             <div class="col-md-6 mb-2">
                                                 <label class="form-label">Jenis:</label>
                                                 <input type="text" class="form-control form-control-sm"
-                                                    name="alkohol_jenis" placeholder="Jenis alkohol/obat"
+                                                    name="alkohol_jenis"
                                                     value="{{ old('alkohol_jenis', $asesmen->asesmenKetDewasaRanapRiwayatPasien->alkohol_jenis ?? '') }}" disabled>
                                             </div>
                                             <div class="col-md-6 mb-2">
                                                 <label class="form-label">Jumlah/hari:</label>
                                                 <input type="text" class="form-control form-control-sm"
-                                                    name="alkohol_jumlah" placeholder="Jumlah per hari"
+                                                    name="alkohol_jumlah"
                                                     value="{{ old('alkohol_jumlah', $asesmen->asesmenKetDewasaRanapRiwayatPasien->alkohol_jumlah ?? '') }}" disabled>
                                             </div>
                                         </div>
@@ -463,13 +461,13 @@
                                             <div class="col-md-6 mb-2">
                                                 <label class="form-label">Jenis:</label>
                                                 <input type="text" class="form-control form-control-sm"
-                                                    name="merokok_jenis" placeholder="Jenis rokok"
+                                                    name="merokok_jenis"
                                                     value="{{ old('merokok_jenis', $asesmen->asesmenKetDewasaRanapRiwayatPasien->merokok_jenis ?? '') }}" disabled>
                                             </div>
                                             <div class="col-md-6 mb-2">
                                                 <label class="form-label">Jumlah/hari:</label>
                                                 <input type="text" class="form-control form-control-sm"
-                                                    name="merokok_jumlah" placeholder="Batang per hari"
+                                                    name="merokok_jumlah"
                                                     value="{{ old('merokok_jumlah', $asesmen->asesmenKetDewasaRanapRiwayatPasien->merokok_jumlah ?? '') }}" disabled>
                                             </div>
                                         </div>
@@ -571,7 +569,7 @@
                                 <label class="form-label">Diabetes Lainnya:</label>
                                 <input type="text" class="form-control" name="diabetes_lainnya"
                                     value="{{ old('diabetes_lainnya', $asesmen->asesmenKetDewasaRanapRiwayatPasien->diabetes_lainnya ?? '') }}"
-                                    placeholder="Sebutkan jenis diabetes lainnya jika ada" disabled>
+                                    disabled>
                             </div>
                         </div>
 
@@ -654,7 +652,7 @@
                                                 for="tempat_tinggal_lainnya">Lainnya:</label>
                                             <input type="text" class="form-control form-control-sm"
                                                 name="psikososial_lainnya" style="width: 200px;"
-                                                placeholder="Sebutkan..." value="{{ $asesmen->asesmenKetDewasaRanapRiwayatPasien->psikososial_lainnya }}" disabled>
+                                                value="{{ $asesmen->asesmenKetDewasaRanapRiwayatPasien->psikososial_lainnya }}" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -665,7 +663,6 @@
                                 <label class="col-sm-3 col-form-label">Pekerjaan:</label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control" name="psikososial_pekerjaan"
-                                        placeholder="Pekerjaan pasien"
                                         value="{{ $asesmen->asesmenKetDewasaRanapRiwayatPasien->psikososial_pekerjaan }}" disabled>
                                 </div>
                             </div>
@@ -701,7 +698,7 @@
                                                 for="aktivitas_lainnya">Lainnya:</label>
                                             <input type="text" class="form-control form-control-sm"
                                                 name="psikososial_aktivitas_lain" style="width: 150px;"
-                                                placeholder="Sebutkan..." value="{{ $asesmen->asesmenKetDewasaRanapRiwayatPasien->psikososial_aktivitas_lain }}" disabled>
+                                                value="{{ $asesmen->asesmenKetDewasaRanapRiwayatPasien->psikososial_aktivitas_lain }}" disabled>
                                         </div>
                                     </div>
                                     <div class="d-flex flex-wrap gap-3 mt-2">
@@ -737,7 +734,7 @@
                                                 for="aktivitas_lainnya2">Lainnya:</label>
                                             <input type="text" class="form-control form-control-sm"
                                                 name="psikososial_aktivitas_lainnya2" style="width: 150px;"
-                                                placeholder="Sebutkan..." value="{{ $asesmen->asesmenKetDewasaRanapRiwayatPasien->psikososial_aktivitas_lainnya2 }}" disabled>
+                                                value="{{ $asesmen->asesmenKetDewasaRanapRiwayatPasien->psikososial_aktivitas_lainnya2 }}" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -804,7 +801,6 @@
                                                 for="status_emosional_lainnya">Lainnya:</label>
                                             <input type="text" class="form-control form-control-sm d-inline-block"
                                                 name="psikososial_status_emosional_lainnya" style="width: 300px;"
-                                                placeholder="Sebutkan status emosional lainnya..."
                                                 value="{{ $asesmen->asesmenKetDewasaRanapRiwayatPasien->psikososial_status_emosional_lainnya }}" disabled>
                                         </div>
                                     </div>
@@ -816,7 +812,6 @@
                                 <label class="col-sm-3 col-form-label">Keluarga terdekat:</label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control" name="keluarga_terdekat_nama"
-                                        placeholder="Nama"
                                         value="{{ $asesmen->asesmenKetDewasaRanapRiwayatPasien->keluarga_terdekat_nama }}" disabled>
                                 </div>
                             </div>
@@ -824,7 +819,6 @@
                                 <label class="col-sm-3 col-form-label">Hubungan:</label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control" name="keluarga_terdekat_hubungan"
-                                        placeholder="Hubungan"
                                         value="{{ $asesmen->asesmenKetDewasaRanapRiwayatPasien->keluarga_terdekat_hubungan }}" disabled>
                                 </div>
                             </div>
@@ -832,7 +826,6 @@
                                 <label class="col-sm-3 col-form-label">Telepon:</label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control" name="keluarga_terdekat_telepon"
-                                        placeholder="No. telepon"
                                         value="{{ $asesmen->asesmenKetDewasaRanapRiwayatPasien->keluarga_terdekat_telepon }}" disabled>
                                 </div>
                             </div>
@@ -863,7 +856,6 @@
                                                 for="informasi_lainnya">Lainnya:</label>
                                             <input type="text" class="form-control form-control-sm"
                                                 name="informasi_didapat_dari_lainnya" style="width: 200px;"
-                                                placeholder="Sebutkan..."
                                                 value="{{ $asesmen->asesmenKetDewasaRanapRiwayatPasien->informasi_didapat_dari_lainnya }}" disabled>
                                         </div>
                                     </div>
@@ -946,7 +938,6 @@
                                                 for="pandangan_lainnya">Lainnya:</label>
                                             <input type="text" class="form-control form-control-sm"
                                                 name="pandangan_spiritual_lainnya" style="width: 300px;"
-                                                placeholder="Sebutkan pandangan spiritual lainnya..."
                                                 value="{{ $asesmen->asesmenKetDewasaRanapRiwayatPasien->pandangan_spiritual_lainnya }}" disabled>
                                         </div>
                                     </div>
@@ -1054,7 +1045,7 @@
                                 <div class="mt-3">
                                     <label class="form-label fw-bold">Catatan:</label>
                                     <textarea class="form-control" name="mata_telinga_hidung_catatan" rows="2"
-                                        placeholder="Catatan pemeriksaan" disabled>{{ $asesmen->asesmenKetDewasaRanapFisik->mata_telinga_hidung_catatan ?? '' }}</textarea>
+                                        disabled>{{ $asesmen->asesmenKetDewasaRanapFisik->mata_telinga_hidung_catatan ?? '' }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -1188,7 +1179,7 @@
                                 <div class="mt-3">
                                     <label class="form-label fw-bold">Catatan:</label>
                                     <textarea class="form-control" name="pemeriksaan_paru_catatan" rows="2"
-                                        placeholder="Catatan pemeriksaan" disabled>{{ old('pemeriksaan_paru_catatan', $asesmen->asesmenKetDewasaRanapFisik->pemeriksaan_paru_catatan ?? '') }}</textarea>
+                                        disabled>{{ old('pemeriksaan_paru_catatan', $asesmen->asesmenKetDewasaRanapFisik->pemeriksaan_paru_catatan ?? '') }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -1273,7 +1264,7 @@
                                     <label class="form-check-label" for="pemeriksaan_gastrointestinal_babberakhir">BAB terakhir:</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="text" class="form-control" name="pemeriksaan_gastrointestinal_bab_terakhir" placeholder="BAB terakhir"
+                                    <input type="text" class="form-control" name="pemeriksaan_gastrointestinal_bab_terakhir"
                                         value="{{ old('pemeriksaan_gastrointestinal_bab_terakhir', $asesmen->asesmenKetDewasaRanapFisik->pemeriksaan_gastrointestinal_bab_terakhir ?? '') }}" disabled>
                                 </div>
                             </div>
@@ -1281,14 +1272,14 @@
                             <div class="row mt-3">
                                 <div class="col-sm-12">
                                     <label class="form-label">Diet khusus:</label>
-                                    <input type="text" class="form-control" name="fisik_diet_khusus" placeholder="Diet khusus"
+                                    <input type="text" class="form-control" name="fisik_diet_khusus"
                                         value="{{ old('fisik_diet_khusus', $asesmen->asesmenKetDewasaRanapFisik->fisik_diet_khusus ?? '') }}" disabled>
                                 </div>
                             </div>
 
                             <div class="mt-3">
                                 <label class="form-label">Catatan:</label>
-                                <textarea class="form-control" name="pemeriksaan_gastrointestinal_catatan" rows="2" placeholder="Catatan pemeriksaan" disabled>{{ old('pemeriksaan_gastrointestinal_catatan', $asesmen->asesmenKetDewasaRanapFisik->pemeriksaan_gastrointestinal_catatan ?? '') }}</textarea>
+                                <textarea class="form-control" name="pemeriksaan_gastrointestinal_catatan" rows="2" disabled>{{ old('pemeriksaan_gastrointestinal_catatan', $asesmen->asesmenKetDewasaRanapFisik->pemeriksaan_gastrointestinal_catatan ?? '') }}</textarea>
                             </div>
                         </div>
 
@@ -1358,7 +1349,7 @@
 
                             <div class="mt-3">
                                 <label class="form-label">Catatan:</label>
-                                <textarea class="form-control" name="pemeriksaan_kardiovaskular_catatan" rows="2" placeholder="Catatan pemeriksaan" disabled>{{ old('pemeriksaan_kardiovaskular_catatan', $asesmen->asesmenKetDewasaRanapFisik->pemeriksaan_kardiovaskular_catatan ?? '') }}</textarea>
+                                <textarea class="form-control" name="pemeriksaan_kardiovaskular_catatan" rows="2" disabled>{{ old('pemeriksaan_kardiovaskular_catatan', $asesmen->asesmenKetDewasaRanapFisik->pemeriksaan_kardiovaskular_catatan ?? '') }}</textarea>
                             </div>
                         </div>
 
@@ -1448,7 +1439,7 @@
                                 </div>
                                 <div class="mt-3">
                                     <label class="form-label fw-bold">Catatan:</label>
-                                    <textarea class="form-control" name="pemeriksaan_genitourinaria_ginekologi_catatan" rows="2" placeholder="Catatan pemeriksaan" disabled>{{ old('pemeriksaan_genitourinaria_ginekologi_catatan', $asesmen->asesmenKetDewasaRanapFisik->pemeriksaan_genitourinaria_ginekologi_catatan ?? '') }}</textarea>
+                                    <textarea class="form-control" name="pemeriksaan_genitourinaria_ginekologi_catatan" rows="2" disabled>{{ old('pemeriksaan_genitourinaria_ginekologi_catatan', $asesmen->asesmenKetDewasaRanapFisik->pemeriksaan_genitourinaria_ginekologi_catatan ?? '') }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -1562,7 +1553,7 @@
                                 </div>
                                 <div class="mt-3">
                                     <label class="form-label fw-bold">Catatan:</label>
-                                    <textarea class="form-control" name="pemeriksaan_neurologi_catatan" rows="2" placeholder="Catatan pemeriksaan" disabled>{{ old('pemeriksaan_neurologi_catatan', $asesmen->asesmenKetDewasaRanapFisik->pemeriksaan_neurologi_catatan ?? '') }}</textarea>
+                                    <textarea class="form-control" name="pemeriksaan_neurologi_catatan" rows="2" disabled>{{ old('pemeriksaan_neurologi_catatan', $asesmen->asesmenKetDewasaRanapFisik->pemeriksaan_neurologi_catatan ?? '') }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -1623,7 +1614,7 @@
 
                                 <input type="text" class="form-control" name="vital_sign[gcs]" id="gcsInput"
                                     value="{{ old('vital_sign.gcs', $gcsValue) }}"
-                                    placeholder="Contoh: 15 E4 V5 M6" readonly disabled>
+                                    readonly disabled>
 
                                 <button type="button" class="btn btn-outline-primary"
                                     onclick="openGCSModal()" title="Buka Kalkulator GCS">
@@ -1742,7 +1733,7 @@
                                             <label class="form-label text-muted">
                                                 <em>(Diabetes, Kemo, HD, geriatri, penurunan imun, dll sebutkan:</em>
                                             </label>
-                                            <textarea class="form-control" rows="2" name="status_nutrisi_lainnya" placeholder="Sebutkan diagnosa khusus jika ada..." disabled>{{ $asesmen->asesmenKetDewasaRanapStatusNutrisi->status_nutrisi_lainnya }}</textarea>
+                                            <textarea class="form-control" rows="2" name="status_nutrisi_lainnya" disabled>{{ $asesmen->asesmenKetDewasaRanapStatusNutrisi->status_nutrisi_lainnya }}</textarea>
                                         </div>
                                         <div class="mb-3 text-center">
                                             <h6 class="card-title mb-2">TOTAL SKOR</h6>
@@ -1841,7 +1832,6 @@
                             <label class="col-sm-2 col-form-label" for="lokasi_nyeri">Lokasi nyeri:</label>
                             <div class="col-sm-10">
                                 <input class="form-control" type="text" name="lokasi_nyeri" id="lokasi_nyeri"
-                                    placeholder="Sebutkan lokasi nyeri..."
                                     value="{{ old('lokasi_nyeri', $asesmen->asesmenKetDewasaRanapSkalaNyeri->lokasi_nyeri ?? '') }}" disabled>
                             </div>
                         </div>
@@ -1893,7 +1883,6 @@
                             <label class="col-sm-2 col-form-label" for="durasi_nyeri">Durasi nyeri:</label>
                             <div class="col-sm-10">
                                 <input disabled class="form-control" type="text" name="durasi_nyeri" id="durasi_nyeri"
-                                    placeholder="Sebutkan Durasi nyeri..."
                                     value="{{ old('durasi_nyeri', $asesmen->asesmenKetDewasaRanapSkalaNyeri->durasi_nyeri ?? '') }}">
                             </div>
                         </div>
@@ -1917,8 +1906,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <input disabled type="text" class="form-control" name="durasi_nyeri_lokasi" id="nyeri_menjalar_lokasi"
-                                            value="{{ old('durasi_nyeri_lokasi', $asesmen->asesmenKetDewasaRanapSkalaNyeri->durasi_nyeri_lokasi ?? '') }}"
-                                            placeholder="Sebutkan lokasi...">
+                                            value="{{ old('durasi_nyeri_lokasi', $asesmen->asesmenKetDewasaRanapSkalaNyeri->durasi_nyeri_lokasi ?? '') }}">
                                     </div>
                                 </div>
                             </div>
@@ -2030,8 +2018,7 @@
                                                 {{ in_array('lainnya', old('faktor_peringan', $asesmen->asesmenKetDewasaRanapSkalaNyeri->faktor_peringan ?? [])) ? 'checked' : '' }}>
                                             <label class="form-check-label" for="faktor_peringan_lainnya">Lainnya:</label>
                                             <input disabled type="text" class="form-control mt-2" id="faktor_peringan_lainnya_text" name="faktor_peringan_lainnya_text"
-                                                value="{{ old('faktor_peringan_lainnya_text', $asesmen->asesmenKetDewasaRanapSkalaNyeri->faktor_peringan_lainnya_text ?? '') }}"
-                                                placeholder="Sebutkan...">
+                                                value="{{ old('faktor_peringan_lainnya_text', $asesmen->asesmenKetDewasaRanapSkalaNyeri->faktor_peringan_lainnya_text ?? '') }}">
                                         </div>
                                     </div>
                                 </div>
@@ -2077,8 +2064,7 @@
                                                 {{ in_array('lainnya', old('efek_nyeri', $asesmen->asesmenKetDewasaRanapSkalaNyeri->efek_nyeri ?? [])) ? 'checked' : '' }}>
                                             <label class="form-check-label" for="efek_nyeri_lainnya">Lainnya:</label>
                                             <input disabled type="text" class="form-control mt-2" id="efek_nyeri_lainnya_text" name="efek_nyeri_lainnya_text"
-                                                value="{{ old('efek_nyeri_lainnya_text', $asesmen->asesmenKetDewasaRanapSkalaNyeri->efek_nyeri_lainnya_text ?? '') }}"
-                                                placeholder="Sebutkan efek lainnya...">
+                                                value="{{ old('efek_nyeri_lainnya_text', $asesmen->asesmenKetDewasaRanapSkalaNyeri->efek_nyeri_lainnya_text ?? '') }}">
                                         </div>
                                     </div>
                                 </div>
@@ -2745,7 +2731,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-2">
-                                    <input disabled type="text" class="form-control" name="bicara_lainnya" placeholder="Lainnya, sebutkan..."
+                                    <input disabled type="text" class="form-control" name="bicara_lainnya"
                                     value="{{ $asesmen->asesmenKetDewasaRanapPengkajianEdukasi->bicara_lainnya }}">
                                 </div>
                             </div>
@@ -2773,7 +2759,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-2">
-                                    <input disabled type="text" class="form-control" name="bahasa_sehari_lainnya" placeholder="Sebutkan bahasa lainnya..."
+                                    <input disabled type="text" class="form-control" name="bahasa_sehari_lainnya"
                                     value="{{ $asesmen->asesmenKetDewasaRanapPengkajianEdukasi->bahasa_sehari_lainnya }}">
                                 </div>
                             </div>
@@ -2801,7 +2787,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-2">
-                                    <input disabled type="text" class="form-control" name="penerjemah_bahasa" placeholder="Bahasa..."
+                                    <input disabled type="text" class="form-control" name="penerjemah_bahasa"
                                     value="{{ $asesmen->asesmenKetDewasaRanapPengkajianEdukasi->penerjemah_bahasa }}">
                                 </div>
                             </div>
@@ -2834,7 +2820,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-2">
-                                    <input disabled type="text" class="form-control" name="hambatan_lainnya" placeholder="Sebutkan hambatan lainnya..."
+                                    <input disabled type="text" class="form-control" name="hambatan_lainnya"
                                     value="{{ $asesmen->asesmenKetDewasaRanapPengkajianEdukasi->hambatan_lainnya }}">
                                 </div>
                             </div>
@@ -2862,7 +2848,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-2">
-                                    <input disabled type="text" class="form-control" name="cara_komunikasi_lainnya" placeholder="Sebutkan cara komunikasi lainnya..."
+                                    <input disabled type="text" class="form-control" name="cara_komunikasi_lainnya"
                                     value="{{ $asesmen->asesmenKetDewasaRanapPengkajianEdukasi->cara_komunikasi_lainnya }}">
                                 </div>
                             </div>
@@ -2905,7 +2891,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-2">
-                                    <input disabled type="text" class="form-control" name="pendidikan_detail" placeholder="( S-1 / S-2 / S-3 )"
+                                    <input disabled type="text" class="form-control" name="pendidikan_detail"
                                         value="{{ $asesmen->asesmenKetDewasaRanapPengkajianEdukasi->pendidikan_detail }}">
                                 </div>
                             </div>
@@ -2949,7 +2935,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-2">
-                                    <input disabled type="text" class="form-control" name="potensi_pembelajaran_lainnya" placeholder="Sebutkan lainnya..."
+                                    <input disabled type="text" class="form-control" name="potensi_pembelajaran_lainnya"
                                     value="{{ $asesmen->asesmenKetDewasaRanapPengkajianEdukasi->potensi_pembelajaran_lainnya }}">
                                 </div>
                             </div>
@@ -2959,7 +2945,7 @@
                         <div class="row mb-3">
                             <label class="col-sm-2 col-form-label">Catatan Khusus:</label>
                             <div class="col-sm-10">
-                                <textarea disabled class="form-control" name="catatan_khusus" rows="4" placeholder="Tulis catatan khusus di sini...">{{ old('catatan_khusus', $asesmen->asesmenKetDewasaRanapPengkajianEdukasi->catatan_khusus ?? '') }}</textarea>
+                                <textarea disabled class="form-control" name="catatan_khusus" rows="4">{{ old('catatan_khusus', $asesmen->asesmenKetDewasaRanapPengkajianEdukasi->catatan_khusus ?? '') }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -2968,11 +2954,11 @@
                     <div class="section-separator" id="discharge-planning">
                         <h5 class="section-title">11. Perencanaan Pulang Pasien (Discharge Planning)</h5>
 
-                        <div class="mb-4">
+                        {{-- <div class="mb-4">
                             <label class="form-label">Diagnosis medis</label>
-                            <input disabled type="text" class="form-control" name="diagnosis_medis" placeholder="Diagnosis"
+                            <input disabled type="text" class="form-control" name="diagnosis_medis"
                                 value="{{ $asesmen->asesmenKetDewasaRanapDischargePlanning->diagnosis_medis }}">
-                        </div>
+                        </div> --}}
 
                         <div class="mb-4">
                             <label class="form-label">Usia lanjut (>60 th)</label>
@@ -3013,14 +2999,12 @@
                         <div class="mb-4">
                             <label class="form-label">Rencana Pulang Khusus</label>
                             <input disabled type="text" class="form-control" name="rencana_pulang_khusus"
-                                placeholder="Rencana Pulang Khusus"
                                 value="{{ $asesmen->asesmenKetDewasaRanapDischargePlanning->rencana_pulang_khusus }}">
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label">Rencana Lama Perawatan</label>
                             <input disabled type="text" class="form-control" name="rencana_lama_perawatan"
-                                placeholder="Rencana Lama Perawatan"
                                 value="{{ $asesmen->asesmenKetDewasaRanapDischargePlanning->rencana_lama_perawatan }}">
                         </div>
 
@@ -3053,7 +3037,7 @@
                         <h5 class="section-title">12. DIET KHUSUS</h5>
                         <div class="mb-4">
                             <label class="form-label">Diet Khusus:</label>
-                            <input disabled type="text" class="form-control" name="diet_khusus" placeholder="Diet Khusus"
+                            <input disabled type="text" class="form-control" name="diet_khusus"
                                 value="{{ old('diet_khusus', $asesmen->asesmenKetDewasaRanapDietKhusus->diet_khusus ?? '') }}">
                         </div>
 
@@ -3174,7 +3158,7 @@
                                         <label class="form-check-label" for="antisipasi_ya">Ya</label>
                                     </div>
                                 </div>
-                                <input disabled type="text" class="form-control" name="antisipasi_jelaskan" placeholder="Jelaskan:"
+                                <input disabled type="text" class="form-control" name="antisipasi_jelaskan"
                                     value="{{ old('antisipasi_jelaskan', $asesmen->asesmenKetDewasaRanapDietKhusus->antisipasi_jelaskan ?? '') }}">
                             </div>
                         </div>
@@ -3262,7 +3246,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-2">
-                                    <input disabled type="text" class="form-control" name="bantuan_lainnya" placeholder="Jelaskan lainnya..."
+                                    <input disabled type="text" class="form-control" name="bantuan_lainnya"
                                         value="{{ old('bantuan_lainnya', $asesmen->asesmenKetDewasaRanapDietKhusus->bantuan_lainnya ?? '') }}">
                                 </div>
                             </div>
@@ -3284,7 +3268,7 @@
                                         <label class="form-check-label" for="peralatan_ya">Ya</label>
                                     </div>
                                 </div>
-                                <input disabled type="text" class="form-control" name="peralatan_jelaskan" placeholder="Jelaskan:"
+                                <input disabled type="text" class="form-control" name="peralatan_jelaskan"
                                     value="{{ old('peralatan_jelaskan', $asesmen->asesmenKetDewasaRanapDietKhusus->peralatan_jelaskan ?? '') }}">
                             </div>
                         </div>
@@ -3305,7 +3289,7 @@
                                         <label class="form-check-label" for="alat_bantu_ya">Ya</label>
                                     </div>
                                 </div>
-                                <input disabled type="text" class="form-control" name="alat_bantu_jelaskan" placeholder="Jelaskan:"
+                                <input disabled type="text" class="form-control" name="alat_bantu_jelaskan"
                                     value="{{ old('alat_bantu_jelaskan', $asesmen->asesmenKetDewasaRanapDietKhusus->alat_bantu_jelaskan ?? '') }}">
                             </div>
                         </div>
@@ -3326,7 +3310,7 @@
                                         <label class="form-check-label" for="perawatan_khusus_ya">Ya</label>
                                     </div>
                                 </div>
-                                <input disabled type="text" class="form-control" name="perawatan_khusus_jelaskan" placeholder="Jelaskan:"
+                                <input disabled type="text" class="form-control" name="perawatan_khusus_jelaskan"
                                     value="{{ old('perawatan_khusus_jelaskan', $asesmen->asesmenKetDewasaRanapDietKhusus->perawatan_khusus_jelaskan ?? '') }}">
                             </div>
                         </div>
@@ -3347,7 +3331,7 @@
                                         <label class="form-check-label" for="nyeri_kronis_ya">Ya</label>
                                     </div>
                                 </div>
-                                <input disabled type="text" class="form-control" name="nyeri_kronis_jelaskan" placeholder="Jelaskan:"
+                                <input disabled type="text" class="form-control" name="nyeri_kronis_jelaskan"
                                     value="{{ old('nyeri_kronis_jelaskan', $asesmen->asesmenKetDewasaRanapDietKhusus->nyeri_kronis_jelaskan ?? '') }}">
                             </div>
                         </div>
@@ -3368,7 +3352,7 @@
                                         <label class="form-check-label" for="keterampilan_ya">Ya</label>
                                     </div>
                                 </div>
-                                <input disabled type="text" class="form-control" name="keterampilan_jelaskan" placeholder="Jelaskan:"
+                                <input disabled type="text" class="form-control" name="keterampilan_jelaskan"
                                     value="{{ old('keterampilan_jelaskan', $asesmen->asesmenKetDewasaRanapDietKhusus->keterampilan_jelaskan ?? '') }}">
                             </div>
                         </div>
@@ -3389,7 +3373,7 @@
                                         <label class="form-check-label" for="dirujuk_ya">Ya</label>
                                     </div>
                                 </div>
-                                <input disabled type="text" class="form-control" name="dirujuk_jelaskan" placeholder="Jelaskan:"
+                                <input disabled type="text" class="form-control" name="dirujuk_jelaskan"
                                     value="{{ old('dirujuk_jelaskan', $asesmen->asesmenKetDewasaRanapDietKhusus->dirujuk_jelaskan ?? '') }}">
                             </div>
                         </div>
@@ -3398,7 +3382,7 @@
                         <div class="row mb-4">
                             <label class="col-sm-2 col-form-label">CATATAN KHUSUS:</label>
                             <div class="col-sm-10">
-                                <textarea disabled class="form-control" name="catatan_khusus_diet" rows="4" placeholder="Tulis catatan khusus di sini...">{{ old('catatan_khusus_diet', $asesmen->asesmenKetDewasaRanapDietKhusus->catatan_khusus_diet ?? '') }}</textarea>
+                                <textarea disabled class="form-control" name="catatan_khusus_diet" rows="4">{{ old('catatan_khusus_diet', $asesmen->asesmenKetDewasaRanapDietKhusus->catatan_khusus_diet ?? '') }}</textarea>
                             </div>
                         </div>
                     </div>

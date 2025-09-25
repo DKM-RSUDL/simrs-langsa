@@ -289,15 +289,15 @@
 
 
         // Add Form
-        $('#addTindakanForm').submit(function(e) {
-            let $this = $(this);
-            let gambarVal = $this.find('#gambar_tindakan').val();
+        // $('#addTindakanForm').submit(function(e) {
+        //     let $this = $(this);
+        //     let gambarVal = $this.find('#gambar_tindakan').val();
 
-            if (gambarVal == '') {
-                showToast('error', 'Gambar tindakan harus dipilih!');
-                return false;
-            }
-        });
+        //     if (gambarVal == '') {
+        //         showToast('error', 'Gambar tindakan harus dipilih!');
+        //         return false;
+        //     }
+        // });
 
         // Tindakan di pilih / diubah
         $('#addTindakanModal #tindakan').on('select2:select', function(e) {

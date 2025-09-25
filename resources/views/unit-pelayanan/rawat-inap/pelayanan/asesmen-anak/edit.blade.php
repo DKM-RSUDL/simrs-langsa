@@ -549,7 +549,7 @@
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Suhu (C)</label>
-                                        <input type="number" class="form-control" name="suhu"
+                                        <input type="text" class="form-control" name="suhu"
                                             value="{{ $asesmen->rmeAsesmenKepAnakFisik->suhu }}"
                                             placeholder="suhu dalam celcius">
                                     </div>
@@ -769,7 +769,7 @@
                                         </select>
                                     </div>
 
-                                    
+
 
                                     <div class="mt-4">
                                         <h6>Pemeriksaan Lanjutan</h6>
@@ -2966,12 +2966,12 @@
                             <div class="section-separator" id="discharge-planning">
                                 <h5 class="section-title">15. Discharge Planning</h5>
 
-                                <div class="mb-4">
+                                {{-- <div class="mb-4">
                                     <label class="form-label">Diagnosis medis</label>
                                     <input type="text" class="form-control" name="diagnosis_medis"
                                         placeholder="Diagnosis"
                                         value="{{ $asesmen->rmeAsesmenKepAnakRencanaPulang->diagnosis_medis ?? '' }}">
-                                </div>
+                                </div> --}}
 
                                 <div class="mb-4">
                                     <label class="form-label">Usia lanjut</label>
@@ -4180,7 +4180,7 @@
                     container.innerHTML = items.map(item => `
                         <div class="alert alert-light border d-flex justify-content-between align-items-center py-1 px-2 mb-1">
                             <span>${item}</span>
-                            <button type="button" class="btn btn-sm btn-link text-danger p-0 ms-2" 
+                            <button type="button" class="btn btn-sm btn-link text-danger p-0 ms-2"
                                     onclick="removeItem('${containerId}', '${item}')">
                                 <i class="bi bi-x" style="font-size: 1.2rem;"></i>
                             </button>
@@ -5163,33 +5163,33 @@
                     // Load data GCS yang sudah ada
                     @if(isset($asesmen->gcs_parsed))
                         const gcsData = @json($asesmen->gcs_parsed);
-                        
+
                         if (gcsData.eye) {
                             document.querySelector(`input[name="gcs_eye"][value="${gcsData.eye}"]`)?.setAttribute('checked', 'checked');
                             document.getElementById('gcs_eye_display').textContent = gcsData.eye;
                         }
-                        
+
                         if (gcsData.verbal) {
                             document.querySelector(`input[name="gcs_verbal"][value="${gcsData.verbal}"]`)?.setAttribute('checked', 'checked');
                             document.getElementById('gcs_verbal_display').textContent = gcsData.verbal;
                         }
-                        
+
                         if (gcsData.motor) {
                             document.querySelector(`input[name="gcs_motor"][value="${gcsData.motor}"]`)?.setAttribute('checked', 'checked');
                             document.getElementById('gcs_motor_display').textContent = gcsData.motor;
                         }
-                        
+
                         if (gcsData.total) {
                             const gcsDisplay = document.getElementById('gcs_display');
                             if (gcsDisplay) {
                                 gcsDisplay.value = `${gcsData.total} E${gcsData.eye} V${gcsData.verbal} M${gcsData.motor}`;
                             }
-                            
+
                             const gcsValue = document.getElementById('gcs_value');
                             if (gcsValue) {
                                 gcsValue.value = `${gcsData.total} E${gcsData.eye} V${gcsData.verbal} M${gcsData.motor}`;
                             }
-                            
+
                             this.updateGCSTotal();
                         }
                     @endif
@@ -5227,7 +5227,7 @@
 
                     if (total > 0) {
                         totalDisplay.innerHTML = `<strong>Total: ${total}</strong>`;
-                        
+
                         let interpretationText = '';
                         if (total >= 13) {
                             interpretationText = 'Cedera kepala ringan';
@@ -5239,7 +5239,7 @@
                             interpretationText = 'Cedera kepala berat';
                             interpretation.className = 'alert alert-danger mb-0';
                         }
-                        
+
                         interpretation.textContent = interpretationText;
                     } else {
                         totalDisplay.innerHTML = '<strong>Total: - </strong>';
@@ -5264,11 +5264,11 @@
                     const total = parseInt(eyeValue) + parseInt(verbalValue) + parseInt(motorValue);
 
                     const gcsString = `${total} E${eyeValue} V${verbalValue} M${motorValue}`;
-                    
+
                     // Update form fields
                     const gcsDisplay = document.getElementById('gcs_display');
                     const gcsValue = document.getElementById('gcs_value');
-                    
+
                     if (gcsDisplay) gcsDisplay.value = gcsString;
                     if (gcsValue) gcsValue.value = gcsString;
 
@@ -5333,38 +5333,38 @@
                 createMasalahItem(value = '', showRemove = false) {
                     const div = document.createElement('div');
                     div.className = 'masalah-item mb-2';
-                    
+
                     div.innerHTML = `
                         <div class="d-flex gap-2">
                             <textarea class="form-control" name="masalah_diagnosis[]" rows="2"
                                 placeholder="Tuliskan masalah atau diagnosis keperawatan...">${value}</textarea>
                             <button type="button" class="btn btn-sm btn-outline-danger remove-masalah"
-                                onclick="DiagnosisKeperawatanModule.removeMasalah(this)" 
+                                onclick="DiagnosisKeperawatanModule.removeMasalah(this)"
                                 style="display: ${showRemove ? 'block' : 'none'};">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </div>
                     `;
-                    
+
                     return div;
                 },
 
                 createIntervensiItem(value = '', showRemove = false) {
                     const div = document.createElement('div');
                     div.className = 'intervensi-item mb-2';
-                    
+
                     div.innerHTML = `
                         <div class="d-flex gap-2">
                             <textarea class="form-control" name="intervensi_rencana[]" rows="3"
                                 placeholder="Tuliskan intervensi, rencana asuhan, dan target yang terukur...">${value}</textarea>
                             <button type="button" class="btn btn-sm btn-outline-danger remove-intervensi"
-                                onclick="DiagnosisKeperawatanModule.removeIntervensi(this)" 
+                                onclick="DiagnosisKeperawatanModule.removeIntervensi(this)"
                                 style="display: ${showRemove ? 'block' : 'none'};">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </div>
                     `;
-                    
+
                     return div;
                 },
 
@@ -5392,7 +5392,7 @@
 
                     const masalahItem = this.createMasalahItem('', true);
                     container.appendChild(masalahItem);
-                    
+
                     // Update visibility of remove buttons
                     this.updateRemoveButtonsVisibility('masalah');
                 },
@@ -5403,7 +5403,7 @@
 
                     const intervensiItem = this.createIntervensiItem('', true);
                     container.appendChild(intervensiItem);
-                    
+
                     // Update visibility of remove buttons
                     this.updateRemoveButtonsVisibility('intervensi');
                 },
@@ -5443,7 +5443,7 @@
             // 10. FUNGSI GLOBAL
             // ===================================================================
 
-            
+
             // Fungsi global untuk risiko jatuh
             window.showForm = function(formType) {
                 FallRiskModule.showForm(formType);

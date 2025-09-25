@@ -188,7 +188,7 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    
+
                                     @push('modals')
                                         @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.modal-create-alergi')
                                     @endpush
@@ -229,7 +229,7 @@
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Suhu (C)</label>
-                                        <input type="number" class="form-control" name="suhu"
+                                        <input type="text" class="form-control" name="suhu"
                                             placeholder="suhu dalam celcius"
                                             value="{{ $asesmen->rmeAsesmenThtPemeriksaanFisik[0]->suhu ?? '' }}">
                                     </div>
@@ -1461,7 +1461,7 @@
                                         <select class="form-select" name="tht_prognosis">
                                             <option value="" disabled>--Pilih Prognosis--</option>
                                             @forelse ($satsetPrognosis as $item)
-                                                <option value="{{ $item->prognosis_id }}" 
+                                                <option value="{{ $item->prognosis_id }}"
                                                     {{ old('tht_prognosis', $asesmen->rmeAsesmenThtDiagnosisImplementasi[0]->tht_prognosis ?? '') == $item->prognosis_id ? 'selected' : '' }}>
                                                     {{ $item->value ?? 'Field tidak ditemukan' }}
                                                 </option>

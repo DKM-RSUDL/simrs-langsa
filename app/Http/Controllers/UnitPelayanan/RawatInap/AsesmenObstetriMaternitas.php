@@ -17,7 +17,11 @@ use App\Models\RmeMasterDiagnosis;
 use App\Models\RmeMasterImplementasi;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
+<<<<<<< HEAD
 use App\Services\AsesmenService;
+=======
+use App\Models\SatsetPrognosis;
+>>>>>>> 4fe83f679cffba81d985cf6e835b3ce0daeb2fe4
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -43,6 +47,7 @@ class AsesmenObstetriMaternitas extends Controller
         $itemFisik = MrItemFisik::orderby('urut')->get();
         $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
         $rmeMasterImplementasi = RmeMasterImplementasi::all();
+        $satsetPrognosis = SatsetPrognosis::all();
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -87,6 +92,7 @@ class AsesmenObstetriMaternitas extends Controller
             'urut_masuk',
             'dataMedis',
             'itemFisik',
+            'satsetPrognosis',
             'user',
             'rmeMasterDiagnosis',
             'rmeMasterImplementasi'
@@ -158,6 +164,8 @@ class AsesmenObstetriMaternitas extends Controller
             $asesmenObstetri->nama_pemeriksa = Auth::user()->name;
             $asesmenObstetri->anamnesis_anamnesis = $request->anamnesis_anamnesis;
             $asesmenObstetri->evaluasi_evaluasi = $request->evaluasi_evaluasi;
+            $asesmenObstetri->paru_prognosis = $request->paru_prognosis;
+            $asesmenObstetri->rencana_pengobatan = $request->rencana_pengobatan;
 
             // Array untuk menyimpan path file yang berhasil diupload
             $uploadedFiles = [];
@@ -459,10 +467,12 @@ class AsesmenObstetriMaternitas extends Controller
 
             $itemFisikIds = $asesmen->pemeriksaanFisik->pluck('id_item_fisik')->unique()->toArray();
             $itemFisik = MrItemFisik::whereIn('id', $itemFisikIds)->orderBy('urut')->get();
+            $satsetPrognosis = SatsetPrognosis::all();
 
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.show', compact(
                 'asesmen',
                 'dataMedis',
+                'satsetPrognosis',
                 'itemFisik'
             ));
         } catch (ModelNotFoundException $e) {
@@ -499,12 +509,14 @@ class AsesmenObstetriMaternitas extends Controller
             $itemFisik = MrItemFisik::orderBy('urut')->get();
             $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
             $rmeMasterImplementasi = RmeMasterImplementasi::all();
+            $satsetPrognosis = SatsetPrognosis::all();
 
             // Kirim data ke view
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.edit', compact(
                 'asesmen',
                 'dataMedis',
                 'itemFisik',
+                'satsetPrognosis',
                 'rmeMasterDiagnosis',
                 'rmeMasterImplementasi',
             ));
@@ -548,6 +560,8 @@ class AsesmenObstetriMaternitas extends Controller
             $asesmenObstetri->nama_pemeriksa = Auth::user()->name;
             $asesmenObstetri->anamnesis_anamnesis = $request->anamnesis_anamnesis;
             $asesmenObstetri->evaluasi_evaluasi = $request->evaluasi_evaluasi;
+            $asesmenObstetri->paru_prognosis = $request->paru_prognosis;
+            $asesmenObstetri->rencana_pengobatan = $request->rencana_pengobatan;
 
             /// Fungsi helper untuk upload file
             $handleFile = function ($fieldName) use ($request, $asesmen, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk) {

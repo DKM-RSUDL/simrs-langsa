@@ -23,6 +23,7 @@ use App\Models\RmeMasterImplementasi;
 use App\Models\RmeMenjalar;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
+use App\Models\SatsetPrognosis;
 use App\Services\AsesmenService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -33,6 +34,7 @@ use Illuminate\Support\Facades\DB;
 class AsesmenKepOpthamologyController extends Controller
 {
     protected $asesmenService;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
@@ -52,6 +54,7 @@ class AsesmenKepOpthamologyController extends Controller
         $jenisnyeri = RmeJenisNyeri::all();
         $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
         $rmeMasterImplementasi = RmeMasterImplementasi::all();
+        $satsetPrognosis = SatsetPrognosis::all();
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -103,129 +106,138 @@ class AsesmenKepOpthamologyController extends Controller
             'faktorperingan',
             'efeknyeri',
             'jenisnyeri',
+            'satsetPrognosis',
             'rmeMasterDiagnosis',
             'rmeMasterImplementasi',
             'user'
         ));
     }
 
-  
 
-public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
-{
-    DB::beginTransaction();
+    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        DB::beginTransaction();
 
-    try {
-        
-        // Prepare assessment time
-        $tanggal = $request->tanggal_masuk;
-        $jam = $request->jam_masuk;
-        $waktu_asesmen = $tanggal . ' ' . $jam;
+        try {
 
-        // Save core assessment data
-        $dataAsesmen = new RmeAsesmen();
-        $dataAsesmen->kd_pasien = $kd_pasien;
-        $dataAsesmen->kd_unit = $kd_unit;
-        $dataAsesmen->tgl_masuk = $tgl_masuk;
-        $dataAsesmen->urut_masuk = $urut_masuk;
-        $dataAsesmen->user_id = Auth::id();
-        $dataAsesmen->waktu_asesmen = $waktu_asesmen;
-        $dataAsesmen->kategori = 2;
-        $dataAsesmen->sub_kategori = 6; // Specific to ophthalmology
-        $dataAsesmen->anamnesis = $request->anamnesis;
-        $dataAsesmen->save();
+            // Prepare assessment time
+            $tanggal = $request->tanggal_masuk;
+            $jam = $request->jam_masuk;
+            $waktu_asesmen = $tanggal . ' ' . $jam;
 
-        // Save ophthalmology-specific assessment data
-        $dataOphtamology = new RmeAsesmenKepOphtamology();
-        $dataOphtamology->id_asesmen = $dataAsesmen->id;
-        $dataOphtamology->waktu_masuk = $waktu_asesmen;
-        $dataOphtamology->diagnosis_masuk = $request->diagnosis_masuk;
-        $dataOphtamology->kondisi_masuk = $request->kondisi_masuk;
-        $dataOphtamology->barang_berharga = $request->barang_berharga;
-        $dataOphtamology->save();
+            // Save core assessment data
+            $dataAsesmen = new RmeAsesmen();
+            $dataAsesmen->kd_pasien = $kd_pasien;
+            $dataAsesmen->kd_unit = $kd_unit;
+            $dataAsesmen->tgl_masuk = $tgl_masuk;
+            $dataAsesmen->urut_masuk = $urut_masuk;
+            $dataAsesmen->user_id = Auth::id();
+            $dataAsesmen->waktu_asesmen = $waktu_asesmen;
+            $dataAsesmen->kategori = 2;
+            $dataAsesmen->sub_kategori = 6; // Specific to ophthalmology
+            $dataAsesmen->anamnesis = $request->anamnesis;
+            $dataAsesmen->save();
 
-        // Prepare vital sign data
-        $vitalSignData = [
-            'sistole' => $request->sistole ? (int) $request->sistole : null,
-            'diastole' => $request->diastole ? (int) $request->diastole : null,
-            'nadi' => $request->nadi ? (int) $request->nadi : null,
-            'respiration' => $request->nafas ? (int) $request->nafas : null,
-            'suhu' => $request->suhu ? (float) $request->suhu : null,
-            'spo2_tanpa_o2' => $request->spo_o2_tanpa ? (int) $request->spo_o2_tanpa : null,
-            'spo2_dengan_o2' => $request->spo_o2_dengan ? (int) $request->spo_o2_dengan : null,
-            'tinggi_badan' => $request->tinggi_badan ? (int) $request->tinggi_badan : null,
-            'berat_badan' => $request->berat_badan ? (int) $request->berat_badan : null,
-        ];
+            $dataOphtamology = new RmeAsesmenKepOphtamology();
+            $dataOphtamology->id_asesmen = $dataAsesmen->id;
+            $dataOphtamology->waktu_masuk = $waktu_asesmen;
+            $dataOphtamology->diagnosis_masuk = $request->diagnosis_masuk;
+            $dataOphtamology->kondisi_masuk = $request->kondisi_masuk;
+            $dataOphtamology->barang_berharga = $request->barang_berharga;
+            $dataOphtamology->diagnosis_banding = $request->diagnosis_banding ?? '[]';
+            $dataOphtamology->diagnosis_kerja = $request->diagnosis_kerja ?? '[]';
+            $dataOphtamology->prognosis = $request->prognosis;
+            $dataOphtamology->observasi = $request->observasi;
+            $dataOphtamology->terapeutik = $request->terapeutik;
+            $dataOphtamology->edukasi = $request->edukasi;
+            $dataOphtamology->kolaborasi = $request->kolaborasi;
+            $dataOphtamology->evaluasi = $request->evaluasi_keperawatan;
+            $dataOphtamology->penyakit_yang_diderita = $request->penyakit_diderita ?? '[]';
+            $dataOphtamology->riwayat_penyakit_keluarga = $request->riwayat_kesehatan_keluarga ?? '[]';
+            $dataOphtamology->riwayat_penggunaan_obat = $request->riwayat_penggunaan_obat ?? '[]';
+            $dataOphtamology->paru_prognosis = $request->paru_prognosis;
+            $dataOphtamology->save();
 
-        // Get transaction data for vital sign storage
-        $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            // Prepare vital sign data
+            $vitalSignData = [
+                'sistole' => $request->sistole ? (int) $request->sistole : null,
+                'diastole' => $request->diastole ? (int) $request->diastole : null,
+                'nadi' => $request->nadi ? (int) $request->nadi : null,
+                'respiration' => $request->nafas ? (int) $request->nafas : null,
+                'suhu' => $request->suhu ? (float) $request->suhu : null,
+                'spo2_tanpa_o2' => $request->spo_o2_tanpa ? (int) $request->spo_o2_tanpa : null,
+                'spo2_dengan_o2' => $request->spo_o2_dengan ? (int) $request->spo_o2_dengan : null,
+                'tinggi_badan' => $request->tinggi_badan ? (int) $request->tinggi_badan : null,
+                'berat_badan' => $request->berat_badan ? (int) $request->berat_badan : null,
+            ];
 
-        // Save vital signs using service
-        $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaction, $lastTransaction->kd_kasir);
+            // Get transaction data for vital sign storage
+            $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
-        // Save vital signs to ophthalmology physical assessment
-        $dataOpthamologyFisik = new RmeAsesmenKepOphtamologyFisik();
-        $dataOpthamologyFisik->id_asesmen = $dataAsesmen->id;
-        $dataOpthamologyFisik->sistole = $vitalSignData['sistole'];
-        $dataOpthamologyFisik->diastole = $vitalSignData['diastole'];
-        $dataOpthamologyFisik->nadi = $vitalSignData['nadi'];
-        $dataOpthamologyFisik->nafas = $vitalSignData['respiration'];
-        $dataOpthamologyFisik->spo2_tanpa_bantuan = $vitalSignData['spo2_tanpa_o2'];
-        $dataOpthamologyFisik->spo2_dengan_bantuan = $vitalSignData['spo2_dengan_o2'];
-        $dataOpthamologyFisik->suhu = $vitalSignData['suhu'];
-        $dataOpthamologyFisik->sensorium = $request->sensorium;
-        $dataOpthamologyFisik->anemis = $request->anemis;
-        $dataOpthamologyFisik->ikhterik = $request->ikhterik;
-        $dataOpthamologyFisik->dyspnoe = $request->dyspnoe;
-        $dataOpthamologyFisik->sianosis = $request->sianosis;
-        $dataOpthamologyFisik->edema = $request->edema;
-        $dataOpthamologyFisik->avpu = $request->avpu;
-        $dataOpthamologyFisik->tinggi_badan = $vitalSignData['tinggi_badan'];
-        $dataOpthamologyFisik->berat_badan = $vitalSignData['berat_badan'];
-        $dataOpthamologyFisik->save();
+            // Save vital signs using service
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaction, $lastTransaction->kd_kasir);
 
-        // Save resume data with vital signs
-        $resumeData = [
-            'anamnesis' => $request->anamnesis,
-            'diagnosis' => [],
-            'tindak_lanjut_code' => null,
-            'tindak_lanjut_name' => null,
-            'tgl_kontrol_ulang' => null,
-            'unit_rujuk_internal' => null,
-            'rs_rujuk' => null,
-            'rs_rujuk_bagian' => null,
-            'konpas' => [
-                'sistole' => ['hasil' => $vitalSignData['sistole']],
-                'diastole' => ['hasil' => $vitalSignData['diastole']],
-                'respiration_rate' => ['hasil' => $vitalSignData['respiration']],
-                'suhu' => ['hasil' => $vitalSignData['suhu']],
-                'nadi' => ['hasil' => $vitalSignData['nadi']],
-                'tinggi_badan' => ['hasil' => $vitalSignData['tinggi_badan']],
-                'berat_badan' => ['hasil' => $vitalSignData['berat_badan']],
-                'spo2_tanpa_o2' => ['hasil' => $vitalSignData['spo2_tanpa_o2']],
-                'spo2_dengan_o2' => ['hasil' => $vitalSignData['spo2_dengan_o2']],
-            ]
-        ];
+            // Save vital signs to ophthalmology physical assessment
+            $dataOpthamologyFisik = new RmeAsesmenKepOphtamologyFisik();
+            $dataOpthamologyFisik->id_asesmen = $dataAsesmen->id;
+            $dataOpthamologyFisik->sistole = $vitalSignData['sistole'];
+            $dataOpthamologyFisik->diastole = $vitalSignData['diastole'];
+            $dataOpthamologyFisik->nadi = $vitalSignData['nadi'];
+            $dataOpthamologyFisik->nafas = $vitalSignData['respiration'];
+            $dataOpthamologyFisik->spo2_tanpa_bantuan = $vitalSignData['spo2_tanpa_o2'];
+            $dataOpthamologyFisik->spo2_dengan_bantuan = $vitalSignData['spo2_dengan_o2'];
+            $dataOpthamologyFisik->suhu = $vitalSignData['suhu'];
+            $dataOpthamologyFisik->sensorium = $request->sensorium;
+            $dataOpthamologyFisik->anemis = $request->anemis;
+            $dataOpthamologyFisik->ikhterik = $request->ikhterik;
+            $dataOpthamologyFisik->dyspnoe = $request->dyspnoe;
+            $dataOpthamologyFisik->sianosis = $request->sianosis;
+            $dataOpthamologyFisik->edema = $request->edema;
+            $dataOpthamologyFisik->avpu = $request->avpu;
+            $dataOpthamologyFisik->tinggi_badan = $vitalSignData['tinggi_badan'];
+            $dataOpthamologyFisik->berat_badan = $vitalSignData['berat_badan'];
+            $dataOpthamologyFisik->save();
 
-        $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+            // Save resume data with vital signs
+            $resumeData = [
+                'anamnesis' => $request->anamnesis,
+                'diagnosis' => [],
+                'tindak_lanjut_code' => null,
+                'tindak_lanjut_name' => null,
+                'tgl_kontrol_ulang' => null,
+                'unit_rujuk_internal' => null,
+                'rs_rujuk' => null,
+                'rs_rujuk_bagian' => null,
+                'konpas' => [
+                    'sistole' => ['hasil' => $vitalSignData['sistole']],
+                    'diastole' => ['hasil' => $vitalSignData['diastole']],
+                    'respiration_rate' => ['hasil' => $vitalSignData['respiration']],
+                    'suhu' => ['hasil' => $vitalSignData['suhu']],
+                    'nadi' => ['hasil' => $vitalSignData['nadi']],
+                    'tinggi_badan' => ['hasil' => $vitalSignData['tinggi_badan']],
+                    'berat_badan' => ['hasil' => $vitalSignData['berat_badan']],
+                    'spo2_tanpa_o2' => ['hasil' => $vitalSignData['spo2_tanpa_o2']],
+                    'spo2_dengan_o2' => ['hasil' => $vitalSignData['spo2_dengan_o2']],
+                ]
+            ];
 
-        DB::commit();
+            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
 
-        return redirect()->to(url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum"))
-            ->with('success', 'Data asesmen ophthalmology dan vital sign berhasil disimpan');
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return redirect()->back()->with('error', 'Gagal menyimpan data asesmen: ' . $e->getMessage());
+            DB::commit();
+
+            return redirect()->to(url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum"))
+                ->with('success', 'Data asesmen ophthalmology dan vital sign berhasil disimpan');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Gagal menyimpan data asesmen: ' . $e->getMessage());
+        }
     }
-}
-
 
 
     public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         try {
             // Ambil data asesmen beserta semua relasinya
-
 
             $asesmen = RmeAsesmen::with([
                 'user',
@@ -238,7 +250,7 @@ public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_
                 'pemeriksaanFisik.itemFisik'
             ])->findOrFail($id);
 
-            dd($asesmen);
+            // dd($asesmen);
 
             // Mengambil data medis pasien
             $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -286,6 +298,7 @@ public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_
             $jenisnyeri = RmeJenisNyeri::all();
             $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
             $rmeMasterImplementasi = RmeMasterImplementasi::all();
+            $satsetPrognosis = SatsetPrognosis::all();
             $user = auth()->user();
 
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-opthamology.show', compact(
@@ -299,6 +312,7 @@ public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_
                 'faktorperingan',
                 'efeknyeri',
                 'jenisnyeri',
+                'satsetPrognosis',
                 'rmeMasterDiagnosis',
                 'rmeMasterImplementasi',
                 'user'
@@ -397,6 +411,7 @@ public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_
             $jenisnyeri = RmeJenisNyeri::all();
             $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
             $rmeMasterImplementasi = RmeMasterImplementasi::all();
+            $satsetPrognosis = SatsetPrognosis::all();
             $user = auth()->user();
 
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-opthamology.edit', compact(
@@ -412,6 +427,7 @@ public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_
                 'jenisnyeri',
                 'rmeMasterDiagnosis',
                 'rmeMasterImplementasi',
+                'satsetPrognosis',
                 'user',
                 'kd_unit',
                 'kd_pasien',
@@ -470,6 +486,7 @@ public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_
             $asesmenKepOpthamology->penyakit_yang_diderita = $request->penyakit_diderita ?? '[]';
             $asesmenKepOpthamology->riwayat_penyakit_keluarga = $request->riwayat_kesehatan_keluarga ?? '[]';
             $asesmenKepOpthamology->riwayat_penggunaan_obat = $request->riwayat_penggunaan_obat ?? '[]';
+            $asesmenKepOpthamology->paru_prognosis = $request->paru_prognosis;
             $asesmenKepOpthamology->save();
 
             // Simpan Diagnosa ke Master (opsional, hanya jika ada perubahan baru)

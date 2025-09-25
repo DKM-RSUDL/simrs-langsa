@@ -140,7 +140,7 @@
                                                 <div class="col-md-3">
                                                     <label class="form-label">HPHT:</label>
                                                     <p class="form-control-plaintext border-bottom">
-                                                        @if($asesmen->rmeAsesmenGinekologik->hpht)
+                                                        @if ($asesmen->rmeAsesmenGinekologik->hpht)
                                                             {{ \Carbon\Carbon::parse($asesmen->rmeAsesmenGinekologik->hpht)->format('d/m/Y') }}
                                                             <small class="text-muted d-block">
                                                                 {{ \Carbon\Carbon::parse($asesmen->rmeAsesmenGinekologik->hpht)->diffForHumans() }}
@@ -153,11 +153,11 @@
                                                 <div class="col-md-3">
                                                     <label class="form-label">Usia Kehamilan:</label>
                                                     <p class="form-control-plaintext border-bottom">
-                                                        @if($asesmen->rmeAsesmenGinekologik->usia_kehamilan_display)
+                                                        @if ($asesmen->rmeAsesmenGinekologik->usia_kehamilan_display)
                                                             <span class="badge bg-success">
                                                                 {{ $asesmen->rmeAsesmenGinekologik->usia_kehamilan_display }}
                                                             </span>
-                                                            @if($asesmen->rmeAsesmenGinekologik->usia_kehamilan_total_hari)
+                                                            @if ($asesmen->rmeAsesmenGinekologik->usia_kehamilan_total_hari)
                                                                 <small class="text-muted d-block">
                                                                     Total:
                                                                     {{ $asesmen->rmeAsesmenGinekologik->usia_kehamilan_total_hari }}
@@ -166,7 +166,8 @@
                                                             @endif
                                                         @elseif($asesmen->rmeAsesmenGinekologik->usia_minggu || $asesmen->rmeAsesmenGinekologik->usia_hari)
                                                             <span class="badge bg-info">
-                                                                {{ $asesmen->rmeAsesmenGinekologik->usia_minggu ?? 0 }} minggu
+                                                                {{ $asesmen->rmeAsesmenGinekologik->usia_minggu ?? 0 }}
+                                                                minggu
                                                                 {{ $asesmen->rmeAsesmenGinekologik->usia_hari ?? 0 }} hari
                                                             </span>
                                                         @else
@@ -176,7 +177,7 @@
                                                 </div>
                                             </div>
 
-                                            @if($asesmen->rmeAsesmenGinekologik->hpht && $asesmen->rmeAsesmenGinekologik->usia_minggu)
+                                            @if ($asesmen->rmeAsesmenGinekologik->hpht && $asesmen->rmeAsesmenGinekologik->usia_minggu)
                                                 <!-- Detail Summary Card -->
                                                 <div class="mt-3">
                                                     <div class="border-success">
@@ -255,7 +256,8 @@
                                 @if (!empty($asesmen->rmeAsesmenGinekologik->riwayat_obstetrik))
                                     @php
                                         // Safely decode JSON, with error handling
-                                        $riwayatObstetrik = json_decode($asesmen->rmeAsesmenGinekologik->riwayat_obstetrik, true) ?? [];
+                                        $riwayatObstetrik =
+                                            json_decode($asesmen->rmeAsesmenGinekologik->riwayat_obstetrik, true) ?? [];
                                     @endphp
                                     @if (!empty($riwayatObstetrik) && is_array($riwayatObstetrik))
                                         <div class="table-responsive">
@@ -345,7 +347,7 @@
                                 <div class="col-md-3">
                                     <label class="form-label fw-bold">Suhu:</label>
                                     <p class="form-control-plaintext border-bottom">
-                                        @if($asesmen->rmeAsesmenGinekologikTandaVital->suhu)
+                                        @if ($asesmen->rmeAsesmenGinekologikTandaVital->suhu)
                                             @php
                                                 $suhu = $asesmen->rmeAsesmenGinekologikTandaVital->suhu;
                                             @endphp
@@ -360,7 +362,7 @@
                                 <div class="col-md-3">
                                     <label class="form-label fw-bold">Respirasi:</label>
                                     <p class="form-control-plaintext border-bottom">
-                                        @if($asesmen->rmeAsesmenGinekologikTandaVital->respirasi)
+                                        @if ($asesmen->rmeAsesmenGinekologikTandaVital->respirasi)
                                             @php
                                                 $respirasi = $asesmen->rmeAsesmenGinekologikTandaVital->respirasi;
                                             @endphp
@@ -375,7 +377,7 @@
                                 <div class="col-md-3">
                                     <label class="form-label fw-bold">saturasi oksigen:</label>
                                     <p class="form-control-plaintext border-bottom">
-                                        @if($asesmen->rmeAsesmenGinekologikTandaVital->nadi)
+                                        @if ($asesmen->rmeAsesmenGinekologikTandaVital->nadi)
                                             @php
                                                 $nadi = $asesmen->rmeAsesmenGinekologikTandaVital->nadi;
                                             @endphp
@@ -437,7 +439,7 @@
                                 </div>
                                 <div class="col-9">
                                     <p class="form-control-plaintext border-bottom">
-                                        @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kepala ?? 1) == 1)
+                                        @if (($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kepala ?? 1) == 1)
                                             Normal
                                         @else
                                             Abnormal:
@@ -454,7 +456,7 @@
                                 </div>
                                 <div class="col-9">
                                     <p class="form-control-plaintext border-bottom">
-                                        @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hidung ?? 1) == 1)
+                                        @if (($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hidung ?? 1) == 1)
                                             Normal
                                         @else
                                             Abnormal:
@@ -471,7 +473,7 @@
                                 </div>
                                 <div class="col-9">
                                     <p class="form-control-plaintext border-bottom">
-                                        @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mata ?? 1) == 1)
+                                        @if (($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mata ?? 1) == 1)
                                             Normal
                                         @else
                                             Abnormal:
@@ -488,7 +490,7 @@
                                 </div>
                                 <div class="col-9">
                                     <p class="form-control-plaintext border-bottom">
-                                        @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->leher ?? 1) == 1)
+                                        @if (($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->leher ?? 1) == 1)
                                             Normal
                                         @else
                                             Abnormal:
@@ -505,7 +507,7 @@
                                 </div>
                                 <div class="col-9">
                                     <p class="form-control-plaintext border-bottom">
-                                        @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->tenggorokan ?? 1) == 1)
+                                        @if (($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->tenggorokan ?? 1) == 1)
                                             Normal
                                         @else
                                             Abnormal:
@@ -528,7 +530,7 @@
                                         </div>
                                         <div class="col-9">
                                             <p class="form-control-plaintext border-bottom">
-                                                @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->jantung ?? 1) == 1)
+                                                @if (($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->jantung ?? 1) == 1)
                                                     Normal
                                                 @else
                                                     Abnormal:
@@ -544,7 +546,7 @@
                                         </div>
                                         <div class="col-9">
                                             <p class="form-control-plaintext border-bottom">
-                                                @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru ?? 1) == 1)
+                                                @if (($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru ?? 1) == 1)
                                                     Normal
                                                 @else
                                                     Abnormal:
@@ -569,7 +571,7 @@
                                         </div>
                                         <div class="col-9">
                                             <p class="form-control-plaintext border-bottom">
-                                                @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hati ?? 1) == 1)
+                                                @if (($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hati ?? 1) == 1)
                                                     Normal
                                                 @else
                                                     Abnormal:
@@ -585,7 +587,7 @@
                                         </div>
                                         <div class="col-9">
                                             <p class="form-control-plaintext border-bottom">
-                                                @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->limpa ?? 1) == 1)
+                                                @if (($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->limpa ?? 1) == 1)
                                                     Normal
                                                 @else
                                                     Abnormal:
@@ -604,7 +606,7 @@
                                 </div>
                                 <div class="col-9">
                                     <p class="form-control-plaintext border-bottom">
-                                        @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kulit ?? 1) == 1)
+                                        @if (($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kulit ?? 1) == 1)
                                             Normal
                                         @else
                                             Abnormal:
@@ -621,7 +623,7 @@
                                 </div>
                                 <div class="col-9">
                                     <p class="form-control-plaintext border-bottom">
-                                        @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mulut_gigi ?? 1) == 1)
+                                        @if (($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mulut_gigi ?? 1) == 1)
                                             Normal
                                         @else
                                             Abnormal:
@@ -638,7 +640,7 @@
                                     tidak dilakukan.
                                 </p>
 
-                                @if($asesmen->pemeriksaanFisik->count() > 0 && $itemFisik->count() > 0)
+                                @if ($asesmen->pemeriksaanFisik->count() > 0 && $itemFisik->count() > 0)
                                 <div class="row">
                                     @php
                                     // Buat mapping pemeriksaan fisik berdasarkan id_item_fisik
@@ -895,7 +897,7 @@
                     </div>
 
                     <!-- 11. Discharge Planning -->
-                    <div class="section-separator mb-4">
+                    {{-- <div class="section-separator mb-4">
                         <h5 class="section-title">11. Discharge Planning</h5>
                         <div class="card">
                             <div class="card-body">
@@ -984,14 +986,42 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <!-- 12. Diagnosis -->
                     <div class="section-separator mb-4">
-                        <h5 class="section-title">12. Diagnosis</h5>
+                        <h5 class="section-title">11. Diagnosis</h5>
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="text-primary fw-semibold mb-2">Prognosis</label>
+                                            <select class="form-select" name="paru_prognosis" disabled>
+                                                <option value="" disabled
+                                                    {{ !old(
+                                                        'paru_prognosis',
+                                                        isset($asesmen->rmeAsesmenGinekologik) ? $asesmen->rmeAsesmenGinekologik->paru_prognosis : '',
+                                                    )
+                                                        ? 'selected'
+                                                        : '' }}>
+                                                    --Pilih Prognosis--</option>
+                                                @forelse ($satsetPrognosis as $item)
+                                                    <option value="{{ $item->prognosis_id }}"
+                                                        {{ old(
+                                                            'paru_prognosis',
+                                                            isset($asesmen->rmeAsesmenGinekologik) ? $asesmen->rmeAsesmenGinekologik->paru_prognosis : '',
+                                                        ) == $item->prognosis_id
+                                                            ? 'selected'
+                                                            : '' }}>
+                                                        {{ $item->value ?? 'Field tidak ditemukan' }}
+                                                    </option>
+                                                @empty
+                                                    <option value="" disabled>Tidak ada data</option>
+                                                @endforelse
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label class="form-label fw-bold">Diagnosis Banding:</label>
@@ -1008,9 +1038,16 @@
                                                 $prognosis = [];
 
                                                 if ($asesmen->rmeAsesmenGinekologikDiagnosisImplementasi) {
-                                                    $implementasi = $asesmen->rmeAsesmenGinekologikDiagnosisImplementasi;
-                                                    $diagnosisBanding = json_decode($implementasi->diagnosis_banding ?? '[]', true);
-                                                    $diagnosisKerja = json_decode($implementasi->diagnosis_kerja ?? '[]', true);
+                                                    $implementasi =
+                                                        $asesmen->rmeAsesmenGinekologikDiagnosisImplementasi;
+                                                    $diagnosisBanding = json_decode(
+                                                        $implementasi->diagnosis_banding ?? '[]',
+                                                        true,
+                                                    );
+                                                    $diagnosisKerja = json_decode(
+                                                        $implementasi->diagnosis_kerja ?? '[]',
+                                                        true,
+                                                    );
                                                     $observasi = json_decode($implementasi->observasi ?? '[]', true);
                                                     $terapeutik = json_decode($implementasi->terapeutik ?? '[]', true);
                                                     $edukasi = json_decode($implementasi->edukasi ?? '[]', true);
@@ -1082,195 +1119,14 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 13. Implementasi -->
-                    <div class="section-separator mb-4">
-                        <h5 class="section-title">13. Implementasi</h5>
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="mb-4">
-                                    <label class="text-primary fw-semibold">Rencana Penatalaksanaan dan Pengobatan</label>
-                                    <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                        rencana, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
-                                        rencana Penatalaksanaan dan Pengobatan kerja yang tidak ditemukan.</small>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Observasi:</label>
-                                            @php
-                                                // Already defined above
-                                            @endphp
-
-                                            @if (!empty($observasi))
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered table-sm">
-                                                        <thead class="table-light">
-                                                            <tr>
-                                                                <th>No</th>
-                                                                <th>Observasi</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($observasi as $index => $item)
-                                                                <tr>
-                                                                    <td>{{ $index + 1 }}</td>
-                                                                    <td>{{ $item }}</td>
-                                                                </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            @else
-                                                <p class="form-control-plaintext border-bottom">
-                                                    <span class="text-muted">Tidak ada</span>
-                                                </p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Terapeutik:</label>
-                                            @php
-                                                // Already defined above
-                                            @endphp
-
-                                            @if (!empty($terapeutik))
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered table-sm">
-                                                        <thead class="table-light">
-                                                            <tr>
-                                                                <th>No</th>
-                                                                <th>Terapeutik</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($terapeutik as $index => $item)
-                                                                <tr>
-                                                                    <td>{{ $index + 1 }}</td>
-                                                                    <td>{{ $item }}</td>
-                                                                </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            @else
-                                                <p class="form-control-plaintext border-bottom">
-                                                    <span class="text-muted">Tidak ada</span>
-                                                </p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Edukasi:</label>
-                                            @php
-                                                // Already defined above
-                                            @endphp
-
-                                            @if (!empty($edukasi))
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered table-sm">
-                                                        <thead class="table-light">
-                                                            <tr>
-                                                                <th>No</th>
-                                                                <th>Edukasi</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($edukasi as $index => $item)
-                                                                <tr>
-                                                                    <td>{{ $index + 1 }}</td>
-                                                                    <td>{{ $item }}</td>
-                                                                </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            @else
-                                                <p class="form-control-plaintext border-bottom">
-                                                    <span class="text-muted">Tidak ada</span>
-                                                </p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Kolaborasi:</label>
-                                            @php
-                                                // Already defined above
-                                            @endphp
-
-                                            @if (!empty($kolaborasi))
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered table-sm">
-                                                        <thead class="table-light">
-                                                            <tr>
-                                                                <th>No</th>
-                                                                <th>Kolaborasi</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($kolaborasi as $index => $item)
-                                                                <tr>
-                                                                    <td>{{ $index + 1 }}</td>
-                                                                    <td>{{ $item }}</td>
-                                                                </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            @else
-                                                <p class="form-control-plaintext border-bottom">
-                                                    <span class="text-muted">Tidak ada</span>
-                                                </p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Prognosis:</label>
-                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                keterangan Prognosis yang tidak ditemukan.</small>
-                                            @php
-                                                // Already defined above
-                                            @endphp
-
-                                            @if (!empty($prognosis))
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered table-sm">
-                                                        <thead class="table-light">
-                                                            <tr>
-                                                                <th>No</th>
-                                                                <th>Prognosis</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($prognosis as $index => $item)
-                                                                <tr>
-                                                                    <td>{{ $index + 1 }}</td>
-                                                                    <td>{{ $item }}</td>
-                                                                </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            @else
-                                                <p class="form-control-plaintext border-bottom">
-                                                    <span class="text-muted">Tidak ada</span>
-                                                </p>
-                                            @endif
+                                        <div class="form-group mb-3">
+                                            <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan
+                                                Pengobatan</label>
+                                            <textarea class="form-control" name="rencana_pengobatan" rows="4"
+                                                placeholder="Rencana Penatalaksanaan Dan Pengobatan" disabled>{{ old('rencana_pengobatan', isset($asesmen->rmeAsesmenGinekologik) ? $asesmen->rmeAsesmenGinekologik->rencana_pengobatan : '') }}</textarea>
                                         </div>
                                     </div>
                                 </div>

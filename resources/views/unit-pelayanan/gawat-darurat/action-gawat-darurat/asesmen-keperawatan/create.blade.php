@@ -366,7 +366,7 @@
                                                         <small class="text-muted">Jumlah Frekuensi (x/mnt)</small>
                                                     </div>
                                                     <input class="form-control" type="number"
-                                                        name="circulation_transfusi_jumlah">
+                                                        name="circulation_transfusi_jumlah" value="{{ $vitalSignMedis['nadi'] ?? 0 }}" readonly>
                                                 </div>
                                             </div>
                                         </div>

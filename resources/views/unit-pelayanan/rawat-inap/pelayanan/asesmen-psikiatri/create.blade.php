@@ -112,7 +112,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Suhu (°C)</label>
-                                            <input type="number" class="form-control" name="suhu" step="0.1"
+                                            <input type="text" class="form-control" name="suhu" step="0.1"
                                                 placeholder="36.5" min="30" max="45">
                                         </div>
 
@@ -268,11 +268,11 @@
                                         </div>
 
                                     </div>
-                                    
+
 
                                     <div class="section-separator" id="pemeriksaan-fisik">
                                         <h5 class="section-title">5. Pemeriksaan Fisik</h5>
-                                        
+
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Pemeriksaan Psikiatri</label>
                                             <textarea class="form-control" name="pemeriksaan_psikiatri"
@@ -342,7 +342,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Axis III</label>
-                                            <input type="text" class="form-control" name="axis_iii" placeholder="Masukkan Axis III">    
+                                            <input type="text" class="form-control" name="axis_iii" placeholder="Masukkan Axis III">
                                         </div>
 
                                         <div class="form-group">
@@ -370,10 +370,10 @@
 
                                     <div class="mb-4">
                                         <label class="text-primary fw-semibold">Prognosis</label>
-                                        
+
                                         <select class="form-select" name="prognosis">
                                             <option value="">--Pilih Prognosis--</option>
-                                            @forelse ($satsetPrognosis as $item)                                            
+                                            @forelse ($satsetPrognosis as $item)
                                                 <option value="{{ $item->prognosis_id }}">
                                                     {{ $item->value ?? 'Field tidak ditemukan' }}
                                                 </option>

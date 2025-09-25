@@ -2242,12 +2242,12 @@
                                     <div class="row">
                                         <h5>15. Discharge Planning</h5>
                                         <div class="col-md-6">
-                                            <div class="mb-3">
+                                            {{-- <div class="mb-3">
                                                 <label class="form-label fw-bold">Diagnosis Medis</label>
                                                 <p class="form-control-plaintext border-bottom">
                                                     {{ $asesmen->rmeAsesmenKepAnakRencanaPulang->diagnosis_medis ?? '-' }}
                                                 </p>
-                                            </div>
+                                            </div> --}}
 
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Usia Lanjut</label>
@@ -2341,7 +2341,7 @@
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Kesimpulan</label>
                                                 <div
-                                                    class="alert 
+                                                    class="alert
                             @if ($asesmen->rmeAsesmenKepAnakRencanaPulang->kesimpulan == 'Mebutuhkan rencana pulang khusus') alert-warning
                             @elseif($asesmen->rmeAsesmenKepAnakRencanaPulang->kesimpulan == 'Tidak mebutuhkan rencana pulang khusus')
                                 alert-success

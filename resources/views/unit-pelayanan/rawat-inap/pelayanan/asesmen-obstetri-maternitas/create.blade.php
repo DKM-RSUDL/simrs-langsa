@@ -4,9 +4,9 @@
 @section('content')
     @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.create-include')
     @push('modals')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.modal-riwayat-kehamilan')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.modal-riwayat-penyakin-keluarwa')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.modal-riwayat-obstetrik')
+        @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.modal-riwayat-kehamilan')
+        @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.modal-riwayat-penyakin-keluarwa')
+        @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.modal-riwayat-obstetrik')
     @endpush
 
     <div class="row">
@@ -129,8 +129,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Anamnesis</label>
-                                            <textarea class="form-control" name="anamnesis_anamnesis" rows="4"
-                                                placeholder="keluhan utama pasien"></textarea>
+                                            <textarea class="form-control" name="anamnesis_anamnesis" rows="4" placeholder="keluhan utama pasien"></textarea>
                                         </div>
                                     </div>
 
@@ -169,7 +168,7 @@
 
                                         <div class="form-group mb-3">
                                             <label class="d-block mb-2" style="min-width: 200px;">Suhu (C)</label>
-                                            <input type="number" class="form-control" name="suhu"
+                                            <input type="text" class="form-control" name="suhu"
                                                 placeholder="suhu dalam celcius">
                                         </div>
 
@@ -312,38 +311,38 @@
                                             <label class="d-block mb-2" style="min-width: 200px;">Station</label>
                                             <div class="d-flex gap-2">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="serviks_station"
-                                                        value="-3" id="station-3">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="serviks_station" value="-3" id="station-3">
                                                     <label class="form-check-label" for="station-3">-3</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="serviks_station"
-                                                        value="-2" id="station-2">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="serviks_station" value="-2" id="station-2">
                                                     <label class="form-check-label" for="station-2">-2</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="serviks_station"
-                                                        value="-1" id="station-1">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="serviks_station" value="-1" id="station-1">
                                                     <label class="form-check-label" for="station-1">-1</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="serviks_station"
-                                                        value="0" id="station0">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="serviks_station" value="0" id="station0">
                                                     <label class="form-check-label" for="station0">0</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="serviks_station"
-                                                        value="+1" id="station1">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="serviks_station" value="+1" id="station1">
                                                     <label class="form-check-label" for="station1">+1</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="serviks_station"
-                                                        value="+2" id="station2">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="serviks_station" value="+2" id="station2">
                                                     <label class="form-check-label" for="station2">+2</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="serviks_station"
-                                                        value="+3" id="station3">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="serviks_station" value="+3" id="station3">
                                                     <label class="form-check-label" for="station3">+3</label>
                                                 </div>
                                             </div>
@@ -362,7 +361,8 @@
 
                                         <div class="form-group mb-3">
                                             <label class="d-block mb-2" style="min-width: 200px;">Pembukaan</label>
-                                            <input type="text" class="form-control" name="serviks_pembukaan" placeholder="">
+                                            <input type="text" class="form-control" name="serviks_pembukaan"
+                                                placeholder="">
                                             <label class="d-block mr-2">Jam</label>
                                             <input type="time" class="form-control" name="serviks_jam_pembukaan">
                                         </div>
@@ -575,13 +575,16 @@
                                                             <div class="d-flex flex-column gap-3">
                                                                 @foreach ($chunk as $item)
                                                                     <div class="pemeriksaan-item">
-                                                                        <div class="d-flex align-items-center border-bottom pb-2">
+                                                                        <div
+                                                                            class="d-flex align-items-center border-bottom pb-2">
                                                                             <div class="flex-grow-1">{{ $item->nama }}
                                                                             </div>
                                                                             <div class="form-check me-3">
-                                                                                <input type="checkbox" class="form-check-input"
+                                                                                <input type="checkbox"
+                                                                                    class="form-check-input"
                                                                                     id="{{ $item->id }}-normal"
-                                                                                    name="{{ $item->id }}-normal" checked>
+                                                                                    name="{{ $item->id }}-normal"
+                                                                                    checked>
                                                                                 <label class="form-check-label"
                                                                                     for="{{ $item->id }}-normal">Normal</label>
                                                                             </div>
@@ -592,7 +595,8 @@
                                                                                 <i class="bi bi-plus"></i>
                                                                             </button>
                                                                         </div>
-                                                                        <div class="keterangan mt-2" id="{{ $item->id }}-keterangan"
+                                                                        <div class="keterangan mt-2"
+                                                                            id="{{ $item->id }}-keterangan"
                                                                             style="display:none;">
                                                                             <input type="text" class="form-control"
                                                                                 name="{{ $item->id }}_keterangan"
@@ -638,8 +642,8 @@
                                             <label class="d-block mb-2" style="min-width: 200px;">Nilai Skala
                                                 Nyeri</label>
                                             <input type="number" class="form-control" name="skala_nyeri"
-                                                id="skala_nyeri_main" value="{{ old('skala_nyeri', 0) }}" min="0" max="10"
-                                                readonly>
+                                                id="skala_nyeri_main" value="{{ old('skala_nyeri', 0) }}" min="0"
+                                                max="10" readonly>
                                         </div>
 
                                         <div class="form-group mb-3">
@@ -659,13 +663,15 @@
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label class="d-block mb-2" style="min-width: 100px;">Lokasi</label>
-                                                    <input type="text" class="form-control bg-light" name="lokasi_nyeri">
+                                                    <input type="text" class="form-control bg-light"
+                                                        name="lokasi_nyeri">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label class="d-block mb-2" style="min-width: 100px;">Durasi</label>
-                                                    <input type="text" class="form-control bg-light" name="durasi_nyeri">
+                                                    <input type="text" class="form-control bg-light"
+                                                        name="durasi_nyeri">
                                                 </div>
                                             </div>
                                         </div>
@@ -684,7 +690,8 @@
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
-                                                    <label class="d-block mb-2" style="min-width: 100px;">Frekuensi</label>
+                                                    <label class="d-block mb-2"
+                                                        style="min-width: 100px;">Frekuensi</label>
                                                     <select class="form-select" name="frekuensi_nyeri">
                                                         <option value="" selected>Pilih</option>
                                                         <option value="Jarang">Jarang</option>
@@ -699,7 +706,8 @@
                                         <div class="row mb-3">
                                             <div class="col-6">
                                                 <div class="form-group">
-                                                    <label class="d-block mb-2" style="min-width: 100px;">Menjalar?</label>
+                                                    <label class="d-block mb-2"
+                                                        style="min-width: 100px;">Menjalar?</label>
                                                     <select class="form-select" name="menjalar">
                                                         <option value="" selected>Pilih</option>
                                                         <option value="1">Ya</option>
@@ -775,8 +783,10 @@
                                         <div class="form-group mb-3">
                                             <label class="d-block mb-2" style="min-width: 200px;">Status Obstetri</label>
                                             <div class="d-flex gap-3">
-                                                <input type="text" class="form-control" name="gravid" placeholder="Gravid">
-                                                <input type="text" class="form-control" name="partus" placeholder="Partus">
+                                                <input type="text" class="form-control" name="gravid"
+                                                    placeholder="Gravid">
+                                                <input type="text" class="form-control" name="partus"
+                                                    placeholder="Partus">
                                                 <input type="text" class="form-control" name="abortus"
                                                     placeholder="Abortus">
                                             </div>
@@ -794,7 +804,8 @@
 
                                         <div class="form-group mb-3">
                                             <label class="d-block mb-2" style="min-width: 200px;">Lama Haid</label>
-                                            <input type="number" class="form-control" name="lama_haid" placeholder="Hari">
+                                            <input type="number" class="form-control" name="lama_haid"
+                                                placeholder="Hari">
                                         </div>
 
                                         <div class="form-group mb-3">
@@ -850,7 +861,8 @@
 
                                         <div class="row mt-2">
                                             <div class="form-group mb-3">
-                                                <label class="d-block mb-2" style="min-width: 200px;">Kebiasaan Ibu Sewaktu
+                                                <label class="d-block mb-2" style="min-width: 200px;">Kebiasaan Ibu
+                                                    Sewaktu
                                                     Hamil</label>
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" id="kebiasaanHamilDisplay"
@@ -863,7 +875,8 @@
                                             </div>
                                             <div class="form-group mb-3">
                                                 <div class="selected-items mt-2" id="kebiasaanHamilPilihan"></div>
-                                                <input type="hidden" name="kebiasaan_ibu_hamil" id="kebiasaanHamilInput">
+                                                <input type="hidden" name="kebiasaan_ibu_hamil"
+                                                    id="kebiasaanHamilInput">
                                             </div>
                                             @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.modal-kebiasaan-hamil')
                                         </div>
@@ -900,7 +913,8 @@
                                                 <label class="d-block mb-2" style="min-width: 200px;">Pengambilan
                                                     Keputusan</label>
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" id="pengambilanKeputusanDisplay"
+                                                    <input type="text" class="form-control"
+                                                        id="pengambilanKeputusanDisplay"
                                                         placeholder="Pengambilan Keputusan" readonly>
                                                     <button type="button" class="btn btn-primary"
                                                         id="btnPilihPengambilanKeputusan"
@@ -923,8 +937,8 @@
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" id="pendampingDisplay"
                                                         placeholder="Pendamping" readonly>
-                                                    <button type="button" class="btn btn-primary" id="btnPilihPendamping"
-                                                        title="Pilih Pendamping">
+                                                    <button type="button" class="btn btn-primary"
+                                                        id="btnPilihPendamping" title="Pilih Pendamping">
                                                         <i class="bi bi-list-check me-1"></i> Pilih
                                                     </button>
                                                 </div>
@@ -944,7 +958,8 @@
                                         </div>
 
                                         <div class="form-group mb-3">
-                                            <label class="d-block mb-2" style="min-width: 200px;">Riwayat Rawat Inap</label>
+                                            <label class="d-block mb-2" style="min-width: 200px;">Riwayat Rawat
+                                                Inap</label>
                                             <div class="d-flex gap-3">
                                                 <select class="form-select" name="riwayat_rawat_inap">
                                                     <option value="" selected>pilih</option>
@@ -1013,17 +1028,22 @@
                                         </div>
 
                                         <div class="form-group mb-3">
-                                            <label class="d-block mb-2 text-primary" style="min-width: 200px;">Riwayat Obstetrik</label>
-                                            <small class="text-muted d-block mb-2">Pilih tanda tambah untuk menambah keterangan Riwayat Obstetrik yang ada.</small>
+                                            <label class="d-block mb-2 text-primary" style="min-width: 200px;">Riwayat
+                                                Obstetrik</label>
+                                            <small class="text-muted d-block mb-2">Pilih tanda tambah untuk menambah
+                                                keterangan Riwayat Obstetrik yang ada.</small>
                                         </div>
 
                                         <div class="form-group mb-3">
                                             <div class="table-responsive">
-                                                <a href="javascript:void(0)" class="text-secondary text-decoration-none fw-bold ms-3" id="btn-riwayat-obstetrik">
+                                                <a href="javascript:void(0)"
+                                                    class="text-secondary text-decoration-none fw-bold ms-3"
+                                                    id="btn-riwayat-obstetrik">
                                                     <i class="bi bi-plus-square"></i> Tambah
                                                 </a>
                                                 <!-- Hidden input to store the JSON data -->
-                                                <input type="hidden" name="riwayat_obstetrik" id="riwayatObstetrikInput">
+                                                <input type="hidden" name="riwayat_obstetrik"
+                                                    id="riwayatObstetrikInput">
                                                 <table class="table table-bordered" id="tabelRiwayatObstetrik">
                                                     <thead>
                                                         <tr>
@@ -1047,385 +1067,276 @@
                                     </div>
 
                                     <div class="section-separator" style="margin-bottom: 2rem;"
-                                            id="hasil-pemeriksaan-penunjang">
-                                            <h5 class="fw-semibold mb-4">6. Hasil Pemeriksaan Penunjang</h5>
+                                        id="hasil-pemeriksaan-penunjang">
+                                        <h5 class="fw-semibold mb-4">6. Hasil Pemeriksaan Penunjang</h5>
 
-                                            <div class="mt-4">
-                                                @php
-                                                    $examTypes = [
-                                                        'darah' => 'Darah',
-                                                        'urine' => 'Urine',
-                                                        'rontgent' => 'Rontgent',
-                                                        'histopatology' => 'Histopatology',
-                                                    ];
-                                                @endphp
+                                        <div class="mt-4">
+                                            @php
+                                                $examTypes = [
+                                                    'darah' => 'Darah',
+                                                    'urine' => 'Urine',
+                                                    'rontgent' => 'Rontgent',
+                                                    'histopatology' => 'Histopatology',
+                                                ];
+                                            @endphp
 
-                                                @foreach ($examTypes as $key => $label)
-                                                    <div class="row align-items-center mb-3">
-                                                        <div class="col-3 col-md-2">
-                                                            <span class="text-secondary">{{ $label }}</span>
-                                                        </div>
-                                                        <div class="col col-md-8">
-                                                            <div class="border rounded p-2 bg-white">
-                                                                <div class="d-flex align-items-center justify-content-between">
-                                                                    <div class="d-flex align-items-center flex-grow-1">
-                                                                        <i class="bi bi-file-text text-primary me-2"></i>
-                                                                        <div class="file-input-wrapper position-relative w-100">
-                                                                            <input type="file" class="form-control"
-                                                                                name="hasil_pemeriksaan_penunjang_{{ $key }}"
-                                                                                id="{{ $key }}File"
-                                                                                accept=".pdf,.jpg,.jpeg,.png"
-                                                                                data-preview-container="{{ $key }}Preview">
-                                                                            <div class="file-info small text-muted mt-1"
-                                                                                id="{{ $key }}FileInfo">
-                                                                                <span>Format: PDF, JPG, PNG (Max 2MB)</span>
-                                                                            </div>
-                                                                            @error('hasil_pemeriksaan_penunjang_' . $key)
-                                                                                <div class="invalid-feedback d-block">
-                                                                                    {{ $message }}
-                                                                                </div>
-                                                                            @enderror
+                                            @foreach ($examTypes as $key => $label)
+                                                <div class="row align-items-center mb-3">
+                                                    <div class="col-3 col-md-2">
+                                                        <span class="text-secondary">{{ $label }}</span>
+                                                    </div>
+                                                    <div class="col col-md-8">
+                                                        <div class="border rounded p-2 bg-white">
+                                                            <div class="d-flex align-items-center justify-content-between">
+                                                                <div class="d-flex align-items-center flex-grow-1">
+                                                                    <i class="bi bi-file-text text-primary me-2"></i>
+                                                                    <div
+                                                                        class="file-input-wrapper position-relative w-100">
+                                                                        <input type="file" class="form-control"
+                                                                            name="hasil_pemeriksaan_penunjang_{{ $key }}"
+                                                                            id="{{ $key }}File"
+                                                                            accept=".pdf,.jpg,.jpeg,.png"
+                                                                            data-preview-container="{{ $key }}Preview">
+                                                                        <div class="file-info small text-muted mt-1"
+                                                                            id="{{ $key }}FileInfo">
+                                                                            <span>Format: PDF, JPG, PNG (Max 2MB)</span>
                                                                         </div>
+                                                                        @error('hasil_pemeriksaan_penunjang_' . $key)
+                                                                            <div class="invalid-feedback d-block">
+                                                                                {{ $message }}
+                                                                            </div>
+                                                                        @enderror
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-auto">
-                                                            <div id="{{ $key }}Preview" class="preview-container">
-                                                            </div>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <div id="{{ $key }}Preview" class="preview-container">
                                                         </div>
                                                     </div>
-                                                @endforeach
-                                            </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+
+                                    <div class="section-separator" id="diagnosis">
+                                        <h5 class="fw-semibold mb-4">7. Diagnosis</h5>
+
+                                        <div class="mb-4">
+                                            <label class="text-primary fw-semibold">Prognosis</label>
+
+                                            <select class="form-select" name="paru_prognosis">
+                                                <option value="" selected disabled>--Pilih Prognosis--</option>
+                                                @forelse ($satsetPrognosis as $item)
+                                                    <option value="{{ $item->prognosis_id }}">
+                                                        {{ $item->value ?? 'Field tidak ditemukan' }}
+                                                    </option>
+                                                @empty
+                                                    <option value="" disabled>Tidak ada data</option>
+                                                @endforelse
+                                            </select>
                                         </div>
 
-                                        <div class="section-separator" style="margin-bottom: 2rem;" id="discharge-planning">
-                                            <h5 class="fw-semibold mb-4">7. Discharge Planning</h5>
+                                        <!-- Diagnosis Banding -->
+                                        <div class="mb-4">
+                                            <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
+                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                diagnosis banding,
+                                                apabila tidak ada, Pilih tanda tambah untuk menambah
+                                                keterangan diagnosis banding yang tidak ditemukan.</small>
 
-                                            <form id="dischargePlanningForm">
-                                                <div class="mb-3 row align-items-center">
-                                                    <label class="col-md-3 text-secondary">Diagnosis medis</label>
-                                                    <div class="col-md-9">
-                                                        <select class="form-select bg-light" id="diagnosisMedis"
-                                                            name="dp_diagnosis_medis">
-                                                            <option selected value="Lokalis nyeri">Lokalis nyeri</option>
-                                                            <option value="Penyakit jantung">Penyakit jantung</option>
-                                                            <option value="Penyakit paru">Penyakit paru</option>
-                                                            <option value="Lainnya">Lainnya</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="mb-3 row align-items-center">
-                                                    <label class="col-md-3 text-secondary">Usia lanjut</label>
-                                                    <div class="col-md-9">
-                                                        <select class="form-select bg-light risk-factor" id="usiaLanjut"
-                                                            name="dp_usia_lanjut">
-                                                            <option selected value="">--pilih--</option>
-                                                            <option value="1">Ya</option>
-                                                            <option value="0">Tidak</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="mb-3 row align-items-center">
-                                                    <label class="col-md-3 text-secondary">Hambatan mobilisasi</label>
-                                                    <div class="col-md-9">
-                                                        <select class="form-select bg-light risk-factor"
-                                                            id="hambatanMobilisasi" name="dp_hambatan_mobilisasi">
-                                                            <option selected value="">--pilih--</option>
-                                                            <option value="1">Ya</option>
-                                                            <option value="0">Tidak</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="mb-3 row align-items-center">
-                                                    <label class="col-md-3 text-secondary">Membutuhkan pelayanan medis
-                                                        berkelanjutan</label>
-                                                    <div class="col-md-9">
-                                                        <select class="form-select bg-light risk-factor" id="pelayananMedis"
-                                                            name="dp_layanan_medis_lanjutan">
-                                                            <option selected value="">--pilih--</option>
-                                                            <option value="1">Ya</option>
-                                                            <option value="0">Tidak</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="mb-3 row align-items-center">
-                                                    <label class="col-md-3 text-secondary">Ketergantungan dengan orang lain
-                                                        dalam aktivitas harian</label>
-                                                    <div class="col-md-9">
-                                                        <select class="form-select bg-light risk-factor" id="ketergantungan"
-                                                            name="dp_tergantung_orang_lain">
-                                                            <option selected value="">--pilih--</option>
-                                                            <option value="1">Ya</option>
-                                                            <option value="0">Tidak</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="mb-4 row align-items-center">
-                                                    <label class="col-md-3 text-secondary">Perkiraan lama hari
-                                                        dirawat</label>
-                                                    <div class="col-md-3">
-                                                        <div class="input-group">
-                                                            <input type="number" id="lamaDirawat" name="dp_lama_dirawat"
-                                                                class="form-control bg-light" placeholder="Hari" min="1">
-                                                            <span class="input-group-text bg-light">Hari</span>
-                                                        </div>
-                                                    </div>
-                                                    <label class="col-md-2 text-secondary text-end">Rencana Pulang</label>
-                                                    <div class="col-md-4">
-                                                        <div class="input-group">
-                                                            <input type="text" id="rencanaPulang" name="dp_rencana_pulang"
-                                                                class="form-control bg-light"
-                                                                value="{{ \Carbon\Carbon::now()->addDays(7)->format('d M Y') }}">
-                                                            <span class="input-group-text bg-light date-picker-toggle"
-                                                                id="datePickerToggle">
-                                                                <i class="bi bi-calendar"></i>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="mb-2" id="conclusionContainer">
-                                                    <div class="alert alert-warning mb-2" id="needSpecialPlanAlert"
-                                                        style="background-color: #fff3cd; display: none;">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="dp_kesimpulan" id="need_special"
-                                                                value="Membutuhkan rencana pulang khusus" readonly>
-                                                            <label class="form-check-label" for="need_special">
-                                                                Membutuhkan rencana pulang khusus
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="alert alert-success mb-2" id="noSpecialPlanAlert"
-                                                        style="background-color: #d1e7dd; display: none;">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="dp_kesimpulan" id="no_special"
-                                                                value="Tidak membutuhkan rencana pulang khusus" readonly>
-                                                            <label class="form-check-label" for="no_special">
-                                                                Tidak membutuhkan rencana pulang khusus
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Hidden input yang akan selalu terkirim ke database -->
-                                                    <input type="hidden" id="dp_kesimpulan_hidden" name="dp_kesimpulan"
-                                                        value="">
-                                                </div>
-
-                                                <div id="conclusionSection" class="mt-4 p-3 border rounded"
-                                                    style="display: none;">
-                                                    <h6 class="fw-bold">Kesimpulan:</h6>
-                                                    <p id="conclusionText" class="mb-0"></p>
-                                                </div>
-                                            </form>
-                                        </div>
-
-                                        <div class="section-separator" id="diagnosis">
-                                            <h5 class="fw-semibold mb-4">8. Diagnosis</h5>
-
-                                            <!-- Diagnosis Banding -->
-                                            <div class="mb-4">
-                                                <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
-                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                    diagnosis banding,
-                                                    apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                    keterangan diagnosis banding yang tidak ditemukan.</small>
-
-                                                <div class="input-group mb-3">
-                                                    <span class="input-group-text bg-white border-end-0">
-                                                        <i class="bi bi-search text-secondary"></i>
-                                                    </span>
-                                                    <input type="text" id="diagnosis-banding-input"
-                                                        class="form-control border-start-0 ps-0"
-                                                        placeholder="Cari dan tambah Diagnosis Banding">
-                                                    <span class="input-group-text bg-white" id="add-diagnosis-banding">
-                                                        <i class="bi bi-plus-circle text-primary"></i>
-                                                    </span>
-                                                </div>
-
-                                                <div id="diagnosis-banding-list"
-                                                    class="diagnosis-list bg-light p-3 rounded">
-                                                    <!-- Diagnosis items will be added here dynamically -->
-                                                </div>
-
-                                                <!-- Hidden input to store JSON data -->
-                                                <input type="hidden" id="diagnosis_banding" name="diagnosis_banding"
-                                                    value="[]">
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text bg-white border-end-0">
+                                                    <i class="bi bi-search text-secondary"></i>
+                                                </span>
+                                                <input type="text" id="diagnosis-banding-input"
+                                                    class="form-control border-start-0 ps-0"
+                                                    placeholder="Cari dan tambah Diagnosis Banding">
+                                                <span class="input-group-text bg-white" id="add-diagnosis-banding">
+                                                    <i class="bi bi-plus-circle text-primary"></i>
+                                                </span>
                                             </div>
 
-                                            <!-- Diagnosis Kerja -->
-                                            <div class="mb-4">
-                                                <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
-                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                    diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                    keterangan diagnosis kerja yang tidak ditemukan.</small>
-
-                                                <div class="input-group mb-3">
-                                                    <span class="input-group-text bg-white border-end-0">
-                                                        <i class="bi bi-search text-secondary"></i>
-                                                    </span>
-                                                    <input type="text" id="diagnosis-kerja-input"
-                                                        class="form-control border-start-0 ps-0"
-                                                        placeholder="Cari dan tambah Diagnosis Kerja">
-                                                    <span class="input-group-text bg-white" id="add-diagnosis-kerja">
-                                                        <i class="bi bi-plus-circle text-primary"></i>
-                                                    </span>
-                                                </div>
-
-                                                <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
-                                                    <!-- Diagnosis items will be added here dynamically -->
-                                                </div>
-
-                                                <!-- Hidden input to store JSON data -->
-                                                <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja" value="[]">
+                                            <div id="diagnosis-banding-list" class="diagnosis-list bg-light p-3 rounded">
+                                                <!-- Diagnosis items will be added here dynamically -->
                                             </div>
+
+                                            <!-- Hidden input to store JSON data -->
+                                            <input type="hidden" id="diagnosis_banding" name="diagnosis_banding"
+                                                value="[]">
                                         </div>
 
-                                        <div class="section-separator" style="margin-bottom: 2rem;" id="implementasi">
-                                            <h5 class="fw-semibold mb-4">9. Implementasi</h5>
+                                        <!-- Diagnosis Kerja -->
+                                        <div class="mb-4">
+                                            <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
+                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah
+                                                keterangan diagnosis kerja yang tidak ditemukan.</small>
 
-                                            <!-- Rencana Penatalaksanaan dan Pengobatan -->
-                                            <div class="mb-4">
-                                                <label class="text-primary fw-semibold">Rencana Penatalaksanaan dan
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text bg-white border-end-0">
+                                                    <i class="bi bi-search text-secondary"></i>
+                                                </span>
+                                                <input type="text" id="diagnosis-kerja-input"
+                                                    class="form-control border-start-0 ps-0"
+                                                    placeholder="Cari dan tambah Diagnosis Kerja">
+                                                <span class="input-group-text bg-white" id="add-diagnosis-kerja">
+                                                    <i class="bi bi-plus-circle text-primary"></i>
+                                                </span>
+                                            </div>
+
+                                            <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
+                                                <!-- Diagnosis items will be added here dynamically -->
+                                            </div>
+
+                                            <!-- Hidden input to store JSON data -->
+                                            <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja"
+                                                value="[]">
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <!-- sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis -->
+                                            <div class="form-group mb-4">
+                                                <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan
                                                     Pengobatan</label>
-                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                    rencana, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
-                                                    rencana Penatalaksanaan dan Pengobatan kerja yang tidak
-                                                    ditemukan.</small>
-                                            </div>
-
-                                            <!-- Observasi Section -->
-                                            <div class="mb-4">
-                                                <label class="fw-semibold mb-2">Observasi</label>
-                                                <div class="input-group mt-2">
-                                                    <span class="input-group-text bg-white border-end-0">
-                                                        <i class="bi bi-search text-secondary"></i>
-                                                    </span>
-                                                    <input type="text" id="observasi-input"
-                                                        class="form-control border-start-0 ps-0"
-                                                        placeholder="Cari dan tambah Observasi">
-                                                    <span class="input-group-text bg-white" id="add-observasi">
-                                                        <i class="bi bi-plus-circle text-primary"></i>
-                                                    </span>
-                                                </div>
-                                                <div id="observasi-list" class="list-group mb-2">
-                                                    <!-- Items will be added here dynamically -->
-                                                </div>
-                                                <!-- Hidden input to store JSON data -->
-                                                <input type="hidden" id="observasi" name="observasi" value="[]">
-                                            </div>
-
-                                            <!-- Terapeutik Section -->
-                                            <div class="mb-4">
-                                                <label class="fw-semibold mb-2">Terapeutik</label>
-                                                <div class="input-group mt-2">
-                                                    <span class="input-group-text bg-white border-end-0">
-                                                        <i class="bi bi-search text-secondary"></i>
-                                                    </span>
-                                                    <input type="text" id="terapeutik-input"
-                                                        class="form-control border-start-0 ps-0"
-                                                        placeholder="Cari dan tambah Terapeutik">
-                                                    <span class="input-group-text bg-white" id="add-terapeutik">
-                                                        <i class="bi bi-plus-circle text-primary"></i>
-                                                    </span>
-                                                </div>
-                                                <div id="terapeutik-list" class="list-group mb-2">
-                                                    <!-- Items will be added here dynamically -->
-                                                </div>
-                                                <!-- Hidden input to store JSON data -->
-                                                <input type="hidden" id="terapeutik" name="terapeutik" value="[]">
-                                            </div>
-
-                                            <!-- Edukasi Section -->
-                                            <div class="mb-4">
-                                                <label class="fw-semibold mb-2">Edukasi</label>
-                                                <div class="input-group mt-2">
-                                                    <span class="input-group-text bg-white border-end-0">
-                                                        <i class="bi bi-search text-secondary"></i>
-                                                    </span>
-                                                    <input type="text" id="edukasi-input"
-                                                        class="form-control border-start-0 ps-0"
-                                                        placeholder="Cari dan tambah Edukasi">
-                                                    <span class="input-group-text bg-white" id="add-edukasi">
-                                                        <i class="bi bi-plus-circle text-primary"></i>
-                                                    </span>
-                                                </div>
-                                                <div id="edukasi-list" class="list-group mb-2">
-                                                    <!-- Items will be added here dynamically -->
-                                                </div>
-                                                <!-- Hidden input to store JSON data -->
-                                                <input type="hidden" id="edukasi" name="edukasi" value="[]">
-                                            </div>
-
-                                            <!-- Kolaborasi Section -->
-                                            <div class="mb-4">
-                                                <label class="fw-semibold mb-2">Kolaborasi</label>
-                                                <div class="input-group mt-2">
-                                                    <span class="input-group-text bg-white border-end-0">
-                                                        <i class="bi bi-search text-secondary"></i>
-                                                    </span>
-                                                    <input type="text" id="kolaborasi-input"
-                                                        class="form-control border-start-0 ps-0"
-                                                        placeholder="Cari dan tambah Kolaborasi">
-                                                    <span class="input-group-text bg-white" id="add-kolaborasi">
-                                                        <i class="bi bi-plus-circle text-primary"></i>
-                                                    </span>
-                                                </div>
-                                                <div id="kolaborasi-list" class="list-group mb-2">
-                                                    <!-- Items will be added here dynamically -->
-                                                </div>
-                                                <!-- Hidden input to store JSON data -->
-                                                <input type="hidden" id="kolaborasi" name="kolaborasi" value="[]">
-                                            </div>
-
-                                            <!-- Kolaborasi Section -->
-                                            <div class="mb-4">
-                                                <label class="text-primary fw-semibold">Prognosis</label>
-                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                    Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                    keterangan
-                                                    Prognosis yang tidak ditemukan.</small>
-                                                <!-- sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis -->
-                                                <div class="input-group mb-3">
-                                                    <span class="input-group-text bg-white border-end-0">
-                                                        <i class="bi bi-search text-secondary"></i>
-                                                    </span>
-                                                    <input type="text" id="rencana-input"
-                                                        class="form-control border-start-0 ps-0"
-                                                        placeholder="Cari dan tambah Rencana Penatalaksanaan">
-                                                    <span class="input-group-text bg-white" id="add-rencana">
-                                                        <i class="bi bi-plus-circle text-primary"></i>
-                                                    </span>
-                                                </div>
-
-                                                <div id="rencana-list" class="list-group mb-3">
-                                                    <!-- Items will be added here dynamically -->
-                                                </div>
-                                                <!-- Hidden input to store JSON data -->
-                                                <input type="hidden" id="rencana_penatalaksanaan" name="prognosis"
-                                                    value="[]">
+                                                <textarea class="form-control" name="rencana_pengobatan" rows="4"
+                                                    placeholder="Rencana Penatalaksanaan Dan Pengobatan"></textarea>
                                             </div>
                                         </div>
+                                    </div>
 
-                                    <div class="section-separator" style="margin-bottom: 2rem;">
-                                        <h5 class="fw-semibold mb-4">10. Evaluasi</h5>
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Tambah Evaluasi Keperawatan</label>
-                                            <textarea class="form-control" name="evaluasi_evaluasi" rows="4"
-                                                placeholder="Evaluasi Keperawaran"></textarea>
-                                        </div>
+                                    <div class="section-separator" style="margin-bottom: 2rem;" id="discharge-planning">
+                                        <h5 class="fw-semibold mb-4">8. Discharge Planning</h5>
+
+                                        <form id="dischargePlanningForm">
+                                            {{-- <div class="mb-3 row align-items-center">
+                                                <label class="col-md-3 text-secondary">Diagnosis medis</label>
+                                                <div class="col-md-9">
+                                                    <select class="form-select bg-light" id="diagnosisMedis"
+                                                        name="dp_diagnosis_medis">
+                                                        <option selected value="Lokalis nyeri">Lokalis nyeri</option>
+                                                        <option value="Penyakit jantung">Penyakit jantung</option>
+                                                        <option value="Penyakit paru">Penyakit paru</option>
+                                                        <option value="Lainnya">Lainnya</option>
+                                                    </select>
+                                                </div>
+                                            </div> --}}
+
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-md-3 text-secondary">Usia lanjut</label>
+                                                <div class="col-md-9">
+                                                    <select class="form-select bg-light risk-factor" id="usiaLanjut"
+                                                        name="dp_usia_lanjut">
+                                                        <option selected value="">--pilih--</option>
+                                                        <option value="1">Ya</option>
+                                                        <option value="0">Tidak</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-md-3 text-secondary">Hambatan mobilisasi</label>
+                                                <div class="col-md-9">
+                                                    <select class="form-select bg-light risk-factor"
+                                                        id="hambatanMobilisasi" name="dp_hambatan_mobilisasi">
+                                                        <option selected value="">--pilih--</option>
+                                                        <option value="1">Ya</option>
+                                                        <option value="0">Tidak</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-md-3 text-secondary">Membutuhkan pelayanan medis
+                                                    berkelanjutan</label>
+                                                <div class="col-md-9">
+                                                    <select class="form-select bg-light risk-factor" id="pelayananMedis"
+                                                        name="dp_layanan_medis_lanjutan">
+                                                        <option selected value="">--pilih--</option>
+                                                        <option value="1">Ya</option>
+                                                        <option value="0">Tidak</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-md-3 text-secondary">Ketergantungan dengan orang lain
+                                                    dalam aktivitas harian</label>
+                                                <div class="col-md-9">
+                                                    <select class="form-select bg-light risk-factor" id="ketergantungan"
+                                                        name="dp_tergantung_orang_lain">
+                                                        <option selected value="">--pilih--</option>
+                                                        <option value="1">Ya</option>
+                                                        <option value="0">Tidak</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-4 row align-items-center">
+                                                <label class="col-md-3 text-secondary">Perkiraan lama hari
+                                                    dirawat</label>
+                                                <div class="col-md-3">
+                                                    <div class="input-group">
+                                                        <input type="number" id="lamaDirawat" name="dp_lama_dirawat"
+                                                            class="form-control bg-light" placeholder="Hari"
+                                                            min="1">
+                                                        <span class="input-group-text bg-light">Hari</span>
+                                                    </div>
+                                                </div>
+                                                <label class="col-md-2 text-secondary text-end">Rencana Pulang</label>
+                                                <div class="col-md-4">
+                                                    <div class="input-group">
+                                                        <input type="text" id="rencanaPulang"
+                                                            name="dp_rencana_pulang" class="form-control bg-light"
+                                                            value="{{ \Carbon\Carbon::now()->addDays(7)->format('d M Y') }}">
+                                                        <span class="input-group-text bg-light date-picker-toggle"
+                                                            id="datePickerToggle">
+                                                            <i class="bi bi-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-2" id="conclusionContainer">
+                                                <div class="alert alert-warning mb-2" id="needSpecialPlanAlert"
+                                                    style="background-color: #fff3cd; display: none;">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="dp_kesimpulan" id="need_special"
+                                                            value="Membutuhkan rencana pulang khusus" readonly>
+                                                        <label class="form-check-label" for="need_special">
+                                                            Membutuhkan rencana pulang khusus
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="alert alert-success mb-2" id="noSpecialPlanAlert"
+                                                    style="background-color: #d1e7dd; display: none;">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="dp_kesimpulan" id="no_special"
+                                                            value="Tidak membutuhkan rencana pulang khusus" readonly>
+                                                        <label class="form-check-label" for="no_special">
+                                                            Tidak membutuhkan rencana pulang khusus
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <!-- Hidden input yang akan selalu terkirim ke database -->
+                                                <input type="hidden" id="dp_kesimpulan_hidden" name="dp_kesimpulan"
+                                                    value="">
+                                            </div>
+
+                                            <div id="conclusionSection" class="mt-4 p-3 border rounded"
+                                                style="display: none;">
+                                                <h6 class="fw-bold">Kesimpulan:</h6>
+                                                <p id="conclusionText" class="mb-0"></p>
+                                            </div>
+                                        </form>
                                     </div>
 
                                     <div class="d-flex justify-content-end">
                                         <button type="submit" class="btn btn-primary">Simpan</button>
                                     </div>
-
                                 </div>
                             </div>
                         </div>

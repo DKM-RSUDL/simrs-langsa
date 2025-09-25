@@ -90,7 +90,7 @@ class EdukasiController extends Controller
             abort(404, 'Data not found');
         }
 
-        $role = $request->query('role');
+        $role = $request->query('role', 'admin');
 
         $sectionAccess = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
 
@@ -102,20 +102,27 @@ class EdukasiController extends Controller
 
         $pendidikan = Pendidikan::all();
 
+        // Cari data edukasi yang sudah ada berdasarkan parameter kunjungan
+        $existingEdukasi = Edukasi::with(['edukasiPasien', 'kebutuhanEdukasi', 'kebutuhanEdukasiLanjutan'])
+            ->where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', 3)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
+
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.edukasi.create', compact(
             'dataMedis',
             'pendidikan',
             'sectionAccess',
-            'role'
+            'role',
+            'existingEdukasi',
         ));
     }
 
     public function store(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-
         DB::beginTransaction();
         try {
-
             $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
                 ->join('transaksi as t', function ($join) {
                     $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
@@ -131,22 +138,13 @@ class EdukasiController extends Controller
                 ->where('kunjungan.urut_masuk', $urut_masuk)
                 ->first();
 
-
             if (!$dataMedis) {
                 abort(404, 'Data kunjungan tidak ditemukan');
             }
 
             $role = $request->role;
-            $sectionAccess = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
-
-            if($role == 'dokter') $sectionAccess = [1,2,9,10,13,15,16];
-            if($role == 'farmasi') $sectionAccess = [3,15,16];
-            if($role == 'gizi') $sectionAccess = [4,15,16];
-            if($role == 'perawat') $sectionAccess = [5,6,7,15,16];
-            if($role == 'adc') $sectionAccess = [11,12,14,15,16];
-
-
-            // CREATE EDUKASI
+            $sectionAccess = $this->getSectionAccess($role);
+            
             $edukasi = Edukasi::firstOrCreate([
                 'kd_pasien' => $kd_pasien,
                 'kd_unit' => 3,
@@ -157,469 +155,14 @@ class EdukasiController extends Controller
                 'user_create' => Auth::id(),
             ]);
 
-            // CREATE USER_EDUKASI_ROLE
-            $dataRole = [
-                'id_edukasi'    => 10,
-            ];
+            // UPDATE ROLES - PRESERVE EXISTING DATA
+            $this->updateUserRoles($edukasi->id, $sectionAccess, Auth::id());
 
-            $userLogin = Auth::id();
+            $this->updateEdukasiPasien($edukasi->id, $request, $sectionAccess);
 
-            foreach($sectionAccess as $acc) {
-                $dataRole = array_merge($dataRole, ["user_edukasi_$acc" => $userLogin]);
-            }
+            $this->updateKebutuhanEdukasi($edukasi->id, $request, $sectionAccess);
 
-            $userEdukasiRole = RMEEdukasiRoles::firstOrCreate([
-                'id_edukasi' => $edukasi->id,
-            ], $dataRole);
-
-            // Convert arrays to JSON strings
-            $tipe_pembelajaran = null;
-            if ($request->has('tipe_pembelajaran') && is_array($request->tipe_pembelajaran)) {
-                $tipe_pembelajaran = json_encode($request->tipe_pembelajaran);
-            }
-
-            $hambatan_komunikasi = null;
-            if ($request->has('hambatan_komunikasi') && is_array($request->hambatan_komunikasi)) {
-                $hambatan_komunikasi = json_encode($request->hambatan_komunikasi);
-            }
-
-            $edukasiPasien = new EdukasiPasien();
-            $edukasiPasien->id_edukasi = $edukasi->id;
-            $edukasiPasien->kebutuhan_penerjemah = $request->kebutuhan_penerjemah;
-            $edukasiPasien->penerjemah_bahasa = $request->penerjemah_bahasa;
-            $edukasiPasien->pendidikan = $request->pendidikan;
-            $edukasiPasien->kemampuan_baca_tulis = $request->kemampuan_baca_tulis;
-            $edukasiPasien->tipe_pembelajaran = $tipe_pembelajaran;
-            $edukasiPasien->hambatan_komunikasi = $hambatan_komunikasi;
-            $edukasiPasien->save();
-
-            $pemahaman_awal_1 = null;
-            if ($request->has('pemahaman_awal_1') && is_array($request->pemahaman_awal_1)) {
-                $pemahaman_awal_1 = json_encode($request->pemahaman_awal_1);
-            }
-            $metode_1 = null;
-            if ($request->has('metode_1') && is_array($request->metode_1)) {
-                $metode_1 = json_encode($request->metode_1);
-            }
-            $media_1 = null;
-            if ($request->has('media_1') && is_array($request->media_1)) {
-                $media_1 = json_encode($request->media_1);
-            }
-            $evaluasi_1 = null;
-            if ($request->has('evaluasi_1') && is_array($request->evaluasi_1)) {
-                $evaluasi_1 = json_encode($request->evaluasi_1);
-            }
-
-            $pemahaman_awal_2 = null;
-            if ($request->has('pemahaman_awal_2') && is_array($request->pemahaman_awal_2)) {
-                $pemahaman_awal_2 = json_encode($request->pemahaman_awal_2);
-            }
-            $metode_2 = null;
-            if ($request->has('metode_2') && is_array($request->metode_2)) {
-                $metode_2 = json_encode($request->metode_2);
-            }
-            $media_2 = null;
-            if ($request->has('media_2') && is_array($request->media_2)) {
-                $media_2 = json_encode($request->media_2);
-            }
-            $evaluasi_2 = null;
-            if ($request->has('evaluasi_2') && is_array($request->evaluasi_2)) {
-                $evaluasi_2 = json_encode($request->evaluasi_2);
-            }
-
-            $pemahaman_awal_3 = null;
-            if ($request->has('pemahaman_awal_3') && is_array($request->pemahaman_awal_3)) {
-                $pemahaman_awal_3 = json_encode($request->pemahaman_awal_3);
-            }
-            $metode_3 = null;
-            if ($request->has('metode_3') && is_array($request->metode_3)) {
-                $metode_3 = json_encode($request->metode_3);
-            }
-            $media_3 = null;
-            if ($request->has('media_3') && is_array($request->media_3)) {
-                $media_3 = json_encode($request->media_3);
-            }
-            $evaluasi_3 = null;
-            if ($request->has('evaluasi_3') && is_array($request->evaluasi_3)) {
-                $evaluasi_3 = json_encode($request->evaluasi_3);
-            }
-
-            $pemahaman_awal_4 = null;
-            if ($request->has('pemahaman_awal_4') && is_array($request->pemahaman_awal_4)) {
-                $pemahaman_awal_4 = json_encode($request->pemahaman_awal_4);
-            }
-            $metode_4 = null;
-            if ($request->has('metode_4') && is_array($request->metode_4)) {
-                $metode_4 = json_encode($request->metode_4);
-            }
-            $media_4 = null;
-            if ($request->has('media_4') && is_array($request->media_4)) {
-                $media_4 = json_encode($request->media_4);
-            }
-            $evaluasi_4 = null;
-            if ($request->has('evaluasi_4') && is_array($request->evaluasi_4)) {
-                $evaluasi_4 = json_encode($request->evaluasi_4);
-            }
-
-            $pemahaman_awal_5 = null;
-            if ($request->has('pemahaman_awal_5') && is_array($request->pemahaman_awal_5)) {
-                $pemahaman_awal_5 = json_encode($request->pemahaman_awal_5);
-            }
-            $metode_5 = null;
-            if ($request->has('metode_5') && is_array($request->metode_5)) {
-                $metode_5 = json_encode($request->metode_5);
-            }
-            $media_5 = null;
-            if ($request->has('media_5') && is_array($request->media_5)) {
-                $media_5 = json_encode($request->media_5);
-            }
-            $evaluasi_5 = null;
-            if ($request->has('evaluasi_5') && is_array($request->evaluasi_5)) {
-                $evaluasi_5 = json_encode($request->evaluasi_5);
-            }
-
-            $pemahaman_awal_6 = null;
-            if ($request->has('pemahaman_awal_6') && is_array($request->pemahaman_awal_6)) {
-                $pemahaman_awal_6 = json_encode($request->pemahaman_awal_6);
-            }
-            $metode_6 = null;
-            if ($request->has('metode_6') && is_array($request->metode_6)) {
-                $metode_6 = json_encode($request->metode_6);
-            }
-            $media_6 = null;
-            if ($request->has('media_6') && is_array($request->media_6)) {
-                $media_6 = json_encode($request->media_6);
-            }
-            $evaluasi_6 = null;
-            if ($request->has('evaluasi_6') && is_array($request->evaluasi_6)) {
-                $evaluasi_6 = json_encode($request->evaluasi_6);
-            }
-
-            $KebutuhanEdukasi = new EdukasiKebutuhanEdukasi();
-            $KebutuhanEdukasi->id_edukasi = $edukasi->id;
-            $KebutuhanEdukasi->tanggal_1 = $request->tanggal_1;
-            $KebutuhanEdukasi->ket_Kondisi_medis_1 = $request->ket_Kondisi_medis_1;
-            $KebutuhanEdukasi->sasaran_nama_1 = $request->sasaran_nama_1;
-            $KebutuhanEdukasi->edukator_nama_1 = $request->edukator_nama_1;
-            $KebutuhanEdukasi->pemahaman_awal_1 = $pemahaman_awal_1;
-            $KebutuhanEdukasi->metode_1 = $metode_1;
-            $KebutuhanEdukasi->media_1 = $media_1;
-            $KebutuhanEdukasi->evaluasi_1 = $evaluasi_1;
-            $KebutuhanEdukasi->lama_edukasi_1 = $request->lama_edukasi_1;
-
-            $KebutuhanEdukasi->tanggal_2 = $request->tanggal_2;
-            $KebutuhanEdukasi->sasaran_nama_2 = $request->sasaran_nama_2;
-            $KebutuhanEdukasi->edukator_nama_2 = $request->edukator_nama_2;
-            $KebutuhanEdukasi->pemahaman_awal_2 = $pemahaman_awal_2;
-            $KebutuhanEdukasi->metode_2 = $metode_2;
-            $KebutuhanEdukasi->media_2 = $media_2;
-            $KebutuhanEdukasi->evaluasi_2 = $evaluasi_2;
-            $KebutuhanEdukasi->lama_edukasi_2 = $request->lama_edukasi_2;
-
-            $KebutuhanEdukasi->tanggal_3 = $request->tanggal_3;
-            $KebutuhanEdukasi->sasaran_nama_3 = $request->sasaran_nama_3;
-            $KebutuhanEdukasi->edukator_nama_3 = $request->edukator_nama_3;
-            $KebutuhanEdukasi->pemahaman_awal_3 = $pemahaman_awal_3;
-            $KebutuhanEdukasi->metode_3 = $metode_3;
-            $KebutuhanEdukasi->media_3 = $media_3;
-            $KebutuhanEdukasi->evaluasi_3 = $evaluasi_3;
-            $KebutuhanEdukasi->lama_edukasi_3 = $request->lama_edukasi_3;
-
-            $KebutuhanEdukasi->tanggal_4 = $request->tanggal_4;
-            $KebutuhanEdukasi->ket_program_4 = $request->ket_program_4;
-            $KebutuhanEdukasi->sasaran_nama_4 = $request->sasaran_nama_4;
-            $KebutuhanEdukasi->edukator_nama_4 = $request->edukator_nama_4;
-            $KebutuhanEdukasi->pemahaman_awal_4 = $pemahaman_awal_4;
-            $KebutuhanEdukasi->metode_4 = $metode_4;
-            $KebutuhanEdukasi->media_4 = $media_4;
-            $KebutuhanEdukasi->evaluasi_4 = $evaluasi_4;
-            $KebutuhanEdukasi->lama_edukasi_4 = $request->lama_edukasi_4;
-
-            $KebutuhanEdukasi->tanggal_5 = $request->tanggal_5;
-            $KebutuhanEdukasi->sasaran_nama_5 = $request->sasaran_nama_5;
-            $KebutuhanEdukasi->edukator_nama_5 = $request->edukator_nama_5;
-            $KebutuhanEdukasi->pemahaman_awal_5 = $pemahaman_awal_5;
-            $KebutuhanEdukasi->metode_5 = $metode_5;
-            $KebutuhanEdukasi->media_5 = $media_5;
-            $KebutuhanEdukasi->evaluasi_5 = $evaluasi_5;
-            $KebutuhanEdukasi->lama_edukasi_5 = $request->lama_edukasi_5;
-
-            $KebutuhanEdukasi->tanggal_6 = $request->tanggal_6;
-            $KebutuhanEdukasi->sasaran_nama_6 = $request->sasaran_nama_6;
-            $KebutuhanEdukasi->edukator_nama_6 = $request->edukator_nama_6;
-            $KebutuhanEdukasi->pemahaman_awal_6 = $pemahaman_awal_6;
-            $KebutuhanEdukasi->metode_6 = $metode_6;
-            $KebutuhanEdukasi->media_6 = $media_6;
-            $KebutuhanEdukasi->evaluasi_6 = $evaluasi_6;
-            $KebutuhanEdukasi->lama_edukasi_6 = $request->lama_edukasi_6;
-            $KebutuhanEdukasi->save();
-
-            $pemahaman_awal_7 = null;
-            if ($request->has('pemahaman_awal_7') && is_array($request->pemahaman_awal_7)) {
-                $pemahaman_awal_7 = json_encode($request->pemahaman_awal_7);
-            }
-            $metode_7 = null;
-            if ($request->has('metode_7') && is_array($request->metode_7)) {
-                $metode_7 = json_encode($request->metode_7);
-            }
-            $media_7 = null;
-            if ($request->has('media_7') && is_array($request->media_7)) {
-                $media_7 = json_encode($request->media_7);
-            }
-            $evaluasi_7 = null;
-            if ($request->has('evaluasi_7') && is_array($request->evaluasi_7)) {
-                $evaluasi_7 = json_encode($request->evaluasi_7);
-            }
-
-            $pemahaman_awal_8 = null;
-            if ($request->has('pemahaman_awal_8') && is_array($request->pemahaman_awal_8)) {
-                $pemahaman_awal_8 = json_encode($request->pemahaman_awal_8);
-            }
-            $metode_8 = null;
-            if ($request->has('metode_8') && is_array($request->metode_8)) {
-                $metode_8 = json_encode($request->metode_8);
-            }
-            $media_8 = null;
-            if ($request->has('media_8') && is_array($request->media_8)) {
-                $media_8 = json_encode($request->media_8);
-            }
-            $evaluasi_8 = null;
-            if ($request->has('evaluasi_8') && is_array($request->evaluasi_8)) {
-                $evaluasi_8 = json_encode($request->evaluasi_8);
-            }
-
-            $pemahaman_awal_9 = null;
-            if ($request->has('pemahaman_awal_9') && is_array($request->pemahaman_awal_9)) {
-                $pemahaman_awal_9 = json_encode($request->pemahaman_awal_9);
-            }
-            $metode_9 = null;
-            if ($request->has('metode_9') && is_array($request->metode_9)) {
-                $metode_9 = json_encode($request->metode_9);
-            }
-            $media_9 = null;
-            if ($request->has('media_9') && is_array($request->media_9)) {
-                $media_9 = json_encode($request->media_9);
-            }
-            $evaluasi_9 = null;
-            if ($request->has('evaluasi_9') && is_array($request->evaluasi_9)) {
-                $evaluasi_9 = json_encode($request->evaluasi_9);
-            }
-
-            $pemahaman_awal_10 = null;
-            if ($request->has('pemahaman_awal_10') && is_array($request->pemahaman_awal_10)) {
-                $pemahaman_awal_10 = json_encode($request->pemahaman_awal_10);
-            }
-            $metode_10 = null;
-            if ($request->has('metode_10') && is_array($request->metode_10)) {
-                $metode_10 = json_encode($request->metode_10);
-            }
-            $media_10 = null;
-            if ($request->has('media_10') && is_array($request->media_10)) {
-                $media_10 = json_encode($request->media_10);
-            }
-            $evaluasi_10 = null;
-            if ($request->has('evaluasi_10') && is_array($request->evaluasi_10)) {
-                $evaluasi_10 = json_encode($request->evaluasi_10);
-            }
-
-            $pemahaman_awal_11 = null;
-            if ($request->has('pemahaman_awal_11') && is_array($request->pemahaman_awal_11)) {
-                $pemahaman_awal_11 = json_encode($request->pemahaman_awal_11);
-            }
-            $metode_11 = null;
-            if ($request->has('metode_11') && is_array($request->metode_11)) {
-                $metode_11 = json_encode($request->metode_11);
-            }
-            $media_11 = null;
-            if ($request->has('media_11') && is_array($request->media_11)) {
-                $media_11 = json_encode($request->media_11);
-            }
-            $evaluasi_11 = null;
-            if ($request->has('evaluasi_11') && is_array($request->evaluasi_11)) {
-                $evaluasi_11 = json_encode($request->evaluasi_11);
-            }
-
-            $pemahaman_awal_12 = null;
-            if ($request->has('pemahaman_awal_12') && is_array($request->pemahaman_awal_12)) {
-                $pemahaman_awal_12 = json_encode($request->pemahaman_awal_12);
-            }
-            $metode_12 = null;
-            if ($request->has('metode_12') && is_array($request->metode_12)) {
-                $metode_12 = json_encode($request->metode_12);
-            }
-            $media_12 = null;
-            if ($request->has('media_12') && is_array($request->media_12)) {
-                $media_12 = json_encode($request->media_12);
-            }
-            $evaluasi_12 = null;
-            if ($request->has('evaluasi_12') && is_array($request->evaluasi_12)) {
-                $evaluasi_12 = json_encode($request->evaluasi_12);
-            }
-
-            $pemahaman_awal_13 = null;
-            if ($request->has('pemahaman_awal_13') && is_array($request->pemahaman_awal_13)) {
-                $pemahaman_awal_13 = json_encode($request->pemahaman_awal_13);
-            }
-            $metode_13 = null;
-            if ($request->has('metode_13') && is_array($request->metode_13)) {
-                $metode_13 = json_encode($request->metode_13);
-            }
-            $media_13 = null;
-            if ($request->has('media_13') && is_array($request->media_13)) {
-                $media_13 = json_encode($request->media_13);
-            }
-            $evaluasi_13 = null;
-            if ($request->has('evaluasi_13') && is_array($request->evaluasi_13)) {
-                $evaluasi_13 = json_encode($request->evaluasi_13);
-            }
-
-            $pemahaman_awal_14 = null;
-            if ($request->has('pemahaman_awal_14') && is_array($request->pemahaman_awal_14)) {
-                $pemahaman_awal_14 = json_encode($request->pemahaman_awal_14);
-            }
-            $metode_14 = null;
-            if ($request->has('metode_14') && is_array($request->metode_14)) {
-                $metode_14 = json_encode($request->metode_14);
-            }
-            $media_14 = null;
-            if ($request->has('media_14') && is_array($request->media_14)) {
-                $media_14 = json_encode($request->media_14);
-            }
-            $evaluasi_14 = null;
-            if ($request->has('evaluasi_14') && is_array($request->evaluasi_14)) {
-                $evaluasi_14 = json_encode($request->evaluasi_14);
-            }
-            $pemahaman_awal_15 = null;
-            if ($request->has('pemahaman_awal_15') && is_array($request->pemahaman_awal_15)) {
-                $pemahaman_awal_15 = json_encode($request->pemahaman_awal_15);
-            }
-            $metode_15 = null;
-            if ($request->has('metode_15') && is_array($request->metode_15)) {
-                $metode_15 = json_encode($request->metode_15);
-            }
-            $media_15 = null;
-            if ($request->has('media_15') && is_array($request->media_15)) {
-                $media_15 = json_encode($request->media_15);
-            }
-            $evaluasi_15 = null;
-            if ($request->has('evaluasi_15') && is_array($request->evaluasi_15)) {
-                $evaluasi_15 = json_encode($request->evaluasi_15);
-            }
-
-            $pemahaman_awal_16 = null;
-            if ($request->has('pemahaman_awal_16') && is_array($request->pemahaman_awal_16)) {
-                $pemahaman_awal_16 = json_encode($request->pemahaman_awal_16);
-            }
-            $metode_16 = null;
-            if ($request->has('metode_16') && is_array($request->metode_16)) {
-                $metode_16 = json_encode($request->metode_16);
-            }
-            $media_16 = null;
-            if ($request->has('media_16') && is_array($request->media_16)) {
-                $media_16 = json_encode($request->media_16);
-            }
-            $evaluasi_16 = null;
-            if ($request->has('evaluasi_16') && is_array($request->evaluasi_16)) {
-                $evaluasi_16 = json_encode($request->evaluasi_16);
-            }
-
-            $KebutuhanEdukasiLanjutan = new EdukasiKebutuhanEdukasiLanjutan();
-            $KebutuhanEdukasiLanjutan->id_edukasi = $edukasi->id;
-            $KebutuhanEdukasiLanjutan->tanggal_7 = $request->tanggal_7;
-            $KebutuhanEdukasiLanjutan->sasaran_nama_7 = $request->sasaran_nama_7;
-            $KebutuhanEdukasiLanjutan->edukator_nama_7 = $request->edukator_nama_7;
-            $KebutuhanEdukasiLanjutan->pemahaman_awal_7 = $pemahaman_awal_7;
-            $KebutuhanEdukasiLanjutan->metode_7 = $metode_7;
-            $KebutuhanEdukasiLanjutan->media_7 = $media_7;
-            $KebutuhanEdukasiLanjutan->evaluasi_7 = $evaluasi_7;
-            $KebutuhanEdukasiLanjutan->lama_edukasi_7 = $request->lama_edukasi_7;
-
-            $KebutuhanEdukasiLanjutan->tanggal_8 = $request->tanggal_8;
-            $KebutuhanEdukasiLanjutan->sasaran_nama_8 = $request->sasaran_nama_8;
-            $KebutuhanEdukasiLanjutan->edukator_nama_8 = $request->edukator_nama_8;
-            $KebutuhanEdukasiLanjutan->pemahaman_awal_8 = $pemahaman_awal_8;
-            $KebutuhanEdukasiLanjutan->metode_8 = $metode_8;
-            $KebutuhanEdukasiLanjutan->media_8 = $media_8;
-            $KebutuhanEdukasiLanjutan->evaluasi_8 = $evaluasi_8;
-            $KebutuhanEdukasiLanjutan->lama_edukasi_8 = $request->lama_edukasi_8;
-
-            $KebutuhanEdukasiLanjutan->tanggal_9 = $request->tanggal_9;
-            $KebutuhanEdukasiLanjutan->ket_teknik_rehabilitasi_9 = $request->ket_teknik_rehabilitasi_9;
-            $KebutuhanEdukasiLanjutan->teknik_rehabilitasi_9 = $request->teknik_rehabilitasi_9;
-            $KebutuhanEdukasiLanjutan->sasaran_nama_9 = $request->sasaran_nama_9;
-            $KebutuhanEdukasiLanjutan->edukator_nama_9 = $request->edukator_nama_9;
-            $KebutuhanEdukasiLanjutan->pemahaman_awal_9 = $pemahaman_awal_9;
-            $KebutuhanEdukasiLanjutan->metode_9 = $metode_9;
-            $KebutuhanEdukasiLanjutan->media_9 = $media_9;
-            $KebutuhanEdukasiLanjutan->evaluasi_9 = $evaluasi_9;
-            $KebutuhanEdukasiLanjutan->lama_edukasi_9 = $request->lama_edukasi_9;
-
-            $KebutuhanEdukasiLanjutan->tanggal_10 = $request->tanggal_10;
-            $KebutuhanEdukasiLanjutan->sasaran_nama_10 = $request->sasaran_nama_10;
-            $KebutuhanEdukasiLanjutan->edukator_nama_10 = $request->edukator_nama_10;
-            $KebutuhanEdukasiLanjutan->pemahaman_awal_10 = $pemahaman_awal_10;
-            $KebutuhanEdukasiLanjutan->metode_10 = $metode_10;
-            $KebutuhanEdukasiLanjutan->media_10 = $media_10;
-            $KebutuhanEdukasiLanjutan->evaluasi_10 = $evaluasi_10;
-            $KebutuhanEdukasiLanjutan->lama_edukasi_10 = $request->lama_edukasi_10;
-
-            $KebutuhanEdukasiLanjutan->tanggal_11 = $request->tanggal_11;
-            $KebutuhanEdukasiLanjutan->sasaran_nama_11 = $request->sasaran_nama_11;
-            $KebutuhanEdukasiLanjutan->edukator_nama_11 = $request->edukator_nama_11;
-            $KebutuhanEdukasiLanjutan->pemahaman_awal_11 = $pemahaman_awal_11;
-            $KebutuhanEdukasiLanjutan->metode_11 = $metode_11;
-            $KebutuhanEdukasiLanjutan->media_11 = $media_11;
-            $KebutuhanEdukasiLanjutan->evaluasi_11 = $evaluasi_11;
-            $KebutuhanEdukasiLanjutan->lama_edukasi_11 = $request->lama_edukasi_11;
-
-            $KebutuhanEdukasiLanjutan->tanggal_12 = $request->tanggal_12;
-            $KebutuhanEdukasiLanjutan->sasaran_nama_12 = $request->sasaran_nama_12;
-            $KebutuhanEdukasiLanjutan->edukator_nama_12 = $request->edukator_nama_12;
-            $KebutuhanEdukasiLanjutan->pemahaman_awal_12 = $pemahaman_awal_12;
-            $KebutuhanEdukasiLanjutan->metode_12 = $metode_12;
-            $KebutuhanEdukasiLanjutan->media_12 = $media_12;
-            $KebutuhanEdukasiLanjutan->evaluasi_12 = $evaluasi_12;
-            $KebutuhanEdukasiLanjutan->lama_edukasi_12 = $request->lama_edukasi_12;
-
-            $KebutuhanEdukasiLanjutan->tanggal_13 = $request->tanggal_13;
-            $KebutuhanEdukasiLanjutan->sasaran_nama_13 = $request->sasaran_nama_13;
-            $KebutuhanEdukasiLanjutan->edukator_nama_13 = $request->edukator_nama_13;
-            $KebutuhanEdukasiLanjutan->pemahaman_awal_13 = $pemahaman_awal_13;
-            $KebutuhanEdukasiLanjutan->metode_13 = $metode_13;
-            $KebutuhanEdukasiLanjutan->media_13 = $media_13;
-            $KebutuhanEdukasiLanjutan->evaluasi_13 = $evaluasi_13;
-            $KebutuhanEdukasiLanjutan->lama_edukasi_13 = $request->lama_edukasi_13;
-
-            $KebutuhanEdukasiLanjutan->tanggal_14 = $request->tanggal_14;
-            $KebutuhanEdukasiLanjutan->ket_hambatan_14 = $request->ket_hambatan_14;
-            $KebutuhanEdukasiLanjutan->sasaran_nama_14 = $request->sasaran_nama_14;
-            $KebutuhanEdukasiLanjutan->edukator_nama_14 = $request->edukator_nama_14;
-            $KebutuhanEdukasiLanjutan->pemahaman_awal_14 = $pemahaman_awal_14;
-            $KebutuhanEdukasiLanjutan->metode_14 = $metode_14;
-            $KebutuhanEdukasiLanjutan->media_14 = $media_14;
-            $KebutuhanEdukasiLanjutan->evaluasi_14 = $evaluasi_14;
-            $KebutuhanEdukasiLanjutan->lama_edukasi_14 = $request->lama_edukasi_14;
-
-            $KebutuhanEdukasiLanjutan->tanggal_15 = $request->tanggal_15;
-            $KebutuhanEdukasiLanjutan->ket_pertanyaan_15 = $request->ket_pertanyaan_15;
-            $KebutuhanEdukasiLanjutan->sasaran_nama_15 = $request->sasaran_nama_15;
-            $KebutuhanEdukasiLanjutan->edukator_nama_15 = $request->edukator_nama_15;
-            $KebutuhanEdukasiLanjutan->pemahaman_awal_15 = $pemahaman_awal_15;
-            $KebutuhanEdukasiLanjutan->metode_15 = $metode_15;
-            $KebutuhanEdukasiLanjutan->media_15 = $media_15;
-            $KebutuhanEdukasiLanjutan->evaluasi_15 = $evaluasi_15;
-            $KebutuhanEdukasiLanjutan->lama_edukasi_15 = $request->lama_edukasi_15;
-
-            $KebutuhanEdukasiLanjutan->tanggal_16 = $request->tanggal_16;
-            $KebutuhanEdukasiLanjutan->ket_preferensi_16 = $request->ket_preferensi_16;
-            $KebutuhanEdukasiLanjutan->sasaran_nama_16 = $request->sasaran_nama_16;
-            $KebutuhanEdukasiLanjutan->edukator_nama_16 = $request->edukator_nama_16;
-            $KebutuhanEdukasiLanjutan->pemahaman_awal_16 = $pemahaman_awal_16;
-            $KebutuhanEdukasiLanjutan->metode_16 = $metode_16;
-            $KebutuhanEdukasiLanjutan->media_16 = $media_16;
-            $KebutuhanEdukasiLanjutan->evaluasi_16 = $evaluasi_16;
-            $KebutuhanEdukasiLanjutan->lama_edukasi_16 = $request->lama_edukasi_16;
-            $KebutuhanEdukasiLanjutan->save();
+            $this->updateKebutuhanEdukasiLanjutan($edukasi->id, $request, $sectionAccess);
 
             DB::commit();
 
@@ -628,10 +171,175 @@ class EdukasiController extends Controller
                 $tgl_masuk,
                 $request->urut_masuk,
             ])->with(['success' => 'Berhasil menambah Edukasi !']);
+            
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
         }
+    }
+
+    private function getSectionAccess($role)
+    {
+        $sectionAccess = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+
+        if($role == 'dokter') $sectionAccess = [1,2,9,10,13,15,16];
+        if($role == 'farmasi') $sectionAccess = [3,15,16];
+        if($role == 'gizi') $sectionAccess = [4,15,16];
+        if($role == 'perawat') $sectionAccess = [5,6,7,15,16];
+        if($role == 'adc') $sectionAccess = [11,12,14,15,16];
+
+        return $sectionAccess;
+    }
+
+    private function updateUserRoles($edukasiId, $sectionAccess, $userId)
+    {
+        $existingRole = RMEEdukasiRoles::where('id_edukasi', $edukasiId)->first();
+        
+        if ($existingRole) {
+            // Update hanya kolom yang sesuai dengan role saat ini
+            $updateData = [];
+            foreach($sectionAccess as $acc) {
+                $updateData["user_edukasi_$acc"] = $userId;
+            }
+            $existingRole->update($updateData);
+        } else {
+            // Buat baru
+            $dataRole = ['id_edukasi' => $edukasiId];
+            foreach($sectionAccess as $acc) {
+                $dataRole["user_edukasi_$acc"] = $userId;
+            }
+            RMEEdukasiRoles::create($dataRole);
+        }
+    }
+
+    private function updateEdukasiPasien($edukasiId, $request, $sectionAccess)
+    {
+        $edukasiPasien = EdukasiPasien::firstOrNew(['id_edukasi' => $edukasiId]);
+        
+        // Hanya update field yang ada di section access role ini
+        // Untuk EdukasiPasien, biasanya semua role bisa akses basic info
+        if ($request->has('kebutuhan_penerjemah')) {
+            $edukasiPasien->kebutuhan_penerjemah = $request->kebutuhan_penerjemah;
+        }
+        if ($request->has('penerjemah_bahasa')) {
+            $edukasiPasien->penerjemah_bahasa = $request->penerjemah_bahasa;
+        }
+        if ($request->has('pendidikan')) {
+            $edukasiPasien->pendidikan = $request->pendidikan;
+        }
+        if ($request->has('kemampuan_baca_tulis')) {
+            $edukasiPasien->kemampuan_baca_tulis = $request->kemampuan_baca_tulis;
+        }
+        if ($request->has('tipe_pembelajaran')) {
+            $edukasiPasien->tipe_pembelajaran = json_encode($request->tipe_pembelajaran);
+        }
+        if ($request->has('hambatan_komunikasi')) {
+            $edukasiPasien->hambatan_komunikasi = json_encode($request->hambatan_komunikasi);
+        }
+        
+        $edukasiPasien->save();
+    }
+
+    private function updateKebutuhanEdukasi($edukasiId, $request, $sectionAccess)
+    {
+        $kebutuhanEdukasi = EdukasiKebutuhanEdukasi::firstOrNew(['id_edukasi' => $edukasiId]);
+        
+        // Update hanya field yang accessible oleh role ini
+        for ($i = 1; $i <= 6; $i++) {
+            if (in_array($i, $sectionAccess)) {
+                // Update field untuk section ini
+                if ($request->has("tanggal_$i")) {
+                    $kebutuhanEdukasi->{"tanggal_$i"} = $request->{"tanggal_$i"};
+                }
+                if ($request->has("ket_Kondisi_medis_$i")) {
+                    $kebutuhanEdukasi->{"ket_Kondisi_medis_$i"} = $request->{"ket_Kondisi_medis_$i"};
+                }
+                if ($request->has("ket_program_$i")) {
+                    $kebutuhanEdukasi->{"ket_program_$i"} = $request->{"ket_program_$i"};
+                }
+                if ($request->has("sasaran_nama_$i")) {
+                    $kebutuhanEdukasi->{"sasaran_nama_$i"} = $request->{"sasaran_nama_$i"};
+                }
+                if ($request->has("edukator_nama_$i")) {
+                    $kebutuhanEdukasi->{"edukator_nama_$i"} = $request->{"edukator_nama_$i"};
+                }
+                if ($request->has("pemahaman_awal_$i")) {
+                    $kebutuhanEdukasi->{"pemahaman_awal_$i"} = json_encode($request->{"pemahaman_awal_$i"});
+                }
+                if ($request->has("metode_$i")) {
+                    $kebutuhanEdukasi->{"metode_$i"} = json_encode($request->{"metode_$i"});
+                }
+                if ($request->has("media_$i")) {
+                    $kebutuhanEdukasi->{"media_$i"} = json_encode($request->{"media_$i"});
+                }
+                if ($request->has("evaluasi_$i")) {
+                    $kebutuhanEdukasi->{"evaluasi_$i"} = json_encode($request->{"evaluasi_$i"});
+                }
+                if ($request->has("lama_edukasi_$i")) {
+                    $kebutuhanEdukasi->{"lama_edukasi_$i"} = $request->{"lama_edukasi_$i"};
+                }
+            }
+        }
+        
+        $kebutuhanEdukasi->save();
+    }
+
+    private function updateKebutuhanEdukasiLanjutan($edukasiId, $request, $sectionAccess)
+    {
+        $kebutuhanEdukasiLanjutan = EdukasiKebutuhanEdukasiLanjutan::firstOrNew(['id_edukasi' => $edukasiId]);
+        
+        // Update hanya field yang accessible oleh role ini
+        for ($i = 7; $i <= 16; $i++) {
+            if (in_array($i, $sectionAccess)) {
+                // Update field untuk section ini
+                if ($request->has("tanggal_$i")) {
+                    $kebutuhanEdukasiLanjutan->{"tanggal_$i"} = $request->{"tanggal_$i"};
+                }
+                if ($request->has("sasaran_nama_$i")) {
+                    $kebutuhanEdukasiLanjutan->{"sasaran_nama_$i"} = $request->{"sasaran_nama_$i"};
+                }
+                if ($request->has("edukator_nama_$i")) {
+                    $kebutuhanEdukasiLanjutan->{"edukator_nama_$i"} = $request->{"edukator_nama_$i"};
+                }
+                
+                // Field khusus untuk section tertentu
+                if ($i == 9) {
+                    if ($request->has("ket_teknik_rehabilitasi_9")) {
+                        $kebutuhanEdukasiLanjutan->ket_teknik_rehabilitasi_9 = $request->ket_teknik_rehabilitasi_9;
+                    }
+                    if ($request->has("teknik_rehabilitasi_9")) {
+                        $kebutuhanEdukasiLanjutan->teknik_rehabilitasi_9 = $request->teknik_rehabilitasi_9;
+                    }
+                }
+                if ($i == 14 && $request->has("ket_hambatan_14")) {
+                    $kebutuhanEdukasiLanjutan->ket_hambatan_14 = $request->ket_hambatan_14;
+                }
+                if ($i == 15 && $request->has("ket_pertanyaan_15")) {
+                    $kebutuhanEdukasiLanjutan->ket_pertanyaan_15 = $request->ket_pertanyaan_15;
+                }
+                if ($i == 16 && $request->has("ket_preferensi_16")) {
+                    $kebutuhanEdukasiLanjutan->ket_preferensi_16 = $request->ket_preferensi_16;
+                }
+                
+                if ($request->has("pemahaman_awal_$i")) {
+                    $kebutuhanEdukasiLanjutan->{"pemahaman_awal_$i"} = json_encode($request->{"pemahaman_awal_$i"});
+                }
+                if ($request->has("metode_$i")) {
+                    $kebutuhanEdukasiLanjutan->{"metode_$i"} = json_encode($request->{"metode_$i"});
+                }
+                if ($request->has("media_$i")) {
+                    $kebutuhanEdukasiLanjutan->{"media_$i"} = json_encode($request->{"media_$i"});
+                }
+                if ($request->has("evaluasi_$i")) {
+                    $kebutuhanEdukasiLanjutan->{"evaluasi_$i"} = json_encode($request->{"evaluasi_$i"});
+                }
+                if ($request->has("lama_edukasi_$i")) {
+                    $kebutuhanEdukasiLanjutan->{"lama_edukasi_$i"} = $request->{"lama_edukasi_$i"};
+                }
+            }
+        }
+        
+        $kebutuhanEdukasiLanjutan->save();
     }
 
     public function show($kd_pasien, $tgl_masuk, $urut_masuk, $id)
@@ -676,9 +384,8 @@ class EdukasiController extends Controller
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.edukasi.show', compact('edukasi', 'pendidikan', 'dataMedis'));
     }
 
-    public function edit($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function edit($kd_pasien, $tgl_masuk, $urut_masuk, $id, Request $request)
     {
-
         $edukasi = Edukasi::with([
             'edukasiPasien',
             'kebutuhanEdukasi',
@@ -701,7 +408,6 @@ class EdukasiController extends Controller
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->first();
 
-
         if (!$dataMedis) {
             abort(404, 'Data not found');
         }
@@ -712,18 +418,30 @@ class EdukasiController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
+        // Get role from request, default to admin if not specified
+        $role = $request->query('role', 'admin');
+        $sectionAccess = $this->getSectionAccess($role);
+
         // Get reference data for display purposes
         $pendidikan = Pendidikan::all();
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.edukasi.edit', compact('edukasi', 'pendidikan', 'dataMedis'));
+        // Set existing edukasi untuk populasi data di form
+        $existingEdukasi = $edukasi;
+
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.edukasi.edit', compact(
+            'edukasi', 
+            'pendidikan', 
+            'dataMedis', 
+            'role', 
+            'sectionAccess', 
+            'existingEdukasi'
+        ));
     }
 
     public function update(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-
         DB::beginTransaction();
         try {
-
             $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
                 ->join('transaksi as t', function ($join) {
                     $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
@@ -739,7 +457,6 @@ class EdukasiController extends Controller
                 ->where('kunjungan.urut_masuk', $urut_masuk)
                 ->first();
 
-
             if (!$dataMedis) {
                 abort(404, 'Data kunjungan tidak ditemukan');
             }
@@ -753,454 +470,17 @@ class EdukasiController extends Controller
             $edukasi->user_edit = Auth::id();
             $edukasi->save();
 
-            // Convert arrays to JSON strings
-            $tipe_pembelajaran = null;
-            if ($request->has('tipe_pembelajaran') && is_array($request->tipe_pembelajaran)) {
-                $tipe_pembelajaran = json_encode($request->tipe_pembelajaran);
-            }
+            $role = $request->role ?? 'admin';
+            $sectionAccess = $this->getSectionAccess($role);
 
-            $hambatan_komunikasi = null;
-            if ($request->has('hambatan_komunikasi') && is_array($request->hambatan_komunikasi)) {
-                $hambatan_komunikasi = json_encode($request->hambatan_komunikasi);
-            }
+            // UPDATE ROLES - PRESERVE EXISTING DATA
+            $this->updateUserRoles($edukasi->id, $sectionAccess, Auth::id());
 
-            $edukasiPasien = EdukasiPasien::firstOrNew(['id_edukasi' => $edukasi->id]);
-            $edukasiPasien->id_edukasi = $edukasi->id;
-            $edukasiPasien->kebutuhan_penerjemah = $request->kebutuhan_penerjemah;
-            $edukasiPasien->penerjemah_bahasa = $request->penerjemah_bahasa;
-            $edukasiPasien->pendidikan = $request->pendidikan;
-            $edukasiPasien->kemampuan_baca_tulis = $request->kemampuan_baca_tulis;
-            $edukasiPasien->tipe_pembelajaran = $tipe_pembelajaran;
-            $edukasiPasien->hambatan_komunikasi = $hambatan_komunikasi;
-            $edukasiPasien->save();
+            $this->updateEdukasiPasien($edukasi->id, $request, $sectionAccess);
 
-            $pemahaman_awal_1 = null;
-            if ($request->has('pemahaman_awal_1') && is_array($request->pemahaman_awal_1)) {
-                $pemahaman_awal_1 = json_encode($request->pemahaman_awal_1);
-            }
-            $metode_1 = null;
-            if ($request->has('metode_1') && is_array($request->metode_1)) {
-                $metode_1 = json_encode($request->metode_1);
-            }
-            $media_1 = null;
-            if ($request->has('media_1') && is_array($request->media_1)) {
-                $media_1 = json_encode($request->media_1);
-            }
-            $evaluasi_1 = null;
-            if ($request->has('evaluasi_1') && is_array($request->evaluasi_1)) {
-                $evaluasi_1 = json_encode($request->evaluasi_1);
-            }
+            $this->updateKebutuhanEdukasi($edukasi->id, $request, $sectionAccess);
 
-            $pemahaman_awal_2 = null;
-            if ($request->has('pemahaman_awal_2') && is_array($request->pemahaman_awal_2)) {
-                $pemahaman_awal_2 = json_encode($request->pemahaman_awal_2);
-            }
-            $metode_2 = null;
-            if ($request->has('metode_2') && is_array($request->metode_2)) {
-                $metode_2 = json_encode($request->metode_2);
-            }
-            $media_2 = null;
-            if ($request->has('media_2') && is_array($request->media_2)) {
-                $media_2 = json_encode($request->media_2);
-            }
-            $evaluasi_2 = null;
-            if ($request->has('evaluasi_2') && is_array($request->evaluasi_2)) {
-                $evaluasi_2 = json_encode($request->evaluasi_2);
-            }
-
-            $pemahaman_awal_3 = null;
-            if ($request->has('pemahaman_awal_3') && is_array($request->pemahaman_awal_3)) {
-                $pemahaman_awal_3 = json_encode($request->pemahaman_awal_3);
-            }
-            $metode_3 = null;
-            if ($request->has('metode_3') && is_array($request->metode_3)) {
-                $metode_3 = json_encode($request->metode_3);
-            }
-            $media_3 = null;
-            if ($request->has('media_3') && is_array($request->media_3)) {
-                $media_3 = json_encode($request->media_3);
-            }
-            $evaluasi_3 = null;
-            if ($request->has('evaluasi_3') && is_array($request->evaluasi_3)) {
-                $evaluasi_3 = json_encode($request->evaluasi_3);
-            }
-
-            $pemahaman_awal_4 = null;
-            if ($request->has('pemahaman_awal_4') && is_array($request->pemahaman_awal_4)) {
-                $pemahaman_awal_4 = json_encode($request->pemahaman_awal_4);
-            }
-            $metode_4 = null;
-            if ($request->has('metode_4') && is_array($request->metode_4)) {
-                $metode_4 = json_encode($request->metode_4);
-            }
-            $media_4 = null;
-            if ($request->has('media_4') && is_array($request->media_4)) {
-                $media_4 = json_encode($request->media_4);
-            }
-            $evaluasi_4 = null;
-            if ($request->has('evaluasi_4') && is_array($request->evaluasi_4)) {
-                $evaluasi_4 = json_encode($request->evaluasi_4);
-            }
-
-            $pemahaman_awal_5 = null;
-            if ($request->has('pemahaman_awal_5') && is_array($request->pemahaman_awal_5)) {
-                $pemahaman_awal_5 = json_encode($request->pemahaman_awal_5);
-            }
-            $metode_5 = null;
-            if ($request->has('metode_5') && is_array($request->metode_5)) {
-                $metode_5 = json_encode($request->metode_5);
-            }
-            $media_5 = null;
-            if ($request->has('media_5') && is_array($request->media_5)) {
-                $media_5 = json_encode($request->media_5);
-            }
-            $evaluasi_5 = null;
-            if ($request->has('evaluasi_5') && is_array($request->evaluasi_5)) {
-                $evaluasi_5 = json_encode($request->evaluasi_5);
-            }
-
-            $pemahaman_awal_6 = null;
-            if ($request->has('pemahaman_awal_6') && is_array($request->pemahaman_awal_6)) {
-                $pemahaman_awal_6 = json_encode($request->pemahaman_awal_6);
-            }
-            $metode_6 = null;
-            if ($request->has('metode_6') && is_array($request->metode_6)) {
-                $metode_6 = json_encode($request->metode_6);
-            }
-            $media_6 = null;
-            if ($request->has('media_6') && is_array($request->media_6)) {
-                $media_6 = json_encode($request->media_6);
-            }
-            $evaluasi_6 = null;
-            if ($request->has('evaluasi_6') && is_array($request->evaluasi_6)) {
-                $evaluasi_6 = json_encode($request->evaluasi_6);
-            }
-
-            $KebutuhanEdukasi = EdukasiKebutuhanEdukasi::firstOrNew(['id_edukasi' => $edukasi->id]);
-            $KebutuhanEdukasi->id_edukasi = $edukasi->id;
-            $KebutuhanEdukasi->tanggal_1 = $request->tanggal_1;
-            $KebutuhanEdukasi->ket_Kondisi_medis_1 = $request->ket_Kondisi_medis_1;
-            $KebutuhanEdukasi->sasaran_nama_1 = $request->sasaran_nama_1;
-            $KebutuhanEdukasi->edukator_nama_1 = $request->edukator_nama_1;
-            $KebutuhanEdukasi->pemahaman_awal_1 = $pemahaman_awal_1;
-            $KebutuhanEdukasi->metode_1 = $metode_1;
-            $KebutuhanEdukasi->media_1 = $media_1;
-            $KebutuhanEdukasi->evaluasi_1 = $evaluasi_1;
-            $KebutuhanEdukasi->lama_edukasi_1 = $request->lama_edukasi_1;
-
-            $KebutuhanEdukasi->tanggal_2 = $request->tanggal_2;
-            $KebutuhanEdukasi->sasaran_nama_2 = $request->sasaran_nama_2;
-            $KebutuhanEdukasi->edukator_nama_2 = $request->edukator_nama_2;
-            $KebutuhanEdukasi->pemahaman_awal_2 = $pemahaman_awal_2;
-            $KebutuhanEdukasi->metode_2 = $metode_2;
-            $KebutuhanEdukasi->media_2 = $media_2;
-            $KebutuhanEdukasi->evaluasi_2 = $evaluasi_2;
-            $KebutuhanEdukasi->lama_edukasi_2 = $request->lama_edukasi_2;
-
-            $KebutuhanEdukasi->tanggal_3 = $request->tanggal_3;
-            $KebutuhanEdukasi->sasaran_nama_3 = $request->sasaran_nama_3;
-            $KebutuhanEdukasi->edukator_nama_3 = $request->edukator_nama_3;
-            $KebutuhanEdukasi->pemahaman_awal_3 = $pemahaman_awal_3;
-            $KebutuhanEdukasi->metode_3 = $metode_3;
-            $KebutuhanEdukasi->media_3 = $media_3;
-            $KebutuhanEdukasi->evaluasi_3 = $evaluasi_3;
-            $KebutuhanEdukasi->lama_edukasi_3 = $request->lama_edukasi_3;
-
-            $KebutuhanEdukasi->tanggal_4 = $request->tanggal_4;
-            $KebutuhanEdukasi->ket_program_4 = $request->ket_program_4;
-            $KebutuhanEdukasi->sasaran_nama_4 = $request->sasaran_nama_4;
-            $KebutuhanEdukasi->edukator_nama_4 = $request->edukator_nama_4;
-            $KebutuhanEdukasi->pemahaman_awal_4 = $pemahaman_awal_4;
-            $KebutuhanEdukasi->metode_4 = $metode_4;
-            $KebutuhanEdukasi->media_4 = $media_4;
-            $KebutuhanEdukasi->evaluasi_4 = $evaluasi_4;
-            $KebutuhanEdukasi->lama_edukasi_4 = $request->lama_edukasi_4;
-
-            $KebutuhanEdukasi->tanggal_5 = $request->tanggal_5;
-            $KebutuhanEdukasi->sasaran_nama_5 = $request->sasaran_nama_5;
-            $KebutuhanEdukasi->edukator_nama_5 = $request->edukator_nama_5;
-            $KebutuhanEdukasi->pemahaman_awal_5 = $pemahaman_awal_5;
-            $KebutuhanEdukasi->metode_5 = $metode_5;
-            $KebutuhanEdukasi->media_5 = $media_5;
-            $KebutuhanEdukasi->evaluasi_5 = $evaluasi_5;
-            $KebutuhanEdukasi->lama_edukasi_5 = $request->lama_edukasi_5;
-
-            $KebutuhanEdukasi->tanggal_6 = $request->tanggal_6;
-            $KebutuhanEdukasi->sasaran_nama_6 = $request->sasaran_nama_6;
-            $KebutuhanEdukasi->edukator_nama_6 = $request->edukator_nama_6;
-            $KebutuhanEdukasi->pemahaman_awal_6 = $pemahaman_awal_6;
-            $KebutuhanEdukasi->metode_6 = $metode_6;
-            $KebutuhanEdukasi->media_6 = $media_6;
-            $KebutuhanEdukasi->evaluasi_6 = $evaluasi_6;
-            $KebutuhanEdukasi->lama_edukasi_6 = $request->lama_edukasi_6;
-            $KebutuhanEdukasi->save();
-
-            $pemahaman_awal_7 = null;
-            if ($request->has('pemahaman_awal_7') && is_array($request->pemahaman_awal_7)) {
-                $pemahaman_awal_7 = json_encode($request->pemahaman_awal_7);
-            }
-            $metode_7 = null;
-            if ($request->has('metode_7') && is_array($request->metode_7)) {
-                $metode_7 = json_encode($request->metode_7);
-            }
-            $media_7 = null;
-            if ($request->has('media_7') && is_array($request->media_7)) {
-                $media_7 = json_encode($request->media_7);
-            }
-            $evaluasi_7 = null;
-            if ($request->has('evaluasi_7') && is_array($request->evaluasi_7)) {
-                $evaluasi_7 = json_encode($request->evaluasi_7);
-            }
-
-            $pemahaman_awal_8 = null;
-            if ($request->has('pemahaman_awal_8') && is_array($request->pemahaman_awal_8)) {
-                $pemahaman_awal_8 = json_encode($request->pemahaman_awal_8);
-            }
-            $metode_8 = null;
-            if ($request->has('metode_8') && is_array($request->metode_8)) {
-                $metode_8 = json_encode($request->metode_8);
-            }
-            $media_8 = null;
-            if ($request->has('media_8') && is_array($request->media_8)) {
-                $media_8 = json_encode($request->media_8);
-            }
-            $evaluasi_8 = null;
-            if ($request->has('evaluasi_8') && is_array($request->evaluasi_8)) {
-                $evaluasi_8 = json_encode($request->evaluasi_8);
-            }
-
-            $pemahaman_awal_9 = null;
-            if ($request->has('pemahaman_awal_9') && is_array($request->pemahaman_awal_9)) {
-                $pemahaman_awal_9 = json_encode($request->pemahaman_awal_9);
-            }
-            $metode_9 = null;
-            if ($request->has('metode_9') && is_array($request->metode_9)) {
-                $metode_9 = json_encode($request->metode_9);
-            }
-            $media_9 = null;
-            if ($request->has('media_9') && is_array($request->media_9)) {
-                $media_9 = json_encode($request->media_9);
-            }
-            $evaluasi_9 = null;
-            if ($request->has('evaluasi_9') && is_array($request->evaluasi_9)) {
-                $evaluasi_9 = json_encode($request->evaluasi_9);
-            }
-
-            $pemahaman_awal_10 = null;
-            if ($request->has('pemahaman_awal_10') && is_array($request->pemahaman_awal_10)) {
-                $pemahaman_awal_10 = json_encode($request->pemahaman_awal_10);
-            }
-            $metode_10 = null;
-            if ($request->has('metode_10') && is_array($request->metode_10)) {
-                $metode_10 = json_encode($request->metode_10);
-            }
-            $media_10 = null;
-            if ($request->has('media_10') && is_array($request->media_10)) {
-                $media_10 = json_encode($request->media_10);
-            }
-            $evaluasi_10 = null;
-            if ($request->has('evaluasi_10') && is_array($request->evaluasi_10)) {
-                $evaluasi_10 = json_encode($request->evaluasi_10);
-            }
-
-            $pemahaman_awal_11 = null;
-            if ($request->has('pemahaman_awal_11') && is_array($request->pemahaman_awal_11)) {
-                $pemahaman_awal_11 = json_encode($request->pemahaman_awal_11);
-            }
-            $metode_11 = null;
-            if ($request->has('metode_11') && is_array($request->metode_11)) {
-                $metode_11 = json_encode($request->metode_11);
-            }
-            $media_11 = null;
-            if ($request->has('media_11') && is_array($request->media_11)) {
-                $media_11 = json_encode($request->media_11);
-            }
-            $evaluasi_11 = null;
-            if ($request->has('evaluasi_11') && is_array($request->evaluasi_11)) {
-                $evaluasi_11 = json_encode($request->evaluasi_11);
-            }
-
-            $pemahaman_awal_12 = null;
-            if ($request->has('pemahaman_awal_12') && is_array($request->pemahaman_awal_12)) {
-                $pemahaman_awal_12 = json_encode($request->pemahaman_awal_12);
-            }
-            $metode_12 = null;
-            if ($request->has('metode_12') && is_array($request->metode_12)) {
-                $metode_12 = json_encode($request->metode_12);
-            }
-            $media_12 = null;
-            if ($request->has('media_12') && is_array($request->media_12)) {
-                $media_12 = json_encode($request->media_12);
-            }
-            $evaluasi_12 = null;
-            if ($request->has('evaluasi_12') && is_array($request->evaluasi_12)) {
-                $evaluasi_12 = json_encode($request->evaluasi_12);
-            }
-
-            $pemahaman_awal_13 = null;
-            if ($request->has('pemahaman_awal_13') && is_array($request->pemahaman_awal_13)) {
-                $pemahaman_awal_13 = json_encode($request->pemahaman_awal_13);
-            }
-            $metode_13 = null;
-            if ($request->has('metode_13') && is_array($request->metode_13)) {
-                $metode_13 = json_encode($request->metode_13);
-            }
-            $media_13 = null;
-            if ($request->has('media_13') && is_array($request->media_13)) {
-                $media_13 = json_encode($request->media_13);
-            }
-            $evaluasi_13 = null;
-            if ($request->has('evaluasi_13') && is_array($request->evaluasi_13)) {
-                $evaluasi_13 = json_encode($request->evaluasi_13);
-            }
-
-            $pemahaman_awal_14 = null;
-            if ($request->has('pemahaman_awal_14') && is_array($request->pemahaman_awal_14)) {
-                $pemahaman_awal_14 = json_encode($request->pemahaman_awal_14);
-            }
-            $metode_14 = null;
-            if ($request->has('metode_14') && is_array($request->metode_14)) {
-                $metode_14 = json_encode($request->metode_14);
-            }
-            $media_14 = null;
-            if ($request->has('media_14') && is_array($request->media_14)) {
-                $media_14 = json_encode($request->media_14);
-            }
-            $evaluasi_14 = null;
-            if ($request->has('evaluasi_14') && is_array($request->evaluasi_14)) {
-                $evaluasi_14 = json_encode($request->evaluasi_14);
-            }
-            $pemahaman_awal_15 = null;
-            if ($request->has('pemahaman_awal_15') && is_array($request->pemahaman_awal_15)) {
-                $pemahaman_awal_15 = json_encode($request->pemahaman_awal_15);
-            }
-            $metode_15 = null;
-            if ($request->has('metode_15') && is_array($request->metode_15)) {
-                $metode_15 = json_encode($request->metode_15);
-            }
-            $media_15 = null;
-            if ($request->has('media_15') && is_array($request->media_15)) {
-                $media_15 = json_encode($request->media_15);
-            }
-            $evaluasi_15 = null;
-            if ($request->has('evaluasi_15') && is_array($request->evaluasi_15)) {
-                $evaluasi_15 = json_encode($request->evaluasi_15);
-            }
-
-            $pemahaman_awal_16 = null;
-            if ($request->has('pemahaman_awal_16') && is_array($request->pemahaman_awal_16)) {
-                $pemahaman_awal_16 = json_encode($request->pemahaman_awal_16);
-            }
-            $metode_16 = null;
-            if ($request->has('metode_16') && is_array($request->metode_16)) {
-                $metode_16 = json_encode($request->metode_16);
-            }
-            $media_16 = null;
-            if ($request->has('media_16') && is_array($request->media_16)) {
-                $media_16 = json_encode($request->media_16);
-            }
-            $evaluasi_16 = null;
-            if ($request->has('evaluasi_16') && is_array($request->evaluasi_16)) {
-                $evaluasi_16 = json_encode($request->evaluasi_16);
-            }
-
-            $KebutuhanEdukasiLanjutan = EdukasiKebutuhanEdukasiLanjutan::firstOrNew(['id_edukasi' => $edukasi->id]);
-            $KebutuhanEdukasiLanjutan->id_edukasi = $edukasi->id;
-            $KebutuhanEdukasiLanjutan->tanggal_7 = $request->tanggal_7;
-            $KebutuhanEdukasiLanjutan->sasaran_nama_7 = $request->sasaran_nama_7;
-            $KebutuhanEdukasiLanjutan->edukator_nama_7 = $request->edukator_nama_7;
-            $KebutuhanEdukasiLanjutan->pemahaman_awal_7 = $pemahaman_awal_7;
-            $KebutuhanEdukasiLanjutan->metode_7 = $metode_7;
-            $KebutuhanEdukasiLanjutan->media_7 = $media_7;
-            $KebutuhanEdukasiLanjutan->evaluasi_7 = $evaluasi_7;
-            $KebutuhanEdukasiLanjutan->lama_edukasi_7 = $request->lama_edukasi_7;
-
-            $KebutuhanEdukasiLanjutan->tanggal_8 = $request->tanggal_8;
-            $KebutuhanEdukasiLanjutan->sasaran_nama_8 = $request->sasaran_nama_8;
-            $KebutuhanEdukasiLanjutan->edukator_nama_8 = $request->edukator_nama_8;
-            $KebutuhanEdukasiLanjutan->pemahaman_awal_8 = $pemahaman_awal_8;
-            $KebutuhanEdukasiLanjutan->metode_8 = $metode_8;
-            $KebutuhanEdukasiLanjutan->media_8 = $media_8;
-            $KebutuhanEdukasiLanjutan->evaluasi_8 = $evaluasi_8;
-            $KebutuhanEdukasiLanjutan->lama_edukasi_8 = $request->lama_edukasi_8;
-
-            $KebutuhanEdukasiLanjutan->tanggal_9 = $request->tanggal_9;
-            $KebutuhanEdukasiLanjutan->ket_teknik_rehabilitasi_9 = $request->ket_teknik_rehabilitasi_9;
-            $KebutuhanEdukasiLanjutan->teknik_rehabilitasi_9 = $request->teknik_rehabilitasi_9;
-            $KebutuhanEdukasiLanjutan->sasaran_nama_9 = $request->sasaran_nama_9;
-            $KebutuhanEdukasiLanjutan->edukator_nama_9 = $request->edukator_nama_9;
-            $KebutuhanEdukasiLanjutan->pemahaman_awal_9 = $pemahaman_awal_9;
-            $KebutuhanEdukasiLanjutan->metode_9 = $metode_9;
-            $KebutuhanEdukasiLanjutan->media_9 = $media_9;
-            $KebutuhanEdukasiLanjutan->evaluasi_9 = $evaluasi_9;
-            $KebutuhanEdukasiLanjutan->lama_edukasi_9 = $request->lama_edukasi_9;
-
-            $KebutuhanEdukasiLanjutan->tanggal_10 = $request->tanggal_10;
-            $KebutuhanEdukasiLanjutan->sasaran_nama_10 = $request->sasaran_nama_10;
-            $KebutuhanEdukasiLanjutan->edukator_nama_10 = $request->edukator_nama_10;
-            $KebutuhanEdukasiLanjutan->pemahaman_awal_10 = $pemahaman_awal_10;
-            $KebutuhanEdukasiLanjutan->metode_10 = $metode_10;
-            $KebutuhanEdukasiLanjutan->media_10 = $media_10;
-            $KebutuhanEdukasiLanjutan->evaluasi_10 = $evaluasi_10;
-            $KebutuhanEdukasiLanjutan->lama_edukasi_10 = $request->lama_edukasi_10;
-
-            $KebutuhanEdukasiLanjutan->tanggal_11 = $request->tanggal_11;
-            $KebutuhanEdukasiLanjutan->sasaran_nama_11 = $request->sasaran_nama_11;
-            $KebutuhanEdukasiLanjutan->edukator_nama_11 = $request->edukator_nama_11;
-            $KebutuhanEdukasiLanjutan->pemahaman_awal_11 = $pemahaman_awal_11;
-            $KebutuhanEdukasiLanjutan->metode_11 = $metode_11;
-            $KebutuhanEdukasiLanjutan->media_11 = $media_11;
-            $KebutuhanEdukasiLanjutan->evaluasi_11 = $evaluasi_11;
-            $KebutuhanEdukasiLanjutan->lama_edukasi_11 = $request->lama_edukasi_11;
-
-            $KebutuhanEdukasiLanjutan->tanggal_12 = $request->tanggal_12;
-            $KebutuhanEdukasiLanjutan->sasaran_nama_12 = $request->sasaran_nama_12;
-            $KebutuhanEdukasiLanjutan->edukator_nama_12 = $request->edukator_nama_12;
-            $KebutuhanEdukasiLanjutan->pemahaman_awal_12 = $pemahaman_awal_12;
-            $KebutuhanEdukasiLanjutan->metode_12 = $metode_12;
-            $KebutuhanEdukasiLanjutan->media_12 = $media_12;
-            $KebutuhanEdukasiLanjutan->evaluasi_12 = $evaluasi_12;
-            $KebutuhanEdukasiLanjutan->lama_edukasi_12 = $request->lama_edukasi_12;
-
-            $KebutuhanEdukasiLanjutan->tanggal_13 = $request->tanggal_13;
-            $KebutuhanEdukasiLanjutan->sasaran_nama_13 = $request->sasaran_nama_13;
-            $KebutuhanEdukasiLanjutan->edukator_nama_13 = $request->edukator_nama_13;
-            $KebutuhanEdukasiLanjutan->pemahaman_awal_13 = $pemahaman_awal_13;
-            $KebutuhanEdukasiLanjutan->metode_13 = $metode_13;
-            $KebutuhanEdukasiLanjutan->media_13 = $media_13;
-            $KebutuhanEdukasiLanjutan->evaluasi_13 = $evaluasi_13;
-            $KebutuhanEdukasiLanjutan->lama_edukasi_13 = $request->lama_edukasi_13;
-
-            $KebutuhanEdukasiLanjutan->tanggal_14 = $request->tanggal_14;
-            $KebutuhanEdukasiLanjutan->ket_hambatan_14 = $request->ket_hambatan_14;
-            $KebutuhanEdukasiLanjutan->sasaran_nama_14 = $request->sasaran_nama_14;
-            $KebutuhanEdukasiLanjutan->edukator_nama_14 = $request->edukator_nama_14;
-            $KebutuhanEdukasiLanjutan->pemahaman_awal_14 = $pemahaman_awal_14;
-            $KebutuhanEdukasiLanjutan->metode_14 = $metode_14;
-            $KebutuhanEdukasiLanjutan->media_14 = $media_14;
-            $KebutuhanEdukasiLanjutan->evaluasi_14 = $evaluasi_14;
-            $KebutuhanEdukasiLanjutan->lama_edukasi_14 = $request->lama_edukasi_14;
-
-            $KebutuhanEdukasiLanjutan->tanggal_15 = $request->tanggal_15;
-            $KebutuhanEdukasiLanjutan->ket_pertanyaan_15 = $request->ket_pertanyaan_15;
-            $KebutuhanEdukasiLanjutan->sasaran_nama_15 = $request->sasaran_nama_15;
-            $KebutuhanEdukasiLanjutan->edukator_nama_15 = $request->edukator_nama_15;
-            $KebutuhanEdukasiLanjutan->pemahaman_awal_15 = $pemahaman_awal_15;
-            $KebutuhanEdukasiLanjutan->metode_15 = $metode_15;
-            $KebutuhanEdukasiLanjutan->media_15 = $media_15;
-            $KebutuhanEdukasiLanjutan->evaluasi_15 = $evaluasi_15;
-            $KebutuhanEdukasiLanjutan->lama_edukasi_15 = $request->lama_edukasi_15;
-
-            $KebutuhanEdukasiLanjutan->tanggal_16 = $request->tanggal_16;
-            $KebutuhanEdukasiLanjutan->ket_preferensi_16 = $request->ket_preferensi_16;
-            $KebutuhanEdukasiLanjutan->sasaran_nama_16 = $request->sasaran_nama_16;
-            $KebutuhanEdukasiLanjutan->edukator_nama_16 = $request->edukator_nama_16;
-            $KebutuhanEdukasiLanjutan->pemahaman_awal_16 = $pemahaman_awal_16;
-            $KebutuhanEdukasiLanjutan->metode_16 = $metode_16;
-            $KebutuhanEdukasiLanjutan->media_16 = $media_16;
-            $KebutuhanEdukasiLanjutan->evaluasi_16 = $evaluasi_16;
-            $KebutuhanEdukasiLanjutan->lama_edukasi_16 = $request->lama_edukasi_16;
-            $KebutuhanEdukasiLanjutan->save();
+            $this->updateKebutuhanEdukasiLanjutan($edukasi->id, $request, $sectionAccess);
 
             DB::commit();
 
@@ -1209,6 +489,7 @@ class EdukasiController extends Controller
                 $tgl_masuk,
                 $request->urut_masuk,
             ])->with(['success' => 'Berhasil update data Edukasi !']);
+            
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());

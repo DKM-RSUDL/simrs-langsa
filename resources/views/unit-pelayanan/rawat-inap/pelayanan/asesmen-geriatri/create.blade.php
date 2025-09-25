@@ -44,8 +44,10 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
-                                                <input type="date" class="form-control" name="tanggal_masuk" id="tanggal_masuk" value="{{ date('Y-m-d') }}">
-                                                <input type="time" class="form-control" name="jam_masuk" id="jam_masuk" value="{{ date('H:i') }}">
+                                                <input type="date" class="form-control" name="tanggal_masuk"
+                                                    id="tanggal_masuk" value="{{ date('Y-m-d') }}">
+                                                <input type="time" class="form-control" name="jam_masuk" id="jam_masuk"
+                                                    value="{{ date('H:i') }}">
                                             </div>
                                         </div>
 
@@ -103,16 +105,15 @@
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Diastole</label>
-                                                    <input type="number" class="form-control"
-                                                        name="diastole" placeholder="80" min="40"
-                                                        max="150">
+                                                    <input type="number" class="form-control" name="diastole"
+                                                        placeholder="80" min="40" max="150">
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Suhu (°C)</label>
-                                            <input type="number" class="form-control" name="suhu" step="0.1"
+                                            <input type="text" class="form-control" name="suhu" step="0.1"
                                                 placeholder="36.5" min="30" max="45">
                                         </div>
 
@@ -131,19 +132,19 @@
                                         {{-- TAMBAHAN VITAL SIGN: BB, TB, IMT --}}
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Berat Badan (Kg)</label>
-                                            <input type="number" class="form-control" name="berat_badan" id="berat_badan" 
+                                            <input type="number" class="form-control" name="berat_badan" id="berat_badan"
                                                 placeholder="70" step="0.1" min="10" max="300">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Tinggi Badan (Cm)</label>
-                                            <input type="number" class="form-control" name="tinggi_badan" id="tinggi_badan" 
+                                            <input type="number" class="form-control" name="tinggi_badan" id="tinggi_badan"
                                                 placeholder="170" step="0.1" min="50" max="250">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">IMT (Kg/m²)</label>
-                                            <input type="number" class="form-control" name="imt" id="imt" 
+                                            <input type="number" class="form-control" name="imt" id="imt"
                                                 placeholder="Otomatis terhitung" step="0.1" readonly>
                                         </div>
 
@@ -151,31 +152,35 @@
                                             <label style="min-width: 220px;">Kategori IMT</label>
                                             <div class="d-flex flex-column gap-2" style="width: 100%;">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="kategori_imt[]" value="Underweight" id="underweight">
+                                                    <input class="form-check-input" type="checkbox" name="kategori_imt[]"
+                                                        value="Underweight" id="underweight">
                                                     <label class="form-check-label" for="underweight">
-                                                        Underweight (< 18,0)
-                                                    </label>
+                                                        Underweight (< 18,0) </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="kategori_imt[]" value="Normoweight" id="normoweight">
+                                                    <input class="form-check-input" type="checkbox" name="kategori_imt[]"
+                                                        value="Normoweight" id="normoweight">
                                                     <label class="form-check-label" for="normoweight">
                                                         Normoweight (18,0 - 22,9)
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="kategori_imt[]" value="Overweight" id="overweight">
+                                                    <input class="form-check-input" type="checkbox" name="kategori_imt[]"
+                                                        value="Overweight" id="overweight">
                                                     <label class="form-check-label" for="overweight">
                                                         Overweight (23,0 - 24,9)
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="kategori_imt[]" value="Obese" id="obese">
+                                                    <input class="form-check-input" type="checkbox" name="kategori_imt[]"
+                                                        value="Obese" id="obese">
                                                     <label class="form-check-label" for="obese">
                                                         Obese (25,0 - 30,0)
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="kategori_imt[]" value="Morbid Obese" id="morbid_obese">
+                                                    <input class="form-check-input" type="checkbox" name="kategori_imt[]"
+                                                        value="Morbid Obese" id="morbid_obese">
                                                     <label class="form-check-label" for="morbid_obese">
                                                         Morbid Obese (> 30)
                                                     </label>
@@ -236,13 +241,15 @@
                                             <label style="min-width: 220px;">ADL (Activities of Daily Living)</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="adl[]" value="Mandiri" id="adl_mandiri">
+                                                    <input class="form-check-input" type="checkbox" name="adl[]"
+                                                        value="Mandiri" id="adl_mandiri">
                                                     <label class="form-check-label" for="adl_mandiri">
                                                         Mandiri
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="adl[]" value="Ketergantungan" id="adl_ketergantungan">
+                                                    <input class="form-check-input" type="checkbox" name="adl[]"
+                                                        value="Ketergantungan" id="adl_ketergantungan">
                                                     <label class="form-check-label" for="adl_ketergantungan">
                                                         Ketergantungan
                                                     </label>
@@ -254,13 +261,15 @@
                                             <label style="min-width: 220px;">Kognitif</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="kognitif[]" value="Normal" id="kognitif_normal">
+                                                    <input class="form-check-input" type="checkbox" name="kognitif[]"
+                                                        value="Normal" id="kognitif_normal">
                                                     <label class="form-check-label" for="kognitif_normal">
                                                         Normal
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="kognitif[]" value="Gangguan Kognitif" id="kognitif_gangguan">
+                                                    <input class="form-check-input" type="checkbox" name="kognitif[]"
+                                                        value="Gangguan Kognitif" id="kognitif_gangguan">
                                                     <label class="form-check-label" for="kognitif_gangguan">
                                                         Gangguan Kognitif
                                                     </label>
@@ -272,13 +281,15 @@
                                             <label style="min-width: 220px;">Depresi</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="depresi[]" value="Normal" id="depresi_normal">
+                                                    <input class="form-check-input" type="checkbox" name="depresi[]"
+                                                        value="Normal" id="depresi_normal">
                                                     <label class="form-check-label" for="depresi_normal">
                                                         Normal
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="depresi[]" value="Depresi" id="depresi_ada">
+                                                    <input class="form-check-input" type="checkbox" name="depresi[]"
+                                                        value="Depresi" id="depresi_ada">
                                                     <label class="form-check-label" for="depresi_ada">
                                                         Depresi
                                                     </label>
@@ -290,13 +301,17 @@
                                             <label style="min-width: 220px;">Inkontinensia</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="inkontinensia[]" value="Tidak Ada Inkontinensia" id="inkontinensia_tidak">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="inkontinensia[]" value="Tidak Ada Inkontinensia"
+                                                        id="inkontinensia_tidak">
                                                     <label class="form-check-label" for="inkontinensia_tidak">
                                                         Tidak Ada Inkontinensia
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="inkontinensia[]" value="Inkontinensia" id="inkontinensia_ada">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="inkontinensia[]" value="Inkontinensia"
+                                                        id="inkontinensia_ada">
                                                     <label class="form-check-label" for="inkontinensia_ada">
                                                         Inkontinensia
                                                     </label>
@@ -308,13 +323,15 @@
                                             <label style="min-width: 220px;">Insomnia</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="insomnia[]" value="Normal" id="insomnia_normal">
+                                                    <input class="form-check-input" type="checkbox" name="insomnia[]"
+                                                        value="Normal" id="insomnia_normal">
                                                     <label class="form-check-label" for="insomnia_normal">
                                                         Normal
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="insomnia[]" value="Insomnia" id="insomnia_ada">
+                                                    <input class="form-check-input" type="checkbox" name="insomnia[]"
+                                                        value="Insomnia" id="insomnia_ada">
                                                     <label class="form-check-label" for="insomnia_ada">
                                                         Insomnia
                                                     </label>
@@ -345,7 +362,8 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr id="no-alergi-row">
-                                                        <td colspan="5" class="text-center text-muted">Tidak ada data alergi</td>
+                                                        <td colspan="5" class="text-center text-muted">Tidak ada data
+                                                            alergi</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -413,11 +431,11 @@
                                     <div class="section-separator" id="discharge-planning">
                                         <h5 class="section-title">8. Discharge Planning</h5>
 
-                                        <div class="mb-4">
+                                        {{-- <div class="mb-4">
                                             <label class="form-label">Diagnosis medis</label>
                                             <input type="text" class="form-control" name="diagnosis_medis"
                                                 placeholder="Diagnosis">
-                                        </div>
+                                        </div> --}}
 
                                         <div class="mb-4">
                                             <label class="form-label">Usia lanjut</label>

@@ -33,6 +33,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-override.min.css') }}">
     <link rel="stylesheet" id="theme-color" href="{{ asset('assets/css/dark.min.css') }}">
     <link href="{{ asset('vendor/select2/css/select2.min.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
     <link href="{{ asset('vendor/select2-bootstrap-5-theme/select2-bootstrap-5-theme.min.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('vendor/bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}">
     <!-- CSS for this page only -->
@@ -85,6 +86,7 @@
     <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.0.3/js/dataTables.bootstrap5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
     <script>
         Main.init();
     </script>

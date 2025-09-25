@@ -194,9 +194,9 @@
 
         });
 
-        // mencegah menekan enter agar tidak mengirim data form
+        // mencegah menekan enter agar tidak mengirim data form, kecuali pada textarea
         $('#addKonsulModal form').keypress(function(e) {
-            if (e.key === "Enter") {
+            if (e.key === "Enter" && !$(e.target).is('trix-editor')) {
                 e.preventDefault();
             }
         });
@@ -272,7 +272,14 @@
                         $modal.find('#dokter_tujuan').val(konsultasi.kd_dokter_tujuan).trigger(
                             'change');
                         $modal.find('#konsultasi').val(konsultasi.konsultasi);
-                        $modal.find('#instruksi').val(konsultasi.instruksi);
+
+                        // Dapatkan element trix-editor
+                        var trixEditor = $('trix-editor[input="instruksi-edit"]')[0];
+
+                        // Set content menggunakan Trix API
+                        if (trixEditor && trixEditor.editor) {
+                            trixEditor.editor.loadHTML(konsultasi.instruksi);
+                        }
 
                         $modal.modal('show');
                     } else {
@@ -300,7 +307,7 @@
 
         // mencegah menekan enter agar tidak mengirim data form
         $('#editKonsulModal form').keypress(function(e) {
-            if (e.key === "Enter") {
+            if (e.key === "Enter" && !$(e.target).is('trix-editor')) {
                 e.preventDefault();
             }
         });

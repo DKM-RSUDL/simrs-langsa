@@ -174,7 +174,7 @@ class KonsultasiController extends Controller
                 'jam_konsul.required'           => 'Jam konsul harus dipilih!',
                 'jam_konsul.date_format'        => 'Jam konsul harus format yang benar!',
                 'dokter_tujuan.required'        => 'Dokter tujuan harus dipilih!',
-                'konsultasi.required'            => 'Konsultasi harus di isi!'
+                // 'konsultasi.required'            => 'Konsultasi harus di isi!'
             ];
 
             $request->validate([
@@ -182,7 +182,7 @@ class KonsultasiController extends Controller
                 'dokter_tujuan'         => 'required',
                 'tgl_konsul'            => 'required|date_format:Y-m-d',
                 'jam_konsul'            => 'required|date_format:H:i',
-                'konsultasi'            => 'required',
+                // 'konsultasi'            => 'required',
             ], $msgErr);
 
 
@@ -277,7 +277,7 @@ class KonsultasiController extends Controller
                 'jam_konsul.required'           => 'Jam konsul harus dipilih!',
                 'jam_konsul.date_format'        => 'Jam konsul harus format yang benar!',
                 'dokter_tujuan.required'        => 'Dokter tujuan harus dipilih!',
-                'konsultasi.required'            => 'Konsultasi harus di isi!'
+                // 'konsultasi.required'            => 'Konsultasi harus di isi!'
             ];
 
             $request->validate([
@@ -286,7 +286,7 @@ class KonsultasiController extends Controller
                 'dokter_tujuan'         => 'required',
                 'tgl_konsul'            => 'required|date_format:Y-m-d',
                 'jam_konsul'            => 'required',
-                'konsultasi'            => 'required',
+                // 'konsultasi'            => 'required',
             ], $msgErr);
 
 

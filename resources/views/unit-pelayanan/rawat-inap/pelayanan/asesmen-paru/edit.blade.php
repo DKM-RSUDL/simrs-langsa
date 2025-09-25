@@ -1123,11 +1123,11 @@
                                     $kesimpulanPlaning = $dischargePlanning->kesimpulan_planing ?? 'Tidak membutuhkan rencana pulang khusus';
                                 @endphp
 
-                                <div class="mb-4">
+                                {{-- <div class="mb-4">
                                     <label class="form-label">Diagnosis medis</label>
                                     <input type="text" class="form-control" name="diagnosis_medis" placeholder="Diagnosis"
                                         value="{{ $diagnosisMedis }}">
-                                </div>
+                                </div> --}}
 
                                 <div class="mb-4">
                                     <label class="form-label">Usia lanjut (>60 th)</label>

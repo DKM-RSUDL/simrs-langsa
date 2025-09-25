@@ -1511,12 +1511,12 @@
                                         <div class="row">
                                             <h5>15. Discharge Planning</h5>
                                             <div class="col-md-6">
-                                                <div class="mb-3">
+                                                {{-- <div class="mb-3">
                                                     <label class="form-label fw-bold">Diagnosis Medis</label>
                                                     <p class="form-control-plaintext border-bottom">
                                                         {{ $asesmen->rmeAsesmenPerinatologyRencanaPulang->diagnosis_medis ?? '-' }}
                                                     </p>
-                                                </div>
+                                                </div> --}}
 
                                                 <div class="mb-3">
                                                     <label class="form-label fw-bold">Usia Lanjut</label>

@@ -85,7 +85,7 @@
                         alt="Foto Pasien" width="60" height="60">
                     <div>
                         <div class="text-primary fw-bold mb-1">
-                            Asesmen {{ getKategoriAsesmen($item->kategori, $item->sub_kategori) }}
+                            Asesmen {{ getKategoriAsesmen($item->kategori, $item->sub_kategori, 3) }}
                         </div>
                         <div class="text-muted">
                             By: <span class="fw-semibold">{{ $item->user->name }}</span>
