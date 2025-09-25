@@ -14,7 +14,13 @@
                 class="btn">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
-            <form method="POST" enctype="multipart/form-data">
+            <form method="POST"
+                action="{{ route('rawat-inap.asesmen.medis.tht.index', [
+                    'kd_unit' => $kd_unit,
+                    'kd_pasien' => $kd_pasien,
+                    'tgl_masuk' => $tgl_masuk,
+                    'urut_masuk' => $urut_masuk,
+                ]) }}">
                 @csrf
                 <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
                 <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
