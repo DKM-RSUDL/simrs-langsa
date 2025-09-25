@@ -27,12 +27,15 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Services\AsesmenService;
 
 class AsesmenKetDewasaRanapController extends Controller
 {
+    protected $asesmenService;
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->asesmenService = new AsesmenService();
     }
 
     private function getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -61,15 +64,7 @@ class AsesmenKetDewasaRanapController extends Controller
         return $dataMedis;
     }
 
-    private function getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        return Transaksi::select('kd_kasir', 'no_transaksi')
-            ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
-            ->whereDate('tgl_transaksi', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->first();
-    }
+    
 
     private function getMasterData($kd_pasien)
     {
@@ -168,31 +163,30 @@ class AsesmenKetDewasaRanapController extends Controller
 
     public function create(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
-        if (!$dataMedis) {
-            abort(404, 'Data tidak ditemukan');
+            if (!$dataMedis) {
+                abort(404, 'Data tidak ditemukan');
+            }
+
+            $masterData = $this->getMasterData($kd_pasien);
+
+            return view(
+                'unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.create',
+                array_merge([
+                    'kd_unit' => $kd_unit,
+                    'kd_pasien' => $kd_pasien,
+                    'tgl_masuk' => $tgl_masuk,
+                    'urut_masuk' => $urut_masuk,
+                    'dataMedis' => $dataMedis,
+                ], $masterData)
+            );
         }
-
-        $masterData = $this->getMasterData($kd_pasien);
-
-        return view(
-            'unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.create',
-            array_merge([
-                'kd_unit' => $kd_unit,
-                'kd_pasien' => $kd_pasien,
-                'tgl_masuk' => $tgl_masuk,
-                'urut_masuk' => $urut_masuk,
-                'dataMedis' => $dataMedis,
-            ], $masterData)
-        );
-    }
 
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         DB::beginTransaction();
         try {
-
             // 1. Buat record RmeAsesmen
             $asesmen = new RmeAsesmen();
             $asesmen->kd_pasien = $request->kd_pasien;
@@ -205,6 +199,25 @@ class AsesmenKetDewasaRanapController extends Controller
             $asesmen->sub_kategori = 1;
             $asesmen->save();
 
+            // Data vital sign untuk disimpan
+            $vitalSignData = [
+                'sistole' => $request->sistole ? (int)$request->sistole : null,
+                'diastole' => $request->distole ? (int)$request->distole : null,
+                'nadi' => $request->nadi ? (int)$request->nadi : null,
+                'respiration' => $request->nafas ? (int)$request->nafas : null,
+                'suhu' => $request->suhu ? (float)$request->suhu : null,
+                'spo2_tanpa_o2' => $request->sao2 ? (int)$request->sao2 : null,
+                'tinggi_badan' => $request->tb ? (int)$request->tb : null,
+                'berat_badan' => $request->bb ? (int) $request->bb : null,
+            ];
+
+          
+            $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit,$kd_pasien,$tgl_masuk,$urut_masuk);
+
+            // Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaction,$lastTransaction->kd_kasir);
+
+            // Simpan ke tabel RmeAsesmenKetDewasaRanap
             $asesmenKetDewasaRanap = RmeAsesmenKetDewasaRanap::create([
                 'id_asesmen' => $asesmen->id,
                 'tanggal' => $request->tanggal ?? date('Y-m-d'),
@@ -229,6 +242,7 @@ class AsesmenKetDewasaRanapController extends Controller
                 'user_create' => Auth::id()
             ]);
 
+            // Simpan ke tabel RmeAsesmenKetDewasaRanapRiwayatPasien
             $asesmenKetDewasaRanapRiwayatPasien = RmeAsesmenKetDewasaRanapRiwayatPasien::create([
                 'id_asesmen' => $asesmen->id,
                 'tanggal' => $request->tanggal ?? date('Y-m-d'),
@@ -264,6 +278,8 @@ class AsesmenKetDewasaRanapController extends Controller
                 'psikososial_aktivitas_lainnya2' => $request->psikososial_aktivitas_lainnya2,
                 'user_create' => Auth::id()
             ]);
+
+            // Simpan ke tabel RmeAsesmenKetDewasaRanapFisik
             $asesmenKetDewasaRanapFisik = RmeAsesmenKetDewasaRanapFisik::create([
                 'id_asesmen' => $asesmen->id,
                 'tanggal' => $request->tanggal ?? date('Y-m-d'),
@@ -288,10 +304,12 @@ class AsesmenKetDewasaRanapController extends Controller
                 'pemeriksaan_neurologi' => $request->pemeriksaan_neurologi ?? [],
                 'pemeriksaan_neurologi_catatan' => $request->pemeriksaan_neurologi_catatan,
                 'kesadaran' => $request->kesadaran ?? [],
-                'vital_sign' => $this->formatJsonForDatabase($request->vital_sign),
+                'vital_sign' => $this->formatJsonForDatabase($vitalSignData),
                 'pemeriksaan_kardiovaskular_catatan' => $request->pemeriksaan_kardiovaskular_catatan,
                 'user_create' => Auth::id()
             ]);
+
+            // Simpan ke tabel RmeAsesmenKetDewasaRanapStatusNutrisi
             $asesmenKetDewasaStatusNutrisi = RmeAsesmenKetDewasaRanapStatusNutrisi::create([
                 'id_asesmen' => $asesmen->id,
                 'tanggal' => $request->tanggal ?? date('Y-m-d'),
@@ -304,6 +322,8 @@ class AsesmenKetDewasaRanapController extends Controller
                 'status_nutrisi_total' => $request->status_nutrisi_total,
                 'user_create' => Auth::id()
             ]);
+
+            // Simpan ke tabel RmeAsesmenKetDewasaRanapSkalaNyeri
             $asesmenKetDewasaStatusSkalaNyeri = RmeAsesmenKetDewasaRanapSkalaNyeri::create([
                 'id_asesmen' => $asesmen->id,
                 'tanggal' => $request->tanggal ?? date('Y-m-d'),
@@ -324,6 +344,8 @@ class AsesmenKetDewasaRanapController extends Controller
                 'efek_nyeri_lainnya_text' => $request->efek_nyeri_lainnya_text,
                 'user_create' => Auth::id()
             ]);
+
+            // Simpan ke tabel RmeAsesmenKetDewasaRanapResikoJatuh
             $asesmenKetDewasaResikoJatuh = RmeAsesmenKetDewasaRanapResikoJatuh::create([
                 'id_asesmen' => $asesmen->id,
                 'tanggal' => $request->tanggal ?? date('Y-m-d'),
@@ -373,6 +395,8 @@ class AsesmenKetDewasaRanapController extends Controller
                 'adl_kesimpulan' => $request->adl_kesimpulan,
                 'user_create' => Auth::id()
             ]);
+
+            // Simpan ke tabel RmeAsesmenKetDewasaRanapPengkajianEdukasi
             $asesmenKetDewasaPengkajianEdukasi = RmeAsesmenKetDewasaRanapPengkajianEdukasi::create([
                 'id_asesmen' => $asesmen->id,
                 'tanggal' => $request->tanggal ?? date('Y-m-d'),
@@ -394,6 +418,8 @@ class AsesmenKetDewasaRanapController extends Controller
                 'catatan_khusus' => $request->catatan_khusus,
                 'user_create' => Auth::id()
             ]);
+
+            // Simpan ke tabel RmeAsesmenKetDewasaRanapDischargePlanning
             $asesmenKetDewasaDischargePlanning = RmeAsesmenKetDewasaRanapDischargePlanning::create([
                 'id_asesmen' => $asesmen->id,
                 'tanggal' => $request->tanggal ?? date('Y-m-d'),
@@ -409,6 +435,8 @@ class AsesmenKetDewasaRanapController extends Controller
                 'kesimpulan_planing' => $request->kesimpulan_planing,
                 'user_create' => Auth::id()
             ]);
+
+            // Simpan ke tabel RmeAsesmenKetDewasaRanapDietKhusus
             $asesmenKetDewasaDietKhusus = RmeAsesmenKetDewasaRanapDietKhusus::create([
                 'id_asesmen' => $asesmen->id,
                 'tanggal' => $request->tanggal ?? date('Y-m-d'),
@@ -438,6 +466,8 @@ class AsesmenKetDewasaRanapController extends Controller
                 'catatan_khusus_diet' => $request->catatan_khusus_diet,
                 'user_create' => Auth::id()
             ]);
+
+            // Simpan ke tabel RmeAsesmenKetDewasaRanapDiagnosisKeperawatan
             $asesmenKetDewasaDiagnosisKeperawatan = RmeAsesmenKetDewasaRanapDiagnosisKeperawatan::create([
                 'id_asesmen' => $asesmen->id,
                 'tanggal' => $request->tanggal ?? date('Y-m-d'),

@@ -112,6 +112,48 @@ class AsesmenObstetriMaternitas extends Controller
                 'hasil_pemeriksaan_penunjang_histopatology' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048'
             ]);
 
+            // 1. Buat record RmeAsesmen
+        $asesmen = new RmeAsesmen();
+        $asesmen->kd_pasien = $request->kd_pasien;
+        $asesmen->kd_unit = $request->kd_unit;
+        $asesmen->tgl_masuk = $request->tgl_masuk;
+        $asesmen->urut_masuk = $request->urut_masuk;
+        $asesmen->user_id = Auth::id();
+        $asesmen->waktu_asesmen = now();
+        $asesmen->kategori = 1;
+        $asesmen->sub_kategori = 4;
+        $asesmen->save();
+
+        // 2. Data vital sign untuk disimpan
+        $vitalSignData = [
+            'sistole'       => $request->tekanan_darah_sistole ? (int)$request->tekanan_darah_sistole : null,
+            'diastole'      => $request->tekanan_darah_diastole ? (int)$request->tekanan_darah_diastole : null,
+            'nadi'          => $request->nadi ? (int)$request->nadi : null,
+            'respiration'   => $request->pernafasan ? (int)$request->pernafasan : null,
+            'suhu'          => $request->suhu ? (float)$request->suhu : null,
+            'tinggi_badan'  => $request->antropometri_tinggi_badan ? (int)$request->antropometri_tinggi_badan : null,
+            'berat_badan'   => $request->antropometr_berat_badan ? (int)$request->antropometr_berat_badan : null,
+        ];
+
+            // 3. Ambil transaksi terakhir untuk pasien
+            $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+            // 4. Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaction, $lastTransaction->kd_kasir);
+
+            // 5. Simpan ke tabel obstetri (contoh)
+            $asesmenObstetri = new RmeAsesmenObstetri();
+            $asesmenObstetri->id_asesmen = $asesmen->id;
+            $asesmenObstetri->tgl_masuk = "$request->tgl_masuk $request->jam_masuk";
+            $asesmenObstetri->antenatal_rs = $request->antenatal_rs;
+            $asesmenObstetri->antenatal_rs_count = $request->antenatal_rs_count;
+            $asesmenObstetri->antenatal_lain = $request->antenatal_lain;
+            $asesmenObstetri->antenatal_lain_count = $request->antenatal_lain_count;
+            $asesmenObstetri->nama_pemeriksa = Auth::user()->name;
+            $asesmenObstetri->anamnesis_anamnesis = $request->anamnesis_anamnesis;
+            $asesmenObstetri->evaluasi_evaluasi = $request->evaluasi_evaluasi;
+            $asesmenObstetri->save();
+
             $asesmenObstetri = new RmeAsesmenObstetri();
             $asesmenObstetri->id_asesmen = $asesmen->id;
             $asesmenObstetri->tgl_masuk = "$request->tgl_masuk $request->jam_masuk";

@@ -27,12 +27,15 @@ use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use App\Services\AsesmenService;
 
 class AsesmenKepThtController extends Controller
 {
+    protected $asesmenService;
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->asesmenService = new AsesmenService();
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -96,10 +99,8 @@ class AsesmenKepThtController extends Controller
         ));
     }
 
-    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        DB::beginTransaction();
-
+    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk){
+         DB::beginTransaction();
         try {
 
             $asesmenTht = new RmeAsesmen();
@@ -119,6 +120,25 @@ class AsesmenKepThtController extends Controller
                 'hasil_pemeriksaan_penunjang_rontgent' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
                 'hasil_pemeriksaan_penunjang_histopatology' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048'
             ]);
+
+            // Data vital sign untuk disimpan (disesuaikan dengan field yang tersedia di THT)
+            $vitalSignData = [
+                'sistole' => $request->darah_sistole ? (int)$request->darah_sistole : null,
+                'diastole' => $request->darah_diastole ? (int)$request->darah_diastole : null,
+                'nadi' => $request->nadi ? (int)$request->nadi : null,
+                'respiration' => $request->nafas ? (int)$request->nafas : null,
+                'suhu' => $request->suhu ? (float)$request->suhu : null,
+                'spo2_tanpa_o2' => null, // Tidak ada di THT, set null
+                'tinggi_badan' => $request->antropometri_tinggi_badan ? (int)$request->antropometri_tinggi_badan : null,
+                'berat_badan' => $request->antropometr_berat_badan ? (int)$request->antropometr_berat_badan : null,
+            ];
+
+           
+
+            $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit,$kd_pasien,$tgl_masuk,$urut_masuk);
+
+            // Simpan vital sign menggunakan service
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaction,$lastTransaction->kd_kasir);
 
             $asesmenThtDataMasuk = new RmeAsesmenTht();
             $asesmenThtDataMasuk->id_asesmen = $asesmenTht->id;
@@ -165,11 +185,12 @@ class AsesmenKepThtController extends Controller
 
             $asesmenThtPemeriksaanFisik = new RmeAsesmenThtPemeriksaanFisik();
             $asesmenThtPemeriksaanFisik->id_asesmen = $asesmenTht->id;
-            $asesmenThtPemeriksaanFisik->darah_sistole = $request->darah_sistole;
-            $asesmenThtPemeriksaanFisik->darah_diastole = $request->darah_diastole;
-            $asesmenThtPemeriksaanFisik->nadi = $request->nadi;
-            $asesmenThtPemeriksaanFisik->nafas = $request->nafas;
-            $asesmenThtPemeriksaanFisik->suhu = $request->suhu;
+            // Vital sign tidak disimpan di sini lagi karena sudah di-handle via service; gunakan null atau hapus field ini jika duplikat
+            $asesmenThtPemeriksaanFisik->darah_sistole = null; // Atau hapus jika tidak diperlukan
+            $asesmenThtPemeriksaanFisik->darah_diastole = null;
+            $asesmenThtPemeriksaanFisik->nadi = null;
+            $asesmenThtPemeriksaanFisik->nafas = null;
+            $asesmenThtPemeriksaanFisik->suhu = null;
             $asesmenThtPemeriksaanFisik->sensorium = $request->sensorium;
             $asesmenThtPemeriksaanFisik->ku_kp_kg = $request->ku_kp_kg;
             $asesmenThtPemeriksaanFisik->avpu = $request->avpu;
@@ -196,29 +217,29 @@ class AsesmenKepThtController extends Controller
             // Tes Pendengaran
             $asesmenThtPemeriksaanFisik->tes_pendengaran_renne_res_kanan = $request->tes_pendengaran_renne_res_kanan;
             $asesmenThtPemeriksaanFisik->tes_pendengaran_renne_res_kiri = $request->tes_pendengaran_renne_res_kiri;
-            $asesmenThtPemeriksaanFisik->tes_pendengaran_weber_tes_kanan = $request->tes_pendengaran_renne_res_kiri;
-            $asesmenThtPemeriksaanFisik->tes_pendengaran_weber_tes_kiri = $request->tes_pendengaran_renne_res_kiri;
-            $asesmenThtPemeriksaanFisik->tes_pendengaran_schwabach_test_kanan = $request->tes_pendengaran_renne_res_kiri;
-            $asesmenThtPemeriksaanFisik->tes_pendengaran_schwabach_test_kiri = $request->tes_pendengaran_renne_res_kiri;
-            $asesmenThtPemeriksaanFisik->tes_pendengaran_bebisik_kanan = $request->tes_pendengaran_renne_res_kiri;
-            $asesmenThtPemeriksaanFisik->tes_pendengaran_bebisik_kiri = $request->tes_pendengaran_renne_res_kiri;
+            $asesmenThtPemeriksaanFisik->tes_pendengaran_weber_tes_kanan = $request->tes_pendengaran_weber_tes_kanan;
+            $asesmenThtPemeriksaanFisik->tes_pendengaran_weber_tes_kiri = $request->tes_pendengaran_weber_tes_kiri;
+            $asesmenThtPemeriksaanFisik->tes_pendengaran_schwabach_test_kanan = $request->tes_pendengaran_schwabach_test_kanan;
+            $asesmenThtPemeriksaanFisik->tes_pendengaran_schwabach_test_kiri = $request->tes_pendengaran_schwabach_test_kiri;
+            $asesmenThtPemeriksaanFisik->tes_pendengaran_bebisik_kanan = $request->tes_pendengaran_bebisik_kanan;
+            $asesmenThtPemeriksaanFisik->tes_pendengaran_bebisik_kiri = $request->tes_pendengaran_bebisik_kiri;
             // Paranatal Sinus
             $asesmenThtPemeriksaanFisik->senus_frontalis_nyeri_tekan_kanan = $request->senus_frontalis_nyeri_tekan_kanan;
             $asesmenThtPemeriksaanFisik->senus_frontalis_nyeri_tekan_kiri = $request->senus_frontalis_nyeri_tekan_kiri;
             $asesmenThtPemeriksaanFisik->senus_frontalis_transluminasi_kanan = $request->senus_frontalis_transluminasi_kanan;
-            $asesmenThtPemeriksaanFisik->senus_frontalis_transluminasi_kiri = $request->senus_frontalis_transluminasi_kanan;
+            $asesmenThtPemeriksaanFisik->senus_frontalis_transluminasi_kiri = $request->senus_frontalis_transluminasi_kiri;
             // Sinus Maksinasi
             $asesmenThtPemeriksaanFisik->sinus_maksinasi_nyari_tekan_kanan = $request->sinus_maksinasi_nyari_tekan_kanan;
             $asesmenThtPemeriksaanFisik->sinus_maksinasi_nyari_tekan_kiri = $request->sinus_maksinasi_nyari_tekan_kiri;
-            $asesmenThtPemeriksaanFisik->sinus_maksinasi_transluminasi_kanan = $request->sinus_maksinasi_nyari_tekan_kiri;
-            $asesmenThtPemeriksaanFisik->sinus_maksinasi_transluminasi_kiri = $request->sinus_maksinasi_nyari_tekan_kiri;
+            $asesmenThtPemeriksaanFisik->sinus_maksinasi_transluminasi_kanan = $request->sinus_maksinasi_transluminasi_kanan;
+            $asesmenThtPemeriksaanFisik->sinus_maksinasi_transluminasi_kiri = $request->sinus_maksinasi_transluminasi_kiri;
             // Rhinoscopi Anterior
             $asesmenThtPemeriksaanFisik->rhinoscopi_anterior_cavun_nasi_kanan = $request->rhinoscopi_anterior_cavun_nasi_kanan;
-            $asesmenThtPemeriksaanFisik->rhinoscopi_anterior_cavun_nasi_kiri = $request->rhinoscopi_anterior_cavun_nasi_kanan;
+            $asesmenThtPemeriksaanFisik->rhinoscopi_anterior_cavun_nasi_kiri = $request->rhinoscopi_anterior_cavun_nasi_kiri;
             $asesmenThtPemeriksaanFisik->rhinoscopi_anterior_konka_inferior_kanan = $request->rhinoscopi_anterior_konka_inferior_kanan;
             $asesmenThtPemeriksaanFisik->rhinoscopi_anterior_konka_inferior_kiri = $request->rhinoscopi_anterior_konka_inferior_kiri;
-            $asesmenThtPemeriksaanFisik->rhinoscopi_anterior_septum_nasi_kanan = $request->rhinoscopi_anterior_konka_inferior_kiri;
-            $asesmenThtPemeriksaanFisik->rhinoscopi_anterior_septum_nasi_kiri = $request->rhinoscopi_anterior_konka_inferior_kiri;
+            $asesmenThtPemeriksaanFisik->rhinoscopi_anterior_septum_nasi_kanan = $request->rhinoscopi_anterior_septum_nasi_kanan;
+            $asesmenThtPemeriksaanFisik->rhinoscopi_anterior_septum_nasi_kiri = $request->rhinoscopi_anterior_septum_nasi_kiri;
             // Rhinoscopi Pasterior
             $asesmenThtPemeriksaanFisik->rhinoscopi_pasterior_septum_nasi_kanan = $request->rhinoscopi_pasterior_septum_nasi_kanan;
             $asesmenThtPemeriksaanFisik->rhinoscopi_pasterior_septum_nasi_kiri = $request->rhinoscopi_pasterior_septum_nasi_kiri;
@@ -251,9 +272,9 @@ class AsesmenKepThtController extends Controller
             $asesmenThtPemeriksaanFisik->hidung_bisul_kiri = $request->hidung_bisul_kiri;
             $asesmenThtPemeriksaanFisik->hidung_fissare_kanan = $request->hidung_fissare_kanan;
             $asesmenThtPemeriksaanFisik->hidung_fissare_kiri = $request->hidung_fissare_kiri;
-            // Antropometri
-            $asesmenThtPemeriksaanFisik->antropometri_tinggi_badan = $request->antropometri_tinggi_badan;
-            $asesmenThtPemeriksaanFisik->antropometr_berat_badan = $request->antropometr_berat_badan;
+            // Antropometri (tidak disimpan di sini lagi karena sudah via service)
+            $asesmenThtPemeriksaanFisik->antropometri_tinggi_badan = null;
+            $asesmenThtPemeriksaanFisik->antropometr_berat_badan = null;
             $asesmenThtPemeriksaanFisik->antropometri_imt = $request->antropometri_imt;
             $asesmenThtPemeriksaanFisik->antropometri_lpt = $request->antropometri_lpt;
 
@@ -445,7 +466,7 @@ class AsesmenKepThtController extends Controller
             saveToColumn($edukasiList, 'edukasi');
             saveToColumn($kolaborasiList, 'kolaborasi');
 
-            // RESUME
+            // RESUME (disesuaikan dengan vital sign dari service, tapi gunakan request untuk konsistensi)
             $resumeData = [
                 'anamnesis'             => $request->anamnesis_anamnesis,
                 'diagnosis'             => [],
@@ -463,7 +484,7 @@ class AsesmenKepThtController extends Controller
                         'hasil' => $request->darah_diastole
                     ],
                     'respiration_rate'   => [
-                        'hasil' => ''
+                        'hasil' => $request->nafas
                     ],
                     'suhu'   => [
                         'hasil' => $request->suhu
