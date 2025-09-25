@@ -182,7 +182,7 @@ class AsesmenGinekologikController extends Controller
             $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
             // Save vital signs using service
-            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaction, $lastTransaction->kd_kasir);
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaksi, $lastTransaction->kd_kasir);
 
             // Save vital signs to gynecology vital signs table
             $asesmenTandaVital = new RmeAsesmenGinekologikTandaVital();

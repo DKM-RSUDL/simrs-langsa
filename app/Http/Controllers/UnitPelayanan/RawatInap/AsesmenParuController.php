@@ -125,7 +125,7 @@ class AsesmenParuController extends Controller
             // 3. Ambil transaksi terakhir untuk pasien
             $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
-            $noTransaction = $lastTransaction->no_transaction ?? null;
+            $noTransaction = $lastTransaction->no_transaksi ?? null;
             $kdKasir = $lastTransaction->kd_kasir ?? null;
 
             // 4. Simpan vital sign menggunakan service (boleh menerima null jika transaksi tidak ada)

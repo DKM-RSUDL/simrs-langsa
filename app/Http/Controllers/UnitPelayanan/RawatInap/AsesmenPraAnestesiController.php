@@ -136,7 +136,7 @@ class AsesmenPraAnestesiController extends Controller
         $this->asesmenService->store(
             $vitalSignData,
             $kd_pasien,
-            $lastTransaction->no_transaction,
+            $lastTransaction->no_transaksi,
             $lastTransaction->kd_kasir
         );
             $asesmenPraAnestesi = new RmeAsesmenPraAnestesi();

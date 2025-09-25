@@ -106,7 +106,7 @@ class AsesmenMedisAnakController extends Controller
             ];
 
             // Simpan vital sign menggunakan service
-            $this->asesmenService->store($vitalSignData, $kd_pasien, $transaksiData->no_transaction, $transaksiData->kd_kasir);
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $transaksiData->no_transaksi, $transaksiData->kd_kasir);
 
             // Vital signs untuk kolom vital_sign JSON
             $vitalSign = [

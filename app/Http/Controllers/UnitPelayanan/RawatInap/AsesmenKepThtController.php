@@ -138,7 +138,7 @@ class AsesmenKepThtController extends Controller
             $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit,$kd_pasien,$tgl_masuk,$urut_masuk);
 
             // Simpan vital sign menggunakan service
-            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaction,$lastTransaction->kd_kasir);
+            $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaksi,$lastTransaction->kd_kasir);
 
             $asesmenThtDataMasuk = new RmeAsesmenTht();
             $asesmenThtDataMasuk->id_asesmen = $asesmenTht->id;
