@@ -72,6 +72,32 @@
 
 @section('content')
 
+    <!-- Status Kemandirian -->
+    @php
+        // Helper kecil: cek apakah semua field anak pada kategori sama dengan $value
+        $allEqual = function (array $fields, string $value): bool {
+            foreach ($fields as $f) {
+                if (old($f) !== $value) {
+                    return false;
+                }
+            }
+            return count($fields) > 0;
+        };
+
+        // Definisi anak per kategori
+        $aktivitasFields = ['berguling', 'duduk'];
+        $higieneFields = [
+            'higiene_wajah',
+            'higiene_tubuh',
+            'higiene_ekstremitas_bawah',
+            'traktus_digestivus',
+            'traktus_urinarius',
+        ];
+        $pakaianFields = ['pakaian_atas', 'pakaian_tubuh', 'pakaian_bawah'];
+        $gerakFields = ['jalan_kaki', 'kursi_roda_kemandirian'];
+    @endphp
+
+
     <div class="row">
         <div class="col-md-3">
             @include('components.patient-card')
@@ -846,7 +872,7 @@
                     <div class="section-content">
                         <p class="text-muted small">(Berikan tanda centang (✓) pada kolom yang sesuai)</p>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-status">
+                            <table class="table table-bordered table-status align-middle">
                                 <thead>
                                     <tr>
                                         <th width="30%"></th>
@@ -856,176 +882,347 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+
+                                    {{-- ========== AKTIVITAS DI TEMPAT TIDUR ========== --}}
+                                    <tr class="table-light">
                                         <td><strong>Aktivitas di tempat tidur</strong></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td class="text-center">
+                                            <Label>Pilih</Label>
+                                            <br>
+                                            <input type="radio" name="aktivitas_master" value="mandiri"
+                                                class="form-check-input section-master" data-section="aktivitas"
+                                                @checked($allEqual($aktivitasFields, 'mandiri'))>
+                                        </td>
+                                        <td class="text-center">
+                                            <Label>Pilih</Label>
+                                            <br>
+                                            <input type="radio" name="aktivitas_master" value="bantuan"
+                                                class="form-check-input section-master" data-section="aktivitas"
+                                                @checked($allEqual($aktivitasFields, 'bantuan'))>
+                                        </td>
+                                        <td class="text-center">
+                                            <Label>Pilih</Label>
+                                            <br>
+                                            <input type="radio" name="aktivitas_master" value="tidak_bisa"
+                                                class="form-check-input section-master" data-section="aktivitas"
+                                                @checked($allEqual($aktivitasFields, 'tidak_bisa'))>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Berguling</td>
-                                        <td class="text-center"><input type="radio" name="berguling" value="mandiri"
-                                                class="form-check-input" @checked(old('berguling') == 'mandiri')></td>
-                                        <td class="text-center"><input type="radio" name="berguling" value="bantuan"
-                                                class="form-check-input" @checked(old('berguling') == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="berguling"
-                                                value="tidak_bisa" class="form-check-input" @checked(old('berguling') == 'tidak_bisa')>
+                                        <td class="text-center">
+                                            <input type="radio" name="berguling" value="mandiri"
+                                                class="form-check-input" data-section="aktivitas" data-child="1"
+                                                data-value="mandiri" @checked(old('berguling') == 'mandiri')>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="radio" name="berguling" value="bantuan"
+                                                class="form-check-input" data-section="aktivitas" data-child="1"
+                                                data-value="bantuan" @checked(old('berguling') == 'bantuan')>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="radio" name="berguling" value="tidak_bisa"
+                                                class="form-check-input" data-section="aktivitas" data-child="1"
+                                                data-value="tidak_bisa" @checked(old('berguling') == 'tidak_bisa')}>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Duduk</td>
-                                        <td class="text-center"><input type="radio" name="duduk" value="mandiri"
-                                                class="form-check-input" @checked(old('duduk') == 'mandiri')></td>
-                                        <td class="text-center"><input type="radio" name="duduk" value="bantuan"
-                                                class="form-check-input" @checked(old('duduk') == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="duduk" value="tidak_bisa"
-                                                class="form-check-input" @checked(old('duduk') == 'tidak_bisa')></td>
+                                        <td class="text-center">
+                                            <input type="radio" name="duduk" value="mandiri"
+                                                class="form-check-input" data-section="aktivitas" data-child="1"
+                                                data-value="mandiri" @checked(old('duduk') == 'mandiri')>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="radio" name="duduk" value="bantuan"
+                                                class="form-check-input" data-section="aktivitas" data-child="1"
+                                                data-value="bantuan" @checked(old('duduk') == 'bantuan')>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="radio" name="duduk" value="tidak_bisa"
+                                                class="form-check-input" data-section="aktivitas" data-child="1"
+                                                data-value="tidak_bisa" @checked(old('duduk') == 'tidak_bisa')}>
+                                        </td>
                                     </tr>
-                                    <tr>
+
+                                    {{-- ========== HIGIENE PRIBADI ========== --}}
+                                    <tr class="table-light">
                                         <td><strong>Higiene pribadi</strong></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td class="text-center">
+                                            <Label>Pilih</Label>
+                                            <br>
+                                            <input type="radio" name="higiene_master" value="mandiri"
+                                                class="form-check-input section-master" data-section="higiene"
+                                                @checked($allEqual($higieneFields, 'mandiri'))>
+                                        </td>
+                                        <td class="text-center">
+                                            <Label>Pilih</Label>
+                                            <br>
+                                            <input type="radio" name="higiene_master" value="bantuan"
+                                                class="form-check-input section-master" data-section="higiene"
+                                                @checked($allEqual($higieneFields, 'bantuan'))>
+                                        </td>
+                                        <td class="text-center">
+                                            <Label>Pilih</Label>
+                                            <br>
+                                            <input type="radio" name="higiene_master" value="tidak_bisa"
+                                                class="form-check-input section-master" data-section="higiene"
+                                                @checked($allEqual($higieneFields, 'tidak_bisa'))>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Wajah, rambut, tangan</td>
-                                        <td class="text-center"><input type="radio" name="higiene_wajah"
-                                                value="mandiri" class="form-check-input" @checked(old('higiene_wajah') == 'mandiri')>
+                                        <td class="text-center">
+                                            <input type="radio" name="higiene_wajah" value="mandiri"
+                                                class="form-check-input" data-section="higiene" data-child="1"
+                                                data-value="mandiri" @checked(old('higiene_wajah') == 'mandiri')>
                                         </td>
-                                        <td class="text-center"><input type="radio" name="higiene_wajah"
-                                                value="bantuan" class="form-check-input" @checked(old('higiene_wajah') == 'bantuan')>
+                                        <td class="text-center">
+                                            <input type="radio" name="higiene_wajah" value="bantuan"
+                                                class="form-check-input" data-section="higiene" data-child="1"
+                                                data-value="bantuan" @checked(old('higiene_wajah') == 'bantuan')>
                                         </td>
-                                        <td class="text-center"><input type="radio" name="higiene_wajah"
-                                                value="tidak_bisa" class="form-check-input" @checked(old('higiene_wajah') == 'tidak_bisa')>
+                                        <td class="text-center">
+                                            <input type="radio" name="higiene_wajah" value="tidak_bisa"
+                                                class="form-check-input" data-section="higiene" data-child="1"
+                                                data-value="tidak_bisa" @checked(old('higiene_wajah') == 'tidak_bisa')}>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Tubuh, perineum</td>
-                                        <td class="text-center"><input type="radio" name="higiene_tubuh"
-                                                value="mandiri" class="form-check-input" @checked(old('higiene_tubuh') == 'mandiri')>
+                                        <td class="text-center">
+                                            <input type="radio" name="higiene_tubuh" value="mandiri"
+                                                class="form-check-input" data-section="higiene" data-child="1"
+                                                data-value="mandiri" @checked(old('higiene_tubuh') == 'mandiri')>
                                         </td>
-                                        <td class="text-center"><input type="radio" name="higiene_tubuh"
-                                                value="bantuan" class="form-check-input" @checked(old('higiene_tubuh') == 'bantuan')>
+                                        <td class="text-center">
+                                            <input type="radio" name="higiene_tubuh" value="bantuan"
+                                                class="form-check-input" data-section="higiene" data-child="1"
+                                                data-value="bantuan" @checked(old('higiene_tubuh') == 'bantuan')>
                                         </td>
-                                        <td class="text-center"><input type="radio" name="higiene_tubuh"
-                                                value="tidak_bisa" class="form-check-input" @checked(old('higiene_tubuh') == 'tidak_bisa')>
+                                        <td class="text-center">
+                                            <input type="radio" name="higiene_tubuh" value="tidak_bisa"
+                                                class="form-check-input" data-section="higiene" data-child="1"
+                                                data-value="tidak_bisa" @checked(old('higiene_tubuh') == 'tidak_bisa')}>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Ekstremitas bawah</td>
-                                        <td class="text-center"><input type="radio" name="higiene_ekstremitas_bawah"
-                                                value="mandiri" class="form-check-input" @checked(old('higiene_ekstremitas_bawah') == 'mandiri')>
+                                        <td class="text-center">
+                                            <input type="radio" name="higiene_ekstremitas_bawah" value="mandiri"
+                                                class="form-check-input" data-section="higiene" data-child="1"
+                                                data-value="mandiri" @checked(old('higiene_ekstremitas_bawah') == 'mandiri')>
                                         </td>
-                                        <td class="text-center"><input type="radio" name="higiene_ekstremitas_bawah"
-                                                value="bantuan" class="form-check-input" @checked(old('higiene_ekstremitas_bawah') == 'bantuan')>
+                                        <td class="text-center">
+                                            <input type="radio" name="higiene_ekstremitas_bawah" value="bantuan"
+                                                class="form-check-input" data-section="higiene" data-child="1"
+                                                data-value="bantuan" @checked(old('higiene_ekstremitas_bawah') == 'bantuan')>
                                         </td>
-                                        <td class="text-center"><input type="radio" name="higiene_ekstremitas_bawah"
-                                                value="tidak_bisa" class="form-check-input" @checked(old('higiene_ekstremitas_bawah') == 'tidak_bisa')>
+                                        <td class="text-center">
+                                            <input type="radio" name="higiene_ekstremitas_bawah" value="tidak_bisa"
+                                                class="form-check-input" data-section="higiene" data-child="1"
+                                                data-value="tidak_bisa" @checked(old('higiene_ekstremitas_bawah') == 'tidak_bisa')}>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Traktus digestivus</td>
-                                        <td class="text-center"><input type="radio" name="traktus_digestivus"
-                                                value="mandiri" class="form-check-input" @checked(old('traktus_digestivus') == 'mandiri')>
+                                        <td class="text-center">
+                                            <input type="radio" name="traktus_digestivus" value="mandiri"
+                                                class="form-check-input" data-section="higiene" data-child="1"
+                                                data-value="mandiri" @checked(old('traktus_digestivus') == 'mandiri')>
                                         </td>
-                                        <td class="text-center"><input type="radio" name="traktus_digestivus"
-                                                value="bantuan" class="form-check-input" @checked(old('traktus_digestivus') == 'bantuan')>
+                                        <td class="text-center">
+                                            <input type="radio" name="traktus_digestivus" value="bantuan"
+                                                class="form-check-input" data-section="higiene" data-child="1"
+                                                data-value="bantuan" @checked(old('traktus_digestivus') == 'bantuan')>
                                         </td>
-                                        <td class="text-center"><input type="radio" name="traktus_digestivus"
-                                                value="tidak_bisa" class="form-check-input" @checked(old('traktus_digestivus') == 'tidak_bisa')>
+                                        <td class="text-center">
+                                            <input type="radio" name="traktus_digestivus" value="tidak_bisa"
+                                                class="form-check-input" data-section="higiene" data-child="1"
+                                                data-value="tidak_bisa" @checked(old('traktus_digestivus') == 'tidak_bisa')}>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Traktus urinarius</td>
-                                        <td class="text-center"><input type="radio" name="traktus_urinarius"
-                                                value="mandiri" class="form-check-input" @checked(old('traktus_urinarius') == 'mandiri')>
+                                        <td class="text-center">
+                                            <input type="radio" name="traktus_urinarius" value="mandiri"
+                                                class="form-check-input" data-section="higiene" data-child="1"
+                                                data-value="mandiri" @checked(old('traktus_urinarius') == 'mandiri')>
                                         </td>
-                                        <td class="text-center"><input type="radio" name="traktus_urinarius"
-                                                value="bantuan" class="form-check-input" @checked(old('traktus_urinarius') == 'bantuan')>
+                                        <td class="text-center">
+                                            <input type="radio" name="traktus_urinarius" value="bantuan"
+                                                class="form-check-input" data-section="higiene" data-child="1"
+                                                data-value="bantuan" @checked(old('traktus_urinarius') == 'bantuan')>
                                         </td>
-                                        <td class="text-center"><input type="radio" name="traktus_urinarius"
-                                                value="tidak_bisa" class="form-check-input" @checked(old('traktus_urinarius') == 'tidak_bisa')>
+                                        <td class="text-center">
+                                            <input type="radio" name="traktus_urinarius" value="tidak_bisa"
+                                                class="form-check-input" data-section="higiene" data-child="1"
+                                                data-value="tidak_bisa" @checked(old('traktus_urinarius') == 'tidak_bisa')}>
                                         </td>
                                     </tr>
-                                    <tr>
+
+                                    {{-- ========== BERPAKAIAN ========== --}}
+                                    <tr class="table-light">
                                         <td><strong>Berpakaian</strong></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td class="text-center">
+                                            <Label>Pilih</Label>
+                                            <br>
+                                            <input type="radio" name="pakaian_master" value="mandiri"
+                                                class="form-check-input section-master" data-section="pakaian"
+                                                @checked($allEqual($pakaianFields, 'mandiri'))>
+                                        </td>
+                                        <td class="text-center">
+                                            <Label>Pilih</Label>
+                                            <br>
+                                            <input type="radio" name="pakaian_master" value="bantuan"
+                                                class="form-check-input section-master" data-section="pakaian"
+                                                @checked($allEqual($pakaianFields, 'bantuan'))>
+                                        </td>
+                                        <td class="text-center">
+                                            <Label>Pilih</Label>
+                                            <br>
+                                            <input type="radio" name="pakaian_master" value="tidak_bisa"
+                                                class="form-check-input section-master" data-section="pakaian"
+                                                @checked($allEqual($pakaianFields, 'tidak_bisa'))>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Ekstremitas atas</td>
-                                        <td class="text-center"><input type="radio" name="pakaian_atas"
-                                                value="mandiri" class="form-check-input" @checked(old('pakaian_atas') == 'mandiri')>
+                                        <td class="text-center">
+                                            <input type="radio" name="pakaian_atas" value="mandiri"
+                                                class="form-check-input" data-section="pakaian" data-child="1"
+                                                data-value="mandiri" @checked(old('pakaian_atas') == 'mandiri')>
                                         </td>
-                                        <td class="text-center"><input type="radio" name="pakaian_atas"
-                                                value="bantuan" class="form-check-input" @checked(old('pakaian_atas') == 'bantuan')>
+                                        <td class="text-center">
+                                            <input type="radio" name="pakaian_atas" value="bantuan"
+                                                class="form-check-input" data-section="pakaian" data-child="1"
+                                                data-value="bantuan" @checked(old('pakaian_atas') == 'bantuan')>
                                         </td>
-                                        <td class="text-center"><input type="radio" name="pakaian_atas"
-                                                value="tidak_bisa" class="form-check-input" @checked(old('pakaian_atas') == 'tidak_bisa')>
+                                        <td class="text-center">
+                                            <input type="radio" name="pakaian_atas" value="tidak_bisa"
+                                                class="form-check-input" data-section="pakaian" data-child="1"
+                                                data-value="tidak_bisa" @checked(old('pakaian_atas') == 'tidak_bisa')}>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Batang tubuh</td>
-                                        <td class="text-center"><input type="radio" name="pakaian_tubuh"
-                                                value="mandiri" class="form-check-input" @checked(old('pakaian_tubuh') == 'mandiri')>
+                                        <td class="text-center">
+                                            <input type="radio" name="pakaian_tubuh" value="mandiri"
+                                                class="form-check-input" data-section="pakaian" data-child="1"
+                                                data-value="mandiri" @checked(old('pakaian_tubuh') == 'mandiri')>
                                         </td>
-                                        <td class="text-center"><input type="radio" name="pakaian_tubuh"
-                                                value="bantuan" class="form-check-input" @checked(old('pakaian_tubuh') == 'bantuan')>
+                                        <td class="text-center">
+                                            <input type="radio" name="pakaian_tubuh" value="bantuan"
+                                                class="form-check-input" data-section="pakaian" data-child="1"
+                                                data-value="bantuan" @checked(old('pakaian_tubuh') == 'bantuan')>
                                         </td>
-                                        <td class="text-center"><input type="radio" name="pakaian_tubuh"
-                                                value="tidak_bisa" class="form-check-input" @checked(old('pakaian_tubuh') == 'tidak_bisa')>
+                                        <td class="text-center">
+                                            <input type="radio" name="pakaian_tubuh" value="tidak_bisa"
+                                                class="form-check-input" data-section="pakaian" data-child="1"
+                                                data-value="tidak_bisa" @checked(old('pakaian_tubuh') == 'tidak_bisa')}>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Ekstremitas bawah</td>
-                                        <td class="text-center"><input type="radio" name="pakaian_bawah"
-                                                value="mandiri" class="form-check-input" @checked(old('pakaian_bawah') == 'mandiri')>
+                                        <td class="text-center">
+                                            <input type="radio" name="pakaian_bawah" value="mandiri"
+                                                class="form-check-input" data-section="pakaian" data-child="1"
+                                                data-value="mandiri" @checked(old('pakaian_bawah') == 'mandiri')>
                                         </td>
-                                        <td class="text-center"><input type="radio" name="pakaian_bawah"
-                                                value="bantuan" class="form-check-input" @checked(old('pakaian_bawah') == 'bantuan')>
+                                        <td class="text-center">
+                                            <input type="radio" name="pakaian_bawah" value="bantuan"
+                                                class="form-check-input" data-section="pakaian" data-child="1"
+                                                data-value="bantuan" @checked(old('pakaian_bawah') == 'bantuan')>
                                         </td>
-                                        <td class="text-center"><input type="radio" name="pakaian_bawah"
-                                                value="tidak_bisa" class="form-check-input" @checked(old('pakaian_bawah') == 'tidak_bisa')>
+                                        <td class="text-center">
+                                            <input type="radio" name="pakaian_bawah" value="tidak_bisa"
+                                                class="form-check-input" data-section="pakaian" data-child="1"
+                                                data-value="tidak_bisa" @checked(old('pakaian_bawah') == 'tidak_bisa')}>
                                         </td>
                                     </tr>
+
+                                    {{-- ========== MAKAN (tanpa master, 1 baris) ========== --}}
                                     <tr>
                                         <td><strong>Makan</strong></td>
-                                        <td class="text-center"><input type="radio" name="makan" value="mandiri"
-                                                class="form-check-input" @checked(old('makan') == 'mandiri')></td>
-                                        <td class="text-center"><input type="radio" name="makan" value="bantuan"
-                                                class="form-check-input" @checked(old('makan') == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="makan" value="tidak_bisa"
-                                                class="form-check-input" @checked(old('makan') == 'tidak_bisa')></td>
+                                        <td class="text-center">
+                                            <input type="radio" name="makan" value="mandiri"
+                                                class="form-check-input" data-section="makan" data-child="1"
+                                                data-value="mandiri" @checked(old('makan') == 'mandiri')>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="radio" name="makan" value="bantuan"
+                                                class="form-check-input" data-section="makan" data-child="1"
+                                                data-value="bantuan" @checked(old('makan') == 'bantuan')>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="radio" name="makan" value="tidak_bisa"
+                                                class="form-check-input" data-section="makan" data-child="1"
+                                                data-value="tidak_bisa" @checked(old('makan') == 'tidak_bisa')}>
+                                        </td>
                                     </tr>
-                                    <tr>
+
+                                    {{-- ========== PERGERAKAN ========== --}}
+                                    <tr class="table-light">
                                         <td><strong>Pergerakan</strong></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td class="text-center">
+                                            <Label>Pilih</Label>
+                                            <br>
+                                            <input type="radio" name="gerak_master" value="mandiri"
+                                                class="form-check-input section-master" data-section="gerak"
+                                                @checked($allEqual($gerakFields, 'mandiri'))>
+                                        </td>
+                                        <td class="text-center">
+                                            <Label>Pilih</Label>
+                                            <br>
+                                            <input type="radio" name="gerak_master" value="bantuan"
+                                                class="form-check-input section-master" data-section="gerak"
+                                                @checked($allEqual($gerakFields, 'bantuan'))>
+                                        </td>
+                                        <td class="text-center">
+                                            <Label>Pilih</Label>
+                                            <br>
+                                            <input type="radio" name="gerak_master" value="tidak_bisa"
+                                                class="form-check-input section-master" data-section="gerak"
+                                                @checked($allEqual($gerakFields, 'tidak_bisa'))>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Jalan kaki</td>
-                                        <td class="text-center"><input type="radio" name="jalan_kaki" value="mandiri"
-                                                class="form-check-input" @checked(old('jalan_kaki') == 'mandiri')></td>
-                                        <td class="text-center"><input type="radio" name="jalan_kaki" value="bantuan"
-                                                class="form-check-input" @checked(old('jalan_kaki') == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="jalan_kaki"
-                                                value="tidak_bisa" class="form-check-input" @checked(old('jalan_kaki') == 'tidak_bisa')>
+                                        <td class="text-center">
+                                            <input type="radio" name="jalan_kaki" value="mandiri"
+                                                class="form-check-input" data-section="gerak" data-child="1"
+                                                data-value="mandiri" @checked(old('jalan_kaki') == 'mandiri')>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="radio" name="jalan_kaki" value="bantuan"
+                                                class="form-check-input" data-section="gerak" data-child="1"
+                                                data-value="bantuan" @checked(old('jalan_kaki') == 'bantuan')>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="radio" name="jalan_kaki" value="tidak_bisa"
+                                                class="form-check-input" data-section="gerak" data-child="1"
+                                                data-value="tidak_bisa" @checked(old('jalan_kaki') == 'tidak_bisa')}>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Kursi roda</td>
-                                        <td class="text-center"><input type="radio" name="kursi_roda_kemandirian"
-                                                value="mandiri" class="form-check-input" @checked(old('kursi_roda_kemandirian') == 'mandiri')>
+                                        <td class="text-center">
+                                            <input type="radio" name="kursi_roda_kemandirian" value="mandiri"
+                                                class="form-check-input" data-section="gerak" data-child="1"
+                                                data-value="mandiri" @checked(old('kursi_roda_kemandirian') == 'mandiri')>
                                         </td>
-                                        <td class="text-center"><input type="radio" name="kursi_roda_kemandirian"
-                                                value="bantuan" class="form-check-input" @checked(old('kursi_roda_kemandirian') == 'bantuan')>
+                                        <td class="text-center">
+                                            <input type="radio" name="kursi_roda_kemandirian" value="bantuan"
+                                                class="form-check-input" data-section="gerak" data-child="1"
+                                                data-value="bantuan" @checked(old('kursi_roda_kemandirian') == 'bantuan')>
                                         </td>
-                                        <td class="text-center"><input type="radio" name="kursi_roda_kemandirian"
-                                                value="tidak_bisa" class="form-check-input" @checked(old('kursi_roda_kemandirian') == 'tidak_bisa')>
+                                        <td class="text-center">
+                                            <input type="radio" name="kursi_roda_kemandirian" value="tidak_bisa"
+                                                class="form-check-input" data-section="gerak" data-child="1"
+                                                data-value="tidak_bisa" @checked(old('kursi_roda_kemandirian') == 'tidak_bisa')}>
                                         </td>
                                     </tr>
+
                                 </tbody>
                             </table>
                         </div>
@@ -1099,11 +1296,14 @@
                                 <option value="">--Pilih--</option>
                                 <option value="Derajat 1" @selected(old('derajat_pasien') == 'Derajat 1')>Derajat 1 - Transporter - Perawat
                                 </option>
-                                <option value="Derajat 2" @selected(old('derajat_pasien') == 'Derajat 2')>Derajat 2 - Transporter - Perawat -
+                                <option value="Derajat 2" @selected(old('derajat_pasien') == 'Derajat 2')>Derajat 2 - Transporter - Perawat
+                                    -
                                     Dokter</option>
-                                <option value="Derajat 3" @selected(old('derajat_pasien') == 'Derajat 3')>Derajat 3 - Transporter - Perawat -
+                                <option value="Derajat 3" @selected(old('derajat_pasien') == 'Derajat 3')>Derajat 3 - Transporter - Perawat
+                                    -
                                     Dokter yang kompeten</option>
-                                <option value="Derajat 4" @selected(old('derajat_pasien') == 'Derajat 4')>Derajat 4 - Transporter - Perawat -
+                                <option value="Derajat 4" @selected(old('derajat_pasien') == 'Derajat 4')>Derajat 4 - Transporter - Perawat
+                                    -
                                     Dokter yang kompeten menangani pasien kritis dan berpengalaman minimal 6 bulan bekerja
                                     di IGD/ ICU</option>
                             </select>
@@ -1580,6 +1780,51 @@
                     allowClear: true
                 });
             }
+        });
+
+        /**
+         * Saat radio master (baris kategori) dipilih,
+         * semua anak (baris detail) dalam kategori itu akan diset sesuai kolom yang sama.
+         *
+         * Cara kerja:
+         * - Radio master punya class .section-master dan data-section="nama_kategori"
+         * - Setiap radio anak punya data-section="nama_kategori", data-child="1", dan data-value="mandiri|bantuan|tidak_bisa"
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            // Event untuk master
+            document.querySelectorAll('input.section-master').forEach(function(master) {
+                master.addEventListener('change', function() {
+                    if (!this.checked) return;
+
+                    const section = this.dataset
+                    .section; // contoh: "aktivitas", "higiene", "pakaian", "gerak"
+                    const value = this.value; // "mandiri" | "bantuan" | "tidak_bisa"
+
+                    // Ambil semua input anak pada section tsb
+                    const childInputs = Array.from(document.querySelectorAll(
+                        'input[data-section="' + section + '"][data-child="1"]'
+                    ));
+
+                    // Kumpulkan nama field unik (berguling, duduk, dll)
+                    const childNames = [...new Set(childInputs.map(i => i.name))];
+
+                    // Untuk tiap anak, pilih radio dengan data-value yang sama dengan master
+                    childNames.forEach(function(fieldName) {
+                        const target = document.querySelector(
+                            'input[name="' + fieldName + '"][data-section="' + section +
+                            '"][data-child="1"][data-value="' + value + '"]'
+                        );
+                        if (target) {
+                            target.checked = true;
+                            // Optional: trigger event change kalau perlu hook lain
+                            target.dispatchEvent(new Event('change'));
+                        }
+                    });
+                });
+            });
+
+            // (Opsional) Jika semua anak dalam section sama, master seharusnya sudah "checked"
+            // karena kita handle di Blade pakai helper $allEqual(). Jadi tidak perlu sync lagi di JS.
         });
     </script>
 @endpush
