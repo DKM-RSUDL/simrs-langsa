@@ -114,7 +114,7 @@
                             <label class="col-sm-3 col-form-label">BB:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="number" step="0.1" class="form-control" name="bb" placeholder="70">
+                                    <input type="number" class="form-control" name="bb" placeholder="70">
                                     <span class="input-group-text">Kg</span>
                                 </div>
                             </div>
