@@ -72,6 +72,8 @@ class CpptController extends Controller
             abort(404, 'Data not found');
         }
 
+        $vitalSignData = $this->asesmenService->getVitalSignForCppt($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
         // get cppt
         $getCppt = Cppt::with(['dtCppt', 'pemberat', 'peringan', 'kualitas', 'frekuensi', 'menjalar', 'jenis'])
             ->select([
@@ -230,7 +232,8 @@ class CpptController extends Controller
             'menjalar'          => $menjalar,
             'jenisNyeri'        => $jenisNyeri,
             'cppt'              => $cppt,
-            'karyawan'          => $karyawan
+            'karyawan'          => $karyawan,
+            'vitalSignData'     => $vitalSignData
         ]);
     }
 

@@ -30,7 +30,7 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group mt-3">
+                            {{-- <div class="form-group mt-3">
                                 <p class="fw-bold">Tanda Vital</p>
                                 <div class="row">
 
@@ -41,6 +41,50 @@
                                         </div>
                                     @endforeach
 
+                                </div>
+                            </div> --}}
+                            <div class="form-group mt-3">
+                                <p class="fw-bold">Tanda Vital</p>
+                                <div class="row">
+                                    @foreach ($tandaVital as $item)
+                                        @php
+                                            // Mapping kondisi ke field vital sign berdasarkan nama
+                                            $vitalValue = '';
+                                            if (isset($vitalSignData) && !empty($vitalSignData)) {
+                                                $kondisiName = strtolower(trim($item->kondisi));
+
+                                                if (str_contains($kondisiName, 'nadi')) {
+                                                    $vitalValue = $vitalSignData['nadi'] ?? '';
+                                                } elseif (str_contains($kondisiName, 'sistole')) {
+                                                    $vitalValue = $vitalSignData['sistole'] ?? '';
+                                                } elseif (str_contains($kondisiName, 'diastole') || str_contains($kondisiName, 'distole')) {
+                                                    $vitalValue = $vitalSignData['diastole'] ?? '';
+                                                } elseif (str_contains($kondisiName, 'tinggi badan') || str_contains($kondisiName, 'tinggi')) {
+                                                    $vitalValue = $vitalSignData['tinggi_badan'] ?? '';
+                                                } elseif (str_contains($kondisiName, 'berat badan') || str_contains($kondisiName, 'berat')) {
+                                                    $vitalValue = $vitalSignData['berat_badan'] ?? '';
+                                                } elseif (str_contains($kondisiName, 'respiration rate') || str_contains($kondisiName, 'respiration')) {
+                                                    $vitalValue = $vitalSignData['respiration'] ?? '';
+                                                } elseif (str_contains($kondisiName, 'suhu')) {
+                                                    $vitalValue = $vitalSignData['suhu'] ?? '';
+                                                } elseif (str_contains($kondisiName, 'spo2 tanpa') || str_contains($kondisiName, 'sensorium')) {
+                                                    $vitalValue = $vitalSignData['spo2_tanpa_o2'] ?? '';
+                                                } elseif (str_contains($kondisiName, 'spo2 dengan') || str_contains($kondisiName, 'golongan darah')) {
+                                                    $vitalValue = $vitalSignData['spo2_dengan_o2'] ?? '';
+                                                }
+                                            }
+                                        @endphp
+
+                                        <div class="col-md-4">
+                                            <label for="kondisi{{ $item->id_kondisi }}" class="form-label">{{ $item->kondisi }}</label>
+                                            <input type="text"
+                                                name="tanda_vital[]"
+                                                class="form-control"
+                                                id="kondisi{{ $item->id_kondisi }}"
+                                                value="{{ $vitalValue }}"
+                                                placeholder="Masukkan {{ strtolower($item->kondisi) }}">
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
 
@@ -429,7 +473,7 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group mt-3">
+                            {{-- <div class="form-group mt-3">
                                 <p class="fw-bold">Tanda Vital</p>
                                 <div class="row">
 
@@ -440,6 +484,21 @@
                                         </div>
                                     @endforeach
 
+                                </div>
+                            </div> --}}
+
+                            <div class="form-group mt-3">
+                                <p class="fw-bold">Tanda Vital</p>
+                                <div class="row">
+                                    @foreach ($tandaVital as $item)
+                                        <div class="col-md-4">
+                                            <label for="kondisi{{ $item->id_kondisi }}" class="form-label">{{ $item->kondisi }}</label>
+                                            <input type="text"
+                                                name="tanda_vital[]"
+                                                class="form-control"
+                                                id="kondisi{{ $item->id_kondisi }}">  {{-- ID harus sama --}}
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
 

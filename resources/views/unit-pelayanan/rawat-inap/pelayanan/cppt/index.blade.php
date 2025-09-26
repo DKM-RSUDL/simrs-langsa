@@ -246,7 +246,7 @@
                                                                     // Ambil data karyawan berdasarkan kode PPA
                                                                     $ppa_kode = is_array($instruksi) ? $instruksi['ppa'] : $instruksi->ppa;
                                                                     $karyawan_ppa = $karyawan->where('kd_karyawan', $ppa_kode)->first();
-                                                                    
+
                                                                     $nama_ppa = $ppa_kode; // default
                                                                     if ($karyawan_ppa) {
                                                                         $nama_ppa = '';
@@ -259,7 +259,7 @@
                                                                         }
                                                                     }
                                                                 @endphp
-                                                                
+
                                                                 <tr>
                                                                     <td class="text-center fw-bold text-primary">{{ sprintf('%02d', $index + 1) }}</td>
                                                                     <td>
@@ -336,8 +336,25 @@
 @push('js')
     <script>
 
+        // Debugging - tambahkan setelah document ready
+        $(document).ready(function() {
+            // Debug data yang tersedia
+            @if(isset($vitalSignData))
+                console.log('Vital Sign Data tersedia:', {!! json_encode($vitalSignData) !!});
+
+                // Tampilkan sumber data
+                @if($vitalSignData && !empty(array_filter($vitalSignData)))
+                    console.log('Data vital sign berhasil dimuat');
+                @else
+                    console.log('Data vital sign kosong');
+                @endif
+            @else
+                console.log('Variable vitalSignData tidak ditemukan');
+            @endif
+        });
+
         function loadInstruksiPpa(urutTotal, containerId) {
-            
+
             $.ajax({
                 url: '{{ route("rawat-inap.cppt.get-instruksi-ppa", [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}',
                 method: 'POST',
