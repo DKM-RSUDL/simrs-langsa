@@ -336,23 +336,6 @@
 @push('js')
     <script>
 
-        // Debugging - tambahkan setelah document ready
-        $(document).ready(function() {
-            // Debug data yang tersedia
-            @if(isset($vitalSignData))
-                console.log('Vital Sign Data tersedia:', {!! json_encode($vitalSignData) !!});
-
-                // Tampilkan sumber data
-                @if($vitalSignData && !empty(array_filter($vitalSignData)))
-                    console.log('Data vital sign berhasil dimuat');
-                @else
-                    console.log('Data vital sign kosong');
-                @endif
-            @else
-                console.log('Variable vitalSignData tidak ditemukan');
-            @endif
-        });
-
         function loadInstruksiPpa(urutTotal, containerId) {
 
             $.ajax({
