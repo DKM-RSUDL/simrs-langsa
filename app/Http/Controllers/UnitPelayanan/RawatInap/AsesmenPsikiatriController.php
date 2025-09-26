@@ -129,13 +129,13 @@ class AsesmenPsikiatriController extends Controller
             $dataAsesmen->save();
 
             $vitalSignData = [
-                'sistole'      => $request->sistole ? (int)$request->sistole : null,
-                'diastole'     => $request->diastole ? (int)$request->diastole : null,
+                'sistole'      => $request->tekanan_darah_sistole ? (int)$request->tekanan_darah_sistole : null,
+                'diastole'     => $request->tekanan_darah_diastole ? (int)$request->tekanan_darah_diastole : null,
                 'nadi'         => $request->nadi ? (int)$request->nadi : null,
-                'respiration'  => $request->pernafasan ? (int)$request->pernafasan : null,
+                'respiration'  => $request->respirasi ? (int)$request->respirasi : null,
                 'suhu'         => $request->suhu ? (float)$request->suhu : null,
-                'tinggi_badan' => $request->tb ? (int)$request->tb : null,
-                'berat_badan'  => $request->bb ? (int)$request->bb : null,
+                'tinggi_badan' => $request->tinggi_badan ? (int)$request->tinggi_badan : null,
+                'berat_badan'  => $request->berat_badan ? (int)$request->berat_badan : null,
             ];
 
             $lastTransaction = $this->asesmenService->getTransaksiData(
@@ -254,13 +254,13 @@ class AsesmenPsikiatriController extends Controller
                 'rs_rujuk_bagian'       => null,
                 'konpas'                => [
                     'sistole'   => [
-                        'hasil' => $request->sistole
+                        'hasil' => $request->tekanan_darah_sistole
                     ],
                     'distole'   => [
-                        'hasil' => $request->diastole
+                        'hasil' => $request->tekanan_darah_diastole
                     ],
                     'respiration_rate'   => [
-                        'hasil' => ''
+                        'hasil' => $request->respirasi
                     ],
                     'suhu'   => [
                         'hasil' => $request->suhu
@@ -577,10 +577,10 @@ class AsesmenPsikiatriController extends Controller
                 'rs_rujuk_bagian'       => null,
                 'konpas'                => [
                     'sistole'   => [
-                        'hasil' => $request->sistole
+                        'hasil' => $request->tekanan_darah_sistole
                     ],
                     'distole'   => [
-                        'hasil' => $request->diastole
+                        'hasil' => $request->tekanan_darah_diastole
                     ],
                     'respiration_rate'   => [
                         'hasil' => ''

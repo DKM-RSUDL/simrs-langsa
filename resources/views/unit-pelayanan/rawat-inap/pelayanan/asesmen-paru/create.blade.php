@@ -354,7 +354,7 @@
                                                             <div class="d-flex align-items-center gap-2">
                                                                 <input type="number"
                                                                     class="form-control input-inline input-sm"
-                                                                    name="temperatur" step="0.1">
+                                                                    name="temperatur">
                                                                 <span>°C</span>
                                                             </div>
                                                         </div>

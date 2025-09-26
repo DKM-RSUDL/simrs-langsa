@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
+use App\Services\AsesmenService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -33,7 +34,7 @@ class AsesmenParuController extends Controller
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
-        $this->esmenService = new AsesmenController();
+        $this->asesmenService = new AsesmenService();
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
