@@ -741,23 +741,6 @@ class CpptController extends Controller
 
             $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
 
-            // Prepare vital sign data
-            // $vitalSignData = [
-            //     'sistole' => $request->tekanan_darah_sistole ? (int) $request->tekanan_darah_sistole : null,
-            //     'diastole' => $request->tekanan_darah_diastole ? (int) $request->tekanan_darah_diastole : null,
-            //     'nadi' => $request->nadi ? (int) $request->nadi : null,
-            //     'respiration' => $request->respirasi ? (int) $request->respirasi : null,
-            //     'nafas' => $request->nafas ? (int) $request->nafas : null,
-            //     'suhu' => $request->suhu ? (float) $request->suhu : null,
-            //     'tinggi_badan' => $request->tinggi_badan ? (int) $request->tinggi_badan : null,
-            //     'berat_badan' => $request->berat_badan ? (int) $request->berat_badan : null,
-            // ];
-
-            // Get transaction data for vital sign storage
-            // $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-            // Save vital signs using service
-            // $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaksi, $lastTransaction->kd_kasir);
-
             // Ganti bagian ini:
             $cpptInstruksiPpa = [
                 'urut_total_cppt'   => $lastUrutTotalCppt,
