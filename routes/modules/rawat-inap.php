@@ -397,6 +397,7 @@ Route::prefix('rawat-inap')->group(function () {
                                             Route::get('/{id}', 'show')->name('.show');
                                             Route::put('/{id}', 'update')->name('.update');
                                             Route::get('/{id}/print', 'print')->name('.print');
+                                            Route::get('/igd/{id}', 'showMedisIGD')->name('.medis-igd');
                                         });
                                     });
                                 });
@@ -566,6 +567,7 @@ Route::prefix('rawat-inap')->group(function () {
                                             Route::get('/{id}', 'show')->name('.show');
                                             Route::get('/{id}/edit', 'edit')->name('.edit');
                                             Route::put('/{id}', 'update')->name('.update');
+                                            Route::get('/igd/{id}', 'showKepIGD')->name('.keperawatan-igd');
                                         });
                                     });
                                 });

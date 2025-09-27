@@ -60,16 +60,16 @@
                             <label class="col-sm-3 col-form-label">Sistole:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="number" class="form-control" name="sistole" placeholder="120">
+                                    <input type="number" class="form-control" name="sistole" placeholder="Sistole">
                                     <span class="input-group-text">mmHg</span>
                                 </div>
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label class="col-sm-3 col-form-label">Distole:</label>
+                            <label class="col-sm-3 col-form-label">Diastole:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="number" class="form-control" name="distole" placeholder="80">
+                                    <input type="number" class="form-control" name="distole" placeholder="Diastole">
                                     <span class="input-group-text">mmHg</span>
                                 </div>
                             </div>
@@ -87,7 +87,7 @@
                             <label class="col-sm-3 col-form-label">Suhu:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="text" step="0.1" class="form-control" name="suhu" placeholder="36.5">
+                                    <input type="text" step="0.1" class="form-control" name="suhu" placeholder="Suhu">
                                     <span class="input-group-text">°C</span>
                                 </div>
                             </div>
@@ -96,7 +96,7 @@
                             <label class="col-sm-3 col-form-label">SaO2:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="number" class="form-control" name="sao2" placeholder="98">
+                                    <input type="number" class="form-control" name="sao2" placeholder="SaO2">
                                     <span class="input-group-text">%</span>
                                 </div>
                             </div>
@@ -105,7 +105,7 @@
                             <label class="col-sm-3 col-form-label">TB:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="number" class="form-control" name="tb" placeholder="170">
+                                    <input type="number" class="form-control" name="tb" placeholder="TB">
                                     <span class="input-group-text">cm</span>
                                 </div>
                             </div>
@@ -114,7 +114,7 @@
                             <label class="col-sm-3 col-form-label">BB:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="number" class="form-control" name="bb" placeholder="70">
+                                    <input type="number" class="form-control" name="bb" placeholder="BB">
                                     <span class="input-group-text">Kg</span>
                                 </div>
                             </div>
