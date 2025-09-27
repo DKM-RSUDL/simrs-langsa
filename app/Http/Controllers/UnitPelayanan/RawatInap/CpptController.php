@@ -28,6 +28,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Services\AsesmenService;
+use Illuminate\Support\Facades\Gate;
 
 class CpptController extends Controller
 {
@@ -73,6 +74,7 @@ class CpptController extends Controller
         }
 
         $vitalSignData = $this->asesmenService->getVitalSignForCppt($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        $lastCpptData = $this->getLastCpptData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         // get cppt
         $getCppt = Cppt::with(['dtCppt', 'pemberat', 'peringan', 'kualitas', 'frekuensi', 'menjalar', 'jenis'])
@@ -233,7 +235,8 @@ class CpptController extends Controller
             'jenisNyeri'        => $jenisNyeri,
             'cppt'              => $cppt,
             'karyawan'          => $karyawan,
-            'vitalSignData'     => $vitalSignData
+            'vitalSignData'     => $vitalSignData,
+            'lastCpptData'      => $lastCpptData
         ]);
     }
 
@@ -476,6 +479,36 @@ class CpptController extends Controller
         }
 
         return $nama_lengkap;
+    }
+
+    private function getLastCpptData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        $lastCppt = Cppt::with(['pemberat', 'peringan', 'kualitas', 'frekuensi', 'menjalar', 'jenis'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('cppt.no_transaksi', '=', 't.no_transaksi')
+                    ->on('cppt.kd_kasir', '=', 't.kd_kasir');
+            })
+            ->where('t.kd_pasien', $kd_pasien)
+            ->where('t.kd_unit', $kd_unit)
+            ->orderBy('cppt.tanggal', 'desc')
+            ->orderBy('cppt.jam', 'desc')
+            ->first();
+
+        if ($lastCppt) {
+            return [
+                'skala_nyeri' => $lastCppt->skala_nyeri ?? 0,
+                'lokasi' => $lastCppt->lokasi ?? '',
+                'durasi' => $lastCppt->durasi ?? '',
+                'pemberat_id' => $lastCppt->faktor_pemberat_id ?? '',
+                'peringan_id' => $lastCppt->faktor_peringan_id ?? '',
+                'kualitas_nyeri_id' => $lastCppt->kualitas_nyeri_id ?? '',
+                'frekuensi_nyeri_id' => $lastCppt->frekuensi_nyeri_id ?? '',
+                'menjalar_id' => $lastCppt->menjalar_id ?? '',
+                'jenis_nyeri_id' => $lastCppt->jenis_nyeri_id ?? '',
+            ];
+        }
+
+        return null;
     }
     public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
@@ -1051,6 +1084,7 @@ class CpptController extends Controller
 
     public function verifikasiCppt($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
+
         try {
             $kdPasienReq = $request->kd_pasien;
             $noTransaksiReq = $request->no_transaksi;

@@ -220,71 +220,71 @@
                                     </div>
 
                                     <div class="row mt-3">
-                                    <div class="col-12">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <!-- Tabel List Instruksi -->
-                                                <div class="border rounded">
-                                                    <div class="d-flex justify-content-between align-items-center p-3 bg-light border-bottom">
-                                                        <h6 class="mb-0 fw-bold text-primary">
-                                                            <i class="bi bi-list-check me-2"></i>List Instruksi PPA
-                                                        </h6>
-                                                    </div>
+                                        <div class="col-12">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <!-- Tabel List Instruksi -->
+                                                    <div class="border rounded">
+                                                        <div class="d-flex justify-content-between align-items-center p-3 bg-light border-bottom">
+                                                            <h6 class="mb-0 fw-bold text-primary">
+                                                                <i class="bi bi-list-check me-2"></i>List Instruksi PPA
+                                                            </h6>
+                                                        </div>
 
-                                                    <div class="table-responsive">
-                                                        <table class="table table-hover mb-0">
-                                                            <thead class="table-light">
-                                                                <tr>
-                                                                    <th width="15%" class="text-center">No</th>
-                                                                    <th width="35%">Kode PPA</th>
-                                                                    <th width="50%">Instruksi</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                @foreach($value['instruksi_ppa_nama'] as $index => $instruksi)
-                                                                @php
-                                                                    // Ambil data karyawan berdasarkan kode PPA
-                                                                    $ppa_kode = is_array($instruksi) ? $instruksi['ppa'] : $instruksi->ppa;
-                                                                    $karyawan_ppa = $karyawan->where('kd_karyawan', $ppa_kode)->first();
+                                                        <div class="table-responsive">
+                                                            <table class="table table-hover mb-0">
+                                                                <thead class="table-light">
+                                                                    <tr>
+                                                                        <th width="15%" class="text-center">No</th>
+                                                                        <th width="35%">Kode PPA</th>
+                                                                        <th width="50%">Instruksi</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach($value['instruksi_ppa_nama'] as $index => $instruksi)
+                                                                    @php
+                                                                        // Ambil data karyawan berdasarkan kode PPA
+                                                                        $ppa_kode = is_array($instruksi) ? $instruksi['ppa'] : $instruksi->ppa;
+                                                                        $karyawan_ppa = $karyawan->where('kd_karyawan', $ppa_kode)->first();
 
-                                                                    $nama_ppa = $ppa_kode; // default
-                                                                    if ($karyawan_ppa) {
-                                                                        $nama_ppa = '';
-                                                                        if (!empty($karyawan_ppa->gelar_depan)) {
-                                                                            $nama_ppa .= $karyawan_ppa->gelar_depan . ' ';
+                                                                        $nama_ppa = $ppa_kode; // default
+                                                                        if ($karyawan_ppa) {
+                                                                            $nama_ppa = '';
+                                                                            if (!empty($karyawan_ppa->gelar_depan)) {
+                                                                                $nama_ppa .= $karyawan_ppa->gelar_depan . ' ';
+                                                                            }
+                                                                            $nama_ppa .= $karyawan_ppa->nama;
+                                                                            if (!empty($karyawan_ppa->gelar_belakang)) {
+                                                                                $nama_ppa .= ', ' . $karyawan_ppa->gelar_belakang;
+                                                                            }
                                                                         }
-                                                                        $nama_ppa .= $karyawan_ppa->nama;
-                                                                        if (!empty($karyawan_ppa->gelar_belakang)) {
-                                                                            $nama_ppa .= ', ' . $karyawan_ppa->gelar_belakang;
-                                                                        }
-                                                                    }
-                                                                @endphp
+                                                                    @endphp
 
-                                                                <tr>
-                                                                    <td class="text-center fw-bold text-primary">{{ sprintf('%02d', $index + 1) }}</td>
-                                                                    <td>
-                                                                        <div class="d-flex align-items-center">
-                                                                            <span class="badge bg-info text-dark me-2">PPA</span>
-                                                                            <div>
-                                                                                <strong>{{ $nama_ppa }}</strong>
-                                                                                <br>
-                                                                                <small class="text-muted">{{ $ppa_kode }}</small>
+                                                                    <tr>
+                                                                        <td class="text-center fw-bold text-primary">{{ sprintf('%02d', $index + 1) }}</td>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center">
+                                                                                <span class="badge bg-info text-dark me-2">PPA</span>
+                                                                                <div>
+                                                                                    <strong>{{ $nama_ppa }}</strong>
+                                                                                    <br>
+                                                                                    <small class="text-muted">{{ $ppa_kode }}</small>
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td class="text-wrap">
-                                                                        {{ is_array($instruksi) ? $instruksi['instruksi'] : $instruksi->instruksi }}
-                                                                    </td>
-                                                                </tr>
-                                                            @endforeach
-                                                            </tbody>
-                                                        </table>
+                                                                        </td>
+                                                                        <td class="text-wrap">
+                                                                            {{ is_array($instruksi) ? $instruksi['instruksi'] : $instruksi->instruksi }}
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
                                     <!-- Button -->
                                     <div class="d-flex justify-content-between mt-4">
@@ -294,30 +294,38 @@
                                                 Terverifikasi
                                             </p>
                                         @else
-                                            <form
-                                                action="{{ route('rawat-inap.cppt.verifikasi', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
-                                                method="post">
-                                                @csrf
-                                                @method('put')
+                                            {{-- Tombol Verifikasi hanya untuk admin dan dokter --}}
+                                            @canany(['is-admin', 'is-dokter-umum', 'is-dokter-spesialis'])
+                                                <form action="{{ route('rawat-inap.cppt.verifikasi', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="post">
+                                                    @csrf
+                                                    @method('put')
 
-                                                <input type="hidden" name="kd_pasien"
-                                                    value="{{ $dataMedis->kd_pasien }}">
-                                                <input type="hidden" name="no_transaksi"
-                                                    value="{{ $dataMedis->no_transaksi }}">
-                                                <input type="hidden" name="kd_kasir"
-                                                    value="{{ $dataMedis->kd_kasir }}">
-                                                <input type="hidden" name="tanggal" value="{{ $value['tanggal'] }}">
-                                                <input type="hidden" name="urut" value="{{ $value['urut'] }}">
-                                                <button type="submit" class="btn btn-primary">Verifikasi DPJP</button>
-                                            </form>
+                                                    <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
+                                                    <input type="hidden" name="no_transaksi" value="{{ $dataMedis->no_transaksi }}">
+                                                    <input type="hidden" name="kd_kasir" value="{{ $dataMedis->kd_kasir }}">
+                                                    <input type="hidden" name="tanggal" value="{{ $value['tanggal'] }}">
+                                                    <input type="hidden" name="urut" value="{{ $value['urut'] }}">
+                                                    <button type="submit" class="btn btn-primary">Verifikasi DPJP</button>
+                                                </form>
+                                            @endcanany
                                         @endif
 
-                                        <button class="btn btn-primary btn-edit-cppt" data-bs-target="#editCpptModal"
-                                            data-tgl="{{ $value['tanggal'] }}" data-urut="{{ $value['urut'] }}"
-                                            data-unit="{{ $value['kd_unit'] }}"
-                                            data-transaksi="{{ $value['no_transaksi'] }}"
-                                            data-urut-total="{{ $value['urut_total'] }}">Edit</button>
+                                        {{-- Tombol Edit untuk admin, dokter, dan perawat --}}
+                                        @canany(['is-admin', 'is-dokter-umum', 'is-dokter-spesialis', 'is-perawat'])
+                                            @if ($value['verified'])
+                                                <button class="btn btn-secondary" disabled title="Data sudah diverifikasi dan tidak dapat diedit">
+                                                    <i class="ti-lock"></i> Edit
+                                                </button>
+                                            @else
+                                                <button class="btn btn-primary btn-edit-cppt" data-bs-target="#editCpptModal"
+                                                    data-tgl="{{ $value['tanggal'] }}" data-urut="{{ $value['urut'] }}"
+                                                    data-unit="{{ $value['kd_unit'] }}"
+                                                    data-transaksi="{{ $value['no_transaksi'] }}"
+                                                    data-urut-total="{{ $value['urut_total'] }}">Edit</button>
+                                            @endif
+                                        @endcanany
                                     </div>
+
                                 </div>
 
                                 @php
@@ -473,7 +481,7 @@
             const items = dropdown.find('.dropdown-item:visible');
             const active = dropdown.find('.dropdown-item.active');
 
-            if (e.keyCode === 40) { 
+            if (e.keyCode === 40) {
                 e.preventDefault();
                 if (active.length === 0) {
                     items.first().addClass('active');
@@ -486,7 +494,7 @@
                         items.first().addClass('active');
                     }
                 }
-            } else if (e.keyCode === 38) { 
+            } else if (e.keyCode === 38) {
                 e.preventDefault();
                 if (active.length === 0) {
                     items.last().addClass('active');
@@ -897,7 +905,7 @@
 
     function loadEditInstruksiPpaFromAjaxData(instruksiPpaArray) {
         console.log('Loading instruksi PPA data:', instruksiPpaArray);
-        
+
         // Reset data
         editInstruksiPpaData = [];
         editInstruksiPpaCounter = 0;
@@ -922,14 +930,14 @@
 
         // CRITICAL: Simpan sebagai backup
         window.editInstruksiPpaBackup = JSON.parse(JSON.stringify(editInstruksiPpaData));
-        
+
         // console.log('Instruksi PPA berhasil dimuat:', editInstruksiPpaData.length, 'items');
     }
 
     function ensureEditInstruksiPpaData() {
-        if ((!editInstruksiPpaData || editInstruksiPpaData.length === 0) && 
+        if ((!editInstruksiPpaData || editInstruksiPpaData.length === 0) &&
             window.editInstruksiPpaBackup && window.editInstruksiPpaBackup.length > 0) {
-            
+
             // console.log('Mengembalikan data PPA dari backup...');
             editInstruksiPpaData = JSON.parse(JSON.stringify(window.editInstruksiPpaBackup));
             updateEditInstruksiPpaTable();
@@ -948,7 +956,7 @@
 
         selectEditPerawat('', '');
         $('#edit_instruksi_ppa_text_input').val('');
-        
+
         // Clear backups
         delete window.editInstruksiPpaBackup;
         delete window.tempEditInstruksiPpaData;
@@ -964,10 +972,10 @@
             updateEditInstruksiPpaTable();
             updateEditInstruksiPpaHiddenInputs();
             updateEditInstruksiPpaCountBadge();
-            
+
             // Update backup
             window.editInstruksiPpaBackup = JSON.parse(JSON.stringify(editInstruksiPpaData));
-            
+
             showInstruksiAlert('success', 'Instruksi berhasil dihapus!');
         }
     }
@@ -1191,7 +1199,7 @@
                 setTimeout(() => {
                     try {
                         // console.log('Initializing edit modal with PPA data...');
-                        
+
                         // Initialize searchable select TANPA reset data
                         initEditInstruksiPpaSearchableSelect();
 
@@ -1251,12 +1259,12 @@
     //  Event handler untuk save diagnosis yang tidak mengganggu data PPA
     $('#editDiagnosisModal #btnSaveDiagnose').click(function(e) {
         e.preventDefault();
-        
+
         // console.log('Saving diagnosis, preserving PPA data...');
-        
+
         // Backup current PPA data sebelum melakukan apapun
         var currentPpaBackup = null;
-        
+
         // Try to get the best backup available
         if (editInstruksiPpaData && editInstruksiPpaData.length > 0) {
             currentPpaBackup = JSON.parse(JSON.stringify(editInstruksiPpaData));
@@ -1277,9 +1285,9 @@
                 });
             });
         }
-        
+
         // console.log('Using backup with', currentPpaBackup ? currentPpaBackup.length : 0, 'items');
-        
+
         // Process diagnosis
         var dignoseListContent = '';
         let diagnoses = $('#editDiagnosisModal #listDiagnosa li');
@@ -1299,26 +1307,26 @@
         });
 
         $('#editCpptModal #diagnoseList').html(dignoseListContent);
-        
+
         // IMMEDIATELY restore PPA data
         if (currentPpaBackup && currentPpaBackup.length > 0) {
             editInstruksiPpaData = JSON.parse(JSON.stringify(currentPpaBackup));
             editInstruksiPpaCounter = editInstruksiPpaData.length;
-            
+
             // Update tampilan
             updateEditInstruksiPpaTable();
             updateEditInstruksiPpaHiddenInputs();
             updateEditInstruksiPpaCountBadge();
-            
+
             // Update all backup locations
             window.editInstruksiPpaBackup = JSON.parse(JSON.stringify(editInstruksiPpaData));
             window.PERSISTENT_PPA_BACKUP = JSON.parse(JSON.stringify(editInstruksiPpaData));
-            
+
             // console.log('PPA data restored after diagnosis save:', editInstruksiPpaData.length, 'items');
         } else {
             console.warn('No backup data available to restore');
         }
-        
+
         // Close modal
         $('#editDiagnosisModal .btn-close').trigger('click');
     });
@@ -1326,20 +1334,20 @@
     // Event handler untuk buka modal diagnosis dengan proteksi data PPA
     $('#editCpptModal #openEditDiagnosisModal').click(function(e) {
         e.preventDefault();
-        
+
         // console.log('Opening diagnosis modal, current PPA data:', editInstruksiPpaData.length);
-        
+
         // Simpan ke SEMUA backup locations yang mungkin
         window.PRE_DIAGNOSIS_BACKUP = JSON.parse(JSON.stringify(editInstruksiPpaData));
         window.tempEditInstruksiPpaData = JSON.parse(JSON.stringify(editInstruksiPpaData));
         window.editInstruksiPpaBackup = JSON.parse(JSON.stringify(editInstruksiPpaData));
         window.ULTRA_SAFE_BACKUP = JSON.parse(JSON.stringify(editInstruksiPpaData));
-        
+
         // Juga backup dari master data
         if (window.MASTER_EDIT_INSTRUKSI_PPA) {
             window.MASTER_BACKUP = JSON.parse(JSON.stringify(window.MASTER_EDIT_INSTRUKSI_PPA));
         }
-        
+
         // console.log('Created multiple PPA backups:', window.PRE_DIAGNOSIS_BACKUP.length, 'items');
 
         var $this = $(this);
@@ -1371,11 +1379,11 @@
     // Event handler untuk restore data PPA saat modal diagnosis ditutup
     $('#editDiagnosisModal').on('hidden.bs.modal', function() {
         // console.log('Diagnosis modal closed, final PPA restore...');
-        
+
         // Final restore attempt jika data masih kosong
         if (!editInstruksiPpaData || editInstruksiPpaData.length === 0) {
             var finalBackup = null;
-            
+
             // Try all possible backup sources
             if (window.PRE_DIAGNOSIS_BACKUP && window.PRE_DIAGNOSIS_BACKUP.length > 0) {
                 finalBackup = window.PRE_DIAGNOSIS_BACKUP;
@@ -1400,19 +1408,19 @@
                 });
                 // console.log('Using MASTER_EDIT_INSTRUKSI_PPA converted');
             }
-            
+
             if (finalBackup) {
                 editInstruksiPpaData = JSON.parse(JSON.stringify(finalBackup));
                 editInstruksiPpaCounter = editInstruksiPpaData.length;
-                
+
                 updateEditInstruksiPpaTable();
                 updateEditInstruksiPpaHiddenInputs();
                 updateEditInstruksiPpaCountBadge();
-                
+
                 // console.log('Final restore successful:', editInstruksiPpaData.length, 'items');
             }
         }
-        
+
         // Clean up temporary backups but keep persistent ones
         delete window.tempEditInstruksiPpaData;
         delete window.PRE_DIAGNOSIS_BACKUP;
@@ -1543,7 +1551,7 @@
         updateEditInstruksiPpaTable();
         updateEditInstruksiPpaHiddenInputs();
         updateEditInstruksiPpaCountBadge();
-        
+
         // Update backup setelah menambah data baru
         window.editInstruksiPpaBackup = JSON.parse(JSON.stringify(editInstruksiPpaData));
 
@@ -1579,6 +1587,9 @@
         setTimeout(() => {
             initAddInstruksiPpaSearchableSelect();
         }, 100);
+
+        // Trigger change event untuk skala nyeri agar label ter-update
+        $('#addCpptModal input[name="skala_nyeri"]').trigger('change');
     });
 
     // Event saat modal ADD ditutup
@@ -1619,9 +1630,9 @@
     // Function untuk manual restore data PPA
     function manualRestorePpaData() {
         // console.log('Manual restore PPA data...');
-        
+
         var backupToUse = null;
-        
+
         if (window.PERSISTENT_PPA_BACKUP && window.PERSISTENT_PPA_BACKUP.length > 0) {
             backupToUse = window.PERSISTENT_PPA_BACKUP;
         } else if (window.MASTER_EDIT_INSTRUKSI_PPA && window.MASTER_EDIT_INSTRUKSI_PPA.length > 0) {
@@ -1636,19 +1647,19 @@
                 });
             });
         }
-        
+
         if (backupToUse) {
             editInstruksiPpaData = JSON.parse(JSON.stringify(backupToUse));
             editInstruksiPpaCounter = editInstruksiPpaData.length;
-            
+
             updateEditInstruksiPpaTable();
             updateEditInstruksiPpaHiddenInputs();
             updateEditInstruksiPpaCountBadge();
-            
+
             // console.log('Manual restore completed:', editInstruksiPpaData.length, 'items');
             return true;
         }
-        
+
         console.warn('No backup data available for manual restore');
         return false;
     }
@@ -1656,9 +1667,9 @@
     // Auto-check setiap 2 detik jika data PPA hilang
     setInterval(function() {
         if ($('#editCpptModal').hasClass('show')) { // Jika modal edit sedang terbuka
-            if ((!editInstruksiPpaData || editInstruksiPpaData.length === 0) && 
+            if ((!editInstruksiPpaData || editInstruksiPpaData.length === 0) &&
                 (window.PERSISTENT_PPA_BACKUP && window.PERSISTENT_PPA_BACKUP.length > 0)) {
-                
+
                 // console.log('Auto-restoring PPA data...');
                 manualRestorePpaData();
             }
@@ -1679,7 +1690,7 @@
     // Function load data PPA yang TIDAK mereset data
     function loadEditInstruksiPpaFromAjaxDataFinal(instruksiPpaArray) {
         // console.log('loadEditInstruksiPpaFromAjaxDataFinal called with:', instruksiPpaArray.length, 'items');
-        
+
         // JANGAN reset counter jika sudah ada data
         if (editInstruksiPpaData.length === 0) {
             editInstruksiPpaData = [];
@@ -1690,7 +1701,7 @@
             // Clear existing data only if new data is available
             editInstruksiPpaData = [];
             editInstruksiPpaCounter = 0;
-            
+
             instruksiPpaArray.forEach(function(item) {
                 editInstruksiPpaCounter++;
                 editInstruksiPpaData.push({
@@ -1711,7 +1722,7 @@
         // Simpan multiple backup
         window.editInstruksiPpaBackup = JSON.parse(JSON.stringify(editInstruksiPpaData));
         window.PERSISTENT_PPA_BACKUP = JSON.parse(JSON.stringify(editInstruksiPpaData));
-        
+
         // console.log('PPA data loaded and backed up:', editInstruksiPpaData.length, 'items');
     }
 

@@ -30,19 +30,6 @@
                                 @enderror
                             </div>
 
-                            {{-- <div class="form-group mt-3">
-                                <p class="fw-bold">Tanda Vital</p>
-                                <div class="row">
-
-                                    @foreach ($tandaVital as $item)
-                                        <div class="col-md-4">
-                                            <label for="kondisi{{ $item->id_kondisi }}" class="form-label">{{ $item->kondisi }}</label>
-                                            <input type="text" name="tanda_vital[]" class="form-control" id="kondisi{{ $item->id_kondisi }}">
-                                        </div>
-                                    @endforeach
-
-                                </div>
-                            </div> --}}
                             <div class="form-group mt-3">
                                 <p class="fw-bold">Tanda Vital</p>
                                 <div class="row">
@@ -95,7 +82,9 @@
                                             Skala Nyeri
                                             <label for="skala_nyeri"></label>
                                         </p>
-                                        <input type="number" name="skala_nyeri" class="form-control @error('skala_nyeri') is-invalid @enderror" min="0" max="10" id="skala_nyeri" value="{{ old('skala_nyeri', 0) }}">
+                                        <input type="number" name="skala_nyeri" class="form-control @error('skala_nyeri') is-invalid @enderror"
+                                        min="0" max="10" id="skala_nyeri"
+                                        value="{{ old('skala_nyeri', $lastCpptData['skala_nyeri'] ?? 0) }}">
                                         @error('skala_nyeri')
                                             <div class="invalid-feedback">
                                                 {{ $error }}
@@ -113,7 +102,9 @@
                             <div class="row mt-3">
                                 <label for="lokasi" class="col-sm-2 col-form-label">Lokasi</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control @error('lokasi') is-invalid @enderror" name="lokasi" id="lokasi" value="{{ old('lokasi') }}" placeholder="Lokasi">
+                                    <input type="text" class="form-control @error('lokasi') is-invalid @enderror"
+                                        name="lokasi" id="lokasi"
+                                        value="{{ old('lokasi', $lastCpptData['lokasi'] ?? '') }}" placeholder="Lokasi">
                                     @error('lokasi')
                                         <div class="invalid-feedback">
                                             {{ $error }}
@@ -123,7 +114,9 @@
 
                                 <label for="durasi" class="col-sm-2 col-form-label">Durasi</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control @error('durasi') is-invalid @enderror" name="durasi" id="durasi" placeholder="Durasi" value="{{ old('durasi') }}">
+                                    <input type="text" class="form-control @error('durasi') is-invalid @enderror"
+                                        name="durasi" id="durasi" placeholder="Durasi"
+                                        value="{{ old('durasi', $lastCpptData['durasi'] ?? '') }}">
                                     @error('durasi')
                                         <div class="invalid-feedback">
                                             {{ $error }}
@@ -135,10 +128,13 @@
                             <div class="row mt-3">
                                 <label for="pemberat" class="col-sm-2 col-form-label">Pemberat</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select @error('pemberat') is-invalid @enderror" name="pemberat" id="pemberat" aria-label="---Pilih---">
+                                    <select class="form-select @error('pemberat') is-invalid @enderror" name="pemberat" id="pemberat">
                                         <option value="">--Pilih--</option>
                                         @foreach ($faktorPemberat as $pemberat)
-                                            <option value="{{ $pemberat->id }}" @selected(old('pemberat') == $pemberat->id)>{{ $pemberat->name }}</option>
+                                            <option value="{{ $pemberat->id }}"
+                                                    @selected(old('pemberat', $lastCpptData['pemberat_id'] ?? '') == $pemberat->id)>
+                                                {{ $pemberat->name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                     @error('pemberat')
@@ -150,10 +146,13 @@
 
                                 <label for="peringan" class="col-sm-2 col-form-label">Peringan</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select @error('peringan') is-invalid @enderror" name="peringan" id="peringan" aria-label="---Pilih---">
+                                    <select class="form-select @error('peringan') is-invalid @enderror" name="peringan" id="peringan">
                                         <option value="">--Pilih--</option>
                                         @foreach ($faktorPeringan as $peringan)
-                                            <option value="{{ $peringan->id }}" @selected(old('peringan') == $peringan->id)>{{ $peringan->name }}</option>
+                                            <option value="{{ $peringan->id }}"
+                                                    @selected(old('peringan', $lastCpptData['peringan_id'] ?? '') == $peringan->id)>
+                                                {{ $peringan->name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                     @error('peringan')
@@ -167,10 +166,13 @@
                             <div class="row mt-3">
                                 <label for="kualitas_nyeri" class="col-sm-2 col-form-label">Kualitas</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select @error('kualitas_nyeri') is-invalid @enderror" name="kualitas_nyeri" id="kualitas_nyeri" aria-label="---Pilih---">
+                                    <select class="form-select @error('kualitas_nyeri') is-invalid @enderror" name="kualitas_nyeri" id="kualitas_nyeri">
                                         <option value="">--Pilih--</option>
                                         @foreach ($kualitasNyeri as $kualitas)
-                                            <option value="{{ $kualitas->id }}" @selected(old('kualitas_nyeri') == $kualitas->id)>{{ $kualitas->name }}</option>
+                                            <option value="{{ $kualitas->id }}"
+                                                    @selected(old('kualitas_nyeri', $lastCpptData['kualitas_nyeri_id'] ?? '') == $kualitas->id)>
+                                                {{ $kualitas->name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                     @error('kualitas_nyeri')
@@ -181,10 +183,13 @@
                                 </div>
                                 <label for="frekuensi_nyeri" class="col-sm-2 col-form-label">Frekuensi</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select @error('frekuensi_nyeri') is-invalid @enderror" name="frekuensi_nyeri" id="frekuensi_nyeri" aria-label="---Pilih---">
+                                    <select class="form-select @error('frekuensi_nyeri') is-invalid @enderror" name="frekuensi_nyeri" id="frekuensi_nyeri">
                                         <option value="">--Pilih--</option>
                                         @foreach ($frekuensiNyeri as $frekuensi)
-                                            <option value="{{ $frekuensi->id }}" @selected(old('frekuensi_nyeri') == $frekuensi->id)>{{ $frekuensi->name }}</option>
+                                            <option value="{{ $frekuensi->id }}"
+                                                    @selected(old('frekuensi_nyeri', $lastCpptData['frekuensi_nyeri_id'] ?? '') == $frekuensi->id)>
+                                                {{ $frekuensi->name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                     @error('frekuensi_nyeri')
@@ -198,10 +203,13 @@
                             <div class="row mt-3">
                                 <label for="menjalar" class="col-sm-2 col-form-label">Menjalar</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select @error('menjalar') is-invalid @enderror" name="menjalar" id="menjalar" aria-label="---Pilih---">
+                                    <select class="form-select @error('menjalar') is-invalid @enderror" name="menjalar" id="menjalar">
                                         <option value="">--Pilih--</option>
                                         @foreach ($menjalar as $mjlr)
-                                            <option value="{{ $mjlr->id }}" @selected(old('menjalar') == $mjlr->id)>{{ $mjlr->name }}</option>
+                                            <option value="{{ $mjlr->id }}"
+                                                    @selected(old('menjalar', $lastCpptData['menjalar_id'] ?? '') == $mjlr->id)>
+                                                {{ $mjlr->name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                     @error('menjalar')
@@ -212,10 +220,13 @@
                                 </div>
                                 <label for="jenis_nyeri" class="col-sm-2 col-form-label">Jenis</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select @error('jenis_nyeri') is-invalid @enderror" name="jenis_nyeri" id="jenis_nyeri" aria-label="---Pilih---">
+                                    <select class="form-select @error('jenis_nyeri') is-invalid @enderror" name="jenis_nyeri" id="jenis_nyeri">
                                         <option value="">--Pilih--</option>
                                         @foreach ($jenisNyeri as $jenis)
-                                            <option value="{{ $jenis->id }}" @selected(old('jenis_nyeri') == $jenis->id)>{{ $jenis->name }}</option>
+                                            <option value="{{ $jenis->id }}"
+                                                    @selected(old('jenis_nyeri', $lastCpptData['jenis_nyeri_id'] ?? '') == $jenis->id)>
+                                                {{ $jenis->name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                     @error('jenis_nyeri')
