@@ -286,39 +286,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Button code lama -->
-                                    {{-- <div class="d-flex justify-content-between mt-4">
-                                        @if ($value['verified'])
-                                            <p class="m-0 p-0 text-success">
-                                                <i class="ti-check"></i>
-                                                Terverifikasi
-                                            </p>
-                                        @else
-                                            <form
-                                                action="{{ route('rawat-inap.cppt.verifikasi', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
-                                                method="post">
-                                                @csrf
-                                                @method('put')
-
-                                                <input type="hidden" name="kd_pasien"
-                                                    value="{{ $dataMedis->kd_pasien }}">
-                                                <input type="hidden" name="no_transaksi"
-                                                    value="{{ $dataMedis->no_transaksi }}">
-                                                <input type="hidden" name="kd_kasir"
-                                                    value="{{ $dataMedis->kd_kasir }}">
-                                                <input type="hidden" name="tanggal" value="{{ $value['tanggal'] }}">
-                                                <input type="hidden" name="urut" value="{{ $value['urut'] }}">
-                                                <button type="submit" class="btn btn-primary">Verifikasi DPJP</button>
-                                            </form>
-                                        @endif
-
-                                        <button class="btn btn-primary btn-edit-cppt" data-bs-target="#editCpptModal"
-                                            data-tgl="{{ $value['tanggal'] }}" data-urut="{{ $value['urut'] }}"
-                                            data-unit="{{ $value['kd_unit'] }}"
-                                            data-transaksi="{{ $value['no_transaksi'] }}"
-                                            data-urut-total="{{ $value['urut_total'] }}">Edit</button>
-                                    </div> --}}
-
                                     <!-- Button -->
                                     <div class="d-flex justify-content-between mt-4">
                                         @if ($value['verified'])
@@ -327,7 +294,8 @@
                                                 Terverifikasi
                                             </p>
                                         @else
-                                            @can('can-verify-cppt')
+                                            {{-- Tombol Verifikasi hanya untuk admin dan dokter --}}
+                                            @canany(['is-admin', 'is-dokter-umum', 'is-dokter-spesialis'])
                                                 <form action="{{ route('rawat-inap.cppt.verifikasi', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="post">
                                                     @csrf
                                                     @method('put')
@@ -339,33 +307,23 @@
                                                     <input type="hidden" name="urut" value="{{ $value['urut'] }}">
                                                     <button type="submit" class="btn btn-primary">Verifikasi DPJP</button>
                                                 </form>
-                                            @else
-                                                <p class="m-0 p-0 text-muted">
-                                                    <i class="ti-info"></i>
-                                                    Belum terverifikasi
-                                                </p>
-                                            @endcan
+                                            @endcanany
                                         @endif
 
-                                        <!-- kode lama jika mau edit sesudah create data -->
-                                        {{-- <button class="btn btn-primary btn-edit-cppt" data-bs-target="#editCpptModal"
-                                            data-tgl="{{ $value['tanggal'] }}" data-urut="{{ $value['urut'] }}"
-                                            data-unit="{{ $value['kd_unit'] }}"
-                                            data-transaksi="{{ $value['no_transaksi'] }}"
-                                            data-urut-total="{{ $value['urut_total'] }}">Edit</button> --}}
-
-                                            <!-- code baru jika mau kunci edit -->
-                                        @can('can-verify-cppt')
-                                            <button class="btn btn-primary btn-edit-cppt" data-bs-target="#editCpptModal"
-                                                data-tgl="{{ $value['tanggal'] }}" data-urut="{{ $value['urut'] }}"
-                                                data-unit="{{ $value['kd_unit'] }}"
-                                                data-transaksi="{{ $value['no_transaksi'] }}"
-                                                data-urut-total="{{ $value['urut_total'] }}">Edit</button>
-                                        @else
-                                            <button class="btn btn-secondary" disabled title="Anda tidak memiliki akses untuk mengedit">
-                                                <i class="ti-lock"></i> Edit
-                                            </button>
-                                        @endcan
+                                        {{-- Tombol Edit untuk admin, dokter, dan perawat --}}
+                                        @canany(['is-admin', 'is-dokter-umum', 'is-dokter-spesialis', 'is-perawat'])
+                                            @if ($value['verified'])
+                                                <button class="btn btn-secondary" disabled title="Data sudah diverifikasi dan tidak dapat diedit">
+                                                    <i class="ti-lock"></i> Edit
+                                                </button>
+                                            @else
+                                                <button class="btn btn-primary btn-edit-cppt" data-bs-target="#editCpptModal"
+                                                    data-tgl="{{ $value['tanggal'] }}" data-urut="{{ $value['urut'] }}"
+                                                    data-unit="{{ $value['kd_unit'] }}"
+                                                    data-transaksi="{{ $value['no_transaksi'] }}"
+                                                    data-urut-total="{{ $value['urut_total'] }}">Edit</button>
+                                            @endif
+                                        @endcanany
                                     </div>
 
                                 </div>

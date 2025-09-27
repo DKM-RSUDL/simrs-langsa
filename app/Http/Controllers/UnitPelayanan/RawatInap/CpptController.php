@@ -1085,11 +1085,6 @@ class CpptController extends Controller
     public function verifikasiCppt($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
 
-        // VALIDASI GATE
-        if (!Gate::allows('can-verify-cppt')) {
-            return back()->with('error', 'Anda tidak memiliki akses untuk melakukan verifikasi CPPT!');
-        }
-
         try {
             $kdPasienReq = $request->kd_pasien;
             $noTransaksiReq = $request->no_transaksi;

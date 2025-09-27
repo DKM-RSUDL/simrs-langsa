@@ -108,24 +108,5 @@ class AuthServiceProvider extends ServiceProvider
 
             return $kdJenisTenaga == 2 && $kdDetailJenisTenaga == 2;
         });
-
-        Gate::define('can-verify-cppt', function($user) {
-            // Admin dapat verifikasi
-            if($user->hasRole('admin')) return true;
-
-            // Cek apakah user adalah karyawan dan memiliki data jenis tenaga
-            if(!$user->karyawan) return false;
-
-            $kdJenisTenaga = $user->karyawan->kd_jenis_tenaga;
-            $kdDetailJenisTenaga = $user->karyawan->kd_detail_jenis_tenaga;
-
-            // Dokter Umum (jenis_tenaga = 1, detail = 1)
-            if($kdJenisTenaga == 1 && $kdDetailJenisTenaga == 1) return true;
-
-            // Dokter Spesialis (jenis_tenaga = 1, detail = 2)
-            if($kdJenisTenaga == 1 && $kdDetailJenisTenaga == 2) return true;
-
-            return false;
-        });
     }
 }
