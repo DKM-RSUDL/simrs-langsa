@@ -395,7 +395,7 @@
                                         </div>
 
                                         <div class="col-md-2 d-flex align-items-end">
-                                            <button type="button" class="btn btn-success w-100" id="instruksi_ppa_tambah_btn">
+                                            <button type="button" class="btn btn-primary w-100" id="instruksi_ppa_tambah_btn">
                                                 <i class="bi bi-plus-square me-1"></i>Tambah
                                             </button>
                                         </div>
@@ -777,7 +777,7 @@
                                         </div>
 
                                         <div class="col-md-2 d-flex align-items-end">
-                                            <button type="button" class="btn btn-success w-100" id="edit_instruksi_ppa_tambah_btn">
+                                            <button type="button" class="btn btn-primary w-100" id="edit_instruksi_ppa_tambah_btn">
                                                 <i class="bi bi-plus-square me-1"></i>Tambah
                                             </button>
                                         </div>

@@ -1,5 +1,5 @@
 <!-- Button untuk membuka modal kedua -->
-<button type="button" class="btn btn-sm" id="openVerticalCenterModal"><i class="bi bi-plus-square"></i> Tambah</button>
+<button type="button" class="btn btn-primary btn-sm" id="openVerticalCenterModal"><i class="bi bi-plus-square"></i> Tambah</button>
 
 <div class="modal fade" id="addDiagnosisModal" tabindex="-1" aria-labelledby="addDiagnosisModal" aria-hidden="true"
     style="z-index: 1060;">

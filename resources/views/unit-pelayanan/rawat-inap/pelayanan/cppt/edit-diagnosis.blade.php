@@ -1,5 +1,5 @@
 <!-- Button untuk membuka modal kedua -->
-<button type="button" class="btn btn-sm" id="openEditDiagnosisModal" data-bs-target="#editDiagnosisModal"><i class="bi bi-plus-square"></i> Tambah</button>
+<button type="button" class="btn btn-primary btn-sm" id="openEditDiagnosisModal" data-bs-target="#editDiagnosisModal"><i class="bi bi-plus-square"></i> Tambah</button>
 
 <div class="modal fade" id="editDiagnosisModal" tabindex="-1" aria-labelledby="editDiagnosisModalLabel" aria-hidden="true"
     style="z-index: 1060;">
