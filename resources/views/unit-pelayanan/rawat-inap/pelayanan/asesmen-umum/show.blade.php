@@ -386,92 +386,114 @@
                         </div>
 
                         <!-- Riwayat Alkohol/Obat dan Merokok -->
+                        @php
+                            // prepare arrays (may be JSON string in DB)
+                            $alkoholObat = $asesmen->asesmenKetDewasaRanapRiwayatPasien->alkohol_obat ?? '';
+                            $alkoholJenis = $asesmen->asesmenKetDewasaRanapRiwayatPasien->alkohol_jenis ?? null;
+                            $alkoholJumlah = $asesmen->asesmenKetDewasaRanapRiwayatPasien->alkohol_jumlah ?? null;
+
+                            if (is_string($alkoholJenis) && $alkoholJenis !== '') {
+                                $alkoholJenis = json_decode($alkoholJenis, true) ?: [];
+                            }
+                            if (!is_array($alkoholJenis)) $alkoholJenis = (array) $alkoholJenis;
+
+                            if (is_string($alkoholJumlah) && $alkoholJumlah !== '') {
+                                $alkoholJumlah = json_decode($alkoholJumlah, true) ?: [];
+                            }
+                            if (!is_array($alkoholJumlah)) $alkoholJumlah = (array) $alkoholJumlah;
+
+                            $merokok = $asesmen->asesmenKetDewasaRanapRiwayatPasien->merokok ?? '';
+                            $merokokJenis = $asesmen->asesmenKetDewasaRanapRiwayatPasien->merokok_jenis ?? null;
+                            $merokokJumlah = $asesmen->asesmenKetDewasaRanapRiwayatPasien->merokok_jumlah ?? null;
+
+                            if (is_string($merokokJenis) && $merokokJenis !== '') {
+                                $merokokJenis = json_decode($merokokJenis, true) ?: [];
+                            }
+                            if (!is_array($merokokJenis)) $merokokJenis = (array) $merokokJenis;
+
+                            if (is_string($merokokJumlah) && $merokokJumlah !== '') {
+                                $merokokJumlah = json_decode($merokokJumlah, true) ?: [];
+                            }
+                            if (!is_array($merokokJumlah)) $merokokJumlah = (array) $merokokJumlah;
+
+                            $alkoholCount = max(1, max(count($alkoholJenis), count($alkoholJumlah)));
+                            $merokokCount = max(1, max(count($merokokJenis), count($merokokJumlah)));
+                        @endphp
+
                         <div class="col-12 mb-3 section-separator">
                             <h6 class="fw-bold">Riwayat Konsumsi</h6>
 
-                            <!-- Alkohol/Obat -->
-                            <div class="row mb-3">
-                                <div class="col-md-6">
+                            <div class="d-flex flex-column gap-4">
+                                <div class="col-md-12">
                                     <label class="form-label fw-bold">Alkohol/obat:</label>
                                     <div class="d-flex align-items-center gap-3 mb-2">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="alkohol_obat"
-                                                id="alkohol_tidak" value="tidak"
-                                                {{ old('alkohol_obat', $asesmen->asesmenKetDewasaRanapRiwayatPasien->alkohol_obat ?? '') === 'tidak' ? 'checked' : '' }} disabled>
-                                            <label class="form-check-label" for="alkohol_tidak">Tidak</label>
+                                            <input class="form-check-input" type="radio" disabled {{ $alkoholObat === 'tidak' ? 'checked' : '' }}>
+                                            <label class="form-check-label">Tidak</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="alkohol_obat"
-                                                id="alkohol_ya" value="ya"
-                                                {{ old('alkohol_obat', $asesmen->asesmenKetDewasaRanapRiwayatPasien->alkohol_obat ?? '') === 'ya' ? 'checked' : '' }} disabled>
-                                            <label class="form-check-label" for="alkohol_ya">Ya</label>
+                                            <input class="form-check-input" type="radio" disabled {{ $alkoholObat === 'ya' ? 'checked' : '' }}>
+                                            <label class="form-check-label">Ya</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="alkohol_obat"
-                                                id="alkohol_berhenti" value="berhenti"
-                                                {{ old('alkohol_obat', $asesmen->asesmenKetDewasaRanapRiwayatPasien->alkohol_obat ?? '') === 'berhenti' ? 'checked' : '' }} disabled>
-                                            <label class="form-check-label" for="alkohol_berhenti">Berhenti</label>
+                                            <input class="form-check-input" type="radio" disabled {{ $alkoholObat === 'berhenti' ? 'checked' : '' }}>
+                                            <label class="form-check-label">Berhenti</label>
                                         </div>
                                     </div>
 
-                                    <!-- Detail untuk alkohol/obat jika Ya dipilih -->
-                                    <div class="alkohol-detail" style="display: {{ old('alkohol_obat', $asesmen->asesmenKetDewasaRanapRiwayatPasien->alkohol_obat ?? '') === 'ya' ? 'block' : 'none' }};">
-                                        <div class="row">
-                                            <div class="col-md-6 mb-2">
-                                                <label class="form-label">Jenis:</label>
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="alkohol_jenis" placeholder="Jenis alkohol/obat"
-                                                    value="{{ old('alkohol_jenis', $asesmen->asesmenKetDewasaRanapRiwayatPasien->alkohol_jenis ?? '') }}" disabled>
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <label class="form-label">Jumlah/hari:</label>
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="alkohol_jumlah" placeholder="Jumlah per hari"
-                                                    value="{{ old('alkohol_jumlah', $asesmen->asesmenKetDewasaRanapRiwayatPasien->alkohol_jumlah ?? '') }}" disabled>
-                                            </div>
+                                    <div class="alkohol-detail" style="display: {{ $alkoholObat === 'ya' ? 'block' : 'none' }};">
+                                        <div id="alkoholContainerShow">
+                                            @for($i = 0; $i < $alkoholCount; $i++)
+                                                <div class="d-flex gap-2 align-items-center mb-2">
+                                                    <div class="col">
+                                                        <label class="form-label mb-1">Jenis:</label>
+                                                        <input type="text" class="form-control form-control-sm" readonly
+                                                            value="{{ $alkoholJenis[$i] ?? '' }}">
+                                                    </div>
+                                                    <div class="col">
+                                                        <label class="form-label mb-1">Jumlah/hari:</label>
+                                                        <input type="text" class="form-control form-control-sm" readonly
+                                                            value="{{ $alkoholJumlah[$i] ?? '' }}">
+                                                    </div>
+                                                </div>
+                                            @endfor
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Merokok -->
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <label class="form-label fw-bold">Merokok:</label>
                                     <div class="d-flex align-items-center gap-3 mb-2">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="merokok"
-                                                id="merokok_tidak" value="tidak"
-                                                {{ old('merokok', $asesmen->asesmenKetDewasaRanapRiwayatPasien->merokok ?? '') === 'tidak' ? 'checked' : '' }} disabled>
-                                            <label class="form-check-label" for="merokok_tidak">Tidak</label>
+                                            <input class="form-check-input" type="radio" disabled {{ $merokok === 'tidak' ? 'checked' : '' }}>
+                                            <label class="form-check-label">Tidak</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="merokok" id="merokok_ya"
-                                                value="ya"
-                                                {{ old('merokok', $asesmen->asesmenKetDewasaRanapRiwayatPasien->merokok ?? '') === 'ya' ? 'checked' : '' }} disabled>
-                                            <label class="form-check-label" for="merokok_ya">Ya</label>
+                                            <input class="form-check-input" type="radio" disabled {{ $merokok === 'ya' ? 'checked' : '' }}>
+                                            <label class="form-check-label">Ya</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="merokok"
-                                                id="merokok_berhenti" value="berhenti"
-                                                {{ old('merokok', $asesmen->asesmenKetDewasaRanapRiwayatPasien->merokok ?? '') === 'berhenti' ? 'checked' : '' }} disabled>
-                                            <label class="form-check-label" for="merokok_berhenti">Berhenti</label>
+                                            <input class="form-check-input" type="radio" disabled {{ $merokok === 'berhenti' ? 'checked' : '' }}>
+                                            <label class="form-check-label">Berhenti</label>
                                         </div>
                                     </div>
 
-                                    <!-- Detail untuk merokok jika Ya dipilih -->
-                                    <div class="merokok-detail" style="display: {{ old('merokok', $asesmen->asesmenKetDewasaRanapRiwayatPasien->merokok ?? '') === 'ya' ? 'block' : 'none' }};">
-                                        <div class="row">
-                                            <div class="col-md-6 mb-2">
-                                                <label class="form-label">Jenis:</label>
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="merokok_jenis" placeholder="Jenis rokok"
-                                                    value="{{ old('merokok_jenis', $asesmen->asesmenKetDewasaRanapRiwayatPasien->merokok_jenis ?? '') }}" disabled>
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <label class="form-label">Jumlah/hari:</label>
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="merokok_jumlah" placeholder="Batang per hari"
-                                                    value="{{ old('merokok_jumlah', $asesmen->asesmenKetDewasaRanapRiwayatPasien->merokok_jumlah ?? '') }}" disabled>
-                                            </div>
+                                    <div class="merokok-detail" style="display: {{ $merokok === 'ya' ? 'block' : 'none' }};">
+                                        <div id="merokokContainerShow">
+                                            @for($i = 0; $i < $merokokCount; $i++)
+                                                <div class="d-flex gap-2 align-items-center mb-2">
+                                                    <div class="col">
+                                                        <label class="form-label mb-1">Jenis:</label>
+                                                        <input type="text" class="form-control form-control-sm" readonly
+                                                            value="{{ $merokokJenis[$i] ?? '' }}">
+                                                    </div>
+                                                    <div class="col">
+                                                        <label class="form-label mb-1">Jumlah/hari:</label>
+                                                        <input type="text" class="form-control form-control-sm" readonly
+                                                            value="{{ $merokokJumlah[$i] ?? '' }}">
+                                                    </div>
+                                                </div>
+                                            @endfor
                                         </div>
                                     </div>
                                 </div>
