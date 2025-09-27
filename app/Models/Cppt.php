@@ -46,10 +46,10 @@ class Cppt extends Model
     {
         return $this->belongsTo(DtCppt::class, 'penanggung', 'kode');
     }
-    public function cpptInstruksiPpa()
-    {
-        return $this->hasMany(CpptInstruksiPpa::class, 'urut_total_cppt', 'urut_total');
-    }
+    // public function cpptInstruksiPpa()
+    // {
+    //     return $this->hasMany(CpptInstruksiPpa::class, ['kd_kasir', 'no_transaksi', 'urut_total_cppt'], ['kd_kasir', 'no_transaksi', 'urut_total']);
+    // }
 
     public function pemberat()
     {

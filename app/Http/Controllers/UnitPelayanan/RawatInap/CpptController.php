@@ -150,9 +150,13 @@ class CpptController extends Controller
 
         $cppt = $getCppt->groupBy(['urut_total'])->map(function ($item) {
 
-            $instruksiPpa = CpptInstruksiPpa::where('urut_total_cppt', $item->first()->urut_total)->get();
+            $instruksiPpa = CpptInstruksiPpa::where('urut_total_cppt', $item->first()->urut_total)
+                ->where('kd_kasir', $item->first()->kd_kasir)
+                ->where('no_transaksi', $item->first()->no_transaksi)
+                ->get();
+
             // Transform instruksi PPA untuk menambahkan nama lengkap
-            $instruksiPpaWithNames = $instruksiPpa->map(function($instruksi) {
+            $instruksiPpaWithNames = $instruksiPpa->map(function ($instruksi) {
                 return [
                     'id' => $instruksi->id,
                     'ppa' => $instruksi->ppa,
@@ -353,7 +357,11 @@ class CpptController extends Controller
                 ->get();
 
             $cppt = $getCppt->groupBy(['urut_total'])->map(function ($item) {
-                $instruksiPpa = CpptInstruksiPpa::where('urut_total_cppt', $item->first()->urut_total)->get();
+                $instruksiPpa = CpptInstruksiPpa::where('urut_total_cppt', $item->first()->urut_total)
+                    ->where('kd_kasir', $item->first()->kd_kasir)
+                    ->where('no_transaksi', $item->first()->no_transaksi)
+                    ->get();
+
                 return [
                     'kd_pasien'             => $item->first()->kd_pasien,
                     'no_transaksi'          => $item->first()->no_transaksi,
@@ -452,7 +460,6 @@ class CpptController extends Controller
                 'data' => $instruksiPpa,
                 'count' => $instruksiPpa->count()
             ]);
-
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -774,14 +781,6 @@ class CpptController extends Controller
 
             $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
 
-            // Ganti bagian ini:
-            $cpptInstruksiPpa = [
-                'urut_total_cppt'   => $lastUrutTotalCppt,
-                'ppa'               => $request->ppa,
-                'instruksi'         => $request->instruksi
-            ];
-            CpptInstruksiPpa::create($cpptInstruksiPpa);
-
             if ($request->has('perawat_kode') && is_array($request->perawat_kode)) {
                 $perawatKodes = $request->perawat_kode;
                 $perawatNamas = $request->perawat_nama ?? [];
@@ -790,6 +789,8 @@ class CpptController extends Controller
                 foreach ($perawatKodes as $index => $perawatKode) {
                     if (!empty($perawatKode) && !empty($instruksis[$index])) {
                         $cpptInstruksiPpa = [
+                            'kd_kasir'              => $kunjungan->kd_kasir,
+                            'no_transaksi'          => $kunjungan->no_transaksi,
                             'urut_total_cppt'   => $lastUrutTotalCppt,
                             'ppa'               => $perawatKode,
                             'instruksi'         => $instruksis[$index]
@@ -1045,6 +1046,8 @@ class CpptController extends Controller
                 foreach ($perawatKodes as $index => $perawatKode) {
                     if (!empty($perawatKode) && !empty($instruksis[$index])) {
                         $cpptInstruksiPpa = [
+                            'kd_kasir'              => $kunjungan->kd_kasir,
+                            'no_transaksi'          => $kunjungan->no_transaksi,
                             'urut_total_cppt'   => $cppt->urut_total,
                             'ppa'               => $perawatKode,
                             'instruksi'         => $instruksis[$index]
