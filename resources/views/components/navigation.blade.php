@@ -1,3 +1,4 @@
+
 @push('css')
     <style>
         .nav-icons {
@@ -38,11 +39,12 @@
 
 @php
     $currentUrl = url()->current();
-
+  
     $tglMasukData = date('Y-m-d', strtotime($dataMedis->tgl_masuk));
 
     $navItems = [
         [
+            'validate' => false,
             'icon' => 'verified_badge.png',
             'label' => 'Asesmen',
             'link' => route('asesmen.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
@@ -54,36 +56,43 @@
         //     'link' => route('cppt.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
         // ],
         [
+            'validate' => false,
             'icon' => 'tools.png',
             'label' => 'Tindakan',
             'link' => route('tindakan.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
         ],
         [
+            'validate' => false,
             'icon' => 'agree.png',
             'label' => 'Konsultasi',
             'link' => route('konsultasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
         [
+            'validate' => false,
             'icon' => 'test_tube.png',
             'label' => 'Labor',
             'link' => route('labor.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
         ],
         [
+            'validate' => false,
             'icon' => 'microbeam_radiation_therapy.png',
             'label' => 'Radiologi',
             'link' => route('radiologi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
         ],
         [
+            'validate' => false,
             'icon' => 'pill.png',
             'label' => 'Farmasi',
             'link' => route('farmasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
         ],
         [
+            'validate' => true,
             'icon' => 'info.png',
             'label' => 'Edukasi',
             'link' => route('edukasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
         [
+            'validate' => true,
             'icon' => 'info.png',
             'label' => 'MPP',
             'link' => route('mpp.form-a.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
@@ -94,6 +103,7 @@
         //     'link' => route('careplan.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
         // ],
         [
+            'validate' => true,
             'icon' => 'observasi.png',
             'label' => 'EWS',
             'link' => route('ews-pasien-dewasa.index', [
@@ -103,11 +113,13 @@
             ]),
         ],
         [
+            'validate' => false,
             'icon' => 'cv.png',
             'label' => 'Resume',
             'link' => route('resume.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
         ],
         [
+            'validate' => true,
             'icon' => 'verified_badge.png',
             'label' => 'Resiko Jatuh',
             'link' => route('resiko-jatuh.morse.index', [
@@ -117,6 +129,7 @@
             ]),
         ],
         [
+            'validate' => true,
             'icon' => 'verified_badge.png',
             'label' => 'Status Nyeri',
             'link' => route('status-nyeri.skala-numerik.index', [
@@ -126,6 +139,7 @@
             ]),
         ],
         [
+            'validate' => true,
             'icon' => 'verified_badge.png',
             'label' => 'Decubitus',
             'link' => route('resiko-decubitus.index', [
@@ -135,6 +149,7 @@
             ]),
         ],
         [
+            'validate' => true,
             'icon' => 'verified_badge.png',
             'label' => 'Status Fungsional',
             'link' => route('status-fungsional.index', [
@@ -144,6 +159,7 @@
             ]),
         ],
         [
+            'validate' => true,
             'icon' => 'verified_badge.png',
             'label' => 'Echocardiography',
             'link' => route('echocardiography.index', [
@@ -153,6 +169,7 @@
             ]),
         ],
         [
+            'validate' => true,
             'icon' => 'verified_badge.png',
             'label' => 'Audiometri',
             'link' => route('audiometri.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
@@ -176,13 +193,16 @@
     <div class="card-body p-2">
         <div class="d-flex flex-wrap gap-2">
             @foreach ($navItems as $item)
-                <a href="{{ $item['link'] }}"
-                    class="btn {{ $currentUrl === $item['link'] ? 'btn-primary' : 'btn-light' }} d-flex align-items-center"
-                    style="border-radius: 20px; padding: 6px 12px; font-size: 14px;">
-                    <img src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }}" width="18"
-                        height="18" class="{{ $currentUrl === $item['link'] ? '' : '' }} me-1">
-                    <span>{{ $item['label'] }}</span>
-                </a>
+                @if ($item['validate']===false || ($item['validate']===true && $dataMedis->triase_proses == 0))
+                    <a href="{{ $item['link'] }}"
+                        class="btn {{ $currentUrl === $item['link'] ? 'btn-primary' : 'btn-light' }} d-flex align-items-center"
+                        style="border-radius: 20px; padding: 6px 12px; font-size: 14px;">
+                        <img src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }}" width="18"
+                            height="18" class="{{ $currentUrl === $item['link'] ? '' : '' }} me-1">
+                        <span>{{ $item['label'] }}</span>
+                     </a>
+                @endif
+                
             @endforeach
         </div>
     </div>

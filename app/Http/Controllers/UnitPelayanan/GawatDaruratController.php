@@ -406,6 +406,7 @@ class GawatDaruratController extends Controller
                 'is_rujukan' => $rujukan,
                 'rujukan_ket' => $rujukan_ket,
                 'triase_id' => $triase->id,
+                'triase_proses' => 1
             ];
 
             Kunjungan::create($dataKunjungan);
