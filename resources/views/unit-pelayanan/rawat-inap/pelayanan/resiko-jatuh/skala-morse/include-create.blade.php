@@ -202,7 +202,7 @@
         .resiko_jatuh__btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-            background-color:#0d6efd;
+            background-color: #0d6efd;
         }
 
         .resiko_jatuh__criteria-section {
@@ -336,6 +336,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('resikoJatuh_form');
+            let lastChecked = {}; // Untuk menyimpan radio button yang terakhir diklik
 
             function hitungSkorDanKategori() {
                 const groups = [
@@ -382,56 +383,84 @@
                 const rr = document.getElementById('resikoJatuh_intervensiRR');
                 const rs = document.getElementById('resikoJatuh_intervensiRS');
                 const rt = document.getElementById('resikoJatuh_intervensiRT');
-                rr.style.display = kategori === 'RR' ? '' : 'none';
-                rs.style.display = kategori === 'RS' ? '' : 'none';
-                rt.style.display = kategori === 'RT' ? '' : 'none';
+                if (rr) rr.style.display = kategori === 'RR' ? '' : 'none';
+                if (rs) rs.style.display = kategori === 'RS' ? '' : 'none';
+                if (rt) rt.style.display = kategori === 'RT' ? '' : 'none';
             }
 
-            // Recalculate on change
+            // Event listener untuk radio button dengan fitur uncheck
             document.querySelectorAll('input[type="radio"][name="riwayat_jatuh"],\
-                input[type="radio"][name="diagnosa_sekunder"],\
-                input[type="radio"][name="bantuan_ambulasi"],\
-                input[type="radio"][name="terpasang_infus"],\
-                input[type="radio"][name="gaya_berjalan"],\
-                input[type="radio"][name="status_mental"]').forEach(el => {
-                el.addEventListener('change', hitungSkorDanKategori);
+                    input[type="radio"][name="diagnosa_sekunder"],\
+                    input[type="radio"][name="bantuan_ambulasi"],\
+                    input[type="radio"][name="terpasang_infus"],\
+                    input[type="radio"][name="gaya_berjalan"],\
+                    input[type="radio"][name="status_mental"]').forEach(radio => {
+
+                radio.addEventListener('click', function(e) {
+                    const groupName = this.name;
+
+                    // Jika radio button yang sama diklik lagi, uncheck
+                    if (lastChecked[groupName] === this && this.checked) {
+                        this.checked = false;
+                        lastChecked[groupName] = null;
+
+                        // Update visual state
+                        const group = this.name;
+                        document.querySelectorAll(`[data-group="${group}"]`).forEach(item => {
+                            item.classList.remove('selected');
+                        });
+
+                        // Recalculate
+                        hitungSkorDanKategori();
+                        return;
+                    }
+
+                    // Simpan radio button yang diklik sebagai yang terakhir
+                    lastChecked[groupName] = this;
+
+                    // Update visual selected state
+                    const group = this.name;
+                    document.querySelectorAll(`[data-group="${group}"]`).forEach(item => {
+                        item.classList.remove('selected');
+                    });
+                    this.closest('.resiko_jatuh__criteria-form-check').classList.add('selected');
+
+                    // Recalculate
+                    hitungSkorDanKategori();
+                });
             });
 
             form.addEventListener('submit', function(e) {
-                const groups = [
-                    'riwayat_jatuh',
-                    'diagnosa_sekunder',
-                    'bantuan_ambulasi',
-                    'terpasang_infus',
-                    'gaya_berjalan',
-                    'status_mental'
-                ];
+                // Hanya validasi field yang wajib diisi: Tanggal, Hari ke, Shift
+                const tanggal = document.getElementById('tanggal').value;
+                const hariKe = document.querySelector('input[name="hari_ke"]').value;
+                const shift = document.getElementById('shift').value;
 
-                // Cek kelengkapan per grup (gunakan checked, bukan nilai)
-                const missing = groups.filter(name => !document.querySelector(
-                    `input[name="${name}"]:checked`));
-                if (missing.length > 0) {
+                // Cek field wajib
+                if (!tanggal || !hariKe || !shift) {
                     e.preventDefault();
-                    alert('Mohon lengkapi semua penilaian terlebih dahulu!');
+                    alert('Mohon lengkapi data pengkajian (Tanggal, Hari ke, dan Shift) terlebih dahulu!');
                     return;
                 }
 
-                // Cek skor total: 0 adalah valid, yang tidak valid hanya kosong/NaN
-                const skorStr = document.getElementById('resikoJatuh_skorTotalInput').value;
-                const skor = skorStr === '' ? NaN : parseInt(skorStr, 10);
-                if (Number.isNaN(skor)) {
+                // Validasi nilai hari ke harus positif
+                if (parseInt(hariKe) < 1) {
                     e.preventDefault();
-                    alert('Skor total belum dihitung.');
+                    alert('Hari ke harus berisi angka yang valid (minimal 1)!');
                     return;
                 }
+            });
 
-                // Cek kategori (harus ter-set termasuk saat skor 0 -> RR)
-                const kategori = document.getElementById('resikoJatuh_kategoriResikoInput').value;
-                if (!kategori) {
-                    e.preventDefault();
-                    alert('Kategori risiko belum terisi.');
-                    return;
-                }
+            // Handle checkbox intervensi
+            document.querySelectorAll('input[name^="intervensi_"]').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const formCheck = this.closest('.resiko_jatuh__criteria-form-check');
+                    if (this.checked) {
+                        formCheck.classList.add('selected');
+                    } else {
+                        formCheck.classList.remove('selected');
+                    }
+                });
             });
 
             // Buat seluruh area item bisa di-klik (kecuali input/label agar tidak double-toggle)
@@ -444,10 +473,8 @@
                     if (!input) return;
 
                     if (input.type === 'radio') {
-                        input.checked = true;
-                        input.dispatchEvent(new Event('change', {
-                            bubbles: true
-                        }));
+                        // Trigger click event pada radio button untuk menggunakan logika uncheck
+                        input.click();
                     } else if (input.type === 'checkbox') {
                         input.checked = !input.checked;
                         input.dispatchEvent(new Event('change', {
@@ -457,7 +484,7 @@
                 });
             });
 
-            // Bikin klik pada label juga toggle input terkait (baik pakai for= maupun tidak)
+            // Bikin klik pada label juga toggle input terkait
             document.querySelectorAll('.resiko_jatuh__criteria-form-check label').forEach(label => {
                 label.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -470,12 +497,8 @@
                     if (!input) return;
 
                     if (input.type === 'radio') {
-                        if (!input.checked) {
-                            input.checked = true;
-                            input.dispatchEvent(new Event('change', {
-                                bubbles: true
-                            }));
-                        }
+                        // Trigger click event pada radio button untuk menggunakan logika uncheck
+                        input.click();
                     } else {
                         input.checked = !input.checked;
                         input.dispatchEvent(new Event('change', {
@@ -483,6 +506,17 @@
                         }));
                     }
                 });
+            });
+
+            // Set initial visual state berdasarkan data yang sudah ada (untuk edit mode)
+            document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
+                radio.closest('.resiko_jatuh__criteria-form-check').classList.add('selected');
+                // Set sebagai lastChecked untuk radio yang sudah terpilih saat load
+                lastChecked[radio.name] = radio;
+            });
+
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                checkbox.closest('.resiko_jatuh__criteria-form-check').classList.add('selected');
             });
 
             // Inisialisasi

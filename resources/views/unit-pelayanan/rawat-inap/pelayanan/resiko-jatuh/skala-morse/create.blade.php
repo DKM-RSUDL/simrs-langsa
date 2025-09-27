@@ -69,7 +69,7 @@
                             <label class="resiko_jatuh__font-weight-bold">1. Riwayat Jatuh:</label>
                             <div class="form-check resiko_jatuh__criteria-form-check" data-group="riwayat_jatuh">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
-                                    name="riwayat_jatuh" id="resikoJatuh_riwayat_tidak" value="0" required>
+                                    name="riwayat_jatuh" id="resikoJatuh_riwayat_tidak" value="0">
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_riwayat_tidak">
                                     a. Tidak
@@ -96,7 +96,7 @@
                             <label class="resiko_jatuh__font-weight-bold">2. Diagnosa Sekunder:</label>
                             <div class="form-check resiko_jatuh__criteria-form-check" data-group="diagnosa_sekunder">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
-                                    name="diagnosa_sekunder" id="resikoJatuh_diagnosa_tidak" value="0" required>
+                                    name="diagnosa_sekunder" id="resikoJatuh_diagnosa_tidak" value="0">
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_diagnosa_tidak">
                                     a. Tidak
@@ -123,7 +123,7 @@
                             <label class="resiko_jatuh__font-weight-bold">3. Bantuan Ambulasi:</label>
                             <div class="form-check resiko_jatuh__criteria-form-check" data-group="bantuan_ambulasi">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
-                                    name="bantuan_ambulasi" id="resikoJatuh_ambulasi_tidak" value="0" required>
+                                    name="bantuan_ambulasi" id="resikoJatuh_ambulasi_tidak" value="0">
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_ambulasi_tidak">
                                     a. Tidak ada / bed rest / bantuan perawat
@@ -161,7 +161,7 @@
                             <label class="resiko_jatuh__font-weight-bold">4. Terpasang Infus:</label>
                             <div class="form-check resiko_jatuh__criteria-form-check" data-group="terpasang_infus">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
-                                    name="terpasang_infus" id="resikoJatuh_infus_tidak" value="0" required>
+                                    name="terpasang_infus" id="resikoJatuh_infus_tidak" value="0">
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_infus_tidak">
                                     a. Tidak
@@ -188,7 +188,7 @@
                             <label class="resiko_jatuh__font-weight-bold">5. Cara / gaya berjalan:</label>
                             <div class="form-check resiko_jatuh__criteria-form-check" data-group="gaya_berjalan">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
-                                    name="gaya_berjalan" id="resikoJatuh_berjalan_normal" value="0" required>
+                                    name="gaya_berjalan" id="resikoJatuh_berjalan_normal" value="0">
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_berjalan_normal">
                                     a. Normal / bed rest / kursi roda
@@ -226,7 +226,7 @@
                             <label class="resiko_jatuh__font-weight-bold">6. Status Mental:</label>
                             <div class="form-check resiko_jatuh__criteria-form-check" data-group="status_mental">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
-                                    name="status_mental" id="resikoJatuh_mental_orientasi" value="0" required>
+                                    name="status_mental" id="resikoJatuh_mental_orientasi" value="0">
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_mental_orientasi">
                                     a. Berorientasi pada kemampuannya

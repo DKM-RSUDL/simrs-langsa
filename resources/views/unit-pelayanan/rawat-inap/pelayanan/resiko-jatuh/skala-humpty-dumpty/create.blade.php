@@ -205,7 +205,7 @@
             cursor: pointer;
         }
 
-        .form-check-input:checked + .form-check-label {
+        .form-check-input:checked+.form-check-label {
             color: #097dd6;
             font-weight: 600;
         }
@@ -246,7 +246,7 @@
             .datetime-group {
                 grid-template-columns: 1fr;
             }
-            
+
             .form-section {
                 padding: 1rem;
             }
@@ -261,7 +261,8 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ route('rawat-inap.resiko-jatuh.humpty-dumpty.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" class="btn btn-outline-primary mb-3">
+            <a href="{{ route('rawat-inap.resiko-jatuh.humpty-dumpty.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                class="btn btn-outline-primary mb-3">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
 
@@ -276,17 +277,19 @@
                         <!-- Basic Information Section -->
                         <div class="form-section">
                             <h5 class="section-title">Informasi Dasar</h5>
-                            
+
                             <div class="form-group">
                                 <label class="form-label">Tanggal dan Jam Implementasi</label>
                                 <div class="datetime-group">
                                     <div class="datetime-item">
                                         <label>Tanggal</label>
-                                        <input type="date" class="form-control" name="tanggal_implementasi" id="tanggal_implementasi" required>
+                                        <input type="date" class="form-control" name="tanggal_implementasi"
+                                            id="tanggal_implementasi" required>
                                     </div>
                                     <div class="datetime-item">
                                         <label>Jam</label>
-                                        <input type="time" class="form-control" name="jam_implementasi" id="jam_implementasi" required>
+                                        <input type="time" class="form-control" name="jam_implementasi"
+                                            id="jam_implementasi" required>
                                     </div>
                                 </div>
                             </div>
@@ -305,169 +308,197 @@
                         <!-- Assessment Criteria Section -->
                         <div class="form-section">
                             <h5 class="section-title">Kriteria Penilaian Humpty Dumpty</h5>
-                            
+
                             <div class="form-group">
                                 <div class="radio-group">
-                                    <label class="form-label">Usia</label>
+                                    <div class="form-label">Usia</div>
                                     <div class="radio-options">
-                                        <div class="radio-item">
-                                            <input type="radio" id="usia_1" name="usia" value="4" class="assessment-field" data-field="usia" required>
-                                            <label for="usia_1">&lt;3 tahun</label>
+                                        <label class="radio-item" for="usia_1">
+                                            <input type="radio" id="usia_1" name="usia" value="4"
+                                                class="assessment-field" data-field="usia">
+                                            <span>&lt;3 tahun</span>
                                             <span class="radio-value">4</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="usia_2" name="usia" value="3" class="assessment-field" data-field="usia" required>
-                                            <label for="usia_2">3 sampai 7 tahun</label>
+                                        </label>
+                                        <label class="radio-item" for="usia_2">
+                                            <input type="radio" id="usia_2" name="usia" value="3"
+                                                class="assessment-field" data-field="usia">
+                                            <span>3 sampai 7 tahun</span>
                                             <span class="radio-value">3</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="usia_3" name="usia" value="2" class="assessment-field" data-field="usia" required>
-                                            <label for="usia_3">7 sampai 13 tahun</label>
+                                        </label>
+                                        <label class="radio-item" for="usia_3">
+                                            <input type="radio" id="usia_3" name="usia" value="2"
+                                                class="assessment-field" data-field="usia">
+                                            <span>7 sampai 13 tahun</span>
                                             <span class="radio-value">2</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="usia_4" name="usia" value="1" class="assessment-field" data-field="usia" required>
-                                            <label for="usia_4">&gt;13 tahun</label>
+                                        </label>
+                                        <label class="radio-item" for="usia_4">
+                                            <input type="radio" id="usia_4" name="usia" value="1"
+                                                class="assessment-field" data-field="usia">
+                                            <span>&gt;13 tahun</span>
                                             <span class="radio-value">1</span>
-                                        </div>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="radio-group">
-                                    <label class="form-label">Jenis Kelamin</label>
+                                    <div class="form-label">Jenis Kelamin</div>
                                     <div class="radio-options">
-                                        <div class="radio-item">
-                                            <input type="radio" id="jk_1" name="jenis_kelamin" value="2" class="assessment-field" data-field="jenis_kelamin" required>
-                                            <label for="jk_1">Laki-laki</label>
+                                        <label class="radio-item" for="jk_1">
+                                            <input type="radio" id="jk_1" name="jenis_kelamin" value="2"
+                                                class="assessment-field" data-field="jenis_kelamin">
+                                            <span>Laki-laki</span>
                                             <span class="radio-value">2</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="jk_2" name="jenis_kelamin" value="1" class="assessment-field" data-field="jenis_kelamin" required>
-                                            <label for="jk_2">Perempuan</label>
+                                        </label>
+                                        <label class="radio-item" for="jk_2">
+                                            <input type="radio" id="jk_2" name="jenis_kelamin" value="1"
+                                                class="assessment-field" data-field="jenis_kelamin">
+                                            <span>Perempuan</span>
                                             <span class="radio-value">1</span>
-                                        </div>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="radio-group">
-                                    <label class="form-label">Diagnosis</label>
+                                    <div class="form-label">Diagnosis</div>
                                     <div class="radio-options">
-                                        <div class="radio-item">
-                                            <input type="radio" id="diagnosis_1" name="diagnosis" value="3" class="assessment-field" data-field="diagnosis" required>
-                                            <label for="diagnosis_1">Perubahan oksigenasi (diagnosis respiratorik, dehidrasi, anemia, syncope, pusing)</label>
+                                        <label class="radio-item" for="diagnosis_1">
+                                            <input type="radio" id="diagnosis_1" name="diagnosis" value="3"
+                                                class="assessment-field" data-field="diagnosis">
+                                            <span>Perubahan oksigenasi (diagnosis respiratorik, dehidrasi, anemia, syncope,
+                                                pusing)</span>
                                             <span class="radio-value">3</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="diagnosis_2" name="diagnosis" value="2" class="assessment-field" data-field="diagnosis" required>
-                                            <label for="diagnosis_2">Gangguan perilaku / psikiatri</label>
+                                        </label>
+                                        <label class="radio-item" for="diagnosis_2">
+                                            <input type="radio" id="diagnosis_2" name="diagnosis" value="2"
+                                                class="assessment-field" data-field="diagnosis">
+                                            <span>Gangguan perilaku / psikiatri</span>
                                             <span class="radio-value">2</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="diagnosis_3" name="diagnosis" value="1" class="assessment-field" data-field="diagnosis" required>
-                                            <label for="diagnosis_3">Diagnosis lainnya</label>
+                                        </label>
+                                        <label class="radio-item" for="diagnosis_3">
+                                            <input type="radio" id="diagnosis_3" name="diagnosis" value="1"
+                                                class="assessment-field" data-field="diagnosis">
+                                            <span>Diagnosis lainnya</span>
                                             <span class="radio-value">1</span>
-                                        </div>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="radio-group">
-                                    <label class="form-label">Gangguan Kognitif</label>
+                                    <div class="form-label">Gangguan Kognitif</div>
                                     <div class="radio-options">
-                                        <div class="radio-item">
-                                            <input type="radio" id="kognitif_1" name="gangguan_kognitif" value="3" class="assessment-field" data-field="gangguan_kognitif" required>
-                                            <label for="kognitif_1">Tidak menyadari keterbatasan dirinya</label>
+                                        <label class="radio-item" for="kognitif_1">
+                                            <input type="radio" id="kognitif_1" name="gangguan_kognitif"
+                                                value="3" class="assessment-field" data-field="gangguan_kognitif">
+                                            <span>Tidak menyadari keterbatasan dirinya</span>
                                             <span class="radio-value">3</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="kognitif_2" name="gangguan_kognitif" value="2" class="assessment-field" data-field="gangguan_kognitif" required>
-                                            <label for="kognitif_2">Lupa akan adanya keterbatasan</label>
+                                        </label>
+                                        <label class="radio-item" for="kognitif_2">
+                                            <input type="radio" id="kognitif_2" name="gangguan_kognitif"
+                                                value="2" class="assessment-field" data-field="gangguan_kognitif">
+                                            <span>Lupa akan adanya keterbatasan</span>
                                             <span class="radio-value">2</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="kognitif_3" name="gangguan_kognitif" value="1" class="assessment-field" data-field="gangguan_kognitif" required>
-                                            <label for="kognitif_3">Orientasi baik terhadap diri sendiri</label>
+                                        </label>
+                                        <label class="radio-item" for="kognitif_3">
+                                            <input type="radio" id="kognitif_3" name="gangguan_kognitif"
+                                                value="1" class="assessment-field" data-field="gangguan_kognitif">
+                                            <span>Orientasi baik terhadap diri sendiri</span>
                                             <span class="radio-value">1</span>
-                                        </div>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="radio-group">
-                                    <label class="form-label">Faktor Lingkungan</label>
+                                    <div class="form-label">Faktor Lingkungan</div>
                                     <div class="radio-options">
-                                        <div class="radio-item">
-                                            <input type="radio" id="lingkungan_1" name="faktor_lingkungan" value="4" class="assessment-field" data-field="faktor_lingkungan" required>
-                                            <label for="lingkungan_1">Riwayat jatuh / bayi diletakkan di tempat tidur dewasa</label>
+                                        <label class="radio-item" for="lingkungan_1">
+                                            <input type="radio" id="lingkungan_1" name="faktor_lingkungan"
+                                                value="4" class="assessment-field" data-field="faktor_lingkungan">
+                                            <span>Riwayat jatuh / bayi diletakkan di tempat tidur dewasa</span>
                                             <span class="radio-value">4</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="lingkungan_2" name="faktor_lingkungan" value="3" class="assessment-field" data-field="faktor_lingkungan" required>
-                                            <label for="lingkungan_2">Pasien menggunakan alat bantu / bayi diletakkan di tempat tidur bayi / perabot rumah</label>
+                                        </label>
+                                        <label class="radio-item" for="lingkungan_2">
+                                            <input type="radio" id="lingkungan_2" name="faktor_lingkungan"
+                                                value="3" class="assessment-field" data-field="faktor_lingkungan">
+                                            <span>Pasien menggunakan alat bantu / bayi diletakkan di tempat tidur bayi /
+                                                perabot rumah</span>
                                             <span class="radio-value">3</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="lingkungan_3" name="faktor_lingkungan" value="2" class="assessment-field" data-field="faktor_lingkungan" required>
-                                            <label for="lingkungan_3">Pasien diletakkan di tempat tidur</label>
+                                        </label>
+                                        <label class="radio-item" for="lingkungan_3">
+                                            <input type="radio" id="lingkungan_3" name="faktor_lingkungan"
+                                                value="2" class="assessment-field" data-field="faktor_lingkungan">
+                                            <span>Pasien diletakkan di tempat tidur</span>
                                             <span class="radio-value">2</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="lingkungan_4" name="faktor_lingkungan" value="1" class="assessment-field" data-field="faktor_lingkungan" required>
-                                            <label for="lingkungan_4">Area diluar rumah</label>
+                                        </label>
+                                        <label class="radio-item" for="lingkungan_4">
+                                            <input type="radio" id="lingkungan_4" name="faktor_lingkungan"
+                                                value="1" class="assessment-field" data-field="faktor_lingkungan">
+                                            <span>Area diluar rumah</span>
                                             <span class="radio-value">1</span>
-                                        </div>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="radio-group">
-                                    <label class="form-label">Pembedahan/Sedasi/Anestesi</label>
+                                    <div class="form-label">Pembedahan/Sedasi/Anestesi</div>
                                     <div class="radio-options">
-                                        <div class="radio-item">
-                                            <input type="radio" id="bedah_1" name="pembedahan_sedasi" value="3" class="assessment-field" data-field="pembedahan_sedasi" required>
-                                            <label for="bedah_1">Dalam 24 jam</label>
+                                        <label class="radio-item" for="bedah_1">
+                                            <input type="radio" id="bedah_1" name="pembedahan_sedasi" value="3"
+                                                class="assessment-field" data-field="pembedahan_sedasi">
+                                            <span>Dalam 24 jam</span>
                                             <span class="radio-value">3</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="bedah_2" name="pembedahan_sedasi" value="2" class="assessment-field" data-field="pembedahan_sedasi" required>
-                                            <label for="bedah_2">Dalam 48 jam</label>
+                                        </label>
+                                        <label class="radio-item" for="bedah_2">
+                                            <input type="radio" id="bedah_2" name="pembedahan_sedasi" value="2"
+                                                class="assessment-field" data-field="pembedahan_sedasi">
+                                            <span>Dalam 48 jam</span>
                                             <span class="radio-value">2</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="bedah_3" name="pembedahan_sedasi" value="1" class="assessment-field" data-field="pembedahan_sedasi" required>
-                                            <label for="bedah_3">&gt;48 jam atau tidak menjalani pembedahan/sedasi/anestesi</label>
+                                        </label>
+                                        <label class="radio-item" for="bedah_3">
+                                            <input type="radio" id="bedah_3" name="pembedahan_sedasi" value="1"
+                                                class="assessment-field" data-field="pembedahan_sedasi">
+                                            <span>&gt;48 jam atau tidak menjalani pembedahan/sedasi/anestesi</span>
                                             <span class="radio-value">1</span>
-                                        </div>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="radio-group">
-                                    <label class="form-label">Penggunaan Medikamentosa</label>
+                                    <div class="form-label">Penggunaan Medikamentosa</div>
                                     <div class="radio-options">
-                                        <div class="radio-item">
-                                            <input type="radio" id="obat_1" name="penggunaan_medikamentosa" value="3" class="assessment-field" data-field="penggunaan_medikamentosa" required>
-                                            <label for="obat_1">Penggunaan multiple: sedative, obat hipnosis, barbiturate, fenotiazi, antidepresan, pencahar, diuretik, narkose</label>
+                                        <label class="radio-item" for="obat_1">
+                                            <input type="radio" id="obat_1" name="penggunaan_medikamentosa"
+                                                value="3" class="assessment-field"
+                                                data-field="penggunaan_medikamentosa">
+                                            <span>Penggunaan multiple: sedative, obat hipnosis, barbiturate, fenotiazi,
+                                                antidepresan, pencahar, diuretik, narkose</span>
                                             <span class="radio-value">3</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="obat_2" name="penggunaan_medikamentosa" value="2" class="assessment-field" data-field="penggunaan_medikamentosa" required>
-                                            <label for="obat_2">Penggunaan salah satu obat di atas</label>
+                                        </label>
+                                        <label class="radio-item" for="obat_2">
+                                            <input type="radio" id="obat_2" name="penggunaan_medikamentosa"
+                                                value="2" class="assessment-field"
+                                                data-field="penggunaan_medikamentosa">
+                                            <span>Penggunaan salah satu obat di atas</span>
                                             <span class="radio-value">2</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="obat_3" name="penggunaan_medikamentosa" value="1" class="assessment-field" data-field="penggunaan_medikamentosa" required>
-                                            <label for="obat_3">Penggunaan medikasi lainnya/tidak ada medikasi</label>
+                                        </label>
+                                        <label class="radio-item" for="obat_3">
+                                            <input type="radio" id="obat_3" name="penggunaan_medikamentosa"
+                                                value="1" class="assessment-field"
+                                                data-field="penggunaan_medikamentosa">
+                                            <span>Penggunaan medikasi lainnya/tidak ada medikasi</span>
                                             <span class="radio-value">1</span>
-                                        </div>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -477,23 +508,25 @@
                         <div class="score-display" id="scoreDisplay" style="display: none;">
                             <div class="score-number" id="totalScore">0</div>
                             <div class="score-category" id="riskCategory">-</div>
-                            <div class="score-description" id="riskDescription">Silakan isi semua field untuk melihat hasil penilaian</div>
+                            <div class="score-description" id="riskDescription">Silakan isi semua field untuk melihat
+                                hasil penilaian</div>
                         </div>
 
 
                         <!-- Intervention Section -->
                         <div class="form-section" id="interventionSection" style="display: none;">
                             <h5 class="section-title">Intervensi Pencegahan Jatuh</h5>
-                            
+
                             <!-- Intervensi untuk Risiko Rendah -->
                             <div id="lowRiskInterventions" style="display: none;">
                                 <div class="alert alert-info mb-3">
                                     <i class="ti-info-circle"></i> <strong>Intervensi untuk Risiko Rendah</strong>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="observasi_ambulasi" name="observasi_ambulasi" value="1">
+                                        <input class="form-check-input" type="checkbox" id="observasi_ambulasi"
+                                            name="observasi_ambulasi" value="1">
                                         <label class="form-check-label" for="observasi_ambulasi">
                                             Tingkatkan observasi bantuan yang sesuai saat ambulasi
                                         </label>
@@ -501,28 +534,33 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="form-label">Orientasikan pasien terhadap lingkungan dan rutinitas RS</label>
+                                    <label class="form-label">Orientasikan pasien terhadap lingkungan dan rutinitas
+                                        RS</label>
                                     <div class="ml-3">
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" id="orientasi_kamar_mandi" name="orientasi_kamar_mandi" value="1">
+                                            <input class="form-check-input" type="checkbox" id="orientasi_kamar_mandi"
+                                                name="orientasi_kamar_mandi" value="1">
                                             <label class="form-check-label" for="orientasi_kamar_mandi">
                                                 Tunjukkan lokasi kamar mandi
                                             </label>
                                         </div>
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" id="orientasi_bertahap" name="orientasi_bertahap" value="1">
+                                            <input class="form-check-input" type="checkbox" id="orientasi_bertahap"
+                                                name="orientasi_bertahap" value="1">
                                             <label class="form-check-label" for="orientasi_bertahap">
                                                 Jika pasien linglung, orientasi dilaksanakan bertahap
                                             </label>
                                         </div>
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" id="tempatkan_bel" name="tempatkan_bel" value="1">
+                                            <input class="form-check-input" type="checkbox" id="tempatkan_bel"
+                                                name="tempatkan_bel" value="1">
                                             <label class="form-check-label" for="tempatkan_bel">
                                                 Tempatkan bel ditempat yang mudah dicapai
                                             </label>
                                         </div>
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" id="instruksi_bantuan" name="instruksi_bantuan" value="1">
+                                            <input class="form-check-input" type="checkbox" id="instruksi_bantuan"
+                                                name="instruksi_bantuan" value="1">
                                             <label class="form-check-label" for="instruksi_bantuan">
                                                 Instruksikan meminta bantuan perawat sebelum turun dari tempat tidur
                                             </label>
@@ -532,7 +570,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="pagar_pengaman" name="pagar_pengaman" value="1">
+                                        <input class="form-check-input" type="checkbox" id="pagar_pengaman"
+                                            name="pagar_pengaman" value="1">
                                         <label class="form-check-label" for="pagar_pengaman">
                                             Pagar pengaman tempat tidur dinaikkan, kaji agar kaki/ tangan tidak tersangkut
                                         </label>
@@ -541,7 +580,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="tempat_tidur_rendah" name="tempat_tidur_rendah" value="1">
+                                        <input class="form-check-input" type="checkbox" id="tempat_tidur_rendah"
+                                            name="tempat_tidur_rendah" value="1">
                                         <label class="form-check-label" for="tempat_tidur_rendah">
                                             Tempat tidur dalam posisi rendah dan terkunci
                                         </label>
@@ -550,7 +590,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="edukasi_perilaku" name="edukasi_perilaku" value="1">
+                                        <input class="form-check-input" type="checkbox" id="edukasi_perilaku"
+                                            name="edukasi_perilaku" value="1">
                                         <label class="form-check-label" for="edukasi_perilaku">
                                             Edukasi perilaku yang lebih aman saat jatuh atau transfer
                                         </label>
@@ -559,7 +600,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="monitor_berkala" name="monitor_berkala" value="1">
+                                        <input class="form-check-input" type="checkbox" id="monitor_berkala"
+                                            name="monitor_berkala" value="1">
                                         <label class="form-check-label" for="monitor_berkala">
                                             Monitor kebutuhan pasien secara berkala (minimalnya tiap 2 jam)
                                         </label>
@@ -568,7 +610,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="anjuran_kaus_kaki" name="anjuran_kaus_kaki" value="1">
+                                        <input class="form-check-input" type="checkbox" id="anjuran_kaus_kaki"
+                                            name="anjuran_kaus_kaki" value="1">
                                         <label class="form-check-label" for="anjuran_kaus_kaki">
                                             Anjurkan pasien tidak menggunakan kaus kaki atau sepatu yang licin
                                         </label>
@@ -577,7 +620,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="lantai_antislip" name="lantai_antislip" value="1">
+                                        <input class="form-check-input" type="checkbox" id="lantai_antislip"
+                                            name="lantai_antislip" value="1">
                                         <label class="form-check-label" for="lantai_antislip">
                                             Lantai kamar mandi dengan karpet antislip, tidak licin
                                         </label>
@@ -590,10 +634,11 @@
                                 <div class="alert alert-danger mb-3">
                                     <i class="ti-alert-triangle"></i> <strong>Intervensi untuk Risiko Tinggi</strong>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="semua_intervensi_rendah" name="semua_intervensi_rendah" value="1">
+                                        <input class="form-check-input" type="checkbox" id="semua_intervensi_rendah"
+                                            name="semua_intervensi_rendah" value="1">
                                         <label class="form-check-label" for="semua_intervensi_rendah">
                                             Lakukan SEMUA intervensi jatuh resiko rendah / standar
                                         </label>
@@ -602,7 +647,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="gelang_kuning" name="gelang_kuning" value="1">
+                                        <input class="form-check-input" type="checkbox" id="gelang_kuning"
+                                            name="gelang_kuning" value="1">
                                         <label class="form-check-label" for="gelang_kuning">
                                             Pakailah gelang risiko jatuh berwarna kuning
                                         </label>
@@ -611,16 +657,19 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="pasang_gambar" name="pasang_gambar" value="1">
+                                        <input class="form-check-input" type="checkbox" id="pasang_gambar"
+                                            name="pasang_gambar" value="1">
                                         <label class="form-check-label" for="pasang_gambar">
-                                            Pasang gambar risiko jatuh diatas tempat tidur pasien dan pada pintu kamar pasien
+                                            Pasang gambar risiko jatuh diatas tempat tidur pasien dan pada pintu kamar
+                                            pasien
                                         </label>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="tanda_daftar_nama" name="tanda_daftar_nama" value="1">
+                                        <input class="form-check-input" type="checkbox" id="tanda_daftar_nama"
+                                            name="tanda_daftar_nama" value="1">
                                         <label class="form-check-label" for="tanda_daftar_nama">
                                             Tempatkan tanda resiko pasien jatuh pada daftar nama pasien (warna kuning)
                                         </label>
@@ -629,7 +678,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="pertimbangkan_obat" name="pertimbangkan_obat" value="1">
+                                        <input class="form-check-input" type="checkbox" id="pertimbangkan_obat"
+                                            name="pertimbangkan_obat" value="1">
                                         <label class="form-check-label" for="pertimbangkan_obat">
                                             Pertimbangkan riwayat obat-obatan dan suplemen untuk mengevaluasi pengobatan
                                         </label>
@@ -638,7 +688,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="alat_bantu_jalan" name="alat_bantu_jalan" value="1">
+                                        <input class="form-check-input" type="checkbox" id="alat_bantu_jalan"
+                                            name="alat_bantu_jalan" value="1">
                                         <label class="form-check-label" for="alat_bantu_jalan">
                                             Gunakan alat bantu jalan (walker, handrail)
                                         </label>
@@ -647,7 +698,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="pintu_terbuka" name="pintu_terbuka" value="1">
+                                        <input class="form-check-input" type="checkbox" id="pintu_terbuka"
+                                            name="pintu_terbuka" value="1">
                                         <label class="form-check-label" for="pintu_terbuka">
                                             Biarkan pintu ruangan terbuka kecuali untuk tujuan isolasi
                                         </label>
@@ -656,7 +708,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="jangan_tinggalkan" name="jangan_tinggalkan" value="1">
+                                        <input class="form-check-input" type="checkbox" id="jangan_tinggalkan"
+                                            name="jangan_tinggalkan" value="1">
                                         <label class="form-check-label" for="jangan_tinggalkan">
                                             Jangan tinggalkan pasien saat di ruangan diagnostic atau tindakan
                                         </label>
@@ -665,7 +718,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="dekat_nurse_station" name="dekat_nurse_station" value="1">
+                                        <input class="form-check-input" type="checkbox" id="dekat_nurse_station"
+                                            name="dekat_nurse_station" value="1">
                                         <label class="form-check-label" for="dekat_nurse_station">
                                             Penempatan pasien dekat nurse station untuk memudahkan observasi (24-48 jam)
                                         </label>
@@ -674,7 +728,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="bed_posisi_rendah" name="bed_posisi_rendah" value="1">
+                                        <input class="form-check-input" type="checkbox" id="bed_posisi_rendah"
+                                            name="bed_posisi_rendah" value="1">
                                         <label class="form-check-label" for="bed_posisi_rendah">
                                             Posisi Bed atur ke posisi paling rendah
                                         </label>
@@ -683,7 +738,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="edukasi_keluarga" name="edukasi_keluarga" value="1">
+                                        <input class="form-check-input" type="checkbox" id="edukasi_keluarga"
+                                            name="edukasi_keluarga" value="1">
                                         <label class="form-check-label" for="edukasi_keluarga">
                                             Edukasi pasien/ keluarga yang harus diperhatikan sesuai protokol
                                         </label>
@@ -694,7 +750,7 @@
 
 
                         <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary btn-lg px-4" id="simpan">
+                            <button type="submit" class="btn btn-primary px-4" id="simpan">
                                 <i class="ti-save mr-2"></i> Simpan Data
                             </button>
                         </div>
@@ -708,12 +764,30 @@
 @push('js')
     <script>
         $(document).ready(function() {
+            let lastChecked = {}; // Untuk menyimpan radio button yang terakhir diklik
+
+            // Set tanggal dan jam otomatis ke waktu sekarang
+            function setCurrentDateTime() {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const currentDate = `${year}-${month}-${day}`;
+
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const currentTime = `${hours}:${minutes}`;
+
+                $('#tanggal_implementasi').val(currentDate);
+                $('#jam_implementasi').val(currentTime);
+                checkDuplicateDateTime();
+            }
+
             // Function to calculate total score
             function calculateScore() {
                 let totalScore = 0;
                 let filledCount = 0;
-                
-                // Check each assessment field that is checked
+
                 $('.assessment-field:checked').each(function() {
                     const value = parseInt($(this).val());
                     if (value) {
@@ -721,8 +795,7 @@
                         filledCount++;
                     }
                 });
-                
-                // Always show score if at least one field is filled
+
                 if (filledCount > 0) {
                     updateScoreDisplay(totalScore, filledCount);
                 } else {
@@ -730,44 +803,37 @@
                     $('#interventionSection').hide();
                 }
             }
-            
+
             // Function to update score display
             function updateScoreDisplay(score, filledCount) {
                 $('#totalScore').text(score);
                 $('#scoreDisplay').show();
-                
-                const totalFields = 7; // Total number of assessment fields
-                
-                // Hide all intervention sections first
+
+                const totalFields = 7;
+
                 $('#interventionSection').hide();
                 $('#lowRiskInterventions').hide();
                 $('#highRiskInterventions').hide();
-                
+
                 if (filledCount < totalFields) {
-                    // If not all fields filled, show partial score
                     $('#riskCategory').text('Skor Sementara').removeClass('low-risk high-risk');
-                    $('#riskDescription').text(`Skor saat ini: ${score} (${filledCount}/${totalFields} kriteria terisi)`);
+                    $('#riskDescription').text(
+                        `Skor saat ini: ${score} (${filledCount}/${totalFields} kriteria terisi)`);
                 } else {
-                    // All fields filled, show final assessment
                     if (score >= 6 && score <= 11) {
                         $('#riskCategory').text('Risiko Rendah').removeClass('high-risk').addClass('low-risk');
                         $('#riskDescription').text('Skor 6-11: Pasien memiliki risiko jatuh rendah');
-                        
-                        // Show intervention section and low risk interventions
                         $('#interventionSection').show();
                         $('#lowRiskInterventions').show();
-                        
                     } else if (score >= 12) {
                         $('#riskCategory').text('Risiko Tinggi').removeClass('low-risk').addClass('high-risk');
                         $('#riskDescription').text('Skor ≥12: Pasien memiliki risiko jatuh tinggi');
-                        
-                        // Show intervention section and high risk interventions
                         $('#interventionSection').show();
                         $('#highRiskInterventions').show();
-                        
                     } else {
                         $('#riskCategory').text('Skor Tidak Valid').removeClass('low-risk high-risk');
-                        $('#riskDescription').text('Skor di bawah 6: Hasil tidak sesuai dengan kriteria Humpty Dumpty');
+                        $('#riskDescription').text(
+                            'Skor di bawah 6: Hasil tidak sesuai dengan kriteria Humpty Dumpty');
                     }
                 }
             }
@@ -776,9 +842,8 @@
             function checkDuplicateDateTime() {
                 const tanggal = $('#tanggal_implementasi').val();
                 const shift = $('#shift').val();
-                
+
                 if (tanggal && shift) {
-                    // AJAX call untuk mengecek duplikasi
                     $.ajax({
                         url: "{{ route('rawat-inap.resiko-jatuh.humpty-dumpty.check-duplicate', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
                         method: 'POST',
@@ -789,17 +854,14 @@
                         },
                         success: function(response) {
                             if (response.exists) {
-                                // Show warning message
                                 showDuplicateWarning(true);
                                 $('#simpan').prop('disabled', true);
                             } else {
-                                // Hide warning message
                                 showDuplicateWarning(false);
                                 $('#simpan').prop('disabled', false);
                             }
                         },
                         error: function() {
-                            // On error, allow submission
                             showDuplicateWarning(false);
                             $('#simpan').prop('disabled', false);
                         }
@@ -816,7 +878,7 @@
                     if ($('#duplicate-warning').length === 0) {
                         const warningHtml = `
                             <div id="duplicate-warning" class="alert alert-warning mt-2" style="border-left: 4px solid #ffc107;">
-                                <i class="ti-alert-triangle"></i> 
+                                <i class="ti-alert-triangle"></i>
                                 <strong>Peringatan:</strong> Data dengan tanggal dan shift ini sudah ada!
                             </div>
                         `;
@@ -827,8 +889,32 @@
                     $('#duplicate-warning').hide();
                 }
             }
-            
-            // Event listener for checkbox styling
+
+            // ======= HANYA INI YANG PERLU UNTUK RADIO BUTTON =======
+            // Event handler untuk fitur uncheck pada radio button
+            $('.assessment-field').on('click', function() {
+                const groupName = this.name;
+
+                // Jika radio yang sama diklik lagi, uncheck
+                if (lastChecked[groupName] === this && this.checked) {
+                    this.checked = false;
+                    lastChecked[groupName] = null;
+                } else {
+                    lastChecked[groupName] = this;
+                }
+
+                // Update visual selected state
+                $('.radio-item').removeClass('selected');
+                $('.assessment-field:checked').each(function() {
+                    $(this).closest('.radio-item').addClass('selected');
+                });
+
+                // Calculate score
+                calculateScore();
+            });
+            // ======= AKHIR RADIO BUTTON HANDLER =======
+
+            // Event listener untuk checkbox styling
             $('.form-check-input').on('change', function() {
                 if ($(this).is(':checked')) {
                     $(this).next('.form-check-label').addClass('text-primary');
@@ -836,75 +922,45 @@
                     $(this).next('.form-check-label').removeClass('text-primary');
                 }
             });
-            
-            // Event listener for assessment fields
-            $('.assessment-field').on('change', function() {
-                // Add selected class to radio item
-                $('.radio-item').removeClass('selected');
-                $('input[type="radio"]:checked').closest('.radio-item').addClass('selected');
-                
-                // Calculate score
-                calculateScore();
-            });
-            
-            // Add click handler for radio items
-            $('.radio-item').on('click', function() {
-                $(this).find('input[type="radio"]').prop('checked', true).trigger('change');
-            });
-            
+
             // Form validation
             $('#humptyDumptyForm').on('submit', function(e) {
                 let isValid = true;
                 let errorMessage = '';
-                
-                // Check required fields
-                $('input[required]:not([type="radio"]), select[required]').each(function() {
-                    if (!$(this).val()) {
+
+                const requiredFields = [{
+                        element: $('#tanggal_implementasi'),
+                        name: 'Tanggal Implementasi'
+                    },
+                    {
+                        element: $('#jam_implementasi'),
+                        name: 'Jam Implementasi'
+                    },
+                    {
+                        element: $('#shift'),
+                        name: 'Shift'
+                    }
+                ];
+
+                requiredFields.forEach(function(field) {
+                    if (!field.element.val()) {
                         isValid = false;
-                        $(this).addClass('is-invalid');
-                        errorMessage += '- ' + $(this).prev('label').text() + '\n';
+                        field.element.addClass('is-invalid');
+                        errorMessage += '- ' + field.name + '\n';
                     } else {
-                        $(this).removeClass('is-invalid');
+                        field.element.removeClass('is-invalid');
                     }
                 });
-                
-                // Check radio button groups
-                $('input[type="radio"][required]').each(function() {
-                    const name = $(this).attr('name');
-                    if (!$('input[name="' + name + '"]:checked').length) {
-                        isValid = false;
-                        const groupLabel = $(this).closest('.radio-group').find('.form-label').first().text();
-                        if (errorMessage.indexOf('- ' + groupLabel) === -1) {
-                            errorMessage += '- ' + groupLabel + '\n';
-                        }
-                    }
-                });
-                
+
                 if (!isValid) {
                     e.preventDefault();
                     alert('Mohon lengkapi field berikut:\n' + errorMessage);
                     return false;
                 }
-                
-                // Check if all assessment fields are filled
-                let allAssessmentFilled = true;
-                const radioGroups = ['usia', 'jenis_kelamin', 'diagnosis', 'gangguan_kognitif', 'faktor_lingkungan', 'pembedahan_sedasi', 'penggunaan_medikamentosa'];
-                
-                radioGroups.forEach(function(groupName) {
-                    if (!$('input[name="' + groupName + '"]:checked').length) {
-                        allAssessmentFilled = false;
-                    }
-                });
-                
-                if (!allAssessmentFilled) {
-                    e.preventDefault();
-                    alert('Mohon lengkapi semua kriteria penilaian Humpty Dumpty');
-                    return false;
-                }
-                
+
                 return true;
             });
-            
+
             // Remove invalid class on input
             $('input, select').on('input change', function() {
                 $(this).removeClass('is-invalid');
@@ -915,16 +971,8 @@
                 checkDuplicateDateTime();
             });
 
-            // Custom styling untuk disabled button
-            $('#simpan').on('propertychange change', function() {
-                if ($(this).prop('disabled')) {
-                    $(this).addClass('btn-secondary').removeClass('btn-primary');
-                    $(this).html('<i class="ti-ban mr-2"></i> Data Sudah Ada');
-                } else {
-                    $(this).addClass('btn-primary').removeClass('btn-secondary');
-                    $(this).html('<i class="ti-save mr-2"></i> Simpan Data');
-                }
-            });
+            // Set tanggal dan jam otomatis
+            setCurrentDateTime();
 
         });
     </script>

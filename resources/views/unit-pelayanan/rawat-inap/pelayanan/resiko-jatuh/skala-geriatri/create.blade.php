@@ -205,7 +205,7 @@
             cursor: pointer;
         }
 
-        .form-check-input:checked + .form-check-label {
+        .form-check-input:checked+.form-check-label {
             color: #097dd6;
             font-weight: 600;
         }
@@ -246,7 +246,7 @@
             .datetime-group {
                 grid-template-columns: 1fr;
             }
-            
+
             .form-section {
                 padding: 1rem;
             }
@@ -261,7 +261,8 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ route('rawat-inap.resiko-jatuh.geriatri.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-outline-primary mb-3">
+            <a href="{{ route('rawat-inap.resiko-jatuh.geriatri.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                class="btn btn-outline-primary mb-3">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
 
@@ -276,17 +277,19 @@
                         <!-- Basic Information Section -->
                         <div class="form-section">
                             <h5 class="section-title">Informasi Dasar</h5>
-                            
+
                             <div class="form-group">
                                 <label class="form-label">Tanggal dan Jam Implementasi</label>
                                 <div class="datetime-group">
                                     <div class="datetime-item">
                                         <label>Tanggal</label>
-                                        <input type="date" class="form-control" name="tanggal_implementasi" id="tanggal_implementasi" required>
+                                        <input type="date" class="form-control" name="tanggal_implementasi"
+                                            id="tanggal_implementasi" required>
                                     </div>
                                     <div class="datetime-item">
                                         <label>Jam</label>
-                                        <input type="time" class="form-control" name="jam_implementasi" id="jam_implementasi" required>
+                                        <input type="time" class="form-control" name="jam_implementasi"
+                                            id="jam_implementasi" required>
                                     </div>
                                 </div>
                             </div>
@@ -305,48 +308,58 @@
                         <!-- Assessment Criteria Section -->
                         <div class="form-section">
                             <h5 class="section-title">Kriteria Penilaian Skala Geriatri</h5>
-                            
+
                             <!-- 1. Riwayat Jatuh -->
                             <div class="form-group">
                                 <div class="radio-group">
                                     <label class="form-label">1. Riwayat Jatuh</label>
-                                    
+
                                     <!-- Pertanyaan 1a -->
-                                    <div style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
-                                        <label style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien datang kerumah sakit karena jatuh?</label>
+                                    <div
+                                        style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
+                                        <label style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien datang kerumah
+                                            sakit karena jatuh?</label>
                                         <div class="radio-options">
-                                            <div class="radio-item">
-                                                <input type="radio" id="riwayat_jatuh_1a_ya" name="riwayat_jatuh_1a" value="6" class="assessment-field" data-field="riwayat_jatuh_1a" required>
-                                                <label for="riwayat_jatuh_1a_ya">Ya</label>
+                                            <label class="radio-item" for="riwayat_jatuh_1a_ya">
+                                                <input type="radio" id="riwayat_jatuh_1a_ya" name="riwayat_jatuh_1a"
+                                                    value="6" class="assessment-field" data-field="riwayat_jatuh_1a">
+                                                <span>Ya</span>
                                                 <span class="radio-value">6</span>
-                                            </div>
-                                            <div class="radio-item">
-                                                <input type="radio" id="riwayat_jatuh_1a_tidak" name="riwayat_jatuh_1a" value="0" class="assessment-field" data-field="riwayat_jatuh_1a" required>
-                                                <label for="riwayat_jatuh_1a_tidak">Tidak</label>
+                                            </label>
+                                            <label class="radio-item" for="riwayat_jatuh_1a_tidak">
+                                                <input type="radio" id="riwayat_jatuh_1a_tidak" name="riwayat_jatuh_1a"
+                                                    value="0" class="assessment-field" data-field="riwayat_jatuh_1a">
+                                                <span>Tidak</span>
                                                 <span class="radio-value">0</span>
-                                            </div>
+                                            </label>
                                         </div>
                                     </div>
 
                                     <!-- Pertanyaan 1b -->
-                                    <div style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
-                                        <label style="font-weight: 500; margin-bottom: 0.5rem;">Jika tidak, apakah pasien mengalami jatuh dalam 2 bulan terakhir ini?</label>
+                                    <div
+                                        style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
+                                        <label style="font-weight: 500; margin-bottom: 0.5rem;">Jika tidak, apakah pasien
+                                            mengalami jatuh dalam 2 bulan terakhir ini?</label>
                                         <div class="radio-options">
-                                            <div class="radio-item">
-                                                <input type="radio" id="riwayat_jatuh_1b_ya" name="riwayat_jatuh_1b" value="6" class="assessment-field" data-field="riwayat_jatuh_1b" required>
-                                                <label for="riwayat_jatuh_1b_ya">Ya</label>
+                                            <label class="radio-item" for="riwayat_jatuh_1b_ya">
+                                                <input type="radio" id="riwayat_jatuh_1b_ya" name="riwayat_jatuh_1b"
+                                                    value="6" class="assessment-field" data-field="riwayat_jatuh_1b">
+                                                <span>Ya</span>
                                                 <span class="radio-value">6</span>
-                                            </div>
-                                            <div class="radio-item">
-                                                <input type="radio" id="riwayat_jatuh_1b_tidak" name="riwayat_jatuh_1b" value="0" class="assessment-field" data-field="riwayat_jatuh_1b" required>
-                                                <label for="riwayat_jatuh_1b_tidak">Tidak</label>
+                                            </label>
+                                            <label class="radio-item" for="riwayat_jatuh_1b_tidak">
+                                                <input type="radio" id="riwayat_jatuh_1b_tidak" name="riwayat_jatuh_1b"
+                                                    value="0" class="assessment-field" data-field="riwayat_jatuh_1b">
+                                                <span>Tidak</span>
                                                 <span class="radio-value">0</span>
-                                            </div>
+                                            </label>
                                         </div>
                                     </div>
-                                    <!-- Keterangan Jumlah Nilai Transfer -->
-                                    <div style="margin-top: 1rem; padding: 0.75rem; background-color: #e3f2fd; border-left: 4px solid #097dd6; border-radius: 4px;">
-                                        <div style="font-weight: 400; color: #000000be; margin-bottom: 0.5rem;">Salah Satu jawaban Ya = 6</div>
+                                    <!-- Keterangan -->
+                                    <div
+                                        style="margin-top: 1rem; padding: 0.75rem; background-color: #e3f2fd; border-left: 4px solid #097dd6; border-radius: 4px;">
+                                        <div style="font-weight: 400; color: #000000be; margin-bottom: 0.5rem;">Salah Satu
+                                            jawaban Ya = 6</div>
                                     </div>
                                 </div>
                             </div>
@@ -355,60 +368,81 @@
                             <div class="form-group">
                                 <div class="radio-group">
                                     <label class="form-label">2. Status Mental</label>
-                                    
+
                                     <!-- Pertanyaan 2a -->
-                                    <div style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
-                                        <label style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien delirium? (Tidak dapat membuat keputusan, pola pikir tidak terorganisir, gangguan daya ingat)</label>
+                                    <div
+                                        style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
+                                        <label style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien delirium?
+                                            (Tidak dapat membuat keputusan, pola pikir tidak terorganisir, gangguan daya
+                                            ingat)</label>
                                         <div class="radio-options">
-                                            <div class="radio-item">
-                                                <input type="radio" id="status_mental_2a_ya" name="status_mental_2a" value="14" class="assessment-field" data-field="status_mental_2a" required>
-                                                <label for="status_mental_2a_ya">Ya</label>
+                                            <label class="radio-item" for="status_mental_2a_ya">
+                                                <input type="radio" id="status_mental_2a_ya" name="status_mental_2a"
+                                                    value="14" class="assessment-field"
+                                                    data-field="status_mental_2a">
+                                                <span>Ya</span>
                                                 <span class="radio-value">14</span>
-                                            </div>
-                                            <div class="radio-item">
-                                                <input type="radio" id="status_mental_2a_tidak" name="status_mental_2a" value="0" class="assessment-field" data-field="status_mental_2a" required>
-                                                <label for="status_mental_2a_tidak">Tidak</label>
+                                            </label>
+                                            <label class="radio-item" for="status_mental_2a_tidak">
+                                                <input type="radio" id="status_mental_2a_tidak" name="status_mental_2a"
+                                                    value="0" class="assessment-field"
+                                                    data-field="status_mental_2a">
+                                                <span>Tidak</span>
                                                 <span class="radio-value">0</span>
-                                            </div>
+                                            </label>
                                         </div>
                                     </div>
 
                                     <!-- Pertanyaan 2b -->
-                                    <div style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
-                                        <label style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien disorientasi? (salah menyebutkan waktu, tempat atau orang)</label>
+                                    <div
+                                        style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
+                                        <label style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien disorientasi?
+                                            (salah menyebutkan waktu, tempat atau orang)</label>
                                         <div class="radio-options">
-                                            <div class="radio-item">
-                                                <input type="radio" id="status_mental_2b_ya" name="status_mental_2b" value="14" class="assessment-field" data-field="status_mental_2b" required>
-                                                <label for="status_mental_2b_ya">Ya</label>
+                                            <label class="radio-item" for="status_mental_2b_ya">
+                                                <input type="radio" id="status_mental_2b_ya" name="status_mental_2b"
+                                                    value="14" class="assessment-field"
+                                                    data-field="status_mental_2b">
+                                                <span>Ya</span>
                                                 <span class="radio-value">14</span>
-                                            </div>
-                                            <div class="radio-item">
-                                                <input type="radio" id="status_mental_2b_tidak" name="status_mental_2b" value="0" class="assessment-field" data-field="status_mental_2b" required>
-                                                <label for="status_mental_2b_tidak">Tidak</label>
+                                            </label>
+                                            <label class="radio-item" for="status_mental_2b_tidak">
+                                                <input type="radio" id="status_mental_2b_tidak" name="status_mental_2b"
+                                                    value="0" class="assessment-field"
+                                                    data-field="status_mental_2b">
+                                                <span>Tidak</span>
                                                 <span class="radio-value">0</span>
-                                            </div>
+                                            </label>
                                         </div>
                                     </div>
 
                                     <!-- Pertanyaan 2c -->
-                                    <div style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
-                                        <label style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien mengalami agitasi? (ketakutan, gelisah, tidak cemas)</label>
+                                    <div
+                                        style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
+                                        <label style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien mengalami
+                                            agitasi? (ketakutan, gelisah, tidak cemas)</label>
                                         <div class="radio-options">
-                                            <div class="radio-item">
-                                                <input type="radio" id="status_mental_2c_ya" name="status_mental_2c" value="14" class="assessment-field" data-field="status_mental_2c" required>
-                                                <label for="status_mental_2c_ya">Ya</label>
+                                            <label class="radio-item" for="status_mental_2c_ya">
+                                                <input type="radio" id="status_mental_2c_ya" name="status_mental_2c"
+                                                    value="14" class="assessment-field"
+                                                    data-field="status_mental_2c">
+                                                <span>Ya</span>
                                                 <span class="radio-value">14</span>
-                                            </div>
-                                            <div class="radio-item">
-                                                <input type="radio" id="status_mental_2c_tidak" name="status_mental_2c" value="0" class="assessment-field" data-field="status_mental_2c" required>
-                                                <label for="status_mental_2c_tidak">Tidak</label>
+                                            </label>
+                                            <label class="radio-item" for="status_mental_2c_tidak">
+                                                <input type="radio" id="status_mental_2c_tidak" name="status_mental_2c"
+                                                    value="0" class="assessment-field"
+                                                    data-field="status_mental_2c">
+                                                <span>Tidak</span>
                                                 <span class="radio-value">0</span>
-                                            </div>
+                                            </label>
                                         </div>
                                     </div>
-                                    <!-- Keterangan Jumlah Nilai Transfer -->
-                                    <div style="margin-top: 1rem; padding: 0.75rem; background-color: #e3f2fd; border-left: 4px solid #097dd6; border-radius: 4px;">
-                                        <div style="font-weight: 400; color: #000000be; margin-bottom: 0.5rem;">Salah Satu jawaban Ya = 14</div>
+                                    <!-- Keterangan -->
+                                    <div
+                                        style="margin-top: 1rem; padding: 0.75rem; background-color: #e3f2fd; border-left: 4px solid #097dd6; border-radius: 4px;">
+                                        <div style="font-weight: 400; color: #000000be; margin-bottom: 0.5rem;">Salah Satu
+                                            jawaban Ya = 14</div>
                                     </div>
                                 </div>
                             </div>
@@ -417,60 +451,74 @@
                             <div class="form-group">
                                 <div class="radio-group">
                                     <label class="form-label">3. Penglihatan</label>
-                                    
+
                                     <!-- Pertanyaan 3a -->
-                                    <div style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
-                                        <label style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien memakai kacamata?</label>
+                                    <div
+                                        style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
+                                        <label style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien memakai
+                                            kacamata?</label>
                                         <div class="radio-options">
-                                            <div class="radio-item">
-                                                <input type="radio" id="penglihatan_3a_ya" name="penglihatan_3a" value="1" class="assessment-field" data-field="penglihatan_3a" required>
-                                                <label for="penglihatan_3a_ya">Ya</label>
+                                            <label class="radio-item" for="penglihatan_3a_ya">
+                                                <input type="radio" id="penglihatan_3a_ya" name="penglihatan_3a"
+                                                    value="1" class="assessment-field" data-field="penglihatan_3a">
+                                                <span>Ya</span>
                                                 <span class="radio-value">1</span>
-                                            </div>
-                                            <div class="radio-item">
-                                                <input type="radio" id="penglihatan_3a_tidak" name="penglihatan_3a" value="0" class="assessment-field" data-field="penglihatan_3a" required>
-                                                <label for="penglihatan_3a_tidak">Tidak</label>
+                                            </label>
+                                            <label class="radio-item" for="penglihatan_3a_tidak">
+                                                <input type="radio" id="penglihatan_3a_tidak" name="penglihatan_3a"
+                                                    value="0" class="assessment-field" data-field="penglihatan_3a">
+                                                <span>Tidak</span>
                                                 <span class="radio-value">0</span>
-                                            </div>
+                                            </label>
                                         </div>
                                     </div>
 
                                     <!-- Pertanyaan 3b -->
-                                    <div style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
-                                        <label style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien mengeluh adanya penglihatan buram?</label>
+                                    <div
+                                        style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
+                                        <label style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien mengeluh
+                                            adanya penglihatan buram?</label>
                                         <div class="radio-options">
-                                            <div class="radio-item">
-                                                <input type="radio" id="penglihatan_3b_ya" name="penglihatan_3b" value="1" class="assessment-field" data-field="penglihatan_3b" required>
-                                                <label for="penglihatan_3b_ya">Ya</label>
+                                            <label class="radio-item" for="penglihatan_3b_ya">
+                                                <input type="radio" id="penglihatan_3b_ya" name="penglihatan_3b"
+                                                    value="1" class="assessment-field" data-field="penglihatan_3b">
+                                                <span>Ya</span>
                                                 <span class="radio-value">1</span>
-                                            </div>
-                                            <div class="radio-item">
-                                                <input type="radio" id="penglihatan_3b_tidak" name="penglihatan_3b" value="0" class="assessment-field" data-field="penglihatan_3b" required>
-                                                <label for="penglihatan_3b_tidak">Tidak</label>
+                                            </label>
+                                            <label class="radio-item" for="penglihatan_3b_tidak">
+                                                <input type="radio" id="penglihatan_3b_tidak" name="penglihatan_3b"
+                                                    value="0" class="assessment-field" data-field="penglihatan_3b">
+                                                <span>Tidak</span>
                                                 <span class="radio-value">0</span>
-                                            </div>
+                                            </label>
                                         </div>
                                     </div>
 
                                     <!-- Pertanyaan 3c -->
-                                    <div style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
-                                        <label style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien mempunyai Glaukoma/ Katarak/ degenerasi makula?</label>
+                                    <div
+                                        style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
+                                        <label style="font-weight: 500; margin-bottom: 0.5rem;">Apakah pasien mempunyai
+                                            Glaukoma/ Katarak/ degenerasi makula?</label>
                                         <div class="radio-options">
-                                            <div class="radio-item">
-                                                <input type="radio" id="penglihatan_3c_ya" name="penglihatan_3c" value="1" class="assessment-field" data-field="penglihatan_3c" required>
-                                                <label for="penglihatan_3c_ya">Ya</label>
+                                            <label class="radio-item" for="penglihatan_3c_ya">
+                                                <input type="radio" id="penglihatan_3c_ya" name="penglihatan_3c"
+                                                    value="1" class="assessment-field" data-field="penglihatan_3c">
+                                                <span>Ya</span>
                                                 <span class="radio-value">1</span>
-                                            </div>
-                                            <div class="radio-item">
-                                                <input type="radio" id="penglihatan_3c_tidak" name="penglihatan_3c" value="0" class="assessment-field" data-field="penglihatan_3c" required>
-                                                <label for="penglihatan_3c_tidak">Tidak</label>
+                                            </label>
+                                            <label class="radio-item" for="penglihatan_3c_tidak">
+                                                <input type="radio" id="penglihatan_3c_tidak" name="penglihatan_3c"
+                                                    value="0" class="assessment-field" data-field="penglihatan_3c">
+                                                <span>Tidak</span>
                                                 <span class="radio-value">0</span>
-                                            </div>
+                                            </label>
                                         </div>
                                     </div>
-                                    <!-- Keterangan Jumlah Nilai Transfer -->
-                                    <div style="margin-top: 1rem; padding: 0.75rem; background-color: #e3f2fd; border-left: 4px solid #097dd6; border-radius: 4px;">
-                                        <div style="font-weight: 400; color: #000000be; margin-bottom: 0.5rem;">Salah Satu jawaban Ya = 1</div>
+                                    <!-- Keterangan -->
+                                    <div
+                                        style="margin-top: 1rem; padding: 0.75rem; background-color: #e3f2fd; border-left: 4px solid #097dd6; border-radius: 4px;">
+                                        <div style="font-weight: 400; color: #000000be; margin-bottom: 0.5rem;">Salah Satu
+                                            jawaban Ya = 1</div>
                                     </div>
                                 </div>
                             </div>
@@ -479,21 +527,27 @@
                             <div class="form-group">
                                 <div class="radio-group">
                                     <label class="form-label">4. Kebiasaan Berkemih</label>
-                                    
+
                                     <!-- Pertanyaan 4a -->
-                                    <div style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
-                                        <label style="font-weight: 500; margin-bottom: 0.5rem;">Apakah terdapat perubahan perilaku berkemih? (frekuensi, urgensi, inkontinensia, nokturia)</label>
+                                    <div
+                                        style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f8f9fa; border-radius: 4px;">
+                                        <label style="font-weight: 500; margin-bottom: 0.5rem;">Apakah terdapat perubahan
+                                            perilaku berkemih? (frekuensi, urgensi, inkontinensia, nokturia)</label>
                                         <div class="radio-options">
-                                            <div class="radio-item">
-                                                <input type="radio" id="kebiasaan_berkemih_4a_ya" name="kebiasaan_berkemih_4a" value="2" class="assessment-field" data-field="kebiasaan_berkemih_4a" required>
-                                                <label for="kebiasaan_berkemih_4a_ya">Ya</label>
+                                            <label class="radio-item" for="kebiasaan_berkemih_4a_ya">
+                                                <input type="radio" id="kebiasaan_berkemih_4a_ya"
+                                                    name="kebiasaan_berkemih_4a" value="2" class="assessment-field"
+                                                    data-field="kebiasaan_berkemih_4a">
+                                                <span>Ya</span>
                                                 <span class="radio-value">2</span>
-                                            </div>
-                                            <div class="radio-item">
-                                                <input type="radio" id="kebiasaan_berkemih_4a_tidak" name="kebiasaan_berkemih_4a" value="0" class="assessment-field" data-field="kebiasaan_berkemih_4a" required>
-                                                <label for="kebiasaan_berkemih_4a_tidak">Tidak</label>
+                                            </label>
+                                            <label class="radio-item" for="kebiasaan_berkemih_4a_tidak">
+                                                <input type="radio" id="kebiasaan_berkemih_4a_tidak"
+                                                    name="kebiasaan_berkemih_4a" value="0" class="assessment-field"
+                                                    data-field="kebiasaan_berkemih_4a">
+                                                <span>Tidak</span>
                                                 <span class="radio-value">0</span>
-                                            </div>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -502,34 +556,43 @@
                             <!-- 5. Transfer-->
                             <div class="form-group">
                                 <div class="radio-group">
-                                    <label class="form-label">5. Transfer (dari tempat tidur ke kursi dan kembali lagi ke tempat tidur)</label>
-                                    
+                                    <label class="form-label">5. Transfer (dari tempat tidur ke kursi dan kembali lagi ke
+                                        tempat tidur)</label>
+
                                     <div class="radio-options">
-                                        <div class="radio-item">
-                                            <input type="radio" id="transfer_5a" name="transfer" value="0" class="assessment-field" data-field="transfer" required>
-                                            <label for="transfer_5a">Mandiri (boleh memakai alat bantu jalan)</label>
+                                        <label class="radio-item" for="transfer_5a">
+                                            <input type="radio" id="transfer_5a" name="transfer" value="0"
+                                                class="assessment-field" data-field="transfer">
+                                            <span>Mandiri (boleh memakai alat bantu jalan)</span>
                                             <span class="radio-value">0</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="transfer_5b" name="transfer" value="1" class="assessment-field" data-field="transfer" required>
-                                            <label for="transfer_5b">Memerlukan sedikit bantuan (1 orang) / dalam pengawasan</label>
+                                        </label>
+                                        <label class="radio-item" for="transfer_5b">
+                                            <input type="radio" id="transfer_5b" name="transfer" value="1"
+                                                class="assessment-field" data-field="transfer">
+                                            <span>Memerlukan sedikit bantuan (1 orang) / dalam
+                                                pengawasan</span>
                                             <span class="radio-value">1</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="transfer_5c" name="transfer" value="2" class="assessment-field" data-field="transfer" required>
-                                            <label for="transfer_5c">Memerlukan bantuan yang nyata (2 orang)</label>
+                                        </label>
+                                        <label class="radio-item" for="transfer_5c">
+                                            <input type="radio" id="transfer_5c" name="transfer" value="2"
+                                                class="assessment-field" data-field="transfer">
+                                            <span>Memerlukan bantuan yang nyata (2 orang)</span>
                                             <span class="radio-value">2</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="transfer_5d" name="transfer" value="3" class="assessment-field" data-field="transfer" required>
-                                            <label for="transfer_5d">Tidak dapat duduk dengan seimbang, perlu bantuan total</label>
+                                        </label>
+                                        <label class="radio-item" for="transfer_5d">
+                                            <input type="radio" id="transfer_5d" name="transfer" value="3"
+                                                class="assessment-field" data-field="transfer">
+                                            <span>Tidak dapat duduk dengan seimbang, perlu bantuan
+                                                total</span>
                                             <span class="radio-value">3</span>
-                                        </div>
+                                        </label>
                                     </div>
 
                                     <!-- Keterangan Jumlah Nilai Transfer -->
-                                    <div style="margin-top: 1rem; padding: 0.75rem; background-color: #e3f2fd; border-left: 4px solid #097dd6; border-radius: 4px;">
-                                        <div style="font-weight: 600; color: #097dd6; margin-bottom: 0.5rem;">Jumlah nilai transfer dan mobilitas:</div>
+                                    <div
+                                        style="margin-top: 1rem; padding: 0.75rem; background-color: #e3f2fd; border-left: 4px solid #097dd6; border-radius: 4px;">
+                                        <div style="font-weight: 600; color: #097dd6; margin-bottom: 0.5rem;">Jumlah nilai
+                                            transfer dan mobilitas:</div>
                                         <div style="font-size: 0.9rem; color: #495057;">
                                             <div>• Jika nilai total 0 s/d 3 maka skor = 0.</div>
                                             <div>• Jika nilai total 4 s/d 6, maka skor = 7</div>
@@ -542,32 +605,39 @@
                             <div class="form-group">
                                 <div class="radio-group">
                                     <label class="form-label">6. Mobilitas</label>
-                                    
+
                                     <div class="radio-options">
-                                        <div class="radio-item">
-                                            <input type="radio" id="mobilitas_6a" name="mobilitas" value="0" class="assessment-field" data-field="mobilitas" required>
-                                            <label for="mobilitas_6a">Mandiri (boleh menggunakan alat bantu jalan)</label>
+                                        <label class="radio-item" for="mobilitas_6a">
+                                            <input type="radio" id="mobilitas_6a" name="mobilitas" value="0"
+                                                class="assessment-field" data-field="mobilitas">
+                                            <span>Mandiri (boleh menggunakan alat bantu jalan)</span>
                                             <span class="radio-value">0</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="mobilitas_6b" name="mobilitas" value="1" class="assessment-field" data-field="mobilitas" required>
-                                            <label for="mobilitas_6b">Berjalan dengan bantuan 1 orang (verbal / fisik) menggunakan kursi roda</label>
+                                        </label>
+                                        <label class="radio-item" for="mobilitas_6b">
+                                            <input type="radio" id="mobilitas_6b" name="mobilitas" value="1"
+                                                class="assessment-field" data-field="mobilitas">
+                                            <span>Berjalan dengan bantuan 1 orang (verbal / fisik) menggunakan kursi
+                                                roda</span>
                                             <span class="radio-value">1</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="mobilitas_6c" name="mobilitas" value="2" class="assessment-field" data-field="mobilitas" required>
-                                            <label for="mobilitas_6c">Menggunakan kursi roda</label>
+                                        </label>
+                                        <label class="radio-item" for="mobilitas_6c">
+                                            <input type="radio" id="mobilitas_6c" name="mobilitas" value="2"
+                                                class="assessment-field" data-field="mobilitas">
+                                            <span>Menggunakan kursi roda</span>
                                             <span class="radio-value">2</span>
-                                        </div>
-                                        <div class="radio-item">
-                                            <input type="radio" id="mobilitas_6d" name="mobilitas" value="3" class="assessment-field" data-field="mobilitas" required>
-                                            <label for="mobilitas_6d">Imobilisasi</label>
+                                        </label>
+                                        <label class="radio-item" for="mobilitas_6d">
+                                            <input type="radio" id="mobilitas_6d" name="mobilitas" value="3"
+                                                class="assessment-field" data-field="mobilitas">
+                                            <span>Imobilisasi</span>
                                             <span class="radio-value">3</span>
-                                        </div>
+                                        </label>
                                     </div>
-                                    <!-- Keterangan Jumlah Nilai Transfer -->
-                                    <div style="margin-top: 1rem; padding: 0.75rem; background-color: #e3f2fd; border-left: 4px solid #097dd6; border-radius: 4px;">
-                                        <div style="font-weight: 600; color: #097dd6; margin-bottom: 0.5rem;">Jumlah nilai transfer dan mobilitas:</div>
+                                    <!-- Keterangan -->
+                                    <div
+                                        style="margin-top: 1rem; padding: 0.75rem; background-color: #e3f2fd; border-left: 4px solid #097dd6; border-radius: 4px;">
+                                        <div style="font-weight: 600; color: #097dd6; margin-bottom: 0.5rem;">Jumlah nilai
+                                            transfer dan mobilitas:</div>
                                         <div style="font-size: 0.9rem; color: #495057;">
                                             <div>• Jika nilai total 0 s/d 3 maka skor = 0.</div>
                                             <div>• Jika nilai total 4 s/d 6, maka skor = 7</div>
@@ -582,22 +652,25 @@
                         <div class="score-display" id="scoreDisplay" style="display: none;">
                             <div class="score-number" id="totalScore">0</div>
                             <div class="score-category" id="riskCategory">-</div>
-                            <div class="score-description" id="riskDescription">Silakan isi semua field untuk melihat hasil penilaian</div>
+                            <div class="score-description" id="riskDescription">Silakan isi semua field untuk melihat
+                                hasil penilaian</div>
                         </div>
 
                         <!-- Intervention Section -->
                         <div class="form-section" id="interventionSection" style="display: none;">
                             <h5 class="section-title">Intervensi Pencegahan Jatuh</h5>
-                            
+
                             <!-- Intervensi untuk Risiko Rendah -->
                             <div id="lowRiskInterventions" style="display: none;">
                                 <div class="alert alert-info mb-3">
-                                    <i class="ti-info-circle"></i> <strong>Intervensi Jatuh Risiko Rendah / Standar</strong>
+                                    <i class="ti-info-circle"></i> <strong>Intervensi Jatuh Risiko Rendah /
+                                        Standar</strong>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="rr_observasi_ambulasi" name="rr_observasi_ambulasi" value="1">
+                                        <input class="form-check-input" type="checkbox" id="rr_observasi_ambulasi"
+                                            name="rr_observasi_ambulasi" value="1">
                                         <label class="form-check-label" for="rr_observasi_ambulasi">
                                             Tingkatkan observasi bantuan yang sesuai saat ambulasi
                                         </label>
@@ -605,28 +678,33 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="form-label">Orientasikan pasien terhadap lingkungan dan rutinitas RS:</label>
+                                    <label class="form-label">Orientasikan pasien terhadap lingkungan dan rutinitas
+                                        RS:</label>
                                     <div class="ml-3">
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" id="rr_orientasi_kamar_mandi" name="rr_orientasi_kamar_mandi" value="1">
+                                            <input class="form-check-input" type="checkbox" id="rr_orientasi_kamar_mandi"
+                                                name="rr_orientasi_kamar_mandi" value="1">
                                             <label class="form-check-label" for="rr_orientasi_kamar_mandi">
                                                 Tunjukkan lokasi kamar mandi
                                             </label>
                                         </div>
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" id="rr_orientasi_bertahap" name="rr_orientasi_bertahap" value="1">
+                                            <input class="form-check-input" type="checkbox" id="rr_orientasi_bertahap"
+                                                name="rr_orientasi_bertahap" value="1">
                                             <label class="form-check-label" for="rr_orientasi_bertahap">
                                                 Jika pasien linglung, orientasi dilaksanakan bertahap
                                             </label>
                                         </div>
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" id="rr_tempatkan_bel" name="rr_tempatkan_bel" value="1">
+                                            <input class="form-check-input" type="checkbox" id="rr_tempatkan_bel"
+                                                name="rr_tempatkan_bel" value="1">
                                             <label class="form-check-label" for="rr_tempatkan_bel">
                                                 Tempatkan bel ditempat yang mudah dicapai
                                             </label>
                                         </div>
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" id="rr_instruksi_bantuan" name="rr_instruksi_bantuan" value="1">
+                                            <input class="form-check-input" type="checkbox" id="rr_instruksi_bantuan"
+                                                name="rr_instruksi_bantuan" value="1">
                                             <label class="form-check-label" for="rr_instruksi_bantuan">
                                                 Instruksikan meminta bantuan perawat sebelum turun dari tempat tidur
                                             </label>
@@ -636,7 +714,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="rr_pagar_pengaman" name="rr_pagar_pengaman" value="1">
+                                        <input class="form-check-input" type="checkbox" id="rr_pagar_pengaman"
+                                            name="rr_pagar_pengaman" value="1">
                                         <label class="form-check-label" for="rr_pagar_pengaman">
                                             Pagar pengaman tempat tidur dinaikkan
                                         </label>
@@ -645,7 +724,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="rr_tempat_tidur_rendah" name="rr_tempat_tidur_rendah" value="1">
+                                        <input class="form-check-input" type="checkbox" id="rr_tempat_tidur_rendah"
+                                            name="rr_tempat_tidur_rendah" value="1">
                                         <label class="form-check-label" for="rr_tempat_tidur_rendah">
                                             Tempat tidur dalam posisi rendah dan terkunci
                                         </label>
@@ -654,7 +734,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="rr_edukasi_perilaku" name="rr_edukasi_perilaku" value="1">
+                                        <input class="form-check-input" type="checkbox" id="rr_edukasi_perilaku"
+                                            name="rr_edukasi_perilaku" value="1">
                                         <label class="form-check-label" for="rr_edukasi_perilaku">
                                             Edukasi perilaku yang lebih aman saat jatuh atau transfer
                                         </label>
@@ -663,7 +744,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="rr_monitor_berkala" name="rr_monitor_berkala" value="1">
+                                        <input class="form-check-input" type="checkbox" id="rr_monitor_berkala"
+                                            name="rr_monitor_berkala" value="1">
                                         <label class="form-check-label" for="rr_monitor_berkala">
                                             Monitor kebutuhan pasien secara berkala (minimalnya tiap 2 jam)
                                         </label>
@@ -672,7 +754,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="rr_anjuran_kaus_kaki" name="rr_anjuran_kaus_kaki" value="1">
+                                        <input class="form-check-input" type="checkbox" id="rr_anjuran_kaus_kaki"
+                                            name="rr_anjuran_kaus_kaki" value="1">
                                         <label class="form-check-label" for="rr_anjuran_kaus_kaki">
                                             Anjurkan pasien tidak menggunakan kaus kaki atau sepatu yang licin
                                         </label>
@@ -681,7 +764,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="rr_lantai_antislip" name="rr_lantai_antislip" value="1">
+                                        <input class="form-check-input" type="checkbox" id="rr_lantai_antislip"
+                                            name="rr_lantai_antislip" value="1">
                                         <label class="form-check-label" for="rr_lantai_antislip">
                                             Lantai kamar mandi dengan karpet antislip, tidak licin
                                         </label>
@@ -691,13 +775,15 @@
 
                             <!-- Intervensi untuk Risiko Sedang -->
                             <div id="mediumRiskInterventions" style="display: none;">
-                                <div class="alert" style="background-color: #fff3cd; color: #856404; border-left: 4px solid #fd7e14;">
+                                <div class="alert"
+                                    style="background-color: #fff3cd; color: #856404; border-left: 4px solid #fd7e14;">
                                     <i class="ti-alert-triangle"></i> <strong>Intervensi Jatuh Risiko Sedang</strong>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="rs_semua_intervensi_rendah" name="rs_semua_intervensi_rendah" value="1">
+                                        <input class="form-check-input" type="checkbox" id="rs_semua_intervensi_rendah"
+                                            name="rs_semua_intervensi_rendah" value="1">
                                         <label class="form-check-label" for="rs_semua_intervensi_rendah">
                                             Lakukan SEMUA intervensi jatuh risiko rendah / standar
                                         </label>
@@ -706,7 +792,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="rs_gelang_kuning" name="rs_gelang_kuning" value="1">
+                                        <input class="form-check-input" type="checkbox" id="rs_gelang_kuning"
+                                            name="rs_gelang_kuning" value="1">
                                         <label class="form-check-label" for="rs_gelang_kuning">
                                             Pakailah gelang risiko jatuh berwarna kuning
                                         </label>
@@ -715,16 +802,19 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="rs_pasang_gambar" name="rs_pasang_gambar" value="1">
+                                        <input class="form-check-input" type="checkbox" id="rs_pasang_gambar"
+                                            name="rs_pasang_gambar" value="1">
                                         <label class="form-check-label" for="rs_pasang_gambar">
-                                            Pasang gambar risiko jatuh diatas tempat tidur pasien dan pada pintu kamar pasien
+                                            Pasang gambar risiko jatuh diatas tempat tidur pasien dan pada pintu kamar
+                                            pasien
                                         </label>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="rs_tanda_daftar_nama" name="rs_tanda_daftar_nama" value="1">
+                                        <input class="form-check-input" type="checkbox" id="rs_tanda_daftar_nama"
+                                            name="rs_tanda_daftar_nama" value="1">
                                         <label class="form-check-label" for="rs_tanda_daftar_nama">
                                             Tempatkan tanda resiko pasien jatuh pada daftar nama pasien (warna kuning)
                                         </label>
@@ -733,7 +823,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="rs_pertimbangkan_obat" name="rs_pertimbangkan_obat" value="1">
+                                        <input class="form-check-input" type="checkbox" id="rs_pertimbangkan_obat"
+                                            name="rs_pertimbangkan_obat" value="1">
                                         <label class="form-check-label" for="rs_pertimbangkan_obat">
                                             Pertimbangkan riwayat obat-obatan dan suplemen untuk mengevaluasi pengobatan
                                         </label>
@@ -742,7 +833,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="rs_alat_bantu_jalan" name="rs_alat_bantu_jalan" value="1">
+                                        <input class="form-check-input" type="checkbox" id="rs_alat_bantu_jalan"
+                                            name="rs_alat_bantu_jalan" value="1">
                                         <label class="form-check-label" for="rs_alat_bantu_jalan">
                                             Gunakan alat bantu jalan (walker, handrail)
                                         </label>
@@ -755,10 +847,12 @@
                                 <div class="alert alert-danger mb-3">
                                     <i class="ti-alert-triangle"></i> <strong>Intervensi Jatuh Risiko Tinggi</strong>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="rt_semua_intervensi_rendah_sedang" name="rt_semua_intervensi_rendah_sedang" value="1">
+                                        <input class="form-check-input" type="checkbox"
+                                            id="rt_semua_intervensi_rendah_sedang"
+                                            name="rt_semua_intervensi_rendah_sedang" value="1">
                                         <label class="form-check-label" for="rt_semua_intervensi_rendah_sedang">
                                             Lakukan SEMUA intervensi jatuh risiko rendah / standar dan risiko sedang
                                         </label>
@@ -767,7 +861,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="rt_jangan_tinggalkan" name="rt_jangan_tinggalkan" value="1">
+                                        <input class="form-check-input" type="checkbox" id="rt_jangan_tinggalkan"
+                                            name="rt_jangan_tinggalkan" value="1">
                                         <label class="form-check-label" for="rt_jangan_tinggalkan">
                                             Jangan tinggalkan pasien saat di ruangan diagnostic atau tindakan
                                         </label>
@@ -776,7 +871,8 @@
 
                                 <div class="form-group">
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="rt_dekat_nurse_station" name="rt_dekat_nurse_station" value="1">
+                                        <input class="form-check-input" type="checkbox" id="rt_dekat_nurse_station"
+                                            name="rt_dekat_nurse_station" value="1">
                                         <label class="form-check-label" for="rt_dekat_nurse_station">
                                             Penempatan pasien dekat nurse station untuk memudahkan observasi (24-48 jam)
                                         </label>
@@ -786,7 +882,7 @@
                         </div>
 
                         <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary btn-lg px-4" id="simpan">
+                            <button type="submit" class="btn btn-primary px-4" id="simpan">
                                 <i class="ti-save mr-2"></i> Simpan Data
                             </button>
                         </div>
@@ -800,11 +896,30 @@
 @push('js')
     <script>
         $(document).ready(function() {
+            let lastChecked = {}; // Untuk menyimpan radio button yang terakhir diklik
+
+            // Set tanggal dan jam otomatis ke waktu sekarang
+            function setCurrentDateTime() {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const currentDate = `${year}-${month}-${day}`;
+
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const currentTime = `${hours}:${minutes}`;
+
+                $('#tanggal_implementasi').val(currentDate);
+                $('#jam_implementasi').val(currentTime);
+                checkDuplicateDateTime();
+            }
+
             // Function to calculate total score
             function calculateScore() {
                 let totalScore = 0;
                 let filledCount = 0;
-                
+
                 // Hitung skor untuk setiap kategori
                 const categories = [
                     'riwayat_jatuh_1a', 'riwayat_jatuh_1b',
@@ -813,9 +928,9 @@
                     'kebiasaan_berkemih_4a',
                     'transfer', 'mobilitas'
                 ];
-                
+
                 let categoryScores = {};
-                
+
                 // Ambil nilai dari setiap field yang terisi
                 categories.forEach(function(category) {
                     const checkedInput = $('input[name="' + category + '"]:checked');
@@ -824,104 +939,132 @@
                         filledCount++;
                     }
                 });
-                
+
                 // Kalkulasi skor khusus
-                
                 // 1. Riwayat Jatuh - jika salah satu atau kedua "Ya" = 6, jika kedua "Tidak" = 0
                 let riwayatJatuhScore = 0;
                 const riwayat1a = categoryScores['riwayat_jatuh_1a'];
                 const riwayat1b = categoryScores['riwayat_jatuh_1b'];
-                
+
                 if ((riwayat1a !== undefined && riwayat1a === 6) || (riwayat1b !== undefined && riwayat1b === 6)) {
-                    riwayatJatuhScore = 6; // Jika salah satu atau kedua "Ya"
+                    riwayatJatuhScore = 6;
                 } else if (riwayat1a !== undefined && riwayat1b !== undefined) {
-                    riwayatJatuhScore = 0; // Jika kedua "Tidak"
+                    riwayatJatuhScore = 0;
                 }
                 totalScore += riwayatJatuhScore;
-                
+
                 // 2. Status Mental - jika salah satu atau lebih "Ya" = 14, jika semua "Tidak" = 0
                 let statusMentalScore = 0;
                 const mental2a = categoryScores['status_mental_2a'];
                 const mental2b = categoryScores['status_mental_2b'];
                 const mental2c = categoryScores['status_mental_2c'];
-                
-                if ((mental2a !== undefined && mental2a === 14) || 
-                    (mental2b !== undefined && mental2b === 14) || 
+
+                if ((mental2a !== undefined && mental2a === 14) ||
+                    (mental2b !== undefined && mental2b === 14) ||
                     (mental2c !== undefined && mental2c === 14)) {
-                    statusMentalScore = 14; // Jika salah satu atau lebih "Ya"
+                    statusMentalScore = 14;
                 } else if (mental2a !== undefined && mental2b !== undefined && mental2c !== undefined) {
-                    statusMentalScore = 0; // Jika semua "Tidak"
+                    statusMentalScore = 0;
                 }
                 totalScore += statusMentalScore;
-                
+
                 // 3. Penglihatan - jika salah satu atau lebih "Ya" = 1, jika semua "Tidak" = 0
                 let penglihatanScore = 0;
                 const penglihatan3a = categoryScores['penglihatan_3a'];
                 const penglihatan3b = categoryScores['penglihatan_3b'];
                 const penglihatan3c = categoryScores['penglihatan_3c'];
-                
-                if ((penglihatan3a !== undefined && penglihatan3a === 1) || 
-                    (penglihatan3b !== undefined && penglihatan3b === 1) || 
+
+                if ((penglihatan3a !== undefined && penglihatan3a === 1) ||
+                    (penglihatan3b !== undefined && penglihatan3b === 1) ||
                     (penglihatan3c !== undefined && penglihatan3c === 1)) {
-                    penglihatanScore = 1; // Jika salah satu atau lebih "Ya"
-                } else if (penglihatan3a !== undefined && penglihatan3b !== undefined && penglihatan3c !== undefined) {
-                    penglihatanScore = 0; // Jika semua "Tidak"
+                    penglihatanScore = 1;
+                } else if (penglihatan3a !== undefined && penglihatan3b !== undefined && penglihatan3c !==
+                    undefined) {
+                    penglihatanScore = 0;
                 }
                 totalScore += penglihatanScore;
-                
+
                 // 4. Kebiasaan Berkemih
                 totalScore += categoryScores['kebiasaan_berkemih_4a'] || 0;
-                
+
                 // 5. Transfer + Mobilitas - logika khusus
                 let transferMobilitasScore = 0;
                 let transferValue = categoryScores['transfer'] || 0;
                 let mobilitasValue = categoryScores['mobilitas'] || 0;
                 let totalTransferMobilitas = transferValue + mobilitasValue;
-                
+
                 if (totalTransferMobilitas >= 0 && totalTransferMobilitas <= 3) {
                     transferMobilitasScore = 0;
                 } else if (totalTransferMobilitas >= 4 && totalTransferMobilitas <= 6) {
                     transferMobilitasScore = 7;
                 }
                 totalScore += transferMobilitasScore;
-                
+
                 // Update tampilan skor jika ada field yang terisi
                 if (filledCount > 0) {
                     updateScoreDisplay(totalScore, filledCount, categories.length);
                 } else {
                     $('#scoreDisplay').hide();
+                    $('#interventionSection').hide();
                 }
-                
-                // Debug info (bisa dihapus di production)
+
                 console.log('Debug Score Calculation:');
                 console.log('Riwayat Jatuh:', riwayatJatuhScore, '(1a:', riwayat1a, ', 1b:', riwayat1b, ')');
-                console.log('Status Mental:', statusMentalScore, '(2a:', mental2a, ', 2b:', mental2b, ', 2c:', mental2c, ')');
-                console.log('Penglihatan:', penglihatanScore, '(3a:', penglihatan3a, ', 3b:', penglihatan3b, ', 3c:', penglihatan3c, ')');
+                console.log('Status Mental:', statusMentalScore, '(2a:', mental2a, ', 2b:', mental2b, ', 2c:',
+                    mental2c, ')');
+                console.log('Penglihatan:', penglihatanScore, '(3a:', penglihatan3a, ', 3b:', penglihatan3b,
+                    ', 3c:', penglihatan3c, ')');
                 console.log('Kebiasaan Berkemih:', categoryScores['kebiasaan_berkemih_4a'] || 0);
-                console.log('Transfer + Mobilitas:', transferMobilitasScore, '(Transfer:', transferValue, '+ Mobilitas:', mobilitasValue, '= Total:', totalTransferMobilitas, ')');
+                console.log('Transfer + Mobilitas:', transferMobilitasScore, '(Transfer:', transferValue,
+                    '+ Mobilitas:', mobilitasValue, '= Total:', totalTransferMobilitas, ')');
                 console.log('Total Score:', totalScore);
             }
-            
+
             // Function to update score display
             function updateScoreDisplay(score, filledCount, totalFields) {
                 $('#totalScore').text(score);
                 $('#scoreDisplay').show();
-                
+
+                // Hide all intervention sections first
+                $('#interventionSection').hide();
+                $('#lowRiskInterventions').hide();
+                $('#mediumRiskInterventions').hide();
+                $('#highRiskInterventions').hide();
+
                 if (filledCount < totalFields) {
                     // Jika belum semua field terisi, tampilkan skor sementara
                     $('#riskCategory').text('Skor Sementara').removeClass('low-risk medium-risk high-risk');
-                    $('#riskDescription').text(`Skor saat ini: ${score} (${filledCount}/${totalFields} kriteria terisi)`);
+                    $('#riskDescription').text(
+                        `Skor saat ini: ${score} (${filledCount}/${totalFields} kriteria terisi)`);
                 } else {
                     // Semua field terisi, tampilkan kategori risiko final
                     if (score >= 0 && score <= 5) {
-                        $('#riskCategory').text('Risiko Rendah').removeClass('medium-risk high-risk').addClass('low-risk');
+                        $('#riskCategory').text('Risiko Rendah').removeClass('medium-risk high-risk').addClass(
+                            'low-risk');
                         $('#riskDescription').text('Skor 0-5: Pasien memiliki risiko jatuh rendah');
+
+                        // Show intervention section and low risk interventions
+                        $('#interventionSection').show();
+                        $('#lowRiskInterventions').show();
+
                     } else if (score >= 6 && score <= 16) {
-                        $('#riskCategory').text('Risiko Sedang').removeClass('low-risk high-risk').addClass('medium-risk');
+                        $('#riskCategory').text('Risiko Sedang').removeClass('low-risk high-risk').addClass(
+                            'medium-risk');
                         $('#riskDescription').text('Skor 6-16: Pasien memiliki risiko jatuh sedang');
+
+                        // Show intervention section and medium risk interventions
+                        $('#interventionSection').show();
+                        $('#mediumRiskInterventions').show();
+
                     } else if (score >= 17 && score <= 30) {
-                        $('#riskCategory').text('Risiko Tinggi').removeClass('low-risk medium-risk').addClass('high-risk');
+                        $('#riskCategory').text('Risiko Tinggi').removeClass('low-risk medium-risk').addClass(
+                            'high-risk');
                         $('#riskDescription').text('Skor 17-30: Pasien memiliki risiko jatuh tinggi');
+
+                        // Show intervention section and high risk interventions
+                        $('#interventionSection').show();
+                        $('#highRiskInterventions').show();
+
                     } else {
                         $('#riskCategory').text('Skor Tidak Valid').removeClass('low-risk medium-risk high-risk');
                         $('#riskDescription').text('Skor di luar rentang yang valid');
@@ -933,7 +1076,7 @@
             function checkDuplicateDateTime() {
                 const tanggal = $('#tanggal_implementasi').val();
                 const shift = $('#shift').val();
-                
+
                 if (tanggal && shift) {
                     // AJAX call untuk mengecek duplikasi
                     $.ajax({
@@ -970,7 +1113,7 @@
                     if ($('#duplicate-warning').length === 0) {
                         const warningHtml = `
                             <div id="duplicate-warning" class="alert alert-warning mt-2" style="border-left: 4px solid #ffc107;">
-                                <i class="ti-alert-triangle"></i> 
+                                <i class="ti-alert-triangle"></i>
                                 <strong>Peringatan:</strong> Data dengan tanggal dan shift ini sudah ada!
                             </div>
                         `;
@@ -982,111 +1125,77 @@
                 }
             }
 
-            function updateScoreDisplay(score, filledCount, totalFields) {
-                $('#totalScore').text(score);
-                $('#scoreDisplay').show();
-                
-                // Hide all intervention sections first
-                $('#interventionSection').hide();
-                $('#lowRiskInterventions').hide();
-                $('#mediumRiskInterventions').hide();
-                $('#highRiskInterventions').hide();
-                
-                if (filledCount < totalFields) {
-                    // Jika belum semua field terisi, tampilkan skor sementara
-                    $('#riskCategory').text('Skor Sementara').removeClass('low-risk medium-risk high-risk');
-                    $('#riskDescription').text(`Skor saat ini: ${score} (${filledCount}/${totalFields} kriteria terisi)`);
+            // ======= HANYA INI YANG PERLU UNTUK RADIO BUTTON =======
+            // Event handler untuk fitur uncheck pada radio button
+            $('.assessment-field').on('click', function() {
+                const groupName = this.name;
+
+                // Jika radio yang sama diklik lagi, uncheck
+                if (lastChecked[groupName] === this && this.checked) {
+                    this.checked = false;
+                    lastChecked[groupName] = null;
                 } else {
-                    // Semua field terisi, tampilkan kategori risiko final
-                    if (score >= 0 && score <= 5) {
-                        $('#riskCategory').text('Risiko Rendah').removeClass('medium-risk high-risk').addClass('low-risk');
-                        $('#riskDescription').text('Skor 0-5: Pasien memiliki risiko jatuh rendah');
-                        
-                        // Show intervention section and low risk interventions
-                        $('#interventionSection').show();
-                        $('#lowRiskInterventions').show();
-                        
-                    } else if (score >= 6 && score <= 16) {
-                        $('#riskCategory').text('Risiko Sedang').removeClass('low-risk high-risk').addClass('medium-risk');
-                        $('#riskDescription').text('Skor 6-16: Pasien memiliki risiko jatuh sedang');
-                        
-                        // Show intervention section and medium risk interventions
-                        $('#interventionSection').show();
-                        $('#mediumRiskInterventions').show();
-                        
-                    } else if (score >= 17 && score <= 30) {
-                        $('#riskCategory').text('Risiko Tinggi').removeClass('low-risk medium-risk').addClass('high-risk');
-                        $('#riskDescription').text('Skor 17-30: Pasien memiliki risiko jatuh tinggi');
-                        
-                        // Show intervention section and high risk interventions
-                        $('#interventionSection').show();
-                        $('#highRiskInterventions').show();
-                        
-                    } else {
-                        $('#riskCategory').text('Skor Tidak Valid').removeClass('low-risk medium-risk high-risk');
-                        $('#riskDescription').text('Skor di luar rentang yang valid');
-                    }
+                    lastChecked[groupName] = this;
                 }
-            }
-            
-            // Event listener for assessment fields
-            $('.assessment-field').on('change', function() {
-                // Add selected class to radio item
+
+                // Update visual selected state
                 $('.radio-item').removeClass('selected');
-                $('input[type="radio"]:checked').closest('.radio-item').addClass('selected');
-                
+                $('.assessment-field:checked').each(function() {
+                    $(this).closest('.radio-item').addClass('selected');
+                });
+
                 // Calculate score
                 calculateScore();
             });
-            
-            // Add click handler for radio items
-            $('.radio-item').on('click', function() {
-                $(this).find('input[type="radio"]').prop('checked', true).trigger('change');
+            // ======= AKHIR RADIO BUTTON HANDLER =======
+
+            // Event listener untuk checkbox styling
+            $('.form-check-input').on('change', function() {
+                if ($(this).is(':checked')) {
+                    $(this).next('.form-check-label').addClass('text-primary');
+                } else {
+                    $(this).next('.form-check-label').removeClass('text-primary');
+                }
             });
-            
+
             // Form validation
             $('#humptyDumptyForm').on('submit', function(e) {
                 let isValid = true;
                 let errorMessage = '';
-                
-                // Check required fields
-                $('input[required]:not([type="radio"]), select[required]').each(function() {
-                    if (!$(this).val()) {
-                        isValid = false;
-                        $(this).addClass('is-invalid');
-                        errorMessage += '- ' + $(this).prev('label').text() + '\n';
-                    } else {
-                        $(this).removeClass('is-invalid');
+
+                const requiredFields = [{
+                        element: $('#tanggal_implementasi'),
+                        name: 'Tanggal Implementasi'
+                    },
+                    {
+                        element: $('#jam_implementasi'),
+                        name: 'Jam Implementasi'
+                    },
+                    {
+                        element: $('#shift'),
+                        name: 'Shift'
                     }
-                });
-                
-                // Check radio button groups
-                const requiredRadioGroups = [
-                    'riwayat_jatuh_1a', 'riwayat_jatuh_1b',
-                    'status_mental_2a', 'status_mental_2b', 'status_mental_2c',
-                    'penglihatan_3a', 'penglihatan_3b', 'penglihatan_3c',
-                    'kebiasaan_berkemih_4a', 'transfer', 'mobilitas'
                 ];
-                
-                requiredRadioGroups.forEach(function(groupName) {
-                    if (!$('input[name="' + groupName + '"]:checked').length) {
+
+                requiredFields.forEach(function(field) {
+                    if (!field.element.val()) {
                         isValid = false;
-                        const groupLabel = $('input[name="' + groupName + '"]').closest('.radio-group').find('.form-label').first().text();
-                        if (errorMessage.indexOf('- ' + groupLabel) === -1) {
-                            errorMessage += '- ' + groupLabel + '\n';
-                        }
+                        field.element.addClass('is-invalid');
+                        errorMessage += '- ' + field.name + '\n';
+                    } else {
+                        field.element.removeClass('is-invalid');
                     }
                 });
-                
+
                 if (!isValid) {
                     e.preventDefault();
                     alert('Mohon lengkapi field berikut:\n' + errorMessage);
                     return false;
                 }
-                
+
                 return true;
             });
-            
+
             // Remove invalid class on input
             $('input, select').on('input change', function() {
                 $(this).removeClass('is-invalid');
@@ -1106,34 +1215,9 @@
                 `).appendTo('head');
             }
 
-            // Custom styling untuk disabled button
-                $('#simpan').on('propertychange change', function() {
-                    if ($(this).prop('disabled')) {
-                        $(this).addClass('btn-secondary').removeClass('btn-primary');
-                        $(this).html('<i class="ti-ban mr-2"></i> Data Sudah Ada');
-                    } else {
-                        $(this).addClass('btn-primary').removeClass('btn-secondary');
-                        $(this).html('<i class="ti-save mr-2"></i> Simpan Data');
-                    }
-                });
-            });
+            // Set tanggal dan jam otomatis
+            setCurrentDateTime();
 
-            // Event listener for checkbox styling
-            $('.form-check-input').on('change', function() {
-                if ($(this).is(':checked')) {
-                    $(this).next('.form-check-label').addClass('text-primary');
-                } else {
-                    $(this).next('.form-check-label').removeClass('text-primary');
-                }
-            });
-
-            if (!$('style:contains("medium-risk")').length) {
-                $('<style>').text(`
-                    .score-category.medium-risk {
-                        color: #fd7e14;
-                    }
-                `).appendTo('head');
-            }
-
+        });
     </script>
 @endpush

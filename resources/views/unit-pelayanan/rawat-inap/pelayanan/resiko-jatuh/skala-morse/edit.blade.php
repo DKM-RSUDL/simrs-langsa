@@ -73,7 +73,7 @@
                             <div class="form-check resiko_jatuh__criteria-form-check {{ old('riwayat_jatuh', $skalaMorse->riwayat_jatuh) == '0' ? 'selected' : '' }}" data-group="riwayat_jatuh">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
                                     name="riwayat_jatuh" id="resikoJatuh_riwayat_tidak" value="0"
-                                    {{ old('riwayat_jatuh', $skalaMorse->riwayat_jatuh) == '0' ? 'checked' : '' }} required>
+                                    {{ old('riwayat_jatuh', $skalaMorse->riwayat_jatuh) == '0' ? 'checked' : '' }}>
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_riwayat_tidak">
                                     a. Tidak
@@ -102,7 +102,7 @@
                             <div class="form-check resiko_jatuh__criteria-form-check {{ old('diagnosa_sekunder', $skalaMorse->diagnosa_sekunder) == '0' ? 'selected' : '' }}" data-group="diagnosa_sekunder">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
                                     name="diagnosa_sekunder" id="resikoJatuh_diagnosa_tidak" value="0"
-                                    {{ old('diagnosa_sekunder', $skalaMorse->diagnosa_sekunder) == '0' ? 'checked' : '' }} required>
+                                    {{ old('diagnosa_sekunder', $skalaMorse->diagnosa_sekunder) == '0' ? 'checked' : '' }}>
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_diagnosa_tidak">
                                     a. Tidak
@@ -131,7 +131,7 @@
                             <div class="form-check resiko_jatuh__criteria-form-check {{ old('bantuan_ambulasi', $skalaMorse->bantuan_ambulasi) == '0' ? 'selected' : '' }}" data-group="bantuan_ambulasi">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
                                     name="bantuan_ambulasi" id="resikoJatuh_ambulasi_tidak" value="0"
-                                    {{ old('bantuan_ambulasi', $skalaMorse->bantuan_ambulasi) == '0' ? 'checked' : '' }} required>
+                                    {{ old('bantuan_ambulasi', $skalaMorse->bantuan_ambulasi) == '0' ? 'checked' : '' }}>
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_ambulasi_tidak">
                                     a. Tidak ada / bed rest / bantuan perawat
@@ -172,7 +172,7 @@
                             <div class="form-check resiko_jatuh__criteria-form-check {{ old('terpasang_infus', $skalaMorse->terpasang_infus) == '0' ? 'selected' : '' }}" data-group="terpasang_infus">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
                                     name="terpasang_infus" id="resikoJatuh_infus_tidak" value="0"
-                                    {{ old('terpasang_infus', $skalaMorse->terpasang_infus) == '0' ? 'checked' : '' }} required>
+                                    {{ old('terpasang_infus', $skalaMorse->terpasang_infus) == '0' ? 'checked' : '' }}>
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_infus_tidak">
                                     a. Tidak
@@ -201,7 +201,7 @@
                             <div class="form-check resiko_jatuh__criteria-form-check {{ old('gaya_berjalan', $skalaMorse->gaya_berjalan) == '0' ? 'selected' : '' }}" data-group="gaya_berjalan">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
                                     name="gaya_berjalan" id="resikoJatuh_berjalan_normal" value="0"
-                                    {{ old('gaya_berjalan', $skalaMorse->gaya_berjalan) == '0' ? 'checked' : '' }} required>
+                                    {{ old('gaya_berjalan', $skalaMorse->gaya_berjalan) == '0' ? 'checked' : '' }}>
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_berjalan_normal">
                                     a. Normal / bed rest / kursi roda
@@ -242,7 +242,7 @@
                             <div class="form-check resiko_jatuh__criteria-form-check {{ old('status_mental', $skalaMorse->status_mental) == '0' ? 'selected' : '' }}" data-group="status_mental">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
                                     name="status_mental" id="resikoJatuh_mental_orientasi" value="0"
-                                    {{ old('status_mental', $skalaMorse->status_mental) == '0' ? 'checked' : '' }} required>
+                                    {{ old('status_mental', $skalaMorse->status_mental) == '0' ? 'checked' : '' }}>
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_mental_orientasi">
                                     a. Berorientasi pada kemampuannya

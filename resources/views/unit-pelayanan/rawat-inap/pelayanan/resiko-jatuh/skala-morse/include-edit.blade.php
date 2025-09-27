@@ -4,6 +4,7 @@
             color: white;
             padding: 20px;
             border-radius: 10px;
+            margin-bottom: 30px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
@@ -201,7 +202,7 @@
         .resiko_jatuh__btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-            background-color:#0d6efd;
+            background-color: #0d6efd;
         }
 
         .resiko_jatuh__criteria-section {
@@ -269,6 +270,11 @@
             margin-bottom: 8px;
         }
 
+        /* Style khusus untuk section intervensi */
+        .resiko_jatuh__intervensi-rr {
+            border-left: 4px solid #28a745;
+        }
+
         .resiko_jatuh__intervensi-rr h5 {
             color: #28a745;
         }
@@ -289,31 +295,6 @@
             color: #dc3545;
         }
 
-        .resiko_jatuh__table-intervensi {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        .resiko_jatuh__table-intervensi th,
-        .resiko_jatuh__table-intervensi td {
-            border: 1px solid #dee2e6;
-            padding: 8px;
-            text-align: center;
-            vertical-align: middle;
-            font-size: 12px;
-        }
-
-        .resiko_jatuh__table-intervensi th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-        }
-
-        .resiko_jatuh__table-intervensi .shift-header {
-            background-color: #e9ecef;
-            font-weight: 600;
-        }
-
         .resiko_jatuh__criteria-form-check {
             cursor: pointer;
         }
@@ -328,305 +309,212 @@
 
 @push('js')
     <script>
-        $(document).ready(function () {
-            // Fungsi untuk menghitung skor total
-            function hitungSkorTotal() {
-                let total = 0;
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('resikoJatuh_form');
+            let lastChecked = {}; // Untuk menyimpan radio button yang terakhir diklik
 
-                // Mengambil nilai dari setiap radio button yang dipilih
-                const riwayatJatuh = $('input[name="riwayat_jatuh"]:checked').val() || 0;
-                const diagnosaSekunder = $('input[name="diagnosa_sekunder"]:checked').val() || 0;
-                const bantuanAmbulasi = $('input[name="bantuan_ambulasi"]:checked').val() || 0;
-                const terpasangInfus = $('input[name="terpasang_infus"]:checked').val() || 0;
-                const gayaBerjalan = $('input[name="gaya_berjalan"]:checked').val() || 0;
-                const statusMental = $('input[name="status_mental"]:checked').val() || 0;
+            function hitungSkorDanKategori() {
+                const groups = [
+                    'riwayat_jatuh',
+                    'diagnosa_sekunder',
+                    'bantuan_ambulasi',
+                    'terpasang_infus',
+                    'gaya_berjalan',
+                    'status_mental'
+                ];
 
-                total = parseInt(riwayatJatuh) + parseInt(diagnosaSekunder) + parseInt(bantuanAmbulasi) +
-                    parseInt(terpasangInfus) + parseInt(gayaBerjalan) + parseInt(statusMental);
+                let skor = 0;
+                let lengkap = true;
 
-                // Update tampilan skor dengan animasi
-                $('#resikoJatuh_skorTotal').text(total);
-
-                // **TAMBAHAN PENTING: Update input hidden untuk skor total**
-                $('#resikoJatuh_skorTotalInput').val(total);
-
-                // Sembunyikan semua section intervensi terlebih dahulu
-                $('#resikoJatuh_intervensiRR, #resikoJatuh_intervensiRS, #resikoJatuh_intervensiRT').hide();
-
-                // Tentukan kategori resiko dan warna
-                let kategori = '';
-                let kategoriLengkap = '';
-                let cardClass = '';
-                let kodeResiko = '';
-
-                if (total >= 0 && total <= 24) {
-                    kategori = 'RESIKO RENDAH';
-                    kodeResiko = 'RR';
-                    kategoriLengkap = 'RR';
-                    cardClass = 'bg-success text-white';
-                    // Tampilkan intervensi RR dengan animasi
-                    $('#resikoJatuh_intervensiRR').show().addClass('resiko_jatuh__fade-in');
-                } else if (total >= 25 && total <= 44) {
-                    kategori = 'RESIKO SEDANG';
-                    kodeResiko = 'RS';
-                    kategoriLengkap = 'RS';
-                    cardClass = 'bg-warning text-dark';
-                    // Tampilkan intervensi RS dengan animasi
-                    $('#resikoJatuh_intervensiRS').show().addClass('resiko_jatuh__fade-in');
-                } else if (total >= 45) {
-                    kategori = 'RESIKO TINGGI';
-                    kodeResiko = 'RT';
-                    kategoriLengkap = 'RT';
-                    cardClass = 'bg-danger text-white';
-                    // Tampilkan intervensi RT dengan animasi
-                    $('#resikoJatuh_intervensiRT').show().addClass('resiko_jatuh__fade-in');
-                }
-
-                // Update tampilan kategori
-                $('#resikoJatuh_kategoriResiko').text(`${kategori} (${kodeResiko})`);
-                $('#resikoJatuh_hasilResiko').removeClass('bg-success bg-warning bg-danger text-white text-dark').addClass(cardClass);
-
-                // **TAMBAHAN PENTING: Update input hidden untuk kategori resiko**
-                $('#resikoJatuh_kategoriResikoInput').val(kategoriLengkap);
-            }
-
-            // Function untuk mengecek duplikasi - DIPERBAIKI
-            function checkDuplicateDateTime() {
-                const tanggal = $('#tanggal').val();
-                const shift = $('#shift').val();
-
-                // Ambil ID record jika sedang edit (dari URL atau hidden input)
-                const currentId = window.location.pathname.split('/').pop(); // Ambil ID dari URL
-                // Atau bisa juga menggunakan hidden input jika ada
-                // const currentId = $('#record_id').val();
-
-                if (tanggal && shift) {
-                    // AJAX call untuk mengecek duplikasi
-                    $.ajax({
-                        url: "{{ route('rawat-inap.resiko-jatuh.morse.check-duplicate', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
-                        method: 'POST',
-                        data: {
-                            _token: $('input[name="_token"]').val(),
-                            tanggal: tanggal,
-                            shift: shift,
-                            id: currentId // TAMBAHKAN ID untuk exclude saat edit
-                        },
-                        success: function (response) {
-                            if (response.exists) {
-                                // Show warning message
-                                showDuplicateWarning(true);
-                                $('#resikoJatuh_simpan').prop('disabled', true);
-                            } else {
-                                // Hide warning message
-                                showDuplicateWarning(false);
-                                $('#resikoJatuh_simpan').prop('disabled', false);
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('Error checking duplicate:', error);
-                            // On error, allow submission
-                            showDuplicateWarning(false);
-                            $('#resikoJatuh_simpan').prop('disabled', false);
-                        }
-                    });
-                } else {
-                    showDuplicateWarning(false);
-                    $('#resikoJatuh_simpan').prop('disabled', false);
-                }
-            }
-
-            // Function untuk menampilkan/menyembunyikan warning
-            function showDuplicateWarning(show) {
-                if (show) {
-                    if ($('#duplicate-warning').length === 0) {
-                        const warningHtml = `
-                        <div id="duplicate-warning" class="alert alert-warning mt-2" style="border-left: 4px solid #ffc107;">
-                            <i class="ti-alert-triangle"></i>
-                            <strong>Peringatan:</strong> Data dengan tanggal dan shift ini sudah ada!
-                        </div>
-                    `;
-                        $('#shift').closest('.form-group').after(warningHtml);
+                groups.forEach(name => {
+                    const checked = document.querySelector(`input[name="${name}"]:checked`);
+                    if (!checked) {
+                        lengkap = false;
+                        return;
                     }
-                    $('#duplicate-warning').show();
-                } else {
-                    $('#duplicate-warning').hide();
-                }
-            }
-
-            // **TAMBAHAN EVENT LISTENER UNTUK TANGGAL DAN SHIFT - INI YANG HILANG**
-            $('#tanggal, #shift').on('change blur', function () {
-                checkDuplicateDateTime();
-            });
-
-            // Event listener untuk radio button dengan efek visual
-            $('input[type="radio"]').on('change', function () {
-                const group = $(this).attr('name');
-
-                // Remove selected class from all form-check in the same group
-                $(`.resiko_jatuh__form-check[data-group="${group}"], .resiko_jatuh__criteria-form-check[data-group="${group}"]`).removeClass('selected');
-
-                // Add selected class to the clicked form-check
-                $(this).closest('.resiko_jatuh__form-check, .resiko_jatuh__criteria-form-check').addClass('selected');
-
-                // Hitung ulang skor
-                hitungSkorTotal();
-            });
-
-            // Event listener untuk checkbox intervensi
-            $('input[name^="intervensi_"]').on('change', function () {
-                const checkbox = $(this);
-                const formCheck = checkbox.closest('.resiko_jatuh__criteria-form-check');
-
-                if (checkbox.is(':checked')) {
-                    formCheck.addClass('selected');
-                } else {
-                    formCheck.removeClass('selected');
-                }
-            });
-
-            // Tambahkan efek hover dan klik pada form-check
-            $('.resiko_jatuh__form-check, .resiko_jatuh__criteria-form-check').on('click', function () {
-                const radio = $(this).find('input[type="radio"]');
-                const checkbox = $(this).find('input[type="checkbox"]');
-
-                if (radio.length && !radio.prop('checked')) {
-                    radio.prop('checked', true).trigger('change');
-                } else if (checkbox.length) {
-                    checkbox.prop('checked', !checkbox.prop('checked')).trigger('change');
-                }
-            });
-
-            // Hitung skor awal berdasarkan nilai yang sudah ada
-            hitungSkorTotal();
-
-            // Set initial state untuk form-check yang sudah dipilih
-            $('input[type="radio"]:checked').each(function () {
-                $(this).closest('.resiko_jatuh__criteria-form-check').addClass('selected');
-            });
-
-            $('input[type="checkbox"]:checked').each(function () {
-                $(this).closest('.resiko_jatuh__criteria-form-check').addClass('selected');
-            });
-
-            // Validasi form dengan notifikasi yang lebih baik
-            $('#resikoJatuh_form').on('submit', function (e) {
-                const requiredFields = ['riwayat_jatuh', 'diagnosa_sekunder', 'bantuan_ambulasi', 'terpasang_infus', 'gaya_berjalan', 'status_mental'];
-                let allAnswered = true;
-                let missingFields = [];
-
-                requiredFields.forEach(function (field) {
-                    if (!$('input[name="' + field + '"]:checked').length) {
-                        allAnswered = false;
-                        missingFields.push(field);
-                    }
+                    skor += parseInt(checked.value || '0', 10);
                 });
 
-                // **TAMBAHAN: Pastikan skor total dan kategori terisi sebelum submit**
-                const skorTotal = $('#resikoJatuh_skorTotalInput').val();
-                const kategoriResiko = $('#resikoJatuh_kategoriResikoInput').val();
+                // Update skor total
+                const skorEl = document.getElementById('resikoJatuh_skorTotal');
+                const skorInput = document.getElementById('resikoJatuh_skorTotalInput');
+                skorEl.textContent = isNaN(skor) ? 0 : skor;
+                skorInput.value = isNaN(skor) ? '' : String(skor);
 
-                if (!skorTotal || !kategoriResiko) {
-                    e.preventDefault();
-                    alert('Mohon lengkapi semua penilaian terlebih dahulu!');
-                    return false;
-                }
+                // Set kategori (0–24 RR, 25–44 RS, >=45 RT)
+                const kategoriEl = document.getElementById('resikoJatuh_kategoriResiko');
+                const kategoriInput = document.getElementById('resikoJatuh_kategoriResikoInput');
+                const hasilResikoEl = document.getElementById('resikoJatuh_hasilResiko');
 
-                // Validasi khusus berdasarkan kategori resiko yang muncul
-                if ($('#resikoJatuh_intervensiRR').is(':visible')) {
-                    // Validasi untuk RR
-                    if (!$('input[name="intervensi_rr[]"]:checked').length) {
-                        allAnswered = false;
-                        alert('Untuk pasien dengan resiko rendah, wajib memilih minimal 1 intervensi pencegahan!');
-                        $('#resikoJatuh_intervensiRR').css({
-                            'border': '2px solid #dc3545',
-                            'background': '#f8d7da'
-                        });
-
-                        setTimeout(function () {
-                            $('#resikoJatuh_intervensiRR').css({
-                                'border': '1px solid #e9ecef',
-                                'background': ''
-                            });
-                        }, 3000);
-
-                        return false;
+                let kategori = '';
+                let kategoriLengkap = '';
+                if (lengkap && !isNaN(skor)) {
+                    if (skor <= 24) {
+                        kategori = 'RESIKO RENDAH (RR)';
+                        kategoriLengkap = 'RR';
+                        hasilResikoEl.className =
+                            'card resiko_jatuh__card resiko_jatuh__result-card bg-success text-white';
+                    } else if (skor <= 44) {
+                        kategori = 'RESIKO SEDANG (RS)';
+                        kategoriLengkap = 'RS';
+                        hasilResikoEl.className =
+                            'card resiko_jatuh__card resiko_jatuh__result-card bg-warning text-dark';
+                    } else {
+                        kategori = 'RESIKO TINGGI (RT)';
+                        kategoriLengkap = 'RT';
+                        hasilResikoEl.className =
+                            'card resiko_jatuh__card resiko_jatuh__result-card bg-danger text-white';
                     }
+                } else {
+                    kategori = 'Belum Dinilai';
+                    hasilResikoEl.className = 'card resiko_jatuh__card resiko_jatuh__result-card';
                 }
 
-                if ($('#resikoJatuh_intervensiRS').is(':visible')) {
-                    // Validasi untuk RS
-                    if (!$('input[name="intervensi_rs[]"]:checked').length) {
-                        allAnswered = false;
-                        alert('Untuk pasien dengan resiko sedang, wajib memilih minimal 1 intervensi pencegahan!');
-                        $('#resikoJatuh_intervensiRS').css({
-                            'border': '2px solid #dc3545',
-                            'background': '#f8d7da'
+                kategoriEl.textContent = kategori;
+                kategoriInput.value = kategoriLengkap;
+
+                // Tampilkan intervensi sesuai kategori
+                const rr = document.getElementById('resikoJatuh_intervensiRR');
+                const rs = document.getElementById('resikoJatuh_intervensiRS');
+                const rt = document.getElementById('resikoJatuh_intervensiRT');
+                if (rr) rr.style.display = kategoriLengkap === 'RR' ? 'block' : 'none';
+                if (rs) rs.style.display = kategoriLengkap === 'RS' ? 'block' : 'none';
+                if (rt) rt.style.display = kategoriLengkap === 'RT' ? 'block' : 'none';
+            }
+
+            // Event listener untuk radio button dengan fitur uncheck
+            document.querySelectorAll('input[type="radio"][name="riwayat_jatuh"],\
+                        input[type="radio"][name="diagnosa_sekunder"],\
+                        input[type="radio"][name="bantuan_ambulasi"],\
+                        input[type="radio"][name="terpasang_infus"],\
+                        input[type="radio"][name="gaya_berjalan"],\
+                        input[type="radio"][name="status_mental"]').forEach(radio => {
+
+                radio.addEventListener('click', function(e) {
+                    const groupName = this.name;
+
+                    // Jika radio button yang sama diklik lagi, uncheck
+                    if (lastChecked[groupName] === this && this.checked) {
+                        this.checked = false;
+                        lastChecked[groupName] = null;
+
+                        // Update visual state
+                        const group = this.name;
+                        document.querySelectorAll(`[data-group="${group}"]`).forEach(item => {
+                            item.classList.remove('selected');
                         });
 
-                        setTimeout(function () {
-                            $('#resikoJatuh_intervensiRS').css({
-                                'border': '1px solid #e9ecef',
-                                'background': ''
-                            });
-                        }, 3000);
-
-                        return false;
+                        // Recalculate
+                        hitungSkorDanKategori();
+                        return;
                     }
-                }
 
-                if ($('#resikoJatuh_intervensiRT').is(':visible')) {
-                    // Validasi untuk RT
-                    if (!$('input[name="intervensi_rt[]"]:checked').length) {
-                        allAnswered = false;
-                        alert('Untuk pasien dengan resiko tinggi, wajib memilih minimal 1 intervensi pencegahan!');
-                        $('#resikoJatuh_intervensiRT').css({
-                            'border': '2px solid #dc3545',
-                            'background': '#f8d7da'
-                        });
+                    // Simpan radio button yang diklik sebagai yang terakhir
+                    lastChecked[groupName] = this;
 
-                        setTimeout(function () {
-                            $('#resikoJatuh_intervensiRT').css({
-                                'border': '1px solid #e9ecef',
-                                'background': ''
-                            });
-                        }, 3000);
-
-                        return false;
-                    }
-                }
-
-                if (!allAnswered) {
-                    e.preventDefault();
-
-                    // Highlight missing fields
-                    missingFields.forEach(function (field) {
-                        $(`input[name="${field}"]`).closest('.resiko_jatuh__criteria-section, .resiko_jatuh__section-separator').css({
-                            'border': '2px solid #dc3545',
-                            'background': '#f8d7da'
-                        });
+                    // Update visual selected state
+                    const group = this.name;
+                    document.querySelectorAll(`[data-group="${group}"]`).forEach(item => {
+                        item.classList.remove('selected');
                     });
+                    this.closest('.resiko_jatuh__criteria-form-check').classList.add('selected');
 
-                    alert(`Mohon lengkapi ${missingFields.length} kriteria yang belum dinilai!`);
+                    // Recalculate
+                    hitungSkorDanKategori();
+                });
+            });
 
-                    // Remove highlight after 3 seconds
-                    setTimeout(function () {
-                        $('.resiko_jatuh__criteria-section, .resiko_jatuh__section-separator').css({
-                            'border': '1px solid #e9ecef',
-                            'background': ''
-                        });
-                    }, 3000);
+            form.addEventListener('submit', function(e) {
+                // Hanya validasi field yang wajib diisi: Tanggal, Hari ke, Shift
+                const tanggal = document.getElementById('tanggal').value;
+                const hariKe = document.querySelector('input[name="hari_ke"]').value;
+                const shift = document.getElementById('shift').value;
 
-                    return false;
+                // Cek field wajib
+                if (!tanggal || !hariKe || !shift) {
+                    e.preventDefault();
+                    alert('Mohon lengkapi data pengkajian (Tanggal, Hari ke, dan Shift) terlebih dahulu!');
+                    return;
                 }
 
-                // **TAMBAHAN: Debug log untuk memastikan data terkirim**
-                console.log('Data yang akan dikirim:');
-                console.log('Skor Total:', $('#resikoJatuh_skorTotalInput').val());
-                console.log('Kategori Resiko:', $('#resikoJatuh_kategoriResikoInput').val());
-
-                // Show loading state
-                $('#resikoJatuh_simpan').prop('disabled', true).html('<i class="ti-reload mr-2"></i> Mengupdate...');
+                // Validasi nilai hari ke harus positif
+                if (parseInt(hariKe) < 1) {
+                    e.preventDefault();
+                    alert('Hari ke harus berisi angka yang valid (minimal 1)!');
+                    return;
+                }
             });
+
+            // Handle checkbox intervensi
+            document.querySelectorAll('input[name^="intervensi_"]').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const formCheck = this.closest('.resiko_jatuh__criteria-form-check');
+                    if (this.checked) {
+                        formCheck.classList.add('selected');
+                    } else {
+                        formCheck.classList.remove('selected');
+                    }
+                });
+            });
+
+            // Buat seluruh area item bisa di-klik (kecuali input/label agar tidak double-toggle)
+            document.querySelectorAll('.resiko_jatuh__criteria-form-check').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    const tag = e.target.tagName.toLowerCase();
+                    if (tag === 'input' || tag === 'label') return; // biar label handler yang urus
+
+                    const input = item.querySelector('input[type="radio"], input[type="checkbox"]');
+                    if (!input) return;
+
+                    if (input.type === 'radio') {
+                        // Trigger click event pada radio button untuk menggunakan logika uncheck
+                        input.click();
+                    } else if (input.type === 'checkbox') {
+                        input.checked = !input.checked;
+                        input.dispatchEvent(new Event('change', {
+                            bubbles: true
+                        }));
+                    }
+                });
+            });
+
+            // Bikin klik pada label juga toggle input terkait
+            document.querySelectorAll('.resiko_jatuh__criteria-form-check label').forEach(label => {
+                label.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const forId = label.getAttribute('for');
+                    let input = forId ? document.getElementById(forId) : label.closest(
+                        '.resiko_jatuh__criteria-form-check')?.querySelector(
+                        'input[type="radio"], input[type="checkbox"]');
+                    if (!input) return;
+
+                    if (input.type === 'radio') {
+                        // Trigger click event pada radio button untuk menggunakan logika uncheck
+                        input.click();
+                    } else {
+                        input.checked = !input.checked;
+                        input.dispatchEvent(new Event('change', {
+                            bubbles: true
+                        }));
+                    }
+                });
+            });
+
+            // Set initial visual state berdasarkan data yang sudah ada
+            document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
+                radio.closest('.resiko_jatuh__criteria-form-check').classList.add('selected');
+                // Set sebagai lastChecked untuk radio yang sudah terpilih saat load
+                lastChecked[radio.name] = radio;
+            });
+
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                checkbox.closest('.resiko_jatuh__criteria-form-check').classList.add('selected');
+            });
+
+            // Inisialisasi
+            hitungSkorDanKategori();
         });
     </script>
 @endpush
