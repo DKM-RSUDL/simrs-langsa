@@ -31,7 +31,7 @@
 
                             <div class="col-md-6">
                                 <label class="form-label small">Keterangan</label>
-                                <textarea name="keterangan" id="keterangan" class="form-control"></textarea>
+                                <textarea name="keterangan" id="keterangan" placeholder="Oral/Injeksi atau lainnya" class="form-control"></textarea>
                             </div>
                         </div>
                     </div>
@@ -39,7 +39,7 @@
                     <!-- Dosis, Satuan, Freak -->
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <label class="form-label small">Dosis Sekali Minum</label>
+                            <label class="form-label small">Dosis</label>
                             <input type="text" class="form-control form-control-sm" name="dosis" id="dosis">
                         </div>
                         <div class="col-md-4">
