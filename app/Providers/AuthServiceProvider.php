@@ -29,9 +29,9 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('access-unit', function ($user, $kd_unit) {
-            
+
             if($user->hasRole('admin')) return true;
-            
+
             // jenis tenaga
             $kdJenisTenaga = $user->karyawan->kd_jenis_tenaga;
             $kdDetailJenisTenaga = $user->karyawan->kd_detail_jenis_tenaga;
@@ -43,7 +43,7 @@ class AuthServiceProvider extends ServiceProvider
                 // Dokter Spesialis
                 // if(in_array($kdDetailJenisTenaga, [2,3])) {
                     $dokter = Dokter::where('kd_karyawan', $user->kd_karyawan)->first();
-                    
+
                     // get dokter unit RWJ
                     $klinikList = DokterKlinik::where('kd_dokter', $dokter->kd_dokter)
                                         ->pluck('kd_unit')
@@ -107,6 +107,25 @@ class AuthServiceProvider extends ServiceProvider
             $kdDetailJenisTenaga = $user->karyawan->kd_detail_jenis_tenaga;
 
             return $kdJenisTenaga == 2 && $kdDetailJenisTenaga == 2;
+        });
+
+        Gate::define('can-verify-cppt', function($user) {
+            // Admin dapat verifikasi
+            if($user->hasRole('admin')) return true;
+
+            // Cek apakah user adalah karyawan dan memiliki data jenis tenaga
+            if(!$user->karyawan) return false;
+
+            $kdJenisTenaga = $user->karyawan->kd_jenis_tenaga;
+            $kdDetailJenisTenaga = $user->karyawan->kd_detail_jenis_tenaga;
+
+            // Dokter Umum (jenis_tenaga = 1, detail = 1)
+            if($kdJenisTenaga == 1 && $kdDetailJenisTenaga == 1) return true;
+
+            // Dokter Spesialis (jenis_tenaga = 1, detail = 2)
+            if($kdJenisTenaga == 1 && $kdDetailJenisTenaga == 2) return true;
+
+            return false;
         });
     }
 }

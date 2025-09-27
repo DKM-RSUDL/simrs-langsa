@@ -6,12 +6,12 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addDiagnosisModal">Input Diagnosis</h5>
+                <h5 class="modal-title" id="addDiagnosisModal">Input Asesmen/Diagnosis</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                     <h6 class="fw-bold">
-                        Tambah Diagnosis
+                        Tambah Asesmen/Diagnosis
                     </h6>
                     <p class="text-muted">
                         (Isi diagnosis pada kolom dibawah dan Tekan tambah untuk menambah ke daftar diagnosis. Satu baris
