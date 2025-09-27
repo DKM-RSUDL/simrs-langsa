@@ -550,30 +550,30 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="saksi2_nama" class="form-label">Nama</label>
-                            <input type="text" name="saksi2_nama" id="saksi2_nama" class="form-control">
+                            <input type="text" name="saksi2_nama" id="saksi2_nama" class="form-control" disabled>
                         </div>
 
                         <div class="form-group mt-3">
                             <label for="saksi2_tgl_lahir" class="form-label">Tanggal Lahir</label>
                             <input type="date" name="saksi2_tgl_lahir" id="saksi2_tgl_lahir"
-                                class="form-control">
+                                class="form-control" disabled>
                         </div>
 
                         <div class="form-group mt-3">
                             <label for="saksi2_alamat" class="form-label">Alamat</label>
-                            <textarea name="saksi2_alamat" id="saksi2_alamat" class="form-control"></textarea>
+                            <textarea name="saksi2_alamat" id="saksi2_alamat" class="form-control" disabled></textarea>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="saksi2_nohp" class="form-label">No HP</label>
-                            <input type="number" name="saksi2_nohp" id="saksi2_nohp" class="form-control">
+                            <input type="number" name="saksi2_nohp" id="saksi2_nohp" class="form-control" disabled>
                         </div>
 
                         <div class="form-group mt-3">
                             <label for="saksi2_hubungan_pasien" class="form-label">Hubungan Pasien</label>
-                            <select name="saksi2_hubungan_pasien" id="saksi2_hubungan_pasien" class="form-select">
+                            <select name="saksi2_hubungan_pasien" id="saksi2_hubungan_pasien" class="form-select" disabled>
                                 <option value="">--Pilih--</option>
                                 <option value="0">Diri Sendiri</option>
                                 <option value="1">Orang Tua</option>
