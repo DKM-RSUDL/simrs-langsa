@@ -120,6 +120,22 @@
                 return `${formattedDate} ${formattedTime}`;
             }
 
+            // Jika URL berisi ?open=resep maka aktifkan tab resep saat halaman dimuat
+            (function() {
+                try {
+                    const params = new URLSearchParams(window.location.search);
+                    if (params.get('open') === 'resep') {
+                        // Show resep tab
+                        const resepTab = document.getElementById('resep-tab');
+                        if (resepTab) {
+                            $(resepTab).tab('show');
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error processing open param:', e);
+                }
+            })();
+
         });
     </script>
 @endpush
