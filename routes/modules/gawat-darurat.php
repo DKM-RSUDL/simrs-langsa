@@ -112,6 +112,7 @@ Route::prefix('gawat-darurat')->group(function () {
                     Route::controller(TransferPasienController::class)->group(function () {
                         Route::get('/', 'index');
                         Route::post('/', 'storeTransferInap')->name('.store');
+                        Route::post('/ubah-pasien', 'UbahPasien')->name('.ubah-pasien');
                         Route::post('/get-dokter-spesial-ajax', 'getDokterBySpesial')->name('.get-dokter-spesial-ajax');
                         Route::post('/get-ruang-kelas-ajax', 'getRuanganByKelas')->name('.get-ruang-kelas-ajax');
                         Route::post('/get-kamar-ruang-ajax', 'getKamarByRuang')->name('.get-kamar-ruang-ajax');

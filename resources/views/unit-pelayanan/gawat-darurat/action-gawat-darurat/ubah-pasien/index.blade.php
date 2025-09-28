@@ -20,7 +20,7 @@
         <div class="col-md-9">
             <div class="form-section">
                 <form
-                    action="{{ route('transfer-rwi.store', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                    id="ProsesUbah" action="{{ route('transfer-rwi.ubah-pasien', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
                     method="post">
                     @csrf
 
@@ -173,13 +173,17 @@
                 }
             });
 
-            $(document).on('click','#submit-button',function(){
-                 $('#submit-button').attr('disabled',true)
+            // Handler khusus tombol submit-button
+            $(document).on('submit', '#ProsesUbah', function () {
+                let $submitBtn = $(this).find('button[type="submit"]');
+                $submitBtn.prop('disabled', true).text('Memproses...');
             });
 
-            s
-            $(document).on('click', '#button-nik-pasien', function () {
-                // Get the NIK/No. RM input value
+
+            // Handler form ProsesUbah
+            $(document).on('click', '#button-nik-pasien', function (e) {
+               
+
                 var nik = $('#nik_pasien').val().trim();
 
                 // SweetAlert Toast config
@@ -191,7 +195,7 @@
                     timerProgressBar: true
                 });
 
-                // Validate input
+                // Validasi input kosong
                 if (!nik) {
                     Toast.fire({
                         icon: 'warning',
@@ -200,7 +204,7 @@
                     return;
                 }
 
-                // Validasi panjang karakter 10-16
+                // Validasi panjang karakter 10–16
                 if (nik.length < 10 || nik.length > 16) {
                     Toast.fire({
                         icon: 'error',
@@ -209,17 +213,29 @@
                     return;
                 }
 
+                // 🔹 Tampilkan popup loading
+                Swal.fire({
+                    title: 'Memproses...',
+                    text: 'Mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
                 $.ajax({
-                    _token: "{{ csrf_token() }}",
                     method: 'POST',
                     url: "{{ route('gawat-darurat.get-patient-bynik-ajax') }}",
                     data: { nik: nik },
                     success: function (response) {
+                        $('#submit-button').attr('disabled', false);
+                        Swal.close(); // tutup popup loading
+
                         if (response.status === 'success') {
                             var pasien = response.data;
 
                             $('#nama').val(pasien.nama || '');
-                            $('#jenis_kelamin').val(pasien.jenis_kelamin !== null ? pasien.jenis_kelamin : '');
+                            $('#jenis_kelamin').val(pasien.jenis_kelamin ?? '');
                             $('#tanggal_lahir').val(pasien.tgl_lahir || '');
                             $('#alamat').val(pasien.alamat || '');
 
@@ -236,25 +252,17 @@
                             } else {
                                 $('#usia').val(0);
                             }
-                            $('#submit-button').attr('disabled',false)
 
                             // Enable form
                             $('#nama, #tanggal_lahir, #alamat').prop('readonly', false);
                             $('#jenis_kelamin').prop('disabled', false);
 
-                            // Success Toast
                             Toast.fire({
                                 icon: 'success',
                                 title: response.message
                             });
                         } else {
-                            // Clear & disable form
-                            $('#nama, #tanggal_lahir, #usia, #alamat').val('');
-                            $('#jenis_kelamin').val('');
-                            $('#nama, #tanggal_lahir, #usia, #alamat').prop('readonly', true);
-                            $('#jenis_kelamin').prop('disabled', true);
-
-                            // Error Toast
+                            resetForm();
                             Toast.fire({
                                 icon: 'error',
                                 title: response.message
@@ -262,26 +270,30 @@
                         }
                     },
                     error: function (xhr) {
-                        var errorMessage = xhr.responseJSON && xhr.responseJSON.message
+                        Swal.close(); // tutup popup loading
+
+                        var errorMessage = xhr.responseJSON?.message
                             ? xhr.responseJSON.message
                             : 'Terjadi kesalahan saat mengambil data pasien.';
 
-                        // Error Toast
+                        resetForm();
+
                         Toast.fire({
                             icon: 'error',
                             title: errorMessage
                         });
-
-                        // Clear & disable form
-                        $('#nama, #tanggal_lahir, #usia, #alamat').val('');
-                        $('#jenis_kelamin').val('');
-                        $('#nama, #tanggal_lahir, #usia, #alamat').prop('readonly', true);
-                        $('#jenis_kelamin').prop('disabled', true);
                     }
                 });
+
+                function resetForm() {
+                    $('#nama, #tanggal_lahir, #usia, #alamat').val('').prop('readonly', true);
+                    $('#jenis_kelamin').val('').prop('disabled', true);
+                }
             });
-        })
+
+        });
     </script>
+
 @endpush
 {{-- @push('js')
 <script>
