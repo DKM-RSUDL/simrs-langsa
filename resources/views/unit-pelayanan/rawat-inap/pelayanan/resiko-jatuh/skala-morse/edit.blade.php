@@ -1,9 +1,8 @@
-@extends('layouts.administrator.master')
+ @extends('layouts.administrator.master')
 @include('unit-pelayanan.rawat-inap.pelayanan.resiko-jatuh.skala-morse.include')
 @include('unit-pelayanan.rawat-inap.pelayanan.resiko-jatuh.skala-morse.include-edit')
 
 @section('content')
-
     <div class="row">
         <div class="col-md-3">
             @include('components.patient-card')
@@ -21,10 +20,10 @@
                 @method('PUT')
                 <input type="hidden" id="record_id" value="{{ $skalaMorse->id }}">
 
-                <div class="resiko_jatuh__fade-in">
-                    <div class="resiko_jatuh__header-asesmen text-center">
+                <div class="resiko_jatuh__fade-in d-flex flex-column gap-4">
+                    <div class="resiko_jatuh__header-asesmen bg-primary text-center">
                         <h4 class="mb-2">
-                            <i class="ti-pencil mr-2"></i>
+                            <i class="ti-pencil me-2"></i>
                             EDIT PENGKAJIAN RESIKO JATUH - SKALA MORSE
                         </h4>
                         <small>DEWASA (19 - 59 Tahun)</small>
@@ -32,26 +31,28 @@
 
                     <!-- Data Dasar -->
                     <div class="resiko_jatuh__section-separator">
-                        <h5><i class="ti-calendar mr-2"></i> Data Pengkajian</h5>
+                        <h5><i class="ti-calendar me-2"></i> Data Pengkajian</h5>
                         <div class="row">
                             <div class="col-md-4">
-                                <div class="form-group resiko_jatuh__form-group">
+                                <div class="form-group resiko_jatuh__form-group d-flex flex-column">
                                     <label>Tanggal</label>
-                                    <input type="date" class="form-control resiko_jatuh__form-control" name="tanggal" id="tanggal"
-                                        value="{{ old('tanggal', date('Y-m-d', strtotime($skalaMorse->tanggal))) }}" required>
+                                    <input type="date" class="form-control resiko_jatuh__form-control" id="tanggal"
+                                        name="tanggal" value="{{ old('tanggal', optional($skalaMorse->tanggal)->format('Y-m-d')) }}"
+                                        required>
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="form-group resiko_jatuh__form-group">
+                                <div class="form-group resiko_jatuh__form-group d-flex flex-column">
                                     <label>Hari ke</label>
                                     <input type="number" class="form-control resiko_jatuh__form-control" name="hari_ke"
-                                        min="1" placeholder="Masukkan hari ke..." value="{{ old('hari_ke', $skalaMorse->hari_ke) }}" required>
+                                        min="1" value="{{ old('hari_ke', $skalaMorse->hari_ke) }}" required>
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="form-group resiko_jatuh__form-group">
+                                <div class="form-group resiko_jatuh__form-group d-flex flex-column">
                                     <label>Shift</label>
-                                    <select class="form-control resiko_jatuh__form-control" name="shift" id="shift" required>
+                                    <select class="form-control resiko_jatuh__form-control" id="shift" name="shift"
+                                        required>
                                         <option value="">Pilih Shift</option>
                                         <option value="PG" {{ old('shift', $skalaMorse->shift) == 'PG' ? 'selected' : '' }}>🌅 Pagi (PG)</option>
                                         <option value="SI" {{ old('shift', $skalaMorse->shift) == 'SI' ? 'selected' : '' }}>☀️ Siang (SI)</option>
@@ -64,7 +65,7 @@
 
                     <!-- Penilaian Resiko Jatuh -->
                     <div class="resiko_jatuh__section-separator">
-                        <h5><i class="ti-list-ol mr-2"></i>PENILAIAN RESIKO JATUH (SKALA MORSE)</h5>
+                        <h5><i class="ti-list-ol me-2"></i>PENILAIAN RESIKO JATUH (SKALA MORSE)</h5>
 
                         <!-- Riwayat Jatuh -->
                         <div class="resiko_jatuh__criteria-section">
@@ -72,12 +73,12 @@
                             <div class="form-check resiko_jatuh__criteria-form-check {{ old('riwayat_jatuh', $skalaMorse->riwayat_jatuh) == '0' ? 'selected' : '' }}" data-group="riwayat_jatuh">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
                                     name="riwayat_jatuh" id="resikoJatuh_riwayat_tidak" value="0"
-                                    {{ old('riwayat_jatuh', $skalaMorse->riwayat_jatuh) == '0' ? 'checked' : '' }} required>
+                                    {{ old('riwayat_jatuh', $skalaMorse->riwayat_jatuh) == '0' ? 'checked' : '' }}>
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_riwayat_tidak">
                                     a. Tidak
                                     <span
-                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge bg-primary">Skor:
                                         0</span>
                                 </label>
                             </div>
@@ -89,7 +90,7 @@
                                     for="resikoJatuh_riwayat_ya">
                                     b. Ya
                                     <span
-                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge bg-primary">Skor:
                                         25</span>
                                 </label>
                             </div>
@@ -101,12 +102,12 @@
                             <div class="form-check resiko_jatuh__criteria-form-check {{ old('diagnosa_sekunder', $skalaMorse->diagnosa_sekunder) == '0' ? 'selected' : '' }}" data-group="diagnosa_sekunder">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
                                     name="diagnosa_sekunder" id="resikoJatuh_diagnosa_tidak" value="0"
-                                    {{ old('diagnosa_sekunder', $skalaMorse->diagnosa_sekunder) == '0' ? 'checked' : '' }} required>
+                                    {{ old('diagnosa_sekunder', $skalaMorse->diagnosa_sekunder) == '0' ? 'checked' : '' }}>
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_diagnosa_tidak">
                                     a. Tidak
                                     <span
-                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge bg-primary">Skor:
                                         0</span>
                                 </label>
                             </div>
@@ -118,7 +119,7 @@
                                     for="resikoJatuh_diagnosa_ya">
                                     b. Ya
                                     <span
-                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge bg-primary">Skor:
                                         15</span>
                                 </label>
                             </div>
@@ -130,12 +131,12 @@
                             <div class="form-check resiko_jatuh__criteria-form-check {{ old('bantuan_ambulasi', $skalaMorse->bantuan_ambulasi) == '0' ? 'selected' : '' }}" data-group="bantuan_ambulasi">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
                                     name="bantuan_ambulasi" id="resikoJatuh_ambulasi_tidak" value="0"
-                                    {{ old('bantuan_ambulasi', $skalaMorse->bantuan_ambulasi) == '0' ? 'checked' : '' }} required>
+                                    {{ old('bantuan_ambulasi', $skalaMorse->bantuan_ambulasi) == '0' ? 'checked' : '' }}>
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_ambulasi_tidak">
                                     a. Tidak ada / bed rest / bantuan perawat
                                     <span
-                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge bg-primary">Skor:
                                         0</span>
                                 </label>
                             </div>
@@ -147,7 +148,7 @@
                                     for="resikoJatuh_ambulasi_kruk">
                                     b. Kruk / tongkat / alat bantu berjalan
                                     <span
-                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge bg-primary">Skor:
                                         15</span>
                                 </label>
                             </div>
@@ -159,7 +160,7 @@
                                     for="resikoJatuh_ambulasi_meja">
                                     c. Meja / kursi
                                     <span
-                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge bg-primary">Skor:
                                         30</span>
                                 </label>
                             </div>
@@ -171,12 +172,12 @@
                             <div class="form-check resiko_jatuh__criteria-form-check {{ old('terpasang_infus', $skalaMorse->terpasang_infus) == '0' ? 'selected' : '' }}" data-group="terpasang_infus">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
                                     name="terpasang_infus" id="resikoJatuh_infus_tidak" value="0"
-                                    {{ old('terpasang_infus', $skalaMorse->terpasang_infus) == '0' ? 'checked' : '' }} required>
+                                    {{ old('terpasang_infus', $skalaMorse->terpasang_infus) == '0' ? 'checked' : '' }}>
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_infus_tidak">
                                     a. Tidak
                                     <span
-                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge bg-primary">Skor:
                                         0</span>
                                 </label>
                             </div>
@@ -188,7 +189,7 @@
                                     for="resikoJatuh_infus_ya">
                                     b. Ya
                                     <span
-                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge bg-primary">Skor:
                                         20</span>
                                 </label>
                             </div>
@@ -200,12 +201,12 @@
                             <div class="form-check resiko_jatuh__criteria-form-check {{ old('gaya_berjalan', $skalaMorse->gaya_berjalan) == '0' ? 'selected' : '' }}" data-group="gaya_berjalan">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
                                     name="gaya_berjalan" id="resikoJatuh_berjalan_normal" value="0"
-                                    {{ old('gaya_berjalan', $skalaMorse->gaya_berjalan) == '0' ? 'checked' : '' }} required>
+                                    {{ old('gaya_berjalan', $skalaMorse->gaya_berjalan) == '0' ? 'checked' : '' }}>
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_berjalan_normal">
                                     a. Normal / bed rest / kursi roda
                                     <span
-                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge bg-primary">Skor:
                                         0</span>
                                 </label>
                             </div>
@@ -217,7 +218,7 @@
                                     for="resikoJatuh_berjalan_lemah">
                                     b. Lemah
                                     <span
-                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge bg-primary">Skor:
                                         10</span>
                                 </label>
                             </div>
@@ -229,7 +230,7 @@
                                     for="resikoJatuh_berjalan_terganggu">
                                     c. Terganggu
                                     <span
-                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge bg-primary">Skor:
                                         20</span>
                                 </label>
                             </div>
@@ -241,12 +242,12 @@
                             <div class="form-check resiko_jatuh__criteria-form-check {{ old('status_mental', $skalaMorse->status_mental) == '0' ? 'selected' : '' }}" data-group="status_mental">
                                 <input class="form-check-input resiko_jatuh__criteria-form-check-input" type="radio"
                                     name="status_mental" id="resikoJatuh_mental_orientasi" value="0"
-                                    {{ old('status_mental', $skalaMorse->status_mental) == '0' ? 'checked' : '' }} required>
+                                    {{ old('status_mental', $skalaMorse->status_mental) == '0' ? 'checked' : '' }}>
                                 <label class="form-check-label resiko_jatuh__criteria-form-check-label"
                                     for="resikoJatuh_mental_orientasi">
                                     a. Berorientasi pada kemampuannya
                                     <span
-                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge bg-primary">Skor:
                                         0</span>
                                 </label>
                             </div>
@@ -258,7 +259,7 @@
                                     for="resikoJatuh_mental_lupa">
                                     b. Lupa akan keterbatasannya
                                     <span
-                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge">Skor:
+                                        class="badge resiko_jatuh__badge resiko_jatuh__badge-info resiko_jatuh__score-badge bg-primary">Skor:
                                         15</span>
                                 </label>
                             </div>
@@ -273,7 +274,7 @@
                                 <div class="card resiko_jatuh__card resiko_jatuh__result-card bg-light">
                                     <div class="card-body">
                                         <h5>SKOR TOTAL</h5>
-                                        <div id="resikoJatuh_skorTotal" class="resiko_jatuh__score-total">{{ old('skor_total', $skalaMorse->skor_total) }}</div>
+                                        <div id="resikoJatuh_skorTotal" class="resiko_jatuh__score-total bg-primary">{{ old('skor_total', $skalaMorse->skor_total) }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -329,10 +330,12 @@
 
                         <div class="alert alert-success">
                             <strong><i class="ti-info-alt mr-2"></i>INFORMASI:</strong>
-                            Beri tanda cek (√) pada tindakan yang dilakukan <br>
-                            1. RT: intervensi setiap shift dan dinilai ulang setiap 2 hari) <br>
-                            2. RS: intervensi setiap pagi dan dinilai ulang tiap 3 hari) <br>
-                            3. RR: intervensi setiap pagi dan dinilai ulang tiap 3 hari )
+                            Beri tanda cek (√) pada tindakan yang dilakukan
+                            <ol class="ms-2">
+                                <li>RT: intervensi setiap shift dan dinilai ulang setiap 2 hari</li>
+                                <li>RS: intervensi setiap pagi dan dinilai ulang tiap 3 hari</li>
+                                <li>RR: intervensi setiap pagi dan dinilai ulang tiap 3 hari</li>
+                            </ol>
                         </div>
 
                         <div class="resiko_jatuh__criteria-section">
@@ -353,12 +356,12 @@
                                     value="orientasi_pasien" {{ in_array('orientasi_pasien', old('intervensi_rr', $intervensiRR)) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="rr_intervensi_2">
                                     <strong>2. Orientasikan pasien terhadap lingkungan dan rutinitas RS:</strong>
-                                    <ul class="mt-2 ml-3" style="font-size: 13px;">
-                                        <li>a. Tunjukkan lokasi kamar mandi</li>
-                                        <li>b. Jika pasien linglung, orientasi dilaksanakan bertahap</li>
-                                        <li>c. Tempatkan bel ditempat yang mudah dicapai</li>
-                                        <li>d. Instruksikan meminta bantuan perawat sebelum turun dari tempat tidur</li>
-                                    </ul>
+                                    <ol type="a" class="mt-2 ml-3" style="font-size: 13px;">
+                                        <li>Tunjukkan lokasi kamar mandi</li>
+                                        <li>Jika pasien linglung, orientasi dilaksanakan bertahap</li>
+                                        <li>Tempatkan bel ditempat yang mudah dicapai</li>
+                                        <li>Instruksikan meminta bantuan perawat sebelum turun dari tempat tidur</li>
+                                    </ol>
                                 </label>
                             </div>
 
@@ -420,10 +423,12 @@
 
                         <div class="alert alert-warning">
                             <strong><i class="ti-info-alt mr-2"></i>PERHATIAN:</strong>
-                            Beri tanda cek (√) pada tindakan yang dilakukan <br>
-                            1. RT: intervensi setiap shift dan dinilai ulang setiap 2 hari) <br>
-                            2. RS: intervensi setiap pagi dan dinilai ulang tiap 3 hari) <br>
-                            3. RR: intervensi setiap pagi dan dinilai ulang tiap 3 hari )
+                            Beri tanda cek (√) pada tindakan yang dilakukan
+                            <ol class="ms-2">
+                                <li>RT: intervensi setiap shift dan dinilai ulang setiap 2 hari</li>
+                                <li>RS: intervensi setiap pagi dan dinilai ulang tiap 3 hari</li>
+                                <li>RR: intervensi setiap pagi dan dinilai ulang tiap 3 hari</li>
+                            </ol>
                         </div>
 
                         <div class="resiko_jatuh__criteria-section">
@@ -501,10 +506,12 @@
 
                         <div class="alert alert-danger">
                             <strong><i class="ti-info-alt mr-2"></i>PERHATIAN:</strong>
-                            Beri tanda cek (√) pada tindakan yang dilakukan <br>
-                            1. RT: intervensi setiap shift dan dinilai ulang setiap 2 hari) <br>
-                            2. RS: intervensi setiap pagi dan dinilai ulang tiap 3 hari) <br>
-                            3. RR: intervensi setiap pagi dan dinilai ulang tiap 3 hari )
+                            Beri tanda cek (√) pada tindakan yang dilakukan
+                            <ol class="ms-2">
+                                <li>RT: intervensi setiap shift dan dinilai ulang setiap 2 hari</li>
+                                <li>RS: intervensi setiap pagi dan dinilai ulang tiap 3 hari</li>
+                                <li>RR: intervensi setiap pagi dan dinilai ulang tiap 3 hari</li>
+                            </ol>
                         </div>
 
                         <div class="resiko_jatuh__criteria-section">
@@ -541,9 +548,9 @@
                         </div>
                     </div>
 
-                    <div class="text-end mt-4">
-                        <button type="submit" class="btn btn-success resiko_jatuh__btn-primary" id="resikoJatuh_simpan">
-                            <i class="ti-save mr-2"></i> Update Data
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary" id="resikoJatuh_simpan">
+                            <i class="ti-save me-1"></i> Update Data
                         </button>
                     </div>
                 </div>
@@ -551,7 +558,7 @@
 
             <!-- Keterangan -->
             <div class="resiko_jatuh__section-separator mt-3">
-                <h5><i class="ti-info mr-2"></i> Keterangan</h5>
+                <h5><i class="ti-info me-2"></i> Keterangan</h5>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="resiko_jatuh__keterangan-box">
@@ -576,21 +583,21 @@
                         <div class="resiko_jatuh__keterangan-box">
                             <h6 class="resiko_jatuh__keterangan-title"><strong>Pengkajian resiko jatuh dilakukan pada waktu
                                     :</strong></h6>
-                            <ul class="resiko_jatuh__keterangan-list">
+                            <ol type="a">
                                 <li>
-                                    <strong>a.</strong> Saat pasien masuk RS / Initial Assessment (IA)
+                                    Saat pasien masuk RS / Initial Assessment (IA)
                                 </li>
                                 <li>
-                                    <strong>b.</strong> Saat kondisi pasien berubah atau ada suatu perubahan dalam terapi
+                                    Saat kondisi pasien berubah atau ada suatu perubahan dalam terapi
                                     medik yang dapat resiko jatuh / Change Of Condition (CC)
                                 </li>
                                 <li>
-                                    <strong>c.</strong> Saat pasien dipindahkan ke Unit lain / on Ward Transfer (WT)
+                                    Saat pasien dipindahkan ke Unit lain / on Ward Transfer (WT)
                                 </li>
                                 <li>
-                                    <strong>d.</strong> Setelah kejadian jatuh / Post Fall (PF)
+                                    Setelah kejadian jatuh / Post Fall (PF)
                                 </li>
-                            </ul>
+                            </ol>
                         </div>
                     </div>
                 </div>

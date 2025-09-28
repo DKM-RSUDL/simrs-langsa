@@ -56,7 +56,8 @@
                                             <i class="fas fa-eye"></i>
                                         </button>
 
-                                        <a href="{{ route('rawat-inap.informed-consent.print', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-success btn-sm" title="Cetak" target="_blank">
+                                        <a href="{{ route('rawat-inap.informed-consent.print', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                            class="btn btn-success btn-sm" title="Cetak" target="_blank">
                                             <i class="ti-printer"></i>
                                         </a>
 
@@ -146,7 +147,55 @@
 
                     // success
                     $(target).find('#tanggal').val(data.tanggal);
-                    $(target).find('#jam').val(data.jam);
+
+                    // Normalize time value so input[type=time] accepts it (HH:MM or HH:MM:SS)
+                    let jamValue = data.jam || '';
+
+                    function normalizeTime(t) {
+                        t = String(t).trim();
+                        if (!t) return '';
+
+                        // remove trailing milliseconds if any
+                        t = t.replace(/\.\d+$/, '');
+
+                        // replace dots with colons (e.g. 10.30 -> 10:30)
+                        t = t.replace(/\./g, ':');
+
+                        // handle AM/PM formats like "10:30 AM" or "10:30:00 PM"
+                        let ampmMatch = t.match(/\s*(AM|PM)$/i);
+                        if (ampmMatch) {
+                            let ampm = ampmMatch[1].toUpperCase();
+                            let timePart = t.replace(/\s*(AM|PM)$/i, '').trim();
+                            let parts = timePart.split(':');
+                            let h = parseInt(parts[0], 10) || 0;
+                            let m = parts[1] || '00';
+                            if (ampm === 'PM' && h < 12) h += 12;
+                            if (ampm === 'AM' && h === 12) h = 0;
+                            return ('0' + h).slice(-2) + ':' + ('0' + (parseInt(m, 10) || 0)).slice(-2);
+                        }
+
+                        // hh:mm or hh:mm:ss -> return hh:mm
+                        let hm = t.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+                        if (hm) {
+                            let hh = ('0' + hm[1]).slice(-2);
+                            let mm = hm[2];
+                            return hh + ':' + mm;
+                        }
+
+                        // If it's continuous digits like 930 or 0930 -> convert to hh:mm
+                        let digits = t.match(/^(\d{3,4})$/);
+                        if (digits) {
+                            let s = digits[1];
+                            if (s.length === 3) s = '0' + s;
+                            return s.slice(0, 2) + ':' + s.slice(2, 4);
+                        }
+
+                        // Fallback: return original value
+                        return t;
+                    }
+
+                    let jamNormalized = normalizeTime(jamValue);
+                    $(target).find('#jam').val(jamNormalized);
                     $(target).find('#nama_pemberi_info').val(data.nama_pemberi_info);
                     $(target).find('#nama_penerima_info').val(data.nama_penerima_info);
                     $(target).find('#diagnosis').val(data.diagnosis);
@@ -177,7 +226,7 @@
                     $(target).find('#status_menerangkan_informasi').val(data
                         .status_menerangkan_informasi);
                     $(target).find('#status_persetujuan_keluarga').val(data
-                    .status_persetujuan_keluarga);
+                        .status_persetujuan_keluarga);
 
                     $(target).modal('show');
 

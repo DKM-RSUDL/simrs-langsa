@@ -400,95 +400,141 @@
                         <!-- Riwayat Alkohol/Obat dan Merokok -->
                         <div class="col-12 mb-3 section-separator">
                             <h6 class="fw-bold">Riwayat Konsumsi</h6>
+                            @php
+                                // ambil dan pastikan array (bisa berupa JSON string dari DB)
+                                $alkoholObat = old('alkohol_obat', $asesmen->asesmenKetDewasaRanapRiwayatPasien->alkohol_obat ?? '');
+                                $alkoholJenis = $asesmen->asesmenKetDewasaRanapRiwayatPasien->alkohol_jenis ?? null;
+                                $alkoholJumlah = $asesmen->asesmenKetDewasaRanapRiwayatPasien->alkohol_jumlah ?? null;
 
-                            <!-- Alkohol/Obat -->
-                            <div class="row mb-3">
-                                <div class="col-md-6">
+                                if (is_string($alkoholJenis) && $alkoholJenis !== '') {
+                                    $alkoholJenis = json_decode($alkoholJenis, true) ?: [];
+                                }
+                                if (!is_array($alkoholJenis)) $alkoholJenis = (array) $alkoholJenis;
+
+                                if (is_string($alkoholJumlah) && $alkoholJumlah !== '') {
+                                    $alkoholJumlah = json_decode($alkoholJumlah, true) ?: [];
+                                }
+                                if (!is_array($alkoholJumlah)) $alkoholJumlah = (array) $alkoholJumlah;
+
+                                $merokok = old('merokok', $asesmen->asesmenKetDewasaRanapRiwayatPasien->merokok ?? '');
+                                $merokokJenis = $asesmen->asesmenKetDewasaRanapRiwayatPasien->merokok_jenis ?? null;
+                                $merokokJumlah = $asesmen->asesmenKetDewasaRanapRiwayatPasien->merokok_jumlah ?? null;
+
+                                if (is_string($merokokJenis) && $merokokJenis !== '') {
+                                    $merokokJenis = json_decode($merokokJenis, true) ?: [];
+                                }
+                                if (!is_array($merokokJenis)) $merokokJenis = (array) $merokokJenis;
+
+                                if (is_string($merokokJumlah) && $merokokJumlah !== '') {
+                                    $merokokJumlah = json_decode($merokokJumlah, true) ?: [];
+                                }
+                                if (!is_array($merokokJumlah)) $merokokJumlah = (array) $merokokJumlah;
+
+                                $alkoholCount = max(1, max(count($alkoholJenis), count($alkoholJumlah)));
+                                $merokokCount = max(1, max(count($merokokJenis), count($merokokJumlah)));
+                            @endphp
+
+                            <div class="d-flex flex-column gap-4">
+                                <div class="col-md-12">
                                     <label class="form-label fw-bold">Alkohol/obat:</label>
                                     <div class="d-flex align-items-center gap-3 mb-2">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="alkohol_obat"
-                                                id="alkohol_tidak" value="tidak"
-                                                {{ old('alkohol_obat', $asesmen->asesmenKetDewasaRanapRiwayatPasien->alkohol_obat ?? '') === 'tidak' ? 'checked' : '' }}>
+                                            <input class="form-check-input" type="radio" name="alkohol_obat" id="alkohol_tidak" value="tidak"
+                                                {{ $alkoholObat === 'tidak' ? 'checked' : '' }}>
                                             <label class="form-check-label" for="alkohol_tidak">Tidak</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="alkohol_obat"
-                                                id="alkohol_ya" value="ya"
-                                                {{ old('alkohol_obat', $asesmen->asesmenKetDewasaRanapRiwayatPasien->alkohol_obat ?? '') === 'ya' ? 'checked' : '' }}>
+                                            <input class="form-check-input" type="radio" name="alkohol_obat" id="alkohol_ya" value="ya"
+                                                {{ $alkoholObat === 'ya' ? 'checked' : '' }}>
                                             <label class="form-check-label" for="alkohol_ya">Ya</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="alkohol_obat"
-                                                id="alkohol_berhenti" value="berhenti"
-                                                {{ old('alkohol_obat', $asesmen->asesmenKetDewasaRanapRiwayatPasien->alkohol_obat ?? '') === 'berhenti' ? 'checked' : '' }}>
+                                            <input class="form-check-input" type="radio" name="alkohol_obat" id="alkohol_berhenti" value="berhenti"
+                                                {{ $alkoholObat === 'berhenti' ? 'checked' : '' }}>
                                             <label class="form-check-label" for="alkohol_berhenti">Berhenti</label>
                                         </div>
                                     </div>
 
-                                    <!-- Detail untuk alkohol/obat jika Ya dipilih -->
-                                    <div class="alkohol-detail" style="display: {{ old('alkohol_obat', $asesmen->asesmenKetDewasaRanapRiwayatPasien->alkohol_obat ?? '') === 'ya' ? 'block' : 'none' }};">
-                                        <div class="row">
-                                            <div class="col-md-6 mb-2">
-                                                <label class="form-label">Jenis:</label>
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="alkohol_jenis"
-                                                    value="{{ old('alkohol_jenis', $asesmen->asesmenKetDewasaRanapRiwayatPasien->alkohol_jenis ?? '') }}">
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <label class="form-label">Jumlah/hari:</label>
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="alkohol_jumlah"
-                                                    value="{{ old('alkohol_jumlah', $asesmen->asesmenKetDewasaRanapRiwayatPasien->alkohol_jumlah ?? '') }}">
-                                            </div>
+                                    <div class="alkohol-detail" style="display: {{ $alkoholObat === 'ya' ? 'block' : 'none' }};">
+                                        <div id="alkoholContainer">
+                                            @for($i = 0; $i < $alkoholCount; $i++)
+                                                <div class="d-flex gap-2 align-items-end mb-2 consumption-row">
+                                                    <div class="col">
+                                                        <label class="form-label">Jenis:</label>
+                                                        <input type="text" class="form-control form-control-sm" name="alkohol_jenis[]"
+                                                            placeholder="Jenis alkohol/obat"
+                                                            value="{{ old('alkohol_jenis.' . $i, $alkoholJenis[$i] ?? '') }}">
+                                                    </div>
+                                                    <div class="col">
+                                                        <label class="form-label">Jumlah/hari:</label>
+                                                        <input type="text" class="form-control form-control-sm" name="alkohol_jumlah[]"
+                                                            placeholder="Jumlah per hari"
+                                                            value="{{ old('alkohol_jumlah.' . $i, $alkoholJumlah[$i] ?? '') }}">
+                                                    </div>
+                                                    <div>
+                                                        <button type="button" class="btn btn-danger btn-sm remove-consumption"><i class="fa fa-minus"></i></button>
+                                                    </div>
+                                                </div>
+                                            @endfor
+                                        </div>
+
+                                        <div class="d-flex justify-content-end">
+                                            <button type="button" class="btn btn-sm btn-primary add-alkohol">Tambah</button>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Merokok -->
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <label class="form-label fw-bold">Merokok:</label>
                                     <div class="d-flex align-items-center gap-3 mb-2">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="merokok"
-                                                id="merokok_tidak" value="tidak"
-                                                {{ old('merokok', $asesmen->asesmenKetDewasaRanapRiwayatPasien->merokok ?? '') === 'tidak' ? 'checked' : '' }}>
+                                            <input class="form-check-input" type="radio" name="merokok" id="merokok_tidak" value="tidak"
+                                                {{ $merokok === 'tidak' ? 'checked' : '' }}>
                                             <label class="form-check-label" for="merokok_tidak">Tidak</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="merokok" id="merokok_ya"
-                                                value="ya"
-                                                {{ old('merokok', $asesmen->asesmenKetDewasaRanapRiwayatPasien->merokok ?? '') === 'ya' ? 'checked' : '' }}>
+                                            <input class="form-check-input" type="radio" name="merokok" id="merokok_ya" value="ya"
+                                                {{ $merokok === 'ya' ? 'checked' : '' }}>
                                             <label class="form-check-label" for="merokok_ya">Ya</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="merokok"
-                                                id="merokok_berhenti" value="berhenti"
-                                                {{ old('merokok', $asesmen->asesmenKetDewasaRanapRiwayatPasien->merokok ?? '') === 'berhenti' ? 'checked' : '' }}>
+                                            <input class="form-check-input" type="radio" name="merokok" id="merokok_berhenti" value="berhenti"
+                                                {{ $merokok === 'berhenti' ? 'checked' : '' }}>
                                             <label class="form-check-label" for="merokok_berhenti">Berhenti</label>
                                         </div>
                                     </div>
 
-                                    <!-- Detail untuk merokok jika Ya dipilih -->
-                                    <div class="merokok-detail" style="display: {{ old('merokok', $asesmen->asesmenKetDewasaRanapRiwayatPasien->merokok ?? '') === 'ya' ? 'block' : 'none' }};">
-                                        <div class="row">
-                                            <div class="col-md-6 mb-2">
-                                                <label class="form-label">Jenis:</label>
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="merokok_jenis"
-                                                    value="{{ old('merokok_jenis', $asesmen->asesmenKetDewasaRanapRiwayatPasien->merokok_jenis ?? '') }}">
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <label class="form-label">Jumlah/hari:</label>
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="merokok_jumlah"
-                                                    value="{{ old('merokok_jumlah', $asesmen->asesmenKetDewasaRanapRiwayatPasien->merokok_jumlah ?? '') }}">
-                                            </div>
+                                    <div class="merokok-detail" style="display: {{ $merokok === 'ya' ? 'block' : 'none' }};">
+                                        <div id="merokokContainer">
+                                            @for($i = 0; $i < $merokokCount; $i++)
+                                                <div class="d-flex gap-2 align-items-end mb-2 consumption-row">
+                                                    <div class="col">
+                                                        <label class="form-label">Jenis:</label>
+                                                        <input type="text" class="form-control form-control-sm" name="merokok_jenis[]"
+                                                            placeholder="Jenis rokok"
+                                                            value="{{ old('merokok_jenis.' . $i, $merokokJenis[$i] ?? '') }}">
+                                                    </div>
+                                                    <div class="col">
+                                                        <label class="form-label">Jumlah/hari:</label>
+                                                        <input type="text" class="form-control form-control-sm" name="merokok_jumlah[]"
+                                                            placeholder="Batang per hari"
+                                                            value="{{ old('merokok_jumlah.' . $i, $merokokJumlah[$i] ?? '') }}">
+                                                    </div>
+                                                    <div>
+                                                        <button type="button" class="btn btn-danger btn-sm remove-consumption"><i class="fa fa-minus"></i></button>
+                                                    </div>
+                                                </div>
+                                            @endfor
+                                        </div>
+
+                                        <div class="d-flex justify-content-end">
+                                            <button type="button" class="btn btn-sm btn-primary add-merokok">Tambah</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
 
                         <!-- Riwayat Keluarga -->
                         <div class="col-12 mb-3 section-separator">
@@ -3085,11 +3131,11 @@
                                 <div class="row">
                                     <div class="col-md-4 mb-2">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="pengaruh_perawatan[]" id="pelayanan" value="pelayanan"
-                                                {{ in_array('pelayanan', old('pengaruh_perawatan', is_array($asesmen->asesmenKetDewasaRanapDietKhusus->pengaruh_perawatan)
+                                            <input class="form-check-input" type="checkbox" name="pengaruh_perawatan[]" id="pekerjaan" value="pekerjaan"
+                                                {{ in_array('pekerjaan', old('pengaruh_perawatan', is_array($asesmen->asesmenKetDewasaRanapDietKhusus->pengaruh_perawatan)
                                                     ? $asesmen->asesmenKetDewasaRanapDietKhusus->pengaruh_perawatan
                                                     : ($asesmen->asesmenKetDewasaRanapDietKhusus->pengaruh_perawatan ? json_decode($asesmen->asesmenKetDewasaRanapDietKhusus->pengaruh_perawatan, true) : []))) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="pelayanan">2. Pelayanan</label>
+                                            <label class="form-check-label" for="pelayanan">2. Pekerjaan</label>
                                         </div>
                                     </div>
                                     <div class="col-md-4 mb-2">
@@ -4821,3 +4867,84 @@
     </div>
 </div>
 @endsection
+@push('js')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // toggle detail based on radio
+  function toggleSection(radioName, selector) {
+    document.querySelectorAll('input[name="'+radioName+'"]').forEach(r => {
+      r.addEventListener('change', function() {
+        const el = document.querySelector(selector);
+        if (!el) return;
+        if (this.value === 'ya' && this.checked) el.style.display = 'block';
+        else if (this.checked) el.style.display = 'none';
+      });
+    });
+  }
+  toggleSection('alkohol_obat', '.alkohol-detail');
+  toggleSection('merokok', '.merokok-detail');
+
+  // template row creators
+  function alkoholRowHTML() {
+    return `<div class="d-flex gap-2 align-items-end mb-2 consumption-row">
+              <div class="col">
+                <label class="form-label">Jenis:</label>
+                <input type="text" class="form-control form-control-sm" name="alkohol_jenis[]" placeholder="Jenis alkohol/obat">
+              </div>
+              <div class="col">
+                <label class="form-label">Jumlah/hari:</label>
+                <input type="text" class="form-control form-control-sm" name="alkohol_jumlah[]" placeholder="Jumlah per hari">
+              </div>
+              <div>
+                <button type="button" class="btn btn-danger btn-sm remove-consumption"><i class="fa fa-minus"></i></button>
+              </div>
+            </div>`;
+  }
+  function merokokRowHTML() {
+    return `<div class="d-flex gap-2 align-items-end mb-2 consumption-row">
+              <div class="col">
+                <label class="form-label">Jenis:</label>
+                <input type="text" class="form-control form-control-sm" name="merokok_jenis[]" placeholder="Jenis rokok">
+              </div>
+              <div class="col">
+                <label class="form-label">Jumlah/hari:</label>
+                <input type="text" class="form-control form-control-sm" name="merokok_jumlah[]" placeholder="Batang per hari">
+              </div>
+              <div>
+                <button type="button" class="btn btn-danger btn-sm remove-consumption"><i class="fa fa-minus"></i></button>
+              </div>
+            </div>`;
+  }
+
+  // add/remove handlers
+  document.body.addEventListener('click', function(e) {
+    const addAlk = e.target.closest('.add-alkohol');
+    if (addAlk) {
+      e.preventDefault();
+      document.getElementById('alkoholContainer').insertAdjacentHTML('beforeend', alkoholRowHTML());
+      return;
+    }
+    const addMer = e.target.closest('.add-merokok');
+    if (addMer) {
+      e.preventDefault();
+      document.getElementById('merokokContainer').insertAdjacentHTML('beforeend', merokokRowHTML());
+      return;
+    }
+    const rem = e.target.closest('.remove-consumption');
+    if (rem) {
+      e.preventDefault();
+      const row = rem.closest('.consumption-row');
+      if (!row) return;
+      const parent = row.parentElement;
+      const rows = parent.querySelectorAll('.consumption-row');
+      if (rows.length <= 1) {
+        // kosongkan jika hanya 1 baris tersisa
+        row.querySelectorAll('input').forEach(i => i.value = '');
+      } else {
+        row.remove();
+      }
+    }
+  });
+});
+</script>
+@endpush

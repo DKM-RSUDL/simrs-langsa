@@ -4,11 +4,9 @@
 @section('content')
 <style>
     .resiko_jatuh__header-asesmen {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         padding: 20px;
         border-radius: 10px;
-        margin-bottom: 30px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
 
@@ -16,9 +14,7 @@
         background: white;
         border-radius: 10px;
         padding: 25px;
-        margin-bottom: 20px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        border-left: 4px solid #667eea;
     }
 
     .resiko_jatuh__info-box {
@@ -75,13 +71,13 @@
         @include('components.patient-card')
     </div>
 
-    <div class="col-md-9">
+    <div class="col-md-9 gap-4 d-flex flex-column">
         <a href="{{ route('rawat-inap.resiko-jatuh.morse.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
             class="btn btn-outline-primary resiko_jatuh__btn-outline-primary mb-3">
             <i class="ti-arrow-left"></i> Kembali
         </a>
 
-        <div class="resiko_jatuh__header-asesmen text-center">
+        <div class="resiko_jatuh__header-asesmen bg-primary text-center">
             <h4 class="mb-2">
                 <i class="ti-clipboard mr-2"></i>
                 DETAIL PENGKAJIAN RESIKO JATUH - SKALA MORSE
@@ -102,7 +98,7 @@
                         <tr>
                             <th>Hari Ke:</th>
                             <td>{{ $skalaMorse->hari_ke }}</td>
-                        </tr>                        
+                        </tr>
                     </table>
                 </div>
                 <div class="col-md-6">
@@ -207,7 +203,7 @@
 
         <!-- Intervensi yang Dipilih -->
         @if($skalaMorse->kategori_resiko == 'RR' && $skalaMorse->intervensi_rr)
-        <div class="resiko_jatuh__section-separator" style="border-left-color: #28a745;">
+        <div class="resiko_jatuh__section-separator" >
             <h5 style="color: #28a745;"><i class="ti-shield mr-2"></i> Intervensi Pencegahan - Resiko Rendah</h5>
 
             @php $intervensiNames = $skalaMorse->getIntervensiNamesHtml(); @endphp
@@ -224,7 +220,7 @@
         @endif
 
         @if($skalaMorse->kategori_resiko == 'RS' && $skalaMorse->intervensi_rs)
-        <div class="resiko_jatuh__section-separator" style="border-left-color: #ffc107;">
+        <div class="resiko_jatuh__section-separator">
             <h5 style="color: #856404;"><i class="ti-alert mr-2"></i> Intervensi Pencegahan - Resiko Sedang</h5>
 
             @php $intervensiNames = $skalaMorse->getIntervensiNamesHtml(); @endphp
@@ -241,7 +237,7 @@
         @endif
 
         @if($skalaMorse->kategori_resiko == 'RT' && $skalaMorse->intervensi_rt)
-        <div class="resiko_jatuh__section-separator" style="border-left-color: #dc3545;">
+        <div class="resiko_jatuh__section-separator">
             <h5 style="color: #dc3545;"><i class="ti-alert mr-2"></i> Intervensi Pencegahan - Resiko Tinggi</h5>
 
             @php $intervensiNames = $skalaMorse->getIntervensiNamesHtml(); @endphp
@@ -258,10 +254,10 @@
         @endif
 
         <!-- Action Buttons -->
-        <div class="text-end mt-4 mb-4">
+        <div class="text-end mb-4">
             <a href="{{ route('rawat-inap.resiko-jatuh.morse.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $skalaMorse->id]) }}"
                 class="btn btn-warning">
-                <i class="ti-pencil mr-2"></i> Edit
+                <i class="ti-pencil me-1"></i> Edit
             </a>
         </div>
     </div>

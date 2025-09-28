@@ -121,15 +121,7 @@ class SkalaMorseController extends Controller
         $request->validate([
             'tanggal' => 'required|date',
             'hari_ke' => 'required|integer|min:1',
-            'shift' => 'required|in:PG,SI,ML',
-            'riwayat_jatuh' => 'required|in:0,25',
-            'diagnosa_sekunder' => 'required|in:0,15',
-            'bantuan_ambulasi' => 'required|in:0,15,30',
-            'terpasang_infus' => 'required|in:0,20',
-            'gaya_berjalan' => 'required|in:0,10,20',
-            'status_mental' => 'required|in:0,15',
-            'skor_total' => 'required|integer|min:0',
-            'kategori_resiko' => 'required|in:RR,RS,RT',
+            'shift' => 'required|in:PG,SI,ML'
         ]);
 
         DB::beginTransaction();
@@ -240,14 +232,6 @@ class SkalaMorseController extends Controller
             'tanggal' => 'required|date',
             'hari_ke' => 'required|integer|min:1',
             'shift' => 'required|in:PG,SI,ML',
-            'riwayat_jatuh' => 'required|in:0,25',
-            'diagnosa_sekunder' => 'required|in:0,15',
-            'bantuan_ambulasi' => 'required|in:0,15,30',
-            'terpasang_infus' => 'required|in:0,20',
-            'gaya_berjalan' => 'required|in:0,10,20',
-            'status_mental' => 'required|in:0,15',
-            'skor_total' => 'required|integer|min:0',
-            'kategori_resiko' => 'required|in:RR,RS,RT',
         ]);
 
         DB::beginTransaction();

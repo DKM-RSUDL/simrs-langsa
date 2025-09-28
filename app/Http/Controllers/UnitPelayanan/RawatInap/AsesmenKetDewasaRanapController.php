@@ -171,6 +171,15 @@ class AsesmenKetDewasaRanapController extends Controller
         return $data;
     }
 
+    // helper kecil di dalam controller class
+    private function ensureArray($value)
+    {
+        if (is_null($value)) return [];
+        if (is_array($value)) return array_values($value);
+        // jika string (mis. single value), bungkus jadi array
+        return [$value];
+    }
+
     public function create(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
             $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
@@ -260,11 +269,11 @@ class AsesmenKetDewasaRanapController extends Controller
                 'riwayat_pasien' => $request->riwayat_pasien ?? [],
                 'riwayat_pasien_lain' => $request->riwayat_pasien_lain,
                 'alkohol_obat' => $request->alkohol_obat,
-                'alkohol_jenis' => $request->alkohol_jenis,
-                'alkohol_jumlah' => $request->alkohol_jumlah,
+                'alkohol_jenis' => $this->formatJsonForDatabase($request->input('alkohol_jenis')),
+                'alkohol_jumlah' => $this->formatJsonForDatabase($request->input('alkohol_jumlah')),
                 'merokok' => $request->merokok,
-                'merokok_jenis' => $request->merokok_jenis,
-                'merokok_jumlah' => $request->merokok_jumlah,
+                'merokok_jenis' => $this->formatJsonForDatabase($request->input('merokok_jenis')),
+                'merokok_jumlah' => $this->formatJsonForDatabase($request->input('merokok_jumlah')),
                 'riwayat_keluarga' => $request->riwayat_keluarga ?? [],
                 'diabetes_lainnya' => $request->diabetes_lainnya,
                 'psikososial_status_pernikahan' => $request->psikososial_status_pernikahan,
@@ -661,6 +670,13 @@ class AsesmenKetDewasaRanapController extends Controller
                     'user_edit' => Auth::id(),
                 ]
             );
+
+            // sebelum memanggil updateOrCreate / create: normalisasi
+            $alkoholJenis = $this->ensureArray($request->input('alkohol_jenis'));
+            $alkoholJumlah = $this->ensureArray($request->input('alkohol_jumlah'));
+            $merokokJenis = $this->ensureArray($request->input('merokok_jenis'));
+            $merokokJumlah = $this->ensureArray($request->input('merokok_jumlah'));
+
             $asesmen->asesmenKetDewasaRanapRiwayatPasien()->updateOrCreate(
                 ['id_asesmen' => $asesmen->id],
                 [
@@ -669,11 +685,11 @@ class AsesmenKetDewasaRanapController extends Controller
                     'riwayat_pasien' => $request->riwayat_pasien ?? [],
                     'riwayat_pasien_lain' => $request->riwayat_pasien_lain,
                     'alkohol_obat' => $request->alkohol_obat,
-                    'alkohol_jenis' => $request->alkohol_jenis,
-                    'alkohol_jumlah' => $request->alkohol_jumlah,
+                    'alkohol_jenis' => $this->formatJsonForDatabase($alkoholJenis),
+                    'alkohol_jumlah' => $this->formatJsonForDatabase($alkoholJumlah),
                     'merokok' => $request->merokok,
-                    'merokok_jenis' => $request->merokok_jenis,
-                    'merokok_jumlah' => $request->merokok_jumlah,
+                    'merokok_jenis' => $this->formatJsonForDatabase($merokokJenis),
+                    'merokok_jumlah' => $this->formatJsonForDatabase($merokokJumlah),
                     'riwayat_keluarga' => $request->riwayat_keluarga ?? [],
                     'diabetes_lainnya' => $request->diabetes_lainnya,
                     'psikososial_status_pernikahan' => $request->psikososial_status_pernikahan,
