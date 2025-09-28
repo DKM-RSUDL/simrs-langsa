@@ -4329,7 +4329,6 @@
                                         btn.disabled = true;
                                     }
                                 }
-                                // allow form to submit normally
                             });
                         })();
                     </script>
