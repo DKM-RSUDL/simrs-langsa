@@ -4,36 +4,34 @@ namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Http\Controllers\Controller;
 use App\Models\AsalIGD;
+use App\Models\DataTriase;
 use App\Models\DetailComponent;
 use App\Models\DetailPrsh;
 use App\Models\DetailTransaksi;
 use App\Models\Dokter;
 use App\Models\HrdKaryawan;
 use App\Models\KamarInduk;
+use App\Models\Konsultasi;
+use App\Models\KonsultasiIGD;
 use App\Models\Kunjungan;
+use App\Models\ListTindakanPasien;
 use App\Models\Nginap;
+use App\Models\Pasien;
 use App\Models\PasienInap;
+use App\Models\RmeAsesmen;
 use App\Models\RmeSerahTerima;
 use App\Models\RujukanKunjungan;
+use App\Models\SegalaOrder;
 use App\Models\SjpKunjungan;
 use App\Models\SpcKelas;
 use App\Models\Spesialisasi;
 use App\Models\Tarif;
 use App\Models\Transaksi;
 use App\Models\Unit;
-use App\Models\Pasien;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Models\DataTriase;
-use App\Models\VitalSign;
-use App\Models\Konsultasi;
-use App\Models\RmeAsesmen;
-use App\Models\ListTindakanPasien;
-use App\Models\KonsultasiIGD;
-use App\Models\SegalaOrder;
-
 
 class TransferPasienController extends Controller
 {
@@ -202,6 +200,345 @@ class TransferPasienController extends Controller
 
     public function storeTransferInap(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
+        $messageErr = [
+            'kd_spesial.required'   => 'Spesialisasi harus dipilih!',
+            'kd_dokter.required'    => 'Dokter harus dipilih!',
+            'kd_kelas.required'     => 'Kelas harus dipilih!',
+            'kd_unit.required'      => 'Ruangan harus dipilih!',
+            'no_kamar.required'     => 'Kamar harus dipilih!',
+            'sisa_bed.required'     => 'Sisa bed tidak boleh kosong!',
+        ];
+
+        $request->validate([
+            'kd_spesial'    => 'required',
+            'kd_dokter'     => 'required',
+            'kd_kelas'      => 'required',
+            'kd_unit'       => 'required',
+            'no_kamar'      => 'required',
+            'sisa_bed'      => 'required',
+
+            // HANDOVER
+            'subjective'            => 'required',
+            'background'            => 'required',
+            'assessment'            => 'required',
+            'recomendation'         => 'required',
+            'petugas_menyerahkan'   => 'required',
+            'tanggal_menyerahkan'   => 'required|date_format:Y-m-d',
+            'jam_menyerahkan'       => 'required|date_format:H:i',
+        ], $messageErr);
+
+        DB::beginTransaction();
+
+        try {
+            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->where('kunjungan.kd_unit', 3)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->first();
+
+            if ($dataMedis->status_kunjungan == 1) return back()->with('error', 'Pasien sudah pernah di transfer !');
+
+            $kdSpesial = $request->kd_spesial;
+            $kdDokter = $request->kd_dokter;
+            $kdKelas = $request->kd_kelas;
+            $kdUnit = $request->kd_unit;
+            $noKamar = $request->no_kamar;
+            $sisaBed = $request->sisa_bed;
+
+            // get antrian terakhir
+            $getLastAntrianToday = Kunjungan::select('antrian')
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('kd_unit', $kdUnit)
+                ->orderBy('antrian', 'desc')
+                ->first();
+
+            $no_antrian = !empty($getLastAntrianToday) ? $getLastAntrianToday->antrian + 1 : 1;
+
+            // pasien not null get last urut masuk
+            $getLastUrutMasukPatientToday = Kunjungan::select('urut_masuk')
+                ->where('kd_pasien', $kd_pasien)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->orderBy('urut_masuk', 'desc')
+                ->first();
+
+            $newUrutMasuk = !empty($getLastUrutMasukPatientToday) ? $getLastUrutMasukPatientToday->urut_masuk + 1 : 1;
+
+            // get tarif rawatan per unit
+            $tarifRawatan = Tarif::where('kd_tarif', 'TU')
+                ->where('kd_produk', 17)
+                ->where('kd_unit', $kdUnit)
+                ->whereNull('tgl_berakhir')
+                ->orderBy('tgl_berlaku', 'DESC')
+                ->first();
+
+            if (empty($tarifRawatan)) return back()->with('error', 'Tarif rawatan tidak ditemukan !');
+
+
+            // insert ke tabel kunjungan
+            $dataKunjungan = [
+                'kd_pasien'         => $kd_pasien,
+                'kd_unit'           => $kdUnit,
+                'tgl_masuk'         => $tgl_masuk,
+                'urut_masuk'        => $newUrutMasuk,
+                'jam_masuk'         => date('H:i:s'),
+                'asal_pasien'       => 0,
+                'cara_penerimaan'   => 99,
+                'kd_rujukan'        => $dataMedis->kd_rujukan,
+                'no_surat'          => '',
+                'kd_dokter'         => $kdDokter,
+                'baru'              => 1,
+                'kd_customer'       => $dataMedis->kd_customer,
+                'shift'             => 0,
+                'kontrol'           => 0,
+                'antrian'           => $no_antrian,
+                'tgl_surat'         => $tgl_masuk,
+                'jasa_raharja'      => 0,
+                'catatan'           => '',
+                'kd_triase'         => $dataMedis->kd_triase,
+                'status_inap'       => 0,
+                'user_create'       => Auth::id()
+            ];
+
+            Kunjungan::create($dataKunjungan);
+
+            // delete rujukan_kunjungan
+            RujukanKunjungan::where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kdUnit)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $newUrutMasuk)
+                ->delete();
+
+
+            // insert transaksi
+            $lastTransaction = Transaksi::select('no_transaksi')
+                ->where('kd_kasir', '02')
+                ->orderBy('no_transaksi', 'desc')
+                ->first();
+
+            if ($lastTransaction) {
+                $lastTransactionNumber = (int) $lastTransaction->no_transaksi;
+                $newTransactionNumber = $lastTransactionNumber + 1;
+            } else {
+                $newTransactionNumber = 1;
+            }
+
+            // formatted new transaction number with 7 digits length
+            $formattedTransactionNumber = str_pad($newTransactionNumber, 7, '0', STR_PAD_LEFT);
+
+            $dataTransaksi = [
+                'kd_kasir'      => '02',
+                'no_transaksi'  => $formattedTransactionNumber,
+                'kd_pasien'     => $kd_pasien,
+                'kd_unit'       => $kdUnit,
+                'tgl_transaksi' => $tgl_masuk,
+                'app'           => 0,
+                'ispay'         => 0,
+                'co_status'     => 0,
+                'urut_masuk'    => $newUrutMasuk,
+                'kd_user'       => Auth::id(),
+                'lunas'         => 0,
+            ];
+
+            Transaksi::create($dataTransaksi);
+
+
+            // insert detail_transaksi
+            $dataDetailTransaksi = [
+                'no_transaksi'  => $formattedTransactionNumber,
+                'kd_kasir'      => '02',
+                'tgl_transaksi' => $tgl_masuk,
+                'urut'          => 1,
+                'kd_tarif'      => 'TU',
+                'kd_produk'     => 17,
+                'kd_unit'       => $kdUnit,
+                'kd_unit_tr'    => $kdUnit,
+                'tgl_berlaku'   => $tarifRawatan->tgl_berlaku,
+                'kd_user'       => Auth::id(),
+                'shift'         => 0,
+                'harga'         => $tarifRawatan->tarif,
+                'qty'           => 1,
+                'flag'          => 0,
+                'jns_trans'     => 0,
+            ];
+
+            DetailTransaksi::create($dataDetailTransaksi);
+
+
+            // insert detail_prsh
+            $dataDetailPrsh = [
+                'kd_kasir'      => '02',
+                'no_transaksi'  => $formattedTransactionNumber,
+                'urut'          => 1,
+                'tgl_transaksi' => $tgl_masuk,
+                'hak'           => $tarifRawatan->tarif,
+                'selisih'       => 0,
+                'disc'          => 0
+            ];
+
+            DetailPrsh::create($dataDetailPrsh);
+
+
+            // delete detail_component
+            DetailComponent::where('kd_kasir', '02')
+                ->where('no_transaksi', $formattedTransactionNumber)
+                ->where('urut', 1)
+                ->delete();
+
+
+            // insert detail_component
+            $dataDetailComponent = [
+                'kd_kasir'      => '02',
+                'no_transaksi'  => $formattedTransactionNumber,
+                'tgl_transaksi' => $tgl_masuk,
+                'urut'          => 1,
+                'kd_component'  => '30',
+                'tarif'         => $tarifRawatan->tarif,
+                'disc'          => 0
+            ];
+
+            DetailComponent::create($dataDetailComponent);
+
+            // insert sjp_kunjungan
+            $sjpKunjunganData = [
+                'kd_pasien'     => $kd_pasien,
+                'kd_unit'       => $kdUnit,
+                'tgl_masuk'     => $tgl_masuk,
+                'urut_masuk'    => $newUrutMasuk,
+                'no_sjp'        => '',
+                'penjamin_laka' => 0,
+                'katarak'       => 0,
+                'dpjp'          => $kdDokter,
+                'cob'           => 0
+            ];
+
+            SjpKunjungan::create($sjpKunjunganData);
+
+            // insert tabel pasien inap
+            $pasienInapData = [
+                'kd_kasir'      => '02',
+                'no_transaksi'  => $formattedTransactionNumber,
+                'kd_unit'       => $kdUnit,
+                'no_kamar'      => $noKamar,
+                'kd_spesial'    => $kdSpesial,
+                'co_status'     => 1
+            ];
+
+            PasienInap::create($pasienInapData);
+
+            // insert tabel nginap
+            $getLastUrutNginap = Nginap::select('urut_nginap')
+                ->where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kdUnit)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $newUrutMasuk)
+                ->orderBy('urut_nginap', 'desc')
+                ->first();
+
+            $urutNginap = !empty($getLastUrutNginap) ? $getLastUrutNginap->urut_nginap + 1 : 1;
+
+
+            $nginapData = [
+                'kd_unit_kamar'     => $kdUnit,
+                'no_kamar'          => $noKamar,
+                'kd_pasien'         => $kd_pasien,
+                'kd_unit'           => $kdUnit,
+                'tgl_masuk'         => $tgl_masuk,
+                'urut_masuk'        => $newUrutMasuk,
+                'tgl_inap'          => $tgl_masuk,
+                'jam_inap'          => date('H:i:s'),
+                'kd_spesial'        => $kdSpesial,
+                'akhir'             => 1,
+                'urut_nginap'       => $urutNginap
+            ];
+
+            Nginap::create($nginapData);
+
+
+            // update kamar induk
+            $subquery = KamarInduk::query()
+                ->join('pasien_inap as pi', 'kamar_induk.NO_KAMAR', '=', 'pi.NO_KAMAR')
+                ->join('transaksi as t', function ($join) {
+                    $join->on('t.NO_TRANSAKSI', '=', 'pi.NO_TRANSAKSI')
+                        ->on('t.KD_KASIR', '=', 'pi.KD_KASIR');
+                })
+                ->join('nginap as ng', function ($join) {
+                    $join->on('ng.KD_PASIEN', '=', 't.KD_PASIEN')
+                        ->on('ng.TGL_MASUK', '=', 't.TGL_TRANSAKSI')
+                        ->on('ng.URUT_MASUK', '=', 't.URUT_MASUK')
+                        ->on('ng.KD_UNIT', '=', 't.KD_UNIT');
+                })
+                ->join('pasien as p', 'p.KD_PASIEN', '=', 't.KD_PASIEN')
+                ->whereNull('ng.TGL_KELUAR')
+                ->whereNull('t.tgl_dok')
+                ->where('kamar_induk.aktif', 1)
+                ->where('ng.akhir', 1)
+                ->select('ng.NO_KAMAR')
+                ->selectRaw('COUNT(*) as digunakan')
+                ->groupBy('ng.NO_KAMAR');
+
+            // Update
+            KamarInduk::query()
+                ->joinSub($subquery, 'x', function ($join) {
+                    $join->on('kamar_induk.NO_KAMAR', '=', 'x.NO_KAMAR');
+                })
+                ->update(['kamar_induk.digunakan' => DB::raw('x.digunakan')]);
+
+
+            // CREATE DATA SERAH TERIMA
+            $handOverData = [
+                'kd_pasien'             => $kd_pasien,
+                'tgl_masuk'             => $tgl_masuk,
+                'urut_masuk'            => $urut_masuk,
+                'urut_masuk_tujuan'     => $newUrutMasuk,
+                'kd_unit_asal'          => 3,
+                'kd_unit_tujuan'        => $kdUnit,
+                'subjective'            => $request->subjective,
+                'background'            => $request->background,
+                'assessment'            => $request->assessment,
+                'recomendation'         => $request->recomendation,
+                'petugas_menyerahkan'   => $request->petugas_menyerahkan,
+                'tanggal_menyerahkan'   => $request->tanggal_menyerahkan,
+                'jam_menyerahkan'       => $request->jam_menyerahkan,
+                'status'                => 1
+            ];
+
+            RmeSerahTerima::create($handOverData);
+
+            // update kunjungan pasien telah di transfer
+            Kunjungan::where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', 3)
+                ->where('urut_masuk', $urut_masuk)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->update(['status_kunjungan' => 1]);
+
+
+            // CREATE ASAL_IGD
+            $asalIGDData = [
+                'kd_kasir'          => '02',
+                'no_transaksi'      => $formattedTransactionNumber,
+                'kd_kasir_asal'     => $dataMedis->kd_kasir,
+                'no_transaksi_asal' => $dataMedis->no_transaksi
+            ];
+
+            AsalIGD::create($asalIGDData);
+
+            DB::commit();
+            return to_route('gawat-darurat.index')->with('success', 'Pasien berhasil di transfer !');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function UbahPasien(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
         $kd_pasien_lama = $kd_pasien;
 
         DB::beginTransaction();
@@ -221,11 +558,11 @@ class TransferPasienController extends Controller
                 ->first();
 
             if (empty($pasien_baru)) {
-                throw new \Exception('Pasien baru tidak ditemukan berdasarkan NIK/No. RM yang diberikan.');
+                throw new Exception('Pasien baru tidak ditemukan berdasarkan NIK/No. RM yang diberikan.');
             }
 
             if ($pasien_baru->kd_pasien === $kd_pasien_lama) {
-                throw new \Exception('Pasien baru sama dengan pasien lama. Tidak ada perubahan yang diperlukan.');
+                throw new Exception('Pasien baru sama dengan pasien lama. Tidak ada perubahan yang diperlukan.');
             }
 
             // Update the new patient's data with form inputs
@@ -250,7 +587,7 @@ class TransferPasienController extends Controller
                 $kunjungan->triase_proses = 0;
                 $kunjungan->save();
             } else {
-                throw new \Exception('Data kunjungan tidak ditemukan untuk pasien lama.');
+                throw new Exception('Data kunjungan tidak ditemukan untuk pasien lama.');
             }
 
             // 2. Update Transaksi table (all records matching kd_pasien_lama)
@@ -271,49 +608,29 @@ class TransferPasienController extends Controller
 
            
 
-            // 4. Update SjpKunjungan table (kd_pasien, tgl_masuk, urut_masuk)
-            $sjpKunjunganUpdated = SjpKunjungan::where('kd_pasien', $kd_pasien_lama)
-                ->where('tgl_masuk', $tgl_masuk)
-                ->where('urut_masuk', $urut_masuk)
-                ->update(['kd_pasien' => $kd_pasien_baru]);
+            // Daftar model yang ingin diupdate
+            $models = [
+                SjpKunjungan::class,
+                Konsultasi::class,
+                RmeAsesmen::class,
+                ListTindakanPasien::class,
+                KonsultasiIGD::class,
+                SegalaOrder::class,
+            ];
 
-            // 5. Update Konsultasi table (kd_pasien, tgl_masuk, urut_masuk)
-            $konsultasiUpdated = Konsultasi::where('kd_pasien', $kd_pasien_lama)
-                ->where('tgl_masuk', $tgl_masuk)
-                ->where('urut_masuk', $urut_masuk)
-                ->update(['kd_pasien' => $kd_pasien_baru]);
-
-            // 6. Update RmeAsesmen table (kd_pasien, tgl_masuk, urut_masuk)
-            $rmeAsesmenUpdated = RmeAsesmen::where('kd_pasien', $kd_pasien_lama)
-                ->where('tgl_masuk', $tgl_masuk)
-                ->where('urut_masuk', $urut_masuk)
-                ->update(['kd_pasien' => $kd_pasien_baru]);
-
-            // 7. Update ListTindakanPasien table (kd_pasien, tgl_masuk, urut_masuk)
-            $listTindakanPasienUpdated = ListTindakanPasien::where('kd_pasien', $kd_pasien_lama)
-                ->where('tgl_masuk', $tgl_masuk)
-                ->where('urut_masuk', $urut_masuk)
-                ->update(['kd_pasien' => $kd_pasien_baru]);
-
-            // 8. Update KonsultasiIGD table (kd_pasien, tgl_masuk, urut_masuk)
-            $konsultasiIGDUpdated = KonsultasiIGD::where('kd_pasien', $kd_pasien_lama)
-                ->where('tgl_masuk', $tgl_masuk)
-                ->where('urut_masuk', $urut_masuk)
-                ->update(['kd_pasien' => $kd_pasien_baru]);
-
-            // 9. Update SegalaOrder table (kd_pasien, tgl_masuk, urut_masuk)
-            $segalaOrderUpdated = SegalaOrder::where('kd_pasien', $kd_pasien_lama)
-                ->where('tgl_masuk', $tgl_masuk)
-                ->where('urut_masuk', $urut_masuk)
-                ->update(['kd_pasien' => $kd_pasien_baru]);
+            foreach ($models as $model) {
+                $model::where('kd_pasien', $kd_pasien_lama)
+                    ->where('tgl_masuk', $tgl_masuk)
+                    ->where('urut_masuk', $urut_masuk)
+                    ->update(['kd_pasien' => $kd_pasien_baru]);
+            }
 
             DB::commit();
 
             return redirect()->route('gawat-darurat.index')->with('success', 'Data pasien berhasil diubah dan diperbarui di semua tabel terkait.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Gagal mengubah data pasien: ' . $e->getMessage());
         }
     }
-
 }
