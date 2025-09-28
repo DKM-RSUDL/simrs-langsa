@@ -19,8 +19,8 @@
 
         <div class="col-md-9">
             <div class="form-section">
-                <form
-                    id="ProsesUbah" action="{{ route('transfer-rwi.ubah-pasien', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                <form id="ProsesUbah"
+                    action="{{ route('ubah-pasien.ubah-pasien', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
                     method="post">
                     @csrf
 
@@ -42,10 +42,14 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="nama" class="form-label">Nama Pasien</label>
-                                <input class="form-control" name="nama" type="text" id="nama" value="" readonly>
+                                <input class="form-control" name="nama" type="text" id="nama" value=""
+                                    disabled>
+
+                                <input type="hidden" name="kd_pasien_asli" id="kd_pasien_asli" readonly>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -61,14 +65,14 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
-                                <input class="form-control date" name="tanggal_lahir" type="text" id="tanggal_lahir"
-                                    placeholder="yyyy-mm-dd" readonly>
+                                <input class="form-control" name="tanggal_lahir" type="text" id="tanggal_lahir"
+                                    placeholder="yyyy-mm-dd" disabled>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="usia" class="form-label">Usia</label>
-                                <input class="form-control" name="usia" id="usia" value="0" readonly>
+                                <input class="form-control" name="usia" id="usia" value="0" disabled>
                             </div>
                         </div>
                     </div>
@@ -76,8 +80,7 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="alamat" class="form-label">Alamat</label>
-                                <textarea class="form-control" name="alamat" id="alamat"
-                                    placeholder="Masukkan alamat asli pasien" readonly></textarea>
+                                <textarea class="form-control" name="alamat" id="alamat" placeholder="Masukkan alamat asli pasien" disabled></textarea>
                             </div>
                         </div>
                     </div>
@@ -109,8 +112,8 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="nama_sebelumnya" class="form-label">Nama Pasien</label>
-                                <input readonly class="form-control" name="nama_sebelumnya" type="text" id="nama_sebelumnya"
-                                    value="{{ $dataMedis->pasien->nama ?? 'OKOK' }}">
+                                <input readonly class="form-control" name="nama_sebelumnya" type="text"
+                                    id="nama_sebelumnya" value="{{ $dataMedis->pasien->nama ?? 'OKOK' }}">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -119,9 +122,11 @@
                                 <select readonly name="jenis_kelamin_sebelumnya" id="jenis_kelamin_sebelumnya"
                                     class="form-select" disabled>
                                     <option value="" disabled>--Pilih Jenis Kelamin--</option>
-                                    <option value="1" {{ ($dataMedis->pasien->jenis_kelamin ?? '1') == '1' ? 'selected' : '' }}>
+                                    <option value="1"
+                                        {{ ($dataMedis->pasien->jenis_kelamin ?? '1') == '1' ? 'selected' : '' }}>
                                         Laki-laki</option>
-                                    <option value="0" {{ ($dataMedis->pasien->jenis_kelamin ?? '1') == '0' ? 'selected' : '' }}>
+                                    <option value="0"
+                                        {{ ($dataMedis->pasien->jenis_kelamin ?? '1') == '0' ? 'selected' : '' }}>
                                         Perempuan</option>
                                 </select>
                             </div>
@@ -129,8 +134,9 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="tanggal_lahir_sebelumnya" class="form-label">Tanggal Lahir</label>
-                                <input readonly class="form-control date" name="tanggal_lahir_sebelumnya" type="text"
-                                    id="tanggal_lahir_sebelumnya" value="{{ $dataMedis->pasien->tgl_lahir ?? '2007-04-27' }}">
+                                <input readonly class="form-control" name="tanggal_lahir_sebelumnya" type="date"
+                                    id="tanggal_lahir_sebelumnya"
+                                    value="{{ date('Y-m-d', strtotime($dataMedis->pasien->tgl_lahir)) }}" disabled>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -145,8 +151,7 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="alamat_sebelumnya" class="form-label">Alamat</label>
-                                <textarea readonly class="form-control" name="alamat_sebelumnya"
-                                    id="alamat_sebelumnya">{{ $dataMedis->pasien->alamat ?? '' }}</textarea>
+                                <textarea readonly class="form-control" name="alamat_sebelumnya" id="alamat_sebelumnya">{{ $dataMedis->pasien->alamat ?? '' }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -154,7 +159,8 @@
 
                     <div class="row mt-3">
                         <div class="col-12 text-end">
-                            <button type="submit" class="btn btn-primary" id="submit-button" disabled>Mulai Ubah</button>
+                            <button type="submit" class="btn btn-primary" id="submit-button" disabled>Mulai
+                                Ubah</button>
                         </div>
                     </div>
                 </form>
@@ -166,7 +172,7 @@
 
 @push('js')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -174,15 +180,15 @@
             });
 
             // Handler khusus tombol submit-button
-            $(document).on('submit', '#ProsesUbah', function () {
+            $(document).on('submit', '#ProsesUbah', function() {
                 let $submitBtn = $(this).find('button[type="submit"]');
                 $submitBtn.prop('disabled', true).text('Memproses...');
             });
 
 
             // Handler form ProsesUbah
-            $(document).on('click', '#button-nik-pasien', function (e) {
-               
+            $(document).on('click', '#button-nik-pasien', function(e) {
+
 
                 var nik = $('#nik_pasien').val().trim();
 
@@ -226,8 +232,10 @@
                 $.ajax({
                     method: 'POST',
                     url: "{{ route('gawat-darurat.get-patient-bynik-ajax') }}",
-                    data: { nik: nik },
-                    success: function (response) {
+                    data: {
+                        nik: nik
+                    },
+                    success: function(response) {
                         $('#submit-button').attr('disabled', false);
                         Swal.close(); // tutup popup loading
 
@@ -238,6 +246,7 @@
                             $('#jenis_kelamin').val(pasien.jenis_kelamin ?? '');
                             $('#tanggal_lahir').val(pasien.tgl_lahir || '');
                             $('#alamat').val(pasien.alamat || '');
+                            $('#kd_pasien_asli').val(pasien.kd_pasien || '');
 
                             // Hitung usia
                             if (pasien.tgl_lahir) {
@@ -245,17 +254,14 @@
                                 var today = new Date();
                                 var age = today.getFullYear() - dob.getFullYear();
                                 var monthDiff = today.getMonth() - dob.getMonth();
-                                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob
+                                        .getDate())) {
                                     age--;
                                 }
                                 $('#usia').val(age || 0);
                             } else {
                                 $('#usia').val(0);
                             }
-
-                            // Enable form
-                            $('#nama, #tanggal_lahir, #alamat').prop('readonly', false);
-                            $('#jenis_kelamin').prop('disabled', false);
 
                             Toast.fire({
                                 icon: 'success',
@@ -269,12 +275,12 @@
                             });
                         }
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         Swal.close(); // tutup popup loading
 
-                        var errorMessage = xhr.responseJSON?.message
-                            ? xhr.responseJSON.message
-                            : 'Terjadi kesalahan saat mengambil data pasien.';
+                        var errorMessage = xhr.responseJSON?.message ?
+                            xhr.responseJSON.message :
+                            'Terjadi kesalahan saat mengambil data pasien.';
 
                         resetForm();
 
@@ -293,7 +299,6 @@
 
         });
     </script>
-
 @endpush
 {{-- @push('js')
 <script>
