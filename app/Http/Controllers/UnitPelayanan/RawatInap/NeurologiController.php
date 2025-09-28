@@ -17,6 +17,7 @@ use App\Models\RmeMasterImplementasi;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SatsetPrognosis;
+use App\Services\AsesmenService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -27,8 +28,10 @@ use Illuminate\Support\Facades\DB;
 
 class NeurologiController extends Controller
 {
+    protected $asesmenService;
     public function __construct()
     {
+        $this->asesmenService = new AsesmenService();
         $this->middleware('can:read unit-pelayanan/rawat-inap');
     }
 
@@ -90,6 +93,59 @@ class NeurologiController extends Controller
             $asesmen->kategori = 1;
             $asesmen->sub_kategori = 3;
             $asesmen->save();
+
+                        // Prepare vital sign data (hanya field yang ada input)
+            $vitalSignInput = [
+                'sistole'        => $request->darah_sistole,
+                'diastole'       => $request->darah_diastole,
+                'nadi'           => $request->nadi,
+                'respiration'    => $request->respirasi,
+                'suhu'           => $request->suhu,
+                'spo2_tanpa_o2'  => $request->spo_o2_tanpa,
+                'spo2_dengan_o2' => $request->spo_o2_dengan,
+                'tinggi_badan'   => $request->tinggi_badan,
+                'berat_badan'    => $request->berat_badan,
+            ];
+
+            $mapping = [
+                'sistole'        => 'int',
+                'diastole'       => 'int',
+                'nadi'           => 'int',
+                'respiration'    => 'int',
+                'suhu'           => 'float',
+                'spo2_tanpa_o2'  => 'int',
+                'spo2_dengan_o2' => 'int',
+                'tinggi_badan'   => 'int',
+                'berat_badan'    => 'int',
+            ];
+
+            $vitalSignData = [];
+            foreach ($mapping as $field => $type) {
+                if (isset($vitalSignInput[$field]) && $vitalSignInput[$field] !== '' && $vitalSignInput[$field] !== null) {
+                    $vitalSignData[$field] = $type === 'int'
+                        ? (int) $vitalSignInput[$field]
+                        : (float) $vitalSignInput[$field];
+                }
+            }
+
+            // Get transaction data for vital sign storage
+            $lastTransaction = $this->asesmenService->getTransaksiData(
+                $kd_unit,
+                $kd_pasien,
+                $tgl_masuk,
+                $urut_masuk
+            );
+
+            // Save vital signs using service (hanya field yang terisi)
+            if (!empty($vitalSignData)) {
+                $this->asesmenService->store(
+                    $vitalSignData,
+                    $kd_pasien,
+                    $lastTransaction->no_transaksi,
+                    $lastTransaction->kd_kasir
+                );
+            }
+
 
             $asesmenNeurologi = new RmeAsesmenNeurologi();
             $asesmenNeurologi->id_asesmen = $asesmen->id;

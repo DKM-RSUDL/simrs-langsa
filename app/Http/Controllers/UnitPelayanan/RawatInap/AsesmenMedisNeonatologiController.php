@@ -289,7 +289,7 @@ class AsesmenMedisNeonatologiController extends Controller
             ]
         ];
 
-        $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+        // $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
 
         DB::commit();
 

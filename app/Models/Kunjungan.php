@@ -16,6 +16,9 @@ class Kunjungan extends Model
 
     // protected $keyType = 'string';
     public $timestamps = false;
+    protected $primaryKey  = 'kd_pasien';
+     // Kalau tipe primary key bukan int (misal string/varchar)
+    protected $keyType = 'string';
 
     protected $fillable = [
         'kd_pasien',
@@ -61,7 +64,8 @@ class Kunjungan extends Model
         'status_inap',
         'status_kunjungan',
         'triase_id',
-        'user_create'
+        'user_create',
+        'triase_proses'
     ];
 
     public function pasien()
