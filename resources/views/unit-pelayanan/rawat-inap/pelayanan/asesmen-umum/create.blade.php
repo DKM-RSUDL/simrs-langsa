@@ -399,7 +399,7 @@
 
                                     <!-- Detail untuk alkohol/obat jika Ya dipilih -->
                                     <div class="alkohol-detail gap-2" style="display: none;">
-                                        <div class="d-flex gap-2 align-items-end mb-2">
+                                        <div class="d-flex gap-2 align-items-end mb-2 consumption-row">
                                             <div class="col">
                                                 <label class="form-label">Jenis:</label>
                                                 <input type="text" class="form-control form-control-sm"
@@ -411,7 +411,7 @@
                                                     name="alkohol_jumlah" placeholder="Jumlah per hari">
                                             </div>
                                             <div>
-                                                <button class="btn btn-danger btn-sm">
+                                                <button type="button" class="btn btn-danger btn-sm remove-consumption">
                                                     <i class="fa fa-minus"></i>
                                                 </button>
                                             </div>
@@ -447,7 +447,7 @@
 
                                     <!-- Detail untuk merokok jika Ya dipilih -->
                                     <div class="merokok-detail" style="display: none;">
-                                        <div class="d-flex gap-2 align-items-end mb-2">
+                                        <div class="d-flex gap-2 align-items-end mb-2 consumption-row">
                                             <div class="col">
                                                 <label class="form-label">Jenis:</label>
                                                 <input type="text" class="form-control form-control-sm"
@@ -459,7 +459,7 @@
                                                     name="merokok_jumlah" placeholder="Batang per hari">
                                             </div>
                                             <div>
-                                                <button class="btn btn-danger btn-sm">
+                                                <button type="button" class="btn btn-danger btn-sm remove-consumption">
                                                     <i class="fa fa-minus"></i>
                                                 </button>
                                             </div>
