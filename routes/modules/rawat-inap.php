@@ -124,7 +124,7 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::post('/get-icd10-ajax', 'getIcdTenAjax')->name('.get-icd10-ajax');
                             Route::post('/get-cppt-ajax', 'getCpptAjax')->name('.get-cppt-ajax');
                             Route::post('/get-instruksi-ppa', 'getInstruksiPpaByUrutTotal')->name('.get-instruksi-ppa');
-                            Route::post('/get-last-diagnoses', 'getLastDiagnosesForEdit')->name('.get-last-diagnoses');
+                            Route::post('/get-last-diagnoses', 'getLastDiagnosesAjax')->name('.get-last-diagnoses');
                             Route::post('/', 'store')->name('.store');
                             Route::put('/', 'update')->name('.update');
                             Route::put('/verifikasi', 'verifikasiCppt')->name('.verifikasi');

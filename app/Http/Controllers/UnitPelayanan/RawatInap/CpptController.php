@@ -765,6 +765,29 @@ class CpptController extends Controller
         }
     }
 
+    public function getLastDiagnosesAjax(Request $request)
+    {
+        try {
+            $lastDiagnoses = $this->getLastDiagnosisByTipeCppt(
+                $request->kd_unit,
+                $request->kd_pasien,
+                $request->tgl_masuk,
+                $request->urut_masuk
+            );
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $lastDiagnoses
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => []
+            ]);
+        }
+    }
+
     public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         // Validation Input

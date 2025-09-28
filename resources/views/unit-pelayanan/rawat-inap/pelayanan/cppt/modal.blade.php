@@ -291,6 +291,15 @@
                                             <a href="#" class="fw-bold">DYSPEPSIA</a> <br>
                                             <a href="#" class="fw-bold">DEPRESIVE EPISODE</a> <br> -->
                                         </div>
+                                        <!-- Area untuk menampilkan diagnosis sebelumnya langsung di form test cek-->
+                                        {{-- <div id="autoLoadedDiagnoses" class="mb-3" style="display: none;">
+                                            <h6 class="fw-bold text-success">
+                                                <i class="bi bi-check-circle me-2"></i>Diagnosis Sebelumnya (Otomatis Dimuat)
+                                            </h6>
+                                            <div id="autoLoadedDiagnosesList" class="bg-success-subtle rounded-2 p-3">
+                                                <!-- Akan diisi otomatis -->
+                                            </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             </div>
