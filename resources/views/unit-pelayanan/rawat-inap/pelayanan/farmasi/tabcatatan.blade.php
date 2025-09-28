@@ -17,8 +17,8 @@
                 </div>
             </div>
             <div class="col-md-2">
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahObatCatatan"
-                    type="button">
+                <button id="btnTambahCatatan" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#tambahObatCatatan" type="button">
                     <i class="ti-plus"></i> Tambah
                 </button>
                 @include('unit-pelayanan.rawat-inap.pelayanan.farmasi.modalcatatan')
@@ -166,6 +166,34 @@
 
 
         });
+
+        // Open E-Resep in a new tab when Tambah is clicked while Catatan pane is active
+        (function() {
+            document.addEventListener('DOMContentLoaded', function() {
+                const btnTambah = document.getElementById('btnTambahCatatan');
+                if (!btnTambah) return;
+
+                btnTambah.addEventListener('click', function(event) {
+                    try {
+                        // Determine if Catatan tab pane is currently active/visible
+                        const catatanPane = document.getElementById('catatanTab');
+                        const isActive = catatanPane && catatanPane.classList.contains('show') &&
+                            catatanPane.classList.contains('active');
+
+                        if (isActive) {
+                            // Build URL to open resep tab in new tab
+                            const url = new URL(window.location.href);
+                            url.searchParams.set('open', 'resep');
+                            // Open synchronously on click to avoid popup blocking
+                            window.open(url.toString(), '_blank');
+                        }
+                    } catch (e) {
+                        console.error('Error opening E-Resep tab:', e);
+                    }
+                    // Do not prevent default — let Bootstrap open the modal as well
+                });
+            });
+        })();
 
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.btn-delete-catatan').forEach(button => {
