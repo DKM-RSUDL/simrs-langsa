@@ -10,10 +10,10 @@
     </div>
 
     <div class="patient-info">
-        @if(isset($dataMedis) && $dataMedis && isset($dataMedis->pasien))
+        @if (isset($dataMedis) && $dataMedis && isset($dataMedis->pasien))
             <h6 class="text-decoration-underline">{{ $dataMedis->pasien->nama ?? 'Tidak Diketahui' }}</h6>
             <p class="mb-0">
-                @if(isset($dataMedis->pasien->jenis_kelamin))
+                @if (isset($dataMedis->pasien->jenis_kelamin))
                     {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Tidak Diketahui') }}
                 @else
                     Tidak Diketahui
@@ -24,12 +24,27 @@
 
             <div class="patient-meta mt-2">
                 <p class="mb-0"><strong>RM: {{ $dataMedis->pasien->kd_pasien ?? 'Tidak Diketahui' }}</strong></p>
-                <p class="mb-0"><i class="bi bi-calendar3"></i> {{ isset($dataMedis->tgl_masuk) ? \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('d M Y') : 'Tidak Diketahui' }}</p>
-                <p><i class="bi bi-hospital"></i>
-                    @if(isset($dataMedis->unit) && isset($dataMedis->unit->bagian))
-                        {{ $dataMedis->unit->bagian->bagian ?? 'Tidak Diketahui' }} ({{ $dataMedis->unit->nama_unit ?? 'Tidak Diketahui' }})
+                <p class="mb-0"><i class="bi bi-calendar3"></i>
+                    {{ isset($dataMedis->tgl_masuk) ? \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('d M Y') : 'Tidak Diketahui' }}
+                </p>
+                <p>
+                    <i class="bi bi-hospital"></i>
+                    {{ $dataMedis->unit->bagian->bagian }}
+
+                    @if ($dataMedis->unit->kd_bagian == 1)
+                        @php
+                            $nginap = \App\Models\Nginap::join('unit as u', 'nginap.kd_unit_kamar', '=', 'u.kd_unit')
+                                ->where('nginap.kd_pasien', $dataMedis->kd_pasien)
+                                ->where('nginap.kd_unit', $dataMedis->kd_unit)
+                                ->where('nginap.tgl_masuk', $dataMedis->tgl_masuk)
+                                ->where('nginap.urut_masuk', $dataMedis->urut_masuk)
+                                ->where('nginap.akhir', 1)
+                                ->first();
+                        @endphp
+
+                        ({{ $nginap->nama_unit ?? '-' }})
                     @else
-                        Tidak Diketahui
+                        ({{ $dataMedis->unit->nama_unit }})
                     @endif
                 </p>
             </div>
@@ -37,7 +52,8 @@
             <h6 class="text-decoration-underline">Data Pasien Tidak Tersedia</h6>
             <p class="mb-0">Tidak ada data medis tersedia</p>
             <div class="patient-meta mt-2">
-                <p class="text-danger">Data tidak ditemukan atau terjadi kesalahan. Silakan kembali ke halaman sebelumnya.</p>
+                <p class="text-danger">Data tidak ditemukan atau terjadi kesalahan. Silakan kembali ke halaman
+                    sebelumnya.</p>
             </div>
         @endif
     </div>
