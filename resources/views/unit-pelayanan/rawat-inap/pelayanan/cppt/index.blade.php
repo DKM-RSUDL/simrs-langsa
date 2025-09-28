@@ -1043,6 +1043,23 @@
             $('#addDiagnosisModal .btn-close').trigger('click');
         });
 
+        // Event handler untuk tombol "Gunakan" diagnosis sebelumnya
+        $(document).on('click', '.btn-use-previous', function() {
+            var diagnosis = $(this).data('diagnosis');
+            $('#addDiagnosisModal #listDiagnosa').append(`<li>${diagnosis}</li>`);
+            $(this).prop('disabled', true).html('<i class="bi bi-check me-1"></i>Ditambahkan');
+        });
+
+        // Event saat modal diagnosis dibuka
+        $('#addDiagnosisModal').on('show.bs.modal', function() {
+            // Reset tombol "Gunakan"
+            $('.btn-use-previous').prop('disabled', false).html('<i class="bi bi-plus-circle me-1"></i>Gunakan');
+
+            // Clear list diagnosis
+            $('#addDiagnosisModal #listDiagnosa').empty();
+        });
+
+
         $('#addCpptModal input[name="skala_nyeri"]').change(function(e) {
             var $this = $(this);
             var skalaValue = $this.val();

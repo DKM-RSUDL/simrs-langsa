@@ -39,7 +39,8 @@ class Cppt extends Model
         'user_penanggung',
         'verified',
         'user_verified',
-        'urut_total'
+        'urut_total',
+        'tipe_cppt'
     ];
 
     public function dtCppt()
