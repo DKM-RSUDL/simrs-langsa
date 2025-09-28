@@ -19,7 +19,7 @@
                     Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan
                 </p>
 
-                <form method="POST" action="{{ route('rawat-inap.asesmen.keperawatan.umum.create', [
+                <form id="asesmenForm" method="POST" action="{{ route('rawat-inap.asesmen.keperawatan.umum.create', [
                         'kd_unit' => $kd_unit,
                         'kd_pasien' => $kd_pasien,
                         'tgl_masuk' => $tgl_masuk,
@@ -4303,8 +4303,36 @@
 
 
                     <div class="text-end">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" id="submitBtn" class="btn btn-primary">Simpan</button>
                     </div>
+
+                    {{-- Disable submit button after first click to prevent double submit --}}
+                    <script>
+                        (function(){
+                            var form = document.getElementById('asesmenForm');
+                            if (!form) return;
+                            var btn = document.getElementById('submitBtn');
+                            form.addEventListener('submit', function(e){
+                                // If button already disabled, prevent further submits
+                                if (btn && btn.disabled) {
+                                    e.preventDefault();
+                                    return;
+                                }
+                                if (btn) {
+                                    try {
+                                        // Show simple loading state
+                                        btn.disabled = true;
+                                        // If bootstrap spinner is available, show it, otherwise just change text
+                                        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Menyimpan...';
+                                    } catch (err) {
+                                        btn.textContent = 'Menyimpan...';
+                                        btn.disabled = true;
+                                    }
+                                }
+                                // allow form to submit normally
+                            });
+                        })();
+                    </script>
                 </form>
             </div>
         </div>
