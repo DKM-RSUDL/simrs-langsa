@@ -476,7 +476,7 @@ class AsesmenKepPerinatologyController extends Controller
 
             DB::commit();
 
-            return to_route('rawat-inap.asesmen.perinatology.index', [
+            return to_route('rawat-inap.asesmen.medis.umum.index', [
                 'kd_unit' => $kd_unit,
                 'kd_pasien' => $kd_pasien,
                 'tgl_masuk' => $tgl_masuk,
