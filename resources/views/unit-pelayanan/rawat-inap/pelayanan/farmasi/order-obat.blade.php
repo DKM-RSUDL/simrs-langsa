@@ -119,22 +119,15 @@
                                                 <div class="row mb-3">
                                                     <div class="col-md-12">
                                                         <label for="frekuensi" class="form-label">Frekuensi/interval</label>
-                                                        <select class="form-select" id="frekuensi">
-                                                            <option selected>3 x 1 hari</option>
-                                                            <option>2 x 1 hari</option>
-                                                        </select>
+                                                        <input type="   text" id="frekuensi" class="form-control"
+                                                            value="3 x 1 hari">
                                                     </div>
                                                 </div>
 
                                                 <div class="row mb-3">
                                                     <div class="col-md-6">
                                                         <label for="dosis" class="form-label">Dosis Sekali Minum</label>
-                                                        <select class="form-select" id="dosis">
-                                                            <option selected>1/2</option>
-                                                            <option>1</option>
-                                                            <option>2</option>
-                                                            <option>3</option>
-                                                        </select>
+                                                        <input type="text" id="dosis" class="form-control" value="1/2">
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="satuanObat" class="form-label">Satuan Obat</label>
@@ -356,7 +349,7 @@
             let selectedDokter;
 
             const dokterSelect = $('#dokterPengirim');
-            
+
             @php
                 $dokterLoggedIn = null;
                 foreach ($dokters as $dokter) {
@@ -381,7 +374,7 @@
                         'cursor': 'pointer'
                     })
                     .removeAttr('tabindex');
-                
+
                 // Update selectedDokter when admin changes the selection
                 dokterSelect.on('change', function() {
                     selectedDokter = $(this).val();
@@ -398,7 +391,7 @@
                         'cursor': 'not-allowed'
                     })
                     .attr('tabindex', '-1');
-                
+
                 // Pastikan selectedDokter tetap diisi untuk non-admin (dokter)
                 console.log("Dokter yang login: ", selectedDokter);
             @endcan
@@ -468,7 +461,7 @@
                 updateObatInputs(); // Update input hidden saat menambah obat
                 resetInputObat();
             });
-            
+
             // Fungsi Copy Obat
             $(document).on('click', '.copy-obat', function() {
                 var obatData = $(this).data('obat');
@@ -592,7 +585,7 @@
 
                 // Tambahkan input hidden untuk kd_dokter
                 obatInputs.append(`<input type="hidden" name="kd_dokter" value="${selectedDokter}">`);
-                
+
                 daftarObat.forEach(function(obat, index) {
                     obatInputs.append(`
                         <input type="hidden" name="obat[${index}][id]" value="${obat.id}">
@@ -643,7 +636,7 @@
 
                 $('#loadingIndicator').removeClass('d-none');
                 $('#orderButton').prop('disabled', true);
-                
+
                 // Form akan melakukan submit normal ke server
             });
 
@@ -746,13 +739,13 @@
                 const day = String(now.getDate()).padStart(2, '0');
                 const hours = String(now.getHours()).padStart(2, '0');
                 const minutes = String(now.getMinutes()).padStart(2, '0');
-                
+
                 $('#tanggalOrder').val(`${year}-${month}-${day}T${hours}:${minutes}`);
             }
-            
+
             // Panggil fungsi untuk set default tanggal dan waktu
             setDefaultDateTime();
-            
+
             // Inisialisasi input hidden pertama kali
             updateObatInputs();
         });

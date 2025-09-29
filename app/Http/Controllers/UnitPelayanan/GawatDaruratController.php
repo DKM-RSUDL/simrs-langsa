@@ -97,14 +97,14 @@ class GawatDaruratController extends Controller
                         ->orderBy('kunjungan.antrian', 'desc')
                         ->orderBy('kunjungan.urut_masuk', 'desc');
                 })
-                ->editColumn('tgl_masuk', fn ($row) => date('Y-m-d', strtotime($row->tgl_masuk)) ?: '-')
-                ->addColumn('triase', fn ($row) => $row->kd_triase ?: '-')
-                ->addColumn('bed', fn ($row) => '' ?: '-')
-                ->addColumn('no_rm', fn ($row) => $row->kd_pasien ?: '-')
-                ->addColumn('alamat', fn ($row) => $row->pasien->alamat ?: '-')
-                ->addColumn('jaminan', fn ($row) => $row->customer->customer ?: '-')
-                ->addColumn('instruksi', fn ($row) => '' ?: '-')
-                ->addColumn('kd_dokter', fn ($row) => $row->dokter->nama ?: '-')
+                ->editColumn('tgl_masuk', fn($row) => date('Y-m-d', strtotime($row->tgl_masuk)) ?: '-')
+                ->addColumn('triase', fn($row) => $row->kd_triase ?: '-')
+                ->addColumn('bed', fn($row) => '' ?: '-')
+                ->addColumn('no_rm', fn($row) => $row->kd_pasien ?: '-')
+                ->addColumn('alamat', fn($row) => $row->pasien->alamat ?: '-')
+                ->addColumn('jaminan', fn($row) => $row->customer->customer ?: '-')
+                ->addColumn('instruksi', fn($row) => '' ?: '-')
+                ->addColumn('kd_dokter', fn($row) => $row->dokter->nama ?: '-')
                 ->addColumn('waktu_masuk', function ($row) {
 
                     $tglMasuk = Carbon::parse($row->tgl_masuk)->format('d M Y');
@@ -115,12 +115,12 @@ class GawatDaruratController extends Controller
                 // Hitung umur dari tabel pasien
                 ->addColumn('umur', function ($row) {
                     return $row->pasien && $row->pasien->tgl_lahir
-                        ? Carbon::parse($row->pasien->tgl_lahir)->age.''
+                        ? Carbon::parse($row->pasien->tgl_lahir)->age . ''
                         : 'Tidak diketahui';
                 })
-                ->addColumn('action', fn ($row) => $row->kd_pasien)  // Return raw data, no HTML
-                ->addColumn('del', fn ($row) => $row->kd_pasien)     // Return raw data
-                ->addColumn('profile', fn ($row) => $row)
+                ->addColumn('action', fn($row) => $row->kd_pasien)  // Return raw data, no HTML
+                ->addColumn('del', fn($row) => $row->kd_pasien)     // Return raw data
+                ->addColumn('profile', fn($row) => $row)
                 ->rawColumns(['action', 'del', 'profile'])
                 ->make(true);
         }
@@ -215,7 +215,7 @@ class GawatDaruratController extends Controller
                 }
 
                 // store
-                $path = $file->store('uploads/triase/'.date('Y-m-d', strtotime($dataMedis->tgl_masuk))."/$dataMedis->kd_pasien/$dataMedis->urut_masuk");
+                $path = $file->store('uploads/triase/' . date('Y-m-d', strtotime($dataMedis->tgl_masuk)) . "/$dataMedis->kd_pasien/$dataMedis->urut_masuk");
                 $triaseData->foto_pasien = $path;
                 $triaseData->save();
 
@@ -283,14 +283,14 @@ class GawatDaruratController extends Controller
                 ->first();
 
             if (empty($lastIgdNumber)) {
-                $lastIgdNumber = $prefix.'000001';
+                $lastIgdNumber = $prefix . '000001';
             } else {
                 $lastIgdNumber = $lastIgdNumber->kd_pasien;
                 $lastIgdNumber = explode('-', $lastIgdNumber);
                 $lastIgdNumber = $lastIgdNumber[1];
                 $lastIgdNumber = (int) $lastIgdNumber + 1;
                 $lastIgdNumber = str_pad($lastIgdNumber, 6, '0', STR_PAD_LEFT);
-                $lastIgdNumber = $prefix.$lastIgdNumber;
+                $lastIgdNumber = $prefix . $lastIgdNumber;
             }
 
             // Gunakan kd_pasien jika pasien sudah ada
@@ -406,6 +406,7 @@ class GawatDaruratController extends Controller
                 'is_rujukan' => $rujukan,
                 'rujukan_ket' => $rujukan_ket,
                 'triase_id' => $triase->id,
+                'triase_proses' => 1
             ];
 
             Kunjungan::create($dataKunjungan);
@@ -456,12 +457,16 @@ class GawatDaruratController extends Controller
                 'nadi' => $request->nadi ? (int) $request->nadi : null,
                 'respiration' => $request->respiration ? (int) $request->respiration : null,
                 'suhu' => $request->suhu ? (float) $request->suhu : null,
-                'spo2_tanpa_o2' => $request->sao2 ? (int) $request->sao2 : null,
+                'spo2_tanpa_o2' => $request->spo2_tanpa_o2 ? (int) $request->spo2_tanpa_o2 : null,
+                'spo2_dengan_o2' => $request->spo2_dengan_o2 ? (int) $request->spo2_dengan_o2 : null,
                 'tinggi_badan' => $request->tinggi_badan ? (int) $request->tinggi_badan : null,
                 'berat_badan' => $request->berat_badan ? (int) $request->berat_badan : null,
             ];
 
-            $this->asesmenService->store($vitalSignData, $finalNoRm, '06', $formattedTransactionNumber);
+            $triase->vital_sign = json_encode($vitalSignData);
+            $triase->save();
+
+            $this->asesmenService->store($vitalSignData, $finalNoRm, $formattedTransactionNumber, '06');
 
             // Simpan detail_transaksi
             $dataDetailTransaksi = [
@@ -568,7 +573,7 @@ class GawatDaruratController extends Controller
                 'status' => 'error',
                 'message' => $e->getMessage(),
                 'data' => [],
-            ]. 500);
+            ] . 500);
         }
     }
 
@@ -597,7 +602,7 @@ class GawatDaruratController extends Controller
                 'status' => 'error',
                 'message' => $e->getMessage(),
                 'data' => [],
-            ]. 500);
+            ] . 500);
         }
     }
 
@@ -626,7 +631,7 @@ class GawatDaruratController extends Controller
                 'status' => 'error',
                 'message' => $e->getMessage(),
                 'data' => [],
-            ]. 500);
+            ] . 500);
         }
     }
 

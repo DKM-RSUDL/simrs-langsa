@@ -19,7 +19,7 @@
                     Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan
                 </p>
 
-                <form method="POST" action="{{ route('rawat-inap.asesmen.keperawatan.umum.create', [
+                <form id="asesmenForm" method="POST" action="{{ route('rawat-inap.asesmen.keperawatan.umum.create', [
                         'kd_unit' => $kd_unit,
                         'kd_pasien' => $kd_pasien,
                         'tgl_masuk' => $tgl_masuk,
@@ -375,11 +375,11 @@
                         <div class="col-12 mb-3 section-separator">
                             <h6 class="fw-bold">Riwayat Konsumsi</h6>
 
-                            <!-- Alkohol/Obat -->
-                            <div class="row mb-3">
-                                <div class="col-md-6">
+                            <div class="d-flex flex-column gap-4">
+                                <!-- Alkohol/Obat -->
+                                <div class="col-md-12">
                                     <label class="form-label fw-bold">Alkohol/obat:</label>
-                                    <div class="d-flex align-items-center gap-3 mb-2">
+                                    <div class="d-flex align-items-center justify-content-between gap-3">
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="alkohol_obat"
                                                 id="alkohol_tidak" value="tidak">
@@ -398,26 +398,36 @@
                                     </div>
 
                                     <!-- Detail untuk alkohol/obat jika Ya dipilih -->
-                                    <div class="alkohol-detail" style="display: none;">
-                                        <div class="row">
-                                            <div class="col-md-6 mb-2">
+                                    <div class="alkohol-detail gap-2" style="display: none;">
+                                        <div class="d-flex gap-2 align-items-end mb-2">
+                                            <div class="col">
                                                 <label class="form-label">Jenis:</label>
                                                 <input type="text" class="form-control form-control-sm"
                                                     name="alkohol_jenis" placeholder="Jenis alkohol/obat">
                                             </div>
-                                            <div class="col-md-6 mb-2">
+                                            <div class="col">
                                                 <label class="form-label">Jumlah/hari:</label>
                                                 <input type="text" class="form-control form-control-sm"
                                                     name="alkohol_jumlah" placeholder="Jumlah per hari">
                                             </div>
+                                            <div>
+                                                <button class="btn btn-danger btn-sm">
+                                                    <i class="fa fa-minus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-end">
+                                            <button type="button" class="btn btn-sm btn-primary ms-auto text-end">
+                                                Tambah
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Merokok -->
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <label class="form-label fw-bold">Merokok:</label>
-                                    <div class="d-flex align-items-center gap-3 mb-2">
+                                    <div class="d-flex align-items-center justify-content-between gap-3">
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="merokok"
                                                 id="merokok_tidak" value="tidak">
@@ -437,17 +447,27 @@
 
                                     <!-- Detail untuk merokok jika Ya dipilih -->
                                     <div class="merokok-detail" style="display: none;">
-                                        <div class="row">
-                                            <div class="col-md-6 mb-2">
+                                        <div class="d-flex gap-2 align-items-end mb-2">
+                                            <div class="col">
                                                 <label class="form-label">Jenis:</label>
                                                 <input type="text" class="form-control form-control-sm"
                                                     name="merokok_jenis" placeholder="Jenis rokok">
                                             </div>
-                                            <div class="col-md-6 mb-2">
+                                            <div class="col">
                                                 <label class="form-label">Jumlah/hari:</label>
                                                 <input type="text" class="form-control form-control-sm"
                                                     name="merokok_jumlah" placeholder="Batang per hari">
                                             </div>
+                                            <div>
+                                                <button class="btn btn-danger btn-sm">
+                                                    <i class="fa fa-minus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-end">
+                                            <button type="button" class="btn btn-sm btn-primary ms-auto text-end">
+                                                Tambah
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -2846,8 +2866,8 @@
                                 <div class="row">
                                     <div class="col-md-4 mb-2">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="pengaruh_perawatan[]" id="pelayanan" value="pelayanan">
-                                            <label class="form-check-label" for="pelayanan">2. Pelayanan</label>
+                                            <input class="form-check-input" type="checkbox" name="pengaruh_perawatan[]" id="pekerjaan" value="pekerjaan">
+                                            <label class="form-check-label" for="pekerjaan">2. Pekerjaan</label>
                                         </div>
                                     </div>
                                     <div class="col-md-4 mb-2">
@@ -4283,11 +4303,131 @@
 
 
                     <div class="text-end">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" id="submitBtn" class="btn btn-primary">Simpan</button>
                     </div>
+
+                    {{-- Disable submit button after first click to prevent double submit --}}
+                    <script>
+                        (function(){
+                            var form = document.getElementById('asesmenForm');
+                            if (!form) return;
+                            var btn = document.getElementById('submitBtn');
+                            form.addEventListener('submit', function(e){
+                                // If button already disabled, prevent further submits
+                                if (btn && btn.disabled) {
+                                    e.preventDefault();
+                                    return;
+                                }
+                                if (btn) {
+                                    try {
+                                        // Show simple loading state
+                                        btn.disabled = true;
+                                        // If bootstrap spinner is available, show it, otherwise just change text
+                                        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Menyimpan...';
+                                    } catch (err) {
+                                        btn.textContent = 'Menyimpan...';
+                                        btn.disabled = true;
+                                    }
+                                }
+                            });
+                        })();
+                    </script>
                 </form>
             </div>
         </div>
     </div>
 </div>
 @endsection
+@push('js')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  function toggleDetail(radioName, detailSel) {
+    document.querySelectorAll('input[name="'+radioName+'"]').forEach(r=>{
+      r.addEventListener('change', ()=> {
+        const el = document.querySelector(detailSel);
+        if (!el) return;
+        if (r.value === 'ya' && r.checked) el.style.display = '';
+        else el.style.display = 'none';
+      });
+    });
+  }
+  toggleDetail('alkohol_obat', '.alkohol-detail');
+  toggleDetail('merokok', '.merokok-detail');
+
+  function newRowHtml(type) {
+    if (type === 'alkohol') {
+      return `
+        <div class="d-flex gap-2 align-items-end mb-2 consumption-row">
+          <div class="col">
+            <label class="form-label">Jenis:</label>
+            <input type="text" class="form-control form-control-sm" name="alkohol_jenis[]" placeholder="Jenis alkohol/obat">
+          </div>
+          <div class="col">
+            <label class="form-label">Jumlah/hari:</label>
+            <input type="text" class="form-control form-control-sm" name="alkohol_jumlah[]" placeholder="Jumlah per hari">
+          </div>
+          <div>
+            <button type="button" class="btn btn-danger btn-sm remove-consumption"><i class="fa fa-minus"></i></button>
+          </div>
+        </div>`;
+    } else {
+      return `
+        <div class="d-flex gap-2 align-items-end mb-2 consumption-row">
+          <div class="col">
+            <label class="form-label">Jenis:</label>
+            <input type="text" class="form-control form-control-sm" name="merokok_jenis[]" placeholder="Jenis rokok">
+          </div>
+          <div class="col">
+            <label class="form-label">Jumlah/hari:</label>
+            <input type="text" class="form-control form-control-sm" name="merokok_jumlah[]" placeholder="Batang per hari">
+          </div>
+          <div>
+            <button type="button" class="btn btn-danger btn-sm remove-consumption"><i class="fa fa-minus"></i></button>
+          </div>
+        </div>`;
+    }
+  }
+
+  document.body.addEventListener('click', function(e){
+    const add = e.target.closest('.alkohol-detail button.btn-primary, .merokok-detail button.btn-primary');
+    if (add) {
+      e.preventDefault();
+      const detail = add.closest('.alkohol-detail, .merokok-detail');
+      const isAlk = detail.classList.contains('alkohol-detail');
+      const container = detail.querySelector('.d-flex.justify-content-end');
+      container.insertAdjacentHTML('beforebegin', newRowHtml(isAlk ? 'alkohol' : 'merokok'));
+      return;
+    }
+    const rem = e.target.closest('button.remove-consumption');
+    if (rem) {
+      e.preventDefault();
+      const row = rem.closest('.consumption-row');
+      if (!row) return;
+      const parent = row.parentElement;
+      // jika hanya 1 baris tersisa, kosongkan isinya
+      const rows = parent.querySelectorAll('.consumption-row');
+      if (rows.length <= 1) {
+        row.querySelectorAll('input').forEach(i => i.value = '');
+      } else {
+        row.remove();
+      }
+    }
+  });
+
+  // convert initial static detail row to use [] names if not already
+  const map = [
+    {sel: '.alkohol-detail input[name="alkohol_jenis"]', name: 'alkohol_jenis[]'},
+    {sel: '.alkohol-detail input[name="alkohol_jumlah"]', name: 'alkohol_jumlah[]'},
+    {sel: '.merokok-detail input[name="merokok_jenis"]', name: 'merokok_jenis[]'},
+    {sel: '.merokok-detail input[name="merokok_jumlah"]', name: 'merokok_jumlah[]'}
+  ];
+  map.forEach(m=>{
+    document.querySelectorAll(m.sel).forEach(inp=>{
+      inp.name = m.name;
+    })
+  });
+});
+</script>
+
+
+@endpush

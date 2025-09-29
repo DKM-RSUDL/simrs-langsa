@@ -282,167 +282,176 @@
         var gawatDaruratIndexUrl = "{{ route('gawat-darurat.index') }}";
         var medisGawatDaruratIndexUrl = "{{ url('unit-pelayanan/gawat-darurat/pelayanan/') }}/";
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#rawatDaruratTable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
                     url: gawatDaruratIndexUrl,
-                    data: function(d) {
+                    data: function (d) {
                         d.dokter = $('#dokterSelect').val();
                     }
                 },
                 columns: [{
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false,
-                        render: function(data, type, row) {
-                            return `<div class="d-flex justify-content-center">
-                                        <a href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}" class="edit btn btn-outline-primary btn-sm">
-                                                <i class="ti-pencil-alt"></i>
-                                        </a>
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row) {
+                        let hiddenAttr = row.triase_proses == 1 ? 'hidden' : '';
 
-                                        <div class="dropdown mx-1">
-                                            <button class="btn btn-outline-secondary btn-sm btn-dropdown" type="button" data-bs-toggle="dropdown">
-                                                <i class="bi bi-three-dots"></i>
-                                            </button>
+                        return `
+                                <div class="d-flex justify-content-center">
+                                    <a href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}" 
+                                    class="edit btn btn-outline-primary btn-sm">
+                                        <i class="ti-pencil-alt"></i>
+                                    </a>
 
-                                            <ul class="dropdown-menu shadow-lg">
-                                                <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/ubah-pasien">Ubah Data Pasien</a></li>
+                                    <div class="dropdown mx-1">
+                                        <button class="btn btn-outline-secondary btn-sm btn-dropdown" type="button" data-bs-toggle="dropdown">
+                                            <i class="bi bi-three-dots"></i>
+                                        </button>
 
-                                                <li><a class="dropdown-item m-1 btn-foto-triase" href="#" data-kasir="${row.kd_kasir}" data-transaksi="${row.no_transaksi}">Ubah Foto Triase</a></li>
+                                        <ul class="dropdown-menu shadow-lg">
+                                            <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/ubah-pasien">Ubah Data Pasien</a></li>
 
-                                                <li class="dropdown-submenu">
-                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Persetujuan</a>
-                                                    <ul class="dropdown-menu shadow-lg">
-                                                        <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/general-consent'}">General Consent</a></li>
-                                                        <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/anestesi-sedasi'}">Anestesi dan Sedasi</a></li>
-                                                        <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/persetujuan-transfusi-darah'}">Persetujuan Transfusi Darah</a></li>
-                                                        <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/covid-19'}">Covid 19</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li class="dropdown-submenu">
-                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Mutasi Pasien</a>
-                                                    <ul class="dropdown-menu shadow-lg">
-                                                        <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/transfer-rwi">Pindah Ruangan / Rawat Inap</a></li>
-                                                        <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/rujuk-antar-rs'}">Rujuk Keluar RS</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li class="dropdown-submenu">
-                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Transfusi Darah</a>
-                                                    <ul class="dropdown-menu shadow-lg">
-                                                        <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/permintaan-darah'}">Order</a></li>
-                                                        <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/pengawasan-darah'}">Pengawasan</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li class="dropdown-submenu">
-                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Surat-Surat</a>
-                                                    <ul class="dropdown-menu shadow-lg">
-                                                        <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/surat-kematian'}">Kematian</a></li>
-                                                        <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/paps'}">PAPS</a></li>
-                                                        <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/penundaan'}">Penundaan Pelayanan</a></li>
-                                                        <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/dnr'}">Penolakan Resusitasi</a></li>
-                                                        <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/permintaan-second-opinion'}">Permintaan Second Opinion</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/permintaan-darah'}">Permintaan Darah</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    `;
-                        }
-                    },
-                    {
-                        data: 'profile',
-                        name: 'profile',
-                        render: function(data, type, row) {
-                            let imageUrl = row.foto_pasien ? "{{ asset('storage/') }}" + '/' + row
-                                .foto_pasien : "{{ asset('assets/images/avatar1.png') }}";
-                            let gender = row.pasien.jenis_kelamin == '1' ? 'Laki-Laki' :
-                                'Perempuan';
-                            return `
-                                <div class="profile">
-                                    <img src="${imageUrl}" alt="Profile" width="50" height="50" class="rounded-circle"/>
-                                    <div class="info">
-                                        <strong>${row.pasien.nama}</strong>
-                                        <span>${gender} / ${row.umur} Tahun</span>
+                                            <li><a class="dropdown-item m-1 btn-foto-triase" href="#" data-kasir="${row.kd_kasir}" data-transaksi="${row.no_transaksi}">Ubah Foto Triase</a></li>
+
+                                            <li class="dropdown-submenu" ${hiddenAttr}>
+                                                <a class="dropdown-item m-1 dropdown-toggle" href="#">Persetujuan</a>
+                                                <ul class="dropdown-menu shadow-lg">
+                                                    <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/general-consent">General Consent</a></li>
+                                                    <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/anestesi-sedasi">Anestesi dan Sedasi</a></li>
+                                                    <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/persetujuan-transfusi-darah">Persetujuan Transfusi Darah</a></li>
+                                                    <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/covid-19">Covid 19</a></li>
+                                                </ul>
+                                            </li>
+
+                                            <li class="dropdown-submenu" ${hiddenAttr}>
+                                                <a class="dropdown-item m-1 dropdown-toggle" href="#">Mutasi Pasien</a>
+                                                <ul class="dropdown-menu shadow-lg">
+                                                    <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/transfer-rwi">Pindah Ruangan / Rawat Inap</a></li>
+                                                    <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/rujuk-antar-rs">Rujuk Keluar RS</a></li>
+                                                </ul>
+                                            </li>
+
+                                            <li class="dropdown-submenu" ${hiddenAttr}>
+                                                <a class="dropdown-item m-1 dropdown-toggle" href="#">Transfusi Darah</a>
+                                                <ul class="dropdown-menu shadow-lg">
+                                                    <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/permintaan-darah">Order</a></li>
+                                                    <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/pengawasan-darah">Pengawasan</a></li>
+                                                </ul>
+                                            </li>
+
+                                            <li class="dropdown-submenu" ${hiddenAttr}>
+                                                <a class="dropdown-item m-1 dropdown-toggle" href="#">Surat-Surat</a>
+                                                <ul class="dropdown-menu shadow-lg">
+                                                    <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/surat-kematian">Kematian</a></li>
+                                                    <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/paps">PAPS</a></li>
+                                                    <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/penundaan">Penundaan Pelayanan</a></li>
+                                                    <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/dnr">Penolakan Resusitasi</a></li>
+                                                    <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/permintaan-second-opinion">Permintaan Second Opinion</a></li>
+                                                </ul>
+                                            </li>
+
+                                            <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/permintaan-darah" ${hiddenAttr}>Permintaan Darah</a></li>
+                                        </ul>
                                     </div>
                                 </div>
                             `;
-                        },
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'triase',
-                        name: 'triase',
-                        render: function(data, type, row) {
-                            let kdTriase = row.kd_triase;
-                            let classEl = '';
+                    }
 
-                            if (kdTriase == 5) classEl = 'bg-dark';
-                            if (kdTriase == 4 || kdTriase == 3) classEl = 'bg-danger';
-                            if (kdTriase == 2) classEl = 'bg-warning';
-                            if (kdTriase == 1) classEl = 'bg-success';
+                },
+                {
+                    data: 'profile',
+                    name: 'profile',
+                    render: function (data, type, row) {
+                        let imageUrl = row.foto_pasien ? "{{ asset('storage/') }}" + '/' + row
+                            .foto_pasien : "{{ asset('assets/images/avatar1.png') }}";
+                        let gender = row.pasien.jenis_kelamin == '1' ? 'Laki-Laki' :
+                            'Perempuan';
+                        return `
+                                    <div class="profile">
+                                        <img src="${imageUrl}" alt="Profile" width="50" height="50" class="rounded-circle"/>
+                                        <div class="info">
+                                            <strong>${row.pasien.nama}</strong>
+                                            <span>${gender} / ${row.umur} Tahun</span>
+                                        </div>
+                                    </div>
+                                `;
+                    },
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'triase',
+                    name: 'triase',
+                    render: function (data, type, row) {
+                        let kdTriase = row.kd_triase;
+                        let classEl = '';
 
-                            return `<div class="rounded-circle ${classEl}" style="width: 35px; height: 35px;"></div>`;
-                        },
-                        defaultContent: 'null'
+                        if (kdTriase == 5) classEl = 'bg-dark';
+                        if (kdTriase == 4 || kdTriase == 3) classEl = 'bg-danger';
+                        if (kdTriase == 2) classEl = 'bg-warning';
+                        if (kdTriase == 1) classEl = 'bg-success';
+
+                        return `<div class="rounded-circle ${classEl}" style="width: 35px; height: 35px;"></div>`;
                     },
-                    {
-                        data: 'bed',
-                        name: 'bed',
-                        defaultContent: ''
+                    defaultContent: 'null'
+                },
+                {
+                    data: 'bed',
+                    name: 'bed',
+                    defaultContent: ''
+                },
+                {
+                    data: 'kd_pasien',
+                    name: 'kd_pasien',
+                    render: function (data, type, row) {
+                        // Assuming row.kd_pasien is the "RM" and row.reg_number is the "Reg" value
+                        return `
+                                <div class="rm-reg">
+                                    RM: ${row.kd_pasien ? row.kd_pasien : 'N/A'}<br>
+                                    Reg: ${row.reg_number ? row.reg_number : 'N/A'}
+                                </div>
+                            `;
                     },
-                    {
-                        data: 'kd_pasien',
-                        name: 'kd_pasien',
-                        render: function(data, type, row) {
-                            // Assuming row.kd_pasien is the "RM" and row.reg_number is the "Reg" value
-                            return `
-                            <div class="rm-reg">
-                                RM: ${row.kd_pasien ? row.kd_pasien : 'N/A'}<br>
-                                Reg: ${row.reg_number ? row.reg_number : 'N/A'}
-                            </div>
-                        `;
-                        },
-                        defaultContent: ''
-                    },
-                    {
-                        data: 'alamat',
-                        name: 'alamat',
-                        defaultContent: ''
-                    },
-                    {
-                        data: 'jaminan',
-                        name: 'jaminan',
-                        defaultContent: ''
-                    },
-                    {
-                        data: 'waktu_masuk',
-                        name: 'tgl_masuk',
-                        defaultContent: 'null'
-                    },
-                    {
-                        data: 'kd_dokter',
-                        name: 'kd_dokter',
-                        defaultContent: 'null'
-                    },
-                    {
-                        data: 'instruksi',
-                        name: 'instruksi',
-                        defaultContent: ''
-                    },
-                    {
-                        data: 'del',
-                        name: 'del',
-                        orderable: false,
-                        searchable: false,
-                        render: function(data, type, row) {
-                            return '<a href="#" class="edit btn btn-danger btn-sm"><i class="bi bi-x-circle"></i></a>';
-                        }
-                    },
+                    defaultContent: ''
+                },
+                {
+                    data: 'alamat',
+                    name: 'alamat',
+                    defaultContent: ''
+                },
+                {
+                    data: 'jaminan',
+                    name: 'jaminan',
+                    defaultContent: ''
+                },
+                {
+                    data: 'waktu_masuk',
+                    name: 'tgl_masuk',
+                    defaultContent: 'null'
+                },
+                {
+                    data: 'kd_dokter',
+                    name: 'kd_dokter',
+                    defaultContent: 'null'
+                },
+                {
+                    data: 'instruksi',
+                    name: 'instruksi',
+                    defaultContent: ''
+                },
+                {
+                    data: 'del',
+                    name: 'del',
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row) {
+                        return '<a href="#" class="edit btn btn-danger btn-sm"><i class="bi bi-x-circle"></i></a>';
+                    }
+                },
                 ],
                 paging: true,
                 lengthChange: true,
@@ -455,21 +464,21 @@
             });
 
             $('.dropdown-submenu').hover(
-                function() {
+                function () {
                     $(this).find('.dropdown-menu').addClass('show');
                 },
-                function() {
+                function () {
                     $(this).find('.dropdown-menu').removeClass('show');
                 }
             );
         });
 
-        $('#dokterSelect').on('change', function() {
+        $('#dokterSelect').on('change', function () {
             $('#rawatDaruratTable').DataTable().ajax.reload();
         });
 
         // FOTO TRIASE
-        $('#rawatDaruratTable').on('click', '.btn-foto-triase', function() {
+        $('#rawatDaruratTable').on('click', '.btn-foto-triase', function () {
             let $this = $(this);
             let kdKasir = $this.attr('data-kasir');
             let noTrx = $this.attr('data-transaksi');
@@ -482,7 +491,7 @@
                     "no_transaksi": noTrx,
                     "_token": "{{ csrf_token() }}"
                 },
-                beforeSend: function() {
+                beforeSend: function () {
                     Swal.fire({
                         title: 'Proses...',
                         text: 'Sedang memproses',
@@ -492,7 +501,7 @@
                         }
                     });
                 },
-                success: function(res) {
+                success: function (res) {
                     let status = res.status;
                     let msg = res.message;
                     let data = res.data;
@@ -504,8 +513,8 @@
 
                     let action =
                         "{{ route('gawat-darurat.ubah-foto-triase', [':kdKasir', ':noTrx']) }}"
-                        .replace(':kdKasir', kunjungan.kd_kasir)
-                        .replace(':noTrx', kunjungan.no_transaksi);
+                            .replace(':kdKasir', kunjungan.kd_kasir)
+                            .replace(':noTrx', kunjungan.no_transaksi);
 
                     $('#fotoTriaseModal form').attr('action', action);
 
@@ -525,7 +534,7 @@
                     });
 
                 },
-                error: function() {
+                error: function () {
                     Swal.fire({
                         title: 'Error!',
                         text: 'Internal Server Error',

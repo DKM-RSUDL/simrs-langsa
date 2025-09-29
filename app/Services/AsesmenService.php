@@ -7,6 +7,7 @@ use App\Models\MrKonpas;
 use App\Models\MrKonpasDtl;
 use App\Models\Transaksi;
 use App\Models\VitalSign;
+use Exception;
 
 class AsesmenService
 {
@@ -39,9 +40,12 @@ class AsesmenService
         }
 
         VitalSign::updateOrCreate(
-            ['kd_kasir' => $kd_kasir,
-                'no_transaksi' => $no_transaksi, ],
-            $vitalSign);
+            [
+                'kd_kasir' => $kd_kasir,
+                'no_transaksi' => $no_transaksi,
+            ],
+            $vitalSign
+        );
     }
 
     public function getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -54,5 +58,18 @@ class AsesmenService
             ->first();
 
         return $lastTransaction;
+    }
+
+    public function getVitalSignData($kd_kasir, $no_transaksi)
+    {
+        try {
+            $vitalSign = VitalSign::where('kd_kasir', $kd_kasir)
+                ->where('no_transaksi', $no_transaksi)
+                ->first();
+
+            return $vitalSign;
+        } catch (Exception $e) {
+            return null;
+        }
     }
 }

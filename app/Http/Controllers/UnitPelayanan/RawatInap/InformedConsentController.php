@@ -142,7 +142,7 @@ class InformedConsentController extends Controller
         }
     }
 
-    public function show(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function show(Request $request)
     {
         try {
             $informedConsent = InformedConsent::find($request->dataic);

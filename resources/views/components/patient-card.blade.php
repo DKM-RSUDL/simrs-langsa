@@ -19,8 +19,28 @@
 
         <div class="patient-meta mt-2">
             <p class="mb-0"><strong>RM: {{ $dataMedis->pasien->kd_pasien }}</strong></p>
-            <p class="mb-0"><i class="bi bi-calendar3"></i>{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('d M Y') }}</p>
-            <p><i class="bi bi-hospital"></i>{{ $dataMedis->unit->bagian->bagian }} ({{ $dataMedis->unit->nama_unit }})</p>
+            <p class="mb-0"><i
+                    class="bi bi-calendar3"></i>{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('d M Y') }}</p>
+            <p>
+                <i class="bi bi-hospital"></i>
+                {{ $dataMedis->unit->bagian->bagian }}
+
+                @if ($dataMedis->unit->kd_bagian == 1)
+                    @php
+                        $nginap = \App\Models\Nginap::join('unit as u', 'nginap.kd_unit_kamar', '=', 'u.kd_unit')
+                            ->where('nginap.kd_pasien', $dataMedis->kd_pasien)
+                            ->where('nginap.kd_unit', $dataMedis->kd_unit)
+                            ->where('nginap.tgl_masuk', $dataMedis->tgl_masuk)
+                            ->where('nginap.urut_masuk', $dataMedis->urut_masuk)
+                            ->where('nginap.akhir', 1)
+                            ->first();
+                    @endphp
+
+                    ({{ $nginap->nama_unit ?? '-' }})
+                @else
+                    ({{ $dataMedis->unit->nama_unit }})
+                @endif
+            </p>
         </div>
     </div>
 </div>

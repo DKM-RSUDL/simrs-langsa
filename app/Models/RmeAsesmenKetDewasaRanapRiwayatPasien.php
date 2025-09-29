@@ -17,6 +17,10 @@ class RmeAsesmenKetDewasaRanapRiwayatPasien extends Model
         'riwayat_keluarga' => 'array',
         'agama' => 'array',
         'psikososial_aktivitas' => 'array',
+        'alkohol_jenis' => 'array',
+        'alkohol_jumlah' => 'array',
+        'merokok_jenis' => 'array',
+        'merokok_jumlah' => 'array',
     ];
 
     public function asesmen()

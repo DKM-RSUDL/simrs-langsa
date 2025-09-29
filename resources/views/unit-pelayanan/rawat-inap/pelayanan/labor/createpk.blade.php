@@ -97,11 +97,10 @@
                                 </p>
                                 <div class="row">
                                     <div class="col-12">
-                                        <label for="jadwal_pemeriksaan" class="form-label fw-bold h5 text-dark">Tanggal & Jam Pemeriksaan:</label>
-
-                                        <input type="datetime-local" id="jadwal_pemeriksaan" name="jadwal_pemeriksaan"
-                                            class="form-control"
-                                            value="{{ old('jadwal_pemeriksaan', \Carbon\Carbon::now()->format('Y-m-d\TH:i')) }}">
+                                        <label for="jadwal_pemeriksaan" class="form-label fw-bold h5 text-dark">Tanggal
+                                            & Jam Pemeriksaan:</label>
+                                        <input type="datetime-local" id="jadwal_pemeriksaan"
+                                            name="jadwal_pemeriksaan" class="form-control" {{-- value="{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d H:i:s') }}" --}}>
                                     </div>
                                 </div>
                             </div>
@@ -113,9 +112,9 @@
                             <div class="patient-card mt-4">
                                 <h6 class="fw-bold">Catatan Klinis/Diagnosis</h6>
                                 <div class="diagnosis-list">
-                                    @if(count($diagnosisList) > 0)
+                                    @if (count($diagnosisList) > 0)
                                         <ul class="list-unstyled mb-0">
-                                            @foreach($diagnosisList as $diagnosis)
+                                            @foreach ($diagnosisList as $diagnosis)
                                                 <li class="mb-2">
                                                     <i class="fas fa-circle-notch me-2 text-primary"></i>
                                                     {{ $diagnosis }}
@@ -379,15 +378,15 @@
         //             const $listItem = $('<li>').addClass('list-group-item');
 
         //             $listItem.html(`
-        //             ${selectedItemText}
-        //             <input type="hidden" name="kd_produk[]" value="${kdProduk}">
-        //             <input type="hidden" name="jumlah[]" value="1">
-        //             <input type="hidden" name="status[]" value="1">
-        //             <input type="hidden" name="urut[]" value="${urut}">
-        //             <span class="remove-item" style="color: red; cursor: pointer;">
-        //                 <i class="bi bi-x-circle"></i>
-        //             </span>
-        //         `);
+    //             ${selectedItemText}
+    //             <input type="hidden" name="kd_produk[]" value="${kdProduk}">
+    //             <input type="hidden" name="jumlah[]" value="1">
+    //             <input type="hidden" name="status[]" value="1">
+    //             <input type="hidden" name="urut[]" value="${urut}">
+    //             <span class="remove-item" style="color: red; cursor: pointer;">
+    //                 <i class="bi bi-x-circle"></i>
+    //             </span>
+    //         `);
 
         //             $orderList.append($listItem);
         //             urut++;

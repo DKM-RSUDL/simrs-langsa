@@ -65,7 +65,7 @@ Route::prefix('gawat-darurat')->group(function () {
                 Route::name('ubah-pasien')->group(function () {
                     Route::controller(UpdatePasienController::class)->group(function () {
                         Route::get('/', 'index');
-                        Route::post('/', 'storeTransferInap')->name('.store');
+                        Route::post('/ubah-pasien', 'UbahPasien')->name('.ubah-pasien');
                     });
                 });
             });
