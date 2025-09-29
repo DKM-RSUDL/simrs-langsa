@@ -1896,42 +1896,29 @@
 
 
         // 16. MASALAH/ DIAGNOSIS KEPERAWATAN
-        function toggleRencana(diagnosisType) {
-            // Handle special case for respiratory group (3 diagnosis yang menggunakan 1 rencana)
-            const respiratoryGroup = ['bersihan_jalan_nafas', 'risiko_aspirasi', 'pola_nafas_tidak_efektif'];
+        $('.rencana-perawatan-row-1').change(function() {
+            let rowCount = $('.rencana-perawatan-row-1:checked').length > 0;
 
-            if (respiratoryGroup.includes(diagnosisType)) {
-                // Check if any of the 3 respiratory checkboxes is checked
-                const anyRespChecked = respiratoryGroup.some(diagnosis => {
-                    const checkbox = document.getElementById('diag_' + diagnosis);
-                    return checkbox && checkbox.checked;
-                });
-
-                const rencanaDiv = document.getElementById('rencana_bersihan_jalan_nafas');
-                if (rencanaDiv) {
-                    if (anyRespChecked) {
-                        rencanaDiv.style.display = 'block';
-                    } else {
-                        rencanaDiv.style.display = 'none';
-                        // Uncheck all rencana checkboxes when no respiratory diagnosis is checked
-                        const rencanaCheckboxes = rencanaDiv.querySelectorAll('input[type="checkbox"]');
-                        rencanaCheckboxes.forEach(cb => cb.checked = false);
-                    }
-                }
+            if(rowCount) {
+                $('#rencana_bersihan_jalan_nafas').css('display', 'block');
             } else {
-                // Handle normal case (1 diagnosis = 1 rencana)
-                const checkbox = document.getElementById('diag_' + diagnosisType);
-                const rencanaDiv = document.getElementById('rencana_' + diagnosisType);
+                $('#rencana_bersihan_jalan_nafas').css('display', 'none');
+            }
 
-                if (checkbox && rencanaDiv) {
-                    if (checkbox.checked) {
-                        rencanaDiv.style.display = 'block';
-                    } else {
-                        rencanaDiv.style.display = 'none';
-                        // Uncheck all rencana checkboxes when diagnosis is unchecked
-                        const rencanaCheckboxes = rencanaDiv.querySelectorAll('input[type="checkbox"]');
-                        rencanaCheckboxes.forEach(cb => cb.checked = false);
-                    }
+        });
+        
+        function toggleRencana(diagnosisType) {
+            const checkbox = document.getElementById('diag_' + diagnosisType);
+            const rencanaDiv = document.getElementById('rencana_' + diagnosisType);
+
+            if (checkbox && rencanaDiv) {
+                if (checkbox.checked) {
+                    rencanaDiv.style.display = 'block';
+                } else {
+                    rencanaDiv.style.display = 'none';
+                    // Uncheck all rencana checkboxes when diagnosis is unchecked
+                    const rencanaCheckboxes = rencanaDiv.querySelectorAll('input[type="checkbox"]');
+                    rencanaCheckboxes.forEach(cb => cb.checked = false);
                 }
             }
         }
