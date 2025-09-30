@@ -47,7 +47,9 @@
             @endif
 
             <div class="container-fluid">
-               <form id="resepForm" action="{{ route('rawat-inap.farmasi.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" method="POST">
+                <form id="resepForm"
+                    action="{{ route('rawat-inap.farmasi.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                    method="POST">
                     @csrf
                     <div class="row">
                         <!-- Side Column (Kiri) -->
@@ -80,7 +82,8 @@
                                             aria-labelledby="nonracikan-tab">
                                             <div class="mb-3">
                                                 <label for="dokterPengirim" class="form-label">Dokter Pengirim</label>
-                                                <select class="form-select" id="dokterPengirim" @cannot('is-admin') disabled @endcannot>
+                                                <select class="form-select" id="dokterPengirim"
+                                                    @cannot('is-admin') disabled @endcannot>
                                                     @foreach ($dokters as $dokter)
                                                         <option value="{{ $dokter->kd_dokter }}"
                                                             @selected($dokter->kd_karyawan == auth()->user()->kd_karyawan)>
@@ -94,8 +97,8 @@
                                             <div class="mb-3">
                                                 <label for="tanggalOrder" class="form-label">Tanggal dan Jam Order</label>
                                                 <input type="datetime-local" class="form-control" id="tanggalOrder"
-                                                    name="tgl_order" value="{{ old('tgl_order', now()->format('Y-m-d\TH:i')) }}"
-                                                    required>
+                                                    name="tgl_order"
+                                                    value="{{ old('tgl_order', now()->format('Y-m-d\TH:i')) }}" required>
                                                 @error('tgl_order')
                                                     <div class="text-danger">{{ $message }}</div>
                                                 @enderror
@@ -110,7 +113,9 @@
                                                             name="nama_obat" placeholder="Ketik nama obat...">
                                                         <button class="btn btn-outline-secondary" type="button"
                                                             id="clearObat" style="display:none;">X</button>
-                                                        <span id="searchObatSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        <span id="searchObatSpinner"
+                                                            class="spinner-border spinner-border-sm" role="status"
+                                                            aria-hidden="true"></span>
                                                     </div>
                                                     <input type="hidden" id="selectedObatId" name="obat_id">
                                                     <div id="obatList" class="list-group mt-2"></div>
@@ -118,16 +123,19 @@
                                                 <label class="form-label">Aturan Pakai</label>
                                                 <div class="row mb-3">
                                                     <div class="col-md-12">
-                                                        <label for="frekuensi" class="form-label">Frekuensi/interval</label>
-                                                        <input type="   text" id="frekuensi" class="form-control"
+                                                        <label for="frekuensi"
+                                                            class="form-label">Frekuensi/interval</label>
+                                                        <input type="text" id="frekuensi" class="form-control"
                                                             value="3 x 1 hari">
                                                     </div>
                                                 </div>
 
                                                 <div class="row mb-3">
                                                     <div class="col-md-6">
-                                                        <label for="dosis" class="form-label">Dosis Sekali Minum</label>
-                                                        <input type="text" id="dosis" class="form-control" value="1/2">
+                                                        <label for="dosis" class="form-label">Dosis Sekali
+                                                            Minum</label>
+                                                        <input type="text" id="dosis" class="form-control"
+                                                            value="1/2">
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="satuanObat" class="form-label">Satuan Obat</label>
@@ -160,7 +168,8 @@
                                                 </div>
                                                 <div class="row mb-3">
                                                     <div class="col-md-12">
-                                                        <label for="sebelumSesudahMakan" class="form-label">Sebelum/Sesudah Makan</label>
+                                                        <label for="sebelumSesudahMakan"
+                                                            class="form-label">Sebelum/Sesudah Makan</label>
                                                         <select class="form-select" id="sebelumSesudahMakan">
                                                             <option selected>Sesudah Makan</option>
                                                             <option>Sebelum Makan</option>
@@ -169,7 +178,8 @@
                                                 </div>
                                                 <div class="row mb-3">
                                                     <div class="col-md-12">
-                                                        <label for="aturanTambahan" class="form-label">Aturan tambahan</label>
+                                                        <label for="aturanTambahan" class="form-label">Aturan
+                                                            tambahan</label>
                                                         <textarea class="form-control" id="aturanTambahan">{{ old('aturanTambahan') }}</textarea>
                                                     </div>
                                                 </div>

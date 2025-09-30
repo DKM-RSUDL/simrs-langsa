@@ -99,7 +99,7 @@ class FarmasiController extends Controller
         $dokters = Dokter::all();
 
         return view(
-            'unit-pelayanan.rawat-jalan.pelayanan.farmasi.order-obat',
+            'unit-pelayanan.rawat-inap.pelayanan.farmasi.order-obat',
             compact('dataMedis', 'riwayatObat', 'kd_pasien', 'tgl_masuk', 'dokters', 'kd_unit')
         );
     }
