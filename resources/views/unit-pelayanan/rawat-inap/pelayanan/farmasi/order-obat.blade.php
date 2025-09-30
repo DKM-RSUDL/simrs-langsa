@@ -125,36 +125,18 @@
                                                     <div class="col-md-12">
                                                         <label for="frekuensi"
                                                             class="form-label">Frekuensi/interval</label>
-                                                        <input type="text" id="frekuensi" class="form-control"
-                                                            value="3 x 1 hari">
+                                                        <input type="text" id="frekuensi" class="form-control">
                                                     </div>
                                                 </div>
 
                                                 <div class="row mb-3">
                                                     <div class="col-md-6">
-                                                        <label for="dosis" class="form-label">Dosis Sekali
-                                                            Minum</label>
-                                                        <input type="text" id="dosis" class="form-control"
-                                                            value="1/2">
+                                                        <label for="dosis" class="form-label">Dosis Sekali</label>
+                                                        <input type="text" id="dosis" class="form-control">
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="satuanObat" class="form-label">Satuan Obat</label>
-                                                        <select class="form-select" id="satuanObat">
-                                                            <option value="tablet">Tablet</option>
-                                                            <option value="kapsul">Kapsul (caps)</option>
-                                                            <option value="bungkus">Bungkus (bks)</option>
-                                                            <option value="sendok_makan">Sendok makan</option>
-                                                            <option value="sendok_teh">Sendok teh</option>
-                                                            <option value="tetes">Tetes</option>
-                                                            <option value="cc">CC</option>
-                                                            <option value="olesan">Olesan</option>
-                                                            <option value="taburan">Taburan</option>
-                                                            <option value="semprotan">Semprotan</option>
-                                                            <option value="kali">Kali</option>
-                                                            <option value="ampul">Ampul</option>
-                                                            <option value="unit">Unit</option>
-                                                            <option value="sub">Sub</option>
-                                                        </select>
+                                                        <input type="text" id="satuanObat" class="form-control">
                                                         <input type="text" id="hargaObat" class="form-control d-none"
                                                             readonly>
                                                     </div>
@@ -162,8 +144,7 @@
                                                 <div class="row mb-3">
                                                     <div class="col-md-12">
                                                         <label for="jumlah" class="form-label">Jumlah Obat</label>
-                                                        <input type="number" class="form-control" id="jumlah"
-                                                            value="12">
+                                                        <input type="number" class="form-control" id="jumlah">
                                                     </div>
                                                 </div>
                                                 <div class="row mb-3">

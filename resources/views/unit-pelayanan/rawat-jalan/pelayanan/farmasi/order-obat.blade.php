@@ -119,41 +119,18 @@
                                                 <div class="row mb-3">
                                                     <div class="col-md-12">
                                                         <label for="frekuensi" class="form-label">Frekuensi/interval</label>
-                                                        <select class="form-select" id="frekuensi">
-                                                            <option selected>3 x 1 hari</option>
-                                                            <option>2 x 1 hari</option>
-                                                        </select>
+                                                        <input type="text" id="frekuensi" class="form-control">
                                                     </div>
                                                 </div>
 
                                                 <div class="row mb-3">
                                                     <div class="col-md-6">
-                                                        <label for="dosis" class="form-label">Dosis Sekali Minum</label>
-                                                        <select class="form-select" id="dosis">
-                                                            <option selected>1/2</option>
-                                                            <option>1</option>
-                                                            <option>2</option>
-                                                            <option>3</option>
-                                                        </select>
+                                                        <label for="dosis" class="form-label">Dosis</label>
+                                                        <input type="text" id="dosis" class="form-control">
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="satuanObat" class="form-label">Satuan Obat</label>
-                                                        <select class="form-select" id="satuanObat">
-                                                            <option value="tablet">Tablet</option>
-                                                            <option value="kapsul">Kapsul (caps)</option>
-                                                            <option value="bungkus">Bungkus (bks)</option>
-                                                            <option value="sendok_makan">Sendok makan</option>
-                                                            <option value="sendok_teh">Sendok teh</option>
-                                                            <option value="tetes">Tetes</option>
-                                                            <option value="cc">CC</option>
-                                                            <option value="olesan">Olesan</option>
-                                                            <option value="taburan">Taburan</option>
-                                                            <option value="semprotan">Semprotan</option>
-                                                            <option value="kali">Kali</option>
-                                                            <option value="ampul">Ampul</option>
-                                                            <option value="unit">Unit</option>
-                                                            <option value="sub">Sub</option>
-                                                        </select>
+                                                        <input type="text" id="satuanObat" class="form-control">
                                                         <input type="text" id="hargaObat" class="form-control d-none"
                                                             readonly>
                                                     </div>
@@ -356,7 +333,7 @@
             let selectedDokter;
 
             const dokterSelect = $('#dokterPengirim');
-            
+
             @php
                 $dokterLoggedIn = null;
                 foreach ($dokters as $dokter) {
@@ -381,7 +358,7 @@
                         'cursor': 'pointer'
                     })
                     .removeAttr('tabindex');
-                
+
                 // Update selectedDokter when admin changes the selection
                 dokterSelect.on('change', function() {
                     selectedDokter = $(this).val();
@@ -398,7 +375,7 @@
                         'cursor': 'not-allowed'
                     })
                     .attr('tabindex', '-1');
-                
+
                 // Pastikan selectedDokter tetap diisi untuk non-admin (dokter)
                 console.log("Dokter yang login: ", selectedDokter);
             @endcan
@@ -444,7 +421,7 @@
                         message: "Pilih satuan obat.",
                         position: 'topRight'
                     });
-                    return;               
+                    return;
                 }
 
                 // Cek jika obat sudah ada dalam daftar
@@ -477,7 +454,7 @@
                 updateObatInputs(); // Update input hidden saat menambah obat
                 resetInputObat();
             });
-            
+
             // Fungsi Copy Obat
             $(document).on('click', '.copy-obat', function() {
                 var obatData = $(this).data('obat');
@@ -601,7 +578,7 @@
 
                 // Tambahkan input hidden untuk kd_dokter
                 obatInputs.append(`<input type="hidden" name="kd_dokter" value="${selectedDokter}">`);
-                
+
                 daftarObat.forEach(function(obat, index) {
                     obatInputs.append(`
                         <input type="hidden" name="obat[${index}][id]" value="${obat.id}">
@@ -639,7 +616,7 @@
                     });
                     return false;
                 }
-                
+
 
                 // Validasi kd_dokter
                 if (!selectedDokter || selectedDokter.length > 3) {
@@ -654,7 +631,7 @@
 
                 $('#loadingIndicator').removeClass('d-none');
                 $('#orderButton').prop('disabled', true);
-                
+
                 // Form akan melakukan submit normal ke server
             });
 
@@ -757,13 +734,13 @@
                 const day = String(now.getDate()).padStart(2, '0');
                 const hours = String(now.getHours()).padStart(2, '0');
                 const minutes = String(now.getMinutes()).padStart(2, '0');
-                
+
                 $('#tanggalOrder').val(`${year}-${month}-${day}T${hours}:${minutes}`);
             }
-            
+
             // Panggil fungsi untuk set default tanggal dan waktu
             setDefaultDateTime();
-            
+
             // Inisialisasi input hidden pertama kali
             updateObatInputs();
         });
