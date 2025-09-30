@@ -270,6 +270,10 @@ class RmeAsesmen extends Model
     {
         return $this->hasOne(RmeAsesmenKepAnakFisik::class, 'id_asesmen', 'id');
     }
+    public function rmeAsesmenKepAnakKeperawatan()
+    {
+        return $this->hasOne(RmeAsesmenKepAnakKeperawatan::class, 'id_asesmen', 'id');
+    }
 
     public function rmeAsesmenKepAnakStatusNyeri()
     {
