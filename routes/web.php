@@ -26,6 +26,21 @@ Route::middleware('guest')->group(function () {
     Route::get('/callback', [SsoController::class, 'handleCallback'])->name('callback');
 });
 
+// Keep session alive
+Route::get('/keep-alive', function () {
+    return response()->json([
+        'token' => csrf_token(),
+        'status' => 'alive',
+        'time' => now()->toDateTimeString()
+    ]);
+})->middleware('web');
+
+// Refresh CSRF token
+Route::get('/refresh-csrf', function () {
+    return response()->json([
+        'token' => csrf_token()
+    ]);
+})->middleware('web');
 
 Route::middleware('ssoToken')->group(function () {
 
@@ -62,50 +77,6 @@ Route::middleware('ssoToken')->group(function () {
 
         // Rute untuk Operasi
         require __DIR__ . '/modules/hemodelisa.php';
-
-
-        // // Rute Untuk Forensik
-        // Route::prefix('forensik')->group(function () {
-        //     Route::name('forensik')->group(function () {
-        //         Route::get('/', [ForensikController::class, 'index'])->name('.index');
-
-        //         Route::prefix('unit/{kd_unit}')->group(function () {
-        //             Route::name('.unit')->group(function () {
-        //                 Route::get('/', [ForensikController::class, 'unitPelayanan']);
-
-        //                 //Pelayanan
-        //                 Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
-        //                     Route::name('.pelayanan')->group(function () {
-        //                         Route::get('/', [ForensikController::class, 'pelayanan']);
-        //                         // klinik
-        //                         Route::controller(ForensikKlinikController::class)->group(function () {
-        //                             Route::get('/create', 'create')->name('.create');
-        //                             Route::get('/{data}', 'show')->name('.show');
-        //                             Route::get('/edit/{data}', 'edit')->name('.edit');
-        //                             Route::post('/', 'store')->name('.store');
-        //                             Route::put('/{data}', 'update')->name('.update');
-        //                             Route::delete('/', 'destroy')->name('.destroy');
-        //                         });
-
-        //                         // patologi
-        //                         Route::prefix('patologi')->group(function () {
-        //                             Route::name('.patologi')->group(function () {
-        //                                 Route::controller(ForensikPatologiController::class)->group(function () {
-        //                                     Route::get('/create', 'index')->name('.create');
-        //                                     Route::get('/{data}', 'show')->name('.show');
-        //                                     Route::get('/edit/{data}', 'edit')->name('.edit');
-        //                                     Route::post('/', 'store')->name('.store');
-        //                                     Route::put('/{data}', 'update')->name('.update');
-        //                                     Route::delete('/', 'destroy')->name('.destroy');
-        //                                 });
-        //                             });
-        //                         });
-        //                     });
-        //                 });
-        //             });
-        //         });
-        //     });
-        // });
     });
 
     // TRANSFUSI DARAH
