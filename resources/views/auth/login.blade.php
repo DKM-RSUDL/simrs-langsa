@@ -1,149 +1,59 @@
 @extends('layouts.auth.app')
 
-@section('css')
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
-        .login__container {
-            max-width: 100%;
-            margin: 10px auto;
-            background-color: white;
-            border-radius: 15px;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .login__left {
-            background-color: #ebf5ff;
-            border-top-left-radius: 15px;
-            border-bottom-left-radius: 15px;
-            padding: 40px;
-            flex: 1 1 50%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .login__left h1 {
-            color: #0066cc;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .login__left .row {
-            margin-top: 20px;
-        }
-
-        .login__left img {
-            width: 100%;
-            margin-bottom: 15px;
-        }
-
-        .login__right {
-            padding: 40px;
-            flex: 1 1 50%;
-            background-image: url("{{ asset('assets/img/background.png') }}");
-            background-size: cover;
-            background-position: center;
-            border-top-right-radius: 15px;
-            border-bottom-right-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .btn__custom {
-            background: linear-gradient(90.04deg, #1C9D41 2.03%, #B6D427 132%);
-            color: white;
-            border: none;
-            transition: background 0.3s ease;
-        }
-
-        .btn__custom:hover {
-            background: linear-gradient(90.04deg, #B6D427 2.03%, #1C9D41 132%);
-            color: white;
-        }
-
-
-        .form-control {
-            height: 45px;
-            border-radius: 10px;
-            color: #000;
-        }
-
-        .form-control:focus {
-            box-shadow: none;
-            border-color: #80bdff;
-        }
-
-        .input-group-text {
-            background-color: #f8f9fa;
-            border-radius: 10px 0 0 10px;
-        }
-
-        /* Responsiveness */
-        @media (max-width: 768px) {
-
-            .login__left,
-            .login__right {
-                flex: 1 1 100%;
-                border-radius: 15px;
-            }
-
-            .login__left {
-                text-align: center;
-            }
-
-            .login__left h1 {
-                font-size: 24px;
-            }
-
-            .login__right img {
-                width: 80px;
-            }
-        }
-    </style>
-@endsection
-
 @section('content')
-    <div class="container login__container">
-        <!-- Left Side -->
-        <div class="login__left">
-            <h1>
-                Selamat Datang...<br />Di Electronic Medical Record Information System (EMRIS)<br />RSUD Langsa
-            </h1>
-            <div class="row mt-5">
-                <div class="col-6">
-                    <img src="{{ asset('assets/img/auth1.png') }}" alt="Medical Illustration" class="img-fluid" />
-                </div>
-                <div class="col-6">
-                    <img src="{{ asset('assets/img/auth2.png') }}" alt="Medical Illustration" class="img-fluid" />
-                </div>
-            </div>
-        </div>
+    <div class="d-flex align-items-center bg-success-subtle">
+        <div class="container-fluid px-0">
+            <!-- GANTI: gunakan grid agar responsif -->
+            <div class="row g-0 overflow-hidden rounded-4 shadow mx-auto">
 
-        <!-- Right Side -->
-        <div class="login__right">
-            <div class="row justify-content-center align-items-center">
-                <!-- Gambar Logo dan Ilustrasi -->
-                <div class="col-md-4 text-center">
-                    <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="img-fluid"
-                        style="max-width: 120px;">
-                    <br><br>
-                    <img src="{{ asset('assets/img/auth3.png') }}" alt="Medical Illustration" class="img-fluid"
-                        style="max-width: 150px;">
+                {{-- Kiri: Hero / Branding --}}
+                <div class="col-12 col-md-6 d-flex flex-column justify-content-center bg-light p-4 p-md-5">
+                    <h1 class="fw-bold text-dark mb-2 text-start">
+                        Selamat Datang di EMRIS RSUD Langsa
+                    </h1>
+                    <p class="text-start text-secondary mb-4">
+                        Electronic Medical Record Information System untuk mencatat, mengelola, dan memantau layanan
+                        kesehatan secara cepat, aman, dan terstandar.
+                    </p>
+
+                    <div class="row g-3 mt-2">
+                        <div class="col-6">
+                            <img src="{{ asset('assets/img/auth1.png') }}" class="img-fluid rounded border" alt="Ilustrasi 1">
+                        </div>
+                        <div class="col-6">
+                            <img src="{{ asset('assets/img/auth2.png') }}" class="img-fluid rounded border"
+                                alt="Ilustrasi 2">
+                        </div>
+                    </div>
                 </div>
 
-                <div class="col-md-8 text-center">
-                    <a href="{{ route('home') }}" class="btn btn__custom btn-lg">{{ __('Login') }}</a>
+                {{-- Kanan: Kartu Login --}}
+                <div class="col-12 col-md-6 d-flex flex-column justify-content-center p-4 p-md-5 bg-white">
+                    <div class="d-flex align-items-center gap-3 mb-4 w-100">
+                        <img src="{{ asset('assets/img/logo.png') }}" alt="Logo"
+                            style="width:64px; height:64px; object-fit:contain;">
+                        <div class="text-start">
+                            <div class="fw-bold text-dark">RSUD Langsa</div>
+                            <small class="text-secondary">Electronic Medical Record</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 text-start">
+                        <h2 class="h4 fw-bold text-dark mb-1">Masuk ke Sistem</h2>
+                        <p class="text-secondary mb-0">Gunakan akun resmi yang telah terdaftar.</p>
+                    </div>
+
+                    {{-- Tombol Login --}}
+                    <a href="{{ route('home') }}" class="btn btn-success w-100 fw-semibold mb-3">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                    </a>
+
+                    <div class="text-start">
+                        <small class="text-secondary text-start">Butuh bantuan? Hubungi IT RSUD Langsa.</small>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
-
-@section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
-@endsection
 @endsection

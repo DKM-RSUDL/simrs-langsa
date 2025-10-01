@@ -6,7 +6,7 @@
                 <h5 class="modal-title" id="copyCPOModalLabel">
                     Salin Catatan Pemberian Obat (CPO)
                 </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <form id="copyCPOForm"
@@ -104,17 +104,6 @@
 
 @push('css')
 <style>
-    .modal-content {
-        border: none;
-        border-radius: 0.5rem;
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    }
-
-    .modal-header {
-        border-top-left-radius: 0.5rem;
-        border-top-right-radius: 0.5rem;
-    }
-
     .alert-info {
         background-color: #d1ecf1;
         border-color: #bee5eb;
@@ -129,11 +118,6 @@
     .form-label.fw-semibold {
         color: #212529;
         margin-bottom: 0.5rem;
-    }
-
-    .form-label.small {
-        font-size: 0.875rem;
-        margin-bottom: 0.25rem;
     }
 </style>
 @endpush

@@ -367,7 +367,7 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::put('/catatanObat/validasi', 'validasiCatatanObat')->name('.catatanObat.validasi');
                             Route::delete('/catatanObat/{id}', 'hapusCatatanObat')->name('.hapusCatatanObat');
                             Route::post('/rekonsiliasiObat', 'rekonsiliasiObat')->name('.rekonsiliasiObat');
-                            Route::post('/{kd_unit}/{kd_pasien}/{tgl_masuk}/{urut_masuk}/copy-cpo', 'copyCPO')->name('.copy-cpo');
+                            Route::post('/copy-cpo', 'copyCPO')->name('.copy-cpo');
                             Route::delete('/deleteRekonsiliasiObat', 'deleteRekonsiliasiObat')->name('.rekonsiliasiObatDelete');
                         });
                     });
