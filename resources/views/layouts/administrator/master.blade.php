@@ -102,6 +102,34 @@
                 displayMode: 'once',
             });
         }
+
+        // ============================================
+        // SETUP GLOBAL AJAX - CSRF TOKEN
+        // ============================================
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        // ============================================
+        // KEEP SESSION ALIVE - Ping setiap 5 menit
+        // ============================================
+        setInterval(function() {
+            $.ajax({
+                url: '/keep-alive',
+                method: 'GET',
+                success: function(response) {
+                    if (response.token) {
+                        $('meta[name="csrf-token"]').attr('content', response.token);
+                    }
+
+                },
+                error: function() {
+                    console.warn('⚠️ Failed to refresh session');
+                }
+            });
+        }, 5 * 60 * 1000); // 5 menit
     </script>
 
     <!-- js for this page only -->
