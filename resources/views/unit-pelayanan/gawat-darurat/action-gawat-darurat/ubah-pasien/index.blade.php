@@ -1,6 +1,5 @@
 @extends('layouts.administrator.master')
 
-
 @section('content')
     @push('css')
         <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
