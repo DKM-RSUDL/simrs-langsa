@@ -131,7 +131,7 @@
 
                                                 <div class="row mb-3">
                                                     <div class="col-md-6">
-                                                        <label for="dosis" class="form-label">Dosis Sekali</label>
+                                                        <label for="dosis" class="form-label">Dosis</label>
                                                         <input type="text" id="dosis" class="form-control">
                                                     </div>
                                                     <div class="col-md-6">
