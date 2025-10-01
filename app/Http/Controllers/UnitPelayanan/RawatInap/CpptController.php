@@ -768,23 +768,70 @@ class CpptController extends Controller
     public function getLastDiagnosesAjax(Request $request)
     {
         try {
-            $lastDiagnoses = $this->getLastDiagnosisByTipeCppt(
-                $request->kd_unit,
-                $request->kd_pasien,
-                $request->tgl_masuk,
-                $request->urut_masuk
-            );
+            $kd_unit = $request->kd_unit;
+            $kd_pasien = $request->kd_pasien;
+            $tgl_masuk = $request->tgl_masuk;
+            $urut_masuk = $request->urut_masuk;
+
+            $tipeCppt = $this->getTipeCpptByUser();
+
+            // Get transaksi data
+            $transaction = $this->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+            if (!$transaction) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Transaksi tidak ditemukan',
+                    'data' => []
+                ]);
+            }
+
+            // Ambil CPPT terakhir berdasarkan tipe PPA yang sama
+            $lastCppt = Cppt::join('transaksi as t', function ($join) {
+                    $join->on('cppt.no_transaksi', '=', 't.no_transaksi')
+                        ->on('cppt.kd_kasir', '=', 't.kd_kasir');
+                })
+                ->where('t.kd_pasien', $kd_pasien)
+                ->where('t.kd_unit', $kd_unit)
+                ->where('cppt.tipe_cppt', $tipeCppt)
+                ->orderBy('cppt.tanggal', 'desc')
+                ->orderBy('cppt.jam', 'desc')
+                ->first();
+
+            if (!$lastCppt) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Tidak ada diagnosis sebelumnya',
+                    'data' => []
+                ]);
+            }
+
+            // Ambil diagnosis dari CPPT terakhir
+            $diagnoses = CpptPenyakit::where('no_transaksi', $lastCppt->no_transaksi)
+                ->where('kd_unit', $kd_unit)
+                ->where('tgl_cppt', $lastCppt->tanggal)
+                ->where('urut_cppt', $lastCppt->urut_total)
+                ->get()
+                ->pluck('nama_penyakit')
+                ->toArray();
 
             return response()->json([
                 'status' => 'success',
-                'data' => $lastDiagnoses
+                'message' => 'Data ditemukan',
+                'data' => $diagnoses,
+                'cppt_info' => [
+                    'tanggal' => $lastCppt->tanggal,
+                    'jam' => $lastCppt->jam,
+                    'tipe' => $tipeCppt
+                ]
             ]);
+
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
                 'data' => []
-            ]);
+            ], 500);
         }
     }
 
