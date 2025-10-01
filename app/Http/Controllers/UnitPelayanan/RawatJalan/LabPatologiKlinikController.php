@@ -249,7 +249,7 @@ class LabPatologiKlinikController extends Controller
             'transaksi_penunjang' => 'nullable|string|max:255',
             'cyto' => 'required|string|max:2',
             'puasa' => 'required|string|max:2',
-            'jadwal_pemeriksaan' => 'nullable|date_format:Y-m-d\TH:i|after_or_equal:tgl_order',
+            'jadwal_pemeriksaan' => 'nullable|date_format:Y-m-d\TH:i',
             'diagnosis' => 'nullable|string|max:255',
 
             // Field untuk SegalaOrderDet (ubah menjadi array)
@@ -370,7 +370,7 @@ class LabPatologiKlinikController extends Controller
             'transaksi_penunjang' => 'nullable|string|max:255',
             'cyto' => 'required|string|max:2',
             'puasa' => 'required|string|max:2',
-            'jadwal_pemeriksaan' => 'nullable|date_format:Y-m-d\TH:i|after_or_equal:tgl_order',
+            'jadwal_pemeriksaan' => 'nullable|date_format:Y-m-d\TH:i',
             'diagnosis' => 'nullable|string|max:255',
 
             // Field untuk SegalaOrderDet (ubah menjadi array)
