@@ -19,6 +19,7 @@ use App\Models\RmeAsesmenKepAnakStatusFungsional;
 use App\Models\RmeAsesmenKepAnakStatusNyeri;
 use App\Models\RmeAsesmenKepAnakStatusPsikologis;
 use App\Models\RmeAsesmenPemeriksaanFisik;
+use App\Models\RmeAsesmenKepAnakKeperawatan;
 use App\Models\RmeEfekNyeri;
 use App\Models\RmeFaktorPemberat;
 use App\Models\RmeFaktorPeringan;
@@ -486,17 +487,17 @@ class AsesmenKepAnakController extends Controller
             $jenisSkala = $request->input('jenis_skala_dekubitus') === 'norton' ? 1 : 2;
             $decubitusData->jenis_skala = $jenisSkala;
 
-            // Fungsi untuk menentukan kesimpulan
-            function getRiskConclusion($score)
-            {
-                if ($score <= 12) {
-                    return 'Risiko Tinggi';
-                } elseif ($score <= 14) {
-                    return 'Risiko Sedang';
-                }
+            // // Fungsi untuk menentukan kesimpulan
+            // function getRiskConclusion($score)
+            // {
+            //     if ($score <= 12) {
+            //         return 'Risiko Tinggi';
+            //     } elseif ($score <= 14) {
+            //         return 'Risiko Sedang';
+            //     }
 
-                return 'Risiko Rendah';
-            }
+            //     return 'Risiko Rendah';
+            // }
 
             if ($jenisSkala === 1) {
                 // Norton
@@ -512,8 +513,8 @@ class AsesmenKepAnakController extends Controller
                     (int) $request->input('norton_aktivitas') +
                     (int) $request->input('norton_mobilitas') +
                     (int) $request->input('inkontinensia');
-
-                $decubitusData->decubitus_kesimpulan = getRiskConclusion($totalScore);
+                    
+                $decubitusData->decubitus_kesimpulan = $this->getRiskConclusion($totalScore);
             } else {
                 // Braden
                 $decubitusData->braden_persepsi = $request->input('persepsi_sensori');
@@ -531,7 +532,7 @@ class AsesmenKepAnakController extends Controller
                     (int) $request->input('nutrisi') +
                     (int) $request->input('pergesekan');
 
-                $decubitusData->decubitus_kesimpulan = getRiskConclusion($totalScore);
+                $decubitusData->decubitus_kesimpulan = $this->getRiskConclusion($totalScore);
             }
             $decubitusData->save();
 
@@ -595,6 +596,29 @@ class AsesmenKepAnakController extends Controller
                 ],
             ];
 
+            // Simpan ke tabel RmeAsesmenKepAnakKeperawatan
+            $asesmenKepAnakKeperawatan = RmeAsesmenKepAnakKeperawatan::create([
+                'id_asesmen' => $dataAsesmen->id,
+                'tanggal' => $request->tanggal ?? date('Y-m-d'),
+                'jam' => $request->jam ?? date('H:i:s'),
+                'diagnosis' => $request->diagnosis ?? [],
+                'rencana_bersihan_jalan_nafas' => $request->rencana_bersihan_jalan_nafas ?? [],
+                'rencana_penurunan_curah_jantung' => $request->rencana_penurunan_curah_jantung ?? [],
+                'rencana_perfusi_perifer' => $request->rencana_perfusi_perifer ?? [],
+                'rencana_hipovolemia' => $request->rencana_hipovolemia ?? [],
+                'rencana_hipervolemia' => $request->rencana_hipervolemia ?? [],
+                'rencana_diare' => $request->rencana_diare ?? [],
+                'rencana_retensi_urine' => $request->rencana_retensi_urine ?? [],
+                'rencana_nyeri_akut' => $request->rencana_nyeri_akut ?? [],
+                'rencana_nyeri_kronis' => $request->rencana_nyeri_kronis ?? [],
+                'rencana_hipertermia' => $request->rencana_hipertermia ?? [],
+                'rencana_gangguan_mobilitas_fisik' => $request->rencana_gangguan_mobilitas_fisik ?? [],
+                'rencana_resiko_infeksi' => $request->rencana_resiko_infeksi ?? [],
+                'rencana_konstipasi' => $request->rencana_konstipasi ?? [],
+                'rencana_resiko_jatuh' => $request->rencana_resiko_jatuh ?? [],
+                'rencana_gangguan_integritas_kulit' => $request->rencana_gangguan_integritas_kulit ?? [],
+            ]);
+
             $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
 
             DB::commit();
@@ -631,6 +655,7 @@ class AsesmenKepAnakController extends Controller
                 'rmeAsesmenKepAnakResikoDekubitus',
                 'rmeAsesmenKepAnakStatusFungsional',
                 'rmeAsesmenKepAnakRencanaPulang',
+                'rmeAsesmenKepAnakKeperawatan'
             ])->findOrFail($id);
 
             // Mengambil data medis pasien
@@ -721,6 +746,7 @@ class AsesmenKepAnakController extends Controller
                 'rmeAsesmenKepAnakResikoDekubitus',
                 'rmeAsesmenKepAnakStatusFungsional',
                 'rmeAsesmenKepAnakRencanaPulang',
+                'rmeAsesmenKepAnakKeperawatan'
             ])->findOrFail($id);
 
             // Pastikan data RmeAsesmenKepAnakSosialEkonomi ada
@@ -1239,7 +1265,7 @@ class AsesmenKepAnakController extends Controller
                     (int) $request->input('norton_mobilitas') +
                     (int) $request->input('inkontinensia');
 
-                $decubitusData->decubitus_kesimpulan = getRiskConclusion($totalScore);
+                $decubitusData->decubitus_kesimpulan = $this->getRiskConclusion($totalScore);
             } else {
                 // Braden
                 $decubitusData->braden_persepsi = $request->input('persepsi_sensori');
@@ -1257,7 +1283,7 @@ class AsesmenKepAnakController extends Controller
                     (int) $request->input('nutrisi') +
                     (int) $request->input('pergesekan');
 
-                $decubitusData->decubitus_kesimpulan = getRiskConclusion($totalScore);
+                $decubitusData->decubitus_kesimpulan = $this->getRiskConclusion($totalScore);
             }
             $decubitusData->save();
 
@@ -1310,6 +1336,30 @@ class AsesmenKepAnakController extends Controller
             $asesmenRencana->kesimpulan = $request->kesimpulan_planing;
             $asesmenRencana->save();
 
+            $dataAsesmen->rmeAsesmenKepAnakKeperawatan()->updateOrCreate(
+                ['id_asesmen' => $dataAsesmen->id],
+                [
+                    'tanggal' => $request->tanggal ?? date('Y-m-d'),
+                    'jam' => $request->jam ?? date('H:i:s'),
+                    'diagnosis' => $request->diagnosis ?? [],
+                    'rencana_bersihan_jalan_nafas' => $request->rencana_bersihan_jalan_nafas ?? [],
+                    'rencana_penurunan_curah_jantung' => $request->rencana_penurunan_curah_jantung ?? [],
+                    'rencana_perfusi_perifer' => $request->rencana_perfusi_perifer ?? [],
+                    'rencana_hipovolemia' => $request->rencana_hipovolemia ?? [],
+                    'rencana_hipervolemia' => $request->rencana_hipervolemia ?? [],
+                    'rencana_diare' => $request->rencana_diare ?? [],
+                    'rencana_retensi_urine' => $request->rencana_retensi_urine ?? [],
+                    'rencana_nyeri_akut' => $request->rencana_nyeri_akut ?? [],
+                    'rencana_nyeri_kronis' => $request->rencana_nyeri_kronis ?? [],
+                    'rencana_hipertermia' => $request->rencana_hipertermia ?? [],
+                    'rencana_gangguan_mobilitas_fisik' => $request->rencana_gangguan_mobilitas_fisik ?? [],
+                    'rencana_resiko_infeksi' => $request->rencana_resiko_infeksi ?? [],
+                    'rencana_konstipasi' => $request->rencana_konstipasi ?? [],
+                    'rencana_resiko_jatuh' => $request->rencana_resiko_jatuh ?? [],
+                    'rencana_gangguan_integritas_kulit' => $request->rencana_gangguan_integritas_kulit ?? [],
+                ]
+            );
+
             // RESUME
             $resumeData = [
                 'anamnesis' => $request->anamnesis,
@@ -1361,6 +1411,16 @@ class AsesmenKepAnakController extends Controller
 
             return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
         }
+    }
+
+    private function getRiskConclusion($score)
+    {
+        if ($score <= 12) {
+            return 'Risiko Tinggi';
+        } elseif ($score <= 14) {
+            return 'Risiko Sedang';
+        }
+        return 'Risiko Rendah';
     }
 
     public function createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $data)

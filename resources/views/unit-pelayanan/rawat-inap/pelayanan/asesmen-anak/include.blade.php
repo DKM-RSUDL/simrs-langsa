@@ -174,46 +174,46 @@
 @push('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            
+
             // ============================================================================
             // SECTION 1: DATETIME & BASIC FORM HANDLERS
             // ============================================================================
             initializeDateTimeDefaults();
             initializeAnthropometryCalculation();
             initializePemeriksaanFisikHandlers();
-            
+
             // ============================================================================
             // SECTION 2: RIWAYAT KESEHATAN HANDLERS
             // ============================================================================
             initializeRiwayatKesehatanHandlers();
             initializeGCSHandlers();
-            
+
             // ============================================================================
             // SECTION 3: PAIN SCALE MANAGEMENT
             // ============================================================================
             initializePainScaleHandlers();
-            
+
             // ============================================================================
             // SECTION 4: RISK ASSESSMENT (FALL & DECUBITUS)
             // ============================================================================
             initializeFallRiskHandlers();
             initializeDecubitusRiskHandlers();
-            
+
             // ============================================================================
             // SECTION 5: PSYCHOLOGICAL STATUS
             // ============================================================================
             initializePsychologicalStatusHandlers();
-            
+
             // ============================================================================
             // SECTION 6: NUTRITIONAL STATUS
             // ============================================================================
             initializeNutritionalStatusHandlers();
-            
+
             // ============================================================================
             // SECTION 7: FUNCTIONAL STATUS (ADL)
             // ============================================================================
             initializeFunctionalStatusHandlers();
-            
+
             // ============================================================================
             // SECTION 8: DISCHARGE PLANNING
             // ============================================================================
@@ -225,7 +225,7 @@
         // ============================================================================
         // SECTION 1: DATETIME & BASIC FORM HANDLERS
         // ============================================================================
-        
+
         /**
          * Initialize default datetime values
          */
@@ -234,10 +234,10 @@
             const formattedDate = currentDate.toISOString().split('T')[0];
             const hours = String(currentDate.getHours()).padStart(2, '0');
             const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-            
+
             const tanggalMasukInput = document.getElementById('tanggal_masuk');
             const jamMasukInput = document.getElementById('jam_masuk');
-            
+
             if (tanggalMasukInput) tanggalMasukInput.value = formattedDate;
             if (jamMasukInput) jamMasukInput.value = `${hours}:${minutes}`;
         }
@@ -260,7 +260,7 @@
                 if (!isNaN(tinggi) && !isNaN(berat) && tinggi > 0) {
                     const imt = berat / (tinggi * tinggi);
                     const lpt = (tinggi * 100 * berat) / 3600; // Height converted to cm
-                    
+
                     imtInput.value = imt.toFixed(2);
                     lptInput.value = lpt.toFixed(2);
                 } else {
@@ -326,7 +326,7 @@
         // ============================================================================
         // SECTION 2: RIWAYAT KESEHATAN HANDLERS
         // ============================================================================
-        
+
         /**
          * Initialize handlers for medical history section
          */
@@ -394,7 +394,7 @@
         // ============================================================================
         // SECTION 3: PAIN SCALE MANAGEMENT
         // ============================================================================
-        
+
         /**
          * Initialize pain scale handlers
          */
@@ -429,10 +429,10 @@
 
             // Initialize NRS handlers
             initializeNRSHandlers(nilaiSkalaNyeri, kesimpulanNyeri, kesimpulanNyeriAlert);
-            
+
             // Initialize FLACC handlers
             initializeFLACCHandlers(nilaiSkalaNyeri, kesimpulanNyeri, kesimpulanNyeriAlert);
-            
+
             // Initialize CRIES handlers
             initializeCRIESHandlers(nilaiSkalaNyeri, kesimpulanNyeri, kesimpulanNyeriAlert);
         }
@@ -451,13 +451,13 @@
             // NRS value change handler
             nrsValue.addEventListener('input', function() {
                 let value = parseInt(this.value);
-                
+
                 if (value < 0) this.value = 0;
                 if (value > 10) this.value = 10;
                 value = parseInt(this.value);
 
                 const { kesimpulan, alertClass, emoji } = getPainConclusion(value);
-                
+
                 nrsKesimpulan.className = 'alert ' + alertClass;
                 nrsKesimpulan.innerHTML = `
                     <div class="d-flex align-items-center gap-2">
@@ -472,7 +472,7 @@
                 if (nilaiSkalaNyeri && kesimpulanNyeri && kesimpulanNyeriAlert) {
                     const value = parseInt(nrsValue.value);
                     const { kesimpulan, alertClass, emoji } = getPainConclusion(value);
-                    
+
                     nilaiSkalaNyeri.value = value;
                     kesimpulanNyeri.value = kesimpulan;
                     kesimpulanNyeriAlert.innerHTML = `
@@ -482,7 +482,7 @@
                         </div>
                     `;
                     kesimpulanNyeriAlert.className = `alert ${alertClass}`;
-                    
+
                     bootstrap.Modal.getInstance(nrsModal).hide();
                 }
             });
@@ -513,16 +513,16 @@
                 const flaccChecks = document.querySelectorAll('.flacc-check:checked');
                 const flaccTotal = document.getElementById('flaccTotal');
                 const flaccKesimpulan = document.getElementById('flaccKesimpulan');
-                
+
                 let total = 0;
                 flaccChecks.forEach(check => {
                     total += parseInt(check.value);
                 });
-                
+
                 if (flaccTotal) flaccTotal.value = total;
 
                 const { kesimpulan, alertClass } = getPainConclusion(total);
-                
+
                 if (flaccKesimpulan) {
                     flaccKesimpulan.textContent = kesimpulan;
                     flaccKesimpulan.className = `alert py-1 px-3 mb-0 ${alertClass}`;
@@ -535,11 +535,11 @@
 
             simpanFLACC.addEventListener('click', function() {
                 const flaccTotal = document.getElementById('flaccTotal');
-                
+
                 if (nilaiSkalaNyeri && flaccTotal && flaccTotal.value !== '') {
                     const total = parseInt(flaccTotal.value);
                     const { kesimpulan, alertClass, emoji } = getPainConclusion(total);
-                    
+
                     nilaiSkalaNyeri.value = total;
                     kesimpulanNyeri.value = kesimpulan;
                     kesimpulanNyeriAlert.innerHTML = `
@@ -568,16 +568,16 @@
                 const criesChecks = document.querySelectorAll('.cries-check:checked');
                 const criesTotal = document.getElementById('criesTotal');
                 const criesKesimpulan = document.getElementById('criesKesimpulan');
-                
+
                 let total = 0;
                 criesChecks.forEach(check => {
                     total += parseInt(check.value);
                 });
-                
+
                 if (criesTotal) criesTotal.value = total;
 
                 const { kesimpulan, alertClass } = getPainConclusion(total);
-                
+
                 if (criesKesimpulan) {
                     criesKesimpulan.textContent = kesimpulan;
                     criesKesimpulan.className = `alert py-1 px-3 mb-0 ${alertClass}`;
@@ -590,11 +590,11 @@
 
             simpanCRIES.addEventListener('click', function() {
                 const criesTotal = document.getElementById('criesTotal');
-                
+
                 if (nilaiSkalaNyeri && criesTotal && criesTotal.value !== '') {
                     const total = parseInt(criesTotal.value);
                     const { kesimpulan, alertClass, emoji } = getPainConclusion(total);
-                    
+
                     nilaiSkalaNyeri.value = total;
                     kesimpulanNyeri.value = kesimpulan;
                     kesimpulanNyeriAlert.innerHTML = `
@@ -670,14 +670,14 @@
                 if (eyeValue && verbalValue && motorValue) {
                     const total = parseInt(eyeValue) + parseInt(verbalValue) + parseInt(motorValue);
                     const gcsString = `${total} E${eyeValue} V${verbalValue} M${motorValue}`;
-                    
+
                     // Update display fields
                     gcsDisplay.value = gcsString;
                     document.getElementById('gcs_value').value = gcsString;
-                    
+
                     // Close modal
                     bootstrap.Modal.getInstance(gcsModal).hide();
-                    
+
                     // Show success message
                     showToast('success', 'GCS berhasil disimpan');
                 } else {
@@ -707,7 +707,7 @@
             // Calculate total and interpretation
             if (eyeValue && verbalValue && motorValue) {
                 const total = parseInt(eyeValue) + parseInt(verbalValue) + parseInt(motorValue);
-                
+
                 // Update total display
                 const totalDisplay = document.getElementById('gcs_total_display');
                 totalDisplay.innerHTML = `<strong>Total: ${total} (E${eyeValue} V${verbalValue} M${motorValue})</strong>`;
@@ -777,13 +777,13 @@
         // ============================================================================
         // SECTION 4: RISK ASSESSMENT (FALL & DECUBITUS)
         // ============================================================================
-        
+
         /**
          * Initialize fall risk assessment handlers
          */
         function initializeFallRiskHandlers() {
             const risikoJatuhSkala = document.getElementById('risikoJatuhSkala');
-            
+
             if (risikoJatuhSkala) {
                 risikoJatuhSkala.addEventListener('change', function() {
                     showForm(this.value);
@@ -797,7 +797,7 @@
          */
         function initializeDecubitusRiskHandlers() {
             const skalaDecubitusSelect = document.getElementById('skalaRisikoDekubitus');
-            
+
             if (skalaDecubitusSelect) {
                 skalaDecubitusSelect.addEventListener('change', function() {
                     showDecubitusForm(this.value);
@@ -825,7 +825,7 @@
         // ============================================================================
         // SECTION 5: PSYCHOLOGICAL STATUS
         // ============================================================================
-        
+
         /**
          * Initialize psychological status handlers
          */
@@ -856,7 +856,7 @@
                 if (!event.target.closest('.dropdown-wrapper')) {
                     const dropdownKondisi = document.getElementById('dropdownKondisiPsikologis');
                     const dropdownPerilaku = document.getElementById('dropdownGangguanPerilaku');
-                    
+
                     if (dropdownKondisi) dropdownKondisi.style.display = 'none';
                     if (dropdownPerilaku) dropdownPerilaku.style.display = 'none';
                 }
@@ -950,7 +950,7 @@
             container.innerHTML = items.map(item => `
                 <div class="alert alert-light border d-flex justify-content-between align-items-center py-1 px-2 mb-1">
                     <span>${item}</span>
-                    <button type="button" class="btn btn-sm btn-link text-danger p-0 ms-2" 
+                    <button type="button" class="btn btn-sm btn-link text-danger p-0 ms-2"
                             onclick="removeItem('${containerId}', '${item}')">
                         <i class="bi bi-x" style="font-size: 1.2rem;"></i>
                     </button>
@@ -967,7 +967,7 @@
         // ============================================================================
         // SECTION 6: NUTRITIONAL STATUS
         // ============================================================================
-        
+
         /**
          * Initialize nutritional status handlers
          */
@@ -1239,7 +1239,7 @@
         // ============================================================================
         // SECTION 7: FUNCTIONAL STATUS (ADL)
         // ============================================================================
-        
+
         /**
          * Initialize functional status handlers
          */
@@ -1255,7 +1255,7 @@
                     adlTotal.value = '';
                     adlKesimpulanAlert.className = 'alert alert-info';
                     adlKesimpulanAlert.textContent = 'Pilih skala aktivitas harian terlebih dahulu';
-                    
+
                     const modal = new bootstrap.Modal(document.getElementById('modalADL'));
                     modal.show();
                 } else if (this.value === 'Lainnya') {
@@ -1285,12 +1285,12 @@
                 const adlChecks = document.querySelectorAll('.adl-check:checked');
                 const adlModalTotal = document.getElementById('adlTotal');
                 const adlModalKesimpulan = document.getElementById('adlKesimpulan');
-                
+
                 let total = 0;
                 adlChecks.forEach(check => {
                     total += parseInt(check.value);
                 });
-                
+
                 if (adlModalTotal) adlModalTotal.value = total;
 
                 const checkedCategories = new Set(Array.from(adlChecks).map(check => check.getAttribute('data-category')));
@@ -1305,7 +1305,7 @@
                 }
 
                 let kesimpulan, alertClass;
-                
+
                 if (total <= 4) {
                     kesimpulan = 'Mandiri';
                     alertClass = 'alert-success';
@@ -1335,15 +1335,15 @@
                 simpanADL.addEventListener('click', function() {
                     const adlModalTotal = document.getElementById('adlTotal');
                     const adlModalKesimpulan = document.getElementById('adlKesimpulan');
-                    
+
                     if (adlModalTotal && adlModalTotal.value !== '' && adlKesimpulanAlert) {
                         adlTotal.value = adlModalTotal.value;
                         adlKesimpulanAlert.className = adlModalKesimpulan.className.replace('py-1 px-3 mb-0', '');
                         adlKesimpulanAlert.textContent = adlModalKesimpulan.textContent;
-                        
+
                         const adlValues = getSelectedADLValues();
                         updateADLHiddenInputs(adlValues, adlModalKesimpulan.textContent);
-                        
+
                         bootstrap.Modal.getInstance(document.getElementById('modalADL')).hide();
                     }
                 });
@@ -1357,7 +1357,7 @@
             const makanValue = document.querySelector('input[name="makan"]:checked')?.value || '';
             const berjalanValue = document.querySelector('input[name="berjalan"]:checked')?.value || '';
             const mandiValue = document.querySelector('input[name="mandi"]:checked')?.value || '';
-            
+
             const getTextValue = (value) => {
                 switch (value) {
                     case '1': return 'Mandiri';
@@ -1367,7 +1367,7 @@
                     default: return '';
                 }
             };
-            
+
             return {
                 makan: getTextValue(makanValue),
                 makanValue: makanValue,
@@ -1402,7 +1402,7 @@
         // ============================================================================
         // SECTION 8: DISCHARGE PLANNING
         // ============================================================================
-        
+
         /**
          * Initialize discharge planning handlers
          */
@@ -1468,7 +1468,7 @@
             const btnTambahIntervensi = document.getElementById('btnTambahIntervensi');
             const masalahContainer = document.getElementById('masalahContainer');
             const intervensiContainer = document.getElementById('intervensiContainer');
-            
+
             if (!btnTambahMasalah || !btnTambahIntervensi || !masalahContainer || !intervensiContainer) return;
 
             // Add masalah field
@@ -1491,7 +1491,7 @@
                 newField.className = 'masalah-item mb-2';
                 newField.innerHTML = `
                     <div class="d-flex gap-2">
-                        <textarea class="form-control" name="masalah_diagnosis[]" rows="2" 
+                        <textarea class="form-control" name="masalah_diagnosis[]" rows="2"
                                 placeholder="Tuliskan masalah atau diagnosis keperawatan..."></textarea>
                         <button type="button" class="btn btn-sm btn-outline-danger remove-masalah" onclick="removeMasalah(this)">
                             <i class="bi bi-trash"></i>
@@ -1509,7 +1509,7 @@
                 newField.className = 'intervensi-item mb-2';
                 newField.innerHTML = `
                     <div class="d-flex gap-2">
-                        <textarea class="form-control" name="intervensi_rencana[]" rows="3" 
+                        <textarea class="form-control" name="intervensi_rencana[]" rows="3"
                                 placeholder="Tuliskan intervensi, rencana asuhan, dan target yang terukur..."></textarea>
                         <button type="button" class="btn btn-sm btn-outline-danger remove-intervensi" onclick="removeIntervensi(this)">
                             <i class="bi bi-trash"></i>
@@ -1551,13 +1551,13 @@
             window.removeMasalah = function(button) {
                 const masalahItem = button.closest('.masalah-item');
                 const masalahItems = masalahContainer.querySelectorAll('.masalah-item');
-                
+
                 // Don't remove if it's the only field
                 if (masalahItems.length <= 1) {
                     showToast('warning', 'Minimal harus ada satu masalah diagnosis');
                     return;
                 }
-                
+
                 masalahItem.remove();
                 updateMasalahRemoveButtons();
                 showToast('success', 'Masalah diagnosis berhasil dihapus');
@@ -1569,13 +1569,13 @@
             window.removeIntervensi = function(button) {
                 const intervensiItem = button.closest('.intervensi-item');
                 const intervensiItems = intervensiContainer.querySelectorAll('.intervensi-item');
-                
+
                 // Don't remove if it's the only field
                 if (intervensiItems.length <= 1) {
                     showToast('warning', 'Minimal harus ada satu intervensi rencana');
                     return;
                 }
-                
+
                 intervensiItem.remove();
                 updateIntervensiRemoveButtons();
                 showToast('success', 'Intervensi rencana berhasil dihapus');
@@ -1765,7 +1765,7 @@
          */
         function resetDecubitusForm(form) {
             if (!form) return;
-            
+
             form.querySelectorAll('select').forEach(select => select.value = '');
             const kesimpulanDiv = form.querySelector('#kesimpulanNorton');
             if (kesimpulanDiv) {
@@ -1867,7 +1867,7 @@
          */
         function removeItem(containerId, item) {
             const container = document.getElementById(containerId);
-            
+
             if (containerId === 'selectedKondisiPsikologis') {
                 document.querySelectorAll('.kondisi-options input[type="checkbox"]').forEach(checkbox => {
                     if (checkbox.value === item) {
@@ -1893,5 +1893,34 @@
         window.showDecubitusForm = showDecubitusForm;
         window.updateDecubitusConclusion = updateDecubitusConclusion;
         window.removeItem = removeItem;
+
+
+        // 16. MASALAH/ DIAGNOSIS KEPERAWATAN
+        $('.rencana-perawatan-row-1').change(function() {
+            let rowCount = $('.rencana-perawatan-row-1:checked').length > 0;
+
+            if(rowCount) {
+                $('#rencana_bersihan_jalan_nafas').css('display', 'block');
+            } else {
+                $('#rencana_bersihan_jalan_nafas').css('display', 'none');
+            }
+
+        });
+        
+        function toggleRencana(diagnosisType) {
+            const checkbox = document.getElementById('diag_' + diagnosisType);
+            const rencanaDiv = document.getElementById('rencana_' + diagnosisType);
+
+            if (checkbox && rencanaDiv) {
+                if (checkbox.checked) {
+                    rencanaDiv.style.display = 'block';
+                } else {
+                    rencanaDiv.style.display = 'none';
+                    // Uncheck all rencana checkboxes when diagnosis is unchecked
+                    const rencanaCheckboxes = rencanaDiv.querySelectorAll('input[type="checkbox"]');
+                    rencanaCheckboxes.forEach(cb => cb.checked = false);
+                }
+            }
+        }
     </script>
 @endpush

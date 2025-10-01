@@ -291,10 +291,28 @@
         ],
     ];
 
-    if (in_array($dataMedis->kd_unit, ['10015', '10016', '10131', '10132'])) {
+    $kdUnitNow = $dataMedis->kd_unit;
+    $namaUnitNow = $dataMedis->unit->nama_unit;
+
+    if ($dataMedis->unit->kd_bagian == 1) {
+        $nginap = \App\Models\Nginap::join('unit as u', 'nginap.kd_unit_kamar', '=', 'u.kd_unit')
+            ->where('nginap.kd_pasien', $dataMedis->kd_pasien)
+            ->where('nginap.kd_unit', $dataMedis->kd_unit)
+            ->where('nginap.tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('nginap.urut_masuk', $dataMedis->urut_masuk)
+            ->where('nginap.akhir', 1)
+            ->first();
+
+        if (!empty($nginap)) {
+            $kdUnitNow = $nginap->kd_unit_kamar;
+            $namaUnitNow = $nginap->nama_unit;
+        }
+    }
+
+    if (in_array($kdUnitNow, ['10015', '10016', '10131', '10132'])) {
         $navItems[] = [
             'icon' => 'monitoring.png',
-            'label' => 'Monitoring ' . $dataMedis->unit->nama_unit,
+            'label' => 'Monitoring ' . $namaUnitNow,
             'link' => route('rawat-inap.monitoring.index', [
                 $dataMedis->kd_unit,
                 $dataMedis->kd_pasien,

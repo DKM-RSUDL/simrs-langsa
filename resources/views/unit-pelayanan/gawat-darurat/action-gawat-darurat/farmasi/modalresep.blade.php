@@ -108,29 +108,13 @@
 
                                                     <div class="row mb-3">
                                                         <div class="col-md-6">
-                                                            <label for="dosis" class="form-label">Dosis Sekali
-                                                                Minum</label>
+                                                            <label for="dosis" class="form-label">Dosis</label>
                                                                 <input type="text" class="form-control" id="dosis" placeholder="1/2 , 1, 2">
                                                         </div>
                                                         <div class="col md-6">
                                                             <label for="satuanObat" class="form-label">Satuan
                                                                 Obat</label>
-                                                            <select class="form-select" id="satuanObat">
-                                                                <option value="tablet">Tablet</option>
-                                                                <option value="kapsul">Kapsul (caps)</option>
-                                                                <option value="bungkus">Bungkus (bks)</option>
-                                                                <option value="sendok_makan">Sendok makan</option>
-                                                                <option value="sendok_teh">Sendok teh</option>
-                                                                <option value="tetes">Tetes</option>
-                                                                <option value="cc">CC</option>
-                                                                <option value="olesan">Olesan</option>
-                                                                <option value="taburan">Taburan</option>
-                                                                <option value="semprotan">Semprotan</option>
-                                                                <option value="kali">Kali</option>
-                                                                <option value="ampul">Ampul</option>
-                                                                <option value="unit">Unit</option>
-                                                                <option value="sub">Sub</option>
-                                                            </select>
+                                                            <input type="text" id="satuanObat" class="form-control">
                                                             <input type="text" id="hargaObat"
                                                                 class="form-control d-none" readonly></input>
                                                         </div>
