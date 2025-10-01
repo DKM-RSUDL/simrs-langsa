@@ -222,7 +222,7 @@
 
                     timeout = setTimeout(() => {
                         $.ajax({
-                            url: '{{ route('farmasi.searchObat', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}',
+                            url: '{{ route("rawat-jalan.farmasi.searchObat", [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}',
                             method: 'GET',
                             data: {
                                 term: query

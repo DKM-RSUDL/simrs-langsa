@@ -39,7 +39,7 @@ class FarmasiController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-        if (!$dataMedis) {
+        if (! $dataMedis) {
             abort(404, 'Data not found');
         }
 
@@ -76,7 +76,7 @@ class FarmasiController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-        if (!$dataMedis) {
+        if (! $dataMedis) {
             abort(404, 'Data not found');
         }
 
@@ -134,24 +134,24 @@ class FarmasiController extends Controller
                 ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                 ->first();
 
-            if (!$kunjungan) {
+            if (! $kunjungan) {
                 throw new \Exception('Data kunjungan tidak ditemukan.');
             }
 
             // Generate ID_MRRESEP (sebagai string)
             $tglMasuk = Carbon::parse($kunjungan->tgl_masuk);
             $prefix = $tglMasuk->format('Ymd');
-            $lastResep = MrResep::where('ID_MRRESEP', 'like', $prefix . '%')
+            $lastResep = MrResep::where('ID_MRRESEP', 'like', $prefix.'%')
                 ->orderBy('ID_MRRESEP', 'desc')
                 ->first();
 
             $newNumber = $lastResep ? intval(substr($lastResep->ID_MRRESEP, -4)) + 1 : 1;
-            $ID_MRRESEP = $prefix . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+            $ID_MRRESEP = $prefix.str_pad($newNumber, 4, '0', STR_PAD_LEFT);
 
             // Periksa apakah ID sudah ada
             while (MrResep::where('ID_MRRESEP', $ID_MRRESEP)->exists()) {
                 $newNumber++;
-                $ID_MRRESEP = $prefix . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+                $ID_MRRESEP = $prefix.str_pad($newNumber, 4, '0', STR_PAD_LEFT);
             }
 
             // Log data sebelum insert
@@ -174,7 +174,7 @@ class FarmasiController extends Controller
             Log::info('Data untuk insert MR_RESEP', $resepData);
 
             // Simpan ke MR_RESEP
-            $mrResep = new MrResep();
+            $mrResep = new MrResep;
             $mrResep->KD_PASIEN = $kunjungan->kd_pasien; // varchar(12)
             $mrResep->KD_UNIT = $kunjungan->kd_unit; // varchar(5)
             $mrResep->TGL_MASUK = $kunjungan->tgl_masuk; // datetime
@@ -197,7 +197,7 @@ class FarmasiController extends Controller
                     'ID_MRRESEP' => $ID_MRRESEP,
                     'URUT' => $index + 1,
                     'KD_PRD' => $obat['id'],
-                    'CARA_PAKAI' => $obat['frekuensi'] . ', ' . $obat['sebelumSesudahMakan'],
+                    'CARA_PAKAI' => $obat['frekuensi'].', '.$obat['sebelumSesudahMakan'],
                     'JUMLAH' => $obat['jumlah'],
                     'JUMLAH_TAKARAN' => $obat['dosis'],
                     'SATUAN_TAKARAN' => $obat['satuan'],
@@ -207,11 +207,11 @@ class FarmasiController extends Controller
                 ];
                 Log::info('Data untuk insert MR_RESEPDTL', $resepDtlData);
 
-                $mrResepDtl = new MrResepDtl();
+                $mrResepDtl = new MrResepDtl;
                 $mrResepDtl->ID_MRRESEP = $ID_MRRESEP;
                 $mrResepDtl->URUT = $index + 1;
                 $mrResepDtl->KD_PRD = $obat['id'];
-                $mrResepDtl->CARA_PAKAI = $obat['frekuensi'] . ', ' . $obat['sebelumSesudahMakan'];
+                $mrResepDtl->CARA_PAKAI = $obat['frekuensi'].', '.$obat['sebelumSesudahMakan'];
                 $mrResepDtl->JUMLAH = $obat['jumlah'];
                 $mrResepDtl->JUMLAH_TAKARAN = $obat['dosis'];
                 $mrResepDtl->SATUAN_TAKARAN = $obat['satuan'];
@@ -234,30 +234,42 @@ class FarmasiController extends Controller
                 $kd_unit,
                 $kd_pasien,
                 date('Y-m-d', strtotime($tgl_masuk)),
-                $urut_masuk
-            ])->with('success', 'Resep berhasil disimpan dengan ID: ' . $ID_MRRESEP);
+                $urut_masuk,
+            ])->with('success', 'Resep berhasil disimpan dengan ID: '.$ID_MRRESEP);
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollback();
+
             return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()])->withInput();
+
+            return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan: '.$e->getMessage()])->withInput();
         }
     }
 
     public function searchObat(Request $request)
     {
         $search = $request->get('term');
+        $cacheKey = 'obat_search_'.md5($search);
+
+        if (Cache::has($cacheKey)) {
+            return response()->json(Cache::get($cacheKey));
+        }
+
         $obats = AptObat::join('APT_PRODUK', 'APT_OBAT.KD_PRD', '=', 'APT_PRODUK.KD_PRD')
             ->join('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
             ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
-                               FROM DATA_BATCH AS db
-                               WHERE TGL_MASUK = (
-                                   SELECT MAX(TGL_MASUK)
-                                   FROM DATA_BATCH
-                                   WHERE KD_PRD = db.KD_PRD
-                               )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
-            ->where('APT_OBAT.nama_obat', 'LIKE', '%' . $search . '%')
+                           FROM DATA_BATCH AS db
+                           WHERE TGL_MASUK = (
+                               SELECT MAX(TGL_MASUK)
+                               FROM DATA_BATCH
+                               WHERE KD_PRD = db.KD_PRD
+                           )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
+            ->where(function ($query) use ($search) {
+                // Optimize search conditions
+                $query->where('APT_OBAT.nama_obat', 'LIKE', $search.'%')
+                    ->orWhere('APT_OBAT.nama_obat', 'LIKE', '% '.$search.'%');
+            })
             ->select(
                 'APT_OBAT.KD_PRD as id',
                 'APT_OBAT.nama_obat as text',
@@ -265,8 +277,11 @@ class FarmasiController extends Controller
                 'APT_SATUAN.SATUAN as satuan'
             )
             ->groupBy('APT_OBAT.KD_PRD', 'APT_OBAT.nama_obat', 'latest_price.HRG_BELI_OBT', 'APT_SATUAN.SATUAN')
-            ->take(10)
+            ->limit(10)
             ->get();
+
+        // Simpan ke cache selama 5 menit
+        Cache::put($cacheKey, $obats, now()->addMinutes(5));
 
         return response()->json($obats);
     }
@@ -308,7 +323,6 @@ class FarmasiController extends Controller
             ->get();
     }
 
-
     private function getRiwayatObatHariIni($kd_pasien)
     {
         $today = Carbon::today()->toDateString();
@@ -348,11 +362,11 @@ class FarmasiController extends Controller
 
         if (empty($resume)) {
             $resumeData = [
-                'kd_pasien'     => $kd_pasien,
-                'kd_unit'       => $kd_unit,
-                'tgl_masuk'     => $tgl_masuk,
-                'urut_masuk'    => $urut_masuk,
-                'status'        => 0
+                'kd_pasien' => $kd_pasien,
+                'kd_unit' => $kd_unit,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk,
+                'status' => 0,
             ];
 
             $newResume = RMEResume::create($resumeData);
@@ -360,7 +374,7 @@ class FarmasiController extends Controller
 
             // create resume detail
             $resumeDtlData = [
-                'id_resume'     => $newResume->id
+                'id_resume' => $newResume->id,
             ];
 
             RmeResumeDtl::create($resumeDtlData);
@@ -368,13 +382,14 @@ class FarmasiController extends Controller
             // get resume dtl
             $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
             $resumeDtlData = [
-                'id_resume'     => $resume->id
+                'id_resume' => $resume->id,
             ];
 
-            if (empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
+            if (empty($resumeDtl)) {
+                RmeResumeDtl::create($resumeDtlData);
+            }
         }
     }
-
 
     private function getRekonsiliasi($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk)
     {
@@ -429,10 +444,9 @@ class FarmasiController extends Controller
                 ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                 ->first();
 
-            if (!$dataMedis) {
+            if (! $dataMedis) {
                 abort(404, 'Data Kunjungan Tidak Ditemukan');
             }
-
 
             // Simpan data ke tabel RmeRekonsiliasiObat
             $rekonsiliasi = RmeRekonsiliasiObat::create([
@@ -458,7 +472,7 @@ class FarmasiController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan saat menyimpan rekonsiliasi obat: ' . $e->getMessage(),
+                'message' => 'Terjadi kesalahan saat menyimpan rekonsiliasi obat: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -473,10 +487,10 @@ class FarmasiController extends Controller
             ->where('urut_masuk', $urut_masuk)
             ->first();
 
-        if (!$rekonsiliasi) {
+        if (! $rekonsiliasi) {
             return response()->json([
                 'success' => false,
-                'message' => 'Rekonsiliasi obat tidak ditemukan'
+                'message' => 'Rekonsiliasi obat tidak ditemukan',
             ], 404);
         }
 
@@ -484,7 +498,7 @@ class FarmasiController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Rekonsiliasi obat berhasil dihapus'
+            'message' => 'Rekonsiliasi obat berhasil dihapus',
         ], 200);
     }
 }

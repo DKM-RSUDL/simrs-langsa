@@ -291,6 +291,7 @@ class FarmasiController extends Controller
         return response()->json($obats);
     }
 
+
     private function getRiwayatObat($kd_pasien)
     {
         return DB::table('MR_RESEP')

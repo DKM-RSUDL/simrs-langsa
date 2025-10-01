@@ -210,7 +210,7 @@
 
                 timeout = setTimeout(() => {
                     $.ajax({
-                        url: '{{ route('farmasi.searchObat', ['kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk]) }}',
+                        url: '{{ route("gawat-darurat.farmasi.searchObat", ['kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk]) }}',
                         method: 'GET',
                         data: { term: query },
                         dataType: 'json',
