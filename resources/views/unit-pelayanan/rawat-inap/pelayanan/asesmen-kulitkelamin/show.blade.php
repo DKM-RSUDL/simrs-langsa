@@ -300,39 +300,32 @@
                                         @endif
                                     </div>
                                 </div>
-
-                                <div class="row mb-4">
-                                    <div class="col-md-12">
-                                        <label class="text-primary fw-semibold">Prognosis</label>
-
-                                        <select class="form-select" name="prognosis" disabled>
-                                            <option value="">--Pilih Prognosis--</option>
-                                            @forelse ($satsetPrognosis as $item)
-                                                <option value="{{ $item->prognosis_id }}"
-                                                    {{ isset($asesmenKulitKelamin->prognosis) && $asesmenKulitKelamin->prognosis == $item->prognosis_id ? 'selected' : '' }}>
-                                                    {{ $item->value ?? 'Field tidak ditemukan' }}
-                                                </option>
-                                            @empty
-                                                <option value="" disabled>Tidak ada data</option>
-                                            @endforelse
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-4">
-                                    <div class="col-md-12">
-                                        <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan
-                                            Pengobatan</label>
-                                        <textarea class="form-control" name="rencana_pengobatan" rows="4"
-                                            placeholder="Rencana Penatalaksanaan Dan Pengobatan" readonly>{{ old('rencana_pengobatan', isset($asesmenKulitKelamin) ? $asesmenKulitKelamin->rencana_pengobatan : '') }}</textarea>
-                                    </div>
-                                </div>
                             </div>
+                            <div class="section-separator" id="rencana_pengobatan">
+                                <h5 class="section-title">8. Rencana Penatalaksanaan dan Pengobatan</h5>
+                                <textarea class="form-control" name="rencana_pengobatan" rows="4"
+                                    placeholder="Rencana Penatalaksanaan Dan Pengobatan" disabled>{{ old('rencana_pengobatan', isset($asesmenKulitKelamin) ? $asesmenKulitKelamin->rencana_pengobatan : '') }}</textarea>
+                            </div>
+                            <div class="section-separator" id="prognosis">
+                                <h5 class="section-title">9. Prognosis</h5>
+                                <select class="form-select" name="prognosis" disabled>
+                                    <option value="">--Pilih Prognosis--</option>
+                                    @forelse ($satsetPrognosis as $item)
+                                        <option value="{{ $item->prognosis_id }}"
+                                            {{ isset($asesmenKulitKelamin->prognosis) && $asesmenKulitKelamin->prognosis == $item->prognosis_id ? 'selected' : '' }}>
+                                            {{ $item->value ?? 'Field tidak ditemukan' }}
+                                        </option>
+                                    @empty
+                                        <option value="" disabled>Tidak ada data</option>
+                                    @endforelse
+                                </select>
+                            </div>
+
 
                             <!-- 7. Discharge Planning -->
                             @if ($rencanaPulang)
                                 <div class="section-separator" id="discharge-planning">
-                                    <h5 class="section-title">8. Discharge Planning</h5>
+                                    <h5 class="section-title">10. Discharge Planning</h5>
 
                                     <div class="row mb-3">
                                         {{-- <div class="col-md-6">

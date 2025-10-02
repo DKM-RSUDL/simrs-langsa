@@ -996,34 +996,6 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label class="text-primary fw-semibold mb-2">Prognosis</label>
-                                            <select class="form-select" name="paru_prognosis" disabled>
-                                                <option value="" disabled
-                                                    {{ !old(
-                                                        'paru_prognosis',
-                                                        isset($asesmen->rmeAsesmenGinekologik) ? $asesmen->rmeAsesmenGinekologik->paru_prognosis : '',
-                                                    )
-                                                        ? 'selected'
-                                                        : '' }}>
-                                                    --Pilih Prognosis--</option>
-                                                @forelse ($satsetPrognosis as $item)
-                                                    <option value="{{ $item->prognosis_id }}"
-                                                        {{ old(
-                                                            'paru_prognosis',
-                                                            isset($asesmen->rmeAsesmenGinekologik) ? $asesmen->rmeAsesmenGinekologik->paru_prognosis : '',
-                                                        ) == $item->prognosis_id
-                                                            ? 'selected'
-                                                            : '' }}>
-                                                        {{ $item->value ?? 'Field tidak ditemukan' }}
-                                                    </option>
-                                                @empty
-                                                    <option value="" disabled>Tidak ada data</option>
-                                                @endforelse
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
                                             <label class="form-label fw-bold">Diagnosis Banding:</label>
                                             <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
                                                 diagnosis banding, apabila tidak ada, Pilih tanda tambah untuk menambah
@@ -1119,21 +1091,54 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="section-separator mb-4">
+                        <h5 class="section-title">12. Rencana Penatalaksanaan dan Pengobatan</h5>
+                        <div class="card">
+                            <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group mb-3">
-                                            <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan
-                                                Pengobatan</label>
-                                            <textarea class="form-control" name="rencana_pengobatan" rows="4"
-                                                placeholder="Rencana Penatalaksanaan Dan Pengobatan" disabled>{{ old('rencana_pengobatan', isset($asesmen->rmeAsesmenGinekologik) ? $asesmen->rmeAsesmenGinekologik->rencana_pengobatan : '') }}</textarea>
-                                        </div>
-                                    </div>
+                                    <textarea class="form-control" name="rencana_pengobatan" rows="4"
+                                        placeholder="Rencana Penatalaksanaan dan Pengobatan" disabled>{{ old('rencana_pengobatan', isset($asesmen->rmeAsesmenGinekologik) ? $asesmen->rmeAsesmenGinekologik->rencana_pengobatan : '') }}</textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    <div class="section-separator mb-4">
+                        <h5 class="section-title">13. Diagnosis</h5>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <select class="form-select" name="paru_prognosis" disabled>
+                                        <option value="" disabled
+                                            {{ !old(
+                                                'paru_prognosis',
+                                                isset($asesmen->rmeAsesmenGinekologik) ? $asesmen->rmeAsesmenGinekologik->paru_prognosis : '',
+                                            )
+                                                ? 'selected'
+                                                : '' }}>
+                                            --Pilih Prognosis--</option>
+                                        @forelse ($satsetPrognosis as $item)
+                                            <option value="{{ $item->prognosis_id }}"
+                                                {{ old(
+                                                    'paru_prognosis',
+                                                    isset($asesmen->rmeAsesmenGinekologik) ? $asesmen->rmeAsesmenGinekologik->paru_prognosis : '',
+                                                ) == $item->prognosis_id
+                                                    ? 'selected'
+                                                    : '' }}>
+                                                {{ $item->value ?? 'Field tidak ditemukan' }}
+                                            </option>
+                                        @empty
+                                            <option value="" disabled>Tidak ada data</option>
+                                        @endforelse
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

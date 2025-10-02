@@ -53,7 +53,7 @@
                                             ? ($readonly ?? false
                                                 ? 'Detail asesmen yang telah disimpan'
                                                 : 'Edit asesmen yang
-                                                                                                                    telah disimpan')
+                                                                                                                                                            telah disimpan')
                                             : 'Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan' }}
                                     </p>
                                 </div>
@@ -400,49 +400,6 @@
                             <div class="section-separator" id="diagnosis">
                                 <h5 class="fw-semibold mb-4">8. Diagnosis</h5>
 
-                                <div class="mb-4">
-                                    <label class="text-primary fw-semibold">Prognosis</label>
-
-                                    @if ($readonly ?? false)
-                                        <div class="form-control-plaintext">
-                                            @if (isset($asesmen->asesmenMedisRanap) && $asesmen->asesmenMedisRanap->paru_prognosis)
-                                                @php
-                                                    $selectedPrognosis = $satsetPrognosis
-                                                        ->where(
-                                                            'prognosis_id',
-                                                            $asesmen->asesmenMedisRanap->paru_prognosis,
-                                                        )
-                                                        ->first();
-                                                @endphp
-                                                {{ $selectedPrognosis ? $selectedPrognosis->value : 'Tidak ditemukan' }}
-                                            @else
-                                                <span class="text-muted">Tidak ada prognosis</span>
-                                            @endif
-                                        </div>
-                                    @else
-                                        <select class="form-select" name="paru_prognosis">
-                                            <option value="" disabled
-                                                {{ !old('paru_prognosis', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->paru_prognosis : '')
-                                                    ? 'selected'
-                                                    : '' }}>
-                                                --Pilih Prognosis--</option>
-                                            @forelse ($satsetPrognosis as $item)
-                                                <option value="{{ $item->prognosis_id }}"
-                                                    {{ old(
-                                                        'paru_prognosis',
-                                                        isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->paru_prognosis : '',
-                                                    ) == $item->prognosis_id
-                                                        ? 'selected'
-                                                        : '' }}>
-                                                    {{ $item->value ?? 'Field tidak ditemukan' }}
-                                                </option>
-                                            @empty
-                                                <option value="" disabled>Tidak ada data</option>
-                                            @endforelse
-                                        </select>
-                                    @endif
-                                </div>
-
                                 <!-- Diagnosis Banding -->
                                 <div class="mb-4">
                                     <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
@@ -506,16 +463,60 @@
                                         value="{{ old('diagnosis_kerja', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->diagnosis_kerja : '[]') }}">
                                 </div>
 
+
+                            </div>
+
+                            <div class="section-separator" id="rencana_pengobatan">
+                                <h5 class="fw-semibold mb-4">9. Rencana Penatalaksanaan Dan Pengobatan</h5>
                                 <div class="form-group">
-                                    <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan Pengobatan</label>
                                     <textarea class="form-control" name="rencana_pengobatan" rows="4"
                                         placeholder="Rencana Penatalaksanaan Dan Pengobatan" {{ $readonly ?? false ? 'readonly' : '' }}>{{ old('rencana_pengobatan', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->rencana_pengobatan : '') }}</textarea>
                                 </div>
                             </div>
 
+                            <div class="section-separator" id="prognosis">
+                                <h5 class="fw-semibold mb-4">10. Prognosis</h5>
+
+                                @if ($readonly ?? false)
+                                    <div class="form-control-plaintext">
+                                        @if (isset($asesmen->asesmenMedisRanap) && $asesmen->asesmenMedisRanap->paru_prognosis)
+                                            @php
+                                                $selectedPrognosis = $satsetPrognosis
+                                                    ->where('prognosis_id', $asesmen->asesmenMedisRanap->paru_prognosis)
+                                                    ->first();
+                                            @endphp
+                                            {{ $selectedPrognosis ? $selectedPrognosis->value : 'Tidak ditemukan' }}
+                                        @else
+                                            <span class="text-muted">Tidak ada prognosis</span>
+                                        @endif
+                                    </div>
+                                @else
+                                    <select class="form-select" name="paru_prognosis">
+                                        <option value="" disabled
+                                            {{ !old('paru_prognosis', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->paru_prognosis : '')
+                                                ? 'selected'
+                                                : '' }}>
+                                            --Pilih Prognosis--</option>
+                                        @forelse ($satsetPrognosis as $item)
+                                            <option value="{{ $item->prognosis_id }}"
+                                                {{ old(
+                                                    'paru_prognosis',
+                                                    isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->paru_prognosis : '',
+                                                ) == $item->prognosis_id
+                                                    ? 'selected'
+                                                    : '' }}>
+                                                {{ $item->value ?? 'Field tidak ditemukan' }}
+                                            </option>
+                                        @empty
+                                            <option value="" disabled>Tidak ada data</option>
+                                        @endforelse
+                                    </select>
+                                @endif
+                            </div>
+
                             <!-- 9. Perencanaan Pulang Pasien -->
                             <div class="section-separator" id="discharge-planning">
-                                <h5 class="section-title">9. Perencanaan Pulang Pasien (Discharge Planning)</h5>
+                                <h5 class="section-title">11. Perencanaan Pulang Pasien (Discharge Planning)</h5>
 
                                 {{-- <div class="mb-4">
                                 <label class="form-label fw-bold">Diagnosis medis:</label>
@@ -819,12 +820,12 @@
                             <br><small class="text-muted">${obat.keterangan}</small>
                         </td>
                         ${!isReadonly ? `
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeObat(this)">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                                ` : ''}
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeObat(this)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                    ` : ''}
                     </tr>
                 `).join('');
                     }
@@ -875,12 +876,12 @@
                                 </span>
                             </td>
                             ${!isReadonly ? `
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeAlergi(this, ${index})">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                    ` : ''}
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeAlergi(this, ${index})">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                        ` : ''}
                         </tr>
                     `;
                         }).join('');
@@ -918,10 +919,10 @@
                     <div class="diagnosis-item mb-2 p-2 border rounded">
                         <span class="fw-medium">${diagnosis}</span>
                         ${!isReadonly ? `
-                                <button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="removeDiagnosis(this, '${inputId}')">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                                ` : ''}
+                                    <button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="removeDiagnosis(this, '${inputId}')">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                    ` : ''}
                     </div>
                 `).join('');
                     }

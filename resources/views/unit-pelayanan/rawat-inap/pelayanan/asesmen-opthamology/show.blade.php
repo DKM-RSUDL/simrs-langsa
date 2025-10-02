@@ -1007,20 +1007,38 @@
                                                 @endif
                                             </div>
 
-                                            <!-- Prognosis -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade show">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <h5>9. Rencana Penatalaksanaan Dan Pengobatan</h5>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <textarea class="form-control" name="rencana_pengobatan" rows="4"
+                                                    placeholder="Rencana Penatalaksanaan Dan Pengobatan" readonly>{{ old('rencana_pengobatan', isset($asesmen->rmeAsesmenKepOphtamology) ? $asesmen->rmeAsesmenKepOphtamology->rencana_pengobatan : '') }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade show">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <h5>10. Prognosis</h5>
+                                        <div class="col-md-12">
                                             <div class="mb-4">
                                                 <label class="form-label fw-bold">Prognosis</label>
                                                 <p class="form-control-plaintext border-bottom">
                                                     {{ $asesmen->rmeAsesmenKepOphtamology->prognosis ?? '-' }}
                                                 </p>
-                                            </div>
-
-
-                                            <div class="form-group">
-                                                <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan
-                                                    Pengobatan</label>
-                                                <textarea class="form-control" name="rencana_pengobatan" rows="4"
-                                                    placeholder="Rencana Penatalaksanaan Dan Pengobatan" readonly>{{ old('rencana_pengobatan', isset($asesmen->rmeAsesmenKepOphtamology) ? $asesmen->rmeAsesmenKepOphtamology->rencana_pengobatan : '') }}</textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -1033,7 +1051,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
-                                        <h5>9. Discharge Planning</h5>
+                                        <h5>11. Discharge Planning</h5>
                                         <div class="col-md-6">
                                             {{-- <div class="mb-3">
                                                 <label class="form-label fw-bold">Diagnosis Medis</label>
