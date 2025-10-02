@@ -133,7 +133,8 @@
                         <div>{{ Auth::user()->name ?? 'User' }}</div>
                     </div>
                     @if (empty(auth()->user()->karyawan->foto))
-                        <img class="img-user rounded-circle" src="{{ asset('assets/images/avatar1.png') }}" alt="user"srcset="">
+                        <img class="img-user rounded-circle" src="{{ asset('assets/images/avatar1.png') }}"
+                            alt="user"srcset="">
                     @else
                         <img class="img-user rounded-circle"
                             src="https://e-rsudlangsa.id/hrd/user/images/profil/{{ auth()->user()->karyawan->foto }}"
@@ -147,7 +148,7 @@
                                 <i class="ti-user"></i> Profile
                             </div>
                         </a>
-                        <a href="{{ route('logout') }}">
+                        <a href="{{ env('SSO_BASE_URI', route('logout')) }}">
                             <div class="description">
                                 <i class="ti-power-off"></i> Logout
                             </div>

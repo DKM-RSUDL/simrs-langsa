@@ -55,6 +55,7 @@
                     <th>Keterangan</th>
                     <th>Nama Dokter</th>
                     <th>Status</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -64,7 +65,7 @@
                         $frekuensi = trim($cara_pakai_parts[0] ?? '');
                         $keterangan = trim($cara_pakai_parts[1] ?? '');
 
-                        switch($resep->status) {
+                        switch ($resep->status) {
                             case 0:
                                 $statusText = 'Menunggu';
                                 $statusIcon = '<i class="bi bi-hourglass text-warning"></i>';
@@ -102,12 +103,22 @@
                         <td>{{ $resep->nama_obat ?? 'Tidak ada informasi' }}</td>
                         <td>{{ $resep->jumlah_takaran }} {{ Str::title($resep->satuan_takaran) }}</td>
                         <td>{{ $frekuensi }}</td>
-                        <td>{{ (int)$resep->jumlah ?? 'Tidak ada informasi' }}</td>
+                        <td>{{ (int) $resep->jumlah ?? 'Tidak ada informasi' }}</td>
                         <td>Rute</td>
                         <td>{{ $keterangan }}</td>
                         <td>{{ $resep->nama_dokter }}</td>
                         <td class="{{ $statusClass }}">
                             {!! $statusIcon !!} {{ $statusText }}
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-info btn-copy-cpo flex gap-2"
+                                data-nama-obat="{{ $resep->nama_obat ?? '' }}"
+                                data-dosis="{{ $resep->jumlah_takaran }}" data-satuan="{{ $resep->satuan_takaran }}"
+                                data-frekuensi="{{ $frekuensi }}" data-keterangan="{{ $keterangan }}"
+                                data-tanggal="{{ \Carbon\Carbon::parse($resep->tgl_order)->format('d/m/Y') }}"
+                                data-dokter="{{ $resep->nama_dokter }}" title="Copy untuk Catatan Pemberian Obat">
+                                <i class="fa fa-copy" aria-hidden="true" title="Salin"></i> CPO
+                            </button>
                         </td>
                     </tr>
                 @endforeach
@@ -123,6 +134,9 @@
         </div>
     @endif
 </div>
+
+{{-- Include Modal Copy CPO --}}
+@include('unit-pelayanan.rawat-inap.pelayanan.farmasi.tab-riwayat.modal-copy-cpo')
 
 @push('js')
     <script>

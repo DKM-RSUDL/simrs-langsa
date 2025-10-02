@@ -81,26 +81,26 @@
             <li class="list-group-item">
                 <a href="#decubitus" class="text-decoration-none assessment-link">9. Risiko Decubitus</a>
             </li>
-            <li class="list-group-item">
+            {{-- <li class="list-group-item">
                 <a href="#status-gizi" class="text-decoration-none assessment-link">10. Status Gizi</a>
+            </li> --}}
+            <li class="list-group-item">
+                <a href="#status-fungsional" class="text-decoration-none assessment-link">10. Status Fungsional</a>
             </li>
             <li class="list-group-item">
-                <a href="#status-fungsional" class="text-decoration-none assessment-link">11. Status Fungsional</a>
+                <a href="#kebutuhan-edukasi" class="text-decoration-none assessment-link">11. Kebutuhan Edukasi</a>
             </li>
             <li class="list-group-item">
-                <a href="#kebutuhan-edukasi" class="text-decoration-none assessment-link">12. Kebutuhan Edukasi</a>
+                <a href="#discharge-planning" class="text-decoration-none assessment-link">12. Discharge Planning</a>
             </li>
             <li class="list-group-item">
-                <a href="#discharge-planning" class="text-decoration-none assessment-link">13. Discharge Planning</a>
+                <a href="#diagnosis" class="text-decoration-none assessment-link">13. Diagnosis</a>
             </li>
             <li class="list-group-item">
-                <a href="#diagnosis" class="text-decoration-none assessment-link">14. Diagnosis</a>
+                <a href="#implementasi" class="text-decoration-none assessment-link">14. Implementasi</a>
             </li>
             <li class="list-group-item">
-                <a href="#implementasi" class="text-decoration-none assessment-link">15. Implementasi</a>
-            </li>
-            <li class="list-group-item">
-                <a href="#evaluasi" class="text-decoration-none assessment-link">16. Evaluasi</a>
+                <a href="#evaluasi" class="text-decoration-none assessment-link">15. Evaluasi</a>
             </li>
         </ol>
     </div>

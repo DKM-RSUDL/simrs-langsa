@@ -1580,7 +1580,7 @@
 
                                     </div>
 
-                                    <div class="section-separator" id="status_gizi">
+                                    {{-- <div class="section-separator" id="status_gizi">
                                         <h5 class="section-title">10. Status Gizi</h5>
                                         <div class="form-group mb-4">
                                             <select class="form-select" name="gizi_jenis" id="nutritionAssessment">
@@ -2028,10 +2028,10 @@
                                                     id="gizi_nrs_kesimpulan">
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                     <div class="section-separator" id="status-fungsional">
-                                        <h5 class="section-title">11. Status Fungsional</h5>
+                                        <h5 class="section-title">10. Status Fungsional</h5>
 
                                         <div class="mb-4">
                                             <label class="form-label">Pilih jenis Skala Pengkajian Aktivitas Harian (ADL) sesuai kondisi pasien</label>
@@ -2062,7 +2062,7 @@
                                     </div>
 
                                     <div class="section-separator" id="kebutuhan-edukasi">
-                                        <h5 class="section-title">12. Status Kebutuhan Edukasi, Pendidikan dan Pengajaran
+                                        <h5 class="section-title">11. Status Kebutuhan Edukasi, Pendidikan dan Pengajaran
                                         </h5>
 
                                         <div class="form-group">

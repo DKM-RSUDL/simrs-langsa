@@ -139,10 +139,7 @@ class MppBController extends Controller
         $dokter = Dokter::where('status', 1)
             ->get();
 
-        $perawat = HrdKaryawan::where('kd_jenis_tenaga', 2)
-            ->where('kd_detail_jenis_tenaga', 1)
-            ->where('status_peg', 1)
-            ->get();
+        $perawat = HrdKaryawan::where('status_peg', 1)->get();
 
         // Get latest Form A data to auto-fill doctors
         $latestFormA = RmeMppA::where('kd_pasien', $kd_pasien)
@@ -312,10 +309,7 @@ class MppBController extends Controller
             ->select('kd_dokter', 'nama')
             ->get();
 
-        $perawat = HrdKaryawan::where('kd_jenis_tenaga', 2)
-            ->where('kd_detail_jenis_tenaga', 1)
-            ->where('status_peg', 1)
-            ->get();
+        $perawat = HrdKaryawan::where('status_peg', 1)->get();
 
         return view('unit-pelayanan.rawat-inap.pelayanan.mpp.form-b.edit', compact(
             'dataMedis',

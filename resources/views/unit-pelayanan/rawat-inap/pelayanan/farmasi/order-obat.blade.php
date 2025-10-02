@@ -47,7 +47,9 @@
             @endif
 
             <div class="container-fluid">
-               <form id="resepForm" action="{{ route('rawat-inap.farmasi.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" method="POST">
+                <form id="resepForm"
+                    action="{{ route('rawat-inap.farmasi.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                    method="POST">
                     @csrf
                     <div class="row">
                         <!-- Side Column (Kiri) -->
@@ -80,7 +82,8 @@
                                             aria-labelledby="nonracikan-tab">
                                             <div class="mb-3">
                                                 <label for="dokterPengirim" class="form-label">Dokter Pengirim</label>
-                                                <select class="form-select" id="dokterPengirim" @cannot('is-admin') disabled @endcannot>
+                                                <select class="form-select" id="dokterPengirim"
+                                                    @cannot('is-admin') disabled @endcannot>
                                                     @foreach ($dokters as $dokter)
                                                         <option value="{{ $dokter->kd_dokter }}"
                                                             @selected($dokter->kd_karyawan == auth()->user()->kd_karyawan)>
@@ -94,8 +97,8 @@
                                             <div class="mb-3">
                                                 <label for="tanggalOrder" class="form-label">Tanggal dan Jam Order</label>
                                                 <input type="datetime-local" class="form-control" id="tanggalOrder"
-                                                    name="tgl_order" value="{{ old('tgl_order', now()->format('Y-m-d\TH:i')) }}"
-                                                    required>
+                                                    name="tgl_order"
+                                                    value="{{ old('tgl_order', now()->format('Y-m-d\TH:i')) }}" required>
                                                 @error('tgl_order')
                                                     <div class="text-danger">{{ $message }}</div>
                                                 @enderror
@@ -110,7 +113,9 @@
                                                             name="nama_obat" placeholder="Ketik nama obat...">
                                                         <button class="btn btn-outline-secondary" type="button"
                                                             id="clearObat" style="display:none;">X</button>
-                                                        <span id="searchObatSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        <span id="searchObatSpinner"
+                                                            class="spinner-border spinner-border-sm" role="status"
+                                                            aria-hidden="true"></span>
                                                     </div>
                                                     <input type="hidden" id="selectedObatId" name="obat_id">
                                                     <div id="obatList" class="list-group mt-2"></div>
@@ -118,35 +123,20 @@
                                                 <label class="form-label">Aturan Pakai</label>
                                                 <div class="row mb-3">
                                                     <div class="col-md-12">
-                                                        <label for="frekuensi" class="form-label">Frekuensi/interval</label>
-                                                        <input type="   text" id="frekuensi" class="form-control"
-                                                            value="3 x 1 hari">
+                                                        <label for="frekuensi"
+                                                            class="form-label">Frekuensi/interval</label>
+                                                        <input type="text" id="frekuensi" class="form-control">
                                                     </div>
                                                 </div>
 
                                                 <div class="row mb-3">
                                                     <div class="col-md-6">
-                                                        <label for="dosis" class="form-label">Dosis Sekali Minum</label>
-                                                        <input type="text" id="dosis" class="form-control" value="1/2">
+                                                        <label for="dosis" class="form-label">Dosis</label>
+                                                        <input type="text" id="dosis" class="form-control">
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="satuanObat" class="form-label">Satuan Obat</label>
-                                                        <select class="form-select" id="satuanObat">
-                                                            <option value="tablet">Tablet</option>
-                                                            <option value="kapsul">Kapsul (caps)</option>
-                                                            <option value="bungkus">Bungkus (bks)</option>
-                                                            <option value="sendok_makan">Sendok makan</option>
-                                                            <option value="sendok_teh">Sendok teh</option>
-                                                            <option value="tetes">Tetes</option>
-                                                            <option value="cc">CC</option>
-                                                            <option value="olesan">Olesan</option>
-                                                            <option value="taburan">Taburan</option>
-                                                            <option value="semprotan">Semprotan</option>
-                                                            <option value="kali">Kali</option>
-                                                            <option value="ampul">Ampul</option>
-                                                            <option value="unit">Unit</option>
-                                                            <option value="sub">Sub</option>
-                                                        </select>
+                                                        <input type="text" id="satuanObat" class="form-control">
                                                         <input type="text" id="hargaObat" class="form-control d-none"
                                                             readonly>
                                                     </div>
@@ -154,13 +144,13 @@
                                                 <div class="row mb-3">
                                                     <div class="col-md-12">
                                                         <label for="jumlah" class="form-label">Jumlah Obat</label>
-                                                        <input type="number" class="form-control" id="jumlah"
-                                                            value="12">
+                                                        <input type="number" class="form-control" id="jumlah">
                                                     </div>
                                                 </div>
                                                 <div class="row mb-3">
                                                     <div class="col-md-12">
-                                                        <label for="sebelumSesudahMakan" class="form-label">Sebelum/Sesudah Makan</label>
+                                                        <label for="sebelumSesudahMakan"
+                                                            class="form-label">Sebelum/Sesudah Makan</label>
                                                         <select class="form-select" id="sebelumSesudahMakan">
                                                             <option selected>Sesudah Makan</option>
                                                             <option>Sebelum Makan</option>
@@ -169,7 +159,8 @@
                                                 </div>
                                                 <div class="row mb-3">
                                                     <div class="col-md-12">
-                                                        <label for="aturanTambahan" class="form-label">Aturan tambahan</label>
+                                                        <label for="aturanTambahan" class="form-label">Aturan
+                                                            tambahan</label>
                                                         <textarea class="form-control" id="aturanTambahan">{{ old('aturanTambahan') }}</textarea>
                                                     </div>
                                                 </div>
@@ -341,8 +332,92 @@
 
 
 @push('js')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
     <script>
         $(document).ready(function() {
+
+            // ============================================
+            // SETUP GLOBAL AJAX - CSRF TOKEN
+            // ============================================
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            // ============================================
+            // KEEP SESSION ALIVE - Ping setiap 5 menit
+            // ============================================
+            setInterval(function() {
+                $.ajax({
+                    url: '/keep-alive',
+                    method: 'GET',
+                    success: function(response) {
+                        if (response.token) {
+                            $('meta[name="csrf-token"]').attr('content', response.token);
+                            console.log('✅ Session refreshed:', response.time);
+                        }
+                    },
+                    error: function() {
+                        console.warn('⚠️ Failed to refresh session');
+                    }
+                });
+            }, 5 * 60 * 1000); // 5 menit
+
+            // ============================================
+            // WARNING USER IDLE (Opsional)
+            // ============================================
+            let idleTime = 0;
+            const idleInterval = setInterval(function() {
+                idleTime++;
+
+                // Warning setelah 100 menit idle
+                if (idleTime === 100) {
+                    iziToast.warning({
+                        title: 'Peringatan Idle',
+                        message: 'Anda telah idle 100 menit. Mohon lakukan aktivitas agar session tidak expired.',
+                        position: 'topRight',
+                        timeout: 10000
+                    });
+                }
+            }, 60000); // Check setiap 1 menit
+
+            // Reset idle timer saat ada aktivitas
+            $(document).on('mousemove keypress click scroll', function() {
+                idleTime = 0;
+            });
+
+            // ============================================
+            // REFRESH TOKEN SAAT MODAL DIBUKA
+            // ============================================
+            $('#tambahResep').on('show.bs.modal', function() {
+                selectedDokter = dokterSelect.val();
+
+                // Refresh CSRF token
+                $.ajax({
+                    url: '/refresh-csrf',
+                    method: 'GET',
+                    success: function(response) {
+                        if (response.token) {
+                            $('meta[name="csrf-token"]').attr('content', response.token);
+                            console.log('✅ CSRF refreshed on modal open');
+                        }
+                    }
+                });
+            });
+
+            // Simpan tab aktif ke localStorage saat tab berubah
+            $('#myTab .nav-link').on('shown.bs.tab', function(e) {
+                const activeTabId = $(e.target).attr('id');
+                localStorage.setItem('activeMainTab', activeTabId);
+            });
+
+            // Pulihkan tab aktif saat halaman dimuat
+            const savedTab = localStorage.getItem('activeMainTab');
+            if (savedTab) {
+                $(`#${savedTab}`).tab('show');
+            }
+
             // ------------ 1. Variabel Global dan Inisialisasi ------------ //
             let daftarObat = [];
             let activeTab = 'Non Racikan';
@@ -350,22 +425,7 @@
 
             const dokterSelect = $('#dokterPengirim');
 
-            @php
-                $dokterLoggedIn = null;
-                foreach ($dokters as $dokter) {
-                    if ($dokter->kd_karyawan == auth()->user()->kd_karyawan) {
-                        $dokterLoggedIn = $dokter;
-                        break;
-                    }
-                }
-            @endphp
-
-            // Set nilai default untuk selectedDokter dari dokter yang login
-            selectedDokter = "{{ $dokterLoggedIn ? $dokterLoggedIn->kd_dokter : '' }}";
-
-            // Atur dokter pengirim berdasarkan peran
             @can('is-admin')
-                // Enable the select field for admins
                 dokterSelect
                     .prop('disabled', false)
                     .css({
@@ -375,14 +435,10 @@
                     })
                     .removeAttr('tabindex');
 
-                // Update selectedDokter when admin changes the selection
                 dokterSelect.on('change', function() {
                     selectedDokter = $(this).val();
-                    console.log("Dokter dipilih (admin): ", selectedDokter);
-                    updateObatInputs(); // Update semua input hidden saat dokter berubah
                 });
             @else
-                // Keep disabled state for non-admin users
                 dokterSelect
                     .prop('disabled', true)
                     .css({
@@ -391,18 +447,16 @@
                         'cursor': 'not-allowed'
                     })
                     .attr('tabindex', '-1');
-
-                // Pastikan selectedDokter tetap diisi untuk non-admin (dokter)
-                console.log("Dokter yang login: ", selectedDokter);
             @endcan
 
-            // ------------ 2. Event Listener untuk Tab dan Obat ------------ //
+            selectedDokter = dokterSelect.val();
+
+            // ------------ 2. Event Listener untuk Pengguna ------------ //
             $('#obatTabs .nav-link').on('shown.bs.tab', function(e) {
                 activeTab = $(e.target).text().trim();
             });
 
-            // Fungsi untuk menambahkan obat ke daftar dan menampilkan di tabel
-            $('#tambahObatNonRacikan').on('click', function() {
+            $('#tambahObatNonRacikan, #tambahObatRacikan').on('click', function() {
                 var obatName = $('#cariObat').val();
                 var obatId = $('#selectedObatId').val();
                 var dosis = $('#dosis').val();
@@ -411,7 +465,7 @@
                 var sebelumSesudahMakan = $('#sebelumSesudahMakan').val();
                 var aturanTambahan = $('#aturanTambahan').val();
                 var satuanObat = $('#satuanObat').val();
-                var hargaObat = parseFloat($('#hargaObat').val()) || 0;
+                var hargaObat = parseFloat($('#hargaObat').val());
 
                 if (!obatId) {
                     iziToast.error({
@@ -422,16 +476,15 @@
                     return;
                 }
 
-                if (!jumlah || isNaN(jumlah) || jumlah < 1) {
+                if (!jumlah || isNaN(jumlah)) {
                     iziToast.error({
                         title: 'Error',
-                        message: "Masukkan jumlah obat yang valid.",
+                        message: "Masukkan Jumlah Obat.",
                         position: 'topRight'
                     });
                     return;
                 }
 
-                // Cek jika obat sudah ada dalam daftar
                 const exists = daftarObat.some(obat => obat.id === obatId);
                 if (exists) {
                     iziToast.warning({
@@ -442,7 +495,6 @@
                     return;
                 }
 
-                // Tambah ke daftar obat
                 daftarObat.push({
                     id: obatId,
                     nama: obatName,
@@ -458,16 +510,16 @@
                 });
 
                 renderDaftarObat();
-                updateObatInputs(); // Update input hidden saat menambah obat
                 resetInputObat();
             });
 
-            // Fungsi Copy Obat
             $(document).on('click', '.copy-obat', function() {
                 var obatData = $(this).data('obat');
                 $('#modal-overlay').show();
 
-                var editModal = new bootstrap.Modal($('#editObatModal'));
+                var editModal = new bootstrap.Modal($('#editObatModal'), {
+                    backdrop: 'static',
+                });
                 editModal.show();
 
                 $('#editObatModal').css({
@@ -490,6 +542,7 @@
                 var sebelumSesudahMakan = caraPakai[1] ? caraPakai[1].trim() : 'N/A';
 
                 $('#editNamaObat').val(obatData.nama_obat || 'Tidak ada informasi');
+                $('#editJumlahHari').val(obatData.jumlah_hari || '7');
                 $('#editFrekuensi').val(frekuensi || '');
                 $('#editDosis').val(obatData.jumlah_takaran || '');
                 $('#editSatuanObat').val(obatData.satuan_takaran || '');
@@ -501,12 +554,15 @@
                 $('#saveEditObat').on('click', function() {
                     saveEditedObat(obatData);
                 });
+
+                $('#editObatModal').modal('show');
             }
 
             function saveEditedObat(originalObatData) {
                 var editedData = {
                     id: originalObatData.kd_prd,
                     nama: originalObatData.nama_obat || 'Tidak ada informasi',
+                    jumlah_hari: $('#editJumlahHari').val(),
                     frekuensi: $('#editFrekuensi').val(),
                     dosis: $('#editDosis').val(),
                     satuan: $('#editSatuanObat').val(),
@@ -535,12 +591,11 @@
                     });
                 }
                 renderDaftarObat();
-                updateObatInputs(); // Update input hidden saat mengedit obat
                 $('#editObatModal').modal('hide');
                 $('#modal-overlay').hide();
             }
 
-            // ------------ 3. Fungsi CRUD Obat (Render, Hapus) ------------ //
+            // ------------ 3. Fungsi CRUD Obat ------------ //
             function renderDaftarObat() {
                 var tbody = $('#daftarObatBody');
                 tbody.empty();
@@ -568,186 +623,299 @@
                 });
 
                 $('.fw-bold:contains("Jumlah Item Obat")').text(`Jumlah Item Obat: ${daftarObat.length}`);
-                $('.fw-bold:contains("Total Biaya Obat")').text(
-                    `Total Biaya Obat: Rp. ${totalBiaya.toLocaleString()}`);
+                $('.fw-bold:contains("Total Biaya Obat")').text(`Total Biaya Obat: Rp. ${totalBiaya.toLocaleString()}`);
             }
 
             window.removeObat = function(index) {
                 daftarObat.splice(index, 1);
                 renderDaftarObat();
-                updateObatInputs(); // Update input hidden saat menghapus obat
             };
 
-            // Fungsi untuk memperbarui input hidden obat
-            function updateObatInputs() {
-                var obatInputs = $('#obatInputs');
-                obatInputs.empty();
+            // ------------ 4. SUBMIT FORM dengan Auto-Refresh Token ------------ //
+            $(document).on('submit', '#resepForm', function(e) {
+                e.preventDefault();
+                var form = $(this);
 
-                // Tambahkan input hidden untuk kd_dokter
-                obatInputs.append(`<input type="hidden" name="kd_dokter" value="${selectedDokter}">`);
-
-                daftarObat.forEach(function(obat, index) {
-                    obatInputs.append(`
-                        <input type="hidden" name="obat[${index}][id]" value="${obat.id}">
-                        <input type="hidden" name="obat[${index}][frekuensi]" value="${obat.frekuensi}">
-                        <input type="hidden" name="obat[${index}][jumlah]" value="${obat.jumlah}">
-                        <input type="hidden" name="obat[${index}][dosis]" value="${obat.dosis}">
-                        <input type="hidden" name="obat[${index}][sebelumSesudahMakan]" value="${obat.sebelumSesudahMakan}">
-                        <input type="hidden" name="obat[${index}][aturanTambahan]" value="${obat.aturanTambahan || ''}">
-                        <input type="hidden" name="obat[${index}][satuan]" value="${obat.satuan}">
-                    `);
-                });
-            }
-
-            // Validasi sisi klien sebelum submit
-            $('#resepForm').on('submit', function(e) {
                 if (daftarObat.length === 0) {
-                    e.preventDefault();
                     iziToast.error({
                         title: 'Error',
                         message: 'Silakan tambahkan minimal satu obat sebelum mengirim resep.',
                         position: 'topRight'
                     });
-                    return false;
+                    return;
                 }
 
-                var tanggalOrder = $('#tanggalOrder').val();
+                // Refresh token sebelum submit
+                $.ajax({
+                    url: '/refresh-csrf',
+                    method: 'GET',
+                    success: function(response) {
+                        if (response.token) {
+                            $('meta[name="csrf-token"]').attr('content', response.token);
+                        }
+                        submitResepForm(form);
+                    },
+                    error: function() {
+                        // Tetap coba submit meski gagal refresh
+                        submitResepForm(form);
+                    }
+                });
+            });
 
-                if (!tanggalOrder) {
-                    e.preventDefault();
-                    iziToast.error({
-                        title: 'Error',
-                        message: 'Tanggal dan jam order harus diisi.',
-                        position: 'topRight'
-                    });
-                    return false;
-                }
-
-                // Validasi kd_dokter
-                if (!selectedDokter || selectedDokter.length > 3) {
-                    e.preventDefault();
-                    iziToast.error({
-                        title: 'Error',
-                        message: 'Silahkan Pilih Dokter Terlebih dahulu!.',
-                        position: 'topRight'
-                    });
-                    return false;
-                }
-
+            function submitResepForm(form) {
                 $('#loadingIndicator').removeClass('d-none');
                 $('#orderButton').prop('disabled', true);
 
-                // Form akan melakukan submit normal ke server
+                var formData = {
+                    urut_masuk: "{{ $dataMedis->urut_masuk }}",
+                    kd_dokter: selectedDokter,
+                    tgl_order: $('#tanggalOrder').val(),
+                    jam_order: $('#jamOrder').val(),
+                    cat_racikan: $('#cat_racikan').val(),
+                    obat: daftarObat.map(obat => ({
+                        id: obat.id,
+                        frekuensi: obat.frekuensi,
+                        jumlah: obat.jumlah,
+                        dosis: obat.dosis,
+                        sebelumSesudahMakan: obat.sebelumSesudahMakan,
+                        aturanTambahan: obat.aturanTambahan,
+                        satuan: obat.satuan,
+                    }))
+                };
+
+                $.ajax({
+                    url: form.attr('action'),
+                    method: 'POST',
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Accept': 'application/json'
+                    },
+                    success: function(response) {
+                        $('#loadingIndicator').addClass('d-none');
+                        $('#orderButton').prop('disabled', false);
+
+                        iziToast.success({
+                            title: 'Sukses',
+                            message: 'Resep berhasil disimpan dengan ID: ' + response.id_mrresep,
+                            position: 'topRight'
+                        });
+
+                        daftarObat = [];
+                        renderDaftarObat();
+                        $('#resepForm')[0].reset();
+                        $('#dokterPengirim').prop('disabled', false);
+                        selectedDokter = null;
+                        $('#tambahResep').modal('hide');
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        $('#loadingIndicator').addClass('d-none');
+                        $('#orderButton').prop('disabled', false);
+
+                        // Handle 419 dengan auto-retry
+                        if (xhr.status === 419) {
+                            iziToast.warning({
+                                title: 'Session Expired',
+                                message: 'Mencoba refresh token dan submit ulang...',
+                                position: 'topRight',
+                                timeout: 2000
+                            });
+
+                            // Auto retry
+                            $.ajax({
+                                url: '/refresh-csrf',
+                                method: 'GET',
+                                success: function(response) {
+                                    if (response.token) {
+                                        $('meta[name="csrf-token"]').attr('content', response.token);
+                                        setTimeout(function() {
+                                            submitResepForm(form);
+                                        }, 1000);
+                                    } else {
+                                        showExpiredError();
+                                    }
+                                },
+                                error: showExpiredError
+                            });
+                            return;
+                        }
+
+                        var errorMessage = 'Terjadi kesalahan saat menyimpan resep.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage += ' ' + xhr.responseJSON.message;
+                        }
+                        if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                            errorMessage = 'Validasi gagal:\n';
+                            for (let field in xhr.responseJSON.errors) {
+                                errorMessage += `${field}: ${xhr.responseJSON.errors[field].join(', ')}\n`;
+                            }
+                        }
+                        iziToast.error({
+                            title: 'Error',
+                            message: errorMessage,
+                            position: 'topRight'
+                        });
+                    }
+                });
+            }
+
+            function showExpiredError() {
+                iziToast.error({
+                    title: 'Session Expired',
+                    message: 'Session berakhir. Halaman akan dimuat ulang...',
+                    position: 'topRight',
+                    timeout: 3000,
+                    onClosing: function() {
+                        location.reload();
+                    }
+                });
+            }
+
+            $(document).on('click', '#orderButton', function(e) {
+                e.preventDefault();
+                $('#resepForm').submit();
             });
 
-            // ------------ 5. Fungsi Pencarian Obat ------------ //
+            // ------------ 5. Search Obat ------------ //
             const cariObat = $('#cariObat');
             const clearObat = $('#clearObat');
             const obatList = $('#obatList');
             const selectedObatId = $('#selectedObatId');
             const satuanObat = $('#satuanObat');
-            const searchObatSpinner = $('#searchObatSpinner');
-            var timer;
 
-            cariObat.on('keyup', function() {
-                clearTimeout(timer);
-                var query = $(this).val();
+            let searchTimeout;
+            let lastQuery = '';
+            let isSearching = false;
 
-                timer = setTimeout(function() {
-                    if (query.length >= 2) {
-                        searchObatSpinner.show();
-                        $.ajax({
-                            url: '{{ route('farmasi.searchObat', ['kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk]) }}',
-                            method: 'GET',
-                            data: {
-                                term: query
-                            },
-                            success: function(data) {
-                                searchObatSpinner.hide();
-                                var html = '';
-                                if (data.length > 0) {
-                                    data.forEach(function(obat) {
-                                        html +=
-                                            '<a href="#" class="list-group-item list-group-item-action" ' +
-                                            'data-id="' + obat.id + '" ' +
-                                            'data-harga="' + obat.harga + '" ' +
-                                            'data-satuan="' + obat.satuan +
-                                            '">' +
-                                            obat.text + '</a>';
-                                    });
-                                } else {
-                                    html =
-                                        '<div class="list-group-item text-muted">Tidak ada hasil yang ditemukan</div>';
-                                }
-                                obatList.html(html);
-                            },
-                            error: function(xhr, status, error) {
-                                searchObatSpinner.hide();
-                                obatList.html(
-                                    '<div class="list-group-item text-danger">Terjadi kesalahan saat mencari obat</div>'
-                                );
+            cariObat.on('input', function() {
+                const query = $(this).val().trim();
+                clearTimeout(searchTimeout);
+
+                if (query.length === 0) {
+                    obatList.empty();
+                    return;
+                }
+
+                if (query.length < 2) {
+                    obatList.html('<div class="list-group-item text-muted">Ketik minimal 2 karakter...</div>');
+                    return;
+                }
+
+                if (query === lastQuery) return;
+
+                if (!isSearching) {
+                    obatList.html(`
+                        <div class="list-group-item text-center">
+                            <div class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    `);
+                }
+
+                searchTimeout = setTimeout(() => {
+                    lastQuery = query;
+                    isSearching = true;
+
+                    $.ajax({
+                        url: '{{ route('farmasi.searchObat', ['kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk]) }}',
+                        method: 'GET',
+                        data: { term: query },
+                        success: function(data) {
+                            isSearching = false;
+                            if (query !== cariObat.val().trim()) return;
+
+                            let html = '';
+                            if (data.length > 0) {
+                                data.forEach(function(obat) {
+                                    html += `
+                                        <a href="#" class="list-group-item list-group-item-action py-2"
+                                        data-id="${obat.id}"
+                                        data-harga="${obat.harga}"
+                                        data-satuan="${obat.satuan}">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="fw-medium">${obat.text}</div>
+                                                <small class="text-muted">Satuan: ${obat.satuan}</small>
+                                            </div>
+                                        </a>`;
+                                });
+                            } else {
+                                html = '<div class="list-group-item text-muted">Tidak ada hasil yang ditemukan</div>';
                             }
-                        });
-                    } else {
-                        obatList.html('');
-                        searchObatSpinner.hide();
-                    }
+                            obatList.html(html);
+                        },
+                        error: function() {
+                            isSearching = false;
+                            if (query === cariObat.val().trim()) {
+                                obatList.html('<div class="list-group-item text-danger">Terjadi kesalahan saat mencari obat</div>');
+                            }
+                        }
+                    });
                 }, 300);
             });
 
             $(document).on('click', '#obatList a', function(e) {
                 e.preventDefault();
-                var $this = $(this);
-                var obatName = $(this).text();
-                var obatId = $(this).data('id');
-                var obatSatuan = $(this).data('satuan');
-                var obatHarga = $this.attr('data-harga');
+                const $this = $(this);
+                const obatSatuan = $this.data('satuan').toLowerCase();
 
-                cariObat.val(obatName).prop('readonly', true);
-                selectedObatId.val(obatId);
-                satuanObat.val(obatSatuan);
-                $('#hargaObat').val(obatHarga);
-                obatList.html('');
+                cariObat.val($this.find('.fw-medium').text()).prop('readonly', true);
+                selectedObatId.val($this.data('id'));
+                $('#hargaObat').val($this.data('harga'));
+
+                const satuanMapping = {
+                    'tablet': 'tablet', 'tab': 'tablet',
+                    'kapsul': 'kapsul', 'caps': 'kapsul',
+                    'botol': 'cc', 'btl': 'cc',
+                    'bungkus': 'bungkus', 'bks': 'bungkus',
+                    'ampul': 'ampul', 'amp': 'ampul',
+                    'pcs': 'unit', 'unit': 'unit',
+                    'tetes': 'tetes', 'cc': 'cc', 'ml': 'cc'
+                };
+
+                satuanObat.val(satuanMapping[obatSatuan] || 'tablet');
+                obatList.empty();
                 clearObat.show();
             });
 
             clearObat.on('click', function() {
-                cariObat.val('').prop('readonly', false);
+                cariObat.val('').prop('readonly', false).focus();
                 selectedObatId.val('');
-                satuanObat.val('');
                 $('#hargaObat').val('');
                 clearObat.hide();
-                obatList.html('');
+                obatList.empty();
             });
 
             function resetInputObat() {
-                $('#cariObat').val('').prop('readonly', false);
-                $('#selectedObatId').val('');
+                cariObat.val('').prop('readonly', false);
+                selectedObatId.val('');
                 $('#jumlah').val('12');
                 $('#aturanTambahan').val('');
-                $('#clearObat').hide();
-                $('#obatList').html('');
+                $('#jumlahHari').val('');
                 $('#hargaObat').val('');
-                $('#satuanObat').val('tablet');
+                clearObat.hide();
+                obatList.empty();
             }
 
-            // Set tanggal dan waktu default saat halaman dimuat
-            function setDefaultDateTime() {
-                const now = new Date();
-                const year = now.getFullYear();
-                const month = String(now.getMonth() + 1).padStart(2, '0');
-                const day = String(now.getDate()).padStart(2, '0');
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
+            function formatDateTime(date, time) {
+                if (!date || !time) return '';
 
-                $('#tanggalOrder').val(`${year}-${month}-${day}T${hours}:${minutes}`);
+                let formattedDate;
+                if (date.includes('-')) {
+                    formattedDate = date;
+                } else if (date.includes('/')) {
+                    const parts = date.split('/');
+                    formattedDate = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                } else {
+                    return '';
+                }
+
+                const formattedTime = time.length === 5 ? time + ':00' : time;
+                return `${formattedDate} ${formattedTime}`;
             }
 
-            // Panggil fungsi untuk set default tanggal dan waktu
-            setDefaultDateTime();
-
-            // Inisialisasi input hidden pertama kali
-            updateObatInputs();
         });
     </script>
 @endpush
