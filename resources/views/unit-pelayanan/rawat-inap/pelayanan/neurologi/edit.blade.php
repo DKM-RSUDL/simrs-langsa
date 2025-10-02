@@ -131,7 +131,8 @@
                                             <div class="mb-3">
                                                 <h6 class="text-dark">Riwayat Alergi</h6>
                                                 <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                                    id="openAlergiModal" data-bs-toggle="modal" data-bs-target="#alergiModal">
+                                                    id="openAlergiModal" data-bs-toggle="modal"
+                                                    data-bs-target="#alergiModal">
                                                     <i class="ti-plus"></i> Tambah Alergi
                                                 </button>
                                                 <input type="hidden" name="alergis" id="alergisInput" value="[]">
@@ -148,7 +149,8 @@
                                                         </thead>
                                                         <tbody>
                                                             <tr id="no-alergi-row">
-                                                                <td colspan="5" class="text-center text-muted">Tidak ada data alergi</td>
+                                                                <td colspan="5" class="text-center text-muted">Tidak
+                                                                    ada data alergi</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -167,12 +169,14 @@
                                                         <label style="min-width: 200px;">Tek. Darah (mmHg)</label>
                                                         <div class="d-flex gap-3" style="width: 100%;">
                                                             <div class="flex-grow-1">
-                                                                <input type="number" class="form-control" name="darah_sistole"
-                                                                    placeholder="Sistole" value="{{ $asesmen->rmeAsesmenNeurologi->darah_sistole ?? '' }}">
+                                                                <input type="number" class="form-control"
+                                                                    name="darah_sistole" placeholder="Sistole"
+                                                                    value="{{ $asesmen->rmeAsesmenNeurologi->darah_sistole ?? '' }}">
                                                             </div>
                                                             <div class="flex-grow-1">
-                                                                <input type="number" class="form-control" name="darah_diastole"
-                                                                    placeholder="Diastole" value="{{ $asesmen->rmeAsesmenNeurologi->darah_diastole ?? '' }}">
+                                                                <input type="number" class="form-control"
+                                                                    name="darah_diastole" placeholder="Diastole"
+                                                                    value="{{ $asesmen->rmeAsesmenNeurologi->darah_diastole ?? '' }}">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -183,7 +187,8 @@
                                                                 Respirasi
                                                             </span>
                                                             <input type="text" class="form-control text-center"
-                                                                id="respirasi" name="respirasi" placeholder="0" value="{{ $asesmen->rmeAsesmenNeurologi->respirasi ?? '' }}">
+                                                                id="respirasi" name="respirasi" placeholder="0"
+                                                                value="{{ $asesmen->rmeAsesmenNeurologi->respirasi ?? '' }}">
                                                             <span class="input-group-text">x/menit</span>
                                                         </div>
                                                     </div>
@@ -194,7 +199,8 @@
                                                                 Suhu
                                                             </span>
                                                             <input type="text" class="form-control text-center"
-                                                                id="suhu" name="suhu" placeholder="0" value="{{ $asesmen->rmeAsesmenNeurologi->suhu ?? '' }}">
+                                                                id="suhu" name="suhu" placeholder="0"
+                                                                value="{{ $asesmen->rmeAsesmenNeurologi->suhu ?? '' }}">
                                                             <span class="input-group-text">°C</span>
                                                         </div>
                                                     </div>
@@ -205,7 +211,8 @@
                                                                 Nadi
                                                             </span>
                                                             <input type="text" class="form-control text-center"
-                                                                id="nadi" name="nadi" placeholder="0" value="{{ $asesmen->rmeAsesmenNeurologi->nadi ?? '' }}">
+                                                                id="nadi" name="nadi" placeholder="0"
+                                                                value="{{ $asesmen->rmeAsesmenNeurologi->nadi ?? '' }}">
                                                             <span class="input-group-text">x/menit</span>
                                                         </div>
                                                     </div>
@@ -326,12 +333,18 @@
                                                 <div class="row mb-3">
                                                     <div class="col-md-12">
                                                         <div class="input-group">
-                                                                <div class="input-group">
-                                                                <label style="min-width: 170px;" class="fw-normal">Pupil</label>
-                                                                <select class="form-select" name="pupil_isokor" id="pupil_isokor">
+                                                            <div class="input-group">
+                                                                <label style="min-width: 170px;"
+                                                                    class="fw-normal">Pupil</label>
+                                                                <select class="form-select" name="pupil_isokor"
+                                                                    id="pupil_isokor">
                                                                     <option value="">Pilih...</option>
-                                                                    <option value="Isokor" {{ ($asesmen->rmeAsesmenNeurologiSistemSyaraf->pupil_isokor ?? '') == 'Isokor' ? 'selected' : '' }}>Isokor</option>
-                                                                    <option value="Anisokor" {{ ($asesmen->rmeAsesmenNeurologiSistemSyaraf->pupil_isokor ?? '') == 'Anisokor' ? 'selected' : '' }}>Anisokor</option>
+                                                                    <option value="Isokor"
+                                                                        {{ ($asesmen->rmeAsesmenNeurologiSistemSyaraf->pupil_isokor ?? '') == 'Isokor' ? 'selected' : '' }}>
+                                                                        Isokor</option>
+                                                                    <option value="Anisokor"
+                                                                        {{ ($asesmen->rmeAsesmenNeurologiSistemSyaraf->pupil_isokor ?? '') == 'Anisokor' ? 'selected' : '' }}>
+                                                                        Anisokor</option>
                                                                 </select>
                                                                 <span class="input-group-text">Ø:</span>
                                                                 <input type="text" class="form-control"
@@ -780,21 +793,6 @@
                                                 <div class="section-separator" id="diagnosis">
                                                     <h5 class="fw-semibold mb-4">Diagnosis</h5>
 
-                                                    <div class="mb-4">
-                                                        <label class="text-primary fw-semibold">Prognosis</label>
-                                                        <select class="form-select" name="neurologi_prognosis">
-                                                            <option value="" disabled>--Pilih Prognosis--</option>
-                                                            @forelse ($satsetPrognosis as $item)
-                                                                <option value="{{ $item->prognosis_id }}"
-                                                                    {{ old('neurologi_prognosis', $asesmen->rmeAsesmenNeurologiIntensitasNyeri[0]->neurologi_prognosis ?? '') == $item->prognosis_id ? 'selected' : '' }}>
-                                                                    {{ $item->value ?? 'Field tidak ditemukan' }}
-                                                                </option>
-                                                            @empty
-                                                                <option value="" disabled>Tidak ada data</option>
-                                                            @endforelse
-                                                        </select>
-                                                    </div>
-
                                                     @php
                                                         // Parse existing diagnosis data from database
                                                         $diagnosisBanding = !empty(
@@ -893,12 +891,24 @@
                                                             <i class="bi bi-clipboard-plus me-1 text-primary"></i>
                                                             Rencana penatalaksanaan dan pengobatan:
                                                         </label>
-                                                        <textarea class="form-control"
-                                                                id="rencana_pengobatan"
-                                                                name="rencana_pengobatan"
-                                                                rows="3"
-                                                                placeholder="Tuliskan Rencana penatalaksanaan dan pengobatan...">{{ old('rencana_pengobatan', $asesmen->rmeAsesmenNeurologiIntensitasNyeri->rencana_pengobatan ?? '') }}</textarea>
+                                                        <textarea class="form-control" id="rencana_pengobatan" name="rencana_pengobatan" rows="3"
+                                                            placeholder="Tuliskan Rencana penatalaksanaan dan pengobatan...">{{ old('rencana_pengobatan', $asesmen->rmeAsesmenNeurologiIntensitasNyeri->rencana_pengobatan ?? '') }}</textarea>
                                                     </div>
+                                                </div>
+
+                                                <div class="section-separator" id="prognosis">
+                                                    <h5 class="fw-semibold mb-4">Prognosis</h5>
+                                                    <select class="form-select" name="neurologi_prognosis">
+                                                        <option value="" disabled>--Pilih Prognosis--</option>
+                                                        @forelse ($satsetPrognosis as $item)
+                                                            <option value="{{ $item->prognosis_id }}"
+                                                                {{ old('neurologi_prognosis', $asesmen->rmeAsesmenNeurologiIntensitasNyeri[0]->neurologi_prognosis ?? '') == $item->prognosis_id ? 'selected' : '' }}>
+                                                                {{ $item->value ?? 'Field tidak ditemukan' }}
+                                                            </option>
+                                                        @empty
+                                                            <option value="" disabled>Tidak ada data</option>
+                                                        @endforelse
+                                                    </select>
                                                 </div>
 
                                                 {{-- <div class="section-separator" style="margin-bottom: 2rem;">

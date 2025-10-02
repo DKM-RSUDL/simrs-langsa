@@ -126,7 +126,8 @@
                                                     </thead>
                                                     <tbody>
                                                         <tr id="no-alergi-row">
-                                                            <td colspan="5" class="text-center text-muted">Tidak ada data alergi</td>
+                                                            <td colspan="5" class="text-center text-muted">Tidak ada data
+                                                                alergi</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -212,7 +213,10 @@
                                                                 $firstColumn = $pemeriksaanFisikData->take($halfCount);
                                                                 $secondColumn = $pemeriksaanFisikData->skip($halfCount);
 
-                                                                $maxRows = max($firstColumn->count(), $secondColumn->count());
+                                                                $maxRows = max(
+                                                                    $firstColumn->count(),
+                                                                    $secondColumn->count(),
+                                                                );
                                                             @endphp
 
                                                             @for ($i = 0; $i < $maxRows; $i++)
@@ -224,22 +228,28 @@
                                                                             $status = $item->is_normal;
                                                                             $keterangan = $item->keterangan;
                                                                             $itemId = $item->id_item_fisik;
-                                                                            $namaItem = $itemFisikNames[$itemId] ?? 'Item #' . $itemId;
+                                                                            $namaItem =
+                                                                                $itemFisikNames[$itemId] ??
+                                                                                'Item #' . $itemId;
                                                                         @endphp
                                                                         <td>
                                                                             {{ $namaItem }}
                                                                             @if ($keterangan && ($status == '0' || $status == 0))
                                                                                 <br>
-                                                                                <small class="text-muted">Keterangan: {{ $keterangan }}</small>
+                                                                                <small class="text-muted">Keterangan:
+                                                                                    {{ $keterangan }}</small>
                                                                             @endif
                                                                         </td>
                                                                         <td class="text-center">
                                                                             @if ($status == '0' || $status == 0)
-                                                                                <span class="badge bg-warning text-dark">Tidak Normal</span>
+                                                                                <span
+                                                                                    class="badge bg-warning text-dark">Tidak
+                                                                                    Normal</span>
                                                                             @elseif ($status == '1' || $status == 1)
                                                                                 <span class="badge bg-success">Normal</span>
                                                                             @else
-                                                                                <span class="badge bg-secondary">Tidak Diperiksa</span>
+                                                                                <span class="badge bg-secondary">Tidak
+                                                                                    Diperiksa</span>
                                                                             @endif
                                                                         </td>
                                                                     @else
@@ -254,26 +264,31 @@
                                                                             $status = $item->is_normal;
                                                                             $keterangan = $item->keterangan;
                                                                             $itemId = $item->id_item_fisik;
-                                                                            $namaItem = $itemFisikNames[$itemId] ?? 'Item #' . $itemId;
+                                                                            $namaItem =
+                                                                                $itemFisikNames[$itemId] ??
+                                                                                'Item #' . $itemId;
                                                                         @endphp
                                                                         <td>
                                                                             {{ $namaItem }}
                                                                             @if ($keterangan && ($status == '0' || $status == 0))
                                                                                 <br>
-                                                                                <small class="text-muted">Keterangan: {{ $keterangan }}</small>
+                                                                                <small class="text-muted">Keterangan:
+                                                                                    {{ $keterangan }}</small>
                                                                             @endif
                                                                         </td>
                                                                         <td class="text-center">
                                                                             @if ($status == '0' || $status == 0)
-                                                                                <span class="badge bg-warning text-dark">Tidak Normal</span>
+                                                                                <span
+                                                                                    class="badge bg-warning text-dark">Tidak
+                                                                                    Normal</span>
                                                                             @elseif ($status == '1' || $status == 1)
                                                                                 <span class="badge bg-success">Normal</span>
                                                                             @else
-                                                                                <span class="badge bg-secondary">Tidak Diperiksa</span>
+                                                                                <span class="badge bg-secondary">Tidak
+                                                                                    Diperiksa</span>
                                                                             @endif
                                                                         </td>
                                                                     @else
-                                                                        
                                                                     @endif
                                                                 </tr>
                                                             @endfor
@@ -704,20 +719,6 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <h5>Diagnosis</h5>
-                                        <div class="mb-4">
-                                            <label class="text-primary fw-semibold">Prognosis</label>
-                                            <select class="form-select" name="neurologi_prognosis" disabled>
-                                                <option value="" disabled>--Pilih Prognosis--</option>
-                                                @forelse ($satsetPrognosis as $item)
-                                                    <option value="{{ $item->prognosis_id }}"
-                                                        {{ old('neurologi_prognosis', $asesmen->rmeAsesmenNeurologiIntensitasNyeri[0]->neurologi_prognosis ?? '') == $item->prognosis_id ? 'selected' : '' }}>
-                                                        {{ $item->value ?? 'Field tidak ditemukan' }}
-                                                    </option>
-                                                @empty
-                                                    <option value="" disabled>Tidak ada data</option>
-                                                @endforelse
-                                            </select>
-                                        </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Diagnosis Banding :</label>
@@ -728,7 +729,8 @@
                                                     keterangan diagnosis banding yang tidak ditemukan.</small>
                                                 @php
                                                     $diagnosisBanding = json_decode(
-                                                        $asesmen->rmeAsesmenNeurologiIntensitasNyeri->diagnosis_banding ?? '[]',
+                                                        $asesmen->rmeAsesmenNeurologiIntensitasNyeri
+                                                            ->diagnosis_banding ?? '[]',
                                                         true,
                                                     );
                                                 @endphp
@@ -768,7 +770,8 @@
                                                     keterangan diagnosis kerja yang tidak ditemukan.</small>
                                                 @php
                                                     $diagnosisKerja = json_decode(
-                                                        $asesmen->rmeAsesmenNeurologiIntensitasNyeri->diagnosis_kerja ?? '[]',
+                                                        $asesmen->rmeAsesmenNeurologiIntensitasNyeri->diagnosis_kerja ??
+                                                            '[]',
                                                         true,
                                                     );
                                                 @endphp
@@ -804,12 +807,30 @@
                                                 <i class="bi bi-clipboard-plus me-1 text-primary"></i>
                                                 Rencana penatalaksanaan dan pengobatan:
                                             </label>
-                                            <textarea class="form-control"
-                                                    id="rencana_pengobatan"
-                                                    name="rencana_pengobatan"
-                                                    rows="3"
-                                                    placeholder="Tuliskan Rencana penatalaksanaan dan pengobatan..." disabled>{{ old('rencana_pengobatan', $asesmen->rmeAsesmenNeurologiIntensitasNyeri->rencana_pengobatan ?? '') }}</textarea>
+                                            <textarea class="form-control" id="rencana_pengobatan" name="rencana_pengobatan" rows="3"
+                                                placeholder="Tuliskan Rencana penatalaksanaan dan pengobatan..." disabled>{{ old('rencana_pengobatan', $asesmen->rmeAsesmenNeurologiIntensitasNyeri->rencana_pengobatan ?? '') }}</textarea>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade show">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <h5>Prognosis</h5>
+                                        <select class="form-select" name="neurologi_prognosis" disabled>
+                                            <option value="" disabled>--Pilih Prognosis--</option>
+                                            @forelse ($satsetPrognosis as $item)
+                                                <option value="{{ $item->prognosis_id }}"
+                                                    {{ old('neurologi_prognosis', $asesmen->rmeAsesmenNeurologiIntensitasNyeri[0]->neurologi_prognosis ?? '') == $item->prognosis_id ? 'selected' : '' }}>
+                                                    {{ $item->value ?? 'Field tidak ditemukan' }}
+                                                </option>
+                                            @empty
+                                                <option value="" disabled>Tidak ada data</option>
+                                            @endforelse
+                                        </select>
                                     </div>
                                 </div>
                             </div>

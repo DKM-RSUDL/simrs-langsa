@@ -41,14 +41,16 @@
                                 @if (!empty($dataGet) && count($dataGet) > 0)
                                     @include('unit-pelayanan.rawat-jalan.pelayanan.resume.resume-medis.resume-medis')
                                 @else
-                                <div>Tidak ada data yang ditampilkan.</div>
+                                    <div>Tidak ada data yang ditampilkan.</div>
+                                @endif
                             </div>
                             <div class="tab-pane fade" id="riwayat" role="tabpanel" aria-labelledby="riwayat-tab">
                                 {{-- TAB 2. buatlah list disini --}}
                                 @if (!empty($dataGet) && count($dataGet) > 0)
                                     @include('unit-pelayanan.rawat-jalan.pelayanan.resume.resume-profil-ringkas-medis.profil_ringkas_medis')
                                 @else
-                                <div>Tidak ada data yang ditampilkan.</div>
+                                    <div>Tidak ada data yang ditampilkan.</div>
+                                @endif
                             </div>
                         </div>
                     </div>

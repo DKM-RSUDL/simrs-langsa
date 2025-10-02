@@ -72,13 +72,13 @@
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Anamnesis</label>
                                             <input type="text" class="form-control" name="anamnesis"
-                                                placeholder="Masukkan anamnesis" required>
+                                                placeholder="Masukkan anamnesis">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Keluhan Utama/Alasan Masuk RS</label>
                                             <textarea class="form-control" name="keluhan_utama" rows="4"
-                                                placeholder="Masukkan keluhan utama atau alasan masuk rumah sakit" required></textarea>
+                                                placeholder="Masukkan keluhan utama atau alasan masuk rumah sakit"></textarea>
                                         </div>
 
                                         <div class="form-group">
@@ -360,8 +360,8 @@
                                     <div class="section-separator" id="implemetasi" style="margin-bottom: 2rem;">
                                         <h5 class="fw-semibold mb-4">7. Prognosis dan Therapy</h5>
 
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Therapi</label>
+                                          <div class="mb-4">
+                                             <label class="text-primary fw-semibold">Therapy</label>
                                             <textarea class="form-control" name="therapi"
                                                 rows="4" placeholder="Masukkan terapi"></textarea>
                                         </div>

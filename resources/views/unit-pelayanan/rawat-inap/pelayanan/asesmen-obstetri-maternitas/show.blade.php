@@ -1047,29 +1047,6 @@
                                         <h5>7. Diagnosis</h5>
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label class="text-primary fw-semibold mb-2">Prognosis</label>
-                                                <select class="form-select" name="paru_prognosis" disabled>
-                                                    <option value="" disabled
-                                                        {{ !old('paru_prognosis', isset($asesmen->asesmenObstetri) ? $asesmen->asesmenObstetri->paru_prognosis : '')
-                                                            ? 'selected'
-                                                            : '' }}>
-                                                        --Pilih Prognosis--</option>
-                                                    @forelse ($satsetPrognosis as $item)
-                                                        <option value="{{ $item->prognosis_id }}"
-                                                            {{ old('paru_prognosis', isset($asesmen->asesmenObstetri) ? $asesmen->asesmenObstetri->paru_prognosis : '') ==
-                                                            $item->prognosis_id
-                                                                ? 'selected'
-                                                                : '' }}>
-                                                            {{ $item->value ?? 'Field tidak ditemukan' }}
-                                                        </option>
-                                                    @empty
-                                                        <option value="" disabled>Tidak ada data</option>
-                                                    @endforelse
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">Diagnosis Banding :</label>
                                                 <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk
                                                     mencari
@@ -1104,27 +1081,59 @@
                                                 @endif
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan
-                                                    Pengobatan</label>
-                                                <textarea class="form-control" name="rencana_pengobatan" rows="4"
-                                                    placeholder="Rencana Penatalaksanaan Dan Pengobatan" readonly>{{ old('rencana_pengobatan', isset($asesmen->asesmenObstetri) ? $asesmen->asesmenObstetri->rencana_pengobatan : '') }}</textarea>
+                        <div class="tab-pane fade show">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <h5>8. Rencana Penatalaksanaan dan
+                                            Pengobatan</h5>
+                                        <div class="col-md-12">
+                                            <textarea class="form-control" name="rencana_pengobatan" rows="4"
+                                                placeholder="Rencana Penatalaksanaan Dan Pengobatan" readonly>{{ old('rencana_pengobatan', isset($asesmen->asesmenObstetri) ? $asesmen->asesmenObstetri->rencana_pengobatan : '') }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade show">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <h5>9. Prognosis</h5>
+                                            <div class="col-md-12">
+                                                <select class="form-select" name="paru_prognosis" disabled>
+                                                    <option value="" disabled
+                                                        {{ !old('paru_prognosis', isset($asesmen->asesmenObstetri) ? $asesmen->asesmenObstetri->paru_prognosis : '')
+                                                            ? 'selected'
+                                                            : '' }}>
+                                                        --Pilih Prognosis--</option>
+                                                    @forelse ($satsetPrognosis as $item)
+                                                        <option value="{{ $item->prognosis_id }}"
+                                                            {{ old('paru_prognosis', isset($asesmen->asesmenObstetri) ? $asesmen->asesmenObstetri->paru_prognosis : '') ==
+                                                            $item->prognosis_id
+                                                                ? 'selected'
+                                                                : '' }}>
+                                                            {{ $item->value ?? 'Field tidak ditemukan' }}
+                                                        </option>
+                                                    @empty
+                                                        <option value="" disabled>Tidak ada data</option>
+                                                    @endforelse
+                                                </select>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
-    </div>
     </div>
     </div>
 @endsection

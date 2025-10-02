@@ -262,7 +262,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Suhu badan</label>
-                                            <input type="number" class="form-control" name="suhu" value="{{ $pemeriksaan->suhu }}">
+                                            <input type="text" class="form-control" name="suhu" value="{{ $pemeriksaan->suhu }}">
                                         </div>
 
                                         <div class="form-group">
