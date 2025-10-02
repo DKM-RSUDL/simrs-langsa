@@ -257,9 +257,7 @@ class FarmasiController extends Controller
         $search = $request->get('term');
         $cacheKey = 'obat_search_' . md5($search);
 
-        if (Cache::has($cacheKey)) {
-            return response()->json(Cache::get($cacheKey));
-        }
+       
 
         $obats = AptObat::join('APT_PRODUK', 'APT_OBAT.KD_PRD', '=', 'APT_PRODUK.KD_PRD')
             ->join('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
@@ -285,9 +283,7 @@ class FarmasiController extends Controller
             ->limit(10)
             ->get();
 
-        // Simpan ke cache selama 5 menit
-        Cache::put($cacheKey, $obats, now()->addMinutes(5));
-
+        
         return response()->json($obats);
     }
 
@@ -612,6 +608,7 @@ class FarmasiController extends Controller
                 'frekuensi_obat' => $request->frekuensi,
                 'keterangan_obat' => $request->keterangan,
                 'dosis_obat' => $request->dosis,
+                'cara_pemberian' => $request->cara_pemberian,
                 'tindak_lanjut_dpjp' => $tindakLanjutValue,
                 'obat_dibawa_pulang' => $request->dibawa,
                 'perubahan_aturan_pakai' => $request->perubahanpakai,
