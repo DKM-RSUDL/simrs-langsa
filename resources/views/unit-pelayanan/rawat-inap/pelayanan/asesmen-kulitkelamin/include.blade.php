@@ -208,6 +208,15 @@
         // Inisialisasi Site Marking
         //====================================================================================//
         function initSiteMarking() {
+            // Guard agar tidak inisialisasi dua kali (jika include ter-load ganda)
+            if (window.__siteMarkingInited) {
+                if (window.SITE_MARKING_DEBUG) console.warn('[SiteMarking] Sudah terinisialisasi, skip.');
+                return;
+            }
+            window.__siteMarkingInited = true;
+
+            if (window.SITE_MARKING_DEBUG) console.log('[SiteMarking] Mulai inisialisasi');
+
             const image = document.getElementById('anatomyImage');
             const canvas = document.getElementById('markingCanvas');
             const ctx = canvas.getContext('2d');
@@ -217,115 +226,162 @@
             const clearAllBtn = document.getElementById('clearAllMarking');
             const markingCount = document.getElementById('markingCount');
             const emptyState = document.getElementById('emptyState');
-            
+
             let markings = [];
             let markingCounter = 1;
             let currentColor = '#dc3545';
             let isDrawing = false;
             let startX = 0;
             let startY = 0;
-            
-            // Initialize color selection
-            initColorSelection();
-            
-            // Setup canvas
+
+            // Setup canvas HARUS dipanggil sebelum yang lain
             setupCanvas();
-            
+
+            // Initialize color selection SETELAH canvas ready
+            initColorSelection();
+
             // Load existing data
             loadExistingData();
-            
+
             function setupCanvas() {
                 function updateCanvasSize() {
-                    const rect = image.getBoundingClientRect();
-                    canvas.width = image.offsetWidth;
-                    canvas.height = image.offsetHeight;
-                    canvas.style.width = image.offsetWidth + 'px';
-                    canvas.style.height = image.offsetHeight + 'px';
-                    
-                    // Redraw all markings
-                    redrawCanvas();
+                    if (!image || image.naturalWidth === 0) {
+                        // Gambar belum siap
+                        return;
+                    }
+                    // Set dimensi canvas mengikuti dimensi tampak (rendered) gambar
+                    const displayedWidth = image.offsetWidth;
+                    const displayedHeight = image.offsetHeight;
+                    if (!displayedWidth || !displayedHeight) return; // Hindari set 0
+
+                    if (canvas.width !== displayedWidth || canvas.height !== displayedHeight) {
+                        canvas.width = displayedWidth;
+                        canvas.height = displayedHeight;
+                        canvas.style.width = displayedWidth + 'px';
+                        canvas.style.height = displayedHeight + 'px';
+                        canvas.style.left = '0px';
+                        canvas.style.top = '0px';
+                        if (window.SITE_MARKING_DEBUG) console.log('[SiteMarking] Update canvas size', displayedWidth,
+                            displayedHeight);
+                        redrawCanvas();
+                    }
                 }
-                
-                // Update canvas size when image loads
-                image.onload = updateCanvasSize;
-                
-                // Update canvas size when window resizes
-                window.addEventListener('resize', updateCanvasSize);
-                
-                // Initial setup
-                if (image.complete) {
+
+                // Pakai ResizeObserver jika tersedia supaya mengikuti perubahan layout container
+                if ('ResizeObserver' in window && image) {
+                    const ro = new ResizeObserver(() => {
+                        updateCanvasSize();
+                    });
+                    ro.observe(image);
+                }
+
+                // Listener window resize sebagai fallback
+                let resizeTimeout;
+                window.addEventListener('resize', function() {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(updateCanvasSize, 100);
+                });
+
+                // Panggil awal (akan skip kalau gambar belum siap)
+                updateCanvasSize();
+
+                // Polling singkat jika gambar dari cache dan onload tidak terpanggil
+                let tries = 0;
+                const poll = setInterval(() => {
                     updateCanvasSize();
-                }
+                    if ((image && image.complete && image.naturalWidth > 0) || tries > 20) {
+                        clearInterval(poll);
+                    }
+                    tries++;
+                }, 150);
             }
-            
+
             function initColorSelection() {
-                document.querySelectorAll('.color-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
+                const scope = document.getElementById('site-marking') || document;
+                const colorButtons = scope.querySelectorAll('.color-btn');
+
+                colorButtons.forEach(btn => {
+                    // Hapus listener lama dengan clone (aman jika inisialisasi ulang dipaksa)
+                    const newBtn = btn.cloneNode(true);
+                    btn.parentNode.replaceChild(newBtn, btn);
+                });
+
+                scope.querySelectorAll('.color-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
                         currentColor = this.getAttribute('data-color');
                         updateColorSelection();
+                        if (window.SITE_MARKING_DEBUG) console.log('[SiteMarking] Warna dipilih:',
+                            currentColor);
                     });
                 });
+
+                updateColorSelection();
             }
-            
+
             function updateColorSelection() {
-                document.querySelectorAll('.color-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                
-                const selectedBtn = document.querySelector(`[data-color="${currentColor}"]`);
-                if (selectedBtn) {
-                    selectedBtn.classList.add('active');
-                }
+                const scope = document.getElementById('site-marking') || document;
+                scope.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('active'));
+                const selectedBtn = scope.querySelector(`[data-color="${currentColor}"]`);
+                if (selectedBtn) selectedBtn.classList.add('active');
             }
-            
-            // Mouse events for drawing
+
+            // Mouse events untuk drawing
             canvas.addEventListener('mousedown', function(e) {
+                e.preventDefault();
                 isDrawing = true;
                 const rect = canvas.getBoundingClientRect();
                 startX = e.clientX - rect.left;
                 startY = e.clientY - rect.top;
             });
-            
+
             canvas.addEventListener('mousemove', function(e) {
                 if (!isDrawing) return;
-                
+
+                e.preventDefault();
                 const rect = canvas.getBoundingClientRect();
                 const endX = e.clientX - rect.left;
                 const endY = e.clientY - rect.top;
-                
-                // Clear canvas and redraw all markings
+
+                // Clear dan redraw semua marking
                 redrawCanvas();
-                
+
                 // Draw preview arrow
                 drawArrow(ctx, startX, startY, endX, endY, currentColor, true);
             });
-            
+
             canvas.addEventListener('mouseup', function(e) {
                 if (!isDrawing) return;
-                
+
+                e.preventDefault();
                 const rect = canvas.getBoundingClientRect();
                 const endX = e.clientX - rect.left;
                 const endY = e.clientY - rect.top;
-                
-                // Only create arrow if there's actual movement
+
+                // Hanya buat arrow jika ada movement
                 const distance = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
-                if (distance > 10) { // Minimum distance
+                if (distance > 10) {
                     addMarking(startX, startY, endX, endY);
                 }
-                
+
                 isDrawing = false;
                 redrawCanvas();
             });
-            
+
+            // Prevent context menu
+            canvas.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+            });
+
             function addMarking(startX, startY, endX, endY) {
                 const note = markingNote.value.trim() || `Penandaan ${markingCounter}`;
-                
-                // Convert to percentage for responsiveness
+
+                // Convert to percentage untuk responsiveness
                 const startXPercent = (startX / canvas.width) * 100;
                 const startYPercent = (startY / canvas.height) * 100;
                 const endXPercent = (endX / canvas.width) * 100;
                 const endYPercent = (endY / canvas.height) * 100;
-                
+
                 const marking = {
                     id: `mark_${Date.now()}`,
                     startX: startXPercent,
@@ -336,41 +392,36 @@
                     note: note,
                     timestamp: new Date().toISOString()
                 };
-                
+
                 markings.push(marking);
-                
-                // Add to list
                 addToMarkingsList(marking);
-                
-                // Update hidden input and counter
                 updateHiddenInput();
                 updateMarkingCount();
-                
+
                 // Clear note input
                 markingNote.value = '';
                 markingCounter++;
-                
-                // Redraw canvas
+
                 redrawCanvas();
             }
-            
+
             function drawArrow(ctx, startX, startY, endX, endY, color, isPreview = false) {
                 ctx.strokeStyle = color;
                 ctx.fillStyle = color;
                 ctx.lineWidth = isPreview ? 2 : 3;
                 ctx.lineCap = 'round';
-                
+
                 // Draw line
                 ctx.beginPath();
                 ctx.moveTo(startX, startY);
                 ctx.lineTo(endX, endY);
                 ctx.stroke();
-                
+
                 // Calculate arrow head
                 const angle = Math.atan2(endY - startY, endX - startX);
                 const arrowLength = 15;
                 const arrowAngle = Math.PI / 6;
-                
+
                 // Draw arrow head
                 ctx.beginPath();
                 ctx.moveTo(endX, endY);
@@ -385,114 +436,96 @@
                 );
                 ctx.stroke();
             }
-            
+
             function redrawCanvas() {
-                // Clear canvas
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                // Draw all markings
+
                 markings.forEach(marking => {
                     const startX = (marking.startX / 100) * canvas.width;
                     const startY = (marking.startY / 100) * canvas.height;
                     const endX = (marking.endX / 100) * canvas.width;
                     const endY = (marking.endY / 100) * canvas.height;
-                    
+
                     drawArrow(ctx, startX, startY, endX, endY, marking.color);
                 });
             }
-            
+
             function addToMarkingsList(marking) {
-                // Hide empty state
                 emptyState.style.display = 'none';
-                
+
                 const listItem = document.createElement('div');
                 listItem.className = 'marking-list-item';
                 listItem.setAttribute('data-marking-id', marking.id);
-                
+
                 listItem.innerHTML = `
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <div class="fw-semibold">${marking.note}</div>
-                            <div class="d-flex align-items-center gap-2 mt-1">
-                                <span class="badge" style="background-color: ${marking.color}; color: white; font-size: 10px;">PANAH</span>
-                                <small class="text-muted">${new Date(marking.timestamp).toLocaleTimeString('id-ID')}</small>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteMarking('${marking.id}')">
-                            <i class="ti-trash"></i>
-                        </button>
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="fw-semibold">${marking.note}</div>
+                    <div class="d-flex align-items-center gap-2 mt-1">
+                        <span class="badge" style="background-color: ${marking.color}; color: white; font-size: 10px;">PANAH</span>
+                        <small class="text-muted">${new Date(marking.timestamp).toLocaleTimeString('id-ID')}</small>
                     </div>
-                `;
-                
+                </div>
+                <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteMarking('${marking.id}')">
+                    <i class="ti-trash"></i>
+                </button>
+            </div>
+        `;
+
                 markingsList.appendChild(listItem);
             }
-            
+
             function updateMarkingCount() {
                 markingCount.textContent = markings.length;
-                
-                // Show/hide empty state
-                if (markings.length === 0) {
-                    emptyState.style.display = 'block';
-                } else {
-                    emptyState.style.display = 'none';
-                }
+                emptyState.style.display = markings.length === 0 ? 'block' : 'none';
             }
-            
+
             function updateHiddenInput() {
                 siteMarkingData.value = JSON.stringify(markings);
             }
-            
+
             function loadExistingData() {
                 try {
                     const existingData = JSON.parse(siteMarkingData.value || '[]');
                     if (existingData.length > 0) {
                         markings = existingData;
                         markingCounter = markings.length + 1;
-                        
-                        // Rebuild list
-                        markingsList.innerHTML = '<div class="text-muted text-center py-3" id="emptyState"><i class="ti-info-alt"></i> Belum ada penandaan</div>';
-                        markings.forEach(marking => {
-                            addToMarkingsList(marking);
-                        });
-                        
+
+                        markingsList.innerHTML =
+                            '<div class="text-muted text-center py-3" id="emptyState"><i class="ti-info-alt"></i> Belum ada penandaan</div>';
+                        markings.forEach(marking => addToMarkingsList(marking));
+
                         updateMarkingCount();
-                        
-                        // Redraw canvas after a short delay
-                        setTimeout(() => {
-                            redrawCanvas();
-                        }, 100);
+                        setTimeout(() => redrawCanvas(), 100);
                     }
                 } catch (e) {
-                    console.error('Error loading existing marking data:', e);
+                    console.error('Error loading marking data:', e);
                 }
             }
-            
-            // Clear all markings
+
             clearAllBtn.addEventListener('click', function() {
                 if (markings.length === 0) return;
-                
+
                 if (confirm('Hapus semua penandaan?')) {
                     markings = [];
-                    markingsList.innerHTML = '<div class="text-muted text-center py-3" id="emptyState"><i class="ti-info-alt"></i> Belum ada penandaan</div>';
+                    markingsList.innerHTML =
+                        '<div class="text-muted text-center py-3" id="emptyState"><i class="ti-info-alt"></i> Belum ada penandaan</div>';
                     updateHiddenInput();
                     updateMarkingCount();
                     redrawCanvas();
                     markingCounter = 1;
                 }
             });
-            
-            // Global function for delete
+
             window.deleteMarking = function(markingId) {
                 if (confirm('Hapus penandaan ini?')) {
-                    // Remove from array
                     markings = markings.filter(m => m.id !== markingId);
-                    
-                    // Remove from list
+
                     const listElement = markingsList.querySelector(`[data-marking-id="${markingId}"]`);
                     if (listElement) {
                         markingsList.removeChild(listElement);
                     }
-                    
+
                     updateHiddenInput();
                     updateMarkingCount();
                     redrawCanvas();
@@ -566,7 +599,7 @@
 
             //====================================================================================//
             // Event handler untuk tombol Tambah Riwayat
-            //====================================================================================// 
+            //====================================================================================//
             let riwayatArray = [];
 
             function updateRiwayatJson() {
@@ -883,6 +916,19 @@
                 const addButton = document.getElementById(`add-${prefix}`);
                 const listContainer = document.getElementById(`${prefix}-list`);
                 const hiddenInput = document.getElementById(hiddenFieldId);
+
+                // Guard: if critical elements are missing, skip initialization for this section
+                if (!inputField || !addButton || !listContainer || !hiddenInput) {
+                    if (window.SITE_MARKING_DEBUG) console.warn(
+                        `[initImplementationSection] Skipping init for ${prefix}. Missing elements:`, {
+                            inputField: !!inputField,
+                            addButton: !!addButton,
+                            listContainer: !!listContainer,
+                            hiddenInput: !!hiddenInput
+                        });
+                    return;
+                }
+
                 const suggestionsList = document.createElement('div');
 
                 // Style suggestions list
@@ -1148,7 +1194,43 @@
 
             // Add site marking initialization
 
-            initSiteMarking();
+            //==============================================================//
+            // Inisialisasi Site Marking dengan menunggu gambar siap
+            //==============================================================//
+            window.SITE_MARKING_DEBUG = window.SITE_MARKING_DEBUG || false; // set true untuk debug
+
+            const anatomyImg = document.getElementById('anatomyImage');
+            if (anatomyImg) {
+                const startInit = () => {
+                    if (window.SITE_MARKING_DEBUG) console.log('[SiteMarking] startInit dipanggil');
+                    initSiteMarking();
+                };
+
+                if (!anatomyImg.complete || anatomyImg.naturalWidth === 0) {
+                    if (window.SITE_MARKING_DEBUG) console.log('[SiteMarking] Menunggu gambar load...');
+                    anatomyImg.addEventListener('load', startInit, {
+                        once: true
+                    });
+                    // Fallback polling (untuk kasus browser cache spesifik)
+                    let attempts = 0;
+                    const waitPoll = setInterval(() => {
+                        if (anatomyImg.complete && anatomyImg.naturalWidth > 0) {
+                            clearInterval(waitPoll);
+                            startInit();
+                        }
+                        if (++attempts > 30) { // ~4.5 detik
+                            clearInterval(waitPoll);
+                            if (window.SITE_MARKING_DEBUG) console.warn(
+                                '[SiteMarking] Gambar tidak siap, paksa init');
+                            startInit();
+                        }
+                    }, 150);
+                } else {
+                    startInit();
+                }
+            } else {
+                console.error('[SiteMarking] anatomyImage tidak ditemukan di DOM');
+            }
 
         });
     </script>
