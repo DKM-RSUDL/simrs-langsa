@@ -24,11 +24,11 @@
                                     Order
                                 </a>
                             </li>
-                            <li class="nav-item" role="presentation">
+                            {{-- <li class="nav-item" role="presentation">
                                 <a href="?tab=monitoring" class="nav-link" aria-selected="true">
                                     Monitoring
                                 </a>
-                            </li>
+                            </li> --}}
                         </ul>
 
                         {{-- Tab Content --}}
