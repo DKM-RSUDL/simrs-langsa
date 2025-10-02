@@ -66,7 +66,7 @@
                             </div>
                             <div class="tab-pane fade" id="riwayat" role="tabpanel" aria-labelledby="catatan-tab">
                                 {{-- TAB 2. buatlah list disini --}}
-                                @include('unit-pelayanan.rawat-inap.pelayanan.farmasi.tabsriwayat')
+                                @include('unit-pelayanan.rawat-inap.pelayanan.farmasi.tab-riwayat.riwayat')
                             </div>
                             <div class="tab-pane fade" id="catatanTab" role="tabpanel" aria-labelledby="catatan-tab">
                                 {{-- TAB 3. buatlah list disini --}}

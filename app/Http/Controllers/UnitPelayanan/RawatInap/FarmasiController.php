@@ -652,4 +652,47 @@ class FarmasiController extends Controller
             'message' => 'Rekonsiliasi obat berhasil dihapus'
         ], 200);
     }
+
+    public function copyCPO(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Validasi data - sama seperti catatanObat
+            $validatedData = $request->validate([
+                'nama_obat' => 'required',
+                'frekuensi' => 'required',
+                'keterangan' => 'required',
+                'dosis' => 'required',
+                'satuan' => 'required',
+                'tanggal' => 'required|date',
+                'jam' => 'required',
+                'catatan' => 'nullable',
+                'is_validasi' => 'required|in:0,1'
+            ]);
+
+            // Simpan ke tabel RmeCatatanPemberianObat - sama seperti catatanObat
+            $catatan = new RmeCatatanPemberianObat();
+            $catatan->kd_pasien = $kd_pasien;
+            $catatan->kd_unit = $kd_unit;
+            $catatan->tgl_masuk = $tgl_masuk;
+            $catatan->urut_masuk = $urut_masuk;
+            $catatan->kd_petugas = Auth::user()->karyawan->kd_karyawan;
+            $catatan->nama_obat = $validatedData['nama_obat'];
+            $catatan->frekuensi = $validatedData['frekuensi'];
+            $catatan->keterangan = $validatedData['keterangan'];
+            $catatan->dosis = $validatedData['dosis'];
+            $catatan->satuan = $validatedData['satuan'];
+            $catatan->tanggal = $validatedData['tanggal'] . ' ' . $validatedData['jam'];
+            $catatan->catatan = $validatedData['catatan'];
+            $catatan->is_validasi = $validatedData['is_validasi'];
+            $catatan->save();
+
+            DB::commit();
+            return back()->with('success', 'Catatan pemberian obat berhasil disalin dan disimpan');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
+    }
 }
