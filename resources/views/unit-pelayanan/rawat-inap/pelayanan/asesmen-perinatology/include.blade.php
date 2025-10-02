@@ -238,17 +238,45 @@
             // ============================================================================
 
             function initializePemeriksaanFisik() {
-                // Toggle keterangan form
+                // Set default checked state DULU sebelum menambahkan event listener
+                safeQueryAll('.pemeriksaan-item .form-check-input').forEach(checkbox => {
+                    // Hanya set default jika belum ada value (untuk form create)
+                    if (checkbox.checked === undefined || checkbox.checked === null) {
+                        checkbox.checked = true;
+                    }
+                    
+                    const keteranganDiv = checkbox.closest('.pemeriksaan-item')?.querySelector('.keterangan');
+                    if (keteranganDiv && checkbox.checked) {
+                        keteranganDiv.style.display = 'none';
+                        const input = keteranganDiv.querySelector('input');
+                        if (input) input.value = '';
+                    }
+                });
+
+                // Toggle keterangan form saat button "+" diklik
                 safeQueryAll('.tambah-keterangan').forEach(button => {
-                    button.addEventListener('click', function() {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault(); // Mencegah form submit
+                        
                         const targetId = this.getAttribute('data-target');
                         const keteranganDiv = safeQuery(`#${targetId}`);
-                        const normalCheckbox = this.closest('.pemeriksaan-item')?.querySelector(
-                            '.form-check-input');
+                        const pemeriksaanItem = this.closest('.pemeriksaan-item');
+                        const normalCheckbox = pemeriksaanItem?.querySelector('.form-check-input');
 
                         if (keteranganDiv && normalCheckbox) {
-                            keteranganDiv.style.display = 'block';
-                            normalCheckbox.checked = false;
+                            // Toggle display
+                            if (keteranganDiv.style.display === 'none' || keteranganDiv.style.display === '') {
+                                keteranganDiv.style.display = 'block';
+                                normalCheckbox.checked = false;
+                                
+                                // Focus pada input
+                                const input = keteranganDiv.querySelector('input');
+                                if (input) {
+                                    setTimeout(() => input.focus(), 100);
+                                }
+                            } else {
+                                keteranganDiv.style.display = 'none';
+                            }
                         }
                     });
                 });
@@ -256,26 +284,25 @@
                 // Handle normal checkbox change
                 safeQueryAll('.pemeriksaan-item .form-check-input').forEach(checkbox => {
                     checkbox.addEventListener('change', function() {
-                        const keteranganDiv = this.closest('.pemeriksaan-item')?.querySelector(
-                            '.keterangan');
-                        if (keteranganDiv && this.checked) {
-                            keteranganDiv.style.display = 'none';
-                            const input = keteranganDiv.querySelector('input');
-                            if (input) input.value = '';
+                        const pemeriksaanItem = this.closest('.pemeriksaan-item');
+                        const keteranganDiv = pemeriksaanItem?.querySelector('.keterangan');
+                        
+                        if (keteranganDiv) {
+                            if (this.checked) {
+                                // Jika dicentang normal, sembunyikan keterangan dan reset input
+                                keteranganDiv.style.display = 'none';
+                                const input = keteranganDiv.querySelector('input');
+                                if (input) input.value = '';
+                            } else {
+                                // Jika uncheck, tampilkan keterangan
+                                keteranganDiv.style.display = 'block';
+                                const input = keteranganDiv.querySelector('input');
+                                if (input) {
+                                    setTimeout(() => input.focus(), 100);
+                                }
+                            }
                         }
                     });
-                });
-
-                // Set default checked state
-                safeQueryAll('.pemeriksaan-item .form-check-input').forEach(checkbox => {
-                    checkbox.checked = true;
-                    const keteranganDiv = checkbox.closest('.pemeriksaan-item')?.querySelector(
-                        '.keterangan');
-                    if (keteranganDiv) {
-                        keteranganDiv.style.display = 'none';
-                        const input = keteranganDiv.querySelector('input');
-                        if (input) input.value = '';
-                    }
                 });
             }
 
@@ -1275,7 +1302,8 @@
                 if (!statusFungsionalSelect) return;
 
                 statusFungsionalSelect.addEventListener('change', function() {
-                    if (this.value === 'Pengkajian Aktivitas') {
+                    // Ubah dari 'Pengkajian Aktivitas' menjadi '1'
+                    if (this.value === '1') {
                         // Reset values
                         if (adlTotal) adlTotal.value = '';
                         if (adlKesimpulanAlert) {
@@ -1287,7 +1315,7 @@
                         if (modal) {
                             new bootstrap.Modal(modal).show();
                         }
-                    } else if (this.value === 'Lainnya') {
+                    } else if (this.value === '2') { // Ubah dari 'Lainnya' menjadi '2'
                         showToast('warning', 'Skala pengukuran lainnya belum tersedia');
                         this.value = '';
                         if (adlTotal) adlTotal.value = '';
@@ -1320,10 +1348,8 @@
                         if (adlModalTotal) adlModalTotal.value = total;
 
                         // Check if all categories are selected
-                        const checkedCategories = new Set(Array.from(adlChecks).map(check => check.getAttribute(
-                            'data-category')));
-                        const allCategoriesSelected = checkedCategories.size ===
-                        3; // 3 categories: makan, berjalan, mandi
+                        const checkedCategories = new Set(Array.from(adlChecks).map(check => check.getAttribute('data-category')));
+                        const allCategoriesSelected = checkedCategories.size === 3; // 3 categories: makan, berjalan, mandi
 
                         if (!allCategoriesSelected) {
                             if (adlModalKesimpulan) {
@@ -1372,8 +1398,7 @@
                         // Update main form
                         if (adlTotal) adlTotal.value = total;
                         if (adlKesimpulanAlert) {
-                            adlKesimpulanAlert.className = adlModalKesimpulan.className.replace(
-                                'py-1 px-3 mb-0', '');
+                            adlKesimpulanAlert.className = adlModalKesimpulan.className.replace('py-1 px-3 mb-0', '');
                             adlKesimpulanAlert.textContent = kesimpulan;
                         }
 
@@ -1388,54 +1413,39 @@
                         safeQueryAll('.adl-check').forEach(check => check.checked = false);
                         if (adlModalTotal) adlModalTotal.value = '0';
                         if (adlModalKesimpulan) {
-                            adlModalKesimpulan.textContent =
-                            'Pilih semua kategori untuk melihat kesimpulan';
+                            adlModalKesimpulan.textContent = 'Pilih semua kategori untuk melihat kesimpulan';
                             adlModalKesimpulan.className = 'alert alert-info py-1 px-3 mb-0';
                         }
                     });
 
                     function saveADLHiddenValues() {
-                        const getSelectedADLValues = () => {
-                            const makanValue = safeQuery('input[name="makan"]:checked')?.value || '';
-                            const berjalanValue = safeQuery('input[name="berjalan"]:checked')?.value || '';
-                            const mandiValue = safeQuery('input[name="mandi"]:checked')?.value || '';
-
-                            const getTextValue = (value) => {
-                                switch (value) {
-                                    case '1':
-                                        return 'Mandiri';
-                                    case '2':
-                                        return '25% Dibantu';
-                                    case '3':
-                                        return '50% Dibantu';
-                                    case '4':
-                                        return '75% Dibantu';
-                                    default:
-                                        return '';
-                                }
-                            };
-
-                            return {
-                                makan: getTextValue(makanValue),
-                                makanValue: makanValue,
-                                berjalan: getTextValue(berjalanValue),
-                                berjalanValue: berjalanValue,
-                                mandi: getTextValue(mandiValue),
-                                mandiValue: mandiValue
-                            };
+                        // Fungsi helper untuk mendapatkan text value
+                        const getTextValue = (value) => {
+                            switch (value) {
+                                case '1':
+                                    return 'Mandiri';
+                                case '2':
+                                    return '25% Dibantu';
+                                case '3':
+                                    return '50% Dibantu';
+                                case '4':
+                                    return '75% Dibantu';
+                                default:
+                                    return '';
+                            }
                         };
 
-                        const adlValues = getSelectedADLValues();
+                        // Ambil nilai yang dipilih
+                        const makanValue = safeQuery('input[name="makan"]:checked')?.value || '';
+                        const berjalanValue = safeQuery('input[name="berjalan"]:checked')?.value || '';
+                        const mandiValue = safeQuery('input[name="mandi"]:checked')?.value || '';
 
+                        // Simpan ke hidden fields - HANYA field yang ada di database
                         const hiddenInputs = {
-                            'adl_makan': adlValues.makan,
-                            'adl_makan_value': adlValues.makanValue,
-                            'adl_berjalan': adlValues.berjalan,
-                            'adl_berjalan_value': adlValues.berjalanValue,
-                            'adl_mandi': adlValues.mandi,
-                            'adl_mandi_value': adlValues.mandiValue,
-                            'adl_kesimpulan_value': adlKesimpulanAlert?.textContent || '',
-                            'adl_jenis_skala': '1'
+                            'adl_makan': getTextValue(makanValue),
+                            'adl_berjalan': getTextValue(berjalanValue),
+                            'adl_mandi': getTextValue(mandiValue),
+                            'adl_kesimpulan_value': adlKesimpulanAlert?.textContent || ''
                         };
 
                         Object.entries(hiddenInputs).forEach(([id, value]) => {
@@ -1454,9 +1464,10 @@
                 const dischargePlanningSection = safeQuery('#discharge-planning');
                 if (!dischargePlanningSection) return;
 
-                const allSelects = dischargePlanningSection.querySelectorAll('select');
-                const alertWarning = dischargePlanningSection.querySelector('.alert-warning');
-                const alertSuccess = dischargePlanningSection.querySelector('.alert-success');
+                const allSelects = dischargePlanningSection.querySelectorAll('.discharge-select');
+                const alertWarning = safeQuery('#discharge-warning');
+                const alertSuccess = safeQuery('#discharge-success');
+                const kesimpulanInput = safeQuery('#kesimpulan_planing');
 
                 function updateDischargePlanningConclusion() {
                     let needsSpecialPlan = false;
@@ -1465,23 +1476,35 @@
                     allSelects.forEach(select => {
                         if (!select.value) {
                             allSelected = false;
-                        } else if (select.value === '1') { // Ya
-                            needsSpecialPlan = true;
+                        } else {
+                            // Ya = perlu rencana khusus
+                            // Untuk tinyint: 0 = Ya, 1 = Tidak
+                            // Untuk varchar: 'ya' = Ya, 'tidak' = Tidak
+                            if (select.value === '0' || select.value === 'ya') {
+                                needsSpecialPlan = true;
+                            }
                         }
                     });
 
                     if (!allSelected) {
                         if (alertWarning) alertWarning.style.display = 'none';
                         if (alertSuccess) alertSuccess.style.display = 'none';
+                        if (kesimpulanInput) kesimpulanInput.value = '';
                         return;
                     }
 
                     if (needsSpecialPlan) {
-                        if (alertWarning) alertWarning.style.display = 'block';
+                        if (alertWarning) {
+                            alertWarning.style.display = 'block';
+                            if (kesimpulanInput) kesimpulanInput.value = 'Membutuhkan rencana pulang khusus';
+                        }
                         if (alertSuccess) alertSuccess.style.display = 'none';
                     } else {
                         if (alertWarning) alertWarning.style.display = 'none';
-                        if (alertSuccess) alertSuccess.style.display = 'block';
+                        if (alertSuccess) {
+                            alertSuccess.style.display = 'block';
+                            if (kesimpulanInput) kesimpulanInput.value = 'Tidak membutuhkan rencana pulang khusus';
+                        }
                     }
                 }
 
@@ -1521,7 +1544,7 @@
                     newField.className = 'masalah-item mb-2';
                     newField.innerHTML = `
                 <div class="d-flex gap-2">
-                    <textarea class="form-control" name="masalah_diagnosis[]" rows="2" 
+                    <textarea class="form-control" name="masalah_diagnosis[]" rows="2"
                             placeholder="Tuliskan masalah atau diagnosis keperawatan..."></textarea>
                     <button type="button" class="btn btn-sm btn-outline-danger remove-masalah" onclick="removeMasalah(this)">
                         <i class="bi bi-trash"></i>
@@ -1536,7 +1559,7 @@
                     newField.className = 'intervensi-item mb-2';
                     newField.innerHTML = `
                 <div class="d-flex gap-2">
-                    <textarea class="form-control" name="intervensi_rencana[]" rows="3" 
+                    <textarea class="form-control" name="intervensi_rencana[]" rows="3"
                             placeholder="Tuliskan intervensi, rencana asuhan, dan target yang terukur..."></textarea>
                     <button type="button" class="btn btn-sm btn-outline-danger remove-intervensi" onclick="removeIntervensi(this)">
                         <i class="bi bi-trash"></i>
@@ -1637,5 +1660,35 @@
 
             console.log('Asesmen Perinatology form initialized successfully');
         });
+
+        // ============================================================================
+        // 16. MASALAH/ DIAGNOSIS KEPERAWATAN
+        // ============================================================================
+        $('.rencana-perawatan-row-1').change(function() {
+            let rowCount = $('.rencana-perawatan-row-1:checked').length > 0;
+
+            if(rowCount) {
+                $('#rencana_bersihan_jalan_nafas').css('display', 'block');
+            } else {
+                $('#rencana_bersihan_jalan_nafas').css('display', 'none');
+            }
+
+        });
+
+        function toggleRencana(diagnosisType) {
+            const checkbox = document.getElementById('diag_' + diagnosisType);
+            const rencanaDiv = document.getElementById('rencana_' + diagnosisType);
+
+            if (checkbox && rencanaDiv) {
+                if (checkbox.checked) {
+                    rencanaDiv.style.display = 'block';
+                } else {
+                    rencanaDiv.style.display = 'none';
+                    // Uncheck all rencana checkboxes when diagnosis is unchecked
+                    const rencanaCheckboxes = rencanaDiv.querySelectorAll('input[type="checkbox"]');
+                    rencanaCheckboxes.forEach(cb => cb.checked = false);
+                }
+            }
+        }
     </script>
 @endpush
