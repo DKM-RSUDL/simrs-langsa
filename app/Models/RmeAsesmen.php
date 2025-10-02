@@ -362,14 +362,18 @@ class RmeAsesmen extends Model
         return $this->hasOne(RmeAsesmenKepPerinatologyGizi::class, 'id_asesmen', 'id');
     }
 
-    public function rmeAsesmenPerinatologyFungsional()
+    public function rmeAsesmenPerinatologyStatusFungsional()
     {
-        return $this->hasOne(RmeAsesmenKepPerinatologyFungsional::class, 'id_asesmen', 'id');
+        return $this->hasOne(RmeAsesmenKepPerinatologyStatusFungsional::class, 'id_asesmen', 'id');
     }
 
     public function rmeAsesmenPerinatologyRencanaPulang()
     {
         return $this->hasOne(RmeAsesmenKepPerinatologyRencanaPulang::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenKepPerinatologyKeperawatan()
+    {
+        return $this->hasOne(RmeAsesmenKepPerinatologyKeperawatan::class, 'id_asesmen', 'id');
     }
 
     // asesmenObstetri

@@ -156,6 +156,7 @@
 @endpush
 
 @section('content')
+@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-perinatology.include-edit')
 
     <div class="row">
         <div class="col-md-3">
@@ -172,7 +173,7 @@
                         <div class="px-3">
                             <div class="row g-3">
                                 <div class="col-md-12">
-                                    <h4 class="header-asesmen">Edit Asesmen Awal Keperawatan Perinatology</h4>
+                                    <h4 class="header-asesmen"><span class="text-warning">Edit</span> Asesmen Awal Keperawatan Perinatology</h4>
                                     <p>
                                         Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan
                                     </p>
@@ -315,13 +316,14 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label style="min-width: 200px;">Sidik Jari Ibu Bayi</label>
+                                        <label style="min-width: 200px;">Sidik Jari Ibu</label>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label class="form-label">Jari Kiri</label>
                                                 <div class="input-group mb-2">
-                                                    <input type="file" class="form-control"
-                                                        name="sidik_jari_kiri">
+                                                    <input type="file" 
+                                                        class="form-control @error('sidik_jari_ibu_kiri') is-invalid @enderror"
+                                                        name="sidik_jari_ibu_kiri">
                                                 </div>
                                                 @if($asesmen->rmeAsesmenPerinatology->sidik_jari_ibu_kiri ?? '')
                                                     <div class="d-flex align-items-center mb-2">
@@ -334,12 +336,16 @@
                                                     </div>
                                                 @endif
                                                 <small class="text-muted">Format: JPG, PNG, PDF | Maks: 10MB</small>
+                                                @error('sidik_jari_ibu_kiri')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">Jari Kanan</label>
                                                 <div class="input-group mb-2">
-                                                    <input type="file" class="form-control"
-                                                        name="sidik_jari_kanan">
+                                                    <input type="file" 
+                                                        class="form-control @error('sidik_jari_ibu_kanan') is-invalid @enderror"
+                                                        name="sidik_jari_ibu_kanan">
                                                 </div>
                                                 @if($asesmen->rmeAsesmenPerinatology->sidik_jari_ibu_kanan ?? '')
                                                     <div class="d-flex align-items-center mb-2">
@@ -352,36 +358,59 @@
                                                     </div>
                                                 @endif
                                                 <small class="text-muted">Format: JPG, PNG, PDF | Maks: 10MB</small>
+                                                @error('sidik_jari_ibu_kanan')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
-                                        <label style="min-width: 200px;">Sidik Jari Ibu Bayi</label>
+                                        <label style="min-width: 200px;">Sidik Jari Bayi</label>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label class="form-label">Jari Kiri</label>
-                                                <div class="input-group">
-                                                    <input type="file" class="form-control"
-                                                        name="sidik_jari_kiri">
-                                                    @if($asesmen->rmeAsesmenPerinatology->sidik_jari_kiri ?? '')
-                                                        <div class="mt-2">
-                                                            <small class="text-success">File sudah diunggah sebelumnya</small>
-                                                        </div>
-                                                    @endif
+                                                <div class="input-group mb-2">
+                                                    <input type="file" 
+                                                        class="form-control @error('sidik_jari_bayi_kiri') is-invalid @enderror"
+                                                        name="sidik_jari_bayi_kiri">
                                                 </div>
+                                                @if($asesmen->rmeAsesmenPerinatology->sidik_jari_bayi_kiri ?? '')
+                                                    <div class="d-flex align-items-center mb-2">
+                                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                        <small class="text-success">File sudah diunggah sebelumnya</small>
+                                                        <a href="{{ Storage::url($asesmen->rmeAsesmenPerinatology->sidik_jari_bayi_kiri) }}"
+                                                        class="btn btn-sm btn-info ms-2" target="_blank">
+                                                            <i class="bi bi-eye"></i> Lihat
+                                                        </a>
+                                                    </div>
+                                                @endif
+                                                <small class="text-muted">Format: JPG, PNG, PDF | Maks: 10MB</small>
+                                                @error('sidik_jari_bayi_kiri')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">Jari Kanan</label>
-                                                <div class="input-group">
-                                                    <input type="file" class="form-control"
-                                                        name="sidik_jari_kanan">
-                                                    @if($asesmen->rmeAsesmenPerinatology->sidik_jari_kanan ?? '')
-                                                        <div class="mt-2">
-                                                            <small class="text-success">File sudah diunggah sebelumnya</small>
-                                                        </div>
-                                                    @endif
+                                                <div class="input-group mb-2">
+                                                    <input type="file" 
+                                                        class="form-control @error('sidik_jari_bayi_kanan') is-invalid @enderror"
+                                                        name="sidik_jari_bayi_kanan">
                                                 </div>
+                                                @if($asesmen->rmeAsesmenPerinatology->sidik_jari_bayi_kanan ?? '')
+                                                    <div class="d-flex align-items-center mb-2">
+                                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                        <small class="text-success">File sudah diunggah sebelumnya</small>
+                                                        <a href="{{ Storage::url($asesmen->rmeAsesmenPerinatology->sidik_jari_bayi_kanan) }}"
+                                                        class="btn btn-sm btn-info ms-2" target="_blank">
+                                                            <i class="bi bi-eye"></i> Lihat
+                                                        </a>
+                                                    </div>
+                                                @endif
+                                                <small class="text-muted">Format: JPG, PNG, PDF | Maks: 10MB</small>
+                                                @error('sidik_jari_bayi_kanan')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                         </div>
                                     </div>
@@ -418,10 +447,10 @@
                                             <div class="flex-grow-1">
                                                 <select class="form-select" name="status_frekuensi">
                                                     <option value="" selected disabled>--Pilih--</option>
-                                                    <option value="kuat" {{ $asesmen->rmeAsesmenPerinatologyFisik->status_frekuensi == 'kuat' ? 'selected' : '' }} >kuat</option>
-                                                    <option value="lemah" {{$asesmen->rmeAsesmenPerinatologyFisik->status_frekuensi == 'lemah' ? 'selected' : ''}} >lemah</option>
-                                                    <option value="teratur {{$asesmen->rmeAsesmenPerinatologyFisik->status_frekuensi == 'teratur' ? 'selected' : ''}} ">teratur</option>
-                                                    <option value="tidak teratur" {{$asesmen->rmeAsesmenPerinatologyFisik->status_frekuensi == 'tidak teratur' ? 'selected' : ''}} >tidak teratur</option>
+                                                    <option value="kuat" {{ optional($asesmen->rmeAsesmenPerinatologyFisik)->status_frekuensi == 'kuat' ? 'selected' : '' }} >kuat</option>
+                                                    <option value="lemah" {{ optional($asesmen->rmeAsesmenPerinatologyFisik)->status_frekuensi == 'lemah' ? 'selected' : ''}} >lemah</option>
+                                                    <option value="teratur" {{ optional($asesmen->rmeAsesmenPerinatologyFisik)->status_frekuensi == 'teratur' ? 'selected' : ''}} >teratur</option>
+                                                    <option value="tidak teratur" {{ optional($asesmen->rmeAsesmenPerinatologyFisik)->status_frekuensi == 'tidak teratur' ? 'selected' : ''}} >tidak teratur</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -511,7 +540,7 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Warna Kulit</label>
                                             <select class="form-select" name="warna_kulit">
-                                                <option value="" selected disabled>--Pilih--</option>
+                                                <option value="" selected>--Pilih--</option>
                                                 <option value="Pink" {{ $asesmen->rmeAsesmenPerinatologyPemeriksaanLanjut->warna_kulit == 'Pink' ? 'selected' : '' }}>Pink</option>
                                                 <option value="Kuning" {{ $asesmen->rmeAsesmenPerinatologyPemeriksaanLanjut->warna_kulit == 'Kuning' ? 'selected' : '' }}>Kuning</option>
                                                 <option value="Pucat" {{ $asesmen->rmeAsesmenPerinatologyPemeriksaanLanjut->warna_kulit == 'Pucat' ? 'selected' : '' }}>Pucat</option>
@@ -523,7 +552,7 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Sianosis</label>
                                             <select class="form-select" name="sianosis">
-                                                <option value="" selected disabled>--Pilih--</option>
+                                                <option value="" selected>--Pilih--</option>
                                                 <option value="Kuku" {{ $asesmen->rmeAsesmenPerinatologyPemeriksaanLanjut->sianosis == 'Kuku' ? 'selected' : '' }}>Kuku</option>
                                                 <option value="Sekitar Mulut" {{ $asesmen->rmeAsesmenPerinatologyPemeriksaanLanjut->sianosis == 'Sekitar Mulut' ? 'selected' : '' }}>Sekitar Mulut</option>
                                                 <option value="Sekitar Mata" {{ $asesmen->rmeAsesmenPerinatologyPemeriksaanLanjut->sianosis == 'Sekitar Mata' ? 'selected' : '' }}>Sekitar Mata</option>
@@ -1798,8 +1827,8 @@
                                     <div class="form-group mb-4">
                                         <select class="form-select" id="skalaRisikoDekubitus" name="jenis_skala_dekubitus">
                                             <option value="" disabled>--Pilih Skala--</option>
-                                            <option value="norton" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->jenis_skala == 1 ? 'selected' : '' }}>Skala Norton</option>
-                                            <option value="braden" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->jenis_skala == 2 ? 'selected' : '' }}>Skala Braden</option>
+                                            <option value="norton" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->jenis_skala == 1 ? 'selected' : '' }}>Skala Norton</option>
+                                            <option value="braden" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->jenis_skala == 2 ? 'selected' : '' }}>Skala Braden</option>
                                         </select>
                                     </div>
 
@@ -1811,10 +1840,10 @@
                                             <label class="form-label">Kondisi Fisik</label>
                                             <select class="form-select bg-light" name="kondisi_fisik">
                                                 <option value="" disabled>--Pilih--</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->norton_kondisi_fisik == '4' ? 'selected' : '' }}>Baik</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->norton_kondisi_fisik == '3' ? 'selected' : '' }}>Sedang</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->norton_kondisi_fisik == '2' ? 'selected' : '' }}>Buruk</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->norton_kondisi_fisik == '1' ? 'selected' : '' }}>Sangat Buruk</option>
+                                                <option value="4" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->norton_kondisi_fisik == '4' ? 'selected' : '' }}>Baik</option>
+                                                <option value="3" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->norton_kondisi_fisik == '3' ? 'selected' : '' }}>Sedang</option>
+                                                <option value="2" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->norton_kondisi_fisik == '2' ? 'selected' : '' }}>Buruk</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->norton_kondisi_fisik == '1' ? 'selected' : '' }}>Sangat Buruk</option>
                                             </select>
                                         </div>
 
@@ -1822,10 +1851,10 @@
                                             <label class="form-label">Kondisi mental</label>
                                             <select class="form-select bg-light" name="kondisi_mental">
                                                 <option value="" disabled>--Pilih--</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->norton_kondisi_mental == '4' ? 'selected' : '' }}>Sadar</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->norton_kondisi_mental == '3' ? 'selected' : '' }}>Apatis</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->norton_kondisi_mental == '2' ? 'selected' : '' }}>Bingung</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->norton_kondisi_mental == '1' ? 'selected' : '' }}>Stupor</option>
+                                                <option value="4" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->norton_kondisi_mental == '4' ? 'selected' : '' }}>Sadar</option>
+                                                <option value="3" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->norton_kondisi_mental == '3' ? 'selected' : '' }}>Apatis</option>
+                                                <option value="2" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->norton_kondisi_mental == '2' ? 'selected' : '' }}>Bingung</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->norton_kondisi_mental == '1' ? 'selected' : '' }}>Stupor</option>
                                             </select>
                                         </div>
 
@@ -1833,10 +1862,10 @@
                                             <label class="form-label">Aktivitas</label>
                                             <select class="form-select bg-light" name="norton_aktivitas">
                                                 <option value="" disabled>--Pilih--</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->norton_aktivitas == '4' ? 'selected' : '' }}>Aktif</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->norton_aktivitas == '3' ? 'selected' : '' }}>Jalan dengan bantuan</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->norton_aktivitas == '2' ? 'selected' : '' }}>Terbatas di kursi</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->norton_aktivitas == '1' ? 'selected' : '' }}>Terbatas di tempat tidur</option>
+                                                <option value="4" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->norton_aktivitas == '4' ? 'selected' : '' }}>Aktif</option>
+                                                <option value="3" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->norton_aktivitas == '3' ? 'selected' : '' }}>Jalan dengan bantuan</option>
+                                                <option value="2" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->norton_aktivitas == '2' ? 'selected' : '' }}>Terbatas di kursi</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->norton_aktivitas == '1' ? 'selected' : '' }}>Terbatas di tempat tidur</option>
                                             </select>
                                         </div>
 
@@ -1844,10 +1873,10 @@
                                             <label class="form-label">Mobilitas</label>
                                             <select class="form-select bg-light" name="norton_mobilitas">
                                                 <option value="" disabled>--Pilih--</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->norton_mobilitas == '4' ? 'selected' : '' }}>Bebas bergerak</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->norton_mobilitas == '3' ? 'selected' : '' }}>Agak terbatas</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->norton_mobilitas == '2' ? 'selected' : '' }}>Sangat terbatas</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->norton_mobilitas == '1' ? 'selected' : '' }}>Tidak dapat bergerak</option>
+                                                <option value="4" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->norton_mobilitas == '4' ? 'selected' : '' }}>Bebas bergerak</option>
+                                                <option value="3" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->norton_mobilitas == '3' ? 'selected' : '' }}>Agak terbatas</option>
+                                                <option value="2" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->norton_mobilitas == '2' ? 'selected' : '' }}>Sangat terbatas</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->norton_mobilitas == '1' ? 'selected' : '' }}>Tidak dapat bergerak</option>
                                             </select>
                                         </div>
 
@@ -1855,10 +1884,10 @@
                                             <label class="form-label">Inkontinensia</label>
                                             <select class="form-select bg-light" name="inkontinensia">
                                                 <option value="" disabled>--Pilih--</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->norton_inkontenesia == '4' ? 'selected' : '' }}>Tidak ada</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->norton_inkontenesia == '3' ? 'selected' : '' }}>Kadang-kadang</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->norton_inkontenesia == '2' ? 'selected' : '' }}>Biasanya urin</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->norton_inkontenesia == '1' ? 'selected' : '' }}>Urin dan feses</option>
+                                                <option value="4" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->norton_inkontenesia == '4' ? 'selected' : '' }}>Tidak ada</option>
+                                                <option value="3" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->norton_inkontenesia == '3' ? 'selected' : '' }}>Kadang-kadang</option>
+                                                <option value="2" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->norton_inkontenesia == '2' ? 'selected' : '' }}>Biasanya urin</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->norton_inkontenesia == '1' ? 'selected' : '' }}>Urin dan feses</option>
                                             </select>
                                         </div>
 
@@ -1866,8 +1895,8 @@
                                             <div class="d-flex gap-2">
                                                 <span class="fw-bold">Kesimpulan :</span>
                                                 <div id="kesimpulanNorton"
-                                                    class="alert {{ strpos($asesmen->rmeAsesmenPerinatologyResikoDekubitus->decubitus_kesimpulan ?? '', 'Tinggi') !== false ? 'alert-danger' : (strpos($asesmen->rmeAsesmenPerinatologyResikoDekubitus->decubitus_kesimpulan ?? '', 'Sedang') !== false ? 'alert-warning' : 'alert-success') }} mb-0 flex-grow-1">
-                                                    {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->decubitus_kesimpulan ?? 'Risiko Rendah' }}
+                                                    class="alert {{ strpos(optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->decubitus_kesimpulan ?? '', 'Tinggi') !== false ? 'alert-danger' : (strpos(optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->decubitus_kesimpulan ?? '', 'Sedang') !== false ? 'alert-warning' : 'alert-success') }} mb-0 flex-grow-1">
+                                                    {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->decubitus_kesimpulan ?? 'Risiko Rendah' }}
                                                 </div>
                                             </div>
                                         </div>
@@ -1880,10 +1909,10 @@
                                             <label class="form-label">Persepsi Sensori</label>
                                             <select class="form-select bg-light" name="persepsi_sensori">
                                                 <option value="" disabled>--Pilih--</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_persepsi == '1' ? 'selected' : '' }}>Keterbatasan Penuh</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_persepsi == '2' ? 'selected' : '' }}>Sangat Terbatas</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_persepsi == '3' ? 'selected' : '' }}>Keterbatasan Ringan</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_persepsi == '4' ? 'selected' : '' }}>Tidak Ada Gangguan</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_persepsi == '1' ? 'selected' : '' }}>Keterbatasan Penuh</option>
+                                                <option value="2" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_persepsi == '2' ? 'selected' : '' }}>Sangat Terbatas</option>
+                                                <option value="3" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_persepsi == '3' ? 'selected' : '' }}>Keterbatasan Ringan</option>
+                                                <option value="4" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_persepsi == '4' ? 'selected' : '' }}>Tidak Ada Gangguan</option>
                                             </select>
                                         </div>
 
@@ -1891,10 +1920,10 @@
                                             <label class="form-label">Kelembapan</label>
                                             <select class="form-select bg-light" name="kelembapan">
                                                 <option value="" disabled>--Pilih--</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_kelembapan == '1' ? 'selected' : '' }}>Selalu Lembap</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_kelembapan == '2' ? 'selected' : '' }}>Umumnya Lembap</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_kelembapan == '3' ? 'selected' : '' }}>Kadang-Kadang Lembap</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_kelembapan == '4' ? 'selected' : '' }}>Jarang Lembap</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_kelembapan == '1' ? 'selected' : '' }}>Selalu Lembap</option>
+                                                <option value="2" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_kelembapan == '2' ? 'selected' : '' }}>Umumnya Lembap</option>
+                                                <option value="3" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_kelembapan == '3' ? 'selected' : '' }}>Kadang-Kadang Lembap</option>
+                                                <option value="4" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_kelembapan == '4' ? 'selected' : '' }}>Jarang Lembap</option>
                                             </select>
                                         </div>
 
@@ -1902,10 +1931,10 @@
                                             <label class="form-label">Aktivitas</label>
                                             <select class="form-select bg-light" name="braden_aktivitas">
                                                 <option value="" disabled>--Pilih--</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_aktivitas == '1' ? 'selected' : '' }}>Total di Tempat Tidur</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_aktivitas == '2' ? 'selected' : '' }}>Dapat Duduk</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_aktivitas == '3' ? 'selected' : '' }}>Berjalan Kadang-kadang</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_aktivitas == '4' ? 'selected' : '' }}>Dapat Berjalan-jalan</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_aktivitas == '1' ? 'selected' : '' }}>Total di Tempat Tidur</option>
+                                                <option value="2" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_aktivitas == '2' ? 'selected' : '' }}>Dapat Duduk</option>
+                                                <option value="3" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_aktivitas == '3' ? 'selected' : '' }}>Berjalan Kadang-kadang</option>
+                                                <option value="4" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_aktivitas == '4' ? 'selected' : '' }}>Dapat Berjalan-jalan</option>
                                             </select>
                                         </div>
 
@@ -1913,10 +1942,10 @@
                                             <label class="form-label">Mobilitas</label>
                                             <select class="form-select bg-light" name="braden_mobilitas">
                                                 <option value="" disabled>--Pilih--</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_mobilitas == '1' ? 'selected' : '' }}>Tidak Mampu Bergerak Sama sekali</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_mobilitas == '2' ? 'selected' : '' }}>Sangat Terbatas</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_mobilitas == '3' ? 'selected' : '' }}>Tidak Ada Masalah</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_mobilitas == '4' ? 'selected' : '' }}>Tanpa Keterbatasan</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_mobilitas == '1' ? 'selected' : '' }}>Tidak Mampu Bergerak Sama sekali</option>
+                                                <option value="2" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_mobilitas == '2' ? 'selected' : '' }}>Sangat Terbatas</option>
+                                                <option value="3" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_mobilitas == '3' ? 'selected' : '' }}>Tidak Ada Masalah</option>
+                                                <option value="4" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_mobilitas == '4' ? 'selected' : '' }}>Tanpa Keterbatasan</option>
                                             </select>
                                         </div>
 
@@ -1924,10 +1953,10 @@
                                             <label class="form-label">Nutrisi</label>
                                             <select class="form-select bg-light" name="nutrisi">
                                                 <option value="" disabled>--Pilih--</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_nutrisi == '1' ? 'selected' : '' }}>Sangat Buruk</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_nutrisi == '2' ? 'selected' : '' }}>Kurang Menucukup</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_nutrisi == '3' ? 'selected' : '' }}>Mencukupi</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_nutrisi == '4' ? 'selected' : '' }}>Sangat Baik</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_nutrisi == '1' ? 'selected' : '' }}>Sangat Buruk</option>
+                                                <option value="2" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_nutrisi == '2' ? 'selected' : '' }}>Kurang Menucukup</option>
+                                                <option value="3" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_nutrisi == '3' ? 'selected' : '' }}>Mencukupi</option>
+                                                <option value="4" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_nutrisi == '4' ? 'selected' : '' }}>Sangat Baik</option>
                                             </select>
                                         </div>
 
@@ -1935,9 +1964,9 @@
                                             <label class="form-label">Pergesekan dan Pergeseran</label>
                                             <select class="form-select bg-light" name="pergesekan">
                                                 <option value="" disabled>--Pilih--</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_pergesekan == '1' ? 'selected' : '' }}>Bermasalah</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_pergesekan == '2' ? 'selected' : '' }}>Potensial Bermasalah</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->braden_pergesekan == '3' ? 'selected' : '' }}>Keterbatasan Ringan</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_pergesekan == '1' ? 'selected' : '' }}>Bermasalah</option>
+                                                <option value="2" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_pergesekan == '2' ? 'selected' : '' }}>Potensial Bermasalah</option>
+                                                <option value="3" {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->braden_pergesekan == '3' ? 'selected' : '' }}>Keterbatasan Ringan</option>
                                             </select>
                                         </div>
 
@@ -1945,8 +1974,8 @@
                                             <div class="d-flex gap-2">
                                                 <span class="fw-bold">Kesimpulan :</span>
                                                 <div id="kesimpulanBraden"
-                                                    class="alert {{ strpos($asesmen->rmeAsesmenPerinatologyResikoDekubitus->decubitus_kesimpulan ?? '', 'Tinggi') !== false ? 'alert-danger' : (strpos($asesmen->rmeAsesmenPerinatologyResikoDekubitus->decubitus_kesimpulan ?? '', 'Sedang') !== false ? 'alert-warning' : 'alert-success') }} mb-0 flex-grow-1">
-                                                    {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->decubitus_kesimpulan ?? 'Kesimpulan Skala Braden' }}
+                                                    class="alert {{ strpos(optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->decubitus_kesimpulan ?? '', 'Tinggi') !== false ? 'alert-danger' : (strpos(optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->decubitus_kesimpulan ?? '', 'Sedang') !== false ? 'alert-warning' : 'alert-success') }} mb-0 flex-grow-1">
+                                                    {{ optional($asesmen->rmeAsesmenPerinatologyResikoDekubitus)->decubitus_kesimpulan ?? 'Kesimpulan Skala Braden' }}
                                                 </div>
                                             </div>
                                         </div>
@@ -1959,10 +1988,10 @@
                                     <div class="form-group mb-4">
                                         <select class="form-select" name="gizi_jenis" id="nutritionAssessment">
                                             <option value="">--Pilih--</option>
-                                            <option value="1" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_jenis == 1 ? 'selected' : '' }}>Malnutrition Screening Tool (MST)</option>
-                                            <option value="2" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_jenis == 2 ? 'selected' : '' }}>The Mini Nutritional Assessment (MNA)</option>
-                                            <option value="3" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_jenis == 3 ? 'selected' : '' }}>Strong Kids (1 bln - 18 Tahun)</option>
-                                            <option value="5" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_jenis == 5 ? 'selected' : '' }}>Tidak Dapat Dinilai</option>
+                                            <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_jenis == 1 ? 'selected' : '' }}>Malnutrition Screening Tool (MST)</option>
+                                            <option value="2" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_jenis == 2 ? 'selected' : '' }}>The Mini Nutritional Assessment (MNA)</option>
+                                            <option value="3" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_jenis == 3 ? 'selected' : '' }}>Strong Kids (1 bln - 18 Tahun)</option>
+                                            <option value="5" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_jenis == 5 ? 'selected' : '' }}>Tidak Dapat Dinilai</option>
                                         </select>
                                     </div>
 
@@ -1973,42 +2002,42 @@
                                             <label class="form-label">Apakah pasien mengalami penurunan BB yang tidak diinginkan dalam 6 bulan terakhir?</label>
                                             <select class="form-select" name="gizi_mst_penurunan_bb">
                                                 <option value="">pilih</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mst_penurunan_bb == '0' ? 'selected' : '' }}>Tidak ada penurunan Berat Badan (BB)</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mst_penurunan_bb == '2' ? 'selected' : '' }}>Tidak yakin/ tidak tahu/ terasa baju lebi longgar</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mst_penurunan_bb == '3' ? 'selected' : '' }}>Ya ada penurunan BB</option>
+                                                <option value="0" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mst_penurunan_bb == '0' ? 'selected' : '' }}>Tidak ada penurunan Berat Badan (BB)</option>
+                                                <option value="2" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mst_penurunan_bb == '2' ? 'selected' : '' }}>Tidak yakin/ tidak tahu/ terasa baju lebi longgar</option>
+                                                <option value="3" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mst_penurunan_bb == '3' ? 'selected' : '' }}>Ya ada penurunan BB</option>
                                             </select>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Jika jawaban di atas "Ya ada penurunan BB", berapa penurunan BB tersebut?</label>
                                             <select class="form-select" name="gizi_mst_jumlah_penurunan_bb">
                                                 <option value="0">pilih</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mst_jumlah_penurunan_bb == '1' ? 'selected' : '' }}>1-5 kg</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mst_jumlah_penurunan_bb == '2' ? 'selected' : '' }}>6-10 kg</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mst_jumlah_penurunan_bb == '3' ? 'selected' : '' }}>11-15 kg</option>
-                                                <option value="4" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mst_jumlah_penurunan_bb == '4' ? 'selected' : '' }}>>15 kg</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mst_jumlah_penurunan_bb == '1' ? 'selected' : '' }}>1-5 kg</option>
+                                                <option value="2" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mst_jumlah_penurunan_bb == '2' ? 'selected' : '' }}>6-10 kg</option>
+                                                <option value="3" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mst_jumlah_penurunan_bb == '3' ? 'selected' : '' }}>11-15 kg</option>
+                                                <option value="4" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mst_jumlah_penurunan_bb == '4' ? 'selected' : '' }}>>15 kg</option>
                                             </select>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Apakah asupan makan berkurang karena tidak nafsu makan?</label>
                                             <select class="form-select" name="gizi_mst_nafsu_makan_berkurang">
                                                 <option value="">pilih</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mst_nafsu_makan_berkurang == '1' ? 'selected' : '' }}>Ya</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mst_nafsu_makan_berkurang == '0' ? 'selected' : '' }}>Tidak</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mst_nafsu_makan_berkurang == '1' ? 'selected' : '' }}>Ya</option>
+                                                <option value="0" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mst_nafsu_makan_berkurang == '0' ? 'selected' : '' }}>Tidak</option>
                                             </select>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Pasien didiagnosa khusus seperti: DM, Cancer (kemoterapi), Geriatri, GGk (hemodialisis), Penurunan Imun</label>
                                             <select class="form-select" name="gizi_mst_diagnosis_khusus">
                                                 <option value="">pilih</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mst_diagnosis_khusus == '1' ? 'selected' : '' }}>Ya</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mst_diagnosis_khusus == '0' ? 'selected' : '' }}>Tidak</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mst_diagnosis_khusus == '1' ? 'selected' : '' }}>Ya</option>
+                                                <option value="0" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mst_diagnosis_khusus == '0' ? 'selected' : '' }}>Tidak</option>
                                             </select>
                                         </div>
                                         <!-- Nilai -->
                                         <div id="mstConclusion" class="risk-indicators mt-4">
                                             <div class="alert alert-success">Kesimpulan: 0-1 tidak berisiko malnutrisi</div>
                                             <div class="alert alert-warning">Kesimpulan: ≥ 2 berisiko malnutrisi</div>
-                                            <input type="hidden" name="gizi_mst_kesimpulan" id="gizi_mst_kesimpulan" value="{{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mst_kesimpulan }}">
+                                            <input type="hidden" name="gizi_mst_kesimpulan" id="gizi_mst_kesimpulan" value="{{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mst_kesimpulan }}">
                                         </div>
                                     </div>
 
@@ -2022,9 +2051,9 @@
                                             </label>
                                             <select class="form-select" name="gizi_mna_penurunan_asupan_3_bulan">
                                                 <option value="">--Pilih--</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_penurunan_asupan_3_bulan == '0' ? 'selected' : '' }}>Mengalami penurunan asupan makanan yang parah</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_penurunan_asupan_3_bulan == '1' ? 'selected' : '' }}>Mengalami penurunan asupan makanan sedang</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_penurunan_asupan_3_bulan == '2' ? 'selected' : '' }}>Tidak mengalami penurunan asupan makanan</option>
+                                                <option value="0" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_penurunan_asupan_3_bulan == '0' ? 'selected' : '' }}>Mengalami penurunan asupan makanan yang parah</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_penurunan_asupan_3_bulan == '1' ? 'selected' : '' }}>Mengalami penurunan asupan makanan sedang</option>
+                                                <option value="2" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_penurunan_asupan_3_bulan == '2' ? 'selected' : '' }}>Tidak mengalami penurunan asupan makanan</option>
                                             </select>
                                         </div>
 
@@ -2034,10 +2063,10 @@
                                             </label>
                                             <select class="form-select" name="gizi_mna_kehilangan_bb_3_bulan">
                                                 <option value="">-- Pilih --</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_kehilangan_bb_3_bulan == '0' ? 'selected' : '' }}>Kehilangan BB lebih dari 3 Kg</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_kehilangan_bb_3_bulan == '1' ? 'selected' : '' }}>Tidak tahu</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_kehilangan_bb_3_bulan == '2' ? 'selected' : '' }}>Kehilangan BB antara 1 s.d 3 Kg</option>
-                                                <option value="3" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_kehilangan_bb_3_bulan == '3' ? 'selected' : '' }}>Tidak ada kehilangan BB</option>
+                                                <option value="0" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_kehilangan_bb_3_bulan == '0' ? 'selected' : '' }}>Kehilangan BB lebih dari 3 Kg</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_kehilangan_bb_3_bulan == '1' ? 'selected' : '' }}>Tidak tahu</option>
+                                                <option value="2" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_kehilangan_bb_3_bulan == '2' ? 'selected' : '' }}>Kehilangan BB antara 1 s.d 3 Kg</option>
+                                                <option value="3" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_kehilangan_bb_3_bulan == '3' ? 'selected' : '' }}>Tidak ada kehilangan BB</option>
                                             </select>
                                         </div>
 
@@ -2045,9 +2074,9 @@
                                             <label class="form-label">Bagaimana mobilisasi atau pergerakan pasien?</label>
                                             <select class="form-select" name="gizi_mna_mobilisasi">
                                                 <option value="">-- Pilih --</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_mobilisasi == '0' ? 'selected' : '' }}>Hanya di tempat tidur atau kursi roda</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_mobilisasi == '1' ? 'selected' : '' }}>Dapat turun dari tempat tidur tapi tidak dapat jalan-jalan</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_mobilisasi == '2' ? 'selected' : '' }}>Dapat jalan-jalan</option>
+                                                <option value="0" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_mobilisasi == '0' ? 'selected' : '' }}>Hanya di tempat tidur atau kursi roda</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_mobilisasi == '1' ? 'selected' : '' }}>Dapat turun dari tempat tidur tapi tidak dapat jalan-jalan</option>
+                                                <option value="2" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_mobilisasi == '2' ? 'selected' : '' }}>Dapat jalan-jalan</option>
                                             </select>
                                         </div>
 
@@ -2057,8 +2086,8 @@
                                             </label>
                                             <select class="form-select" name="gizi_mna_stress_penyakit_akut">
                                                 <option value="">-- Pilih --</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_stress_penyakit_akut == '0' ? 'selected' : '' }}>Ya</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_stress_penyakit_akut == '1' ? 'selected' : '' }}>Tidak</option>
+                                                <option value="0" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_stress_penyakit_akut == '0' ? 'selected' : '' }}>Ya</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_stress_penyakit_akut == '1' ? 'selected' : '' }}>Tidak</option>
                                             </select>
                                         </div>
 
@@ -2066,20 +2095,20 @@
                                             <label class="form-label">Apakah pasien mengalami masalah neuropsikologi?</label>
                                             <select class="form-select" name="gizi_mna_status_neuropsikologi">
                                                 <option value="">-- Pilih --</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_status_neuropsikologi == '0' ? 'selected' : '' }}>Demensia atau depresi berat</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_status_neuropsikologi == '1' ? 'selected' : '' }}>Demensia ringan</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_status_neuropsikologi == '2' ? 'selected' : '' }}>Tidak mengalami masalah neuropsikologi</option>
+                                                <option value="0" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_status_neuropsikologi == '0' ? 'selected' : '' }}>Demensia atau depresi berat</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_status_neuropsikologi == '1' ? 'selected' : '' }}>Demensia ringan</option>
+                                                <option value="2" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_status_neuropsikologi == '2' ? 'selected' : '' }}>Tidak mengalami masalah neuropsikologi</option>
                                             </select>
                                         </div>
 
                                         <div class="mb-3">
                                             <label class="form-label">Berapa Berat Badan (BB) pasien? (Kg)</label>
-                                            <input type="number" name="gizi_mna_berat_badan" class="form-control" id="mnaWeight" min="1" step="0.1" placeholder="Masukkan berat badan dalam Kg" value="{{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_berat_badan }}">
+                                            <input type="number" name="gizi_mna_berat_badan" class="form-control" id="mnaWeight" min="1" step="0.1" placeholder="Masukkan berat badan dalam Kg" value="{{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_berat_badan }}">
                                         </div>
 
                                         <div class="mb-3">
                                             <label class="form-label">Berapa Tinggi Badan (TB) pasien? (cm)</label>
-                                            <input type="number" name="gizi_mna_tinggi_badan" class="form-control" id="mnaHeight" min="1" step="0.1" placeholder="Masukkan tinggi badan dalam cm" value="{{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_tinggi_badan }}">
+                                            <input type="number" name="gizi_mna_tinggi_badan" class="form-control" id="mnaHeight" min="1" step="0.1" placeholder="Masukkan tinggi badan dalam cm" value="{{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_tinggi_badan }}">
                                         </div>
 
                                         <!-- IMT -->
@@ -2088,21 +2117,21 @@
                                             <div class="text-muted small mb-2">
                                                 <i>Rumus IMT = BB (Kg) / (TB (m))²</i>
                                             </div>
-                                            <input type="number" name="gizi_mna_imt" class="form-control bg-light" id="mnaBMI" readonly placeholder="IMT akan terhitung otomatis" value="{{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_imt }}">
+                                            <input type="number" name="gizi_mna_imt" class="form-control bg-light" id="mnaBMI" readonly placeholder="IMT akan terhitung otomatis" value="{{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_imt }}">
                                         </div>
 
                                         <!-- Kesimpulan -->
                                         <div id="mnaConclusion" class="risk-indicators mt-4">
-                                            <div class="alert alert-info mb-3" style="{{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_kesimpulan ? 'display: none;' : '' }}">
+                                            <div class="alert alert-info mb-3" style="{{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_kesimpulan ? 'display: none;' : '' }}">
                                                 Silakan isi semua parameter di atas untuk melihat kesimpulan
                                             </div>
-                                            <div class="alert alert-success" style="{{ strpos($asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_kesimpulan ?? '', 'Tidak Beresiko') !== false ? '' : 'display: none;' }}">
+                                            <div class="alert alert-success" style="{{ strpos(optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_kesimpulan ?? '', 'Tidak Beresiko') !== false ? '' : 'display: none;' }}">
                                                 Kesimpulan: Total Skor ≥ 12 (Tidak Beresiko Malnutrisi)
                                             </div>
-                                            <div class="alert alert-warning" style="{{ strpos($asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_kesimpulan ?? '', 'Beresiko') !== false ? '' : 'display: none;' }}">
+                                            <div class="alert alert-warning" style="{{ strpos(optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_kesimpulan ?? '', 'Beresiko') !== false ? '' : 'display: none;' }}">
                                                 Kesimpulan: Total Skor ≤ 11 (Beresiko Malnutrisi)
                                             </div>
-                                            <input type="hidden" name="gizi_mna_kesimpulan" id="gizi_mna_kesimpulan" value="{{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_mna_kesimpulan }}">
+                                            <input type="hidden" name="gizi_mna_kesimpulan" id="gizi_mna_kesimpulan" value="{{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_mna_kesimpulan }}">
                                         </div>
                                     </div>
 
@@ -2113,8 +2142,8 @@
                                             <label class="form-label">Apakah anak tampa kurus kehilangan lemak subkutan, kehilangan massa otot, dan/ atau wajah cekung?</label>
                                             <select class="form-select" name="gizi_strong_status_kurus">
                                                 <option value="">pilih</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_strong_status_kurus == '1' ? 'selected' : '' }}>Ya</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_strong_status_kurus == '0' ? 'selected' : '' }}>Tidak</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_strong_status_kurus == '1' ? 'selected' : '' }}>Ya</option>
+                                                <option value="0" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_strong_status_kurus == '0' ? 'selected' : '' }}>Tidak</option>
                                             </select>
                                         </div>
                                         <div class="mb-3">
@@ -2122,8 +2151,8 @@
                                                 (berdasarkan penilaian objektif data BB bila ada/penilaian subjektif dari orang tua pasien ATAU tidak ada peningkatan berat badan atau tinggi badan (pada bayi < 1 tahun) selama 3 bulan terakhir)</label>
                                             <select class="form-select" name="gizi_strong_penurunan_bb">
                                                 <option value="">pilih</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_strong_penurunan_bb == '1' ? 'selected' : '' }}>Ya</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_strong_penurunan_bb == '0' ? 'selected' : '' }}>Tidak</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_strong_penurunan_bb == '1' ? 'selected' : '' }}>Ya</option>
+                                                <option value="0" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_strong_penurunan_bb == '0' ? 'selected' : '' }}>Tidak</option>
                                             </select>
                                         </div>
 
@@ -2134,8 +2163,8 @@
                                                 - Intervensi gizi yang sudah ada sebelumnya (misalnya, ONS atau pemberian maka selang)</label>
                                             <select class="form-select" name="gizi_strong_gangguan_pencernaan">
                                                 <option value="">pilih</option>
-                                                <option value="1" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_strong_gangguan_pencernaan == '1' ? 'selected' : '' }}>Ya</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_strong_gangguan_pencernaan == '0' ? 'selected' : '' }}>Tidak</option>
+                                                <option value="1" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_strong_gangguan_pencernaan == '1' ? 'selected' : '' }}>Ya</option>
+                                                <option value="0" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_strong_gangguan_pencernaan == '0' ? 'selected' : '' }}>Tidak</option>
                                             </select>
                                         </div>
                                         <div class="mb-3">
@@ -2143,16 +2172,16 @@
                                                 <a href="#"><i>Lihat penyakit yang berisiko malnutrisi</i></a></label>
                                             <select class="form-select" name="gizi_strong_penyakit_berisiko">
                                                 <option value="">pilih</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_strong_penyakit_berisiko == '2' ? 'selected' : '' }}>Ya</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_strong_penyakit_berisiko == '0' ? 'selected' : '' }}>Tidak</option>
+                                                <option value="2" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_strong_penyakit_berisiko == '2' ? 'selected' : '' }}>Ya</option>
+                                                <option value="0" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_strong_penyakit_berisiko == '0' ? 'selected' : '' }}>Tidak</option>
                                             </select>
                                         </div>
                                         <!-- Nilai -->
                                         <div id="strongKidsConclusion" class="risk-indicators mt-4">
-                                            <div class="alert alert-success" style="{{ strpos($asesmen->rmeAsesmenPerinatologyGizi->gizi_strong_kesimpulan ?? '', 'rendah') !== false ? '' : 'display: none;' }}">Kesimpulan: 0 (Beresiko rendah)</div>
-                                            <div class="alert alert-warning" style="{{ strpos($asesmen->rmeAsesmenPerinatologyGizi->gizi_strong_kesimpulan ?? '', 'sedang') !== false ? '' : 'display: none;' }}">Kesimpulan: 1-3 (Beresiko sedang)</div>
-                                            <div class="alert alert-danger" style="{{ strpos($asesmen->rmeAsesmenPerinatologyGizi->gizi_strong_kesimpulan ?? '', 'Tinggi') !== false ? '' : 'display: none;' }}">Kesimpulan: 4-5 (Beresiko Tinggi)</div>
-                                            <input type="hidden" name="gizi_strong_kesimpulan" id="gizi_strong_kesimpulan" value="{{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_strong_kesimpulan }}">
+                                            <div class="alert alert-success" style="{{ strpos(optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_strong_kesimpulan ?? '', 'rendah') !== false ? '' : 'display: none;' }}">Kesimpulan: 0 (Beresiko rendah)</div>
+                                            <div class="alert alert-warning" style="{{ strpos(optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_strong_kesimpulan ?? '', 'sedang') !== false ? '' : 'display: none;' }}">Kesimpulan: 1-3 (Beresiko sedang)</div>
+                                            <div class="alert alert-danger" style="{{ strpos(optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_strong_kesimpulan ?? '', 'Tinggi') !== false ? '' : 'display: none;' }}">Kesimpulan: 4-5 (Beresiko Tinggi)</div>
+                                            <input type="hidden" name="gizi_strong_kesimpulan" id="gizi_strong_kesimpulan" value="{{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_strong_kesimpulan }}">
                                         </div>
                                     </div>
 
@@ -2165,8 +2194,8 @@
                                             <label class="form-label">Apakah pasien datang kerumah sakit karena jatuh?</label>
                                             <select class="form-select" name="gizi_nrs_jatuh_saat_masuk_rs">
                                                 <option value="">pilih</option>
-                                                <option value="2" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_nrs_jatuh_saat_masuk_rs == '2' ? 'selected' : '' }}>Ya</option>
-                                                <option value="0" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_nrs_jatuh_saat_masuk_rs == '0' ? 'selected' : '' }}>Tidak</option>
+                                                <option value="2" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_nrs_jatuh_saat_masuk_rs == '2' ? 'selected' : '' }}>Ya</option>
+                                                <option value="0" {{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_nrs_jatuh_saat_masuk_rs == '0' ? 'selected' : '' }}>Tidak</option>
                                             </select>
                                         </div>
 
@@ -2174,53 +2203,49 @@
 
                                         <!-- Nilai -->
                                         <div id="nrsConclusion" class="risk-indicators mt-4">
-                                            <div class="alert alert-success" style="{{ strpos($asesmen->rmeAsesmenPerinatologyGizi->gizi_nrs_kesimpulan ?? '', 'rendah') !== false ? '' : 'display: none;' }}">Kesimpulan: Beresiko rendah</div>
-                                            <div class="alert alert-warning" style="{{ strpos($asesmen->rmeAsesmenPerinatologyGizi->gizi_nrs_kesimpulan ?? '', 'sedang') !== false ? '' : 'display: none;' }}">Kesimpulan: Beresiko sedang</div>
-                                            <div class="alert alert-danger" style="{{ strpos($asesmen->rmeAsesmenPerinatologyGizi->gizi_nrs_kesimpulan ?? '', 'Tinggi') !== false ? '' : 'display: none;' }}">Kesimpulan: Beresiko Tinggi</div>
-                                            <input type="hidden" name="gizi_nrs_kesimpulan" id="gizi_nrs_kesimpulan" value="{{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_nrs_kesimpulan }}">
+                                            <div class="alert alert-success" style="{{ strpos(optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_nrs_kesimpulan ?? '', 'rendah') !== false ? '' : 'display: none;' }}">Kesimpulan: Beresiko rendah</div>
+                                            <div class="alert alert-warning" style="{{ strpos(optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_nrs_kesimpulan ?? '', 'sedang') !== false ? '' : 'display: none;' }}">Kesimpulan: Beresiko sedang</div>
+                                            <div class="alert alert-danger" style="{{ strpos(optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_nrs_kesimpulan ?? '', 'Tinggi') !== false ? '' : 'display: none;' }}">Kesimpulan: Beresiko Tinggi</div>
+                                            <input type="hidden" name="gizi_nrs_kesimpulan" id="gizi_nrs_kesimpulan" value="{{ optional($asesmen->rmeAsesmenPerinatologyGizi)->gizi_nrs_kesimpulan }}">
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- 11. Status Fungsional -->
                                 <div class="section-separator" id="status-fungsional">
-                                    <h5 class="section-title">11. Status Fungsional</h5>
+                                        <h5 class="section-title">11. Status Fungsional</h5>
 
-                                    <div class="mb-4">
-                                        <label class="form-label">Pilih jenis Skala Pengkajian Aktivitas Harian (ADL) sesuai kondisi pasien</label>
-                                        <select class="form-select" name="skala_fungsional" id="skala_fungsional">
-                                            <option value="" disabled selected>Pilih Skala Fungsional</option>
-                                            <option value="Pengkajian Aktivitas" {{ isset($asesmen->rmeAsesmenPerinatologyFungsional) && $asesmen->rmeAsesmenPerinatologyFungsional->jenis_skala == 1 ? 'selected' : '' }}>Pengkajian Aktivitas Harian</option>
-                                            <option value="Lainnya" {{ isset($asesmen->rmeAsesmenPerinatologyFungsional) && $asesmen->rmeAsesmenPerinatologyFungsional->jenis_skala == 2 ? 'selected' : '' }}>Lainnya</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Nilai Skala ADL</label>
-                                        <input type="text" class="form-control" id="adl_total" name="adl_total" readonly value="{{ isset($asesmen->rmeAsesmenPerinatologyFungsional) ? $asesmen->rmeAsesmenPerinatologyFungsional->nilai_skala_adl : '' }}">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Kesimpulan Fungsional</label>
-                                        <div id="adl_kesimpulan" class="alert {{ isset($asesmen->rmeAsesmenPerinatologyFungsional) && $asesmen->rmeAsesmenPerinatologyFungsional->kesimpulan_fungsional ?
-                                            (strpos($asesmen->rmeAsesmenPerinatologyFungsional->kesimpulan_fungsional, 'Ketergantungan Total') !== false ? 'alert-danger' :
-                                            (strpos($asesmen->rmeAsesmenPerinatologyFungsional->kesimpulan_fungsional, 'Ketergantungan Berat') !== false ? 'alert-warning' :
-                                            (strpos($asesmen->rmeAsesmenPerinatologyFungsional->kesimpulan_fungsional, 'Ketergantungan Sedang') !== false ? 'alert-info' : 'alert-success')))
-                                            : 'alert-info' }}">
-                                            {{ isset($asesmen->rmeAsesmenPerinatologyFungsional) && $asesmen->rmeAsesmenPerinatologyFungsional->kesimpulan_fungsional ? $asesmen->rmeAsesmenPerinatologyFungsional->kesimpulan_fungsional : 'Pilih skala aktivitas harian terlebih dahulu' }}
+                                        <div class="mb-4">
+                                            <label class="form-label">Pilih jenis Skala Pengkajian Aktivitas Harian (ADL) sesuai kondisi pasien</label>
+                                            <select class="form-select" name="skala_fungsional" id="skala_fungsional">
+                                                <option value="" selected disabled>Pilih Skala Fungsional</option>
+                                                <option value="1" {{ isset($asesmen->rmeAsesmenPerinatologyStatusFungsional) && $asesmen->rmeAsesmenPerinatologyStatusFungsional->jenis_skala == 1 ? 'selected' : '' }}>Pengkajian Aktivitas Harian</option>
+                                                <option value="2" {{ isset($asesmen->rmeAsesmenPerinatologyStatusFungsional) && $asesmen->rmeAsesmenPerinatologyStatusFungsional->jenis_skala == 2 ? 'selected' : '' }}>Lainnya</option>
+                                            </select>
                                         </div>
-                                    </div>
 
-                                    <!-- Hidden fields untuk menyimpan data ADL -->
-                                    <input type="hidden" id="adl_jenis_skala" name="adl_jenis_skala" value="{{ isset($asesmen->rmeAsesmenPerinatologyFungsional) ? $asesmen->rmeAsesmenPerinatologyFungsional->jenis_skala : '' }}">
-                                    <input type="hidden" id="adl_makan" name="adl_makan" value="{{ isset($asesmen->rmeAsesmenPerinatologyFungsional) ? $asesmen->rmeAsesmenPerinatologyFungsional->makan : '' }}">
-                                    <input type="hidden" id="adl_makan_value" name="adl_makan_value" value="{{ isset($asesmen->rmeAsesmenPerinatologyFungsional) ? $asesmen->rmeAsesmenPerinatologyFungsional->makan_value : '' }}">
-                                    <input type="hidden" id="adl_berjalan" name="adl_berjalan" value="{{ isset($asesmen->rmeAsesmenPerinatologyFungsional) ? $asesmen->rmeAsesmenPerinatologyFungsional->berjalan : '' }}">
-                                    <input type="hidden" id="adl_berjalan_value" name="adl_berjalan_value" value="{{ isset($asesmen->rmeAsesmenPerinatologyFungsional) ? $asesmen->rmeAsesmenPerinatologyFungsional->berjalan_value : '' }}">
-                                    <input type="hidden" id="adl_mandi" name="adl_mandi" value="{{ isset($asesmen->rmeAsesmenPerinatologyFungsional) ? $asesmen->rmeAsesmenPerinatologyFungsional->mandi : '' }}">
-                                    <input type="hidden" id="adl_mandi_value" name="adl_mandi_value" value="{{ isset($asesmen->rmeAsesmenPerinatologyFungsional) ? $asesmen->rmeAsesmenPerinatologyFungsional->mandi_value : '' }}">
-                                    <input type="hidden" id="adl_kesimpulan_value" name="adl_kesimpulan_value" value="{{ isset($asesmen->rmeAsesmenPerinatologyFungsional) ? $asesmen->rmeAsesmenPerinatologyFungsional->kesimpulan_fungsional : '' }}">
-                                </div>
+                                        <div class="form-group">
+                                            <label style="min-width: 200px;">Nilai Skala ADL</label>
+                                            <input type="text" class="form-control" id="adl_total" name="adl_total" readonly value="{{ isset($asesmen->rmeAsesmenPerinatologyStatusFungsional) ? $asesmen->rmeAsesmenPerinatologyStatusFungsional->nilai_skala_adl : '' }}">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label style="min-width: 200px;">Kesimpulan Fungsional</label>
+                                            <div id="adl_kesimpulan" class="alert {{ isset($asesmen->rmeAsesmenPerinatologyStatusFungsional) && $asesmen->rmeAsesmenPerinatologyStatusFungsional->kesimpulan_fungsional ?
+                                                (strpos($asesmen->rmeAsesmenPerinatologyStatusFungsional->kesimpulan_fungsional, 'Ketergantungan Total') !== false ? 'alert-danger' :
+                                                (strpos($asesmen->rmeAsesmenPerinatologyStatusFungsional->kesimpulan_fungsional, 'Ketergantungan Berat') !== false ? 'alert-warning' :
+                                                (strpos($asesmen->rmeAsesmenPerinatologyStatusFungsional->kesimpulan_fungsional, 'Ketergantungan Sedang') !== false ? 'alert-info' : 'alert-success')))
+                                                : 'alert-info' }}">
+                                                {{ isset($asesmen->rmeAsesmenPerinatologyStatusFungsional) && $asesmen->rmeAsesmenPerinatologyStatusFungsional->kesimpulan_fungsional ? $asesmen->rmeAsesmenPerinatologyStatusFungsional->kesimpulan_fungsional : 'Pilih skala aktivitas harian terlebih dahulu' }}
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Hidden fields untuk menyimpan data ADL -->
+                                        <input type="hidden" id="adl_makan" name="adl_makan" value="{{ isset($asesmen->rmeAsesmenPerinatologyStatusFungsional) ? $asesmen->rmeAsesmenPerinatologyStatusFungsional->makan : '' }}">
+                                        <input type="hidden" id="adl_berjalan" name="adl_berjalan" value="{{ isset($asesmen->rmeAsesmenPerinatologyStatusFungsional) ? $asesmen->rmeAsesmenPerinatologyStatusFungsional->berjalan : '' }}">
+                                        <input type="hidden" id="adl_mandi" name="adl_mandi" value="{{ isset($asesmen->rmeAsesmenPerinatologyStatusFungsional) ? $asesmen->rmeAsesmenPerinatologyStatusFungsional->mandi : '' }}">
+                                        <input type="hidden" id="adl_kesimpulan_value" name="adl_kesimpulan_value" value="{{ isset($asesmen->rmeAsesmenPerinatologyStatusFungsional) ? $asesmen->rmeAsesmenPerinatologyStatusFungsional->kesimpulan_fungsional : '' }}">
+                                    </div>
 
                                 <!-- 12. Kebutuhan Edukasi -->
                                 <div class="section-separator" id="kebutuhan-edukasi">
@@ -2443,64 +2468,1417 @@
                                     </div>
                                 </div>
 
-                                <!-- 16. Masalah/Diagnosis Keperawatan -->
-                                <div class="section-separator" id="diagnosis-keperawatan">
-                                    <h5 class="section-title">16. Masalah/Diagnosis Keperawatan</h5>
-                                    <p class="text-muted">Diisi berdasarkan hasil asesmen dan berurut sesuai masalah
-                                        yang dominan terlebih dahulu</p>
+                                <!-- MASALAH/ DIAGNOSIS KEPERAWATAN  -->
+                                <div class="section-separator" id="masalah_diagnosis">
+                                    <h5 class="section-title">16. MASALAH/ DIAGNOSIS KEPERAWATAN</h5>
+                                    <p class="text-muted mb-4">(Diisi berdasarkan hasil asesmen dan berurut sesuai masalah yang dominan terlebih dahulu)</p>
 
-                                    <!-- Field 1: Masalah/Diagnosis Keperawatan -->
-                                    <div class="mb-4">
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <label class="form-label fw-bold">1. Masalah/Diagnosis Keperawatan</label>
-                                            <button type="button" class="btn btn-sm btn-outline-primary"
-                                                id="btnTambahMasalah">
-                                                <i class="bi bi-plus"></i> Tambah
-                                            </button>
-                                        </div>
+                                    <!-- Diagnosis Keperawatan Table -->
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead class="table-primary">
+                                                <tr>
+                                                    <th width="50%">DIAGNOSA KEPERAWATAN</th>
+                                                    <th width="50%">RENCANA KEPERAWATAN</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- 1. Bersihan Jalan Nafas Tidak Efektif -->
+                                                <tr>
+                                                    <td class="align-top">
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input rencana-perawatan-row-1"
+                                                                type="checkbox"
+                                                                name="diagnosis[]"
+                                                                value="bersihan_jalan_nafas"
+                                                                id="diag_bersihan_jalan_nafas"
+                                                                onchange="toggleRencana('bersihan_jalan_nafas')"
+                                                                {{ in_array('bersihan_jalan_nafas', old('diagnosis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->diagnosis ?? [])) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="diag_bersihan_jalan_nafas">
+                                                                <strong>Bersihan jalan nafas tidak efektif</strong> berhubungan dengan spasme jalan nafas...
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input rencana-perawatan-row-1"
+                                                                type="checkbox"
+                                                                name="diagnosis[]"
+                                                                value="risiko_aspirasi"
+                                                                id="diag_risiko_aspirasi"
+                                                                onchange="toggleRencana('risiko_aspirasi')"
+                                                                {{ in_array('risiko_aspirasi', old('diagnosis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->diagnosis ?? [])) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="diag_risiko_aspirasi">
+                                                                <strong>Risiko aspirasi</strong> berhubungan dengan tingkat kesadaran...
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input rencana-perawatan-row-1"
+                                                                type="checkbox"
+                                                                name="diagnosis[]"
+                                                                value="pola_nafas_tidak_efektif"
+                                                                id="diag_pola_nafas_tidak_efektif"
+                                                                onchange="toggleRencana('pola_nafas_tidak_efektif')"
+                                                                {{ in_array('pola_nafas_tidak_efektif', old('diagnosis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->diagnosis ?? [])) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="diag_pola_nafas_tidak_efektif">
+                                                                <strong>Pola nafas tidak efektif</strong> berhubungan dengan depresi pusat pernafasan...
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top">
+                                                        <div id="rencana_bersihan_jalan_nafas" style="display: none;">
+                                                            <strong>Observasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_bersihan_jalan_nafas[]" value="monitor_pola_nafas"
+                                                                {{ in_array('monitor_pola_nafas', old('rencana_bersihan_jalan_nafas', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_bersihan_jalan_nafas ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor pola nafas ( frekuensi , kedalaman, usaha nafas )</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_bersihan_jalan_nafas[]" value="monitor_bunyi_nafas"
+                                                                {{ in_array('monitor_bunyi_nafas', old('rencana_bersihan_jalan_nafas', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_bersihan_jalan_nafas ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor bunyi nafas tambahan ( mengi, wheezing, rhonchi )</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_bersihan_jalan_nafas[]" value="monitor_sputum"
+                                                                {{ in_array('monitor_sputum', old('rencana_bersihan_jalan_nafas', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_bersihan_jalan_nafas ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor sputum ( jumlah, warna, aroma )</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_bersihan_jalan_nafas[]" value="monitor_tingkat_kesadaran"
+                                                                {{ in_array('monitor_tingkat_kesadaran', old('rencana_bersihan_jalan_nafas', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_bersihan_jalan_nafas ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor tingkat kesadaran, batuk, muntah dan kemampuan menelan</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_bersihan_jalan_nafas[]" value="monitor_kemampuan_batuk"
+                                                                {{ in_array('monitor_kemampuan_batuk', old('rencana_bersihan_jalan_nafas', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_bersihan_jalan_nafas ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor kemampuan batuk efektif</label>
+                                                            </div>
 
-                                        <div id="masalahContainer">
-                                            <div class="masalah-item mb-2">
-                                                <div class="d-flex gap-2">
-                                                    <textarea class="form-control" name="masalah_diagnosis[]" rows="2"
-                                                        placeholder="Tuliskan masalah atau diagnosis keperawatan..."></textarea>
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-outline-danger remove-masalah"
-                                                        onclick="removeMasalah(this)" style="display: none;">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
+                                                            <strong>Terapeutik:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_bersihan_jalan_nafas[]" value="pertahankan_kepatenan"
+                                                                {{ in_array('pertahankan_kepatenan', old('rencana_bersihan_jalan_nafas', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_bersihan_jalan_nafas ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Pertahankan kepatenan jalan nafas dengan head-tilt dan chin -lift ( jaw – thrust jika curiga trauma servikal ) </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_bersihan_jalan_nafas[]" value="posisikan_semi_fowler"
+                                                                {{ in_array('posisikan_semi_fowler', old('rencana_bersihan_jalan_nafas', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_bersihan_jalan_nafas ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Posisikan semi fowler atau fowler</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_bersihan_jalan_nafas[]" value="berikan_minum_hangat"
+                                                                {{ in_array('berikan_minum_hangat', old('rencana_bersihan_jalan_nafas', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_bersihan_jalan_nafas ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Berikan minum hangat</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_bersihan_jalan_nafas[]" value="fisioterapi_dada"
+                                                                {{ in_array('fisioterapi_dada', old('rencana_bersihan_jalan_nafas', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_bersihan_jalan_nafas ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Lakukan fisioterapi dada, jika perlu</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_bersihan_jalan_nafas[]" value="keluarkan_benda_padat"
+                                                                {{ in_array('keluarkan_benda_padat', old('rencana_bersihan_jalan_nafas', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_bersihan_jalan_nafas ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Keluarkan benda padat dengan forcep</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_bersihan_jalan_nafas[]" value="penghisapan_lendir"
+                                                                {{ in_array('penghisapan_lendir', old('rencana_bersihan_jalan_nafas', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_bersihan_jalan_nafas ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Lakukan penghisapan lendir</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_bersihan_jalan_nafas[]" value="berikan_oksigen"
+                                                                {{ in_array('berikan_oksigen', old('rencana_bersihan_jalan_nafas', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_bersihan_jalan_nafas ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Berikan oksigen</label>
+                                                            </div>
+
+                                                            <strong>Edukasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_bersihan_jalan_nafas[]" value="anjuran_asupan_cairan"
+                                                                {{ in_array('anjuran_asupan_cairan', old('rencana_bersihan_jalan_nafas', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_bersihan_jalan_nafas ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjuran asupan cairan 2000 ml/hari, jika tidak kontra indikasi</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_bersihan_jalan_nafas[]" value="ajarkan_teknik_batuk"
+                                                                {{ in_array('ajarkan_teknik_batuk', old('rencana_bersihan_jalan_nafas', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_bersihan_jalan_nafas ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Ajarkan teknik batuk efektif</label>
+                                                            </div>
+
+                                                            <strong>Kolaborasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_bersihan_jalan_nafas[]" value="kolaborasi_pemberian_obat"
+                                                                {{ in_array('kolaborasi_pemberian_obat', old('rencana_bersihan_jalan_nafas', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_bersihan_jalan_nafas ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Kolaborasi pemberian bronkodilator, ekspektoran, mukolitik, jika perlu</label>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- 2. Penurunan Curah Jantung -->
+                                                <tr>
+                                                    <td class="align-top">
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input" type="checkbox" name="diagnosis[]" value="penurunan_curah_jantung" id="diag_penurunan_curah_jantung" onchange="toggleRencana('penurunan_curah_jantung')"
+                                                            {{ in_array('penurunan_curah_jantung', old('diagnosis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->diagnosis ?? [])) ? 'checked' : '' }}
+                                                            onchange="toggleRencana('diag_penurunan_curah_jantung')">
+                                                            <label class="form-check-label" for="diag_penurunan_curah_jantung">
+                                                                <strong>Penurunan curah jantung</strong> berhubungan dengan perubahan irama jantung, perubahan frekuensi jantung.
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top">
+                                                        <div id="rencana_penurunan_curah_jantung" style="display: none;">
+                                                            <strong>Observasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_penurunan_curah_jantung[]" value="identifikasi_tanda_gejala"
+                                                                {{ in_array('identifikasi_tanda_gejala', old('rencana_penurunan_curah_jantung', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_penurunan_curah_jantung ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi tanda/gejala primer penurunan curah jantung (meliputi dipsnea, kelelahan, edema)</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_penurunan_curah_jantung[]" value="monitor_tekanan_darah"
+                                                                {{ in_array('monitor_tekanan_darah', old('rencana_penurunan_curah_jantung', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_penurunan_curah_jantung ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor tekanan darah</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_penurunan_curah_jantung[]" value="monitor_intake_output"
+                                                                {{ in_array('monitor_intake_output', old('rencana_penurunan_curah_jantung', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_penurunan_curah_jantung ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor intake dan output cairan</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_penurunan_curah_jantung[]" value="monitor_saturasi_oksigen"
+                                                                {{ in_array('monitor_saturasi_oksigen', old('rencana_penurunan_curah_jantung', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_penurunan_curah_jantung ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor saturasi oksigen</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_penurunan_curah_jantung[]" value="monitor_keluhan_nyeri"
+                                                                {{ in_array('monitor_keluhan_nyeri', old('rencana_penurunan_curah_jantung', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_penurunan_curah_jantung ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor keluhan nyeri dada (intensitas, lokasi, durasi, presivitasi yang mengurangi nyeri)</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_penurunan_curah_jantung[]" value="monitor_aritmia"
+                                                                {{ in_array('monitor_aritmia', old('rencana_penurunan_curah_jantung', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_penurunan_curah_jantung ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor aritmia (kelainan irama dan frekuensi)</label>
+                                                            </div>
+
+                                                            <strong>Terapeutik:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_penurunan_curah_jantung[]" value="posisikan_pasien"
+                                                                {{ in_array('posisikan_pasien', old('rencana_penurunan_curah_jantung', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_penurunan_curah_jantung ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Posisikan pasien semi fowler atau fowler dengan kaki kebawah atau posisi nyaman</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_penurunan_curah_jantung[]" value="berikan_terapi_relaksasi"
+                                                                {{ in_array('berikan_terapi_relaksasi', old('rencana_penurunan_curah_jantung', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_penurunan_curah_jantung ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Berikan therapi relaksasi untuk mengurangi stres, jika perlu</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_penurunan_curah_jantung[]" value="berikan_dukungan_emosional"
+                                                                {{ in_array('berikan_dukungan_emosional', old('rencana_penurunan_curah_jantung', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_penurunan_curah_jantung ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Berikan dukungan emosional dan spirital</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_penurunan_curah_jantung[]" value="berikan_oksigen_saturasi"
+                                                                {{ in_array('berikan_oksigen_saturasi', old('rencana_penurunan_curah_jantung', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_penurunan_curah_jantung ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Berikan oksigen untuk mempertahankan saturasi oksigen >94%</label>
+                                                            </div>
+
+                                                            <strong>Edukasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_penurunan_curah_jantung[]" value="anjurkan_beraktifitas"
+                                                                {{ in_array('anjurkan_beraktifitas', old('rencana_penurunan_curah_jantung', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_penurunan_curah_jantung ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan beraktifitas fisik sesuai toleransi</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_penurunan_curah_jantung[]" value="anjurkan_berhenti_merokok"
+                                                                {{ in_array('anjurkan_berhenti_merokok', old('rencana_penurunan_curah_jantung', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_penurunan_curah_jantung ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan berhenti merokok</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_penurunan_curah_jantung[]" value="ajarkan_mengukur_intake"
+                                                                {{ in_array('ajarkan_mengukur_intake', old('rencana_penurunan_curah_jantung', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_penurunan_curah_jantung ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Ajarkan pasien dan keluarga mengukur intake dan output cairan harian</label>
+                                                            </div>
+
+                                                            <strong>Kolaborasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_penurunan_curah_jantung[]" value="kolaborasi_pemberian_terapi"
+                                                                {{ in_array('kolaborasi_pemberian_terapi', old('rencana_penurunan_curah_jantung', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_penurunan_curah_jantung ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Koborasi pemberian therapi</label>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- 3. Perfusi Perifer Tidak Efektif -->
+                                                <tr>
+                                                    <td class="align-top">
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input" type="checkbox" name="diagnosis[]" value="perfusi_perifer" id="diag_perfusi_perifer" onchange="toggleRencana('perfusi_perifer')"
+                                                            {{ in_array('perfusi_perifer', old('diagnosis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->diagnosis ?? [])) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="diag_perfusi_perifer">
+                                                                <strong>Perfusi perifer tidak efektif</strong> berhubungan dengan hyperglikemia, penurunan konsentrasi hemoglobin, peningkatan tekanan darah, kekurangan volume cairan, penurunan aliran arteri dan/atau vena, kurang terpapar informasi tentang proses penyakit (misal: diabetes melitus, hiperlipidmia).
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top">
+                                                        <div id="rencana_perfusi_perifer" style="display: none;">
+                                                            <strong>Observasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_perfusi_perifer[]" value="periksa_sirkulasi"
+                                                                {{ in_array('periksa_sirkulasi', old('rencana_perfusi_perifer', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_perfusi_perifer ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Periksa sirkulasi perifer (edema, pengisian kapiler/CRT, suhu)</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_perfusi_perifer[]" value="identifikasi_faktor_risiko"
+                                                                {{ in_array('identifikasi_faktor_risiko', old('rencana_perfusi_perifer', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_perfusi_perifer ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi faktor risiko gangguan sirkulasi (diabetes, perokok, hipertensi, kadar kolesterol tinggi)</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_perfusi_perifer[]" value="monitor_suhu_kemerahan"
+                                                                {{ in_array('monitor_suhu_kemerahan', old('rencana_perfusi_perifer', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_perfusi_perifer ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor suhu, kemerahan, nyeri atau bengkak pada ekstremitas.</label>
+                                                            </div>
+
+                                                            <strong>Terapeutik:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_perfusi_perifer[]" value="hindari_pemasangan_infus"
+                                                                {{ in_array('hindari_pemasangan_infus', old('rencana_perfusi_perifer', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_perfusi_perifer ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Hindari pemasangan infus atau pengambilan darah di area keterbatasan perfusi</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_perfusi_perifer[]" value="hindari_pengukuran_tekanan"
+                                                                {{ in_array('hindari_pengukuran_tekanan', old('rencana_perfusi_perifer', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_perfusi_perifer ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Hindari pengukuran tekanan darah pada ekstremitas dengan keterbatasan perfusi</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_perfusi_perifer[]" value="hindari_penekanan"
+                                                                {{ in_array('hindari_penekanan', old('rencana_perfusi_perifer', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_perfusi_perifer ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Hindari penekanan dan pemasangan tourniqet pada area yang cedera</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_perfusi_perifer[]" value="lakukan_pencegahan_infeksi"
+                                                                {{ in_array('lakukan_pencegahan_infeksi', old('rencana_perfusi_perifer', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_perfusi_perifer ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Lakukan pencegahan infeksi</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_perfusi_perifer[]" value="perawatan_kaki_kuku"
+                                                                {{ in_array('perawatan_kaki_kuku', old('rencana_perfusi_perifer', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_perfusi_perifer ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Lakukan perawatan kaki dan kuku</label>
+                                                            </div>
+
+                                                            <strong>Edukasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_perfusi_perifer[]" value="anjurkan_berhenti_merokok_perfusi"
+                                                                {{ in_array('anjurkan_berhenti_merokok_perfusi', old('rencana_perfusi_perifer', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_perfusi_perifer ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan berhenti merokok</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_perfusi_perifer[]" value="anjurkan_berolahraga"
+                                                                {{ in_array('anjurkan_berolahraga', old('rencana_perfusi_perifer', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_perfusi_perifer ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan berolahraga rutin</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_perfusi_perifer[]" value="anjurkan_minum_obat"
+                                                                {{ in_array('anjurkan_minum_obat', old('rencana_perfusi_perifer', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_perfusi_perifer ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan minum obat pengontrol tekanan darah secara teratur</label>
+                                                            </div>
+
+                                                            <strong>Kolaborasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_perfusi_perifer[]" value="kolaborasi_terapi_perfusi"
+                                                                {{ in_array('kolaborasi_terapi_perfusi', old('rencana_perfusi_perifer', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_perfusi_perifer ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Koborasi pemberian therapi</label>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- 4. Hipovolemia -->
+                                                <tr>
+                                                    <td class="align-top">
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input" type="checkbox" name="diagnosis[]" value="hipovolemia" id="diag_hipovolemia" onchange="toggleRencana('hipovolemia')"
+                                                            {{ in_array('hipovolemia', old('diagnosis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->diagnosis ?? [])) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="diag_hipovolemia">
+                                                                <strong>Hipovolemia</strong> berhubungan dengan kehilangan cairan aktif, peningkatan permeabilitas kapiler, kekurangan intake cairan, evaporasi.
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top">
+                                                        <div id="rencana_hipovolemia" style="display: none;">
+                                                            <strong>Observasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipovolemia[]" value="periksa_tanda_gejala"
+                                                                {{ in_array('periksa_tanda_gejala', old('rencana_hipovolemia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipovolemia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Periksa tanda dan gejala hipovolemia (frekuensi nadi meningkat, nadi teraba lemah, tekanan darah penurun, turgor kulit menurun, membran mukosa kering, volume urine menurun, haus, lemah)</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipovolemia[]" value="monitor_intake_output_hipovolemia"
+                                                                {{ in_array('monitor_intake_output_hipovolemia', old('rencana_hipovolemia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipovolemia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor intake dan output cairan</label>
+                                                            </div>
+
+                                                            <strong>Terapeutik:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipovolemia[]" value="berikan_asupan_cairan"
+                                                                {{ in_array('berikan_asupan_cairan', old('rencana_hipovolemia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipovolemia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Berikan asupan cairan oral</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipovolemia[]" value="posisi_trendelenburg"
+                                                                {{ in_array('posisi_trendelenburg', old('rencana_hipovolemia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipovolemia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Posisi modified trendelenburg</label>
+                                                            </div>
+
+                                                            <strong>Edukasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipovolemia[]" value="anjurkan_memperbanyak_cairan"
+                                                                {{ in_array('anjurkan_memperbanyak_cairan', old('rencana_hipovolemia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipovolemia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan memperbanyak asupan cairan oral</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipovolemia[]" value="hindari_perubahan_posisi"
+                                                                {{ in_array('hindari_perubahan_posisi', old('rencana_hipovolemia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipovolemia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan menghindari perubahan posisi mendadak</label>
+                                                            </div>
+
+                                                            <strong>Kolaborasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipovolemia[]" value="kolaborasi_terapi_hipovolemia"
+                                                                {{ in_array('kolaborasi_terapi_hipovolemia', old('rencana_hipovolemia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipovolemia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Koborasi pemberian therapi</label>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- 5. Hipervolemia -->
+                                                <tr>
+                                                    <td class="align-top">
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input" type="checkbox" name="diagnosis[]" value="hipervolemia" id="diag_hipervolemia" onchange="toggleRencana('hipervolemia')"
+                                                            {{ in_array('hipervolemia', old('diagnosis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->diagnosis ?? [])) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="diag_hipervolemia">
+                                                                <strong>Hipervolemia</strong> berhubungan dengan kelebihan asupan cairan, kelebihan asupan natrium, gangguan aliran balik vena.
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top">
+                                                        <div id="rencana_hipervolemia" style="display: none;">
+                                                            <strong>Observasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipervolemia[]" value="periksa_tanda_hipervolemia"
+                                                                {{ in_array('periksa_tanda_hipervolemia', old('rencana_hipervolemia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipervolemia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Periksa tanda dan gejala hipervolemia (dipsnea, edema, suara nafas tambahan)</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipervolemia[]" value="identifikasi_penyebab_hipervolemia"
+                                                                {{ in_array('identifikasi_penyebab_hipervolemia', old('rencana_hipervolemia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipervolemia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi penyebab hipervolemia</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipervolemia[]" value="monitor_hemodinamik"
+                                                                {{ in_array('monitor_hemodinamik', old('rencana_hipervolemia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipervolemia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor status hemodinamik (frekuensi jantung, tekanan darah)</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipervolemia[]" value="monitor_intake_output_hipervolemia"
+                                                                {{ in_array('monitor_intake_output_hipervolemia', old('rencana_hipervolemia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipervolemia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor intake dan output cairan</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipervolemia[]" value="monitor_efek_diuretik"
+                                                                {{ in_array('monitor_efek_diuretik', old('rencana_hipervolemia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipervolemia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor efek samping diuretik (hipotensi ortostatik, hipovolemia, hipokalemia, hiponatremia)</label>
+                                                            </div>
+
+                                                            <strong>Terapeutik:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipervolemia[]" value="timbang_berat_badan"
+                                                                {{ in_array('timbang_berat_badan', old('rencana_hipervolemia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipervolemia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Timbang berat badan setiap hari pada waktu yang sama</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipervolemia[]" value="batasi_asupan_cairan"
+                                                                {{ in_array('batasi_asupan_cairan', old('rencana_hipervolemia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipervolemia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Batasi asupan cairan dan garam</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipervolemia[]" value="tinggi_kepala_tempat_tidur"
+                                                                {{ in_array('tinggi_kepala_tempat_tidur', old('rencana_hipervolemia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipervolemia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Tinggi kepala tempat tidur 30 – 40 º</label>
+                                                            </div>
+
+                                                            <strong>Edukasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipervolemia[]" value="ajarkan_mengukur_cairan"
+                                                                {{ in_array('ajarkan_mengukur_cairan', old('rencana_hipervolemia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipervolemia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Ajarkan cara mengukur dan mencatat asupan dan haluaran cairan</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipervolemia[]" value="ajarkan_membatasi_cairan"
+                                                                {{ in_array('ajarkan_membatasi_cairan', old('rencana_hipervolemia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipervolemia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Ajarkan cara membatasi cairan</label>
+                                                            </div>
+
+                                                            <strong>Kolaborasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipervolemia[]" value="kolaborasi_terapi_hipervolemia"
+                                                                {{ in_array('kolaborasi_terapi_hipervolemia', old('rencana_hipervolemia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipervolemia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Koborasi pemberian therapi</label>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- 6. Diare -->
+                                                <tr>
+                                                    <td class="align-top">
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input" type="checkbox" name="diagnosis[]" value="diare" id="diag_diare" onchange="toggleRencana('diare')"
+                                                            {{ in_array('diare', old('diagnosis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->diagnosis ?? [])) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="diag_diare">
+                                                                <strong>Diare</strong> berhubungan dengan inflamasi gastrointestinal, iritasi gastrointestinal, proses infeksi, malabsorpsi.
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top">
+                                                        <div id="rencana_diare" style="display: none;">
+                                                            <strong>Observasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_diare[]" value="identifikasi_penyebab_diare"
+                                                                {{ in_array('identifikasi_penyebab_diare', old('rencana_diare', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_diare ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi penyebab diare (inflamasi gastrointestinal, iritasi gastrointestinal, proses infeksi, malabsorpsi, ansietas, stres, efek samping obat)</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_diare[]" value="identifikasi_riwayat_makanan"
+                                                                {{ in_array('identifikasi_riwayat_makanan', old('rencana_diare', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_diare ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi riwayat pemberian makanan</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_diare[]" value="identifikasi_gejala_invaginasi"
+                                                                {{ in_array('identifikasi_gejala_invaginasi', old('rencana_diare', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_diare ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi riwayat gejala invaginasi (tangisan keras, kepucatan pada bayi)</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_diare[]" value="monitor_warna_volume_tinja"
+                                                                {{ in_array('monitor_warna_volume_tinja', old('rencana_diare', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_diare ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor warna, volume, frekuensi dan konsistensi tinja</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_diare[]" value="monitor_tanda_hipovolemia"
+                                                                {{ in_array('monitor_tanda_hipovolemia', old('rencana_diare', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_diare ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor tanda dan gejala hipovolemia (takikardi, nadi teraba lemah, tekanan darah turun, turgor kulit turun, mukosa mulit kering, CRT melambat, BB menurun)</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_diare[]" value="monitor_iritasi_kulit"
+                                                                {{ in_array('monitor_iritasi_kulit', old('rencana_diare', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_diare ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor iritasi dan ulserasi kulit di daerah perianal</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_diare[]" value="monitor_jumlah_diare"
+                                                                {{ in_array('monitor_jumlah_diare', old('rencana_diare', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_diare ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor jumlah pengeluaran diare</label>
+                                                            </div>
+
+                                                            <strong>Terapeutik:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_diare[]" value="berikan_asupan_cairan_oral"
+                                                                {{ in_array('berikan_asupan_cairan_oral', old('rencana_diare', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_diare ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Berikan asupan cairan oral (larutan garam gula, oralit, pedialyte)</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_diare[]" value="pasang_jalur_intravena"
+                                                                {{ in_array('pasang_jalur_intravena', old('rencana_diare', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_diare ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Pasang jalur intravena</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_diare[]" value="berikan_cairan_intravena"
+                                                                {{ in_array('berikan_cairan_intravena', old('rencana_diare', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_diare ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Berikan cairan intravena</label>
+                                                            </div>
+
+                                                            <strong>Edukasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_diare[]" value="anjurkan_makanan_porsi_kecil"
+                                                                {{ in_array('anjurkan_makanan_porsi_kecil', old('rencana_diare', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_diare ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan makanan porsi kecil dan sering secara bertahap</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_diare[]" value="hindari_makanan_gas"
+                                                                {{ in_array('hindari_makanan_gas', old('rencana_diare', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_diare ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan menghindari makanan pembentuk gas, pedas dan mengandung laktosa</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_diare[]" value="lanjutkan_asi"
+                                                                {{ in_array('lanjutkan_asi', old('rencana_diare', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_diare ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan melanjutkan pemberian ASI</label>
+                                                            </div>
+
+                                                            <strong>Kolaborasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_diare[]" value="kolaborasi_terapi_diare"
+                                                                {{ in_array('kolaborasi_terapi_diare', old('rencana_diare', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_diare ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Koborasi pemberian therapi</label>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- 7. Retensi Urine -->
+                                                <tr>
+                                                    <td class="align-top">
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input" type="checkbox" name="diagnosis[]" value="retensi_urine" id="diag_retensi_urine" onchange="toggleRencana('retensi_urine')"
+                                                            {{ in_array('retensi_urine', old('diagnosis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->diagnosis ?? [])) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="diag_retensi_urine">
+                                                                <strong>Retensi urine</strong> berhubungan dengan peningkatan tekanan uretra, kerusakan arkus refleks, Blok spingter, disfungsi neurologis (trauma, penyakit saraf), efek agen farmakologis (atropine, belladona, psikotropik, antihistamin, opiate).
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top">
+                                                        <div id="rencana_retensi_urine" style="display: none;">
+                                                            <strong>Observasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_retensi_urine[]" value="identifikasi_tanda_retensi"
+                                                                {{ in_array('identifikasi_tanda_retensi', old('rencana_retensi_urine', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_retensi_urine ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi tanda dan gejala retensi atau inkontinensia urine</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_retensi_urine[]" value="identifikasi_faktor_penyebab"
+                                                                {{ in_array('identifikasi_faktor_penyebab', old('rencana_retensi_urine', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_retensi_urine ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi faktor yang menyebabkan retensi atau inkontinensia urine</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_retensi_urine[]" value="monitor_eliminasi_urine"
+                                                                {{ in_array('monitor_eliminasi_urine', old('rencana_retensi_urine', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_retensi_urine ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor eliminasi urine (frekuensi, konsistensi, aroma, volume dan warna)</label>
+                                                            </div>
+
+                                                            <strong>Terapeutik:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_retensi_urine[]" value="catat_waktu_berkemih"
+                                                                {{ in_array('catat_waktu_berkemih', old('rencana_retensi_urine', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_retensi_urine ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Catat waktu-waktu dan haluaran berkemih</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_retensi_urine[]" value="batasi_asupan_cairan"
+                                                                {{ in_array('batasi_asupan_cairan', old('rencana_retensi_urine', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_retensi_urine ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Batasi asupan cairan, jika perlu</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_retensi_urine[]" value="ambil_sampel_urine"
+                                                                {{ in_array('ambil_sampel_urine', old('rencana_retensi_urine', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_retensi_urine ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Ambil sampel urine tengah (midstream) atau kultur</label>
+                                                            </div>
+
+                                                            <strong>Edukasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_retensi_urine[]" value="ajarkan_tanda_infeksi"
+                                                                {{ in_array('ajarkan_tanda_infeksi', old('rencana_retensi_urine', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_retensi_urine ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Ajarkan tanda dan gejala infeksi saluran kemih</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_retensi_urine[]" value="ajarkan_mengukur_asupan"
+                                                                {{ in_array('ajarkan_mengukur_asupan', old('rencana_retensi_urine', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_retensi_urine ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Ajarkan mengukur asupan cairan dan haluaran urine</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_retensi_urine[]" value="ajarkan_spesimen_midstream"
+                                                                {{ in_array('ajarkan_spesimen_midstream', old('rencana_retensi_urine', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_retensi_urine ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Ajarkan mengambil spesimen urine midstream</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_retensi_urine[]" value="ajarkan_tanda_berkemih"
+                                                                {{ in_array('ajarkan_tanda_berkemih', old('rencana_retensi_urine', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_retensi_urine ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Ajarkan mengenali tanda berkemih dan waktu yang tepat untuk berkemih</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_retensi_urine[]" value="ajarkan_minum_cukup"
+                                                                {{ in_array('ajarkan_minum_cukup', old('rencana_retensi_urine', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_retensi_urine ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Ajarkan minum yang cukup, jika tidak ada kontraindikasi</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_retensi_urine[]" value="kurangi_minum_tidur"
+                                                                {{ in_array('kurangi_minum_tidur', old('rencana_retensi_urine', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_retensi_urine ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan mengurangi minum menjelang tidur</label>
+                                                            </div>
+
+                                                            <strong>Kolaborasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_retensi_urine[]" value="kolaborasi_supositoria"
+                                                                {{ in_array('kolaborasi_supositoria', old('rencana_retensi_urine', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_retensi_urine ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Kolaborasi pemberian obat supositoria uretra, jika perlu</label>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- 8. Nyeri Akut -->
+                                                <tr>
+                                                    <td class="align-top">
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input" type="checkbox" name="diagnosis[]" value="nyeri_akut" id="diag_nyeri_akut" onchange="toggleRencana('nyeri_akut')"
+                                                            {{ in_array('nyeri_akut', old('diagnosis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->diagnosis ?? [])) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="diag_nyeri_akut">
+                                                                <strong>Nyeri akut</strong> b.d agen pencedera fisiologis (inflamsi, iskemia, neoplasma), agen pencedera kimiawi (terbakar, bahan kimia iritan), agen pencedera fisik (abses, amputasi, terbakar, terpotong, mengangkat berat, prosedur operasi, trauma, latihan fisik berlebihan).
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top">
+                                                        <div id="rencana_nyeri_akut" style="display: none;">
+                                                            <strong>Observasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_akut[]" value="identifikasi_lokasi_nyeri"
+                                                                {{ in_array('identifikasi_lokasi_nyeri', old('rencana_nyeri_akut', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_akut ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi lokasi, karakteristik, durasi, frekuensi, kualitas, intensitas nyeri</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_akut[]" value="identifikasi_skala_nyeri"
+                                                                {{ in_array('identifikasi_skala_nyeri', old('rencana_nyeri_akut', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_akut ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi skala nyeri</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_akut[]" value="identifikasi_respons_nonverbal"
+                                                                {{ in_array('identifikasi_respons_nonverbal', old('rencana_nyeri_akut', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_akut ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi respons nyeri non verbal</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_akut[]" value="identifikasi_faktor_nyeri"
+                                                                {{ in_array('identifikasi_faktor_nyeri', old('rencana_nyeri_akut', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_akut ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi faktor yang memperberat dan memperingan nyeri</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_akut[]" value="identifikasi_pengetahuan_nyeri"
+                                                                {{ in_array('identifikasi_pengetahuan_nyeri', old('rencana_nyeri_akut', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_akut ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi pengetahuan dan keyaninan tentang nyeri</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_akut[]" value="identifikasi_pengaruh_budaya"
+                                                                {{ in_array('identifikasi_pengaruh_budaya', old('rencana_nyeri_akut', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_akut ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi pengaruh budaya terhadap respon nyeri</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_akut[]" value="identifikasi_pengaruh_kualitas_hidup"
+                                                                {{ in_array('identifikasi_pengaruh_kualitas_hidup', old('rencana_nyeri_akut', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_akut ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi pengaruh nyeri pada kualitas hidup</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_akut[]" value="monitor_keberhasilan_terapi"
+                                                                {{ in_array('monitor_keberhasilan_terapi', old('rencana_nyeri_akut', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_akut ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor keberhasilan terapi komplementer yang sudah diberikan</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_akut[]" value="monitor_efek_samping_analgetik"
+                                                                {{ in_array('monitor_efek_samping_analgetik', old('rencana_nyeri_akut', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_akut ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor efek samping penggunaan analgetil</label>
+                                                            </div>
+
+                                                            <strong>Terapeutik:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_akut[]" value="berikan_teknik_nonfarmakologis"
+                                                                {{ in_array('berikan_teknik_nonfarmakologis', old('rencana_nyeri_akut', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_akut ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Berikan teknik nonfarmakologis untuk mengurangi rasa nyeri (TENS, hipnosis, akupresur, terapi musik, biofeedback, terapi pijat, aromaterapi, teknik imajinasi terbimbing, kompres hangat/dingin, terapi bermain)</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_akut[]" value="kontrol_lingkungan_nyeri"
+                                                                {{ in_array('kontrol_lingkungan_nyeri', old('rencana_nyeri_akut', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_akut ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Kontrol lingkungan yang memperberat rasa nyeri (suhu ruangan, pencahayaan, kebisingan)</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_akut[]" value="fasilitasi_istirahat"
+                                                                {{ in_array('fasilitasi_istirahat', old('rencana_nyeri_akut', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_akut ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Fasilitasi istirahat dan tidur</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_akut[]" value="pertimbangkan_strategi_nyeri"
+                                                                {{ in_array('pertimbangkan_strategi_nyeri', old('rencana_nyeri_akut', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_akut ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Pertimbangkan jenis dan sumber nyeri dalam pemilihan strategi meredakan nyeri</label>
+                                                            </div>
+
+                                                            <strong>Edukasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_akut[]" value="jelaskan_penyebab_nyeri"
+                                                                {{ in_array('jelaskan_penyebab_nyeri', old('rencana_nyeri_akut', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_akut ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Jelaskan penyebab, periode, dan pemicu nyeri</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_akut[]" value="jelaskan_strategi_nyeri"
+                                                                {{ in_array('jelaskan_strategi_nyeri', old('rencana_nyeri_akut', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_akut ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Jelaskan strategi meredakan nyeri</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_akut[]" value="anjurkan_monitor_nyeri"
+                                                                {{ in_array('anjurkan_monitor_nyeri', old('rencana_nyeri_akut', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_akut ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan memonitor nyeri secara mandiri</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_akut[]" value="anjurkan_analgetik"
+                                                                {{ in_array('anjurkan_analgetik', old('rencana_nyeri_akut', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_akut ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan menggunakan analgetik secara tepat</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_akut[]" value="ajarkan_teknik_nonfarmakologis"
+                                                                {{ in_array('ajarkan_teknik_nonfarmakologis', old('rencana_nyeri_akut', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_akut ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Ajarkan teknik nonfarmakologis untuk mengurangin rasa nyeri</label>
+                                                            </div>
+
+                                                            <strong>Kolaborasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_akut[]" value="kolaborasi_analgetik"
+                                                                {{ in_array('kolaborasi_analgetik', old('rencana_nyeri_akut', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_akut ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Kolaborasi pemberian analgetik, jika perlu</label>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- 9. Nyeri Kronis -->
+                                                <tr>
+                                                    <td class="align-top">
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input" type="checkbox" name="diagnosis[]" value="nyeri_kronis" id="diag_nyeri_kronis" onchange="toggleRencana('nyeri_kronis')"
+                                                            {{ in_array('nyeri_kronis', old('diagnosis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->diagnosis ?? [])) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="diag_nyeri_kronis">
+                                                                <strong>Nyeri kronis</strong> b.d kondisi muskuloskeletal kronis, kerusakan sistem saraf, penekanan saraf, infiltrasi tumor, ketidakseimbangan neurotransmiter, neuromodulator, dan reseptor, gangguan imunitas, (neuropati terkait HIV, virus varicella-zoster), gangguan fungsi metabolik, riwayat posisi kerja statis, peningkatan indeks masa tubuh, kondisi pasca trauma, tekanan emosional, riwayat penganiayaan (fisik, psikologis, seksual), riwayat penyalahgunaan obat/zat.
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top">
+                                                        <div id="rencana_nyeri_kronis" style="display: none;">
+                                                            <strong>Observasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_kronis[]" value="identifikasi_lokasi_nyeri_kronis"
+                                                                {{ in_array('identifikasi_lokasi_nyeri_kronis', old('rencana_nyeri_kronis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_kronis ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi lokasi, karakteristik, durasi, frekuensi, kualitas, intensitas nyeri</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_kronis[]" value="identifikasi_skala_nyeri_kronis"
+                                                                {{ in_array('identifikasi_skala_nyeri_kronis', old('rencana_nyeri_kronis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_kronis ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi skala nyeri</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_kronis[]" value="identifikasi_respons_nonverbal_kronis"
+                                                                {{ in_array('identifikasi_respons_nonverbal_kronis', old('rencana_nyeri_kronis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_kronis ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi respons nyeri non verbal</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_kronis[]" value="identifikasi_faktor_nyeri_kronis"
+                                                                {{ in_array('identifikasi_faktor_nyeri_kronis', old('rencana_nyeri_kronis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_kronis ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi faktor yang memperberat dan memperingan nyeri</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_kronis[]" value="identifikasi_pengetahuan_nyeri_kronis"
+                                                                {{ in_array('identifikasi_pengetahuan_nyeri_kronis', old('rencana_nyeri_kronis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_kronis ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi pengetahuan dan keyaninan tentang nyeri</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_kronis[]" value="identifikasi_pengaruh_budaya_kronis"
+                                                                {{ in_array('identifikasi_pengaruh_budaya_kronis', old('rencana_nyeri_kronis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_kronis ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi pengaruh budaya terhadap respon nyeri</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_kronis[]" value="identifikasi_pengaruh_kualitas_hidup_kronis"
+                                                                {{ in_array('identifikasi_pengaruh_kualitas_hidup_kronis', old('rencana_nyeri_kronis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_kronis ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi pengaruh nyeri pada kualitas hidup</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_kronis[]" value="monitor_keberhasilan_terapi_kronis"
+                                                                {{ in_array('monitor_keberhasilan_terapi_kronis', old('rencana_nyeri_kronis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_kronis ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor keberhasilan terapi komplementer yang sudah diberikan</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_kronis[]" value="monitor_efek_samping_analgetik_kronis"
+                                                                {{ in_array('monitor_efek_samping_analgetik_kronis', old('rencana_nyeri_kronis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_kronis ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor efek samping penggunaan analgetil</label>
+                                                            </div>
+
+                                                            <strong>Terapeutik:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_kronis[]" value="berikan_teknik_nonfarmakologis_kronis"
+                                                                {{ in_array('berikan_teknik_nonfarmakologis_kronis', old('rencana_nyeri_kronis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_kronis ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Berikan teknik nonfarmakologis untuk mengurangi rasa nyeri (TENS, hipnosis, akupresur, terapi musik, biofeedback, terapi pijat, aromaterapi, teknik imajinasi terbimbing, kompres hangat/dingin, terapi bermain)</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_kronis[]" value="kontrol_lingkungan_nyeri_kronis"
+                                                                {{ in_array('kontrol_lingkungan_nyeri_kronis', old('rencana_nyeri_kronis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_kronis ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Kontrol lingkungan yang memperberat rasa nyeri (suhu ruangan, pencahayaan, kebisingan)</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_kronis[]" value="fasilitasi_istirahat_kronis"
+                                                                {{ in_array('fasilitasi_istirahat_kronis', old('rencana_nyeri_kronis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_kronis ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Fasilitasi istirahat dan tidur</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_kronis[]" value="pertimbangkan_strategi_nyeri_kronis"
+                                                                {{ in_array('pertimbangkan_strategi_nyeri_kronis', old('rencana_nyeri_kronis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_kronis ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Pertimbangkan jenis dan sumber nyeri dalam pemilihan strategi meredakan nyeri</label>
+                                                            </div>
+
+                                                            <strong>Edukasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_kronis[]" value="jelaskan_penyebab_nyeri_kronis"
+                                                                {{ in_array('jelaskan_penyebab_nyeri_kronis', old('rencana_nyeri_kronis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_kronis ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Jelaskan penyebab, periode, dan pemicu nyeri</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_kronis[]" value="jelaskan_strategi_nyeri_kronis"
+                                                                {{ in_array('jelaskan_strategi_nyeri_kronis', old('rencana_nyeri_kronis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_kronis ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Jelaskan strategi meredakan nyeri</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_kronis[]" value="anjurkan_monitor_nyeri_kronis"
+                                                                {{ in_array('anjurkan_monitor_nyeri_kronis', old('rencana_nyeri_kronis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_kronis ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan memonitor nyeri secara mandiri</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_kronis[]" value="anjurkan_analgetik_kronis"
+                                                                {{ in_array('anjurkan_analgetik_kronis', old('rencana_nyeri_kronis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_kronis ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan menggunakan analgetik secara tepat</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_kronis[]" value="ajarkan_teknik_nonfarmakologis_kronis"
+                                                                {{ in_array('ajarkan_teknik_nonfarmakologis_kronis', old('rencana_nyeri_kronis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_kronis ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Ajarkan teknik nonfarmakologis untuk mengurangin rasa nyeri</label>
+                                                            </div>
+
+                                                            <strong>Kolaborasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_nyeri_kronis[]" value="kolaborasi_analgetik_kronis"
+                                                                {{ in_array('kolaborasi_analgetik_kronis', old('rencana_nyeri_kronis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_nyeri_kronis ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Kolaborasi pemberian analgetik, jika perlu</label>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- 10. Hipertermia -->
+                                                <tr>
+                                                    <td class="align-top">
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input" type="checkbox" name="diagnosis[]" value="hipertermia" id="diag_hipertermia" onchange="toggleRencana('hipertermia')"
+                                                            {{ in_array('hipertermia', old('diagnosis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->diagnosis ?? [])) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="diag_hipertermia">
+                                                                <strong>Hipertermia</strong> b.d dehidrasi, terpapar lingkungan panas, peroses penyakit (infeksi, kanker), ketidaksesuaian pakaian dengan suhu lingkungan, peningkatan laju metabolisme, respon trauma, aktivitas berlebihan, penggunaan inkubator.
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top">
+                                                        <div id="rencana_hipertermia" style="display: none;">
+                                                            <strong>Observasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipertermia[]" value="identifikasi_penyebab_hipertermia"
+                                                                {{ in_array('identifikasi_penyebab_hipertermia', old('rencana_hipertermia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipertermia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi penyebab hipertermia (dehidrasi, terpapar lingkungan panas, penggunaan inkubator)</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipertermia[]" value="monitor_suhu_tubuh"
+                                                                {{ in_array('monitor_suhu_tubuh', old('rencana_hipertermia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipertermia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor suhu tubuh</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipertermia[]" value="monitor_kadar_elektrolit"
+                                                                {{ in_array('monitor_kadar_elektrolit', old('rencana_hipertermia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipertermia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor kadar elektrolit</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipertermia[]" value="monitor_haluaran_urine"
+                                                                {{ in_array('monitor_haluaran_urine', old('rencana_hipertermia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipertermia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor haluaran urine</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipertermia[]" value="monitor_komplikasi_hipertermia"
+                                                                {{ in_array('monitor_komplikasi_hipertermia', old('rencana_hipertermia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipertermia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor komplikasi akibat hipertermia</label>
+                                                            </div>
+
+                                                            <strong>Terapeutik:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipertermia[]" value="sediakan_lingkungan_dingin"
+                                                                {{ in_array('sediakan_lingkungan_dingin', old('rencana_hipertermia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipertermia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Sediakan lingkungan yang dingin</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipertermia[]" value="longgarkan_pakaian"
+                                                                {{ in_array('longgarkan_pakaian', old('rencana_hipertermia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipertermia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Longgarkan atau lepaskan pakaian</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipertermia[]" value="basahi_kipasi_tubuh"
+                                                                {{ in_array('basahi_kipasi_tubuh', old('rencana_hipertermia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipertermia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Basahi dan kipasi permukaan tubuh</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipertermia[]" value="berikan_cairan_oral_hipertermia"
+                                                                {{ in_array('berikan_cairan_oral_hipertermia', old('rencana_hipertermia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipertermia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Berikan cairan oral</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipertermia[]" value="ganti_linen_hiperhidrosis"
+                                                                {{ in_array('ganti_linen_hiperhidrosis', old('rencana_hipertermia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipertermia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Ganti linen setiap hari atau lebih sering jika mengalami hiperhidrosis (keringat berlebih)</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipertermia[]" value="pendinginan_eksternal"
+                                                                {{ in_array('pendinginan_eksternal', old('rencana_hipertermia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipertermia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Lakukan pendinginan eksternal (selimut hipotermia atau kompres dingin pada dahi, leher, dada, abdomen, aksila)</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipertermia[]" value="hindari_antipiretik"
+                                                                {{ in_array('hindari_antipiretik', old('rencana_hipertermia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipertermia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Hindari pemberian antipiretik atau aspirin</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipertermia[]" value="berikan_oksigen_hipertermia"
+                                                                {{ in_array('berikan_oksigen_hipertermia', old('rencana_hipertermia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipertermia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Berikan oksigen, jika perlu</label>
+                                                            </div>
+
+                                                            <strong>Edukasi:</strong>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipertermia[]" value="anjurkan_tirah_baring"
+                                                                {{ in_array('anjurkan_tirah_baring', old('rencana_hipertermia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipertermia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan tirah baring</label>
+                                                            </div>
+
+                                                            <strong>Kolaborasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_hipertermia[]" value="kolaborasi_cairan_elektrolit"
+                                                                {{ in_array('kolaborasi_cairan_elektrolit', old('rencana_hipertermia', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_hipertermia ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Kolaborasi pemberian cairan dan elektrolit intravena, jika perlu</label>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- 11. Gangguan Mobilitas Fisik -->
+                                                <tr>
+                                                    <td class="align-top">
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input" type="checkbox" name="diagnosis[]" value="gangguan_mobilitas_fisik" id="diag_gangguan_mobilitas_fisik" onchange="toggleRencana('gangguan_mobilitas_fisik')"
+                                                            {{ in_array('gangguan_mobilitas_fisik', old('diagnosis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->diagnosis ?? [])) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="diag_gangguan_mobilitas_fisik">
+                                                                <strong>Gangguan mobilitas fisik</strong> b.d kerusakan intergritas struktur tulang, perubahan metabolisme, ketidakbugaran fisik, penurunan kendali otot, penurunan massa otot, penurunan kekuatan otot, keterlambatan perkembangan, kekakuan sendi, kontraktur, malnutrisi, gangguan muskuloskeletal, gangguan neuromuskular, indeks masa tubuh diatas persentil ke-75 seusai usia, efek agen farmakologis, program pembatasan gerak, nyeri, kurang terpapar informasi tentang aktivitas fisik, kecemasan, gangguan kognitif, keengganan melakukan pergerakan, gangguan sensoripersepsi.
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top">
+                                                        <div id="rencana_gangguan_mobilitas_fisik" style="display: none;">
+                                                            <strong>Observasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_mobilitas_fisik[]" value="identifikasi_nyeri_keluhan"
+                                                                {{ in_array('identifikasi_nyeri_keluhan', old('rencana_gangguan_mobilitas_fisik', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_mobilitas_fisik ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Indentifikasi adanya nyeri atau keluhan fisik lainnya</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_mobilitas_fisik[]" value="identifikasi_toleransi_ambulasi"
+                                                                {{ in_array('identifikasi_toleransi_ambulasi', old('rencana_gangguan_mobilitas_fisik', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_mobilitas_fisik ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Indetifikasi toleransi fisik melakukan ambulasi</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_mobilitas_fisik[]" value="monitor_frekuensi_jantung_ambulasi"
+                                                                {{ in_array('monitor_frekuensi_jantung_ambulasi', old('rencana_gangguan_mobilitas_fisik', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_mobilitas_fisik ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor frekuensi jantung dan tekanan darah sebelum memulai ambulasi</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_mobilitas_fisik[]" value="monitor_kondisi_umum_ambulasi"
+                                                                {{ in_array('monitor_kondisi_umum_ambulasi', old('rencana_gangguan_mobilitas_fisik', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_mobilitas_fisik ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor kondiri umum selama melakukan ambulasi</label>
+                                                            </div>
+
+                                                            <strong>Terapeutik:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_mobilitas_fisik[]" value="fasilitasi_aktivitas_ambulasi"
+                                                                {{ in_array('fasilitasi_aktivitas_ambulasi', old('rencana_gangguan_mobilitas_fisik', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_mobilitas_fisik ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Fasilitasi aktivitas ambulasi dengan alat bantu (tongkat, kruk)</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_mobilitas_fisik[]" value="fasilitasi_mobilisasi_fisik"
+                                                                {{ in_array('fasilitasi_mobilisasi_fisik', old('rencana_gangguan_mobilitas_fisik', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_mobilitas_fisik ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Fasilitasi melakukan mobilisasi fisik, jika perlu</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_mobilitas_fisik[]" value="libatkan_keluarga_ambulasi"
+                                                                {{ in_array('libatkan_keluarga_ambulasi', old('rencana_gangguan_mobilitas_fisik', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_mobilitas_fisik ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Libatkan keluarga untuk membantu pasien dalam meningkatkan ambulasi</label>
+                                                            </div>
+
+                                                            <strong>Edukasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_mobilitas_fisik[]" value="jelaskan_tujuan_ambulasi"
+                                                                {{ in_array('jelaskan_tujuan_ambulasi', old('rencana_gangguan_mobilitas_fisik', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_mobilitas_fisik ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Jelaskan tujuan dan prosedur ambulasi</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_mobilitas_fisik[]" value="anjurkan_ambulasi_dini"
+                                                                {{ in_array('anjurkan_ambulasi_dini', old('rencana_gangguan_mobilitas_fisik', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_mobilitas_fisik ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan melakukan ambulasi dini</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_mobilitas_fisik[]" value="ajarkan_ambulasi_sederhana"
+                                                                {{ in_array('ajarkan_ambulasi_sederhana', old('rencana_gangguan_mobilitas_fisik', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_mobilitas_fisik ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Ajarkan ambulasi sederhana yang harus dilakukan (berjalan dari tempat tidur ke kursi roda, berjalan dari tempat tidur ke kamar mandi, berjalan sesuai toleransi)</label>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- 12. Resiko Infeksi -->
+                                                <tr>
+                                                    <td class="align-top">
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input" type="checkbox" name="diagnosis[]" value="resiko_infeksi" id="diag_resiko_infeksi" onchange="toggleRencana('resiko_infeksi')"
+                                                            {{ in_array('resiko_infeksi', old('diagnosis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->diagnosis ?? [])) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="diag_resiko_infeksi">
+                                                                <strong>Resiko infeksi</strong> b.d efek prosedur invasif, penyakit kronis (diabetes melitus), malnutrisi, peningkatan paparan organisme patogen lingkungan, ketidakadekuatan pertahanan tubuh primer (gangguan persitaltik, kerusakan integritas kulit, perubahan sekresi PH, penurunan kerja siliaris, ketuban pecah lama, ketuban pecah sebelum waktunya, merokok, statis cairan tubuh), ketidakadekuatan pertahanan tubuh sekunder (penurunan hemoglobin, imununosupresi, leukopenia, supresi respon inflamasi, vaksinasi tidak adekuat).
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top">
+                                                        <div id="rencana_resiko_infeksi" style="display: none;">
+                                                            <strong>Observasi:</strong>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_infeksi[]" value="monitor_tanda_infeksi_sistemik"
+                                                                {{ in_array('monitor_tanda_infeksi_sistemik', old('rencana_resiko_infeksi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_infeksi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor tanda dan gejala infeksi lokal dan sistemik</label>
+                                                            </div>
+
+                                                            <strong>Terapeutik:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_infeksi[]" value="batasi_pengunjung"
+                                                                {{ in_array('batasi_pengunjung', old('rencana_resiko_infeksi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_infeksi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Batasi jumlah pengunjung</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_infeksi[]" value="perawatan_kulit_edema"
+                                                                {{ in_array('perawatan_kulit_edema', old('rencana_resiko_infeksi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_infeksi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Berikan perawatan kulit pada area edema</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_infeksi[]" value="cuci_tangan_kontak"
+                                                                {{ in_array('cuci_tangan_kontak', old('rencana_resiko_infeksi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_infeksi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Cuci tangan sebelum dan sesudah kontak dengan pasien dan lingkungan pasien</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_infeksi[]" value="pertahankan_teknik_aseptik"
+                                                                {{ in_array('pertahankan_teknik_aseptik', old('rencana_resiko_infeksi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_infeksi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Pertahankan teknik aseptik pada pasien beresiko tinggi</label>
+                                                            </div>
+
+                                                            <strong>Edukasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_infeksi[]" value="jelaskan_tanda_infeksi_edukasi"
+                                                                {{ in_array('jelaskan_tanda_infeksi_edukasi', old('rencana_resiko_infeksi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_infeksi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Jelaskan tanda dan gejala infeksi</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_infeksi[]" value="ajarkan_cuci_tangan"
+                                                                {{ in_array('ajarkan_cuci_tangan', old('rencana_resiko_infeksi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_infeksi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Ajarkan cara mencuci tangan dengan benar</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_infeksi[]" value="ajarkan_etika_batuk"
+                                                                {{ in_array('ajarkan_etika_batuk', old('rencana_resiko_infeksi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_infeksi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Ajarkan etika batuk</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_infeksi[]" value="ajarkan_periksa_luka"
+                                                                {{ in_array('ajarkan_periksa_luka', old('rencana_resiko_infeksi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_infeksi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Ajarkan cara memeriksa kondisi luka atau luka operasi</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_infeksi[]" value="anjurkan_asupan_nutrisi"
+                                                                {{ in_array('anjurkan_asupan_nutrisi', old('rencana_resiko_infeksi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_infeksi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan meningkatkan asupan nutrisi</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_infeksi[]" value="anjurkan_asupan_cairan_infeksi"
+                                                                {{ in_array('anjurkan_asupan_cairan_infeksi', old('rencana_resiko_infeksi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_infeksi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan meningkatkan asupan cairan</label>
+                                                            </div>
+
+                                                            <strong>Kolaborasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_infeksi[]" value="kolaborasi_imunisasi"
+                                                                {{ in_array('kolaborasi_imunisasi', old('rencana_resiko_infeksi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_infeksi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Kolaborasi pemberian imunisasi, jika perlu.</label>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- 13. Konstipasi -->
+                                                <tr>
+                                                    <td class="align-top">
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input" type="checkbox" name="diagnosis[]" value="konstipasi" id="diag_konstipasi" onchange="toggleRencana('konstipasi')"
+                                                            {{ in_array('konstipasi', old('diagnosis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->diagnosis ?? [])) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="diag_konstipasi">
+                                                                <strong>Konstipasi</strong> b.d penurunan motilitas gastrointestinal, ketidaadekuatan pertumbuhan gigi, ketidakcukupan diet, ketidakcukupan asupan serat, ketidakcukupan asupan serat, ketidakcukupan asupan cairan, aganglionik (penyakit Hircsprung), kelemahan otot abdomen.
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top">
+                                                        <div id="rencana_konstipasi" style="display: none;">
+                                                            <strong>Observasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_konstipasi[]" value="periksa_tanda_gejala_konstipasi"
+                                                                {{ in_array('periksa_tanda_gejala_konstipasi', old('rencana_konstipasi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_konstipasi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Periksa tanda dan gejala</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_konstipasi[]" value="periksa_pergerakan_usus"
+                                                                {{ in_array('periksa_pergerakan_usus', old('rencana_konstipasi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_konstipasi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Periksa pergerakan usus, karakteristik feses</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_konstipasi[]" value="identifikasi_faktor_risiko_konstipasi"
+                                                                {{ in_array('identifikasi_faktor_risiko_konstipasi', old('rencana_konstipasi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_konstipasi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi faktor risiko konstipasi</label>
+                                                            </div>
+
+                                                            <strong>Terapeutik:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_konstipasi[]" value="anjurkan_diet_tinggi_serat"
+                                                                {{ in_array('anjurkan_diet_tinggi_serat', old('rencana_konstipasi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_konstipasi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan diet tinggi serat</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_konstipasi[]" value="masase_abdomen"
+                                                                {{ in_array('masase_abdomen', old('rencana_konstipasi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_konstipasi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Lakukan masase abdomen, jika perlu</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_konstipasi[]" value="evakuasi_feses_manual"
+                                                                {{ in_array('evakuasi_feses_manual', old('rencana_konstipasi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_konstipasi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Lakukan evakuasi feses secara manual, jika perlu</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_konstipasi[]" value="berikan_enema"
+                                                                {{ in_array('berikan_enema', old('rencana_konstipasi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_konstipasi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Berikan enema atau intigasi, jika perlu</label>
+                                                            </div>
+
+                                                            <strong>Edukasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_konstipasi[]" value="jelaskan_etiologi_konstipasi"
+                                                                {{ in_array('jelaskan_etiologi_konstipasi', old('rencana_konstipasi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_konstipasi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Jelaskan etiologi masalah dan alasan tindakan</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_konstipasi[]" value="anjurkan_peningkatan_cairan_konstipasi"
+                                                                {{ in_array('anjurkan_peningkatan_cairan_konstipasi', old('rencana_konstipasi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_konstipasi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan peningkatan asupan cairan, jika tidak ada kontraindikasi</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_konstipasi[]" value="ajarkan_mengatasi_konstipasi"
+                                                                {{ in_array('ajarkan_mengatasi_konstipasi', old('rencana_konstipasi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_konstipasi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Ajarkan cara mengatasi konstipasi/impaksi</label>
+                                                            </div>
+
+                                                            <strong>Kolaborasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_konstipasi[]" value="kolaborasi_obat_pencahar"
+                                                                {{ in_array('kolaborasi_obat_pencahar', old('rencana_konstipasi', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_konstipasi ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Kolaborasi penggunaan obat pencahar, jika perlu</label>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- 14. Resiko Jatuh -->
+                                                <tr>
+                                                    <td class="align-top">
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input" type="checkbox" name="diagnosis[]" value="resiko_jatuh" id="diag_resiko_jatuh" onchange="toggleRencana('resiko_jatuh')"
+                                                            {{ in_array('resiko_jatuh', old('diagnosis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->diagnosis ?? [])) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="diag_resiko_jatuh">
+                                                                <strong>Resiko jatuh</strong> b.d usia lebih dari sama dengan 65 tahun (pada dewasa) atau kurang dari sama dengan 2 tahun (pada anak) Riwayat jatuh, anggota gerak bawah prostesis (buatan), penggunaan alat bantu berjalan, penurunan tingkat kesadaran, perubahan fungsi kognitif, lingkungan tidak aman (licin, gelap, lingkungan asing), kondisi pasca operasi, hipotensi ortostatik, perubahan kadar glukosa darah, anemia, kekuatan otot menurun, gangguan pendengaran, gangguan keseimbangan, gangguan penglihatan (glaukoma, katarak, ablasio retina, neuritis optikus), neuropati, efek agen farmakologis (sedasi, alkohol, anastesi umum).
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top">
+                                                        <div id="rencana_resiko_jatuh" style="display: none;">
+                                                            <strong>Observasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_jatuh[]" value="identifikasi_faktor_risiko_jatuh"
+                                                                {{ in_array('identifikasi_faktor_risiko_jatuh', old('rencana_resiko_jatuh', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_jatuh ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi faktor risiko jatuh (usia >65 tahun, penurunan tingkat kesadaran, defisit kognitif, hipotensi ortostatik, gangguan keseimbangan, gangguan penglihatan, neuropati)</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_jatuh[]" value="identifikasi_risiko_setiap_shift"
+                                                                {{ in_array('identifikasi_risiko_setiap_shift', old('rencana_resiko_jatuh', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_jatuh ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi risiko jatuh setidaknya sekali setiap shift atau sesuai dengan kebijakan institusi</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_jatuh[]" value="identifikasi_faktor_lingkungan"
+                                                                {{ in_array('identifikasi_faktor_lingkungan', old('rencana_resiko_jatuh', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_jatuh ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Identifikasi faktor lingkungan yang meningkatkan risiko jatuh (lantai licin, penerangan kurang)</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_jatuh[]" value="hitung_risiko_jatuh"
+                                                                {{ in_array('hitung_risiko_jatuh', old('rencana_resiko_jatuh', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_jatuh ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Hitung risiko jatuh dengan menggunakan skala (Fall Morse Scale, humpty dumpty scale), jika perlu</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_jatuh[]" value="monitor_kemampuan_berpindah"
+                                                                {{ in_array('monitor_kemampuan_berpindah', old('rencana_resiko_jatuh', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_jatuh ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor kemampuan berpindah dari tempat tidur ke kursi roda dan sebaliknya</label>
+                                                            </div>
+
+                                                            <strong>Terapeutik:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_jatuh[]" value="orientasikan_ruangan"
+                                                                {{ in_array('orientasikan_ruangan', old('rencana_resiko_jatuh', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_jatuh ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Orientasikan ruangan pada pasien dan keluarga</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_jatuh[]" value="pastikan_roda_terkunci"
+                                                                {{ in_array('pastikan_roda_terkunci', old('rencana_resiko_jatuh', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_jatuh ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Pastikan roda tempat tidur dan kursi roda selalu dalam kondisi terkunci</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_jatuh[]" value="pasang_handrail"
+                                                                {{ in_array('pasang_handrail', old('rencana_resiko_jatuh', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_jatuh ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Pasang handrail tempat tidur</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_jatuh[]" value="atur_tempat_tidur"
+                                                                {{ in_array('atur_tempat_tidur', old('rencana_resiko_jatuh', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_jatuh ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Atur tempat tidur mekanis pada posisi terendah</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_jatuh[]" value="tempatkan_dekat_perawat"
+                                                                {{ in_array('tempatkan_dekat_perawat', old('rencana_resiko_jatuh', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_jatuh ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Tempatkan pasien berisiko tinggi jatuh dekat dengan pantauan perawat dari nurse station</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_jatuh[]" value="gunakan_alat_bantu"
+                                                                {{ in_array('gunakan_alat_bantu', old('rencana_resiko_jatuh', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_jatuh ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Gunakan alat bantu berjalan (kursi roda, walker)</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_jatuh[]" value="dekatkan_bel"
+                                                                {{ in_array('dekatkan_bel', old('rencana_resiko_jatuh', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_jatuh ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Dekatkan bel pemanggil dalam jangkauan pasien</label>
+                                                            </div>
+
+                                                            <strong>Edukasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_jatuh[]" value="anjurkan_memanggil_perawat"
+                                                                {{ in_array('anjurkan_memanggil_perawat', old('rencana_resiko_jatuh', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_jatuh ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan memanggil perawat jika membutuhkan bantuan untuk berpindah</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_jatuh[]" value="anjurkan_alas_kaki"
+                                                                {{ in_array('anjurkan_alas_kaki', old('rencana_resiko_jatuh', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_jatuh ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan menggunakan alas kaki yang tidak licin</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_jatuh[]" value="anjurkan_berkonsentrasi"
+                                                                {{ in_array('anjurkan_berkonsentrasi', old('rencana_resiko_jatuh', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_jatuh ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan berkonsentrasi untuk menjaga keseimbangan tubuh</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_jatuh[]" value="anjurkan_melebarkan_jarak"
+                                                                {{ in_array('anjurkan_melebarkan_jarak', old('rencana_resiko_jatuh', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_jatuh ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan melebarkan jarak kedua kaki untuk meningkatkan keseimbangan saat berdiri</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_resiko_jatuh[]" value="ajarkan_bel_pemanggil"
+                                                                {{ in_array('ajarkan_bel_pemanggil', old('rencana_resiko_jatuh', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_resiko_jatuh ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Ajarkan cara menggunakan bel pemanggil untuk memanggil perawat</label>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- 15. Gangguan Integritas Kulit/Jaringan -->
+                                                <tr>
+                                                    <td class="align-top">
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input" type="checkbox" name="diagnosis[]" value="gangguan_integritas_kulit" id="diag_gangguan_integritas_kulit" onchange="toggleRencana('gangguan_integritas_kulit')"
+                                                            {{ in_array('gangguan_integritas_kulit', old('diagnosis', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->diagnosis ?? [])) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="diag_gangguan_integritas_kulit">
+                                                                <strong>Gangguan integritas kulit/jaringan</strong> b.d perubahan sirkulasi, perubahan status nutrisi (kelebihan atau kekurangan), kekurangan/kelebihan volume cairan, penurunan mobilitas, bahan kimia iritatif, suhu lingkungan yang ekstream, faktor mekanis (penekanan pada tonjolan tulang, gesekan) atau faktor elektris (elektrodiatermi, energi listrik bertegangan tinggi), efek samping terapi radiasi, kelembapan, proses penuaan, neuropati perifer, perubahan pigmentasi, perubahan hormonal, kurang terpapar informasi tentang upaya mempertahankan/melindungi integritas jaringan.
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top">
+                                                        <div id="rencana_gangguan_integritas_kulit" style="display: none;">
+                                                            <strong>Observasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_integritas_kulit[]" value="monitor_karakteristik_luka"
+                                                                {{ in_array('monitor_karakteristik_luka', old('rencana_gangguan_integritas_kulit', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_integritas_kulit ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor karakteristik luka</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_integritas_kulit[]" value="monitor_tanda_infeksi"
+                                                                {{ in_array('monitor_tanda_infeksi', old('rencana_gangguan_integritas_kulit', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_integritas_kulit ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Monitor tanda-tanda infeksi</label>
+                                                            </div>
+
+                                                            <strong>Terapeutik:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_integritas_kulit[]" value="lepaskan_balutan"
+                                                                {{ in_array('lepaskan_balutan', old('rencana_gangguan_integritas_kulit', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_integritas_kulit ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Lepaskan balutan dan plester secara perlahan</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_integritas_kulit[]" value="bersihkan_nacl"
+                                                                {{ in_array('bersihkan_nacl', old('rencana_gangguan_integritas_kulit', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_integritas_kulit ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Bersihkan dengan cairan NaCl atau pembersih nontoksik</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_integritas_kulit[]" value="bersihkan_jaringan_nekrotik"
+                                                                {{ in_array('bersihkan_jaringan_nekrotik', old('rencana_gangguan_integritas_kulit', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_integritas_kulit ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Bersihkan jaringan nekrotik</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_integritas_kulit[]" value="berikan_salep"
+                                                                {{ in_array('berikan_salep', old('rencana_gangguan_integritas_kulit', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_integritas_kulit ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Berikan salep yang sesuai ke kulit/lesi, jika perlu</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_integritas_kulit[]" value="pasang_balutan"
+                                                                {{ in_array('pasang_balutan', old('rencana_gangguan_integritas_kulit', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_integritas_kulit ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Pasang balutan sesuai jenis luka</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_integritas_kulit[]" value="pertahankan_teknik_steril"
+                                                                {{ in_array('pertahankan_teknik_steril', old('rencana_gangguan_integritas_kulit', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_integritas_kulit ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Pertahankan teknik steril saat melakukan perawatan luka</label>
+                                                            </div>
+
+                                                            <strong>Edukasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_integritas_kulit[]" value="jelaskan_tanda_infeksi"
+                                                                {{ in_array('jelaskan_tanda_infeksi', old('rencana_gangguan_integritas_kulit', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_integritas_kulit ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Jelaskan tanda dan gejala infeksi</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_integritas_kulit[]" value="anjurkan_makanan_tinggi_protein"
+                                                                {{ in_array('anjurkan_makanan_tinggi_protein', old('rencana_gangguan_integritas_kulit', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_integritas_kulit ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Anjurkan mengkonsumsi makanan tinggi kalori dan protein</label>
+                                                            </div>
+
+                                                            <strong>Kolaborasi:</strong>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_integritas_kulit[]" value="kolaborasi_debridement"
+                                                                {{ in_array('kolaborasi_debridement', old('rencana_gangguan_integritas_kulit', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_integritas_kulit ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Kolaborasi prosedur debridement</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="rencana_gangguan_integritas_kulit[]" value="kolaborasi_antibiotik"
+                                                                {{ in_array('kolaborasi_antibiotik', old('rencana_gangguan_integritas_kulit', $asesmen->rmeAsesmenKepPerinatologyKeperawatan->rencana_gangguan_integritas_kulit ?? [])) ? 'checked' : '' }}>
+                                                                <label class="form-check-label">Kolaborasi pemberian antibiotik</label>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
                                     </div>
 
-                                    <!-- Field 2: Intervensi/Rencana Asuhan -->
-                                    <div class="mb-4">
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <label class="form-label fw-bold">2. Intervensi/Rencana Asuhan dan Target
-                                                Terukur</label>
-                                            <button type="button" class="btn btn-sm btn-outline-primary"
-                                                id="btnTambahIntervensi">
-                                                <i class="bi bi-plus"></i> Tambah
-                                            </button>
-                                        </div>
-
-                                        <div id="intervensiContainer">
-                                            <div class="intervensi-item mb-2">
-                                                <div class="d-flex gap-2">
-                                                    <textarea class="form-control" name="intervensi_rencana[]" rows="3"
-                                                        placeholder="Tuliskan intervensi, rencana asuhan, dan target yang terukur..."></textarea>
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-outline-danger remove-intervensi"
-                                                        onclick="removeIntervensi(this)" style="display: none;">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
-
 
                                 {{-- Final section - Submit button --}}
                                 <div class="text-end mt-4">
@@ -2612,533 +3990,5 @@
             </div>
         </div>
     </div>
-    
+
 @endsection
-
-@push('js')
-    <script>
-        // Pass data from PHP to JavaScript
-        window.alergiPasienData = @json($alergiPasien ?? []);
-        
-        // Parse masalah diagnosis data
-        window.masalahDiagnosisData = [];
-        window.intervensiRencanaData = [];
-        
-        @if(isset($asesmen->masalah_diagnosis_parsed))
-            window.masalahDiagnosisData = @json($asesmen->masalah_diagnosis_parsed);
-        @endif
-        
-        @if(isset($asesmen->intervensi_rencana_parsed))
-            window.intervensiRencanaData = @json($asesmen->intervensi_rencana_parsed);
-        @endif
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            'use strict';
-
-            // ==================================================================================
-            // CONFIGURATION AND UTILITIES
-            // ==================================================================================
-            
-            const CONFIG = {
-                STORAGE_KEYS: {
-                    ALERGI: 'alergisInput',
-                    MASALAH_DIAGNOSIS: 'masalah_diagnosis',
-                    INTERVENSI_RENCANA: 'intervensi_rencana'
-                }
-            };
-
-            function showAlert(message, type = 'info') {
-                if (typeof Swal !== 'undefined') {
-                    Swal.fire({
-                        icon: type,
-                        title: type === 'error' ? 'Error' : 'Information',
-                        text: message,
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'Ok'
-                    });
-                } else {
-                    alert(message);
-                }
-            }
-
-            // ==================================================================================
-            // ALLERGY MODULE - FIXED
-            // ==================================================================================
-            
-            const AllergyModule = {
-                alergiDataArray: [],
-                
-                init() {
-                    console.log('Initializing Allergy Module...');
-                    this.loadExistingData();
-                    this.initEventListeners();
-                    this.updateMainAlergiTable();
-                    this.updateHiddenAlergiInput();
-                },
-
-                loadExistingData() {
-                    try {
-                        // Load from PHP variable passed to JavaScript
-                        if (typeof window.alergiPasienData !== 'undefined') {
-                            this.alergiDataArray = window.alergiPasienData.map(item => ({
-                                jenis_alergi: item.jenis_alergi || '',
-                                alergen: item.nama_alergi || '',
-                                reaksi: item.reaksi || '',
-                                tingkat_keparahan: item.tingkat_keparahan || '',
-                                is_existing: true,
-                                id: item.id || null
-                            }));
-                        } else {
-                            // Fallback: try to load from hidden input
-                            const hiddenInput = document.getElementById('alergisInput');
-                            if (hiddenInput && hiddenInput.value) {
-                                const data = JSON.parse(hiddenInput.value);
-                                this.alergiDataArray = data || [];
-                            }
-                        }
-                        
-                        console.log('Loaded allergy data:', this.alergiDataArray);
-                    } catch (e) {
-                        console.error('Error loading existing alergi data:', e);
-                        this.alergiDataArray = [];
-                    }
-                },
-
-                initEventListeners() {
-                    const openAlergiModal = document.getElementById('openAlergiModal');
-                    const addToAlergiList = document.getElementById('addToAlergiList');
-                    const saveAlergiData = document.getElementById('saveAlergiData');
-
-                    if (openAlergiModal) {
-                        openAlergiModal.addEventListener('click', () => {
-                            this.updateModalAlergiList();
-                        });
-                    }
-
-                    if (addToAlergiList) {
-                        addToAlergiList.addEventListener('click', () => {
-                            this.addAlergiToList();
-                        });
-                    }
-
-                    if (saveAlergiData) {
-                        saveAlergiData.addEventListener('click', () => {
-                            this.saveAlergiData();
-                        });
-                    }
-                },
-
-                addAlergiToList() {
-                    const jenisAlergi = document.getElementById('modal_jenis_alergi')?.value?.trim();
-                    const alergen = document.getElementById('modal_alergen')?.value?.trim();
-                    const reaksi = document.getElementById('modal_reaksi')?.value?.trim();
-                    const tingkatKeparahan = document.getElementById('modal_tingkat_keparahan')?.value?.trim();
-
-                    if (!jenisAlergi || !alergen || !reaksi || !tingkatKeparahan) {
-                        showAlert('Semua field harus diisi', 'warning');
-                        return;
-                    }
-
-                    // Check for duplicates
-                    const isDuplicate = this.alergiDataArray.some(item =>
-                        item.jenis_alergi === jenisAlergi &&
-                        item.alergen.toLowerCase() === alergen.toLowerCase()
-                    );
-
-                    if (isDuplicate) {
-                        showAlert('Alergi ini sudah ada dalam daftar', 'warning');
-                        return;
-                    }
-
-                    this.alergiDataArray.push({
-                        jenis_alergi: jenisAlergi,
-                        alergen: alergen,
-                        reaksi: reaksi,
-                        tingkat_keparahan: tingkatKeparahan,
-                        is_existing: false
-                    });
-
-                    this.updateModalAlergiList();
-                    this.resetAlergiForm();
-                },
-
-                updateModalAlergiList() {
-                    const tbody = document.getElementById('modalAlergiList');
-                    const noDataMessage = document.getElementById('noAlergiMessage');
-                    const countBadge = document.getElementById('alergiCount');
-
-                    if (!tbody) return;
-
-                    tbody.innerHTML = '';
-
-                    if (this.alergiDataArray.length === 0) {
-                        if (noDataMessage) noDataMessage.style.display = 'block';
-                        const table = tbody.closest('table');
-                        if (table) table.style.display = 'none';
-                    } else {
-                        if (noDataMessage) noDataMessage.style.display = 'none';
-                        const table = tbody.closest('table');
-                        if (table) table.style.display = 'table';
-
-                        this.alergiDataArray.forEach((item, index) => {
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-                                <td>${item.jenis_alergi}</td>
-                                <td>${item.alergen}</td>
-                                <td>${item.reaksi}</td>
-                                <td>
-                                    <span class="badge ${this.getKeparahanBadgeClass(item.tingkat_keparahan)}">
-                                        ${item.tingkat_keparahan}
-                                    </span>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-danger btn-sm" onclick="AllergyModule.removeAlergiFromModal(${index})">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                    ${item.is_existing ? '<small class="text-muted d-block">Dari DB</small>' : '<small class="text-success d-block">Baru</small>'}
-                                </td>
-                            `;
-                            tbody.appendChild(row);
-                        });
-                    }
-
-                    if (countBadge) countBadge.textContent = this.alergiDataArray.length;
-                },
-
-                updateMainAlergiTable() {
-                    const tbody = document.querySelector('#createAlergiTable tbody');
-                    if (!tbody) return;
-
-                    // Remove existing rows except no-alergi-row
-                    const existingRows = tbody.querySelectorAll('tr:not(#no-alergi-row)');
-                    existingRows.forEach(row => row.remove());
-
-                    const noAlergiRow = document.getElementById('no-alergi-row');
-
-                    if (this.alergiDataArray.length === 0) {
-                        if (!noAlergiRow) {
-                            const emptyRow = document.createElement('tr');
-                            emptyRow.id = 'no-alergi-row';
-                            emptyRow.innerHTML = '<td colspan="5" class="text-center text-muted">Belum ada data alergi</td>';
-                            tbody.appendChild(emptyRow);
-                        } else {
-                            noAlergiRow.style.display = 'table-row';
-                        }
-                    } else {
-                        if (noAlergiRow) noAlergiRow.style.display = 'none';
-
-                        this.alergiDataArray.forEach((item, index) => {
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-                                <td>${item.jenis_alergi}</td>
-                                <td>${item.alergen}</td>
-                                <td>${item.reaksi}</td>
-                                <td>
-                                    <span class="badge ${this.getKeparahanBadgeClass(item.tingkat_keparahan)}">
-                                        ${item.tingkat_keparahan}
-                                    </span>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="AllergyModule.removeAlergiFromMain(${index})">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </td>
-                            `;
-                            tbody.appendChild(row);
-                        });
-                    }
-                },
-
-                saveAlergiData() {
-                    this.updateMainAlergiTable();
-                    this.updateHiddenAlergiInput();
-
-                    const alergiModal = document.getElementById('alergiModal');
-                    if (alergiModal && typeof bootstrap !== 'undefined') {
-                        const modalInstance = bootstrap.Modal.getInstance(alergiModal);
-                        if (modalInstance) modalInstance.hide();
-                    }
-
-                    showAlert('Data alergi berhasil disimpan', 'success');
-                },
-
-                resetAlergiForm() {
-                    const fields = ['modal_jenis_alergi', 'modal_alergen', 'modal_reaksi', 'modal_tingkat_keparahan'];
-                    fields.forEach(fieldId => {
-                        const field = document.getElementById(fieldId);
-                        if (field) field.value = '';
-                    });
-                },
-
-                updateHiddenAlergiInput() {
-                    const hiddenInput = document.getElementById('alergisInput');
-                    if (hiddenInput) {
-                        hiddenInput.value = JSON.stringify(this.alergiDataArray);
-                    }
-                },
-
-                getKeparahanBadgeClass(keparahan) {
-                    switch (keparahan?.toLowerCase()) {
-                        case 'ringan': return 'bg-success';
-                        case 'sedang': return 'bg-warning';
-                        case 'berat': return 'bg-danger';
-                        default: return 'bg-secondary';
-                    }
-                },
-
-                removeAlergiFromModal(index) {
-                    this.alergiDataArray.splice(index, 1);
-                    this.updateModalAlergiList();
-                },
-
-                removeAlergiFromMain(index) {
-                    this.alergiDataArray.splice(index, 1);
-                    this.updateMainAlergiTable();
-                    this.updateHiddenAlergiInput();
-                }
-            };
-
-            // Make AllergyModule globally accessible
-            window.AllergyModule = AllergyModule;
-
-            // ==================================================================================
-            // MASALAH DIAGNOSIS MODULE - FIXED
-            // ==================================================================================
-            
-            const MasalahDiagnosisModule = {
-                init() {
-                    console.log('Initializing Masalah Diagnosis Module...');
-                    this.initMasalahFields();
-                    this.initIntervensiFields();
-                },
-
-                initMasalahFields() {
-                    const masalahContainer = document.getElementById('masalahContainer');
-                    const btnTambahMasalah = document.getElementById('btnTambahMasalah');
-
-                    if (!masalahContainer) {
-                        console.warn('masalahContainer not found');
-                        return;
-                    }
-
-                    // Get existing data from PHP
-                    let existingData = [];
-                    if (typeof window.masalahDiagnosisData !== 'undefined') {
-                        existingData = window.masalahDiagnosisData;
-                    }
-
-                    console.log('Masalah diagnosis existing data:', existingData);
-
-                    // Clear container
-                    masalahContainer.innerHTML = '';
-
-                    // Add existing data or create first empty field
-                    if (existingData && existingData.length > 0) {
-                        existingData.forEach((masalah, index) => {
-                            this.addMasalahField(masalahContainer, masalah, index === 0);
-                        });
-                    } else {
-                        this.addMasalahField(masalahContainer, '', true);
-                    }
-
-                    // Add event listener for adding new masalah
-                    if (btnTambahMasalah) {
-                        btnTambahMasalah.addEventListener('click', () => {
-                            this.addMasalahField(masalahContainer, '', false);
-                        });
-                    }
-                },
-
-                initIntervensiFields() {
-                    const intervensiContainer = document.getElementById('intervensiContainer');
-                    const btnTambahIntervensi = document.getElementById('btnTambahIntervensi');
-
-                    if (!intervensiContainer) {
-                        console.warn('intervensiContainer not found');
-                        return;
-                    }
-
-                    // Get existing data from PHP
-                    let existingData = [];
-                    if (typeof window.intervensiRencanaData !== 'undefined') {
-                        existingData = window.intervensiRencanaData;
-                    }
-
-                    console.log('Intervensi rencana existing data:', existingData);
-
-                    // Clear container
-                    intervensiContainer.innerHTML = '';
-
-                    // Add existing data or create first empty field
-                    if (existingData && existingData.length > 0) {
-                        existingData.forEach((intervensi, index) => {
-                            this.addIntervensiField(intervensiContainer, intervensi, index === 0);
-                        });
-                    } else {
-                        this.addIntervensiField(intervensiContainer, '', true);
-                    }
-
-                    // Add event listener for adding new intervensi
-                    if (btnTambahIntervensi) {
-                        btnTambahIntervensi.addEventListener('click', () => {
-                            this.addIntervensiField(intervensiContainer, '', false);
-                        });
-                    }
-                },
-
-                addMasalahField(container, value = '', isFirst = false) {
-                    const masalahItem = document.createElement('div');
-                    masalahItem.className = 'masalah-item mb-2';
-
-                    masalahItem.innerHTML = `
-                        <div class="d-flex gap-2">
-                            <textarea class="form-control" name="masalah_diagnosis[]" rows="2"
-                                placeholder="Tuliskan masalah atau diagnosis keperawatan...">${value}</textarea>
-                            <button type="button" class="btn btn-sm btn-outline-danger remove-masalah"
-                                style="display: ${isFirst ? 'none' : 'block'};">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </div>
-                    `;
-
-                    container.appendChild(masalahItem);
-
-                    // Add remove event listener
-                    const removeBtn = masalahItem.querySelector('.remove-masalah');
-                    if (removeBtn) {
-                        removeBtn.addEventListener('click', () => {
-                            masalahItem.remove();
-                            this.updateMasalahRemoveButtons();
-                        });
-                    }
-
-                    this.updateMasalahRemoveButtons();
-                },
-
-                addIntervensiField(container, value = '', isFirst = false) {
-                    const intervensiItem = document.createElement('div');
-                    intervensiItem.className = 'intervensi-item mb-2';
-
-                    intervensiItem.innerHTML = `
-                        <div class="d-flex gap-2">
-                            <textarea class="form-control" name="intervensi_rencana[]" rows="3"
-                                placeholder="Tuliskan intervensi, rencana asuhan, dan target yang terukur...">${value}</textarea>
-                            <button type="button" class="btn btn-sm btn-outline-danger remove-intervensi"
-                                style="display: ${isFirst ? 'none' : 'block'};">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </div>
-                    `;
-
-                    container.appendChild(intervensiItem);
-
-                    // Add remove event listener
-                    const removeBtn = intervensiItem.querySelector('.remove-intervensi');
-                    if (removeBtn) {
-                        removeBtn.addEventListener('click', () => {
-                            intervensiItem.remove();
-                            this.updateIntervensiRemoveButtons();
-                        });
-                    }
-
-                    this.updateIntervensiRemoveButtons();
-                },
-
-                updateMasalahRemoveButtons() {
-                    const masalahItems = document.querySelectorAll('.masalah-item');
-                    masalahItems.forEach((item, index) => {
-                        const removeBtn = item.querySelector('.remove-masalah');
-                        if (removeBtn) {
-                            removeBtn.style.display = (index === 0 && masalahItems.length === 1) ? 'none' : 'block';
-                        }
-                    });
-                },
-
-                updateIntervensiRemoveButtons() {
-                    const intervensiItems = document.querySelectorAll('.intervensi-item');
-                    intervensiItems.forEach((item, index) => {
-                        const removeBtn = item.querySelector('.remove-intervensi');
-                        if (removeBtn) {
-                            removeBtn.style.display = (index === 0 && intervensiItems.length === 1) ? 'none' : 'block';
-                        }
-                    });
-                }
-            };
-
-            // ==================================================================================
-            // OTHER EXISTING MODULES (keeping your existing functionality)
-            // ==================================================================================
-            
-            function initPemeriksaanFisik() {
-                // Handle "Tambah Keterangan" buttons
-                document.querySelectorAll('.tambah-keterangan').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const targetId = this.getAttribute('data-target');
-                        const keteranganDiv = document.getElementById(targetId);
-                        const normalCheckbox = this.closest('.pemeriksaan-item')?.querySelector('.form-check-input');
-
-                        if (keteranganDiv) {
-                            keteranganDiv.style.display = 'block';
-                            if (normalCheckbox) normalCheckbox.checked = false;
-                        }
-                    });
-                });
-
-                // Handle normal checkboxes
-                document.querySelectorAll('.form-check-input').forEach(checkbox => {
-                    checkbox.addEventListener('change', function() {
-                        const pemeriksaanItem = this.closest('.pemeriksaan-item');
-                        if (pemeriksaanItem) {
-                            const keteranganDiv = pemeriksaanItem.querySelector('.keterangan');
-                            if (keteranganDiv && this.checked) {
-                                keteranganDiv.style.display = 'none';
-                                const input = keteranganDiv.querySelector('input');
-                                if (input) input.value = '';
-                            }
-                        }
-                    });
-                });
-
-                // Initialize existing data
-                document.querySelectorAll('.pemeriksaan-item').forEach(item => {
-                    const keteranganInput = item.querySelector('.keterangan input');
-                    const normalCheckbox = item.querySelector('.form-check-input');
-                    const keteranganDiv = item.querySelector('.keterangan');
-
-                    if (keteranganInput && keteranganInput.value && keteranganDiv) {
-                        if (normalCheckbox) normalCheckbox.checked = false;
-                        keteranganDiv.style.display = 'block';
-                    }
-                });
-            }
-
-            // ==================================================================================
-            // INITIALIZE ALL MODULES
-            // ==================================================================================
-
-            function initializeApp() {
-                console.log('Initializing Asesmen Perinatology Edit...');
-                
-                // Initialize core modules
-                AllergyModule.init();
-                MasalahDiagnosisModule.init();
-                initPemeriksaanFisik();
-                
-                // Initialize other existing functionality
-                if (typeof initDownScore === 'function') initDownScore();
-                if (typeof initStatusNyeri === 'function') initStatusNyeri();
-                if (typeof initRisikoJatuh === 'function') initRisikoJatuh();
-                if (typeof initStatusGizi === 'function') initStatusGizi();
-                if (typeof initStatusFungsional === 'function') initStatusFungsional();
-                if (typeof initDischargePlanning === 'function') initDischargePlanning();
-                if (typeof initDecubitus === 'function') initDecubitus();
-                
-                console.log('Asesmen Perinatology Edit initialized successfully');
-            }
-
-            // Start the application
-            initializeApp();
-        });
-    </script>
-@endpush
