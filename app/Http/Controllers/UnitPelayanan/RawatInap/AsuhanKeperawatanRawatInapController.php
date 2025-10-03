@@ -138,6 +138,7 @@ class AsuhanKeperawatanRawatInapController extends Controller
             $asuhan->edukasi = $request->edukasi;
             $asuhan->cedera = $request->cedera;
             $asuhan->lainnya = $request->lainnya;
+            $asuhan->makan_via = $request->makan_via;
             $asuhan->user_create = Auth::id();
             $asuhan->save();
 
@@ -285,6 +286,7 @@ class AsuhanKeperawatanRawatInapController extends Controller
             $asuhan->edukasi = $request->edukasi;
             $asuhan->cedera = $request->cedera;
             $asuhan->lainnya = $request->lainnya;
+            $asuhan->makan_via = $request->makan_via;
             $asuhan->user_edit = Auth::id();
             $asuhan->save();
 
