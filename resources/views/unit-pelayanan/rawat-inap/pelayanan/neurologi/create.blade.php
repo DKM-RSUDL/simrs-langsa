@@ -676,17 +676,6 @@
                                                 <div class="section-separator" id="diagnosis">
                                                     <h5 class="fw-semibold mb-4">Diagnosis</h5>
 
-                                                    <select class="form-select" name="neurologi_prognosis">
-                                                        <option value="" selected disabled>--Pilih Prognosis--</option>
-                                                        @forelse ($satsetPrognosis as $item)
-                                                            <option value="{{ $item->prognosis_id }}">
-                                                                {{ $item->value ?? 'Field tidak ditemukan' }}
-                                                            </option>
-                                                        @empty
-                                                            <option value="" disabled>Tidak ada data</option>
-                                                        @endforelse
-                                                    </select>
-
                                                     <!-- Diagnosis Banding -->
                                                     <div class="mb-4 mt-2">
                                                         <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
@@ -745,6 +734,20 @@
                                                         <textarea class="form-control" id="rencana_pengobatan" name="rencana_pengobatan" rows="3"
                                                             placeholder="Tuliskan Rencana penatalaksanaan dan pengobatan..."></textarea>
                                                     </div>
+                                                </div>
+
+                                                <div class="section-separator" id="prognosis">
+                                                    <h5 class="fw-semibold mb-4">Prognosis</h5>
+                                                    <select class="form-select" name="neurologi_prognosis">
+                                                        <option value="" selected disabled>--Pilih Prognosis--</option>
+                                                        @forelse ($satsetPrognosis as $item)
+                                                            <option value="{{ $item->prognosis_id }}">
+                                                                {{ $item->value ?? 'Field tidak ditemukan' }}
+                                                            </option>
+                                                        @empty
+                                                            <option value="" disabled>Tidak ada data</option>
+                                                        @endforelse
+                                                    </select>
                                                 </div>
 
                                                 {{-- <div class="section-separator" style="margin-bottom: 2rem;" id="implementasi">

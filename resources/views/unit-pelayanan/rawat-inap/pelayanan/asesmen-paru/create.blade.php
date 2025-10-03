@@ -20,7 +20,7 @@
                 <input type="hidden" name="tgl_masuk" value="{{ $dataMedis->tgl_masuk }}">
                 <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
 
-                <div class="card">
+                <div class="card" style="height: auto;">
                     <div class="card-body">
                         <div class="px-3">
                             <div class="row g-3">
@@ -1062,7 +1062,6 @@
                                 </div> --}}
                         </div>
 
-
                         <!-- 7. Rencana Kerja Dan Penatalaksanaan -->
                         <div class="section-separator" id="rencana-kerja">
                             <h5 class="section-title">7. Rencana Kerja Dan Penatalaksanaan</h5>
@@ -1242,9 +1241,83 @@
                             </div>
                         </div>
 
+                        <!-- 9. Diagnosis -->
+                        <div class="section-separator" id="diagnosis">
+                            <h5 class="fw-semibold mb-4">8. Diagnosis</h5>
+
+                            <!-- Diagnosis Banding -->
+                            <div class="mb-4">
+                                <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
+                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                    diagnosis banding,
+                                    apabila tidak ada, Pilih tanda tambah untuk menambah
+                                    keterangan diagnosis banding yang tidak ditemukan.</small>
+
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text bg-white border-end-0">
+                                        <i class="bi bi-search text-secondary"></i>
+                                    </span>
+                                    <input type="text" id="diagnosis-banding-input"
+                                        class="form-control border-start-0 ps-0"
+                                        placeholder="Cari dan tambah Diagnosis Banding">
+                                    <span class="input-group-text bg-white" id="add-diagnosis-banding">
+                                        <i class="bi bi-plus-circle text-primary"></i>
+                                    </span>
+                                </div>
+
+                                <div id="diagnosis-banding-list" class="diagnosis-list bg-light p-3 rounded">
+                                    <!-- Diagnosis items will be added here dynamically -->
+                                </div>
+
+                                <!-- Hidden input to store JSON data -->
+                                <input type="hidden" id="diagnosis_banding" name="diagnosis_banding" value="[]">
+                            </div>
+
+                            <!-- Diagnosis Kerja -->
+                            <div>
+                                <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
+                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                    diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah
+                                    keterangan diagnosis kerja yang tidak ditemukan.</small>
+
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text bg-white border-end-0">
+                                        <i class="bi bi-search text-secondary"></i>
+                                    </span>
+                                    <input type="text" id="diagnosis-kerja-input"
+                                        class="form-control border-start-0 ps-0"
+                                        placeholder="Cari dan tambah Diagnosis Kerja">
+                                    <span class="input-group-text bg-white" id="add-diagnosis-kerja">
+                                        <i class="bi bi-plus-circle text-primary"></i>
+                                    </span>
+                                </div>
+
+                                <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
+                                    <!-- Diagnosis items will be added here dynamically -->
+                                </div>
+
+                                <!-- Hidden input to store JSON data -->
+                                <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja" value="[]">
+                            </div>
+                        </div>
+
+                        <div class="section-separator" id="prognosis">
+                            <h5 class="fw-semibold mb-4">9. Prognosis</h5>
+                            <select class="form-select" name="paru_prognosis">
+                                <option value="" selected disabled>--Pilih Prognosis--</option>
+                                @forelse ($satsetPrognosis as $item)
+                                    <option value="{{ $item->prognosis_id }}">
+                                        {{ $item->value ?? 'Field tidak ditemukan' }}
+                                    </option>
+                                @empty
+                                    <option value="" disabled>Tidak ada data</option>
+                                @endforelse
+                            </select>
+                        </div>
+
                         <!-- 8. Perencanaan Pulang Pasien -->
                         <div class="section-separator" id="discharge-planning">
-                            <h5 class="section-title">8. Perencanaan Pulang Pasien (Discharge Planning)</h5>
+                            <h5 class="section-title">10. Perencanaan Pulang Pasien (Discharge Planning)</h5>
 
                             {{-- <div class="mb-4">
                                     <label class="form-label">Diagnosis medis</label>
@@ -1329,95 +1402,17 @@
                                 </button>
                             </div>
                         </div>
-
-                        <!-- 9. Diagnosis -->
-                        <div class="section-separator" id="diagnosis">
-                            <h5 class="fw-semibold mb-4">9. Diagnosis</h5>
-
-                            <div class="mb-4">
-                                <label class="text-primary fw-semibold">Prognosis</label>
-
-                                <select class="form-select" name="paru_prognosis">
-                                    <option value="" selected disabled>--Pilih Prognosis--</option>
-                                    @forelse ($satsetPrognosis as $item)
-                                        <option value="{{ $item->prognosis_id }}">
-                                            {{ $item->value ?? 'Field tidak ditemukan' }}
-                                        </option>
-                                    @empty
-                                        <option value="" disabled>Tidak ada data</option>
-                                    @endforelse
-                                </select>
-                            </div>
-
-                            <!-- Diagnosis Banding -->
-                            <div class="mb-4">
-                                <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
-                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                    diagnosis banding,
-                                    apabila tidak ada, Pilih tanda tambah untuk menambah
-                                    keterangan diagnosis banding yang tidak ditemukan.</small>
-
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text bg-white border-end-0">
-                                        <i class="bi bi-search text-secondary"></i>
-                                    </span>
-                                    <input type="text" id="diagnosis-banding-input"
-                                        class="form-control border-start-0 ps-0"
-                                        placeholder="Cari dan tambah Diagnosis Banding">
-                                    <span class="input-group-text bg-white" id="add-diagnosis-banding">
-                                        <i class="bi bi-plus-circle text-primary"></i>
-                                    </span>
-                                </div>
-
-                                <div id="diagnosis-banding-list" class="diagnosis-list bg-light p-3 rounded">
-                                    <!-- Diagnosis items will be added here dynamically -->
-                                </div>
-
-                                <!-- Hidden input to store JSON data -->
-                                <input type="hidden" id="diagnosis_banding" name="diagnosis_banding"
-                                    value="[]">
-                            </div>
-
-                            <!-- Diagnosis Kerja -->
-                            <div class="mb-4">
-                                <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
-                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                    diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                    keterangan diagnosis kerja yang tidak ditemukan.</small>
-
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text bg-white border-end-0">
-                                        <i class="bi bi-search text-secondary"></i>
-                                    </span>
-                                    <input type="text" id="diagnosis-kerja-input"
-                                        class="form-control border-start-0 ps-0"
-                                        placeholder="Cari dan tambah Diagnosis Kerja">
-                                    <span class="input-group-text bg-white" id="add-diagnosis-kerja">
-                                        <i class="bi bi-plus-circle text-primary"></i>
-                                    </span>
-                                </div>
-
-                                <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
-                                    <!-- Diagnosis items will be added here dynamically -->
-                                </div>
-
-                                <!-- Hidden input to store JSON data -->
-                                <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja" value="[]">
-                            </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-save me-2"></i>Simpan
+                            </button>
                         </div>
-
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="d-flex justify-content-end mt-4">
-                        <button type="submit" class="btn btn-primary px-4">
-                            <i class="fas fa-save me-2"></i>Simpan
-                        </button>
                     </div>
                 </div>
+            </form>
         </div>
-        </form>
-    </div>
     </div>
 @endsection
 @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-kulitkelamin.modal-create-alergi')
@@ -1448,7 +1443,7 @@
                             if (this.value !== yesValue) {
                                 input.value = ''; // Clear input when disabled
                                 input.classList.remove(
-                                'is-invalid'); // Remove validation error styling
+                                    'is-invalid'); // Remove validation error styling
                             }
                         });
                     });

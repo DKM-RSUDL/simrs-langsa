@@ -82,8 +82,8 @@
                                     <div class="card-header bg-light">Obat Dibawa Pulang?</div>
                                     <div class="card-body">
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="radio" name="dibawa"
-                                                id="bawaYa" value="1" required>
+                                            <input class="form-check-input" type="radio" name="dibawa" id="bawaYa"
+                                                value="1" required>
                                             <label class="form-check-label" for="bawaYa">Ya</label>
                                         </div>
                                         <div class="form-check">
@@ -108,7 +108,9 @@
                     <input type="hidden" name="kd_petugas" value="{{ auth()->user()->id }}">
                 </form>
                 <!-- Overlay loading -->
-                <div id="loadingOverlay" class="d-none position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" style="background: rgba(255, 255, 255, 0.8); z-index: 1051;">
+                <div id="loadingOverlay"
+                    class="d-none position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+                    style="background: rgba(255, 255, 255, 0.8); z-index: 1051;">
                     <div class="spinner-border text-primary" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
@@ -196,7 +198,9 @@
                 }
 
                 if (query.length < 2) {
-                    $('#obatListRekon').html('<div class="dropdown-item text-muted">Ketik minimal 2 karakter...</div>').show();
+                    $('#obatListRekon').html(
+                            '<div class="dropdown-item text-muted">Ketik minimal 2 karakter...</div>')
+                        .show();
                     return;
                 }
 
@@ -212,16 +216,18 @@
                     $.ajax({
                         url: '{{ route('farmasi.searchObat', ['kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk]) }}',
                         method: 'GET',
-                        data: { term: query },
+                        data: {
+                            term: query
+                        },
                         dataType: 'json',
                         success: function(data) {
                             let html = '';
                             if (data && data.length > 0) {
                                 data.forEach(function(obat) {
                                     html += `
-                                        <a href="#" class="dropdown-item py-2" 
-                                        data-id="${obat.id || ''}" 
-                                        data-harga="${obat.harga || ''}" 
+                                        <a href="#" class="dropdown-item py-2"
+                                        data-id="${obat.id || ''}"
+                                        data-harga="${obat.harga || ''}"
                                         data-satuan="${obat.satuan || ''}">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="fw-medium">${obat.text || 'Tidak ada nama'}</div>
@@ -230,12 +236,15 @@
                                         </a>`;
                                 });
                             } else {
-                                html = '<div class="dropdown-item text-muted py-2">Tidak ada hasil yang ditemukan</div>';
+                                html =
+                                    '<div class="dropdown-item text-muted py-2">Tidak ada hasil yang ditemukan</div>';
                             }
                             $('#obatListRekon').html(html).show();
                         },
                         error: function(xhr) {
-                            $('#obatListRekon').html('<div class="dropdown-item text-danger py-2">Terjadi kesalahan saat mencari obat</div>').show();
+                            $('#obatListRekon').html(
+                                '<div class="dropdown-item text-danger py-2">Terjadi kesalahan saat mencari obat</div>'
+                            ).show();
                         }
                     });
                 }, 300);
@@ -281,15 +290,15 @@
             // Submit form
             $('#btnSaveObat').on('click', function() {
                 const obatId = $('#selectedObatId').val();
-                if (!obatId) {
-                    iziToast.error({
-                        title: 'Error',
-                        message: 'Silakan pilih obat terlebih dahulu!',
-                        position: 'topRight'
-                    });
-                    $('#cariObatRekon').focus();
-                    return;
-                }
+                // if (!obatId) {
+                //     iziToast.error({
+                //         title: 'Error',
+                //         message: 'Silakan pilih obat terlebih dahulu!',
+                //         position: 'topRight'
+                //     });
+                //     $('#cariObatRekon').focus();
+                //     return;
+                // }
 
                 if ($('#rekonsiliasiForm')[0].checkValidity()) {
                     const $btn = $(this);
@@ -304,7 +313,9 @@
                         url: $('#rekonsiliasiForm').attr('action'),
                         method: 'POST',
                         data: $('#rekonsiliasiForm').serialize(),
-                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
                         success: function(response) {
                             $btn.html(originalBtnText).prop('disabled', false);
                             $('#loadingOverlay').addClass('d-none'); // Sembunyikan overlay
@@ -333,7 +344,8 @@
 
                             let errorMessage = 'Terjadi kesalahan saat menyimpan data.';
                             if (xhr.responseJSON && xhr.responseJSON.errors) {
-                                errorMessage = Object.values(xhr.responseJSON.errors).flat().join('<br>');
+                                errorMessage = Object.values(xhr.responseJSON.errors).flat()
+                                    .join('<br>');
                             } else if (xhr.responseJSON && xhr.responseJSON.message) {
                                 errorMessage = xhr.responseJSON.message;
                             }

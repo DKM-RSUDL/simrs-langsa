@@ -1253,6 +1253,12 @@
                 <div class="form-section">
                     <div class="section-header">TERAPI SAAT PINDAH</div>
                     <div class="section-content">
+
+                        <!-- Riwayat Pemberian Obat akan digabungkan ke tabel terapi (tidak membuat tabel baru).
+                                     Server memberikan $riwayatObat; kita akan memasukkannya ke dataObat di JS
+                                     hanya jika entry berada dalam 24 jam terakhir. -->
+                        <input type="hidden" id="riwayatObatJson" value='@json($riwayatObat ?? [])'>
+
                         <!-- Button Tambah Terapi -->
                         <div class="mb-3">
                             <button type="button" class="btn btn-success btn-sm" onclick="bukaModal()">
@@ -1414,16 +1420,77 @@
 
         // Initialize old values untuk terapi dan alergi
         document.addEventListener('DOMContentLoaded', function() {
-            // Load old terapi data jika ada
+            // 1) Load terapi yang dimasukkan manual (old / input sebelumnya)
             const oldTerapiData = {!! json_encode(old('terapi_data', '[]')) !!};
             if (oldTerapiData && oldTerapiData !== '[]') {
                 try {
-                    dataObat = JSON.parse(oldTerapiData);
-                    tampilkanTabel();
+                    const parsed = JSON.parse(oldTerapiData);
+                    if (Array.isArray(parsed)) {
+                        dataObat = parsed.slice(); // mulai dengan data transfer/old
+                    }
                 } catch (e) {
                     console.error('Error parsing old terapi data:', e);
                 }
             }
+
+            // 2) Ambil riwayat pemberian obat dari server (RmeCatatanPemberianObat)
+            try {
+                const rawRiwayat = document.getElementById('riwayatObatJson')?.value || '[]';
+                const riwayat = JSON.parse(rawRiwayat);
+                if (Array.isArray(riwayat) && riwayat.length > 0) {
+                    const now = new Date();
+                    const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
+                    riwayat.forEach(function(ro) {
+                        // Dapatkan tanggal record (coba beberapa field umum)
+                        const dateStr = ro.tanggal || ro.created_at || ro.createdAt || null;
+                        if (!dateStr) return;
+
+                        const recDate = new Date(dateStr);
+                        if (isNaN(recDate.getTime())) return;
+
+                        // Hanya yang <= 24 jam
+                        if ((now - recDate) > ONE_DAY_MS) return;
+
+                        // Bentuk objek minimal sesuai kolom yang diminta
+                        const nama = ro.nama_obat || ro.namaObat || ro.nama || '-';
+                        const dosis = (ro.dosis ? (ro.dosis + (ro.satuan ? ' ' + ro.satuan : '')) : (ro
+                            .satuan ? ro.satuan : '-'));
+                        const frekuensi = ro.frekuensi || ro.freq || ro.freak || '-';
+                        // Jumlah di model CPO tidak konsisten; coba pakai 'freak' atau 'keterangan'
+                        const jumlah = ro.freak || ro.jumlah || ro.keterangan || '-';
+                        // Cara pemberian coba dari keterangan jika tidak ada field khusus
+                        const cara = ro.cara || ro.cara_pemberian || ro.keterangan || '-';
+
+                        const item = {
+                            namaObat: nama,
+                            jumlah: jumlah,
+                            dosis: dosis,
+                            frekuensi: frekuensi,
+                            cara: cara
+                        };
+
+                        // Hindari duplikasi sederhana: periksa kombinasi nama+dosis+frekuensi
+                        const exists = dataObat.some(function(x) {
+                            return (String(x.namaObat || '').trim().toLowerCase() === String(item
+                                    .namaObat || '').trim().toLowerCase()) &&
+                                (String(x.dosis || '').trim().toLowerCase() === String(item.dosis ||
+                                    '').trim().toLowerCase()) &&
+                                (String(x.frekuensi || '').trim().toLowerCase() === String(item
+                                    .frekuensi || '').trim().toLowerCase());
+                        });
+                        if (!exists) {
+                            // Masukkan riwayat di depan supaya terlihat sebagai referensi
+                            dataObat.unshift(item);
+                        }
+                    });
+                }
+            } catch (e) {
+                console.error('Error parsing riwayat obat from server:', e);
+            }
+
+            // Tampilkan tabel gabungan (old transfer + riwayat CPO yang <=24 jam)
+            tampilkanTabel();
 
             // Load old alergi data jika ada
             const oldAlergiData = {!! json_encode(old('alergis', '[]')) !!};
@@ -1797,7 +1864,7 @@
                     if (!this.checked) return;
 
                     const section = this.dataset
-                    .section; // contoh: "aktivitas", "higiene", "pakaian", "gerak"
+                        .section; // contoh: "aktivitas", "higiene", "pakaian", "gerak"
                     const value = this.value; // "mandiri" | "bantuan" | "tidak_bisa"
 
                     // Ambil semua input anak pada section tsb

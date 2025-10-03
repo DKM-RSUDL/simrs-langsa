@@ -233,9 +233,9 @@
                                 if (data && data.length > 0) {
                                     data.forEach(function(obat) {
                                         html += `
-                                        <a href="#" class="dropdown-item py-2" 
-                                           data-id="${obat.id || ''}" 
-                                           data-harga="${obat.harga || ''}" 
+                                        <a href="#" class="dropdown-item py-2"
+                                           data-id="${obat.id || ''}"
+                                           data-harga="${obat.harga || ''}"
                                            data-satuan="${obat.satuan || ''}">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="fw-medium">${obat.text || 'Tidak ada nama'}</div>
@@ -301,15 +301,15 @@
                 $(document).on('click', '#btnSaveObat', function() {
 
                     const obatId = $('#selectedObatId').val();
-                    if (!obatId) {
-                        iziToast.error({
-                            title: 'Error',
-                            message: 'Silakan pilih obat terlebih dahulu!',
-                            position: 'topRight'
-                        });
-                        $('#cariObatRekon').focus();
-                        return;
-                    }
+                    // if (!obatId) {
+                    //     iziToast.error({
+                    //         title: 'Error',
+                    //         message: 'Silakan pilih obat terlebih dahulu!',
+                    //         position: 'topRight'
+                    //     });
+                    //     $('#cariObatRekon').focus();
+                    //     return;
+                    // }
 
                     if ($('#rekonsiliasiForm')[0].checkValidity()) {
                         const $btn = $(this);

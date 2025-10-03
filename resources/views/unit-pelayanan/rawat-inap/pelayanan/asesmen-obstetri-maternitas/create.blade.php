@@ -1122,22 +1122,6 @@
 
                                     <div class="section-separator" id="diagnosis">
                                         <h5 class="fw-semibold mb-4">7. Diagnosis</h5>
-
-                                        <div class="mb-4">
-                                            <label class="text-primary fw-semibold">Prognosis</label>
-
-                                            <select class="form-select" name="paru_prognosis">
-                                                <option value="" selected disabled>--Pilih Prognosis--</option>
-                                                @forelse ($satsetPrognosis as $item)
-                                                    <option value="{{ $item->prognosis_id }}">
-                                                        {{ $item->value ?? 'Field tidak ditemukan' }}
-                                                    </option>
-                                                @empty
-                                                    <option value="" disabled>Tidak ada data</option>
-                                                @endforelse
-                                            </select>
-                                        </div>
-
                                         <!-- Diagnosis Banding -->
                                         <div class="mb-4">
                                             <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
@@ -1194,20 +1178,31 @@
                                             <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja"
                                                 value="[]">
                                         </div>
+                                    </div>
 
-                                        <div class="mb-4">
-                                            <!-- sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis -->
-                                            <div class="form-group mb-4">
-                                                <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan
-                                                    Pengobatan</label>
-                                                <textarea class="form-control" name="rencana_pengobatan" rows="4"
-                                                    placeholder="Rencana Penatalaksanaan Dan Pengobatan"></textarea>
-                                            </div>
-                                        </div>
+                                    <div class="section-separator" id="rencana_pengobatan">
+                                        <h5 class="fw-semibold mb-4">8. Rencana Penatalaksanaan dan
+                                            Pengobatan</h5>
+                                        <textarea class="form-control" name="rencana_pengobatan" rows="4"
+                                            placeholder="Rencana Penatalaksanaan Dan Pengobatan"></textarea>
+                                    </div>
+
+                                    <div class="section-separator" id="prognosis">
+                                        <h5 class="fw-semibold mb-4">9. Prognosis</h5>
+                                        <select class="form-select" name="paru_prognosis">
+                                            <option value="" selected disabled>--Pilih Prognosis--</option>
+                                            @forelse ($satsetPrognosis as $item)
+                                                <option value="{{ $item->prognosis_id }}">
+                                                    {{ $item->value ?? 'Field tidak ditemukan' }}
+                                                </option>
+                                            @empty
+                                                <option value="" disabled>Tidak ada data</option>
+                                            @endforelse
+                                        </select>
                                     </div>
 
                                     <div class="section-separator" style="margin-bottom: 2rem;" id="discharge-planning">
-                                        <h5 class="fw-semibold mb-4">8. Discharge Planning</h5>
+                                        <h5 class="fw-semibold mb-4">10. Discharge Planning</h5>
 
                                         <form id="dischargePlanningForm">
                                             {{-- <div class="mb-3 row align-items-center">
