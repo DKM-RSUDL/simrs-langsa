@@ -133,54 +133,56 @@
     </div>
 </div>
 
-<style>
-    #obatListRekon {
-        position: absolute;
-        width: 100%;
-        max-height: 250px;
-        overflow-y: auto;
-        z-index: 1050;
-        display: block;
-        margin-top: 0;
-        border-radius: 0.375rem;
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    }
+@push('css')
+    <style>
+        #obatListRekon {
+            position: absolute;
+            width: 100%;
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 1050;
+            display: block;
+            margin-top: 0;
+            border-radius: 0.375rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
 
-    #obatListRekon a {
-        padding: 0.5rem 1rem;
-        font-size: 0.875rem;
-        border-bottom: 1px solid #e9ecef;
-    }
+        #obatListRekon a {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            border-bottom: 1px solid #e9ecef;
+        }
 
-    #obatListRekon a:last-child {
-        border-bottom: none;
-    }
+        #obatListRekon a:last-child {
+            border-bottom: none;
+        }
 
-    .position-relative {
-        position: relative !important;
-    }
+        .position-relative {
+            position: relative !important;
+        }
 
-    .modal-content {
-        border: none;
-        border-radius: 0.5rem;
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    }
+        .modal-content {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
 
-    .modal-header {
-        border-top-left-radius: 0.5rem;
-        border-top-right-radius: 0.5rem;
-    }
+        .modal-header {
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+        }
 
-    .card-header {
-        font-weight: 500;
-        padding: 0.5rem 1rem;
-    }
+        .card-header {
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+        }
 
-    .form-check-input:checked {
-        background-color: #0d6efd;
-        border-color: #0d6efd;
-    }
-</style>
+        .form-check-input:checked {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+    </style>
+@endpush
 
 @push('js')
     <script>
@@ -233,9 +235,9 @@
                                 if (data && data.length > 0) {
                                     data.forEach(function(obat) {
                                         html += `
-                                        <a href="#" class="dropdown-item py-2" 
-                                           data-id="${obat.id || ''}" 
-                                           data-harga="${obat.harga || ''}" 
+                                        <a href="#" class="dropdown-item py-2"
+                                           data-id="${obat.id || ''}"
+                                           data-harga="${obat.harga || ''}"
                                            data-satuan="${obat.satuan || ''}">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="fw-medium">${obat.text || 'Tidak ada nama'}</div>
@@ -301,15 +303,15 @@
                 $(document).on('click', '#btnSaveObat', function() {
 
                     const obatId = $('#selectedObatId').val();
-                    if (!obatId) {
-                        iziToast.error({
-                            title: 'Error',
-                            message: 'Silakan pilih obat terlebih dahulu!',
-                            position: 'topRight'
-                        });
-                        $('#cariObatRekon').focus();
-                        return;
-                    }
+                    // if (!obatId) {
+                    //     iziToast.error({
+                    //         title: 'Error',
+                    //         message: 'Silakan pilih obat terlebih dahulu!',
+                    //         position: 'topRight'
+                    //     });
+                    //     $('#cariObatRekon').focus();
+                    //     return;
+                    // }
 
                     if ($('#rekonsiliasiForm')[0].checkValidity()) {
                         const $btn = $(this);
