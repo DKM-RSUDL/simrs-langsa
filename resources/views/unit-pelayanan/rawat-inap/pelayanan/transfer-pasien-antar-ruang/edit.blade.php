@@ -78,11 +78,12 @@
 
         <div class="col-md-9">
             <div class="d-flex align-items-center mb-3">
-                <a href="{{ route('rawat-inap.transfer-pasien-antar-ruang.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" class="btn btn-outline-primary btn-sm me-2">
+                <a href="{{ route('rawat-inap.transfer-pasien-antar-ruang.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                    class="btn btn-outline-primary btn-sm me-2">
                     <i class="fas fa-arrow-left"></i> Kembali
                 </a>
             </div>
-            
+
             <div class="text-center mt-1 mb-3">
                 <h4 class="text-primary fw-bold">EDIT FORM TRANSFER PASIEN ANTAR RUANG</h4>
             </div>
@@ -97,7 +98,9 @@
                 </div>
             @endif
 
-            <form action="{{ route('rawat-inap.transfer-pasien-antar-ruang.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $transfer->id]) }}" method="post">
+            <form
+                action="{{ route('rawat-inap.transfer-pasien-antar-ruang.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $transfer->id]) }}"
+                method="post">
                 @csrf
                 @method('PUT')
 
@@ -158,19 +161,21 @@
 
                             <div class="mb-3">
                                 <label for="petugas_menyerahkan" class="form-label">Petugas yang Menyerahkan</label>
-                                <select name="petugas_menyerahkan" id="petugas_menyerahkan" class="form-select select2" required>
+                                <select name="petugas_menyerahkan" id="petugas_menyerahkan" class="form-select select2"
+                                    required>
                                     <option value="">--Pilih--</option>
                                     <option value="{{ auth()->user()->kd_karyawan }}" @selected(old('petugas_menyerahkan', $transfer->petugas_menyerahkan) == auth()->user()->kd_karyawan)>
-                                        {{ auth()->user()->karyawan->gelar_depan . ' ' .
-                                        str()->title(auth()->user()->karyawan->nama) . ' ' .
-                                        auth()->user()->karyawan->gelar_belakang }}
+                                        {{ auth()->user()->karyawan->gelar_depan .
+                                            ' ' .
+                                            str()->title(auth()->user()->karyawan->nama) .
+                                            ' ' .
+                                            auth()->user()->karyawan->gelar_belakang }}
                                     </option>
 
                                     @foreach ($petugas as $item)
                                         @if ($item->kd_karyawan != auth()->user()->kd_karyawan)
                                             <option value="{{ $item->kd_karyawan }}" @selected(old('petugas_menyerahkan', $transfer->petugas_menyerahkan) == $item->kd_karyawan)>
-                                                {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' .
-                                                $item->gelar_belakang }}
+                                                {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' . $item->gelar_belakang }}
                                             </option>
                                         @endif
                                     @endforeach
@@ -183,7 +188,8 @@
                             <div class="mb-3 row">
                                 <div class="col-md-6">
                                     <label class="form-label">Tanggal</label>
-                                    <input type="date" name="tanggal_menyerahkan" value="{{ old('tanggal_menyerahkan', $transfer->tanggal_menyerahkan) }}"
+                                    <input type="date" name="tanggal_menyerahkan"
+                                        value="{{ old('tanggal_menyerahkan', $transfer->tanggal_menyerahkan) }}"
                                         class="form-control" required>
                                     @error('tanggal_menyerahkan')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -191,7 +197,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Jam</label>
-                                    <input type="time" name="jam_menyerahkan" value="{{ old('jam_menyerahkan', $transfer->jam_menyerahkan) }}" class="form-control" required>
+                                    <input type="time" name="jam_menyerahkan"
+                                        value="{{ old('jam_menyerahkan', $transfer->jam_menyerahkan) }}"
+                                        class="form-control" required>
                                     @error('jam_menyerahkan')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror
@@ -247,8 +255,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Diagnosis Utama</label>
-                                    <textarea name="diagnosis_utama" class="form-control" rows="3"
-                                        placeholder="Tuliskan diagnosis utama pasien">{{ old('diagnosis_utama', $transfer->diagnosis_utama) }}</textarea>
+                                    <textarea name="diagnosis_utama" class="form-control" rows="3" placeholder="Tuliskan diagnosis utama pasien">{{ old('diagnosis_utama', $transfer->diagnosis_utama) }}</textarea>
                                     @error('diagnosis_utama')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -281,14 +288,17 @@
                                     <label class="form-label fw-bold">Perlu Menjadi Perhatian:</label>
                                     <div class="mb-3">
                                         <label for="mrsa" class="form-label">MRSA:</label>
-                                        <input type="text" name="mrsa" class="form-control" placeholder="Detail MRSA" value="{{ old('mrsa', $transfer->mrsa) }}">
+                                        <input type="text" name="mrsa" class="form-control"
+                                            placeholder="Detail MRSA" value="{{ old('mrsa', $transfer->mrsa) }}">
                                         @error('mrsa')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
                                     <div class="mb-3">
                                         <label for="lainnya_perhatian" class="form-label">Lainnya:</label>
-                                        <input type="text" name="lainnya_perhatian" class="form-control" placeholder="Sebutkan lainnya" value="{{ old('lainnya_perhatian', $transfer->lainnya_perhatian) }}">
+                                        <input type="text" name="lainnya_perhatian" class="form-control"
+                                            placeholder="Sebutkan lainnya"
+                                            value="{{ old('lainnya_perhatian', $transfer->lainnya_perhatian) }}">
                                         @error('lainnya_perhatian')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
@@ -297,31 +307,31 @@
                             </div>
 
                             <div class="section-separator" id="alergi">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openAlergiModal"
-                                        data-bs-toggle="modal" data-bs-target="#alergiModal">
-                                        <i class="ti-plus"></i> Tambah Alergi
-                                    </button>
-                                    <input type="hidden" name="alergis" id="alergisInput" value="[]">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered" id="createAlergiTable">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th width="20%">Jenis Alergi</th>
-                                                    <th width="25%">Alergen</th>
-                                                    <th width="25%">Reaksi</th>
-                                                    <th width="20%">Tingkat Keparahan</th>
-                                                    <th width="10%">Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr id="no-alergi-row">
-                                                    <td colspan="5" class="text-center text-muted">Tidak ada data
-                                                        alergi</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openAlergiModal"
+                                    data-bs-toggle="modal" data-bs-target="#alergiModal">
+                                    <i class="ti-plus"></i> Tambah Alergi
+                                </button>
+                                <input type="hidden" name="alergis" id="alergisInput" value="[]">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="createAlergiTable">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th width="20%">Jenis Alergi</th>
+                                                <th width="25%">Alergen</th>
+                                                <th width="25%">Reaksi</th>
+                                                <th width="20%">Tingkat Keparahan</th>
+                                                <th width="10%">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr id="no-alergi-row">
+                                                <td colspan="5" class="text-center text-muted">Tidak ada data
+                                                    alergi</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
+                            </div>
 
                         </div>
                     </div>
@@ -334,7 +344,8 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label fw-bold">Pasien/keluarga mengetahui dan menyetujui pemindahan:</label>
+                                    <label class="form-label fw-bold">Pasien/keluarga mengetahui dan menyetujui
+                                        pemindahan:</label>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="persetujuan" value="ya"
                                             id="setuju_ya" @checked(old('persetujuan', $transfer->persetujuan) == 'ya') required>
@@ -355,7 +366,8 @@
                                         <div class="col-md-6">
                                             <label class="form-label">Nama</label>
                                             <input type="text" name="nama_keluarga" class="form-control"
-                                                placeholder="Nama keluarga" value="{{ old('nama_keluarga', $transfer->nama_keluarga) }}">
+                                                placeholder="Nama keluarga"
+                                                value="{{ old('nama_keluarga', $transfer->nama_keluarga) }}">
                                             @error('nama_keluarga')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -363,7 +375,8 @@
                                         <div class="col-md-6">
                                             <label class="form-label">Hubungan</label>
                                             <input type="text" name="hubungan_keluarga" class="form-control"
-                                                placeholder="Hubungan dengan pasien" value="{{ old('hubungan_keluarga', $transfer->hubungan_keluarga) }}">
+                                                placeholder="Hubungan dengan pasien"
+                                                value="{{ old('hubungan_keluarga', $transfer->hubungan_keluarga) }}">
                                             @error('hubungan_keluarga')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -372,15 +385,17 @@
                                 </div>
                             </div>
                             @php
-                                $alasan = is_string($transfer->alasan) ? json_decode($transfer->alasan, true) : ($transfer->alasan ?? []);
+                                $alasan = is_string($transfer->alasan)
+                                    ? json_decode($transfer->alasan, true)
+                                    : $transfer->alasan ?? [];
                             @endphp
 
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Alasan Pemindahan:</label>
                                 <div class="checkbox-group">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="alasan[]" value="kondisi_pasien"
-                                            id="kondisi" @checked(is_array(old('alasan', $alasan)) && in_array('kondisi_pasien', old('alasan', $alasan)))>
+                                        <input class="form-check-input" type="checkbox" name="alasan[]"
+                                            value="kondisi_pasien" id="kondisi" @checked(is_array(old('alasan', $alasan)) && in_array('kondisi_pasien', old('alasan', $alasan)))>
                                         <label class="form-check-label" for="kondisi">
                                             Kondisi pasien: memburuk/stabil/tidak ada perubahan
                                         </label>
@@ -388,8 +403,8 @@
                                 </div>
                                 <div class="checkbox-group">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="alasan[]" value="fasilitas"
-                                            id="fasilitas" @checked(is_array(old('alasan', $alasan)) && in_array('fasilitas', old('alasan', $alasan)))>
+                                        <input class="form-check-input" type="checkbox" name="alasan[]"
+                                            value="fasilitas" id="fasilitas" @checked(is_array(old('alasan', $alasan)) && in_array('fasilitas', old('alasan', $alasan)))>
                                         <label class="form-check-label" for="fasilitas">
                                             Fasilitas: kurang memadai/butuh peralatan yang lebih baik
                                         </label>
@@ -407,12 +422,12 @@
                                 <div class="checkbox-group">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="alasan[]"
-                                            value="lainnya_alasan" id="lainnya_alasan" 
-                                            @checked(is_array(old('alasan', $alasan)) && in_array('lainnya_alasan', old('alasan', $alasan)))
+                                            value="lainnya_alasan" id="lainnya_alasan" @checked(is_array(old('alasan', $alasan)) && in_array('lainnya_alasan', old('alasan', $alasan)))
                                             onchange="toggleOtherInput('lainnya_alasan', 'lainnya_alasan_detail_input')">
                                         <label class="form-check-label" for="lainnya_alasan">Lainnya:</label>
-                                        <input type="text" name="lainnya_alasan_detail" id="lainnya_alasan_detail_input"
-                                            class="form-control form-control-sm mt-1" placeholder="Sebutkan alasan lainnya"
+                                        <input type="text" name="lainnya_alasan_detail"
+                                            id="lainnya_alasan_detail_input" class="form-control form-control-sm mt-1"
+                                            placeholder="Sebutkan alasan lainnya"
                                             value="{{ old('lainnya_alasan_detail', $transfer->lainnya_alasan_detail) }}"
                                             style="{{ is_array(old('alasan', $alasan)) && in_array('lainnya_alasan', old('alasan', $alasan)) ? 'display: block;' : 'display: none;' }}">
                                         @error('lainnya_alasan_detail')
@@ -423,7 +438,9 @@
                             </div>
                         </div>
                         @php
-                            $metode = is_string($transfer->metode) ? json_decode($transfer->metode, true) : ($transfer->metode ?? []);
+                            $metode = is_string($transfer->metode)
+                                ? json_decode($transfer->metode, true)
+                                : $transfer->metode ?? [];
                         @endphp
 
                         <div class="mb-3">
@@ -460,8 +477,8 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Keadaan Umum</label>
-                                    <input type="text" name="keadaan_umum" class="form-control" 
-                                        value="{{ old('keadaan_umum', $transfer->keadaan_umum) }}" 
+                                    <input type="text" name="keadaan_umum" class="form-control"
+                                        value="{{ old('keadaan_umum', $transfer->keadaan_umum) }}"
                                         placeholder="Masukkan keadaan umum pasien">
                                     @error('keadaan_umum')
                                         <small class="text-danger">{{ $message }}</small>
@@ -518,8 +535,9 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label for="suhu" class="form-label">Suhu</label>
-                                            <input type="number" step="0.1" class="form-control" name="suhu" id="suhu"
-                                                placeholder="Suhu (°C)" value="{{ old('suhu', $transfer->suhu) }}">
+                                            <input type="number" step="0.1" class="form-control" name="suhu"
+                                                id="suhu" placeholder="Suhu (°C)"
+                                                value="{{ old('suhu', $transfer->suhu) }}">
                                             @error('suhu')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -531,7 +549,8 @@
                                         <div class="col-md-6">
                                             <label for="resp" class="form-label">Respirasi</label>
                                             <input type="number" class="form-control" name="resp" id="resp"
-                                                placeholder="Respirasi (x/menit)" value="{{ old('resp', $transfer->resp) }}">
+                                                placeholder="Respirasi (x/menit)"
+                                                value="{{ old('resp', $transfer->resp) }}">
                                             @error('resp')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -558,8 +577,12 @@
 
                 <!-- Informasi Medis dan Peralatan yang menyertai saat pindah -->
                 @php
-                    $info_medis = is_string($transfer->info_medis) ? json_decode($transfer->info_medis, true) : ($transfer->info_medis ?? []);
-                    $peralatan = is_string($transfer->peralatan) ? json_decode($transfer->peralatan, true) : ($transfer->peralatan ?? []);
+                    $info_medis = is_string($transfer->info_medis)
+                        ? json_decode($transfer->info_medis, true)
+                        : $transfer->info_medis ?? [];
+                    $peralatan = is_string($transfer->peralatan)
+                        ? json_decode($transfer->peralatan, true)
+                        : $transfer->peralatan ?? [];
                 @endphp
 
                 <!-- Informasi Medis dan Peralatan yang Menyertai Saat Pindah -->
@@ -572,38 +595,32 @@
                                 <div class="checkbox-group">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="info_medis[]"
-                                            value="disabilitas" id="disabilitas" 
-                                            @checked(is_array(old('info_medis', $info_medis)) && in_array('disabilitas', old('info_medis', $info_medis)))>
+                                            value="disabilitas" id="disabilitas" @checked(is_array(old('info_medis', $info_medis)) && in_array('disabilitas', old('info_medis', $info_medis)))>
                                         <label class="form-check-label" for="disabilitas">Disabilitas</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="info_medis[]" 
-                                            value="amputasi" id="amputasi" 
-                                            @checked(is_array(old('info_medis', $info_medis)) && in_array('amputasi', old('info_medis', $info_medis)))>
+                                        <input class="form-check-input" type="checkbox" name="info_medis[]"
+                                            value="amputasi" id="amputasi" @checked(is_array(old('info_medis', $info_medis)) && in_array('amputasi', old('info_medis', $info_medis)))>
                                         <label class="form-check-label" for="amputasi">Amputasi</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="info_medis[]"
-                                            value="paralisis" id="paralisis" 
-                                            @checked(is_array(old('info_medis', $info_medis)) && in_array('paralisis', old('info_medis', $info_medis)))>
+                                            value="paralisis" id="paralisis" @checked(is_array(old('info_medis', $info_medis)) && in_array('paralisis', old('info_medis', $info_medis)))>
                                         <label class="form-check-label" for="paralisis">Paralisis</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="info_medis[]"
-                                            value="kontraktur" id="kontraktur" 
-                                            @checked(is_array(old('info_medis', $info_medis)) && in_array('kontraktur', old('info_medis', $info_medis)))>
+                                            value="kontraktur" id="kontraktur" @checked(is_array(old('info_medis', $info_medis)) && in_array('kontraktur', old('info_medis', $info_medis)))>
                                         <label class="form-check-label" for="kontraktur">Kontraktur</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="info_medis[]"
-                                            value="ulkus_dekubitus" id="ulkus_dekubitus" 
-                                            @checked(is_array(old('info_medis', $info_medis)) && in_array('ulkus_dekubitus', old('info_medis', $info_medis)))>
+                                            value="ulkus_dekubitus" id="ulkus_dekubitus" @checked(is_array(old('info_medis', $info_medis)) && in_array('ulkus_dekubitus', old('info_medis', $info_medis)))>
                                         <label class="form-check-label" for="ulkus_dekubitus">Ulkus Dekubitus</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="info_medis[]" 
-                                            value="lainnya" id="lainnya_info_medis" 
-                                            @checked(is_array(old('info_medis', $info_medis)) && in_array('lainnya', old('info_medis', $info_medis)))
+                                        <input class="form-check-input" type="checkbox" name="info_medis[]"
+                                            value="lainnya" id="lainnya_info_medis" @checked(is_array(old('info_medis', $info_medis)) && in_array('lainnya', old('info_medis', $info_medis)))
                                             onchange="toggleOtherInput('lainnya_info_medis', 'info_medis_lainnya_input')">
                                         <label class="form-check-label" for="lainnya_info_medis">Lainnya:</label>
                                         <input type="text" name="info_medis_lainnya" id="info_medis_lainnya_input"
@@ -624,8 +641,7 @@
                                 <div class="checkbox-group">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="peralatan[]"
-                                            value="portable_o2" id="portable_o2" 
-                                            @checked(is_array(old('peralatan', $peralatan)) && in_array('portable_o2', old('peralatan', $peralatan)))
+                                            value="portable_o2" id="portable_o2" @checked(is_array(old('peralatan', $peralatan)) && in_array('portable_o2', old('peralatan', $peralatan)))
                                             onchange="toggleOtherInput('portable_o2', 'o2_kebutuhan_input')">
                                         <label class="form-check-label" for="portable_o2">Portable O2</label>
                                         <input type="text" name="o2_kebutuhan" id="o2_kebutuhan_input"
@@ -637,45 +653,38 @@
                                         @enderror
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="peralatan[]" 
-                                            value="ngt" id="ngt" 
-                                            @checked(is_array(old('peralatan', $peralatan)) && in_array('ngt', old('peralatan', $peralatan)))>
+                                        <input class="form-check-input" type="checkbox" name="peralatan[]"
+                                            value="ngt" id="ngt" @checked(is_array(old('peralatan', $peralatan)) && in_array('ngt', old('peralatan', $peralatan)))>
                                         <label class="form-check-label" for="ngt">NGT</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="peralatan[]"
-                                            value="alat_penghisap" id="alat_penghisap" 
-                                            @checked(is_array(old('peralatan', $peralatan)) && in_array('alat_penghisap', old('peralatan', $peralatan)))>
+                                            value="alat_penghisap" id="alat_penghisap" @checked(is_array(old('peralatan', $peralatan)) && in_array('alat_penghisap', old('peralatan', $peralatan)))>
                                         <label class="form-check-label" for="alat_penghisap">Alat Penghisap</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="peralatan[]"
-                                            value="ventilator" id="ventilator" 
-                                            @checked(is_array(old('peralatan', $peralatan)) && in_array('ventilator', old('peralatan', $peralatan)))>
+                                            value="ventilator" id="ventilator" @checked(is_array(old('peralatan', $peralatan)) && in_array('ventilator', old('peralatan', $peralatan)))>
                                         <label class="form-check-label" for="ventilator">Ventilator</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="peralatan[]" 
-                                            value="bagging" id="bagging" 
-                                            @checked(is_array(old('peralatan', $peralatan)) && in_array('bagging', old('peralatan', $peralatan)))>
+                                        <input class="form-check-input" type="checkbox" name="peralatan[]"
+                                            value="bagging" id="bagging" @checked(is_array(old('peralatan', $peralatan)) && in_array('bagging', old('peralatan', $peralatan)))>
                                         <label class="form-check-label" for="bagging">Bagging</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="peralatan[]"
-                                            value="kateter_urin" id="kateter_urin" 
-                                            @checked(is_array(old('peralatan', $peralatan)) && in_array('kateter_urin', old('peralatan', $peralatan)))>
+                                            value="kateter_urin" id="kateter_urin" @checked(is_array(old('peralatan', $peralatan)) && in_array('kateter_urin', old('peralatan', $peralatan)))>
                                         <label class="form-check-label" for="kateter_urin">Kateter Urin</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="peralatan[]"
-                                            value="pompa_infus" id="pompa_infus" 
-                                            @checked(is_array(old('peralatan', $peralatan)) && in_array('pompa_infus', old('peralatan', $peralatan)))>
+                                            value="pompa_infus" id="pompa_infus" @checked(is_array(old('peralatan', $peralatan)) && in_array('pompa_infus', old('peralatan', $peralatan)))>
                                         <label class="form-check-label" for="pompa_infus">Pompa Infus</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="peralatan[]" 
-                                            value="lainnya" id="lainnya_peralatan" 
-                                            @checked(is_array(old('peralatan', $peralatan)) && in_array('lainnya', old('peralatan', $peralatan)))
+                                        <input class="form-check-input" type="checkbox" name="peralatan[]"
+                                            value="lainnya" id="lainnya_peralatan" @checked(is_array(old('peralatan', $peralatan)) && in_array('lainnya', old('peralatan', $peralatan)))
                                             onchange="toggleOtherInput('lainnya_peralatan', 'peralatan_lainnya_input')">
                                         <label class="form-check-label" for="lainnya_peralatan">Lainnya:</label>
                                         <input type="text" name="peralatan_lainnya" id="peralatan_lainnya_input"
@@ -696,8 +705,12 @@
                 </div>
 
                 @php
-                    $gangguan = is_string($transfer->gangguan) ? json_decode($transfer->gangguan, true) : ($transfer->gangguan ?? []);
-                    $inkontinensia = is_string($transfer->inkontinensia) ? json_decode($transfer->inkontinensia, true) : ($transfer->inkontinensia ?? []);
+                    $gangguan = is_string($transfer->gangguan)
+                        ? json_decode($transfer->gangguan, true)
+                        : $transfer->gangguan ?? [];
+                    $inkontinensia = is_string($transfer->inkontinensia)
+                        ? json_decode($transfer->inkontinensia, true)
+                        : $transfer->inkontinensia ?? [];
                 @endphp
 
                 <!-- Gangguan dan Kondisi Khusus -->
@@ -710,8 +723,8 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="gangguan[]" value="mental"
-                                                id="mental" @checked(is_array(old('gangguan', $gangguan)) && in_array('mental', old('gangguan', $gangguan)))>
+                                            <input class="form-check-input" type="checkbox" name="gangguan[]"
+                                                value="mental" id="mental" @checked(is_array(old('gangguan', $gangguan)) && in_array('mental', old('gangguan', $gangguan)))>
                                             <label class="form-check-label" for="mental">Mental</label>
                                         </div>
                                         <div class="form-check">
@@ -727,8 +740,8 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="gangguan[]" value="bicara"
-                                                id="bicara" @checked(is_array(old('gangguan', $gangguan)) && in_array('bicara', old('gangguan', $gangguan)))>
+                                            <input class="form-check-input" type="checkbox" name="gangguan[]"
+                                                value="bicara" id="bicara" @checked(is_array(old('gangguan', $gangguan)) && in_array('bicara', old('gangguan', $gangguan)))>
                                             <label class="form-check-label" for="bicara">Bicara</label>
                                         </div>
                                         <div class="form-check">
@@ -742,7 +755,8 @@
                                                 onchange="toggleOtherInput('lainnya_gangguan', 'gangguan_lainnya_input')">
                                             <label class="form-check-label" for="lainnya_gangguan">Lainnya:</label>
                                             <input type="text" name="gangguan_lainnya" id="gangguan_lainnya_input"
-                                                class="form-control form-control-sm mt-1" placeholder="Spesifikasi lainnya"
+                                                class="form-control form-control-sm mt-1"
+                                                placeholder="Spesifikasi lainnya"
                                                 value="{{ old('gangguan_lainnya', $transfer->gangguan_lainnya) }}"
                                                 style="{{ is_array(old('gangguan', $gangguan)) && in_array('lainnya', old('gangguan', $gangguan)) ? 'display: block;' : 'display: none;' }}">
                                             @error('gangguan_lainnya')
@@ -778,11 +792,15 @@
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" name="inkontinensia[]"
-                                                    value="lainnya" id="lainnya_inkontinensia" @checked(is_array(old('inkontinensia', $inkontinensia)) && in_array('lainnya', old('inkontinensia', $inkontinensia)))
+                                                    value="lainnya" id="lainnya_inkontinensia"
+                                                    @checked(is_array(old('inkontinensia', $inkontinensia)) && in_array('lainnya', old('inkontinensia', $inkontinensia)))
                                                     onchange="toggleOtherInput('lainnya_inkontinensia', 'inkontinensia_lainnya_input')">
-                                                <label class="form-check-label" for="lainnya_inkontinensia">Lainnya:</label>
-                                                <input type="text" name="inkontinensia_lainnya" id="inkontinensia_lainnya_input"
-                                                    class="form-control form-control-sm mt-1" placeholder="Spesifikasi lainnya"
+                                                <label class="form-check-label"
+                                                    for="lainnya_inkontinensia">Lainnya:</label>
+                                                <input type="text" name="inkontinensia_lainnya"
+                                                    id="inkontinensia_lainnya_input"
+                                                    class="form-control form-control-sm mt-1"
+                                                    placeholder="Spesifikasi lainnya"
                                                     value="{{ old('inkontinensia_lainnya', $transfer->inkontinensia_lainnya) }}"
                                                     style="{{ is_array(old('inkontinensia', $inkontinensia)) && in_array('lainnya', old('inkontinensia', $inkontinensia)) ? 'display: block;' : 'display: none;' }}">
                                                 @error('inkontinensia_lainnya')
@@ -799,23 +817,23 @@
                                 <div class="mt-3">
                                     <label class="form-label fw-bold">Potensi untuk Dilakukan Rehabilitasi:</label>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="rehabilitasi" value="baik"
-                                            id="rehab_baik" @checked(old('rehabilitasi', $transfer->rehabilitasi) == 'baik')>
+                                        <input class="form-check-input" type="radio" name="rehabilitasi"
+                                            value="baik" id="rehab_baik" @checked(old('rehabilitasi', $transfer->rehabilitasi) == 'baik')>
                                         <label class="form-check-label" for="rehab_baik">Baik</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="rehabilitasi" value="sedang"
-                                            id="rehab_sedang" @checked(old('rehabilitasi', $transfer->rehabilitasi) == 'sedang')>
+                                        <input class="form-check-input" type="radio" name="rehabilitasi"
+                                            value="sedang" id="rehab_sedang" @checked(old('rehabilitasi', $transfer->rehabilitasi) == 'sedang')>
                                         <label class="form-check-label" for="rehab_sedang">Sedang</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="rehabilitasi" value="buruk"
-                                            id="rehab_buruk" @checked(old('rehabilitasi', $transfer->rehabilitasi) == 'buruk')>
+                                        <input class="form-check-input" type="radio" name="rehabilitasi"
+                                            value="buruk" id="rehab_buruk" @checked(old('rehabilitasi', $transfer->rehabilitasi) == 'buruk')>
                                         <label class="form-check-label" for="rehab_buruk">Buruk</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="rehabilitasi" value="lainnya"
-                                            id="lainnya_rehabilitasi" @checked(old('rehabilitasi', $transfer->rehabilitasi) == 'lainnya')
+                                        <input class="form-check-input" type="radio" name="rehabilitasi"
+                                            value="lainnya" id="lainnya_rehabilitasi" @checked(old('rehabilitasi', $transfer->rehabilitasi) == 'lainnya')
                                             onchange="toggleOtherInputRadio('lainnya_rehabilitasi', 'rehabilitasi_lainnya_input', 'rehabilitasi')">
                                         <label class="form-check-label" for="lainnya_rehabilitasi">Lainnya:</label>
                                         <input type="text" name="rehabilitasi_lainnya" id="rehabilitasi_lainnya_input"
@@ -841,7 +859,7 @@
                                             <option value="">--Pilih--</option>
                                             @foreach ($petugas as $item)
                                                 @if ($item->kd_karyawan != auth()->user()->kd_karyawan)
-                                                    <option value="{{ $item->kd_karyawan }}" 
+                                                    <option value="{{ $item->kd_karyawan }}"
                                                         @selected(old('petugas1', $transfer->petugas1) == $item->kd_karyawan)>
                                                         {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' . $item->gelar_belakang }}
                                                     </option>
@@ -858,7 +876,7 @@
                                             <option value="">--Pilih--</option>
                                             @foreach ($petugas as $item)
                                                 @if ($item->kd_karyawan != auth()->user()->kd_karyawan)
-                                                    <option value="{{ $item->kd_karyawan }}" 
+                                                    <option value="{{ $item->kd_karyawan }}"
                                                         @selected(old('petugas2', $transfer->petugas2) == $item->kd_karyawan)>
                                                         {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' . $item->gelar_belakang }}
                                                     </option>
@@ -875,7 +893,7 @@
                                             <option value="">--Pilih--</option>
                                             @foreach ($petugas as $item)
                                                 @if ($item->kd_karyawan != auth()->user()->kd_karyawan)
-                                                    <option value="{{ $item->kd_karyawan }}" 
+                                                    <option value="{{ $item->kd_karyawan }}"
                                                         @selected(old('petugas3', $transfer->petugas3) == $item->kd_karyawan)>
                                                         {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' . $item->gelar_belakang }}
                                                     </option>
@@ -937,26 +955,31 @@
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Berguling</td>
                                         <td class="text-center"><input type="radio" name="berguling" value="mandiri"
-                                            class="form-check-input" @checked(old('berguling', $transfer->berguling) == 'mandiri')></td>
+                                                class="form-check-input" @checked(old('berguling', $transfer->berguling) == 'mandiri')></td>
                                         <td class="text-center"><input type="radio" name="berguling" value="bantuan"
-                                            class="form-check-input" @checked(old('berguling', $transfer->berguling) == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="berguling" value="tidak_bisa"
-                                            class="form-check-input" @checked(old('berguling', $transfer->berguling) == 'tidak_bisa')></td>
+                                                class="form-check-input" @checked(old('berguling', $transfer->berguling) == 'bantuan')></td>
+                                        <td class="text-center"><input type="radio" name="berguling"
+                                                value="tidak_bisa" class="form-check-input" @checked(old('berguling', $transfer->berguling) == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Duduk</td>
                                         <td class="text-center"><input type="radio" name="duduk" value="mandiri"
-                                            class="form-check-input" @checked(old('duduk', $transfer->duduk) == 'mandiri')></td>
+                                                class="form-check-input" @checked(old('duduk', $transfer->duduk) == 'mandiri')></td>
                                         <td class="text-center"><input type="radio" name="duduk" value="bantuan"
-                                            class="form-check-input" @checked(old('duduk', $transfer->duduk) == 'bantuan')></td>
+                                                class="form-check-input" @checked(old('duduk', $transfer->duduk) == 'bantuan')></td>
                                         <td class="text-center"><input type="radio" name="duduk" value="tidak_bisa"
-                                            class="form-check-input" @checked(old('duduk', $transfer->duduk) == 'tidak_bisa')></td>
+                                                class="form-check-input" @checked(old('duduk', $transfer->duduk) == 'tidak_bisa')></td>
                                     </tr>
                                     @error('berguling')
-                                        <tr><td colspan="4"><small class="text-danger">{{ $message }}</small></td></tr>
+                                        <tr>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                        </tr>
                                     @enderror
                                     @error('duduk')
-                                        <tr><td colspan="4"><small class="text-danger">{{ $message }}</small></td></tr>
+                                        <tr>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                        </tr>
                                     @enderror
                                     <tr>
                                         <td><strong>Higiene pribadi</strong></td>
@@ -966,63 +989,88 @@
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Wajah, rambut, tangan</td>
-                                        <td class="text-center"><input type="radio" name="higiene_wajah" value="mandiri"
-                                            class="form-check-input" @checked(old('higiene_wajah', $transfer->higiene_wajah) == 'mandiri')></td>
-                                        <td class="text-center"><input type="radio" name="higiene_wajah" value="bantuan"
-                                            class="form-check-input" @checked(old('higiene_wajah', $transfer->higiene_wajah) == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="higiene_wajah" value="tidak_bisa"
-                                            class="form-check-input" @checked(old('higiene_wajah', $transfer->higiene_wajah) == 'tidak_bisa')></td>
+                                        <td class="text-center"><input type="radio" name="higiene_wajah"
+                                                value="mandiri" class="form-check-input" @checked(old('higiene_wajah', $transfer->higiene_wajah) == 'mandiri')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="higiene_wajah"
+                                                value="bantuan" class="form-check-input" @checked(old('higiene_wajah', $transfer->higiene_wajah) == 'bantuan')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="higiene_wajah"
+                                                value="tidak_bisa" class="form-check-input" @checked(old('higiene_wajah', $transfer->higiene_wajah) == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Tubuh, perineum</td>
-                                        <td class="text-center"><input type="radio" name="higiene_tubuh" value="mandiri"
-                                            class="form-check-input" @checked(old('higiene_tubuh', $transfer->higiene_tubuh) == 'mandiri')></td>
-                                        <td class="text-center"><input type="radio" name="higiene_tubuh" value="bantuan"
-                                            class="form-check-input" @checked(old('higiene_tubuh', $transfer->higiene_tubuh) == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="higiene_tubuh" value="tidak_bisa"
-                                            class="form-check-input" @checked(old('higiene_tubuh', $transfer->higiene_tubuh) == 'tidak_bisa')></td>
+                                        <td class="text-center"><input type="radio" name="higiene_tubuh"
+                                                value="mandiri" class="form-check-input" @checked(old('higiene_tubuh', $transfer->higiene_tubuh) == 'mandiri')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="higiene_tubuh"
+                                                value="bantuan" class="form-check-input" @checked(old('higiene_tubuh', $transfer->higiene_tubuh) == 'bantuan')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="higiene_tubuh"
+                                                value="tidak_bisa" class="form-check-input" @checked(old('higiene_tubuh', $transfer->higiene_tubuh) == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Ekstremitas bawah</td>
-                                        <td class="text-center"><input type="radio" name="higiene_ekstremitas_bawah" value="mandiri"
-                                            class="form-check-input" @checked(old('higiene_ekstremitas_bawah', $transfer->higiene_ekstremitas_bawah) == 'mandiri')></td>
-                                        <td class="text-center"><input type="radio" name="higiene_ekstremitas_bawah" value="bantuan"
-                                            class="form-check-input" @checked(old('higiene_ekstremitas_bawah', $transfer->higiene_ekstremitas_bawah) == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="higiene_ekstremitas_bawah" value="tidak_bisa"
-                                            class="form-check-input" @checked(old('higiene_ekstremitas_bawah', $transfer->higiene_ekstremitas_bawah) == 'tidak_bisa')></td>
+                                        <td class="text-center"><input type="radio" name="higiene_ekstremitas_bawah"
+                                                value="mandiri" class="form-check-input" @checked(old('higiene_ekstremitas_bawah', $transfer->higiene_ekstremitas_bawah) == 'mandiri')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="higiene_ekstremitas_bawah"
+                                                value="bantuan" class="form-check-input" @checked(old('higiene_ekstremitas_bawah', $transfer->higiene_ekstremitas_bawah) == 'bantuan')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="higiene_ekstremitas_bawah"
+                                                value="tidak_bisa" class="form-check-input" @checked(old('higiene_ekstremitas_bawah', $transfer->higiene_ekstremitas_bawah) == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Traktus digestivus</td>
-                                        <td class="text-center"><input type="radio" name="traktus_digestivus" value="mandiri"
-                                            class="form-check-input" @checked(old('traktus_digestivus', $transfer->traktus_digestivus) == 'mandiri')></td>
-                                        <td class="text-center"><input type="radio" name="traktus_digestivus" value="bantuan"
-                                            class="form-check-input" @checked(old('traktus_digestivus', $transfer->traktus_digestivus) == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="traktus_digestivus" value="tidak_bisa"
-                                            class="form-check-input" @checked(old('traktus_digestivus', $transfer->traktus_digestivus) == 'tidak_bisa')></td>
+                                        <td class="text-center"><input type="radio" name="traktus_digestivus"
+                                                value="mandiri" class="form-check-input" @checked(old('traktus_digestivus', $transfer->traktus_digestivus) == 'mandiri')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="traktus_digestivus"
+                                                value="bantuan" class="form-check-input" @checked(old('traktus_digestivus', $transfer->traktus_digestivus) == 'bantuan')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="traktus_digestivus"
+                                                value="tidak_bisa" class="form-check-input" @checked(old('traktus_digestivus', $transfer->traktus_digestivus) == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Traktus urinarius</td>
-                                        <td class="text-center"><input type="radio" name="traktus_urinarius" value="mandiri"
-                                            class="form-check-input" @checked(old('traktus_urinarius', $transfer->traktus_urinarius) == 'mandiri')></td>
-                                        <td class="text-center"><input type="radio" name="traktus_urinarius" value="bantuan"
-                                            class="form-check-input" @checked(old('traktus_urinarius', $transfer->traktus_urinarius) == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="traktus_urinarius" value="tidak_bisa"
-                                            class="form-check-input" @checked(old('traktus_urinarius', $transfer->traktus_urinarius) == 'tidak_bisa')></td>
+                                        <td class="text-center"><input type="radio" name="traktus_urinarius"
+                                                value="mandiri" class="form-check-input" @checked(old('traktus_urinarius', $transfer->traktus_urinarius) == 'mandiri')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="traktus_urinarius"
+                                                value="bantuan" class="form-check-input" @checked(old('traktus_urinarius', $transfer->traktus_urinarius) == 'bantuan')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="traktus_urinarius"
+                                                value="tidak_bisa" class="form-check-input" @checked(old('traktus_urinarius', $transfer->traktus_urinarius) == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     @error('higiene_wajah')
-                                        <tr><td colspan="4"><small class="text-danger">{{ $message }}</small></td></tr>
+                                        <tr>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                        </tr>
                                     @enderror
                                     @error('higiene_tubuh')
-                                        <tr><td colspan="4"><small class="text-danger">{{ $message }}</small></td></tr>
+                                        <tr>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                        </tr>
                                     @enderror
                                     @error('higiene_ekstremitas_bawah')
-                                        <tr><td colspan="4"><small class="text-danger">{{ $message }}</small></td></tr>
+                                        <tr>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                        </tr>
                                     @enderror
                                     @error('traktus_digestivus')
-                                        <tr><td colspan="4"><small class="text-danger">{{ $message }}</small></td></tr>
+                                        <tr>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                        </tr>
                                     @enderror
                                     @error('traktus_urinarius')
-                                        <tr><td colspan="4"><small class="text-danger">{{ $message }}</small></td></tr>
+                                        <tr>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                        </tr>
                                     @enderror
                                     <tr>
                                         <td><strong>Berpakaian</strong></td>
@@ -1032,51 +1080,68 @@
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Ekstremitas atas</td>
-                                        <td class="text-center"><input type="radio" name="pakaian_atas" value="mandiri"
-                                            class="form-check-input" @checked(old('pakaian_atas', $transfer->pakaian_atas) == 'mandiri')></td>
-                                        <td class="text-center"><input type="radio" name="pakaian_atas" value="bantuan"
-                                            class="form-check-input" @checked(old('pakaian_atas', $transfer->pakaian_atas) == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="pakaian_atas" value="tidak_bisa"
-                                            class="form-check-input" @checked(old('pakaian_atas', $transfer->pakaian_atas) == 'tidak_bisa')></td>
+                                        <td class="text-center"><input type="radio" name="pakaian_atas"
+                                                value="mandiri" class="form-check-input" @checked(old('pakaian_atas', $transfer->pakaian_atas) == 'mandiri')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="pakaian_atas"
+                                                value="bantuan" class="form-check-input" @checked(old('pakaian_atas', $transfer->pakaian_atas) == 'bantuan')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="pakaian_atas"
+                                                value="tidak_bisa" class="form-check-input" @checked(old('pakaian_atas', $transfer->pakaian_atas) == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Batang tubuh</td>
-                                        <td class="text-center"><input type="radio" name="pakaian_tubuh" value="mandiri"
-                                            class="form-check-input" @checked(old('pakaian_tubuh', $transfer->pakaian_tubuh) == 'mandiri')></td>
-                                        <td class="text-center"><input type="radio" name="pakaian_tubuh" value="bantuan"
-                                            class="form-check-input" @checked(old('pakaian_tubuh', $transfer->pakaian_tubuh) == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="pakaian_tubuh" value="tidak_bisa"
-                                            class="form-check-input" @checked(old('pakaian_tubuh', $transfer->pakaian_tubuh) == 'tidak_bisa')></td>
+                                        <td class="text-center"><input type="radio" name="pakaian_tubuh"
+                                                value="mandiri" class="form-check-input" @checked(old('pakaian_tubuh', $transfer->pakaian_tubuh) == 'mandiri')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="pakaian_tubuh"
+                                                value="bantuan" class="form-check-input" @checked(old('pakaian_tubuh', $transfer->pakaian_tubuh) == 'bantuan')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="pakaian_tubuh"
+                                                value="tidak_bisa" class="form-check-input" @checked(old('pakaian_tubuh', $transfer->pakaian_tubuh) == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Ekstremitas bawah</td>
-                                        <td class="text-center"><input type="radio" name="pakaian_bawah" value="mandiri"
-                                            class="form-check-input" @checked(old('pakaian_bawah', $transfer->pakaian_bawah) == 'mandiri')></td>
-                                        <td class="text-center"><input type="radio" name="pakaian_bawah" value="bantuan"
-                                            class="form-check-input" @checked(old('pakaian_bawah', $transfer->pakaian_bawah) == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="pakaian_bawah" value="tidak_bisa"
-                                            class="form-check-input" @checked(old('pakaian_bawah', $transfer->pakaian_bawah) == 'tidak_bisa')></td>
+                                        <td class="text-center"><input type="radio" name="pakaian_bawah"
+                                                value="mandiri" class="form-check-input" @checked(old('pakaian_bawah', $transfer->pakaian_bawah) == 'mandiri')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="pakaian_bawah"
+                                                value="bantuan" class="form-check-input" @checked(old('pakaian_bawah', $transfer->pakaian_bawah) == 'bantuan')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="pakaian_bawah"
+                                                value="tidak_bisa" class="form-check-input" @checked(old('pakaian_bawah', $transfer->pakaian_bawah) == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     @error('pakaian_atas')
-                                        <tr><td colspan="4"><small class="text-danger">{{ $message }}</small></td></tr>
+                                        <tr>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                        </tr>
                                     @enderror
                                     @error('pakaian_tubuh')
-                                        <tr><td colspan="4"><small class="text-danger">{{ $message }}</small></td></tr>
+                                        <tr>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                        </tr>
                                     @enderror
                                     @error('pakaian_bawah')
-                                        <tr><td colspan="4"><small class="text-danger">{{ $message }}</small></td></tr>
+                                        <tr>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                        </tr>
                                     @enderror
                                     <tr>
                                         <td><strong>Makan</strong></td>
                                         <td class="text-center"><input type="radio" name="makan" value="mandiri"
-                                            class="form-check-input" @checked(old('makan', $transfer->makan) == 'mandiri')></td>
+                                                class="form-check-input" @checked(old('makan', $transfer->makan) == 'mandiri')></td>
                                         <td class="text-center"><input type="radio" name="makan" value="bantuan"
-                                            class="form-check-input" @checked(old('makan', $transfer->makan) == 'bantuan')></td>
+                                                class="form-check-input" @checked(old('makan', $transfer->makan) == 'bantuan')></td>
                                         <td class="text-center"><input type="radio" name="makan" value="tidak_bisa"
-                                            class="form-check-input" @checked(old('makan', $transfer->makan) == 'tidak_bisa')></td>
+                                                class="form-check-input" @checked(old('makan', $transfer->makan) == 'tidak_bisa')></td>
                                     </tr>
                                     @error('makan')
-                                        <tr><td colspan="4"><small class="text-danger">{{ $message }}</small></td></tr>
+                                        <tr>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                        </tr>
                                     @enderror
                                     <tr>
                                         <td><strong>Pergerakan</strong></td>
@@ -1087,26 +1152,34 @@
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Jalan kaki</td>
                                         <td class="text-center"><input type="radio" name="jalan_kaki" value="mandiri"
-                                            class="form-check-input" @checked(old('jalan_kaki', $transfer->jalan_kaki) == 'mandiri')></td>
+                                                class="form-check-input" @checked(old('jalan_kaki', $transfer->jalan_kaki) == 'mandiri')></td>
                                         <td class="text-center"><input type="radio" name="jalan_kaki" value="bantuan"
-                                            class="form-check-input" @checked(old('jalan_kaki', $transfer->jalan_kaki) == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="jalan_kaki" value="tidak_bisa"
-                                            class="form-check-input" @checked(old('jalan_kaki', $transfer->jalan_kaki) == 'tidak_bisa')></td>
+                                                class="form-check-input" @checked(old('jalan_kaki', $transfer->jalan_kaki) == 'bantuan')></td>
+                                        <td class="text-center"><input type="radio" name="jalan_kaki"
+                                                value="tidak_bisa" class="form-check-input" @checked(old('jalan_kaki', $transfer->jalan_kaki) == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;Kursi roda</td>
-                                        <td class="text-center"><input type="radio" name="kursi_roda_kemandirian" value="mandiri"
-                                            class="form-check-input" @checked(old('kursi_roda_kemandirian', $transfer->kursi_roda_kemandirian) == 'mandiri')></td>
-                                        <td class="text-center"><input type="radio" name="kursi_roda_kemandirian" value="bantuan"
-                                            class="form-check-input" @checked(old('kursi_roda_kemandirian', $transfer->kursi_roda_kemandirian) == 'bantuan')></td>
-                                        <td class="text-center"><input type="radio" name="kursi_roda_kemandirian" value="tidak_bisa"
-                                            class="form-check-input" @checked(old('kursi_roda_kemandirian', $transfer->kursi_roda_kemandirian) == 'tidak_bisa')></td>
+                                        <td class="text-center"><input type="radio" name="kursi_roda_kemandirian"
+                                                value="mandiri" class="form-check-input" @checked(old('kursi_roda_kemandirian', $transfer->kursi_roda_kemandirian) == 'mandiri')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="kursi_roda_kemandirian"
+                                                value="bantuan" class="form-check-input" @checked(old('kursi_roda_kemandirian', $transfer->kursi_roda_kemandirian) == 'bantuan')>
+                                        </td>
+                                        <td class="text-center"><input type="radio" name="kursi_roda_kemandirian"
+                                                value="tidak_bisa" class="form-check-input" @checked(old('kursi_roda_kemandirian', $transfer->kursi_roda_kemandirian) == 'tidak_bisa')>
+                                        </td>
                                     </tr>
                                     @error('jalan_kaki')
-                                        <tr><td colspan="4"><small class="text-danger">{{ $message }}</small></td></tr>
+                                        <tr>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                        </tr>
                                     @enderror
                                     @error('kursi_roda_kemandirian')
-                                        <tr><td colspan="4"><small class="text-danger">{{ $message }}</small></td></tr>
+                                        <tr>
+                                            <td colspan="4"><small class="text-danger">{{ $message }}</small></td>
+                                        </tr>
                                     @enderror
                                 </tbody>
                             </table>
@@ -1114,7 +1187,8 @@
 
                         <div class="mt-4">
                             <div class="mb-3">
-                                <label class="form-label">Pemeriksaan penunjang diagnostik yang sudah dilakukan (EKG, Lab, dll):</label>
+                                <label class="form-label">Pemeriksaan penunjang diagnostik yang sudah dilakukan (EKG, Lab,
+                                    dll):</label>
                                 <textarea name="pemeriksaan_penunjang" class="form-control" rows="3"
                                     placeholder="Tuliskan pemeriksaan penunjang yang telah dilakukan">{{ old('pemeriksaan_penunjang', $transfer->pemeriksaan_penunjang) }}</textarea>
                                 @error('pemeriksaan_penunjang')
@@ -1131,8 +1205,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Diet:</label>
-                                <textarea name="diet" class="form-control" rows="3"
-                                    placeholder="Tuliskan diet yang dianjurkan">{{ old('diet', $transfer->diet) }}</textarea>
+                                <textarea name="diet" class="form-control" rows="3" placeholder="Tuliskan diet yang dianjurkan">{{ old('diet', $transfer->diet) }}</textarea>
                                 @error('diet')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -1181,7 +1254,8 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <input type="hidden" id="terapiData" name="terapi_data" value="{{ old('terapi_data', json_encode($transfer->terapi_data ?? [])) }}">
+                            <input type="hidden" id="terapiData" name="terapi_data"
+                                value="{{ old('terapi_data', json_encode($transfer->terapi_data ?? [])) }}">
                         </div>
                     </div>
                 </div>
@@ -1193,10 +1267,15 @@
                             <label for="derajat_pasien" class="form-label">Derajat Pasien</label>
                             <select name="derajat_pasien" id="derajat_pasien" class="form-select">
                                 <option value="">--Pilih--</option>
-                                <option value="Derajat 1" @selected(old('derajat_pasien', $transfer->derajat_pasien) == 'Derajat 1')>Derajat 1 - Transporter - Perawat</option>
-                                <option value="Derajat 2" @selected(old('derajat_pasien', $transfer->derajat_pasien) == 'Derajat 2')>Derajat 2 - Transporter - Perawat - Dokter</option>
-                                <option value="Derajat 3" @selected(old('derajat_pasien', $transfer->derajat_pasien) == 'Derajat 3')>Derajat 3 - Transporter - Perawat - Dokter yang kompeten</option>
-                                <option value="Derajat 4" @selected(old('derajat_pasien', $transfer->derajat_pasien) == 'Derajat 4')>Derajat 4 - Transporter - Perawat - Dokter yang kompeten menangani pasien kritis dan berpengalaman minimal 6 bulan bekerja di IGD/ ICU</option>
+                                <option value="Derajat 1" @selected(old('derajat_pasien', $transfer->derajat_pasien) == 'Derajat 1')>Derajat 1 - Transporter - Perawat
+                                </option>
+                                <option value="Derajat 2" @selected(old('derajat_pasien', $transfer->derajat_pasien) == 'Derajat 2')>Derajat 2 - Transporter - Perawat
+                                    - Dokter</option>
+                                <option value="Derajat 3" @selected(old('derajat_pasien', $transfer->derajat_pasien) == 'Derajat 3')>Derajat 3 - Transporter - Perawat
+                                    - Dokter yang kompeten</option>
+                                <option value="Derajat 4" @selected(old('derajat_pasien', $transfer->derajat_pasien) == 'Derajat 4')>Derajat 4 - Transporter - Perawat
+                                    - Dokter yang kompeten menangani pasien kritis dan berpengalaman minimal 6 bulan bekerja
+                                    di IGD/ ICU</option>
                             </select>
                             @error('derajat_pasien')
                                 <small class="text-danger">{{ $message }}</small>
@@ -1225,11 +1304,13 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label">Nama Obat</label>
-                            <input type="text" class="form-control" id="namaObat" placeholder="Masukkan nama obat">
+                            <input type="text" class="form-control" id="namaObat"
+                                placeholder="Masukkan nama obat">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Jumlah</label>
-                            <input type="text" class="form-control" id="jumlah" placeholder="Contoh: 10 tablet">
+                            <input type="text" class="form-control" id="jumlah"
+                                placeholder="Contoh: 10 tablet">
                         </div>
                     </div>
 
@@ -1240,23 +1321,15 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Frekuensi</label>
-                            <input type="text" class="form-control" id="frekuensi" placeholder="Contoh: 3x sehari">
+                            <input type="text" class="form-control" id="frekuensi"
+                                placeholder="Contoh: 3x sehari">
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Cara Pemberian</label>
-                        <select class="form-select" id="cara">
-                            <option value="">-- Pilih Cara Pemberian --</option>
-                            <option value="Oral">Oral (diminum)</option>
-                            <option value="IV">IV (Intravena)</option>
-                            <option value="IM">IM (Intramuskular)</option>
-                            <option value="SC">SC (Subkutan)</option>
-                            <option value="Topikal">Topikal (oles)</option>
-                            <option value="Inhalasi">Inhalasi (hirup)</option>
-                            <option value="Rektal">Rektal (dubur)</option>
-                            <option value="Sublingual">Sublingual (bawah lidah)</option>
-                        </select>
+                        <input type="text" class="form-control" id="caraInput"
+                            placeholder="Masukkan cara pemberian">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -1295,9 +1368,9 @@
 @push('js')
     <script>
         @cannot('is-admin')
-        $('#petugas_menyerahkan').on('mousedown focusin touchstart', function (e) {
-            e.preventDefault();
-        });
+            $('#petugas_menyerahkan').on('mousedown focusin touchstart', function(e) {
+                e.preventDefault();
+            });
         @endcannot
 
         // Initialize old values untuk terapi
@@ -1315,7 +1388,7 @@
         });
 
         // Persetujuan dan Alasan Pemindahan
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const setujuYa = document.getElementById('setuju_ya');
             const setujuTidak = document.getElementById('setuju_tidak');
             const keluargaSection = document.getElementById('keluarga-section');
@@ -1376,13 +1449,14 @@
         }
 
         // Add event listeners for radio buttons to hide "lainnya" input when other options are selected
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const rehabilitasiRadios = document.querySelectorAll('input[name="rehabilitasi"]');
             rehabilitasiRadios.forEach(radio => {
                 if (radio.id !== 'lainnya_rehabilitasi') {
-                    radio.addEventListener('change', function () {
+                    radio.addEventListener('change', function() {
                         if (this.checked) {
-                            const lainnyaInput = document.getElementById('rehabilitasi_lainnya_input');
+                            const lainnyaInput = document.getElementById(
+                                'rehabilitasi_lainnya_input');
                             lainnyaInput.style.display = 'none';
                             lainnyaInput.value = '';
                         }
@@ -1392,7 +1466,7 @@
         });
 
         // Initialize checkbox/radio states on page load
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Check all checkboxes with "lainnya" to show/hide corresponding inputs
             const lainnyaCheckboxes = document.querySelectorAll('input[type="checkbox"][id*="lainnya"]');
             lainnyaCheckboxes.forEach(checkbox => {
@@ -1440,7 +1514,7 @@
             document.getElementById('jumlah').value = '';
             document.getElementById('dosis').value = '';
             document.getElementById('frekuensi').value = '';
-            document.getElementById('cara').value = '';
+            document.getElementById('caraInput').value = '';
         }
 
         // Fungsi simpan data - SANGAT SEDERHANA
@@ -1449,7 +1523,7 @@
             var jml = document.getElementById('jumlah').value || '';
             var dos = document.getElementById('dosis').value || '';
             var frek = document.getElementById('frekuensi').value || '';
-            var caraPemberian = document.getElementById('cara').value || '';
+            var caraPemberian = document.getElementById('caraInput').value || '';
 
             var objData = {
                 namaObat: nama,
@@ -1492,7 +1566,7 @@
 
             // Hapus semua baris kecuali baris kosong
             var rows = tbody.querySelectorAll('tr:not(#barisKosong)');
-            rows.forEach(function (row) {
+            rows.forEach(function(row) {
                 row.remove();
             });
 
@@ -1500,7 +1574,7 @@
             if (dataObat.length > 0) {
                 barisKosong.style.display = 'none';
 
-                dataObat.forEach(function (item, index) {
+                dataObat.forEach(function(item, index) {
                     var baris = document.createElement('tr');
                     baris.innerHTML = `
                         <td><strong>${item.namaObat || '-'}</strong></td>
@@ -1539,7 +1613,7 @@
             document.getElementById('jumlah').value = item.jumlah || '';
             document.getElementById('dosis').value = item.dosis || '';
             document.getElementById('frekuensi').value = item.frekuensi || '';
-            document.getElementById('cara').value = item.cara || '';
+            document.getElementById('caraInput').value = item.cara || '';
 
             // Ubah judul
             document.getElementById('judulModal').textContent = 'Edit Terapi Obat';
@@ -1589,7 +1663,7 @@
         }
 
         // Inisialisasi saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Tampilkan tabel kosong
             tampilkanTabel();
         });
@@ -1627,7 +1701,8 @@
 
                         if (res.status == 'error') {
                             $('#no_kamar').html('<option value="">--Pilih Kamar--</option>');
-                            $('#no_kamar').next('.form-text').text('Error: ' + res.message).addClass('text-danger');
+                            $('#no_kamar').next('.form-text').text('Error: ' + res.message)
+                                .addClass('text-danger');
 
                             if (typeof Swal !== 'undefined') {
                                 Swal.fire({
@@ -1642,21 +1717,26 @@
                         $('#no_kamar').html(res.data);
 
                         if (res.count > 0) {
-                            $('#no_kamar').next('.form-text').text('Tersedia ' + res.count + ' kamar').removeClass('text-danger').addClass('text-success');
+                            $('#no_kamar').next('.form-text').text('Tersedia ' + res.count +
+                                ' kamar').removeClass('text-danger').addClass(
+                                'text-success');
                         } else {
-                            $('#no_kamar').next('.form-text').text('Tidak ada kamar tersedia').removeClass('text-success').addClass('text-warning');
+                            $('#no_kamar').next('.form-text').text('Tidak ada kamar tersedia')
+                                .removeClass('text-success').addClass('text-warning');
                         }
 
                         // Set selected value if exists
-                        @if(old('no_kamar', $transfer->no_kamar ?? ''))
-                            $('#no_kamar').val('{{ old('no_kamar', $transfer->no_kamar ?? '') }}');
+                        @if (old('no_kamar', $transfer->no_kamar ?? ''))
+                            $('#no_kamar').val(
+                                '{{ old('no_kamar', $transfer->no_kamar ?? '') }}');
                         @endif
                     },
                     error: function(xhr, status, error) {
                         $('#loading-indicator').hide();
                         $('#no_kamar').prop('disabled', false);
                         $('#no_kamar').html('<option value="">--Pilih Kamar--</option>');
-                        $('#no_kamar').next('.form-text').text('Kamar gagal dimuat').addClass('text-danger');
+                        $('#no_kamar').next('.form-text').text('Kamar gagal dimuat').addClass(
+                            'text-danger');
 
                         console.error('AJAX Error:', error);
                         if (typeof Swal !== 'undefined') {
@@ -1684,7 +1764,7 @@
             }
 
             // Trigger change event on page load to load kamar if unit tujuan is already selected
-            @if(old('kd_unit_tujuan', $transfer->kd_unit_tujuan ?? ''))
+            @if (old('kd_unit_tujuan', $transfer->kd_unit_tujuan ?? ''))
                 $('#kd_unit_tujuan').trigger('change');
             @endif
         });
