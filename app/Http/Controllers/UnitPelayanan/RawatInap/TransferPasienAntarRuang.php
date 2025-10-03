@@ -10,6 +10,7 @@ use App\Models\Kunjungan;
 use App\Models\Nginap;
 use App\Models\PasienInap;
 use App\Models\RmeAlergiPasien;
+use App\Models\RmeCatatanPemberianObat;
 use App\Models\RmeSerahTerima;
 use App\Models\Unit;
 use App\Models\RmeTransferPasienAntarRuang;
@@ -158,13 +159,17 @@ class TransferPasienAntarRuang extends Controller
         $dokter = Dokter::where('status', 1)->orderBy('nama_lengkap', 'asc')->get();
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
+        // Ambil riwayat catatan pemberian obat untuk ditampilkan (hanya read)
+        $riwayatObat = $this->getRiwayatCatatanPemberianObat($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
+
         return view('unit-pelayanan.rawat-inap.pelayanan.transfer-pasien-antar-ruang.create', compact(
             'dataMedis',
             'unit',
             'unitTujuan',
             'petugas',
             'dokter',
-            'alergiPasien'
+            'alergiPasien',
+            'riwayatObat' // <-- ditambahkan
         ));
     }
 
@@ -864,5 +869,30 @@ class TransferPasienAntarRuang extends Controller
                 'data'      => 0
             ]);
         }
+    }
+
+    private function getRiwayatCatatanPemberianObat($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk)
+    {
+        return RmeCatatanPemberianObat::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->with(['petugas', 'petugasValidasi'])
+            ->select(
+                'id',
+                'kd_petugas',
+                'nama_obat',
+                'frekuensi',
+                'dosis',
+                'satuan',
+                'keterangan',
+                'freak',
+                'tanggal',
+                'catatan',
+                'is_validasi',
+                'petugas_validasi'
+            )
+            ->orderBy('tanggal', 'desc')
+            ->get();
     }
 }
