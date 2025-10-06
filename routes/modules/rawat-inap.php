@@ -369,6 +369,11 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::post('/rekonsiliasiObat', 'rekonsiliasiObat')->name('.rekonsiliasiObat');
                             Route::post('/copy-cpo', 'copyCPO')->name('.copy-cpo');
                             Route::delete('/deleteRekonsiliasiObat', 'deleteRekonsiliasiObat')->name('.rekonsiliasiObatDelete');
+                            // Rekonsiliasi Obat Admisi (yang baru)
+                            Route::post('/rekonsiliasiObatAdmisi', 'rekonsiliasiObatAdmisi')->name('.rekonsiliasiObatAdmisi');
+                            Route::get('/rekonsiliasiObatAdmisi/{id}/edit', 'editRekonsiliasiObatAdmisi')->name('.editRekonsiliasiObatAdmisi');
+                            Route::put('/rekonsiliasiObatAdmisi/{id}', 'updateRekonsiliasiObatAdmisi')->name('.updateRekonsiliasiObatAdmisi');
+                            Route::delete('/rekonsiliasiObatAdmisi/{id}', 'deleteRekonsiliasiObatAdmisi')->name('.deleteRekonsiliasiObatAdmisi');
                         });
                     });
                 });
