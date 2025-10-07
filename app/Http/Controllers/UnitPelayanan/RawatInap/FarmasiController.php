@@ -12,6 +12,7 @@ use App\Models\RmeCatatanPemberianObat;
 use App\Models\RmeRekonsiliasiObat;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
+use App\Models\RmeFormulirRekonsiliasiObatTransfer;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -58,13 +59,15 @@ class FarmasiController extends Controller
         $riwayatCatatanObat = $this->getRiwayatCatatanPemberianObat($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
         $rekonsiliasiObat = $this->getRekonsiliasi($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
 
+        $rekonsiliasiObatTransfer = $this->getRekonsiliasiTransfer($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
+
         // dd($riwayatObatHariIni);
 
         $dokters = Dokter::where('status', 1)->get();
 
         return view(
             'unit-pelayanan.rawat-inap.pelayanan.farmasi.index',
-            compact('dataMedis', 'riwayatObat', 'riwayatObatHariIni', 'riwayatCatatanObat', 'kd_pasien', 'tgl_masuk', 'dokters', 'rekonsiliasiObat')
+            compact('dataMedis', 'riwayatObat', 'riwayatObatHariIni', 'riwayatCatatanObat', 'kd_pasien', 'tgl_masuk', 'dokters', 'rekonsiliasiObat', 'rekonsiliasiObatTransfer')
         );
     }
 
@@ -734,5 +737,194 @@ class FarmasiController extends Controller
             DB::rollBack();
             return back()->with('error', $e->getMessage());
         }
+    }
+
+    // Store rekonsiliasi obat transfer
+    public function rekonsiliasiObatTransfer($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'nama_obat' => 'required|string|max:255',
+            'frekuensi' => 'required|string|max:255',
+            'keterangan' => 'required|string|in:Sebelum Makan,Sesudah Makan,Saat Makan',
+            'dosis' => 'required|string|max:255',
+            'tindak_lanjut' => 'required|string|in:Lanjut aturan pakai sama,Lanjut aturan pakai berubah,Stop',
+            'perubahanpakai' => 'nullable|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            // Konversi tindak_lanjut ke nilai numerik
+            $tindakLanjutMap = [
+                'Lanjut aturan pakai sama' => 1,
+                'Lanjut aturan pakai berubah' => 2,
+                'Stop' => 3,
+            ];
+            $tindakLanjutValue = $tindakLanjutMap[$request->tindak_lanjut];
+
+            $rekonsiliasi = RmeFormulirRekonsiliasiObatTransfer::create([
+                'kd_pasien' => $kd_pasien,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk,
+                'kd_unit' => $kd_unit,
+                'nama_obat' => $request->nama_obat,
+                'dosis' => $request->dosis,
+                'frekuensi' => $request->frekuensi,
+                'keterangan' => $request->keterangan,
+                'tindak_lanjut' => $tindakLanjutValue,
+                'perubahanpakai' => $request->perubahanpakai,
+                'user_created' => Auth::id(),
+                'kd_petugas' => Auth::id(),
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Rekonsiliasi obat transfer berhasil disimpan',
+                'data' => $rekonsiliasi
+            ], 201);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menyimpan data: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // Get single rekonsiliasi obat transfer for edit
+    public function editRekonsiliasiObatTransfer($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            $rekonsiliasiObat = RmeFormulirRekonsiliasiObatTransfer::findOrFail($id);
+
+            return response()->json([
+                'success' => true,
+                'data' => $rekonsiliasiObat
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak ditemukan'
+            ], 404);
+        }
+    }
+
+    // Update rekonsiliasi obat transfer
+    public function updateRekonsiliasiObatTransfer(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'nama_obat' => 'required|string|max:255',
+            'frekuensi' => 'required|string|max:255',
+            'keterangan' => 'required|string|in:Sebelum Makan,Sesudah Makan,Saat Makan',
+            'dosis' => 'required|string|max:255',
+            'tindak_lanjut' => 'required|string|in:Lanjut aturan pakai sama,Lanjut aturan pakai berubah,Stop',
+            'perubahanpakai' => 'nullable|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $rekonsiliasiObat = RmeFormulirRekonsiliasiObatTransfer::findOrFail($id);
+
+            // Konversi tindak_lanjut ke nilai numerik
+            $tindakLanjutMap = [
+                'Lanjut aturan pakai sama' => 1,
+                'Lanjut aturan pakai berubah' => 2,
+                'Stop' => 3,
+            ];
+            $tindakLanjutValue = $tindakLanjutMap[$request->tindak_lanjut];
+
+            $rekonsiliasiObat->update([
+                'nama_obat' => $request->nama_obat,
+                'dosis' => $request->dosis,
+                'frekuensi' => $request->frekuensi,
+                'keterangan' => $request->keterangan,
+                'tindak_lanjut' => $tindakLanjutValue,
+                'perubahanpakai' => $request->perubahanpakai,
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Rekonsiliasi obat transfer berhasil diperbarui',
+                'data' => $rekonsiliasiObat
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memperbarui data: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // Hapus rekonsiliasi obat transfer
+    public function deleteRekonsiliasiObatTransfer($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $rekonsiliasi = RmeFormulirRekonsiliasiObatTransfer::where('id', $id)
+                ->where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kd_unit)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->first();
+
+            if (!$rekonsiliasi) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Rekonsiliasi obat tidak ditemukan'
+                ], 404);
+            }
+
+            $rekonsiliasi->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Rekonsiliasi obat transfer berhasil dihapus'
+            ], 200);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus data: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // Get rekonsiliasi transfer
+    private function getRekonsiliasiTransfer($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk)
+    {
+        return RmeFormulirRekonsiliasiObatTransfer::where('kd_pasien', $kd_pasien)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('kd_unit', $kd_unit)
+            ->where('urut_masuk', $urut_masuk)
+            ->orderBy('id', 'desc')
+            ->get();
     }
 }

@@ -55,6 +55,13 @@
                                     data-bs-target="#rekonsiliasi" type="button" role="tab"
                                     aria-controls="rekonsiliasi" aria-selected="false">Rekonsiliasi Obat</button>
                             </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="rekonsiliasi-transfer-tab" data-bs-toggle="tab"
+                                    data-bs-target="#rekonsiliasiTransfer" type="button" role="tab"
+                                    aria-controls="rekonsiliasiTransfer" aria-selected="false">
+                                    Rekonsiliasi Obat Transfer
+                                </button>
+                            </li>
                         </ul>
 
                         {{-- Tab Content --}}
@@ -75,6 +82,10 @@
                             <div class="tab-pane fade" id="rekonsiliasi" role="tabpanel" aria-labelledby="rekonsiliasi-tab">
                                 {{-- TAB 4. buatlah list disini --}}
                                 @include('unit-pelayanan.rawat-inap.pelayanan.farmasi.tabsrekonsiliasi')
+                            </div>
+                            <div class="tab-pane fade" id="rekonsiliasiTransfer" role="tabpanel" aria-labelledby="rekonsiliasi-transfer-tab">
+                                <!-- TAB 5. Rekonsiliasi Obat Transfer -->
+                                @include('unit-pelayanan.rawat-inap.pelayanan.farmasi.tabsrekonsiliasitransfer')
                             </div>
                         </div>
                     </div>
