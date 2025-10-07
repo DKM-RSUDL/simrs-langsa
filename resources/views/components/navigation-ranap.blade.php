@@ -391,13 +391,13 @@
     </div>
 </div> --}}
 
-<div class="card" style="height: fit-content; margin-bottom:10px !important;">
-    <div class="card-body p-2">
+<div class="card" style="height: auto;">
+    <div class="card-body">
         <div class="d-flex flex-wrap gap-2">
             @foreach ($navItems as $item)
                 <a href="{{ $item['link'] }}"
                     class="btn {{ $currentUrl === $item['link'] ? 'btn-primary' : 'btn-light' }} d-flex align-items-center"
-                    style="border-radius: 20px; padding: 6px 12px; font-size: 14px;">
+                    style="font-size: 14px;">
                     <img src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }}" width="18"
                         height="18" class="{{ $currentUrl === $item['link'] ? '' : '' }} me-1">
                     <span>{{ $item['label'] }}</span>
