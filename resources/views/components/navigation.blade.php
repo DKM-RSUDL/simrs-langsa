@@ -1,4 +1,3 @@
-
 @push('css')
     <style>
         .nav-icons {
@@ -17,6 +16,7 @@
             color: #ffffff;
             border-radius: 25px;
             transition: all 0.3s ease;
+            border: 1px solid #cecece;
         }
 
         .nav-icons .nav-item:hover {
@@ -39,7 +39,7 @@
 
 @php
     $currentUrl = url()->current();
-  
+
     $tglMasukData = date('Y-m-d', strtotime($dataMedis->tgl_masuk));
 
     $navItems = [
@@ -189,20 +189,19 @@
     </div>
 </div> --}}
 
-<div class="card" style="height: fit-content; margin-bottom:10px !important;">
-    <div class="card-body p-2">
+<div class="card" style="height: auto;">
+    <div class="card-body">
         <div class="d-flex flex-wrap gap-2">
             @foreach ($navItems as $item)
-                @if ($item['validate']===false || ($item['validate']===true && $dataMedis->triase_proses == 0))
+                @if ($item['validate'] === false || ($item['validate'] === true && $dataMedis->triase_proses == 0))
                     <a href="{{ $item['link'] }}"
                         class="btn {{ $currentUrl === $item['link'] ? 'btn-primary' : 'btn-light' }} d-flex align-items-center"
-                        style="border-radius: 20px; padding: 6px 12px; font-size: 14px;">
-                        <img src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }}" width="18"
-                            height="18" class="{{ $currentUrl === $item['link'] ? '' : '' }} me-1">
+                        style="font-size: 14px;">
+                        <img src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }}"
+                            width="18" height="18" class="me-1">
                         <span>{{ $item['label'] }}</span>
-                     </a>
+                    </a>
                 @endif
-                
             @endforeach
         </div>
     </div>

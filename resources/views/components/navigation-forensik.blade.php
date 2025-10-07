@@ -44,9 +44,13 @@
     $tglMasukData = date('Y-m-d', strtotime($dataMedis->tgl_masuk));
 
     $jenisPemeriksaan = 'pemeriksaan-';
-    if($dataMedis->kd_unit == 228)$jenisPemeriksaan .= 'klinik';
-    
-    if($dataMedis->kd_unit == 76)$jenisPemeriksaan .= 'patologi';
+    if ($dataMedis->kd_unit == 228) {
+        $jenisPemeriksaan .= 'klinik';
+    }
+
+    if ($dataMedis->kd_unit == 76) {
+        $jenisPemeriksaan .= 'patologi';
+    }
 
     $navItems = [
         [
@@ -62,7 +66,7 @@
         [
             'icon' => 'verified_badge.png',
             'label' => 'Visum Exit',
-            'link' => route("forensik.unit.pelayanan.visum-exit.index", [
+            'link' => route('forensik.unit.pelayanan.visum-exit.index', [
                 $dataMedis->kd_unit,
                 $dataMedis->kd_pasien,
                 $tglMasukData,
@@ -72,7 +76,7 @@
         [
             'icon' => 'verified_badge.png',
             'label' => 'Visum Otopsi',
-            'link' => route("forensik.unit.pelayanan.visum-otopsi.index", [
+            'link' => route('forensik.unit.pelayanan.visum-otopsi.index', [
                 $dataMedis->kd_unit,
                 $dataMedis->kd_pasien,
                 $tglMasukData,
@@ -101,9 +105,9 @@
             @foreach ($navItems as $item)
                 <a href="{{ $item['link'] }}"
                     class="btn {{ $currentUrl === $item['link'] ? 'btn-primary' : 'btn-light' }} d-flex align-items-center"
-                    style="border-radius: 20px; padding: 6px 12px; font-size: 14px;">
+                    style="font-size: 14px;">
                     <img src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }}" width="18"
-                        height="18" class="{{ $currentUrl === $item['link'] ? '' : '' }} me-1">
+                        height="18" class="me-1">
                     <span>{{ $item['label'] }}</span>
                 </a>
             @endforeach

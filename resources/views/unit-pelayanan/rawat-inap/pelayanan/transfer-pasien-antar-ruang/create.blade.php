@@ -1255,8 +1255,8 @@
                     <div class="section-content">
 
                         <!-- Riwayat Pemberian Obat akan digabungkan ke tabel terapi (tidak membuat tabel baru).
-                                     Server memberikan $riwayatObat; kita akan memasukkannya ke dataObat di JS
-                                     hanya jika entry berada dalam 24 jam terakhir. -->
+                                             Server memberikan $riwayatObat; kita akan memasukkannya ke dataObat di JS
+                                             hanya jika entry berada dalam 24 jam terakhir. -->
                         <input type="hidden" id="riwayatObatJson" value='@json($riwayatObat ?? [])'>
 
                         <!-- Button Tambah Terapi -->
@@ -1364,17 +1364,8 @@
 
                     <div class="mb-3">
                         <label class="form-label">Cara Pemberian</label>
-                        <select class="form-select" id="cara">
-                            <option value="">-- Pilih Cara Pemberian --</option>
-                            <option value="Oral">Oral (diminum)</option>
-                            <option value="IV">IV (Intravena)</option>
-                            <option value="IM">IM (Intramuskular)</option>
-                            <option value="SC">SC (Subkutan)</option>
-                            <option value="Topikal">Topikal (oles)</option>
-                            <option value="Inhalasi">Inhalasi (hirup)</option>
-                            <option value="Rektal">Rektal (dubur)</option>
-                            <option value="Sublingual">Sublingual (bawah lidah)</option>
-                        </select>
+                        <input type="text" class="form-control" id="caraInput"
+                            placeholder="Masukkan cara pemberian">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -1438,28 +1429,13 @@
                 const rawRiwayat = document.getElementById('riwayatObatJson')?.value || '[]';
                 const riwayat = JSON.parse(rawRiwayat);
                 if (Array.isArray(riwayat) && riwayat.length > 0) {
-                    const now = new Date();
-                    const ONE_DAY_MS = 24 * 60 * 60 * 1000;
-
                     riwayat.forEach(function(ro) {
-                        // Dapatkan tanggal record (coba beberapa field umum)
-                        const dateStr = ro.tanggal || ro.created_at || ro.createdAt || null;
-                        if (!dateStr) return;
-
-                        const recDate = new Date(dateStr);
-                        if (isNaN(recDate.getTime())) return;
-
-                        // Hanya yang <= 24 jam
-                        if ((now - recDate) > ONE_DAY_MS) return;
-
-                        // Bentuk objek minimal sesuai kolom yang diminta
+                        // Bentuk objek minimal sesuai kolom yang diminta (controller sudah memfilter 24 jam)
                         const nama = ro.nama_obat || ro.namaObat || ro.nama || '-';
                         const dosis = (ro.dosis ? (ro.dosis + (ro.satuan ? ' ' + ro.satuan : '')) : (ro
                             .satuan ? ro.satuan : '-'));
                         const frekuensi = ro.frekuensi || ro.freq || ro.freak || '-';
-                        // Jumlah di model CPO tidak konsisten; coba pakai 'freak' atau 'keterangan'
                         const jumlah = ro.freak || ro.jumlah || ro.keterangan || '-';
-                        // Cara pemberian coba dari keterangan jika tidak ada field khusus
                         const cara = ro.cara || ro.cara_pemberian || ro.keterangan || '-';
 
                         const item = {
@@ -1470,7 +1446,7 @@
                             cara: cara
                         };
 
-                        // Hindari duplikasi sederhana: periksa kombinasi nama+dosis+frekuensi
+                        // Hindari duplikasi sederhana berdasarkan nama + dosis + frekuensi
                         const exists = dataObat.some(function(x) {
                             return (String(x.namaObat || '').trim().toLowerCase() === String(item
                                     .namaObat || '').trim().toLowerCase()) &&
@@ -1480,7 +1456,6 @@
                                     .frekuensi || '').trim().toLowerCase());
                         });
                         if (!exists) {
-                            // Masukkan riwayat di depan supaya terlihat sebagai referensi
                             dataObat.unshift(item);
                         }
                     });
@@ -1605,7 +1580,7 @@
             document.getElementById('jumlah').value = '';
             document.getElementById('dosis').value = '';
             document.getElementById('frekuensi').value = '';
-            document.getElementById('cara').value = '';
+            document.getElementById('caraInput').value = '';
         }
 
         // Fungsi simpan data - SANGAT SEDERHANA
@@ -1614,7 +1589,7 @@
             var jml = document.getElementById('jumlah').value || '';
             var dos = document.getElementById('dosis').value || '';
             var frek = document.getElementById('frekuensi').value || '';
-            var caraPemberian = document.getElementById('cara').value || '';
+            var caraPemberian = document.getElementById('caraInput').value || '';
 
             var objData = {
                 namaObat: nama,
@@ -1704,7 +1679,7 @@
             document.getElementById('jumlah').value = item.jumlah || '';
             document.getElementById('dosis').value = item.dosis || '';
             document.getElementById('frekuensi').value = item.frekuensi || '';
-            document.getElementById('cara').value = item.cara || '';
+            document.getElementById('caraInput').value = item.cara || '';
 
             // Ubah judul
             document.getElementById('judulModal').textContent = 'Edit Terapi Obat';

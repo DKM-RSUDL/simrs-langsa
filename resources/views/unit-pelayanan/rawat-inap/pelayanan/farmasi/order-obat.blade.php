@@ -23,6 +23,12 @@
             margin-left: 10px;
             vertical-align: middle;
         }
+
+        /* tambah style untuk menandai obat stok habis */
+        .obat-stok-habis {
+            opacity: 0.6;
+            color: #6c757d;
+        }
     </style>
 @endpush
 
@@ -122,7 +128,11 @@
                                                 </div>
                                                 <label class="form-label">Aturan Pakai</label>
                                                 <div class="row mb-3">
-                                                    <div class="col-md-12">
+                                                    <div class="col-md-5">
+                                                        <label for="jumlah" class="form-label">Jumlah Obat</label>
+                                                        <input type="number" class="form-control" id="jumlah">
+                                                    </div>
+                                                    <div class="col-md-7">
                                                         <label for="frekuensi"
                                                             class="form-label">Frekuensi/interval</label>
                                                         <input type="text" id="frekuensi" class="form-control">
@@ -142,10 +152,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="row mb-3">
-                                                    <div class="col-md-12">
-                                                        <label for="jumlah" class="form-label">Jumlah Obat</label>
-                                                        <input type="number" class="form-control" id="jumlah">
-                                                    </div>
+
                                                 </div>
                                                 <div class="row mb-3">
                                                     <div class="col-md-12">
@@ -418,10 +425,10 @@
                 $(`#${savedTab}`).tab('show');
             }
 
-            // ------------ 1. Variabel Global dan Inisialisasi ------------ //
             let daftarObat = [];
             let activeTab = 'Non Racikan';
             let selectedDokter;
+            let selectedObatStock = null; // <- simpan stok obat yang dipilih
 
             const dokterSelect = $('#dokterPengirim');
 
@@ -461,7 +468,7 @@
                 var obatId = $('#selectedObatId').val();
                 var dosis = $('#dosis').val();
                 var frekuensi = $('#frekuensi').val();
-                var jumlah = $('#jumlah').val();
+                var jumlah = parseInt($('#jumlah').val());
                 var sebelumSesudahMakan = $('#sebelumSesudahMakan').val();
                 var aturanTambahan = $('#aturanTambahan').val();
                 var satuanObat = $('#satuanObat').val();
@@ -476,10 +483,20 @@
                     return;
                 }
 
-                if (!jumlah || isNaN(jumlah)) {
+                if (!jumlah || isNaN(jumlah) || jumlah <= 0) {
                     iziToast.error({
                         title: 'Error',
-                        message: "Masukkan Jumlah Obat.",
+                        message: "Masukkan Jumlah Obat yang valid.",
+                        position: 'topRight'
+                    });
+                    return;
+                }
+
+                // Validasi stok sebelum menambah
+                if (selectedObatStock !== null && jumlah > selectedObatStock) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: `Jumlah melebihi stok tersedia (${selectedObatStock}).`,
                         position: 'topRight'
                     });
                     return;
@@ -506,7 +523,8 @@
                     harga: hargaObat,
                     satuan: satuanObat,
                     jenisObat: activeTab,
-                    kd_dokter: selectedDokter
+                    kd_dokter: selectedDokter,
+                    stok: selectedObatStock // simpan stok juga
                 });
 
                 renderDaftarObat();
@@ -623,7 +641,8 @@
                 });
 
                 $('.fw-bold:contains("Jumlah Item Obat")').text(`Jumlah Item Obat: ${daftarObat.length}`);
-                $('.fw-bold:contains("Total Biaya Obat")').text(`Total Biaya Obat: Rp. ${totalBiaya.toLocaleString()}`);
+                $('.fw-bold:contains("Total Biaya Obat")').text(
+                    `Total Biaya Obat: Rp. ${totalBiaya.toLocaleString()}`);
             }
 
             window.removeObat = function(index) {
@@ -698,7 +717,8 @@
 
                         iziToast.success({
                             title: 'Sukses',
-                            message: 'Resep berhasil disimpan dengan ID: ' + response.id_mrresep,
+                            message: 'Resep berhasil disimpan dengan ID: ' + response
+                                .id_mrresep,
                             position: 'topRight'
                         });
 
@@ -729,7 +749,8 @@
                                 method: 'GET',
                                 success: function(response) {
                                     if (response.token) {
-                                        $('meta[name="csrf-token"]').attr('content', response.token);
+                                        $('meta[name="csrf-token"]').attr('content',
+                                            response.token);
                                         setTimeout(function() {
                                             submitResepForm(form);
                                         }, 1000);
@@ -749,7 +770,8 @@
                         if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
                             errorMessage = 'Validasi gagal:\n';
                             for (let field in xhr.responseJSON.errors) {
-                                errorMessage += `${field}: ${xhr.responseJSON.errors[field].join(', ')}\n`;
+                                errorMessage +=
+                                    `${field}: ${xhr.responseJSON.errors[field].join(', ')}\n`;
                             }
                         }
                         iziToast.error({
@@ -799,7 +821,8 @@
                 }
 
                 if (query.length < 2) {
-                    obatList.html('<div class="list-group-item text-muted">Ketik minimal 2 karakter...</div>');
+                    obatList.html(
+                        '<div class="list-group-item text-muted">Ketik minimal 2 karakter...</div>');
                     return;
                 }
 
@@ -820,9 +843,11 @@
                     isSearching = true;
 
                     $.ajax({
-                        url: '{{ route('farmasi.searchObat', ['kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk]) }}',
+                        url: "{{ route('rawat-inap.farmasi.searchObat', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
                         method: 'GET',
-                        data: { term: query },
+                        data: {
+                            term: query
+                        },
                         success: function(data) {
                             isSearching = false;
                             if (query !== cariObat.val().trim()) return;
@@ -830,49 +855,80 @@
                             let html = '';
                             if (data.length > 0) {
                                 data.forEach(function(obat) {
+                                    const stokVal = parseInt(obat.stok) || 0;
+                                    // beri atribut data-stok dan tanda jika stok habis
                                     html += `
-                                        <a href="#" class="list-group-item list-group-item-action py-2"
+                                        <a href="#" class="list-group-item list-group-item-action py-2 ${stokVal <= 0 ? 'obat-stok-habis' : ''}"
                                         data-id="${obat.id}"
                                         data-harga="${obat.harga}"
-                                        data-satuan="${obat.satuan}">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div class="fw-medium">${obat.text}</div>
-                                                <small class="text-muted">Satuan: ${obat.satuan}</small>
+                                        data-satuan="${obat.satuan}"
+                                        data-stok="${stokVal}">
+                                            <div class="d-flex align-items-center w-100">
+                                                <div class="flex-grow-1">
+                                                    <div class="fw-medium">${obat.text}</div>
+                                                    <small class="text-muted">Stok: ${stokVal}</small>
+                                                </div>
+                                                ${stokVal <= 0 ? '<span class="badge bg-danger ms-2">Habis</span>' : ''}
                                             </div>
                                         </a>`;
                                 });
                             } else {
-                                html = '<div class="list-group-item text-muted">Tidak ada hasil yang ditemukan</div>';
+                                html =
+                                    '<div class="list-group-item text-muted">Tidak ada hasil yang ditemukan</div>';
                             }
                             obatList.html(html);
                         },
                         error: function() {
                             isSearching = false;
                             if (query === cariObat.val().trim()) {
-                                obatList.html('<div class="list-group-item text-danger">Terjadi kesalahan saat mencari obat</div>');
+                                obatList.html(
+                                    '<div class="list-group-item text-danger">Terjadi kesalahan saat mencari obat</div>'
+                                );
                             }
                         }
                     });
                 }, 300);
             });
 
+            // klik pilih obat -> cek stok dulu
             $(document).on('click', '#obatList a', function(e) {
                 e.preventDefault();
                 const $this = $(this);
-                const obatSatuan = $this.data('satuan').toLowerCase();
+                const stokRaw = $this.data('stok');
+                const stok = typeof stokRaw === 'undefined' ? 0 : parseInt(stokRaw) || 0;
+
+                if (stok <= 0) {
+                    iziToast.warning({
+                        title: 'Stok Habis',
+                        message: 'Obat tidak tersedia (stok 0).',
+                        position: 'topRight'
+                    });
+                    return;
+                }
+
+                const obatSatuan = ($this.data('satuan') || '').toString().toLowerCase();
 
                 cariObat.val($this.find('.fw-medium').text()).prop('readonly', true);
                 selectedObatId.val($this.data('id'));
                 $('#hargaObat').val($this.data('harga'));
+                selectedObatStock = stok; // simpan stok obat terpilih
 
                 const satuanMapping = {
-                    'tablet': 'tablet', 'tab': 'tablet',
-                    'kapsul': 'kapsul', 'caps': 'kapsul',
-                    'botol': 'cc', 'btl': 'cc',
-                    'bungkus': 'bungkus', 'bks': 'bungkus',
-                    'ampul': 'ampul', 'amp': 'ampul',
-                    'pcs': 'unit', 'unit': 'unit',
-                    'tetes': 'tetes', 'cc': 'cc', 'ml': 'cc'
+                    'tablet': 'tablet',
+                    'tab': 'tablet',
+                    'kapsul': 'kapsul',
+                    'caps': 'kapsul',
+                    'botol': 'cc',
+                    'btl': 'cc',
+                    'bungkus': 'bungkus',
+                    'bks': 'bungkus',
+                    'ampul': 'ampul',
+                    'amp': 'ampul',
+                    'pcs': 'unit',
+                    'unit': 'unit',
+                    'tetes': 'tetes',
+                    'cc': 'cc',
+                    'ml': 'cc'
                 };
 
                 satuanObat.val(satuanMapping[obatSatuan] || 'tablet');
@@ -884,6 +940,7 @@
                 cariObat.val('').prop('readonly', false).focus();
                 selectedObatId.val('');
                 $('#hargaObat').val('');
+                selectedObatStock = null; // reset stok terpilih
                 clearObat.hide();
                 obatList.empty();
             });
@@ -895,6 +952,7 @@
                 $('#aturanTambahan').val('');
                 $('#jumlahHari').val('');
                 $('#hargaObat').val('');
+                selectedObatStock = null; // reset stok
                 clearObat.hide();
                 obatList.empty();
             }
