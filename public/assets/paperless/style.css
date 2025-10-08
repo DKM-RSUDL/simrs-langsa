@@ -1,0 +1,21 @@
+.page-header {
+    display: flex;
+    flex-direction: column;
+}
+
+.page-header-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.page-header-description {
+    color: #82868b;
+}
+
+.w-min {
+    width: fit-content;
+}
+
+.h-auto {
+    height: auto;
+}
