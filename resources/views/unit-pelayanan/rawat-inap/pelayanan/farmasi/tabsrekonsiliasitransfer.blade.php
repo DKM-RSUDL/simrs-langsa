@@ -62,11 +62,11 @@
                             </td>
                             <td>{{ $obat->perubahanpakai ?? '-' }}</td>
                             <td>
-                                <button class="btn btn-sm btn-warning btn-edit-rekonsiliasi-transfer me-1" 
+                                <button class="btn btn-sm btn-warning btn-edit-rekonsiliasi-transfer me-1"
                                     data-id="{{ $obat->id }}">
                                     <i class="bi bi-pencil"></i>
                                 </button>
-                                <button class="mt-2 btn btn-sm btn-danger btn-delete-rekonsiliasi-transfer" 
+                                <button class="btn btn-sm btn-danger btn-delete-rekonsiliasi-transfer"
                                     data-id="{{ $obat->id }}">
                                     <i class="bi bi-trash"></i>
                                 </button>

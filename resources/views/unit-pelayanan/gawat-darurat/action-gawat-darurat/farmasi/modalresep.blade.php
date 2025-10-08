@@ -99,7 +99,12 @@
                                                     </div>
                                                     <label class="form-label">Aturan Pakai</label>
                                                     <div class="row mb-3">
-                                                        <div class="col-md-12">
+                                                        <div class="col-md-5">
+                                                            <label for="jumlah" class="form-label">Jumlah</label>
+                                                            <input type="number" class="form-control" id="jumlah"
+                                                                value="12">
+                                                        </div>
+                                                        <div class="col-md-7">
                                                             <label for="frekuensi"
                                                                 class="form-label">Frekuensi/interval</label>
                                                             <input type="text" class="form-control" id="frekuensi" placeholder="3 x 1 hari">
@@ -109,7 +114,7 @@
                                                     <div class="row mb-3">
                                                         <div class="col-md-6">
                                                             <label for="dosis" class="form-label">Dosis</label>
-                                                                <input type="text" class="form-control" id="dosis" placeholder="1/2 , 1, 2">
+                                                                <input type="text" class="form-control" id="dosis">
                                                         </div>
                                                         <div class="col md-6">
                                                             <label for="satuanObat" class="form-label">Satuan
@@ -117,13 +122,6 @@
                                                             <input type="text" id="satuanObat" class="form-control">
                                                             <input type="text" id="hargaObat"
                                                                 class="form-control d-none" readonly></input>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-12">
-                                                            <label for="jumlah" class="form-label">Jumlah</label>
-                                                            <input type="number" class="form-control" id="jumlah"
-                                                                value="12">
                                                         </div>
                                                     </div>
                                                     <div class="row mb-3">

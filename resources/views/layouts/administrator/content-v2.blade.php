@@ -1,7 +1,7 @@
 <div class="main-content">
     <div class="content-wrapper">
 
-        <x-breadcrumb />
+        {{-- <x-breadcrumb /> --}}
 
         @yield('content')
 

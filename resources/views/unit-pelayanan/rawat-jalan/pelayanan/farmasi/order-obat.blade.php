@@ -23,6 +23,18 @@
             margin-left: 10px;
             vertical-align: middle;
         }
+
+        /* tambahan: style untuk menandai obat stok habis */
+        .obat-stok-habis {
+            opacity: 0.6;
+            color: #6c757d;
+            pointer-events: none;
+            /* mencegah klik */
+        }
+
+        .badge-habis {
+            margin-left: 8px;
+        }
     </style>
 @endpush
 
@@ -47,7 +59,9 @@
             @endif
 
             <div class="container-fluid">
-               <form id="resepForm" action="{{ route('rawat-jalan.farmasi.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" method="POST">
+                <form id="resepForm"
+                    action="{{ route('rawat-jalan.farmasi.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                    method="POST">
                     @csrf
                     <div class="row">
                         <!-- Side Column (Kiri) -->
@@ -80,7 +94,8 @@
                                             aria-labelledby="nonracikan-tab">
                                             <div class="mb-3">
                                                 <label for="dokterPengirim" class="form-label">Dokter Pengirim</label>
-                                                <select class="form-select" id="dokterPengirim" @cannot('is-admin') disabled @endcannot>
+                                                <select class="form-select" id="dokterPengirim"
+                                                    @cannot('is-admin') disabled @endcannot>
                                                     @foreach ($dokters as $dokter)
                                                         <option value="{{ $dokter->kd_dokter }}"
                                                             @selected($dokter->kd_karyawan == auth()->user()->kd_karyawan)>
@@ -94,8 +109,8 @@
                                             <div class="mb-3">
                                                 <label for="tanggalOrder" class="form-label">Tanggal dan Jam Order</label>
                                                 <input type="datetime-local" class="form-control" id="tanggalOrder"
-                                                    name="tgl_order" value="{{ old('tgl_order', now()->format('Y-m-d\TH:i')) }}"
-                                                    required>
+                                                    name="tgl_order"
+                                                    value="{{ old('tgl_order', now()->format('Y-m-d\TH:i')) }}" required>
                                                 @error('tgl_order')
                                                     <div class="text-danger">{{ $message }}</div>
                                                 @enderror
@@ -110,15 +125,23 @@
                                                             name="nama_obat" placeholder="Ketik nama obat...">
                                                         <button class="btn btn-outline-secondary" type="button"
                                                             id="clearObat" style="display:none;">X</button>
-                                                        <span id="searchObatSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        <span id="searchObatSpinner"
+                                                            class="spinner-border spinner-border-sm" role="status"
+                                                            aria-hidden="true"></span>
                                                     </div>
                                                     <input type="hidden" id="selectedObatId" name="obat_id">
                                                     <div id="obatList" class="list-group mt-2"></div>
                                                 </div>
                                                 <label class="form-label">Aturan Pakai</label>
                                                 <div class="row mb-3">
-                                                    <div class="col-md-12">
-                                                        <label for="frekuensi" class="form-label">Frekuensi/interval</label>
+                                                    <div class="col-md-5">
+                                                        <label for="jumlah" class="form-label">Jumlah Obat</label>
+                                                        <input type="number" class="form-control" id="jumlah"
+                                                            value="12">
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <label for="frekuensi"
+                                                            class="form-label">Frekuensi/interval</label>
                                                         <input type="text" id="frekuensi" class="form-control">
                                                     </div>
                                                 </div>
@@ -137,14 +160,8 @@
                                                 </div>
                                                 <div class="row mb-3">
                                                     <div class="col-md-12">
-                                                        <label for="jumlah" class="form-label">Jumlah Obat</label>
-                                                        <input type="number" class="form-control" id="jumlah"
-                                                            value="12">
-                                                    </div>
-                                                </div>
-                                                <div class="row mb-3">
-                                                    <div class="col-md-12">
-                                                        <label for="sebelumSesudahMakan" class="form-label">Sebelum/Sesudah Makan</label>
+                                                        <label for="sebelumSesudahMakan"
+                                                            class="form-label">Sebelum/Sesudah Makan</label>
                                                         <select class="form-select" id="sebelumSesudahMakan">
                                                             <option selected>Sesudah Makan</option>
                                                             <option>Sebelum Makan</option>
@@ -153,7 +170,8 @@
                                                 </div>
                                                 <div class="row mb-3">
                                                     <div class="col-md-12">
-                                                        <label for="aturanTambahan" class="form-label">Aturan tambahan</label>
+                                                        <label for="aturanTambahan" class="form-label">Aturan
+                                                            tambahan</label>
                                                         <textarea class="form-control" id="aturanTambahan">{{ old('aturanTambahan') }}</textarea>
                                                     </div>
                                                 </div>
@@ -331,18 +349,18 @@
             let daftarObat = [];
             let activeTab = 'Non Racikan';
             let selectedDokter;
+            let selectedObatStock = null; // <-- simpan stok obat yang dipilih
 
             const dokterSelect = $('#dokterPengirim');
 
             @php
-                $dokterLoggedIn = null;
+$dokterLoggedIn = null;
                 foreach ($dokters as $dokter) {
                     if ($dokter->kd_karyawan == auth()->user()->kd_karyawan) {
                         $dokterLoggedIn = $dokter;
                         break;
                     }
-                }
-            @endphp
+                } @endphp
 
             // Set nilai default untuk selectedDokter dari dokter yang login
             selectedDokter = "{{ $dokterLoggedIn ? $dokterLoggedIn->kd_dokter : '' }}";
@@ -391,47 +409,91 @@
                 var obatId = $('#selectedObatId').val();
                 var dosis = $('#dosis').val();
                 var frekuensi = $('#frekuensi').val();
-                var jumlah = $('#jumlah').val();
+                var jumlah = parseInt($('#jumlah').val());
                 var sebelumSesudahMakan = $('#sebelumSesudahMakan').val();
                 var aturanTambahan = $('#aturanTambahan').val();
                 var satuanObat = $('#satuanObat').val();
                 var hargaObat = parseFloat($('#hargaObat').val()) || 0;
 
                 if (!obatId) {
-                    iziToast.error({
-                        title: 'Error',
-                        message: "Pilih obat terlebih dahulu.",
-                        position: 'topRight'
-                    });
+                    if (typeof iziToast !== 'undefined') {
+                        iziToast.error({
+                            title: 'Error',
+                            message: "Pilih obat terlebih dahulu.",
+                            position: 'topRight'
+                        });
+                    } else {
+                        alert("Pilih obat terlebih dahulu.");
+                    }
                     return;
                 }
 
                 if (!jumlah || isNaN(jumlah) || jumlah < 1) {
-                    iziToast.error({
-                        title: 'Error',
-                        message: "Masukkan jumlah obat yang valid.",
-                        position: 'topRight'
-                    });
+                    if (typeof iziToast !== 'undefined') {
+                        iziToast.error({
+                            title: 'Error',
+                            message: "Masukkan jumlah obat yang valid.",
+                            position: 'topRight'
+                        });
+                    } else {
+                        alert("Masukkan jumlah obat yang valid.");
+                    }
                     return;
                 }
 
+                // VALIDASI STOK: jika selectedObatStock tersedia, cek jumlah vs stok
+                if (selectedObatStock !== null) {
+                    if (selectedObatStock <= 0) {
+                        if (typeof iziToast !== 'undefined') {
+                            iziToast.warning({
+                                title: 'Stok Habis',
+                                message: 'Obat tidak tersedia (stok 0).',
+                                position: 'topRight'
+                            });
+                        } else {
+                            alert('Obat tidak tersedia (stok 0).');
+                        }
+                        return;
+                    }
+                    if (jumlah > selectedObatStock) {
+                        if (typeof iziToast !== 'undefined') {
+                            iziToast.error({
+                                title: 'Error',
+                                message: `Jumlah melebihi stok tersedia (${selectedObatStock}).`,
+                                position: 'topRight'
+                            });
+                        } else {
+                            alert(`Jumlah melebihi stok tersedia (${selectedObatStock}).`);
+                        }
+                        return;
+                    }
+                }
+
                 if (!satuanObat) {
-                    iziToast.error({
-                        title: 'Error',
-                        message: "Pilih satuan obat.",
-                        position: 'topRight'
-                    });
+                    if (typeof iziToast !== 'undefined') {
+                        iziToast.error({
+                            title: 'Error',
+                            message: "Pilih satuan obat.",
+                            position: 'topRight'
+                        });
+                    } else {
+                        alert("Pilih satuan obat.");
+                    }
                     return;
                 }
 
                 // Cek jika obat sudah ada dalam daftar
                 const exists = daftarObat.some(obat => obat.id === obatId);
                 if (exists) {
-                    iziToast.warning({
-                        title: 'Perhatian',
-                        message: "Obat sudah ada dalam daftar.",
-                        position: 'topRight'
-                    });
+                    if (typeof iziToast !== 'undefined') {
+                        iziToast.warning({
+                            title: 'Perhatian',
+                            message: "Obat sudah ada dalam daftar.",
+                            position: 'topRight'
+                        });
+                    } else {
+                        alert("Obat sudah ada dalam daftar.");
+                    }
                     return;
                 }
 
@@ -447,7 +509,8 @@
                     harga: hargaObat,
                     satuan: satuanObat,
                     jenisObat: activeTab,
-                    kd_dokter: selectedDokter
+                    kd_dokter: selectedDokter,
+                    stok: selectedObatStock // simpan stok juga
                 });
 
                 renderDaftarObat();
@@ -652,7 +715,7 @@
                     if (query.length >= 2) {
                         searchObatSpinner.show();
                         $.ajax({
-                            url: '{{ route('farmasi.searchObat', ['kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk]) }}',
+                            url: "{{ route('rawat-jalan.farmasi.searchObat', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
                             method: 'GET',
                             data: {
                                 term: query
@@ -662,13 +725,26 @@
                                 var html = '';
                                 if (data.length > 0) {
                                     data.forEach(function(obat) {
+                                        const stokVal = parseInt(obat.stok) ||
+                                        0;
                                         html +=
-                                            '<a href="#" class="list-group-item list-group-item-action" ' +
+                                            '<a href="#" class="list-group-item list-group-item-action ' +
+                                            (stokVal <= 0 ? 'obat-stok-habis' :
+                                                '') + '" ' +
                                             'data-id="' + obat.id + '" ' +
                                             'data-harga="' + obat.harga + '" ' +
                                             'data-satuan="' + obat.satuan +
-                                            '">' +
-                                            obat.text + '</a>';
+                                            '" ' +
+                                            'data-stok="' + stokVal + '">' +
+                                            '<div class="d-flex justify-content-between align-items-center">' +
+                                            '<div>' + obat.text +
+                                            '<br><small class="text-muted">Stok: ' +
+                                            stokVal + '</small></div>' +
+                                            (stokVal <= 0 ?
+                                                '<span class="badge bg-danger badge-habis">Habis</span>' :
+                                                '') +
+                                            '</div>' +
+                                            '</a>';
                                     });
                                 } else {
                                     html =
@@ -690,13 +766,32 @@
                 }, 300);
             });
 
+            // klik pilih obat -> cek stok dulu
             $(document).on('click', '#obatList a', function(e) {
                 e.preventDefault();
                 var $this = $(this);
-                var obatName = $(this).text();
-                var obatId = $(this).data('id');
-                var obatSatuan = $(this).data('satuan');
-                var obatHarga = $this.attr('data-harga');
+
+                const stokRaw = $this.data('stok');
+                const stok = (typeof stokRaw === 'undefined') ? 0 : parseInt(stokRaw) || 0;
+
+                if (stok <= 0) {
+                    // jika stok 0, tampilkan notifikasi dan batalkan
+                    if (typeof iziToast !== 'undefined') {
+                        iziToast.warning({
+                            title: 'Stok Habis',
+                            message: 'Obat tidak tersedia (stok 0).',
+                            position: 'topRight'
+                        });
+                    } else {
+                        alert('Obat tidak tersedia (stok 0).');
+                    }
+                    return;
+                }
+
+                var obatName = $this.find('div').first().text().trim() || $this.text();
+                var obatId = $this.data('id');
+                var obatSatuan = $this.data('satuan');
+                var obatHarga = $this.data('harga');
 
                 cariObat.val(obatName).prop('readonly', true);
                 selectedObatId.val(obatId);
@@ -704,6 +799,9 @@
                 $('#hargaObat').val(obatHarga);
                 obatList.html('');
                 clearObat.show();
+
+                // simpan stok terpilih
+                selectedObatStock = stok;
             });
 
             clearObat.on('click', function() {
@@ -713,6 +811,7 @@
                 $('#hargaObat').val('');
                 clearObat.hide();
                 obatList.html('');
+                selectedObatStock = null; // reset stok terpilih
             });
 
             function resetInputObat() {
@@ -724,6 +823,7 @@
                 $('#obatList').html('');
                 $('#hargaObat').val('');
                 $('#satuanObat').val('tablet');
+                selectedObatStock = null; // reset stok saat reset input
             }
 
             // Set tanggal dan waktu default saat halaman dimuat

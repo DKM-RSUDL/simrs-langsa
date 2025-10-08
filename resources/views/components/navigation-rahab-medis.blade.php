@@ -16,6 +16,7 @@
             color: #ffffff;
             border-radius: 25px;
             transition: all 0.3s ease;
+            border: 1px solid #cecece;
         }
 
         .nav-icons .nav-item:hover {
@@ -64,13 +65,19 @@
 @endphp
 
 <div class="header-background">
-    <div class="nav-icons shadow-sm">
-        @foreach ($navItems as $item)
-            <a href="{{ $item['link'] }}" class="nav-item {{ $currentUrl === $item['link'] ? 'active' : '' }}">
-                <img id="image" src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }} Icon"
-                    width="20">
-                <span>{{ $item['label'] }}</span>
-            </a>
-        @endforeach
+    <div class="card" style="height: auto;">
+        <div class="card-body">
+            <div class="d-flex flex-wrap gap-2">
+                @foreach ($navItems as $item)
+                    <a href="{{ $item['link'] }}"
+                        class="btn {{ $currentUrl === $item['link'] ? 'btn-primary' : 'btn-light' }} d-flex align-items-center"
+                        style="font-size: 14px;">
+                        <img src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }} Icon"
+                            width="20" class="me-1">
+                        <span>{{ $item['label'] }}</span>
+                    </a>
+                @endforeach
+            </div>
+        </div>
     </div>
 </div>

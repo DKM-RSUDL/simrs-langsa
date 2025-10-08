@@ -257,41 +257,79 @@ class FarmasiController extends Controller
 
     public function searchObat(Request $request)
     {
-        $search = $request->get('term');
-        $cacheKey = 'obat_search_' . md5($search);
+        $kdMilik  = 1;             // sesuai SQL manual
+        $limit    = 10;
+        $term     = trim((string) $request->get('term', ''));
+        $depo     = $request->get('depo', 'DPF');   // DP1 (RWJ), DPF (Rawat Inap), DP3 (Rawat Darurat)
+
+        // Hindari query berat saat term kosong/terlalu pendek
+        if ($term === '' || mb_strlen($term) < 2) {
+            return response()->json([]);
+        }
+
+        $cacheKey = 'obat_search_' . md5(json_encode([$term, $depo, $kdMilik, $limit]));
 
         if (Cache::has($cacheKey)) {
             return response()->json(Cache::get($cacheKey));
         }
 
-        $obats = AptObat::join('APT_PRODUK', 'APT_OBAT.KD_PRD', '=', 'APT_PRODUK.KD_PRD')
-            ->join('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
-            ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
-                           FROM DATA_BATCH AS db
-                           WHERE TGL_MASUK = (
-                               SELECT MAX(TGL_MASUK)
-                               FROM DATA_BATCH
-                               WHERE KD_PRD = db.KD_PRD
-                           )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
-            ->where(function ($query) use ($search) {
-                // Optimize search conditions
-                $query->where('APT_OBAT.nama_obat', 'LIKE', $search . '%')
-                    ->orWhere('APT_OBAT.nama_obat', 'LIKE', '% ' . $search . '%');
+        // Subquery: latest price per KD_PRD (mengambil HRG_BELI_OBT dari TGL_MASUK terbaru)
+        $latestPriceSub = DB::table('DATA_BATCH as db')
+            ->select('db.KD_PRD', 'db.HRG_BELI_OBT')
+            ->whereRaw('db.TGL_MASUK = (SELECT MAX(TGL_MASUK) FROM DATA_BATCH WHERE KD_PRD = db.KD_PRD)');
+
+        // Subquery: stok per KD_PRD pada depo tertentu (DP1/DPF/DP3), di-SUM agar 1 baris per produk
+        $stokDepoSub = DB::table('APT_OBAT as a')
+            ->join('APT_PRODUK as b', 'a.KD_PRD', '=', 'b.KD_PRD')
+            ->join('APT_STOK_UNIT as c', function ($join) {
+                $join->on('b.KD_PRD', '=', 'c.KD_PRD')
+                    ->on('b.KD_MILIK', '=', 'c.KD_MILIK');
             })
-            ->select(
+            ->where('b.KD_MILIK', $kdMilik)
+            ->where('b.TAG_BERLAKU', 1)
+            ->where('c.KD_UNIT_FAR', $depo)
+            // Filter nama juga di subquery agar index LIKE% terpakai sejak awal
+            ->where(function ($q) use ($term) {
+                $q->where('a.NAMA_OBAT', 'like', $term . '%')
+                    ->orWhere('a.NAMA_OBAT', 'like', '% ' . $term . '%');
+            })
+            ->groupBy('a.KD_PRD')
+            ->select([
+                'a.KD_PRD',
+                DB::raw('SUM(c.JML_STOK_APT) as total_stok'),
+            ]);
+
+        // Query utama: hasil siap pakai untuk Select2
+        $rows = DB::table('APT_OBAT')
+            ->join('APT_PRODUK', 'APT_OBAT.KD_PRD', '=', 'APT_PRODUK.KD_PRD')
+            ->join('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+            ->leftJoinSub($latestPriceSub, 'latest_price', function ($join) {
+                $join->on('APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD');
+            })
+            ->leftJoinSub($stokDepoSub, 'stok_depo', function ($join) {
+                $join->on('APT_OBAT.KD_PRD', '=', 'stok_depo.KD_PRD');
+            })
+            ->where('APT_PRODUK.KD_MILIK', $kdMilik)
+            ->where('APT_PRODUK.TAG_BERLAKU', 1)
+            ->where(function ($q) use ($term) {
+                $q->where('APT_OBAT.NAMA_OBAT', 'like', $term . '%')
+                    ->orWhere('APT_OBAT.NAMA_OBAT', 'like', '% ' . $term . '%');
+            })
+            ->orderBy('APT_OBAT.NAMA_OBAT')
+            ->limit($limit)
+            ->get([
+                // Select2 shape
                 'APT_OBAT.KD_PRD as id',
-                'APT_OBAT.nama_obat as text',
-                'latest_price.HRG_BELI_OBT as harga',
-                'APT_SATUAN.SATUAN as satuan'
-            )
-            ->groupBy('APT_OBAT.KD_PRD', 'APT_OBAT.nama_obat', 'latest_price.HRG_BELI_OBT', 'APT_SATUAN.SATUAN')
-            ->limit(10)
-            ->get();
+                'APT_OBAT.NAMA_OBAT as text',
+                'APT_SATUAN.SATUAN as satuan',
+                DB::raw('COALESCE(latest_price.HRG_BELI_OBT, 0) as harga'),
+                DB::raw('COALESCE(stok_depo.total_stok, 0) as stok'),
+            ]);
 
-        // Simpan ke cache selama 5 menit
-        Cache::put($cacheKey, $obats, now()->addMinutes(5));
+        // Cache 5 menit
+        Cache::put($cacheKey, $rows, now()->addMinutes(5));
 
-        return response()->json($obats);
+        return response()->json($rows);
     }
 
     private function getRiwayatObat($kd_pasien)

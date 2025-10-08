@@ -873,10 +873,12 @@ class TransferPasienAntarRuang extends Controller
 
     private function getRiwayatCatatanPemberianObat($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk)
     {
+        $since = now()->subDay();
         return RmeCatatanPemberianObat::where('kd_pasien', $kd_pasien)
             ->where('kd_unit', $kd_unit)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
+            ->where('tanggal', '>=', $since)
             ->with(['petugas', 'petugasValidasi'])
             ->select(
                 'id',
