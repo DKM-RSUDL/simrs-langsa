@@ -1,6 +1,6 @@
 @props([
     'class' => 'card h-auto',
-    'bodyClass' => 'card-body d-flex flex-column gap-4',
+    'bodyClass' => 'card-body d-flex flex-column gap-3',
 ])
 
 <div {{ $attributes->merge(['class' => $class]) }}>
