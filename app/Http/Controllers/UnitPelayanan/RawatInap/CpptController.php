@@ -1136,7 +1136,7 @@ class CpptController extends Controller
                 'kf.kondisi',
                 'kf.satuan',
                 'kpd.hasil',
-                'p.kd_penyakit',
+                'p.kd_penyakit', 
                 'p.penyakit',
                 'cp.nama_penyakit',
             ])
