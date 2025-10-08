@@ -24,6 +24,8 @@
 
 
     {{-- local --}}
+    <link rel="stylesheet" href="{{ asset('assets/paperless/style.css') }}">
+    
     <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/izitoast/css/iziToast.min.css') }}">
