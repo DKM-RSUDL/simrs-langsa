@@ -917,7 +917,7 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label class="col-sm-2 col-form-label text-end fw-bold">Laju ISO</label>
+                                                        <label class="col-sm-2 col-form-label text-end fw-bold">ISO UF</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
                                                                 <input type="text" class="form-control" value="{{ $asesmen->keperawatanMonitoringPreekripsi->akut_laju_uf ?? '-' }}" disabled>
@@ -927,7 +927,7 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label class="col-sm-2 col-form-label text-end fw-bold">Lama Laju ISO</label>
+                                                        <label class="col-sm-2 col-form-label text-end fw-bold">Lama ISO UF</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
                                                                 <input type="text" class="form-control" value="{{ $asesmen->keperawatanMonitoringPreekripsi->akut_lama_laju_uf ?? '-' }}" disabled>
