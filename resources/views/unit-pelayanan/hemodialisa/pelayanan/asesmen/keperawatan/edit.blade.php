@@ -457,7 +457,7 @@
                                         </div>
 
                                         <!-- Riwayat penggunaan obat pada pasien -->
-                                        <div class="section-separator">
+                                        {{-- <div class="section-separator">
                                             <h5 class="section-title">5. Riwayat Obat dan Rekomendasi Dokter</h5>
 
                                             <!-- Riwayat penggunaan obat pada pasien -->
@@ -517,10 +517,10 @@
                                                 <!-- Hidden input untuk menyimpan data JSON obat dokter -->
                                                 <input type="hidden" name="obat_dokter" id="obat_dokter_json" value="{{ $asesmen->keperawatan->obat_dokter ?? '' }}">
                                             </div>
-                                        </div>
+                                        </div> --}}
 
                                         <div class="section-separator">
-                                            <h5 class="section-title">6. Pemeriksaan Penunjang</h5>
+                                            <h5 class="section-title">5. Pemeriksaan Penunjang</h5>
 
                                             <!-- Pre Hemodialisis -->
                                             <div class="mb-4">
@@ -598,7 +598,7 @@
                                         </div>
 
                                         <div class="section-separator" id="alergi">
-                                            <h5 class="section-title">7. Alergi</h5>
+                                            <h5 class="section-title">6. Alergi</h5>
                                             <input type="hidden" name="alergi"
                                                 value="{{ $asesmen->keperawatan->alergi ?? '[]' }}">
                                             <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
@@ -627,7 +627,7 @@
                                         </div>
 
                                         <div class="section-separator">
-                                            <h5 class="section-title">8. Status Gizi</h5>
+                                            <h5 class="section-title">7. Status Gizi</h5>
 
                                             <div class="row mb-3">
                                                 <label for="gizi_tanggal_pengkajian" class="col-sm-3 col-form-label">Tanggal
@@ -690,7 +690,7 @@
                                         </div>
 
                                         <div class="section-separator">
-                                            <h5 class="section-title">9. Risiko Jatuh</h5>
+                                            <h5 class="section-title">8. Risiko Jatuh</h5>
 
                                             <h6 class="mt-3 mb-3">Penilaian Risiko Jatuh Skala Morse</h6>
 
@@ -767,7 +767,7 @@
                                         </div>
 
                                         <div class="section-separator">
-                                            <h5 class="section-title">10. Status Psikososial</h5>
+                                            <h5 class="section-title">9. Status Psikososial</h5>
 
                                             <div class="row mb-3">
                                                 <label for="tanggal_pengkajian_psiko" class="col-sm-3 col-form-label">Tanggal Pengkajian</label>
@@ -776,7 +776,6 @@
                                                         <input type="date" class="form-control" id="tanggal_pengkajian_psiko" name="tanggal_pengkajian_psiko"
                                                             value="{{ old('tanggal_pengkajian_psiko', $asesmen->keperawatanStatusPsikososial->tanggal_pengkajian_psiko ?? '') }}"
                                                             autocomplete="off">
-                                                        <span class="input-group-text"><i class="bi bi-calendar"></i></span>
                                                     </div>
                                                     @error('tanggal_pengkajian_psiko')
                                                         <div class="invalid-feedback d-block">
@@ -872,7 +871,7 @@
                                         </div>
 
                                         <div class="section-separator">
-                                            <h5 class="section-title">11. Monitoring Hemodialisis</h5>
+                                            <h5 class="section-title">10. Monitoring Hemodialisis</h5>
 
                                             <!-- 1. Preekripsi Hemodialisis -->
                                             <div class="preekripsi__hemodialisis">
@@ -1034,7 +1033,7 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="laju_uf" class="col-sm-2 col-form-label text-end">laju UF</label>
+                                                        <label for="laju_uf" class="col-sm-2 col-form-label text-end">laju ISO</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
                                                                 <input type="text" class="form-control" id="laju_uf" name="akut_laju_uf">
@@ -1044,7 +1043,7 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="lama_laju_uf" class="col-sm-2 col-form-label text-end">Lama laju UF</label>
+                                                        <label for="lama_laju_uf" class="col-sm-2 col-form-label text-end">Lama laju ISO</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
                                                                 <input type="text" class="form-control" id="lama_laju_uf" name="akut_lama_laju_uf">
@@ -1365,13 +1364,13 @@
                                                 <div class="preHD">
                                                     <div class="row mt-3">
                                                         <div class="col-12 mb-2">
-                                                            <h6 class="fw-bold">Pre HD</h6>
+                                                            <h6 class="fw-bold">Pra HD</h6>
                                                         </div>
                                                     </div>
 
                                                     <!-- Waktu Pre HD -->
                                                     <div class="row mb-3">
-                                                        <label for="waktu_pre_hd" class="col-sm-2 col-form-label text-end">Waktu Pre HD</label>
+                                                        <label for="waktu_pre_hd" class="col-sm-2 col-form-label text-end">Waktu Pra HD</label>
                                                         <div class="col-sm-10">
                                                             <input type="time" class="form-control" id="waktu_pre_hd" name="prehd_waktu_pre_hd"
                                                                 value="{{ isset($asesmen->keperawatanMonitoringTindakan->prehd_waktu_pre_hd) ? \Carbon\Carbon::parse($asesmen->keperawatanMonitoringTindakan->prehd_waktu_pre_hd)->format('H:i') : '' }}">
@@ -1525,7 +1524,7 @@
                                             </div>
 
                                             <div class="intraHD">
-                                                <!-- Intra HD -->
+                                                <!-- Intra HD EDIT-->
                                                 <div class="row mt-4">
                                                     <div class="col-12 mb-2">
                                                         <h6 class="fw-bold">Intra HD</h6>
@@ -1631,7 +1630,8 @@
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
                                                             <input type="number" class="form-control" id="suhu_intra" name="suhu_intra"
-                                                                value="{{ $asesmen->keperawatanMonitoringIntrahd->suhu_intra ?? '' }}">
+                                                                value="{{ $asesmen->keperawatanMonitoringIntrahd->suhu_intra ?? '' }}"
+                                                                step="0.1">
                                                             <span class="input-group-text">°C</span>
                                                         </div>
                                                     </div>
@@ -1701,22 +1701,37 @@
                                                 </div>
 
                                                 <div class="table-responsive">
-                                                    <table class="table table-bordered table-striped" id="observasiTable">
+                                                    <table class="table table-bordered table-sm" id="observasiTable" style="min-width: 1500px;">
                                                         <thead class="table-primary">
-                                                            <tr class="text-center">
-                                                                <th>Waktu</th>
-                                                                <th>QB</th>
-                                                                <th>QD</th>
-                                                                <th>UF Rate</th>
-                                                                <th>TD (mmHg)</th>
-                                                                <th>Nadi / Menit</th>
-                                                                <th>S°</th>
-                                                                <th>Action</th>
+                                                            <tr class="text-center align-middle">
+                                                                <th style="min-width: 120px;">Waktu</th>
+                                                                <th style="min-width: 80px;">QB</th>
+                                                                <th style="min-width: 80px;">QD</th>
+                                                                <th style="min-width: 90px;">UF Rate</th>
+                                                                <th style="min-width: 110px;">TD (mmHg)</th>
+                                                                <th style="min-width: 80px;">Nadi</th>
+                                                                <th style="min-width: 80px;">Nafas</th>
+                                                                <th style="min-width: 80px;">Suhu</th>
+                                                                <th style="min-width: 90px;">NaCl (ml)</th>
+                                                                <th style="min-width: 90px;">Minum (ml)</th>
+                                                                <th style="min-width: 100px;">Lain-Lain (ml)</th>
+                                                                <th style="min-width: 90px;">Output (ml)</th>
+                                                                <th style="min-width: 100px;">Action</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody id="observasiTableBody">
-                                                            <!-- Baris akan ditambahkan dari data form -->
+                                                            <!-- Baris akan ditambahkan dari data form atau loaded dari database -->
                                                         </tbody>
+                                                        <tfoot class="table-secondary">
+                                                            <tr class="text-center fw-bold align-middle">
+                                                                <td colspan="8" class="text-end">TOTAL:</td>
+                                                                <td id="total-nacl">0</td>
+                                                                <td id="total-minum">0</td>
+                                                                <td id="total-lain">0</td>
+                                                                <td id="total-output">0</td>
+                                                                <td></td>
+                                                            </tr>
+                                                        </tfoot>
                                                     </table>
                                                 </div>
 
@@ -1887,10 +1902,13 @@
 
                                                 <!-- Jumlah Cairan Intake -->
                                                 <div class="row mb-3">
-                                                    <label for="jumlah_cairan_intake" class="col-sm-2 col-form-label text-end">Jumlah Cairan Intake</label>
+                                                    <label for="jumlah_cairan_intake"
+                                                        class="col-sm-2 col-form-label text-end">Jumlah Cairan
+                                                        Intake</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
-                                                            <input type="number" class="form-control" id="jumlah_cairan_intake" name="jumlah_cairan_intake"
+                                                            <input type="number" class="form-control"
+                                                                id="jumlah_cairan_output" name="jumlah_cairan_intake"
                                                                 value="{{ $asesmen->keperawatanMonitoringPosthd->jumlah_cairan_intake ?? '' }}">
                                                             <span class="input-group-text">ml</span>
                                                         </div>
@@ -1899,10 +1917,13 @@
 
                                                 <!-- Jumlah Cairan Output -->
                                                 <div class="row mb-3">
-                                                    <label for="jumlah_cairan_output" class="col-sm-2 col-form-label text-end">Jumlah Cairan Output</label>
+                                                    <label for="jumlah_cairan_output"
+                                                        class="col-sm-2 col-form-label text-end">Jumlah Cairan
+                                                        Output</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
-                                                            <input type="text" class="form-control" id="jumlah_cairan_output" name="jumlah_cairan_output"
+                                                            <input type="text" class="form-control"
+                                                                id="ultrafiltration_total" name="jumlah_cairan_output"
                                                                 value="{{ $asesmen->keperawatanMonitoringPosthd->jumlah_cairan_output ?? '' }}">
                                                             <span class="input-group-text">ml</span>
                                                         </div>
@@ -1911,10 +1932,11 @@
 
                                                 <!-- Ultrafiltration Total -->
                                                 <div class="row mb-3">
-                                                    <label for="ultrafiltration_total" class="col-sm-2 col-form-label text-end">Ultrafiltration Total</label>
+                                                    <label class="col-sm-2 col-form-label text-end">Ultrafiltration Total</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="ultrafiltration_total" name="ultrafiltration_total"
-                                                            placeholder="input angka, otomatis menghitung total cairan yang diambil selama HD ml"
+                                                        <input type="number" class="form-control" id="jumlah_cairan_intake"
+                                                            name="ultrafiltration_total"
+                                                            placeholder="input angka, otomatis menghitung total cairan yang diambil selama HD ml" readonly
                                                             value="{{ $asesmen->keperawatanMonitoringPosthd->ultrafiltration_total ?? '' }}">
                                                     </div>
                                                 </div>
@@ -1931,7 +1953,7 @@
                                         </div>
 
                                         <div class="section-separator mt-5">
-                                            <h5 class="section-title">12. Penyulit Selama HD</h5>
+                                            <h5 class="section-title">11. Penyulit Selama HD</h5>
 
                                             <div class="row mb-3">
                                                 <label for="klinis" class="col-sm-2 col-form-label text-end">Klinis</label>
@@ -1981,7 +2003,7 @@
                                         </div>
 
                                         <div class="section-separator mt-5">
-                                            <h5 class="section-title">13. Disharge Planning</h5>
+                                            <h5 class="section-title">12. Disharge Planning</h5>
 
                                             <div class="row mb-3">
                                                 <label for="rencana_pulang" class="col-sm-2 col-form-label text-end">Rencana Pulang</label>
@@ -2004,7 +2026,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="section-separator" id="diagnosis">
+                                        {{-- <div class="section-separator" id="diagnosis">
                                             <h5 class="fw-semibold mb-4">14. Diagnosis</h5>
 
                                             @php
@@ -2228,33 +2250,45 @@
                                                 <input type="hidden" id="prognosis" name="prognosis"
                                                     value="{{ json_encode($implementationData['prognosis']) }}">
                                             </div>
-                                        </div>
+                                        </div> --}}
 
                                         <!-- 16. Evaluasi -->
                                         <div class="section-separator mt-5">
-                                            <h5 class="section-title">16. Evaluasi</h5>
+                                            <h5 class="section-title">13. Evaluasi</h5>
 
                                             <!-- Tambah Evaluasi Keperawatan -->
                                             <div class="row mb-3">
                                                 <div class="col-12">
-                                                    <label for="evaluasi_keperawatan" class="form-label">Tambah Evaluasi Keperawatan</label>
-                                                    <textarea class="form-control" id="evaluasi_keperawatan" name="evaluasi_keperawatan" rows="4">{{ $asesmen->keperawatan->evaluasi_keperawatan ?? '' }}</textarea>
+                                                    <label for="soap_s" class="form-label">Subjective (Subjektif)</label>
+                                                    <textarea class="form-control" id="soap_s" name="soap_s" rows="4">{{ $asesmen->keperawatan->soap_s ?? '' }}</textarea>
                                                 </div>
                                             </div>
 
                                             <!-- Tambah Evaluasi Medis -->
                                             <div class="row mb-4">
                                                 <div class="col-12">
-                                                    <label for="evaluasi_medis" class="form-label">Tambah Evaluasi Medis</label>
-                                                    <textarea class="form-control" id="evaluasi_medis" name="evaluasi_medis" rows="4">{{ $asesmen->keperawatan->evaluasi_medis ?? '' }}</textarea>
+                                                    <label for="soap_o" class="form-label">Objective (Objektif)</label>
+                                                    <textarea class="form-control" id="soap_o" name="soap_o" rows="4">{{ $asesmen->keperawatan->soap_o ?? '' }}</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-4">
+                                                <div class="col-12">
+                                                    <label for="soap_a" class="form-label">Assessment (Penilaian)</label>
+                                                    <textarea class="form-control" id="soap_a" name="soap_a" rows="4">{{ $asesmen->keperawatan->soap_a ?? '' }}</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-4">
+                                                <div class="col-12">
+                                                    <label for="soap_p" class="form-label">Plan (Perencanaan)</label>
+                                                    <textarea class="form-control" id="soap_p" name="soap_p" rows="4">{{ $asesmen->keperawatan->soap_p ?? '' }}</textarea>
                                                 </div>
                                             </div>
                                         </div>
                                         <!-- 17. Tanda Tangan dan Verifikasi -->
                                         <div class="section-separator mt-5">
-                                            <h5 class="section-title">17. Tanda Tangan dan Verifikasi</h5>
+                                            <h5 class="section-title">14. Tanda Tangan dan Verifikasi</h5>
 
-                                            <!-- E-Signature Perawat Pemeriksa Akses Vaskular -->
+                                            <!-- E-Signature Perawat Pemeriksa Akses Vaskular (Single) -->
                                             <div class="row mb-4">
                                                 <div class="col-md-3">
                                                     <label class="form-label">E-Signature Nama Perawat Pemeriksa Akses Vaskular</label>
@@ -2272,41 +2306,51 @@
                                                             </select>
                                                         </div>
                                                         <div class="col-md-4 text-center">
-                                                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKQAAACkCAYAAAAZtYVBAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAUESURBVHhe7dxBattQFIZR03W4/62l3YNbGsT3lTzwe0cH0APykaqi9uvz8/MXNPidv6GCIIkhSGIIkhiCJIYgiSFIYgiSGIIkhiCJIUhiCJIYgiSGIIkhiCJIYgiSGIIkhiCJIUhiCJIYgiSGIIkhSGIIkhiCJIYgiSFIYgiSGIIkhiCJIUhiCJIYgiSGIIkhSGIIkhiCJIYgiSFIYgiSGIIkhiCJIUhiCJIYgiSGIIkhSGIIkhiCJMZrQX59ff1YvV+PfZIgiSFIYrwW5J1/f//+qnXPWfNcd+3dY68+b/V56/3/EkESQ5DEmBbk3XPS3TljHpueT1b3hzmOnDMev++aIIkhSGJMC/LqeeOxq/ddrzt73fq5Nc9l4z5X91/d/9XrVgR5cwxBEmNakHfmqDmfzfGOcWyaH+d99/x49Jy5+twgSGIIkhivBTnOLatz0Hhunj/mdDr/V/Pz8ziPM/HV6x/V5wZBEkOQxHgtyPHcNZ6v7sxxq+e/u/HvrK6Zm4+r91sRJDEESYxpQc7Nefj76tz13/PJt39tzWvW+9yveZ7LVuvXz/hFZN1/RZAEud8eQ5DEeC3I+97vH66+UHs39Ptn+Pw0n7NW97t7/+q+dc35vuvePw779h9BEkOQxJgW5Pzcs3pOmeeX+dx05/w0P5ese81z6Dg3rnv8Ph8JkhiCJMZrQR45d62e01bXXc1Rt9X7d+fWcf/qy7n9614RJDEESYxpQV79ZM+YX8b9u/PHHXe/3Lv6vKvnnO+/IkhiCJIYrwV558g1q/PVvP/I9Xeuu5pfjzzy7itBEkOQxJgW5J3z1bzm6pd149q7P+9cvf96zeq+9Xw6X39FkMQQJDFeC/LIeWs+D62uW52f5591zv+ue8+H7/vf97hvgiSGIIkxLcjVuWec/1avu/qcq2vmOfB+zf21//758315Z96fz5XvGe+bIIkhSGK8FuR8vpvnoPn8OD/fHJmjbsf//P/PP4+d93+/5plrd+fO8fPN7xckMQyPEGPsgbEHpgV53/vjh3F3Th7Pc/N58c6cd+f5dHdu3Tueq3vnwKtz5njtfP8VQRJDkMSYFuTY9eZ5a56fVuf68V/GNfO/QHDnuXU+h/5zHfv/e+5ev3fO+6wIkhiCJMZrQc7nl/l5ap4j79fMX7a9G/r/9/8z1z3PdeN17/Pp+pz8vu94jnznnyAQJDEESYzXgtz9wm2eT8bz433tes48cj7dPXfOa+/Msfdr3q97RZDEECQxpgV55T/V3Lnf/Jy4nk/G/nfn/DvOsWOfv194rpnnybP7re5zRZDEECQxXgvy/vPBOF/Nz2HzHPfMvDn+C8Dr38j/5895jv3+fZw/x9dc/Ys+FwRJDEESY1qQ43PL+AXcPOfN89D8nPl9zXzNc+e81T3Xec76ZeDq/Y4QJDEESR5DE2PaL/euzm1H5rj7/vn8dOR5ctw37ltde3XN/PPYcS7eI0hiCJIYrwU5zzfzz/XG1/Pz1NX5bn4+nOe4/X3zHDp/AfdqPh3n0vk5+v7zjiCJIUhiTAvyzsuy+Xlmnpvm55vx/Dk/f67nwN33Ga+5ml/nL/rm6+c5+IggCULEeC3IdS4az0/zOWg+Z41z8eocuPsl3jwHzufY+Xxbv/Rb5+I9giSGIIkxLcgn1ef1/n0ESQxBEuO1IMkkSDIIkhiCJIYgiSFIYgiSGIIkhiCJIUhiCJIYgiSGIIkhSGIIkhiCJIYgiSFIYgiSGIIkhiCJIUhiCJIYgiSGIIkhSGIIkhiCJIYgiSFIYgiSGIIkhiCJIUhiCJIYgiSGIIkhSGIIkhiCJIYgiSFIYgiSGIIkxm+kWDBIHCiGkAAAAABJRU5ErkJggg=="
-                                                                alt="QR Code" class="img-fluid" style="width: 100px; height: 100px;">
-                                                            <div class="mt-2">No..........................</div>
+                                                            <div id="qr-pemeriksa"></div>
+                                                            <div class="mt-2" id="no-pemeriksa">No..........................</div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <!-- E-Signature Perawat Yang Bertugas -->
+                                            <!-- E-Signature Perawat Yang Bertugas (Multiple) -->
                                             <div class="row mb-4">
                                                 <div class="col-md-3">
                                                     <label class="form-label">E-Signature Nama Perawat Yang Bertugas</label>
                                                 </div>
                                                 <div class="col-md-9">
-                                                    <div class="row">
+                                                    <div class="row mb-3">
                                                         <div class="col-md-8">
-                                                            <select name="perawat_bertugas" id="perawat" class="form-select select2">
-                                                                <option value="">--Pilih--</option>
+                                                            <select id="perawat-selector" class="form-select select2">
+                                                                <option value="">--Pilih Perawat--</option>
                                                                 @foreach ($perawat as $prwt)
-                                                                    <option value="{{ $prwt->kd_karyawan }}" {{ ($asesmen->keperawatan->perawat_bertugas ?? '') == $prwt->kd_karyawan ? 'selected' : '' }}>
+                                                                    <option value="{{ $prwt->kd_karyawan }}" 
+                                                                            data-nama="{{ $prwt->gelar_depan }} {{ $prwt->nama }} {{ $prwt->gelar_belakang }}">
                                                                         {{ "$prwt->gelar_depan $prwt->nama $prwt->gelar_belakang" }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
-                                                        <div class="col-md-4 text-center">
-                                                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKQAAACkCAYAAAAZtYVBAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAUESURBVHhe7dxBattQFIZR03W4/62l3YNbGsT3lTzwe0cH0APykaqi9uvz8/MXNPidv6GCIIkhSGIIkhiCJIYgiSFIYgiSGIIkhiCJIUhiCJIYgiSGIIkhiCJIYgiSGIIkhiCJIUhiCJIYgiSGIIkhSGIIkhiCJIYgiSFIYgiSGIIkhiCJIUhiCJIYgiSGIIkhSGIIkhiCJIYgiSFIYgiSGIIkhiCJIUhiCJIYgiSGIIkhSGIIkhiCJMZrQX59ff1YvV+PfZIgiSFIYrwW5J1/f//+qnXPWfNcd+3dY68+b/V56/3/EkESQ5DEmBbk3XPS3TljHpueT1b3hzmOnDMev++aIIkhSGJMC/LqeeOxq/ddrzt73fq5Nc9l4z5X91/d/9XrVgR5cwxBEmNakHfmqDmfzfGOcWyaH+d99/x49Jy5+twgSGIIkhivBTnOLatz0Hhunj/mdDr/V/Pz8ziPM/HV6x/V5wZBEkOQxHgtyPHcNZ6v7sxxq+e/u/HvrK6Zm4+r91sRJDEESYxpQc7Nefj76tz13/PJt39tzWvW+9yveZ7LVuvXz/hFZN1/RZAEud8eQ5DEeC3I+97vH66+UHs39Ptn+Pw0n7NW97t7/+q+dc35vuvePw779h9BEkOQxJgW5Pzcs3pOmeeX+dx05/w0P5ese81z6Dg3rnv8Ph8JkhiCJMZrQR45d62e01bXXc1Rt9X7d+fWcf/qy7n9614RJDEESYxpQV79ZM+YX8b9u/PHHXe/3Lv6vKvnnO+/IkhiCJIYrwV558g1q/PVvP/I9Xeuu5pfjzzy7itBEkOQxJgW5J3z1bzm6pd149q7P+9cvf96zeq+9Xw6X39FkMQQJDFeC/LIeWs+D62uW52f5591zv+ue8+H7/vf97hvgiSGIIkxLcjVuWec/1avu/qcq2vmOfB+zf21//758315Z96fz5XvGe+bIIkhSGK8FuR8vpvnoPn8OD/fHJmjbsf//P/PP4+d93+/5plrd+fO8fPN7xckMQyPEGPsgbEHpgV53/vjh3F3Th7Pc/N58c6cd+f5dHdu3Tueq3vnwKtz5njtfP8VQRJDkMSYFuTY9eZ5a56fVuf68V/GNfO/QHDnuXU+h/5zHfv/e+5ev3fO+6wIkhiCJMZrQc7nl/l5ap4j79fMX7a9G/r/9/8z1z3PdeN17/Pp+pz8vu94jnznnyAQJDEESYzXgtz9wm2eT8bz433tes48cj7dPXfOa+/Msfdr3q97RZDEECQxpgV55T/V3Lnf/Jy4nk/G/nfn/DvOsWOfv194rpnnybP7re5zRZDEECQxXgvy/vPBOF/Nz2HzHPfMvDn+C8Dr38j/5895jv3+fZw/x9dc/Ys+FwRJDEESY1qQ43PL+AXcPOfN89D8nPl9zXzNc+e81T3Xec76ZeDq/Y4QJDEESR5DE2PaL/euzm1H5rj7/vn8dOR5ctw37ltde3XN/PPYcS7eI0hiCJIYrwU5zzfzz/XG1/Pz1NX5bn4+nOe4/X3zHDp/AfdqPh3n0vk5+v7zjiCJIUhiTAvyzsuy+Xlmnpvm55vx/Dk/f67nwN33Ga+5ml/nL/rm6+c5+IggCULEeC3IdS4az0/zOWg+Z41z8eocuPsl3jwHzufY+Xxbv/Rb5+I9giSGIIkxLcgn1ef1/n0ESQxBEuO1IMkkSDIIkhiCJIYgiSFIYgiSGIIkhiCJIUhiCJIYgiSGIIkhSGIIkhiCJIYgiSFIYgiSGIIkhiCJIUhiCJIYgiSGIIkhSGIIkhiCJIYgiSFIYgiSGIIkhiCJIUhiCJIYgiSGIIkhSGIIkhiCJIYgiSFIYgiSGIIkxm+kWDBIHCiGkAAAAABJRU5ErkJggg=="
-                                                                alt="QR Code" class="img-fluid" style="width: 100px; height: 100px;">
-                                                            <div class="mt-2">No..........................</div>
+                                                        <div class="col-md-4">
+                                                            <button type="button" id="btn-tambah-perawat" class="btn btn-primary w-100">
+                                                                <i class="fas fa-plus"></i> Tambah
+                                                            </button>
                                                         </div>
                                                     </div>
+
+                                                    <!-- List Perawat yang Dipilih -->
+                                                    <div id="list-perawat-bertugas" class="border rounded p-3 bg-light">
+                                                        <div class="text-muted text-center py-3" id="empty-message">
+                                                            Belum ada perawat yang ditambahkan
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Hidden input untuk menyimpan data JSON -->
+                                                    <input type="hidden" name="perawat_bertugas" id="perawat-bertugas-json" value="">
                                                 </div>
                                             </div>
 
-                                            <!-- E-Signature Dokter DPJP -->
+                                            <!-- E-Signature Dokter DPJP (Single) -->
                                             <div class="row mb-4">
                                                 <div class="col-md-3">
                                                     <label class="form-label">E-Signature Nama Dokter (DPJP)</label>
@@ -2314,18 +2358,18 @@
                                                 <div class="col-md-9">
                                                     <div class="row">
                                                         <div class="col-md-8">
-                                                            <select name="dokter_pelaksana" id="dokter_pelaksana" class="form-select">
+                                                            <select name="dokter_pelaksana" id="dokter-pelaksana" class="form-select">
                                                                 <option value="">--Pilih--</option>
                                                                 @foreach ($dokterPelaksana as $item)
                                                                     <option value="{{ $item->dokter->kd_dokter }}" {{ ($asesmen->keperawatan->dokter_pelaksana ?? '') == $item->dokter->kd_dokter ? 'selected' : '' }}>
-                                                                        {{ $item->dokter->nama_lengkap }}</option>
+                                                                        {{ $item->dokter->nama_lengkap }}
+                                                                    </option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
                                                         <div class="col-md-4 text-center">
-                                                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKQAAACkCAYAAAAZtYVBAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAUESURBVHhe7dxBattQFIZR03W4/62l3YNbGsT3lTzwe0cH0APykaqi9uvz8/MXNPidv6GCIIkhSGIIkhiCJIYgiSFIYgiSGIIkhiCJIUhiCJIYgiSGIIkhiCJIYgiSGIIkhiCJIUhiCJIYgiSGIIkhSGIIkhiCJIYgiSFIYgiSGIIkhiCJIUhiCJIYgiSGIIkhSGIIkhiCJIYgiSFIYgiSGIIkhiCJIUhiCJIYgiSGIIkhSGIIkhiCJMZrQX59ff1YvV+PfZIgiSFIYrwW5J1/f//+qnXPWfNcd+3dY68+b/V56/3/EkESQ5DEmBbk3XPS3TljHpueT1b3hzmOnDMev++aIIkhSGJMC/LqeeOxq/ddrzt73fq5Nc9l4z5X91/d/9XrVgR5cwxBEmNakHfmqDmfzfGOcWyaH+d99/x49Jy5+twgSGIIkhivBTnOLatz0Hhunj/mdDr/V/Pz8ziPM/HV6x/V5wZBEkOQxHgtyPHcNZ6v7sxxq+e/u/HvrK6Zm4+r91sRJDEESYxpQc7Nefj76tz13/PJt39tzWvW+9yveZ7LVuvXz/hFZN1/RZAEud8eQ5DEeC3I+97vH66+UHs39Ptn+Pw0n7NW97t7/+q+dc35vuvePw779h9BEkOQxJgW5Pzcs3pOmeeX+dx05/w0P5ese81z6Dg3rnv8Ph8JkhiCJMZrQR45d62e01bXXc1Rt9X7d+fWcf/qy7n9614RJDEESYxpQV79ZM+YX8b9u/PHHXe/3Lv6vKvnnO+/IkhiCJIYrwV558g1q/PVvP/I9Xeuu5pfjzzy7itBEkOQxJgW5J3z1bzm6pd149q7P+9cvf96zeq+9Xw6X39FkMQQJDFeC/LIeWs+D62uW52f5591zv+ue8+H7/vf97hvgiSGIIkxLcjVuWec/1avu/qcq2vmOfB+zf21//758315Z96fz5XvGe+bIIkhSGK8FuR8vpvnoPn8OD/fHJmjbsf//P/PP4+d93+/5plrd+fO8fPN7xckMQyPEGPsgbEHpgV53/vjh3F3Th7Pc/N58c6cd+f5dHdu3Tueq3vnwKtz5njtfP8VQRJDkMSYFuTY9eZ5a56fVuf68V/GNfO/QHDnuXU+h/5zHfv/e+5ev3fO+6wIkhiCJMZrQc7nl/l5ap4j79fMX7a9G/r/9/8z1z3PdeN17/Pp+pz8vu94jnznnyAQJDEESYzXgtz9wm2eT8bz433tes48cj7dPXfOa+/Msfdr3q97RZDEECQxpgV55T/V3Lnf/Jy4nk/G/nfn/DvOsWOfv194rpnnybP7re5zRZDEECQxXgvy/vPBOF/Nz2HzHPfMvDn+C8Dr38j/5895jv3+fZw/x9dc/Ys+FwRJDEESY1qQ43PL+AXcPOfN89D8nPl9zXzNc+e81T3Xec76ZeDq/Y4QJDEESR5DE2PaL/euzm1H5rj7/vn8dOR5ctw37ltde3XN/PPYcS7eI0hiCJIYrwU5zzfzz/XG1/Pz1NX5bn4+nOe4/X3zHDp/AfdqPh3n0vk5+v7zjiCJIUhiTAvyzsuy+Xlmnpvm55vx/Dk/f67nwN33Ga+5ml/nL/rm6+c5+IggCULEeC3IdS4az0/zOWg+Z41z8eocuPsl3jwHzufY+Xxbv/Rb5+I9giSGIIkxLcgn1ef1/n0ESQxBEuO1IMkkSDIIkhiCJIYgiSFIYgiSGIIkhiCJIUhiCJIYgiSGIIkhSGIIkhiCJIYgiSFIYgiSGIIkhiCJIUhiCJIYgiSGIIkhSGIIkhiCJIYgiSFIYgiSGIIkhiCJIUhiCJIYgiSGIIkhSGIIkhiCJIYgiSFIYgiSGIIkxm+kWDBIHCiGkAAAAABJRU5ErkJggg=="
-                                                                alt="QR Code" class="img-fluid" style="width: 100px; height: 100px;">
-                                                            <div class="mt-2">No..........................</div>
+                                                            <div id="qr-dokter"></div>
+                                                            <div class="mt-2" id="no-dokter">No..........................</div>
                                                         </div>
                                                     </div>
                                                 </div>
