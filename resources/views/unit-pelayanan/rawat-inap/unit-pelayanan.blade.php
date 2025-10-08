@@ -221,7 +221,7 @@
                                                         <ul class="dropdown-menu shadow-lg">
                                                             <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/transfer-pasien-antar-ruang'}">Pindah Ruangan Rawat Inap</a></li>
                                                             <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/order-hd'}">Hemodialisa (HD)</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Operasi (IBS)</a></li>
+                                                            <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/operasi-ibs'}">Operasi (IBS)</a></li>
                                                         </ul>
                                                     </li>
                                                     <li class="dropdown-submenu">
