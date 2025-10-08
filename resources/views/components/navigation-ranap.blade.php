@@ -53,6 +53,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.asesmen'
         ],
         [
             'icon' => 'positive_dynamic.png',
@@ -63,6 +64,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.cppt'
         ],
         [
             'icon' => 'tools.png',
@@ -73,6 +75,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.tindakan'
         ],
         [
             'icon' => 'agree.png',
@@ -83,6 +86,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.konsultasi'
         ],
         [
             'icon' => 'test_tube.png',
@@ -93,6 +97,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.lab-patologi-klinik'
         ],
         [
             'icon' => 'microbeam_radiation_therapy.png',
@@ -103,6 +108,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.radiologi'
         ],
         [
             'icon' => 'pill.png',
@@ -113,6 +119,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.farmasi'
         ],
         [
             'icon' => 'info.png',
@@ -123,6 +130,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.farmasi'
         ],
         [
             'icon' => 'info.png',
@@ -133,6 +141,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.cairan'
         ],
         [
             'icon' => 'info.png',
@@ -143,6 +152,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.anak'
         ],
         [
             'icon' => 'observasi.png',
@@ -153,6 +163,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.observasi'
         ],
         [
             'icon' => 'observasi.png',
@@ -163,6 +174,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.pengawasan-perinatology'
         ],
         [
             'icon' => 'goal.png',
@@ -178,6 +190,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.rawat-inap-resume'
         ],
         [
             'icon' => 'observasi.png',
@@ -188,6 +201,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.ews-pasien-dewasa'
         ],
         [
             'icon' => 'verified_badge.png',
@@ -198,6 +212,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.form-a'
         ],
         [
             'icon' => 'verified_badge.png',
@@ -208,6 +223,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.asesmen-pra-anestesi'
         ],
         [
             'icon' => 'verified_badge.png',
@@ -218,6 +234,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.resiko-jatuh'
         ],
         [
             'icon' => 'verified_badge.png',
@@ -228,6 +245,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.skala-numerik'
         ],
         [
             'icon' => 'verified_badge.png',
@@ -238,6 +256,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.resiko-decubitus'
         ],
         [
             'icon' => 'verified_badge.png',
@@ -248,6 +267,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.status-fungsional'
         ],
         [
             'icon' => 'verified_badge.png',
@@ -258,6 +278,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.surveilans-ppi'
         ],
         [
             'icon' => 'verified_badge.png',
@@ -268,6 +289,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.pneumonia.psi'
         ],
         [
             'icon' => 'verified_badge.png',
@@ -278,6 +300,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.echocardiography'
         ],
         [
             'icon' => 'verified_badge.png',
@@ -288,6 +311,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'route-name' => 'rawat-inap.audiometri'
         ],
     ];
 
@@ -382,11 +406,11 @@
 {{-- <div class="header-background">
     <div class="nav-icons">
         @foreach ($navItems as $item)
-            <a href="{{ $item['link'] }}" class="nav-item {{ $currentUrl === $item['link'] ? 'active' : '' }}">
-                <img id="image" src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }} Icon"
-                    width="20">
-                <span>{{ $item['label'] }}</span>
-            </a>
+        <a href="{{ $item['link'] }}" class="nav-item {{ $currentUrl === $item['link'] ? 'active' : '' }}">
+            <img id="image" src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }} Icon"
+                width="20">
+            <span>{{ $item['label'] }}</span>
+        </a>
         @endforeach
     </div>
 </div> --}}
@@ -395,8 +419,17 @@
     <div class="card-body p-2">
         <div class="d-flex flex-wrap gap-2">
             @foreach ($navItems as $item)
-                <a href="{{ $item['link'] }}"
+                {{-- <a href="{{ $item['link'] }}"
                     class="btn {{ $currentUrl === $item['link'] ? 'btn-primary' : 'btn-light' }} d-flex align-items-center"
+                    style="border-radius: 20px; padding: 6px 12px; font-size: 14px;">
+                    <img src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }}" width="18"
+                        height="18" class="{{ $currentUrl === $item['link'] ? '' : '' }} me-1">
+                    <span>{{ $item['label'] }}</span>
+                </a> --}}
+
+
+                <a href="{{ $item['link'] }}"
+                    class="btn {{  request()->routeIs(($item['route-name'] ?? $currentUrl) . '.*') ? 'btn-primary' : 'btn-light' }} d-flex align-items-center"
                     style="border-radius: 20px; padding: 6px 12px; font-size: 14px;">
                     <img src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }}" width="18"
                         height="18" class="{{ $currentUrl === $item['link'] ? '' : '' }} me-1">
@@ -410,10 +443,10 @@
 {{-- <div class="header-background">
     <div class="nav-icons shadow-sm">
         @foreach ($navItems as $item)
-            <a href="{{ $item['link'] }}">
-                <img src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }} Icon" width="25">
-                <span>{{ $item['label'] }}</span>
-            </a>
+        <a href="{{ $item['link'] }}">
+            <img src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }} Icon" width="25">
+            <span>{{ $item['label'] }}</span>
+        </a>
         @endforeach
     </div>
 </div> --}}

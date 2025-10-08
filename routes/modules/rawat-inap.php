@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdimeController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenAnakController;
@@ -128,7 +129,11 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::post('/', 'store')->name('.store');
                             Route::put('/', 'update')->name('.update');
                             Route::put('/verifikasi', 'verifikasiCppt')->name('.verifikasi');
+                            Route::get('/gizi', 'cpptGizi')->name('.cppt-gizi');
                         });
+
+                        
+
                     });
                 });
 
