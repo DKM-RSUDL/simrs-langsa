@@ -68,12 +68,12 @@
                                                 data-item='@json($item)' data-bs-target="#showOperasiModal">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="#" class="btn btn-sm btn-warning"
-                                                data-item='@json($item)' data-bs-target="#showOperasiModal">
+                                            <a href="{{ route('rawat-inap.operasi-ibs.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->tgl_op, $item->jam_op]) }}"
+                                                class="btn btn-sm btn-warning">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <button class="btn btn-sm btn-danger"
-                                                data-item='@json($item)' data-bs-target="#showOperasiModal">
+                                            <button class="btn btn-sm btn-danger" data-item='@json($item)'
+                                                data-bs-target="#showOperasiModal">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </div>

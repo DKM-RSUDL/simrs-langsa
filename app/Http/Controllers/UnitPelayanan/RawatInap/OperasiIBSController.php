@@ -72,11 +72,14 @@ class OperasiIBSController extends Controller
         ));
     }
 
-    public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op)
     {
         $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
-        $operasi = OperasiIBS::findOrFail($id);
+        $operasi = OperasiIBS::where('tgl_op', $tgl_op)->where('jam_op', $jam_op)
+            ->where('kd_kasir', $dataMedis->kd_kasir)
+            ->where('no_transaksi', $dataMedis->no_transaksi)
+            ->firstOrFail();
 
         // data not handled by AJAX
         $kamarOperasi = DB::table('kamar')
@@ -114,7 +117,7 @@ class OperasiIBSController extends Controller
         ));
     }
 
-    public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op)
     {
         DB::beginTransaction();
         try {
@@ -134,27 +137,38 @@ class OperasiIBSController extends Controller
                 'catatan' => 'nullable|string|max:1000',
             ]);
 
-            $operasi = OperasiIBS::findOrFail($id);
+            $origTgl = $request->input('tgl_registrasi', $request->tgl_op);
+            $origJam = $request->input('jam_op', $jam_op);
 
-            $operasi->tgl_op = $request->input('tanggal_registrasi');
-            $operasi->jam_op = $request->input('jam_operasi');
-            $operasi->tgl_jadwal = $request->input('tanggal_jadwal');
-            $operasi->kd_unit = $kd_unit;
-            $operasi->no_kamar = $request->input('kamar_operasi');
-            $operasi->kd_unit_kamar = $request->input('kamar_operasi');
-            $operasi->kd_sub_spc = $request->input('sub_spesialisasi');
-            $operasi->kd_spc = $request->input('spesialisasi');
-            $operasi->kd_jenis_op = $request->input('jenis_operasi');
-            $operasi->kd_produk = $request->input('jenis_tindakan');
-            $operasi->no_transaksi = $dataMedis->no_transaksi;
-            $operasi->kd_kasir = $dataMedis->kd_kasir;
-            $operasi->kd_pasien = $kd_pasien;
-            $operasi->kd_unit_kamar = $request->input('kamar_operasi');
-            $operasi->kd_dokter = $request->input('dokter');
-            $operasi->diagnosis = $request->input('diagnosa_medis');
-            $operasi->catatan = $request->input('catatan');
-            $operasi->user_edit = Auth::id();
-            $operasi->save();
+            $payload = [
+                'tgl_op' => $request->input('tanggal_registrasi'),
+                'jam_op' => $request->input('jam_operasi'),
+                'tgl_jadwal' => $request->input('tanggal_jadwal'),
+                'kd_unit' => $kd_unit,
+                'no_kamar' => $request->input('kamar_operasi'),
+                'kd_unit_kamar' => $request->input('kamar_operasi'),
+                'kd_sub_spc' => $request->input('sub_spesialisasi'),
+                'kd_spc' => $request->input('spesialisasi'),
+                'kd_jenis_op' => $request->input('jenis_operasi'),
+                'kd_produk' => $request->input('jenis_tindakan'),
+                'no_transaksi' => $dataMedis->no_transaksi,
+                'kd_kasir' => $dataMedis->kd_kasir,
+                'kd_pasien' => $kd_pasien,
+                'kd_dokter' => $request->input('dokter'),
+                'diagnosis' => $request->input('diagnosa_medis'),
+                'catatan' => $request->input('catatan'),
+                'user_edit' => Auth::id(),
+            ];
+
+            $updated = OperasiIBS::where('tgl_op', $origTgl)
+                ->where('jam_op', $origJam)
+                ->where('kd_kasir', $dataMedis->kd_kasir)
+                ->where('no_transaksi', $dataMedis->no_transaksi)
+                ->update($payload);
+
+            if (! $updated) {
+                throw new \Exception('Record not found or nothing to update.');
+            }
 
             DB::commit();
 
