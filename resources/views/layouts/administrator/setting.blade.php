@@ -4,7 +4,7 @@
             <i class="ti ti-settings"></i>
         </div>
     </div>
-    <div class="settings-content">
+    <div class="settings-content" style="height: auto;">
         <ul>
             <li class="fix-header">
                 <div class="fix-header-wrapper">
@@ -26,27 +26,9 @@
                 </div>
             </li>
             <li>
-                <div class="theme-switch">
-                    <label for="">Theme Color</label>
-                    <div>
-                        <div class="form-check form-check-inline lg">
-                            <input class="form-check-input lg theme-color" type="radio" name="ThemeColor"
-                                id="light" value="light">
-                            <label class="form-check-label" for="light">Light</label>
-                        </div>
-                        <div class="form-check form-check-inline lg">
-                            <input class="form-check-input lg theme-color" type="radio" name="ThemeColor"
-                                id="dark" value="dark">
-                            <label class="form-check-label" for="dark">Dark</label>
-                        </div>
-
-                    </div>
-                </div>
-            </li>
-            <li>
                 <div class="fix-footer-wrapper">
                     <div class="form-check form-switch lg">
-                        <label class="form-check-label" for="settingsFixFooter">Collapse Sidebar</label>
+                        <label class="form-check-label" for="settingsFixFooter">Collapse </label>
                         <input class="form-check-input toggle-settings" name="Sidebar" type="checkbox"
                             id="settingsFixFooter">
                     </div>

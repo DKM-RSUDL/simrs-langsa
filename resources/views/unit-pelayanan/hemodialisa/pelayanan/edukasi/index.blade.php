@@ -4,11 +4,11 @@
 @section('content')
     <div class="row">
         <div class="col-md-3">
-            @include('unit-pelayanan.hemodialisa.component.patient-card')
+            @include('components.patient-card-hemodialisa')
         </div>
 
         <div class="col-md-9">
-            @include('unit-pelayanan.hemodialisa.component.navigation')
+            @include('components.navigation-hemodialisa')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
@@ -104,7 +104,8 @@
                                                                         {{ strtoupper(substr($item->userCreate->name ?? 'U', 0, 1)) }}
                                                                     </div>
                                                                     <div class="flex-grow-1">
-                                                                        <h6 class="assessment-title mb-1">Edukasi Pasien dan Keluarga Pasien HD</h6>
+                                                                        <h6 class="assessment-title mb-1">Edukasi Pasien dan
+                                                                            Keluarga Pasien HD</h6>
                                                                         <p class="doctor-name">By:
                                                                             {{ str()->title($item->userCreate->name ?? 'Unknown') }}
                                                                         </p>
@@ -115,7 +116,8 @@
                                                             <!-- Action Buttons -->
                                                             <div class="col-auto">
                                                                 <div class="action-buttons">
-                                                                    <a target="_blank" href="{{ route('hemodialisa.pelayanan.edukasi.print-pdf', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                    <a target="_blank"
+                                                                        href="{{ route('hemodialisa.pelayanan.edukasi.print-pdf', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                         class="btn btn-print btn-sm" title="Lihat">
                                                                         <i class="bi bi-printer"></i> Print
                                                                     </a>
@@ -135,7 +137,8 @@
                                                                         method="POST" class="d-inline">
                                                                         @csrf
                                                                         @method('DELETE')
-                                                                        <button type="button" class="btn btn-danger btn-sm delete-btn"
+                                                                        <button type="button"
+                                                                            class="btn btn-danger btn-sm delete-btn"
                                                                             data-id="{{ $item->id }}" title="Hapus">
                                                                             <i class="ti-trash"></i>
                                                                         </button>
@@ -157,7 +160,7 @@
                                     </div>
 
                                     <!-- Pagination -->
-                                    @if($hdFormulirEdukasiPasien->hasPages())
+                                    @if ($hdFormulirEdukasiPasien->hasPages())
                                         <div class="d-flex justify-content-center mt-4">
                                             {{ $hdFormulirEdukasiPasien->links() }}
                                         </div>
@@ -177,7 +180,7 @@
 
 @push('js')
     <script>
-        document.getElementById('filterButton').addEventListener('click', function () {
+        document.getElementById('filterButton').addEventListener('click', function() {
             const selectOption = document.getElementById('SelectOption').value;
             const startDate = document.getElementById('start_date').value;
             const endDate = document.getElementById('end_date').value;
@@ -192,7 +195,7 @@
 
         // SweetAlert untuk konfirmasi hapus
         document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', function (e) {
+            button.addEventListener('click', function(e) {
                 e.preventDefault();
                 const id = this.getAttribute('data-id');
                 const form = document.getElementById(`deleteForm_${id}`);
@@ -220,7 +223,7 @@
                                 Swal.showLoading();
                             }
                         });
-                        
+
                         // Submit form
                         form.submit();
                     }

@@ -1,7 +1,7 @@
 @extends('layouts.administrator.master')
 
 @section('content')
-@include('unit-pelayanan.hemodialisa.pelayanan.asesmen.keperawatan.edit-include')
+    @include('unit-pelayanan.hemodialisa.pelayanan.asesmen.keperawatan.edit-include')
     @push('css')
         <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
         <style>
@@ -142,14 +142,16 @@
 
     <div class="row">
         <div class="col-md-3">
-            @include('unit-pelayanan.hemodialisa.component.patient-card')
+            @include('components.patient-card-hemodialisa')
         </div>
 
         <div class="col-md-9">
             <a href="{{ url()->previous() }}" class="btn">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
-            <form action="{{ route('hemodialisa.pelayanan.asesmen.keperawatan.update', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $asesmen->id]) }}" method="post">
+            <form
+                action="{{ route('hemodialisa.pelayanan.asesmen.keperawatan.update', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $asesmen->id]) }}"
+                method="post">
                 @csrf
                 @method('put')
 
@@ -182,14 +184,18 @@
                                                 <div class="row">
                                                     <div class="col-6">
                                                         <label for="sistole" class="form-label">Sistole</label>
-                                                        <input type="number" name="fisik_sistole" id="sistole" class="form-control @error('fisik_sistole') is-invalid @enderror" value="{{ old('fisik_sistole', $asesmen->keperawatanPemeriksaanFisik->fisik_sistole ?? '') }}">
+                                                        <input type="number" name="fisik_sistole" id="sistole"
+                                                            class="form-control @error('fisik_sistole') is-invalid @enderror"
+                                                            value="{{ old('fisik_sistole', $asesmen->keperawatanPemeriksaanFisik->fisik_sistole ?? '') }}">
                                                         @error('fisik_sistole')
                                                             <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
                                                     </div>
                                                     <div class="col-6">
                                                         <label for="diastole" class="form-label">Diastole</label>
-                                                        <input type="number" name="fisik_diastole" id="diastole" class="form-control @error('fisik_diastole') is-invalid @enderror" value="{{ old('fisik_diastole', $asesmen->keperawatanPemeriksaanFisik->fisik_diastole ?? '') }}">
+                                                        <input type="number" name="fisik_diastole" id="diastole"
+                                                            class="form-control @error('fisik_diastole') is-invalid @enderror"
+                                                            value="{{ old('fisik_diastole', $asesmen->keperawatanPemeriksaanFisik->fisik_diastole ?? '') }}">
                                                         @error('fisik_diastole')
                                                             <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
@@ -199,7 +205,9 @@
 
                                             <div class="form-group">
                                                 <label for="nadi" style="min-width: 200px;">Nadi (Per Menit)</label>
-                                                <input type="number" name="fisik_nadi" id="nadi" class="form-control @error('fisik_nadi') is-invalid @enderror" value="{{ old('fisik_nadi', $asesmen->keperawatanPemeriksaanFisik->fisik_nadi ?? '') }}">
+                                                <input type="number" name="fisik_nadi" id="nadi"
+                                                    class="form-control @error('fisik_nadi') is-invalid @enderror"
+                                                    value="{{ old('fisik_nadi', $asesmen->keperawatanPemeriksaanFisik->fisik_nadi ?? '') }}">
                                                 @error('fisik_nadi')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -207,7 +215,9 @@
 
                                             <div class="form-group">
                                                 <label for="nafas" style="min-width: 200px;">Nafas (Per Menit)</label>
-                                                <input type="number" name="fisik_nafas" id="nafas" class="form-control @error('fisik_nadi') is-invalid @enderror" value="{{ old('fisik_nafas', $asesmen->keperawatanPemeriksaanFisik->fisik_nafas ?? '') }}">
+                                                <input type="number" name="fisik_nafas" id="nafas"
+                                                    class="form-control @error('fisik_nadi') is-invalid @enderror"
+                                                    value="{{ old('fisik_nafas', $asesmen->keperawatanPemeriksaanFisik->fisik_nafas ?? '') }}">
                                                 @error('fisik_nafas')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -215,7 +225,9 @@
 
                                             <div class="form-group">
                                                 <label for="suhu" style="min-width: 200px;">Suhu (C)</label>
-                                                <input type="number" name="fisik_suhu" id="suhu" class="form-control @error('fisik_suhu') is-invalid @enderror" value="{{ old('fisik_suhu', $asesmen->keperawatanPemeriksaanFisik->fisik_suhu ?? '') }}">
+                                                <input type="number" name="fisik_suhu" id="suhu"
+                                                    class="form-control @error('fisik_suhu') is-invalid @enderror"
+                                                    value="{{ old('fisik_suhu', $asesmen->keperawatanPemeriksaanFisik->fisik_suhu ?? '') }}">
                                                 @error('fisik_suhu')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -226,14 +238,18 @@
                                                 <div class="row">
                                                     <div class="col-6">
                                                         <label for="so_tb_o2" class="form-label">Tanpa bantuan O2</label>
-                                                        <input type="number" name="so_tb_o2" id="so_tb_o2" class="form-control @error('so_tb_o2') is-invalid @enderror" value="{{ old('so_tb_o2', $asesmen->keperawatanPemeriksaanFisik->so_tb_o2 ?? '') }}">
+                                                        <input type="number" name="so_tb_o2" id="so_tb_o2"
+                                                            class="form-control @error('so_tb_o2') is-invalid @enderror"
+                                                            value="{{ old('so_tb_o2', $asesmen->keperawatanPemeriksaanFisik->so_tb_o2 ?? '') }}">
                                                         @error('so_tb_o2')
                                                             <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
                                                     </div>
                                                     <div class="col-6">
                                                         <label for="so_db_o2" class="form-label">Dengan bantuan O2</label>
-                                                        <input type="number" name="so_db_o2" id="so_db_o2" class="form-control @error('so_db_o2') is-invalid @enderror" value="{{ old('so_db_o2', $asesmen->keperawatanPemeriksaanFisik->so_db_o2 ?? '') }}">
+                                                        <input type="number" name="so_db_o2" id="so_db_o2"
+                                                            class="form-control @error('so_db_o2') is-invalid @enderror"
+                                                            value="{{ old('so_db_o2', $asesmen->keperawatanPemeriksaanFisik->so_db_o2 ?? '') }}">
                                                         @error('so_db_o2')
                                                             <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
@@ -243,14 +259,27 @@
 
                                             <div class="form-group">
                                                 <label for="avpu" style="min-width: 200px;">AVPU</label>
-                                                <select name="avpu" id="avpu" class="form-select @error('avpu') is-invalid @enderror">
+                                                <select name="avpu" id="avpu"
+                                                    class="form-select @error('avpu') is-invalid @enderror">
                                                     <option value="">--Pilih--</option>
-                                                    <option value="0" {{ old('avpu', $asesmen->keperawatanPemeriksaanFisik->avpu ?? '') === '0' ? 'selected' : '' }}>Sadar Baik/Alert: 0</option>
-                                                    <option value="1" {{ old('avpu', $asesmen->keperawatanPemeriksaanFisik->avpu ?? '') === '1' ? 'selected' : '' }}>Berespon dengan kata-kata/Voice: 1</option>
-                                                    <option value="2" {{ old('avpu', $asesmen->keperawatanPemeriksaanFisik->avpu ?? '') === '2' ? 'selected' : '' }}>Hanya berespons jika dirangsang nyeri/Pain: 2</option>
-                                                    <option value="3" {{ old('avpu', $asesmen->keperawatanPemeriksaanFisik->avpu ?? '') === '3' ? 'selected' : '' }}>Pasien tidak sadar/Unresponsive: 3</option>
-                                                    <option value="4" {{ old('avpu', $asesmen->keperawatanPemeriksaanFisik->avpu ?? '') === '4' ? 'selected' : '' }}>Gelisah atau bingung: 4</option>
-                                                    <option value="5" {{ old('avpu', $asesmen->keperawatanPemeriksaanFisik->avpu ?? '') === '5' ? 'selected' : '' }}>Acute Confusional States: 5</option>
+                                                    <option value="0"
+                                                        {{ old('avpu', $asesmen->keperawatanPemeriksaanFisik->avpu ?? '') === '0' ? 'selected' : '' }}>
+                                                        Sadar Baik/Alert: 0</option>
+                                                    <option value="1"
+                                                        {{ old('avpu', $asesmen->keperawatanPemeriksaanFisik->avpu ?? '') === '1' ? 'selected' : '' }}>
+                                                        Berespon dengan kata-kata/Voice: 1</option>
+                                                    <option value="2"
+                                                        {{ old('avpu', $asesmen->keperawatanPemeriksaanFisik->avpu ?? '') === '2' ? 'selected' : '' }}>
+                                                        Hanya berespons jika dirangsang nyeri/Pain: 2</option>
+                                                    <option value="3"
+                                                        {{ old('avpu', $asesmen->keperawatanPemeriksaanFisik->avpu ?? '') === '3' ? 'selected' : '' }}>
+                                                        Pasien tidak sadar/Unresponsive: 3</option>
+                                                    <option value="4"
+                                                        {{ old('avpu', $asesmen->keperawatanPemeriksaanFisik->avpu ?? '') === '4' ? 'selected' : '' }}>
+                                                        Gelisah atau bingung: 4</option>
+                                                    <option value="5"
+                                                        {{ old('avpu', $asesmen->keperawatanPemeriksaanFisik->avpu ?? '') === '5' ? 'selected' : '' }}>
+                                                        Acute Confusional States: 5</option>
                                                 </select>
                                                 @error('avpu')
                                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -259,10 +288,15 @@
 
                                             <div class="form-group">
                                                 <label for="edema" style="min-width: 200px;">Edema</label>
-                                                <select name="edema" id="edema" class="form-select @error('edema') is-invalid @enderror">
+                                                <select name="edema" id="edema"
+                                                    class="form-select @error('edema') is-invalid @enderror">
                                                     <option value="">--Pilih--</option>
-                                                    <option value="0" {{ old('edema', $asesmen->keperawatanPemeriksaanFisik->edema ?? '') === '0' ? 'selected' : '' }}>Tidak</option>
-                                                    <option value="1" {{ old('edema', $asesmen->keperawatanPemeriksaanFisik->edema ?? '') === '1' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0"
+                                                        {{ old('edema', $asesmen->keperawatanPemeriksaanFisik->edema ?? '') === '0' ? 'selected' : '' }}>
+                                                        Tidak</option>
+                                                    <option value="1"
+                                                        {{ old('edema', $asesmen->keperawatanPemeriksaanFisik->edema ?? '') === '1' ? 'selected' : '' }}>
+                                                        Ya</option>
                                                 </select>
                                                 @error('edema')
                                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -271,10 +305,15 @@
 
                                             <div class="form-group">
                                                 <label for="konjungtiva" style="min-width: 200px;">Konjungtiva</label>
-                                                <select name="konjungtiva" id="konjungtiva" class="form-select @error('konjungtiva') is-invalid @enderror">
+                                                <select name="konjungtiva" id="konjungtiva"
+                                                    class="form-select @error('konjungtiva') is-invalid @enderror">
                                                     <option value="">--Pilih--</option>
-                                                    <option value="0" {{ old('konjungtiva', $asesmen->keperawatanPemeriksaanFisik->konjungtiva ?? '') === '0' ? 'selected' : '' }}>Tidak Anemis</option>
-                                                    <option value="1" {{ old('konjungtiva', $asesmen->keperawatanPemeriksaanFisik->konjungtiva ?? '') === '1' ? 'selected' : '' }}>Anemis</option>
+                                                    <option value="0"
+                                                        {{ old('konjungtiva', $asesmen->keperawatanPemeriksaanFisik->konjungtiva ?? '') === '0' ? 'selected' : '' }}>
+                                                        Tidak Anemis</option>
+                                                    <option value="1"
+                                                        {{ old('konjungtiva', $asesmen->keperawatanPemeriksaanFisik->konjungtiva ?? '') === '1' ? 'selected' : '' }}>
+                                                        Anemis</option>
                                                 </select>
                                                 @error('konjungtiva')
                                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -283,10 +322,15 @@
 
                                             <div class="form-group">
                                                 <label for="dehidrasi" style="min-width: 200px;">Dehidrasi</label>
-                                                <select name="dehidrasi" id="dehidrasi" class="form-select @error('dehidrasi') is-invalid @enderror">
+                                                <select name="dehidrasi" id="dehidrasi"
+                                                    class="form-select @error('dehidrasi') is-invalid @enderror">
                                                     <option value="">--Pilih--</option>
-                                                    <option value="0" {{ old('dehidrasi', $asesmen->keperawatanPemeriksaanFisik->dehidrasi ?? '') === '0' ? 'selected' : '' }}>Tidak</option>
-                                                    <option value="1" {{ old('dehidrasi', $asesmen->keperawatanPemeriksaanFisik->dehidrasi ?? '') === '1' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0"
+                                                        {{ old('dehidrasi', $asesmen->keperawatanPemeriksaanFisik->dehidrasi ?? '') === '0' ? 'selected' : '' }}>
+                                                        Tidak</option>
+                                                    <option value="1"
+                                                        {{ old('dehidrasi', $asesmen->keperawatanPemeriksaanFisik->dehidrasi ?? '') === '1' ? 'selected' : '' }}>
+                                                        Ya</option>
                                                 </select>
                                                 @error('dehidrasi')
                                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -296,29 +340,41 @@
                                             <p class="fw-bold">Antropometri</p>
 
                                             <div class="form-group">
-                                                <label for="tinggi_badan" style="min-width: 200px;">Tinggi Badan (Cm)</label>
-                                                <input type="number" name="tinggi_badan" id="tinggi_badan" class="form-control @error('tinggi_badan') is-invalid @enderror" value="{{ old('tinggi_badan', $asesmen->keperawatanPemeriksaanFisik->tinggi_badan ?? '') }}">
+                                                <label for="tinggi_badan" style="min-width: 200px;">Tinggi Badan
+                                                    (Cm)</label>
+                                                <input type="number" name="tinggi_badan" id="tinggi_badan"
+                                                    class="form-control @error('tinggi_badan') is-invalid @enderror"
+                                                    value="{{ old('tinggi_badan', $asesmen->keperawatanPemeriksaanFisik->tinggi_badan ?? '') }}">
                                                 @error('tinggi_badan')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="berat_badan" style="min-width: 200px;">Berat Badan (Kg)</label>
-                                                <input type="number" name="berat_badan" id="berat_badan" class="form-control @error('berat_badan') is-invalid @enderror" value="{{ old('berat_badan', $asesmen->keperawatanPemeriksaanFisik->berat_badan ?? '') }}">
+                                                <label for="berat_badan" style="min-width: 200px;">Berat Badan
+                                                    (Kg)</label>
+                                                <input type="number" name="berat_badan" id="berat_badan"
+                                                    class="form-control @error('berat_badan') is-invalid @enderror"
+                                                    value="{{ old('berat_badan', $asesmen->keperawatanPemeriksaanFisik->berat_badan ?? '') }}">
                                                 @error('berat_badan')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="imt" style="min-width: 200px;">Index Massa Tubuh (IMT)</label>
-                                                <input type="number" name="imt" id="imt" class="form-control" value="{{ old('imt', $asesmen->keperawatanPemeriksaanFisik->imt ?? '') }}" readonly>
+                                                <label for="imt" style="min-width: 200px;">Index Massa Tubuh
+                                                    (IMT)</label>
+                                                <input type="number" name="imt" id="imt" class="form-control"
+                                                    value="{{ old('imt', $asesmen->keperawatanPemeriksaanFisik->imt ?? '') }}"
+                                                    readonly>
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="lpt" style="min-width: 200px;">Luas Permukaan Tubuh (LPT)</label>
-                                                <input type="number" name="lpt" id="lpt" class="form-control" value="{{ old('lpt', $asesmen->keperawatanPemeriksaanFisik->lpt ?? '') }}" readonly>
+                                                <label for="lpt" style="min-width: 200px;">Luas Permukaan Tubuh
+                                                    (LPT)</label>
+                                                <input type="number" name="lpt" id="lpt" class="form-control"
+                                                    value="{{ old('lpt', $asesmen->keperawatanPemeriksaanFisik->lpt ?? '') }}"
+                                                    readonly>
                                             </div>
 
 
@@ -345,52 +401,57 @@
                                                     </p>
                                                     <div class="row">
                                                         @foreach ($itemFisik->chunk(ceil($itemFisik->count() / 2)) as $chunk)
-                                                        <div class="col-md-6">
-                                                            <div class="d-flex flex-column gap-3">
-                                                                @foreach ($chunk as $item)
-                                                                @php
-                                                                // Cari data pemeriksaan fisik untuk item ini
-                                                                $pemeriksaanData = $asesmen->pemeriksaanFisik
-                                                                ->where('id_item_fisik', $item->id)
-                                                                ->first();
-                                                                $keterangan = '';
-                                                                $isNormal = true;
+                                                            <div class="col-md-6">
+                                                                <div class="d-flex flex-column gap-3">
+                                                                    @foreach ($chunk as $item)
+                                                                        @php
+                                                                            // Cari data pemeriksaan fisik untuk item ini
+                                                                            $pemeriksaanData = $asesmen->pemeriksaanFisik
+                                                                                ->where('id_item_fisik', $item->id)
+                                                                                ->first();
+                                                                            $keterangan = '';
+                                                                            $isNormal = true;
 
-                                                                if ($pemeriksaanData) {
-                                                                $keterangan = $pemeriksaanData->keterangan;
-                                                                $isNormal = empty($keterangan);
-                                                                }
-                                                                @endphp
-                                                                <div class="pemeriksaan-item">
-                                                                    <div class="d-flex align-items-center border-bottom pb-2">
-                                                                        <div class="flex-grow-1">{{ $item->nama }}
+                                                                            if ($pemeriksaanData) {
+                                                                                $keterangan =
+                                                                                    $pemeriksaanData->keterangan;
+                                                                                $isNormal = empty($keterangan);
+                                                                            }
+                                                                        @endphp
+                                                                        <div class="pemeriksaan-item">
+                                                                            <div
+                                                                                class="d-flex align-items-center border-bottom pb-2">
+                                                                                <div class="flex-grow-1">
+                                                                                    {{ $item->nama }}
+                                                                                </div>
+                                                                                <div class="form-check me-3">
+                                                                                    <input type="checkbox"
+                                                                                        class="form-check-input"
+                                                                                        id="{{ $item->id }}-normal"
+                                                                                        name="{{ $item->id }}-normal"
+                                                                                        {{ $isNormal ? 'checked' : '' }}>
+                                                                                    <label class="form-check-label"
+                                                                                        for="{{ $item->id }}-normal">Normal</label>
+                                                                                </div>
+                                                                                <button
+                                                                                    class="btn btn-sm btn-outline-primary tambah-keterangan"
+                                                                                    type="button"
+                                                                                    data-target="{{ $item->id }}-keterangan">
+                                                                                    <i class="bi bi-plus"></i>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="keterangan mt-2"
+                                                                                id="{{ $item->id }}-keterangan"
+                                                                                style="display:{{ $isNormal ? 'none' : 'block' }};">
+                                                                                <input type="text" class="form-control"
+                                                                                    name="{{ $item->id }}_keterangan"
+                                                                                    placeholder="Tambah keterangan jika tidak normal..."
+                                                                                    value="{{ $keterangan }}">
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="form-check me-3">
-                                                                            <input type="checkbox" class="form-check-input"
-                                                                                id="{{ $item->id }}-normal"
-                                                                                name="{{ $item->id }}-normal" {{ $isNormal
-                                                                                ? 'checked' : '' }}>
-                                                                            <label class="form-check-label"
-                                                                                for="{{ $item->id }}-normal">Normal</label>
-                                                                        </div>
-                                                                        <button
-                                                                            class="btn btn-sm btn-outline-primary tambah-keterangan"
-                                                                            type="button"
-                                                                            data-target="{{ $item->id }}-keterangan">
-                                                                            <i class="bi bi-plus"></i>
-                                                                        </button>
-                                                                    </div>
-                                                                    <div class="keterangan mt-2" id="{{ $item->id }}-keterangan"
-                                                                        style="display:{{ $isNormal ? 'none' : 'block' }};">
-                                                                        <input type="text" class="form-control"
-                                                                            name="{{ $item->id }}_keterangan"
-                                                                            placeholder="Tambah keterangan jika tidak normal..."
-                                                                            value="{{ $keterangan }}">
-                                                                    </div>
+                                                                    @endforeach
                                                                 </div>
-                                                                @endforeach
                                                             </div>
-                                                        </div>
                                                         @endforeach
                                                     </div>
                                                 </div>
@@ -403,16 +464,19 @@
 
                                             <div class="form-group">
                                                 <label style="min-width: 200px;">Jenis Skala Nyeri</label>
-                                                <input type="text" class="form-control" value="Scale NRS, VAS, VRS" disabled>
+                                                <input type="text" class="form-control" value="Scale NRS, VAS, VRS"
+                                                    disabled>
                                             </div>
 
                                             <div class="form-group justify-content-center">
-                                                <img src="{{ asset('assets/img/cppt/cppt.jpeg') }}" alt="" class="w-50">
+                                                <img src="{{ asset('assets/img/cppt/cppt.jpeg') }}" alt=""
+                                                    class="w-50">
                                             </div>
 
                                             <div class="form-group">
                                                 <label style="min-width: 200px;">Nilai Skala Nyeri</label>
-                                                <input type="number" name="status_skala_nyeri" class="form-control" min="0" max="10"
+                                                <input type="number" name="status_skala_nyeri" class="form-control"
+                                                    min="0" max="10"
                                                     value="{{ $asesmen->keperawatan->status_skala_nyeri ?? '' }}">
                                             </div>
                                         </div>
@@ -420,38 +484,63 @@
                                         <div class="section-separator">
                                             <h5 class="section-title">4. Riwayat Kesehatan</h5>
                                             <div class="form-group">
-                                                <label for="gagal_ginjal_stadium" style="min-width: 200px;">Gagal Ginjal Stadium</label>
-                                                <input type="number" name="gagal_ginjal_stadium" class="form-control" value="{{ $asesmen->keperawatan->gagal_ginjal_stadium ?? '' }}">
+                                                <label for="gagal_ginjal_stadium" style="min-width: 200px;">Gagal Ginjal
+                                                    Stadium</label>
+                                                <input type="number" name="gagal_ginjal_stadium" class="form-control"
+                                                    value="{{ $asesmen->keperawatan->gagal_ginjal_stadium ?? '' }}">
                                             </div>
 
                                             <div class="form-group mb-3">
-                                                <label for="jenis_gagal_ginjal" style="min-width: 200px;">Jenis Gagal Ginjal</label>
-                                                <select class="form-control" id="jenis_gagal_ginjal" name="jenis_gagal_ginjal">
+                                                <label for="jenis_gagal_ginjal" style="min-width: 200px;">Jenis Gagal
+                                                    Ginjal</label>
+                                                <select class="form-control" id="jenis_gagal_ginjal"
+                                                    name="jenis_gagal_ginjal">
                                                     <option value="">pilih</option>
-                                                    <option value="akut" {{ ($asesmen->keperawatan->jenis_gagal_ginjal ?? '') == 'akut' ? 'selected' : '' }}>Akut</option>
-                                                    <option value="kronis" {{ ($asesmen->keperawatan->jenis_gagal_ginjal ?? '') == 'kronis' ? 'selected' : '' }}>Kronis</option>
-                                                    <option value="lainnya" {{ ($asesmen->keperawatan->jenis_gagal_ginjal ?? '') == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
+                                                    <option value="akut"
+                                                        {{ ($asesmen->keperawatan->jenis_gagal_ginjal ?? '') == 'akut' ? 'selected' : '' }}>
+                                                        Akut</option>
+                                                    <option value="kronis"
+                                                        {{ ($asesmen->keperawatan->jenis_gagal_ginjal ?? '') == 'kronis' ? 'selected' : '' }}>
+                                                        Kronis</option>
+                                                    <option value="lainnya"
+                                                        {{ ($asesmen->keperawatan->jenis_gagal_ginjal ?? '') == 'lainnya' ? 'selected' : '' }}>
+                                                        Lainnya</option>
                                                 </select>
                                             </div>
 
                                             <div class="form-group mb-3">
-                                                <label for="lama_menjalani_hd" style="min-width: 200px;">Lama Menjalani HD</label>
-                                                <input type="number" class="form-control" id="lama_menjalani_hd" name="lama_menjalani_hd" value="{{ $asesmen->keperawatan->lama_menjalani_hd ?? '' }}">
-                                                <input type="text" class="form-control" id="lama_menjalani_hd_unit" name="lama_menjalani_hd_unit" placeholder="tahun/bulan" value="{{ $asesmen->keperawatan->lama_menjalani_hd_unit ?? '' }}">
+                                                <label for="lama_menjalani_hd" style="min-width: 200px;">Lama Menjalani
+                                                    HD</label>
+                                                <input type="number" class="form-control" id="lama_menjalani_hd"
+                                                    name="lama_menjalani_hd"
+                                                    value="{{ $asesmen->keperawatan->lama_menjalani_hd ?? '' }}">
+                                                <input type="text" class="form-control" id="lama_menjalani_hd_unit"
+                                                    name="lama_menjalani_hd_unit" placeholder="tahun/bulan"
+                                                    value="{{ $asesmen->keperawatan->lama_menjalani_hd_unit ?? '' }}">
                                             </div>
 
                                             <div class="form-group mb-3">
-                                                <label for="jadwal_hd_rutin" style="min-width: 200px;">Jadwal HD Rutin</label>
-                                                <input type="number" class="form-control" id="jadwal_hd_rutin" name="jadwal_hd_rutin" value="{{ $asesmen->keperawatan->jadwal_hd_rutin ?? '' }}">
-                                                <input type="text" class="form-control" id="jadwal_hd_rutin_unit" name="jadwal_hd_rutin_unit" placeholder="Per minggu" value="{{ $asesmen->keperawatan->jadwal_hd_rutin_unit ?? '' }}">
+                                                <label for="jadwal_hd_rutin" style="min-width: 200px;">Jadwal HD
+                                                    Rutin</label>
+                                                <input type="number" class="form-control" id="jadwal_hd_rutin"
+                                                    name="jadwal_hd_rutin"
+                                                    value="{{ $asesmen->keperawatan->jadwal_hd_rutin ?? '' }}">
+                                                <input type="text" class="form-control" id="jadwal_hd_rutin_unit"
+                                                    name="jadwal_hd_rutin_unit" placeholder="Per minggu"
+                                                    value="{{ $asesmen->keperawatan->jadwal_hd_rutin_unit ?? '' }}">
                                             </div>
 
                                             <div class="form-group mb-3">
-                                                <label for="sesak_nafas" style="min-width: 200px;">Sesak Nafas/Nyeri Dada</label>
+                                                <label for="sesak_nafas" style="min-width: 200px;">Sesak Nafas/Nyeri
+                                                    Dada</label>
                                                 <select class="form-control" id="sesak_nafas" name="sesak_nafas">
                                                     <option value="">pilih</option>
-                                                    <option value="ya" {{ ($asesmen->keperawatan->sesak_nafas ?? '') == 'ya' ? 'selected' : '' }}>Ya</option>
-                                                    <option value="tidak" {{ ($asesmen->keperawatan->sesak_nafas ?? '') == 'tidak' ? 'selected' : '' }}>Tidak</option>
+                                                    <option value="ya"
+                                                        {{ ($asesmen->keperawatan->sesak_nafas ?? '') == 'ya' ? 'selected' : '' }}>
+                                                        Ya</option>
+                                                    <option value="tidak"
+                                                        {{ ($asesmen->keperawatan->sesak_nafas ?? '') == 'tidak' ? 'selected' : '' }}>
+                                                        Tidak</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -486,7 +575,8 @@
                                                     </table>
                                                 </div>
                                                 <!-- Hidden input untuk menyimpan data JSON obat pasien -->
-                                                <input type="hidden" name="obat_pasien" id="obat_pasien_json" value="{{ $asesmen->keperawatan->obat_pasien ?? '' }}">
+                                                <input type="hidden" name="obat_pasien" id="obat_pasien_json"
+                                                    value="{{ $asesmen->keperawatan->obat_pasien ?? '' }}">
                                             </div>
 
                                             <!-- Obat tambahan dokter -->
@@ -515,7 +605,8 @@
                                                     </table>
                                                 </div>
                                                 <!-- Hidden input untuk menyimpan data JSON obat dokter -->
-                                                <input type="hidden" name="obat_dokter" id="obat_dokter_json" value="{{ $asesmen->keperawatan->obat_dokter ?? '' }}">
+                                                <input type="hidden" name="obat_dokter" id="obat_dokter_json"
+                                                    value="{{ $asesmen->keperawatan->obat_dokter ?? '' }}">
                                             </div>
                                         </div> --}}
 
@@ -527,34 +618,42 @@
                                                 <p class="fw-medium mb-3">Pre Hemodialisis</p>
 
                                                 <div class="row mb-3">
-                                                    <label for="pre-ekg" class="col-sm-2 col-form-label text-end">EKG</label>
+                                                    <label for="pre-ekg"
+                                                        class="col-sm-2 col-form-label text-end">EKG</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="pre-ekg" name="pre_ekg"
-                                                            placeholder="freetext" value="{{ $asesmen->keperawatanPempen->pre_ekg ?? '' }}">
+                                                        <input type="text" class="form-control" id="pre-ekg"
+                                                            name="pre_ekg" placeholder="freetext"
+                                                            value="{{ $asesmen->keperawatanPempen->pre_ekg ?? '' }}">
                                                     </div>
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label for="pre-rontgent" class="col-sm-2 col-form-label text-end">Rontgent</label>
+                                                    <label for="pre-rontgent"
+                                                        class="col-sm-2 col-form-label text-end">Rontgent</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="pre-rontgent" name="pre_rontgent"
-                                                            placeholder="freetext" value="{{ $asesmen->keperawatanPempen->pre_rontgent ?? '' }}">
+                                                        <input type="text" class="form-control" id="pre-rontgent"
+                                                            name="pre_rontgent" placeholder="freetext"
+                                                            value="{{ $asesmen->keperawatanPempen->pre_rontgent ?? '' }}">
                                                     </div>
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label for="pre-usg" class="col-sm-2 col-form-label text-end">USG</label>
+                                                    <label for="pre-usg"
+                                                        class="col-sm-2 col-form-label text-end">USG</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="pre-usg" name="pre_usg"
-                                                            placeholder="freetext" value="{{ $asesmen->keperawatanPempen->pre_usg ?? '' }}">
+                                                        <input type="text" class="form-control" id="pre-usg"
+                                                            name="pre_usg" placeholder="freetext"
+                                                            value="{{ $asesmen->keperawatanPempen->pre_usg ?? '' }}">
                                                     </div>
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label for="pre-dll" class="col-sm-2 col-form-label text-end">Dll</label>
+                                                    <label for="pre-dll"
+                                                        class="col-sm-2 col-form-label text-end">Dll</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="pre-dll" name="pre_dll"
-                                                            placeholder="freetext" value="{{ $asesmen->keperawatanPempen->pre_dll ?? '' }}">
+                                                        <input type="text" class="form-control" id="pre-dll"
+                                                            name="pre_dll" placeholder="freetext"
+                                                            value="{{ $asesmen->keperawatanPempen->pre_dll ?? '' }}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -564,34 +663,42 @@
                                                 <p class="fw-medium mb-3">Post Hemodialisis</p>
 
                                                 <div class="row mb-3">
-                                                    <label for="post-ekg" class="col-sm-2 col-form-label text-end">EKG</label>
+                                                    <label for="post-ekg"
+                                                        class="col-sm-2 col-form-label text-end">EKG</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="post-ekg" name="post_ekg"
-                                                            placeholder="freetext" value="{{ $asesmen->keperawatanPempen->post_ekg ?? '' }}">
+                                                        <input type="text" class="form-control" id="post-ekg"
+                                                            name="post_ekg" placeholder="freetext"
+                                                            value="{{ $asesmen->keperawatanPempen->post_ekg ?? '' }}">
                                                     </div>
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label for="post-rontgent" class="col-sm-2 col-form-label text-end">Rontgent</label>
+                                                    <label for="post-rontgent"
+                                                        class="col-sm-2 col-form-label text-end">Rontgent</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="post-rontgent" name="post_rontgent"
-                                                            placeholder="freetext" value="{{ $asesmen->keperawatanPempen->post_rontgent ?? '' }}">
+                                                        <input type="text" class="form-control" id="post-rontgent"
+                                                            name="post_rontgent" placeholder="freetext"
+                                                            value="{{ $asesmen->keperawatanPempen->post_rontgent ?? '' }}">
                                                     </div>
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label for="post-usg" class="col-sm-2 col-form-label text-end">USG</label>
+                                                    <label for="post-usg"
+                                                        class="col-sm-2 col-form-label text-end">USG</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="post-usg" name="post_usg"
-                                                            placeholder="freetext" value="{{ $asesmen->keperawatanPempen->post_usg ?? '' }}">
+                                                        <input type="text" class="form-control" id="post-usg"
+                                                            name="post_usg" placeholder="freetext"
+                                                            value="{{ $asesmen->keperawatanPempen->post_usg ?? '' }}">
                                                     </div>
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label for="post-dll" class="col-sm-2 col-form-label text-end">Dll</label>
+                                                    <label for="post-dll"
+                                                        class="col-sm-2 col-form-label text-end">Dll</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="post-dll" name="post_dll"
-                                                            placeholder="freetext" value="{{ $asesmen->keperawatanPempen->post_dll ?? '' }}">
+                                                        <input type="text" class="form-control" id="post-dll"
+                                                            name="post_dll" placeholder="freetext"
+                                                            value="{{ $asesmen->keperawatanPempen->post_dll ?? '' }}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -630,7 +737,8 @@
                                             <h5 class="section-title">7. Status Gizi</h5>
 
                                             <div class="row mb-3">
-                                                <label for="gizi_tanggal_pengkajian" class="col-sm-3 col-form-label">Tanggal
+                                                <label for="gizi_tanggal_pengkajian"
+                                                    class="col-sm-3 col-form-label">Tanggal
                                                     Pengkajian</label>
                                                 <div class="col-sm-9">
                                                     <div class="input-group">
@@ -660,20 +768,27 @@
                                                 <label for="gizi_kesimpulan"
                                                     class="col-sm-3 col-form-label">Kesimpulan</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-select" id="gizi_kesimpulan" name="gizi_kesimpulan">
+                                                    <select class="form-select" id="gizi_kesimpulan"
+                                                        name="gizi_kesimpulan">
                                                         <option value="">pilih</option>
-                                                        <option value="Tampa mainutrisi (<6)" {{ ($asesmen->keperawatanStatusGizi->gizi_kesimpulan ?? '') == 'Tampa mainutrisi (<6)' ? 'selected' : '' }}>Tampa mainutrisi (6)</option>
-                                                        <option value="Malnutrisi(>6)" {{ ($asesmen->keperawatanStatusGizi->gizi_kesimpulan ?? '') == 'Malnutrisi(>6)' ? 'selected' : '' }}>Malnutrisi(>6)</option>
+                                                        <option value="Tampa mainutrisi (<6)"
+                                                            {{ ($asesmen->keperawatanStatusGizi->gizi_kesimpulan ?? '') == 'Tampa mainutrisi (<6)' ? 'selected' : '' }}>
+                                                            Tampa mainutrisi (6)</option>
+                                                        <option value="Malnutrisi(>6)"
+                                                            {{ ($asesmen->keperawatanStatusGizi->gizi_kesimpulan ?? '') == 'Malnutrisi(>6)' ? 'selected' : '' }}>
+                                                            Malnutrisi(>6)</option>
                                                     </select>
                                                 </div>
                                             </div>
 
                                             <div class="row mb-3">
-                                                <label for="gizi_rencana_pengkajian" class="col-sm-3 col-form-label">Rencana
+                                                <label for="gizi_rencana_pengkajian"
+                                                    class="col-sm-3 col-form-label">Rencana
                                                     Pengkajian Ulang MIS</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" id="gizi_rencana_pengkajian"
-                                                        name="gizi_rencana_pengkajian" placeholder="jelaskan"
+                                                    <input type="text" class="form-control"
+                                                        id="gizi_rencana_pengkajian" name="gizi_rencana_pengkajian"
+                                                        placeholder="jelaskan"
                                                         value="{{ $asesmen->keperawatanStatusGizi->gizi_rencana_pengkajian ?? '' }}">
                                                 </div>
                                             </div>
@@ -695,85 +810,129 @@
                                             <h6 class="mt-3 mb-3">Penilaian Risiko Jatuh Skala Morse</h6>
 
                                             <div class="form-group mb-3">
-                                                <label class="form-label">Riwayat jatuh yang baru atau dalam bulan terakhir</label>
-                                                <select class="form-select risiko-jatuh-select" id="riwayat_jatuh" name="riwayat_jatuh" data-skor="25">
+                                                <label class="form-label">Riwayat jatuh yang baru atau dalam bulan
+                                                    terakhir</label>
+                                                <select class="form-select risiko-jatuh-select" id="riwayat_jatuh"
+                                                    name="riwayat_jatuh" data-skor="25">
                                                     <option value="">pilih</option>
-                                                    <option value="Ya" data-skor="25" {{ ($asesmen->keperawatanRisikoJatuh->riwayat_jatuh ?? '') == 'Ya' ? 'selected' : '' }}>Ya</option>
-                                                    <option value="Tidak" data-skor="0" {{ ($asesmen->keperawatanRisikoJatuh->riwayat_jatuh ?? '') == 'Tidak' ? 'selected' : '' }}>Tidak</option>
+                                                    <option value="Ya" data-skor="25"
+                                                        {{ ($asesmen->keperawatanRisikoJatuh->riwayat_jatuh ?? '') == 'Ya' ? 'selected' : '' }}>
+                                                        Ya</option>
+                                                    <option value="Tidak" data-skor="0"
+                                                        {{ ($asesmen->keperawatanRisikoJatuh->riwayat_jatuh ?? '') == 'Tidak' ? 'selected' : '' }}>
+                                                        Tidak</option>
                                                 </select>
                                             </div>
 
                                             <div class="form-group mb-3">
-                                                <label class="form-label">Pasien memiliki Diagnosa medis sekunder > 1 ?</label>
-                                                <select class="form-select risiko-jatuh-select" id="diagnosa_sekunder" name="diagnosa_sekunder" data-skor="15">
+                                                <label class="form-label">Pasien memiliki Diagnosa medis sekunder > 1
+                                                    ?</label>
+                                                <select class="form-select risiko-jatuh-select" id="diagnosa_sekunder"
+                                                    name="diagnosa_sekunder" data-skor="15">
                                                     <option value="">pilih</option>
-                                                    <option value="Ya" data-skor="15" {{ ($asesmen->keperawatanRisikoJatuh->diagnosa_sekunder ?? '') == 'Ya' ? 'selected' : '' }}>Ya</option>
-                                                    <option value="Tidak" data-skor="0" {{ ($asesmen->keperawatanRisikoJatuh->diagnosa_sekunder ?? '') == 'Tidak' ? 'selected' : '' }}>Tidak</option>
+                                                    <option value="Ya" data-skor="15"
+                                                        {{ ($asesmen->keperawatanRisikoJatuh->diagnosa_sekunder ?? '') == 'Ya' ? 'selected' : '' }}>
+                                                        Ya</option>
+                                                    <option value="Tidak" data-skor="0"
+                                                        {{ ($asesmen->keperawatanRisikoJatuh->diagnosa_sekunder ?? '') == 'Tidak' ? 'selected' : '' }}>
+                                                        Tidak</option>
                                                 </select>
                                             </div>
 
                                             <div class="form-group mb-3">
-                                                <label class="form-label">Pasien membutuhkan bantuan Alat bantu jalan ?</label>
-                                                <select class="form-select risiko-jatuh-select" id="alat_bantu" name="alat_bantu" data-skor="30">
+                                                <label class="form-label">Pasien membutuhkan bantuan Alat bantu jalan
+                                                    ?</label>
+                                                <select class="form-select risiko-jatuh-select" id="alat_bantu"
+                                                    name="alat_bantu" data-skor="30">
                                                     <option value="">pilih</option>
-                                                    <option value="Tidak ada/ bed rest/ bantuan perawat" data-skor="0" {{ ($asesmen->keperawatanRisikoJatuh->alat_bantu ?? '') == 'Tidak ada/ bed rest/ bantuan perawat' ? 'selected' : '' }}>Tidak ada/ bed rest/ bantuan perawat</option>
-                                                    <option value="kruk/ tongkat/ alat bantu berjalan" data-skor="15" {{ ($asesmen->keperawatanRisikoJatuh->alat_bantu ?? '') == 'kruk/ tongkat/ alat bantu berjalan' ? 'selected' : '' }}>kruk/ tongkat/ alat bantu berjalan</option>
-                                                    <option value="Meja/ Kursi" data-skor="30" {{ ($asesmen->keperawatanRisikoJatuh->alat_bantu ?? '') == 'Meja/ Kursi' ? 'selected' : '' }}>Meja/ Kursi</option>
+                                                    <option value="Tidak ada/ bed rest/ bantuan perawat" data-skor="0"
+                                                        {{ ($asesmen->keperawatanRisikoJatuh->alat_bantu ?? '') == 'Tidak ada/ bed rest/ bantuan perawat' ? 'selected' : '' }}>
+                                                        Tidak ada/ bed rest/ bantuan perawat</option>
+                                                    <option value="kruk/ tongkat/ alat bantu berjalan" data-skor="15"
+                                                        {{ ($asesmen->keperawatanRisikoJatuh->alat_bantu ?? '') == 'kruk/ tongkat/ alat bantu berjalan' ? 'selected' : '' }}>
+                                                        kruk/ tongkat/ alat bantu berjalan</option>
+                                                    <option value="Meja/ Kursi" data-skor="30"
+                                                        {{ ($asesmen->keperawatanRisikoJatuh->alat_bantu ?? '') == 'Meja/ Kursi' ? 'selected' : '' }}>
+                                                        Meja/ Kursi</option>
                                                 </select>
                                             </div>
 
                                             <div class="form-group mb-3">
                                                 <label class="form-label">Pasien terpasang infus?</label>
-                                                <select class="form-select risiko-jatuh-select" id="infus" name="infus" data-skor="20">
+                                                <select class="form-select risiko-jatuh-select" id="infus"
+                                                    name="infus" data-skor="20">
                                                     <option value="">pilih</option>
-                                                    <option value="Ya" data-skor="20" {{ ($asesmen->keperawatanRisikoJatuh->infus ?? '') == 'Ya' ? 'selected' : '' }}>Ya</option>
-                                                    <option value="Tidak" data-skor="0" {{ ($asesmen->keperawatanRisikoJatuh->infus ?? '') == 'Tidak' ? 'selected' : '' }}>Tidak</option>
+                                                    <option value="Ya" data-skor="20"
+                                                        {{ ($asesmen->keperawatanRisikoJatuh->infus ?? '') == 'Ya' ? 'selected' : '' }}>
+                                                        Ya</option>
+                                                    <option value="Tidak" data-skor="0"
+                                                        {{ ($asesmen->keperawatanRisikoJatuh->infus ?? '') == 'Tidak' ? 'selected' : '' }}>
+                                                        Tidak</option>
                                                 </select>
                                             </div>
 
                                             <div class="form-group mb-3">
                                                 <label class="form-label">Bagaimana cara berjalan pasien?</label>
-                                                <select class="form-select risiko-jatuh-select" id="cara_berjalan" name="cara_berjalan" data-skor="20">
+                                                <select class="form-select risiko-jatuh-select" id="cara_berjalan"
+                                                    name="cara_berjalan" data-skor="20">
                                                     <option value="">pilih</option>
-                                                    <option value="Normal/ bed rest/ kursi roda" data-skor="0" {{ ($asesmen->keperawatanRisikoJatuh->cara_berjalan ?? '') == 'Normal/ bed rest/ kursi roda' ? 'selected' : '' }}>Normal/ bed rest/ kursi roda</option>
-                                                    <option value="Lemah" data-skor="10" {{ ($asesmen->keperawatanRisikoJatuh->cara_berjalan ?? '') == 'Lemah' ? 'selected' : '' }}>Lemah</option>
-                                                    <option value="Terganggu" data-skor="20" {{ ($asesmen->keperawatanRisikoJatuh->cara_berjalan ?? '') == 'Terganggu' ? 'selected' : '' }}>Terganggu</option>
+                                                    <option value="Normal/ bed rest/ kursi roda" data-skor="0"
+                                                        {{ ($asesmen->keperawatanRisikoJatuh->cara_berjalan ?? '') == 'Normal/ bed rest/ kursi roda' ? 'selected' : '' }}>
+                                                        Normal/ bed rest/ kursi roda</option>
+                                                    <option value="Lemah" data-skor="10"
+                                                        {{ ($asesmen->keperawatanRisikoJatuh->cara_berjalan ?? '') == 'Lemah' ? 'selected' : '' }}>
+                                                        Lemah</option>
+                                                    <option value="Terganggu" data-skor="20"
+                                                        {{ ($asesmen->keperawatanRisikoJatuh->cara_berjalan ?? '') == 'Terganggu' ? 'selected' : '' }}>
+                                                        Terganggu</option>
                                                 </select>
                                             </div>
 
                                             <div class="form-group mb-3">
                                                 <label class="form-label">Bagaimana status mental pasien?</label>
-                                                <select class="form-select risiko-jatuh-select" id="status_mental" name="status_mental" data-skor="15">
+                                                <select class="form-select risiko-jatuh-select" id="status_mental"
+                                                    name="status_mental" data-skor="15">
                                                     <option value="">pilih</option>
-                                                    <option value="Orientasi sesuai kemampuan" data-skor="0" {{ ($asesmen->keperawatanRisikoJatuh->status_mental ?? '') == 'Orientasi sesuai kemampuan' ? 'selected' : '' }}>Orientasi sesuai kemampuan</option>
-                                                    <option value="Lupa keterbatasan" data-skor="15" {{ ($asesmen->keperawatanRisikoJatuh->status_mental ?? '') == 'Lupa keterbatasan' ? 'selected' : '' }}>Lupa keterbatasan</option>
+                                                    <option value="Orientasi sesuai kemampuan" data-skor="0"
+                                                        {{ ($asesmen->keperawatanRisikoJatuh->status_mental ?? '') == 'Orientasi sesuai kemampuan' ? 'selected' : '' }}>
+                                                        Orientasi sesuai kemampuan</option>
+                                                    <option value="Lupa keterbatasan" data-skor="15"
+                                                        {{ ($asesmen->keperawatanRisikoJatuh->status_mental ?? '') == 'Lupa keterbatasan' ? 'selected' : '' }}>
+                                                        Lupa keterbatasan</option>
                                                 </select>
                                             </div>
 
                                             <div class="alert alert-info mt-4 mb-3" id="total-skor-container">
-                                                <strong>Total Skor: </strong> <span id="total-skor">{{ $asesmen->keperawatanRisikoJatuh->risiko_jatuh_skor ?? '0' }}</span>
+                                                <strong>Total Skor: </strong> <span
+                                                    id="total-skor">{{ $asesmen->keperawatanRisikoJatuh->risiko_jatuh_skor ?? '0' }}</span>
                                             </div>
 
                                             <div class="alert alert-primary" id="kesimpulan-container">
                                                 <div class="d-flex justify-content-between align-items-center">
                                                     <strong>Kesimpulan: </strong>
-                                                    <span id="kesimpulan-text">{{ $asesmen->keperawatanRisikoJatuh->risiko_jatuh_kesimpulan ?? '-' }}</span>
+                                                    <span
+                                                        id="kesimpulan-text">{{ $asesmen->keperawatanRisikoJatuh->risiko_jatuh_kesimpulan ?? '-' }}</span>
                                                 </div>
                                             </div>
 
                                             <!-- Hidden input untuk menyimpan data ke database -->
-                                            <input type="hidden" name="risiko_jatuh_skor" id="risiko_jatuh_skor" value="{{ $asesmen->keperawatanRisikoJatuh->risiko_jatuh_skor ?? '0' }}">
-                                            <input type="hidden" name="risiko_jatuh_kesimpulan" id="risiko_jatuh_kesimpulan" value="{{ $asesmen->keperawatanRisikoJatuh->risiko_jatuh_kesimpulan ?? '' }}">
+                                            <input type="hidden" name="risiko_jatuh_skor" id="risiko_jatuh_skor"
+                                                value="{{ $asesmen->keperawatanRisikoJatuh->risiko_jatuh_skor ?? '0' }}">
+                                            <input type="hidden" name="risiko_jatuh_kesimpulan"
+                                                id="risiko_jatuh_kesimpulan"
+                                                value="{{ $asesmen->keperawatanRisikoJatuh->risiko_jatuh_kesimpulan ?? '' }}">
                                         </div>
 
                                         <div class="section-separator">
                                             <h5 class="section-title">9. Status Psikososial</h5>
 
                                             <div class="row mb-3">
-                                                <label for="tanggal_pengkajian_psiko" class="col-sm-3 col-form-label">Tanggal Pengkajian</label>
+                                                <label for="tanggal_pengkajian_psiko"
+                                                    class="col-sm-3 col-form-label">Tanggal Pengkajian</label>
                                                 <div class="col-sm-9">
                                                     <div class="input-group">
-                                                        <input type="date" class="form-control" id="tanggal_pengkajian_psiko" name="tanggal_pengkajian_psiko"
+                                                        <input type="date" class="form-control"
+                                                            id="tanggal_pengkajian_psiko" name="tanggal_pengkajian_psiko"
                                                             value="{{ old('tanggal_pengkajian_psiko', $asesmen->keperawatanStatusPsikososial->tanggal_pengkajian_psiko ?? '') }}"
                                                             autocomplete="off">
                                                     </div>
@@ -786,34 +945,49 @@
                                             </div>
 
                                             <div class="row mb-3">
-                                                <label for="kendala_komunikasi" class="col-sm-3 col-form-label">Kendala Komunikasi</label>
+                                                <label for="kendala_komunikasi" class="col-sm-3 col-form-label">Kendala
+                                                    Komunikasi</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-select" id="kendala_komunikasi" name="kendala_komunikasi">
+                                                    <select class="form-select" id="kendala_komunikasi"
+                                                        name="kendala_komunikasi">
                                                         <option value="">pilih</option>
-                                                        <option value="Normal" {{ ($asesmen->keperawatanStatusPsikososial->kendala_komunikasi ?? '') == 'Normal' ? 'selected' : '' }}>Normal</option>
-                                                        <option value="Tidak jelas" {{ ($asesmen->keperawatanStatusPsikososial->kendala_komunikasi ?? '') == 'Tidak jelas' ? 'selected' : '' }}>Tidak Jelas</option>
+                                                        <option value="Normal"
+                                                            {{ ($asesmen->keperawatanStatusPsikososial->kendala_komunikasi ?? '') == 'Normal' ? 'selected' : '' }}>
+                                                            Normal</option>
+                                                        <option value="Tidak jelas"
+                                                            {{ ($asesmen->keperawatanStatusPsikososial->kendala_komunikasi ?? '') == 'Tidak jelas' ? 'selected' : '' }}>
+                                                            Tidak Jelas</option>
                                                     </select>
                                                 </div>
                                             </div>
 
                                             <div class="row mb-3">
-                                                <label for="yang_merawat" class="col-sm-3 col-form-label">Yang Merawat di rumah</label>
+                                                <label for="yang_merawat" class="col-sm-3 col-form-label">Yang Merawat di
+                                                    rumah</label>
                                                 <div class="col-sm-9">
                                                     <select class="form-select" id="yang_merawat" name="yang_merawat">
                                                         <option value="">pilih</option>
-                                                        <option value="Ada" {{ ($asesmen->keperawatanStatusPsikososial->yang_merawat ?? '') == 'Ada' ? 'selected' : '' }}>Ada</option>
-                                                        <option value="Tidak" {{ ($asesmen->keperawatanStatusPsikososial->yang_merawat ?? '') == 'Tidak' ? 'selected' : '' }}>Tidak</option>
+                                                        <option value="Ada"
+                                                            {{ ($asesmen->keperawatanStatusPsikososial->yang_merawat ?? '') == 'Ada' ? 'selected' : '' }}>
+                                                            Ada</option>
+                                                        <option value="Tidak"
+                                                            {{ ($asesmen->keperawatanStatusPsikososial->yang_merawat ?? '') == 'Tidak' ? 'selected' : '' }}>
+                                                            Tidak</option>
                                                     </select>
                                                 </div>
                                             </div>
 
                                             <div class="row mb-3">
-                                                <label for="kondisi_psikologis" class="col-sm-3 col-form-label">Kondisi Psikologis</label>
+                                                <label for="kondisi_psikologis" class="col-sm-3 col-form-label">Kondisi
+                                                    Psikologis</label>
                                                 <div class="col-sm-9">
                                                     <div class="btn-group" role="group">
                                                         @php
-                                                            $kondisi_psikologis = $asesmen->keperawatanStatusPsikososial->kondisi_psikologis_json ?? '[]';
-                                                            $kondisi_array = json_decode($kondisi_psikologis, true) ?? [];
+                                                            $kondisi_psikologis =
+                                                                $asesmen->keperawatanStatusPsikososial
+                                                                    ->kondisi_psikologis_json ?? '[]';
+                                                            $kondisi_array =
+                                                                json_decode($kondisi_psikologis, true) ?? [];
                                                         @endphp
 
                                                         <input type="checkbox" class="btn-check" id="kondisi_cemas"
@@ -848,25 +1022,36 @@
                                             </div>
 
                                             <div class="row mb-3">
-                                                <label for="kepatuhan_layanan" class="col-sm-3 col-form-label">Apakah kepatuhan/ keterlibatan pasien berkaitan dengan pelayanan kesehatan yang akan diberikan</label>
+                                                <label for="kepatuhan_layanan" class="col-sm-3 col-form-label">Apakah
+                                                    kepatuhan/ keterlibatan pasien berkaitan dengan pelayanan kesehatan yang
+                                                    akan diberikan</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-select" id="kepatuhan_layanan" name="kepatuhan_layanan" onchange="toggleJikaYa()">
+                                                    <select class="form-select" id="kepatuhan_layanan"
+                                                        name="kepatuhan_layanan" onchange="toggleJikaYa()">
                                                         <option value="">pilih</option>
-                                                        <option value="Ya" {{ ($asesmen->keperawatanStatusPsikososial->kepatuhan_layanan ?? '') == 'Ya' ? 'selected' : '' }}>Ya</option>
-                                                        <option value="Tidak" {{ ($asesmen->keperawatanStatusPsikososial->kepatuhan_layanan ?? '') == 'Tidak' ? 'selected' : '' }}>Tidak</option>
+                                                        <option value="Ya"
+                                                            {{ ($asesmen->keperawatanStatusPsikososial->kepatuhan_layanan ?? '') == 'Ya' ? 'selected' : '' }}>
+                                                            Ya</option>
+                                                        <option value="Tidak"
+                                                            {{ ($asesmen->keperawatanStatusPsikososial->kepatuhan_layanan ?? '') == 'Tidak' ? 'selected' : '' }}>
+                                                            Tidak</option>
                                                     </select>
                                                 </div>
                                             </div>
 
-                                            <div class="row mb-3" id="jika_ya_container" style="display: {{ ($asesmen->keperawatanStatusPsikososial->kepatuhan_layanan ?? '') == 'Ya' ? 'flex' : 'none' }};">
-                                                <label for="jika_ya_jelaskan" class="col-sm-3 col-form-label">Jika Iya Jelaskan</label>
+                                            <div class="row mb-3" id="jika_ya_container"
+                                                style="display: {{ ($asesmen->keperawatanStatusPsikososial->kepatuhan_layanan ?? '') == 'Ya' ? 'flex' : 'none' }};">
+                                                <label for="jika_ya_jelaskan" class="col-sm-3 col-form-label">Jika Iya
+                                                    Jelaskan</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" id="jika_ya_jelaskan" name="jika_ya_jelaskan"
-                                                        placeholder="jelaskan" value="{{ $asesmen->keperawatanStatusPsikososial->jika_ya_jelaskan ?? '' }}">
+                                                    <input type="text" class="form-control" id="jika_ya_jelaskan"
+                                                        name="jika_ya_jelaskan" placeholder="jelaskan"
+                                                        value="{{ $asesmen->keperawatanStatusPsikososial->jika_ya_jelaskan ?? '' }}">
                                                 </div>
                                             </div>
 
-                                            <input type="hidden" name="kondisi_psikologis_json" id="kondisi_psikologis_json"
+                                            <input type="hidden" name="kondisi_psikologis_json"
+                                                id="kondisi_psikologis_json"
                                                 value="{{ $asesmen->keperawatanStatusPsikososial->kondisi_psikologis_json ?? '[]' }}">
                                         </div>
 
@@ -876,7 +1061,8 @@
                                             <!-- 1. Preekripsi Hemodialisis -->
                                             <div class="preekripsi__hemodialisis">
                                                 <!-- Hidden input untuk menyimpan data JSON -->
-                                                <input type="hidden" id="monitoring_hemodialisis_data" name="monitoring_hemodialisis_data"
+                                                <input type="hidden" id="monitoring_hemodialisis_data"
+                                                    name="monitoring_hemodialisis_data"
                                                     value="{{ $asesmen->keperawatanMonitoringPreekripsi->data ?? '{}' }}">
                                                 <div class="row mt-3">
                                                     <div class="col-12">
@@ -893,64 +1079,81 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="hd_ke" class="col-sm-2 col-form-label text-end">HD Ke</label>
+                                                        <label for="hd_ke" class="col-sm-2 col-form-label text-end">HD
+                                                            Ke</label>
                                                         <div class="col-sm-10">
-                                                            <input type="number" class="form-control" id="hd_ke" name="inisiasi_hd_ke" placeholder="angka">
+                                                            <input type="number" class="form-control" id="hd_ke"
+                                                                name="inisiasi_hd_ke" placeholder="angka">
                                                         </div>
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="nomor_mesin" class="col-sm-2 col-form-label text-end">Nomor Mesin</label>
+                                                        <label for="nomor_mesin"
+                                                            class="col-sm-2 col-form-label text-end">Nomor Mesin</label>
                                                         <div class="col-sm-10">
-                                                            <input type="number" class="form-control" id="nomor_mesin" name="inisiasi_nomor_mesin" placeholder="angka">
+                                                            <input type="number" class="form-control" id="nomor_mesin"
+                                                                name="inisiasi_nomor_mesin" placeholder="angka">
                                                         </div>
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="bb_hd_lalu" class="col-sm-2 col-form-label text-end">BB HD Yang Lalu</label>
+                                                        <label for="bb_hd_lalu"
+                                                            class="col-sm-2 col-form-label text-end">BB HD Yang
+                                                            Lalu</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="bb_hd_lalu" name="inisiasi_bb_hd_lalu">
+                                                                <input type="text" class="form-control"
+                                                                    id="bb_hd_lalu" name="inisiasi_bb_hd_lalu">
                                                                 <span class="input-group-text">kg</span>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="tekanan_vena" class="col-sm-2 col-form-label text-end">Tekanan Vena</label>
+                                                        <label for="tekanan_vena"
+                                                            class="col-sm-2 col-form-label text-end">Tekanan Vena</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="tekanan_vena" name="inisiasi_tekanan_vena">
+                                                                <input type="text" class="form-control"
+                                                                    id="tekanan_vena" name="inisiasi_tekanan_vena">
                                                                 <span class="input-group-text">ml/mnt</span>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="lama_hd" class="col-sm-2 col-form-label text-end">Lama HD</label>
+                                                        <label for="lama_hd"
+                                                            class="col-sm-2 col-form-label text-end">Lama HD</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="lama_hd" name="inisiasi_lama_hd">
+                                                                <input type="text" class="form-control" id="lama_hd"
+                                                                    name="inisiasi_lama_hd">
                                                                 <span class="input-group-text">Jam</span>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="program_profiling" class="col-sm-2 col-form-label text-end">Program Profiling</label>
+                                                        <label for="program_profiling"
+                                                            class="col-sm-2 col-form-label text-end">Program
+                                                            Profiling</label>
                                                         <div class="col-sm-10">
                                                             <div class="row mb-2">
                                                                 <div class="col-md-3">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" id="uf_profiling"
-                                                                            name="program_profiling[]" value="UF Profiling Mode"
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            id="uf_profiling" name="program_profiling[]"
+                                                                            value="UF Profiling Mode"
                                                                             {{ in_array('UF Profiling Mode', explode(',', $asesmen->keperawatanMonitoringPreekripsi->program_profiling ?? '')) ? 'checked' : '' }}>
-                                                                        <label class="form-check-label" for="uf_profiling">UF Profiling Mode</label>
+                                                                        <label class="form-check-label"
+                                                                            for="uf_profiling">UF Profiling Mode</label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-9">
-                                                                    <input type="text" class="form-control" id="uf_profiling_detail"
-                                                                        name="inisiasi_uf_profiling_detail" placeholder="Freetext"
+                                                                    <input type="text" class="form-control"
+                                                                        id="uf_profiling_detail"
+                                                                        name="inisiasi_uf_profiling_detail"
+                                                                        placeholder="Freetext"
                                                                         value="{{ $asesmen->keperawatanMonitoringPreekripsi->inisiasi_uf_profiling_detail ?? '' }}">
                                                                 </div>
                                                             </div>
@@ -958,15 +1161,21 @@
                                                             <div class="row mb-2">
                                                                 <div class="col-md-3">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" id="bicarbonat_profiling"
-                                                                            name="program_profiling[]" value="Bicarbonat Profiling"
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            id="bicarbonat_profiling"
+                                                                            name="program_profiling[]"
+                                                                            value="Bicarbonat Profiling"
                                                                             {{ in_array('Bicarbonat Profiling', explode(',', $asesmen->keperawatanMonitoringPreekripsi->program_profiling ?? '')) ? 'checked' : '' }}>
-                                                                        <label class="form-check-label" for="bicarbonat_profiling">Bicarbonat Profiling</label>
+                                                                        <label class="form-check-label"
+                                                                            for="bicarbonat_profiling">Bicarbonat
+                                                                            Profiling</label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-9">
-                                                                    <input type="text" class="form-control" id="bicarbonat_profiling_detail"
-                                                                        name="inisiasi_bicarbonat_profiling_detail" placeholder="Freetext"
+                                                                    <input type="text" class="form-control"
+                                                                        id="bicarbonat_profiling_detail"
+                                                                        name="inisiasi_bicarbonat_profiling_detail"
+                                                                        placeholder="Freetext"
                                                                         value="{{ $asesmen->keperawatanMonitoringPreekripsi->inisiasi_bicarbonat_profiling_detail ?? '' }}">
                                                                 </div>
                                                             </div>
@@ -974,15 +1183,19 @@
                                                             <div class="row">
                                                                 <div class="col-md-3">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" id="na_profiling"
-                                                                            name="program_profiling[]" value="Na Profiling Mode"
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            id="na_profiling" name="program_profiling[]"
+                                                                            value="Na Profiling Mode"
                                                                             {{ in_array('Na Profiling Mode', explode(',', $asesmen->keperawatanMonitoringPreekripsi->program_profiling ?? '')) ? 'checked' : '' }}>
-                                                                        <label class="form-check-label" for="na_profiling">Na Profiling Mode</label>
+                                                                        <label class="form-check-label"
+                                                                            for="na_profiling">Na Profiling Mode</label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-9">
-                                                                    <input type="text" class="form-control" id="na_profiling_detail"
-                                                                        name="inisiasi_na_profiling_detail" placeholder="Freetext"
+                                                                    <input type="text" class="form-control"
+                                                                        id="na_profiling_detail"
+                                                                        name="inisiasi_na_profiling_detail"
+                                                                        placeholder="Freetext"
                                                                         value="{{ $asesmen->keperawatanMonitoringPreekripsi->inisiasi_na_profiling_detail ?? '' }}">
                                                                 </div>
                                                             </div>
@@ -999,34 +1212,42 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="type_dializer" class="col-sm-2 col-form-label text-end">Type Dializer</label>
+                                                        <label for="type_dializer"
+                                                            class="col-sm-2 col-form-label text-end">Type Dializer</label>
                                                         <div class="col-sm-10">
-                                                            <input type="text" class="form-control" id="type_dializer" name="akut_type_dializer" placeholder="freetext">
+                                                            <input type="text" class="form-control" id="type_dializer"
+                                                                name="akut_type_dializer" placeholder="freetext">
                                                         </div>
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="uf_goal" class="col-sm-2 col-form-label text-end">UF Goal</label>
+                                                        <label for="uf_goal" class="col-sm-2 col-form-label text-end">UF
+                                                            Goal</label>
                                                         <div class="col-sm-10">
-                                                            <input type="text" class="form-control" id="uf_goal" name="akut_uf_goal" placeholder="freetext">
+                                                            <input type="text" class="form-control" id="uf_goal"
+                                                                name="akut_uf_goal" placeholder="freetext">
                                                         </div>
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="bb_pre_hd" class="col-sm-2 col-form-label text-end">BB Pre HD</label>
+                                                        <label for="bb_pre_hd" class="col-sm-2 col-form-label text-end">BB
+                                                            Pre HD</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="bb_pre_hd" name="akut_bb_pre_hd">
+                                                                <input type="text" class="form-control" id="bb_pre_hd"
+                                                                    name="akut_bb_pre_hd">
                                                                 <span class="input-group-text">kg</span>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="tekanan_arteri" class="col-sm-2 col-form-label text-end">Tekanan Arteri</label>
+                                                        <label for="tekanan_arteri"
+                                                            class="col-sm-2 col-form-label text-end">Tekanan Arteri</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="tekanan_arteri" name="akut_tekanan_arteri">
+                                                                <input type="text" class="form-control"
+                                                                    id="tekanan_arteri" name="akut_tekanan_arteri">
                                                                 <span class="input-group-text">ml/mnt</span>
                                                             </div>
                                                         </div>
@@ -1036,7 +1257,8 @@
                                                         <label for="laju_uf" class="col-sm-2 col-form-label text-end">ISO UF</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="laju_uf" name="akut_laju_uf">
+                                                                <input type="text" class="form-control" id="laju_uf"
+                                                                    name="akut_laju_uf">
                                                                 <span class="input-group-text">ml</span>
                                                             </div>
                                                         </div>
@@ -1046,7 +1268,8 @@
                                                         <label for="lama_laju_uf" class="col-sm-2 col-form-label text-end">Lama ISO UF</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="lama_laju_uf" name="akut_lama_laju_uf">
+                                                                <input type="text" class="form-control"
+                                                                    id="lama_laju_uf" name="akut_lama_laju_uf">
                                                                 <span class="input-group-text">jam</span>
                                                             </div>
                                                         </div>
@@ -1062,54 +1285,68 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="nr_ke" class="col-sm-2 col-form-label text-end">N/R Ke</label>
+                                                        <label for="nr_ke" class="col-sm-2 col-form-label text-end">N/R
+                                                            Ke</label>
                                                         <div class="col-sm-10">
-                                                            <input type="text" class="form-control" id="nr_ke" name="rutin_nr_ke" placeholder="freetext">
+                                                            <input type="text" class="form-control" id="nr_ke"
+                                                                name="rutin_nr_ke" placeholder="freetext">
                                                         </div>
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="bb_kering" class="col-sm-2 col-form-label text-end">BB Kering</label>
+                                                        <label for="bb_kering" class="col-sm-2 col-form-label text-end">BB
+                                                            Kering</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="bb_kering" name="rutin_bb_kering">
+                                                                <input type="text" class="form-control" id="bb_kering"
+                                                                    name="rutin_bb_kering">
                                                                 <span class="input-group-text">kg</span>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="bb_post_hd" class="col-sm-2 col-form-label text-end">BB Post HD</label>
+                                                        <label for="bb_post_hd"
+                                                            class="col-sm-2 col-form-label text-end">BB Post HD</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="bb_post_hd" name="rutin_bb_post_hd">
+                                                                <input type="text" class="form-control"
+                                                                    id="bb_post_hd" name="rutin_bb_post_hd">
                                                                 <span class="input-group-text">kg</span>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="tmp" class="col-sm-2 col-form-label text-end">TMP (Transmembrane Pressure)</label>
+                                                        <label for="tmp" class="col-sm-2 col-form-label text-end">TMP
+                                                            (Transmembrane Pressure)</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="tmp" name="rutin_tmp">
+                                                                <input type="text" class="form-control" id="tmp"
+                                                                    name="rutin_tmp">
                                                                 <span class="input-group-text">mmHg</span>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="program_aksesbilling" class="col-sm-2 col-form-label text-end">Program Vaskular Aksesbilling</label>
+                                                        <label for="program_aksesbilling"
+                                                            class="col-sm-2 col-form-label text-end">Program Vaskular
+                                                            Aksesbilling</label>
                                                         <div class="col-sm-10">
                                                             <div class="row mb-2">
                                                                 <div class="col-md-3">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" id="av_shunt" name="program_aksesbilling[]" value="AV Shunt">
-                                                                        <label class="form-check-label" for="av_shunt">AV Shunt</label>
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            id="av_shunt" name="program_aksesbilling[]"
+                                                                            value="AV Shunt">
+                                                                        <label class="form-check-label" for="av_shunt">AV
+                                                                            Shunt</label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-9">
-                                                                    <select class="form-select" id="av_shunt_detail" name="rutin_av_shunt_detail">
+                                                                    <select class="form-select" id="av_shunt_detail"
+                                                                        name="rutin_av_shunt_detail">
                                                                         <option value="">Pilih</option>
                                                                         <option value="Kiri">Kiri</option>
                                                                         <option value="Kanan">Kanan</option>
@@ -1120,12 +1357,16 @@
                                                             <div class="row mb-2">
                                                                 <div class="col-md-3">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" id="cdl" name="program_aksesbilling[]" value="CDL">
-                                                                        <label class="form-check-label" for="cdl">CDL</label>
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            id="cdl" name="program_aksesbilling[]"
+                                                                            value="CDL">
+                                                                        <label class="form-check-label"
+                                                                            for="cdl">CDL</label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-9">
-                                                                    <select class="form-select" id="cdl_detail" name="rutin_cdl_detail">
+                                                                    <select class="form-select" id="cdl_detail"
+                                                                        name="rutin_cdl_detail">
                                                                         <option value="">Pilih</option>
                                                                         <option value="Jugularis">Jugularis</option>
                                                                         <option value="Subelavia">Subelavia</option>
@@ -1136,12 +1377,16 @@
                                                             <div class="row">
                                                                 <div class="col-md-3">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" id="femoral" name="program_aksesbilling[]" value="Femoral">
-                                                                        <label class="form-check-label" for="femoral">Femoral</label>
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            id="femoral" name="program_aksesbilling[]"
+                                                                            value="Femoral">
+                                                                        <label class="form-check-label"
+                                                                            for="femoral">Femoral</label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-9">
-                                                                    <select class="form-select" id="femoral_detail" name="rutin_femoral_detail">
+                                                                    <select class="form-select" id="femoral_detail"
+                                                                        name="rutin_femoral_detail">
                                                                         <option value="">Pilih</option>
                                                                         <option value="Kiri">Kiri</option>
                                                                         <option value="Kanan">Kanan</option>
@@ -1161,23 +1406,28 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="dialisat" class="col-sm-2 col-form-label text-end">Dialisat</label>
+                                                        <label for="dialisat"
+                                                            class="col-sm-2 col-form-label text-end">Dialisat</label>
                                                         <div class="col-sm-10">
                                                             <div class="row">
                                                                 <div class="col-6">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" id="dialisat_asetat"
-                                                                            name="preop_dialisat" value="Asetat"
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            id="dialisat_asetat" name="preop_dialisat"
+                                                                            value="Asetat"
                                                                             {{ ($asesmen->keperawatanMonitoringPreekripsi->preop_dialisat ?? '') == 'Asetat' ? 'checked' : '' }}>
-                                                                        <label class="form-check-label" for="dialisat_asetat">Asetat</label>
+                                                                        <label class="form-check-label"
+                                                                            for="dialisat_asetat">Asetat</label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-6">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" id="dialisat_bicarbonat"
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            id="dialisat_bicarbonat"
                                                                             name="preop_bicarbonat" value="Bicarbonat"
                                                                             {{ ($asesmen->keperawatanMonitoringPreekripsi->preop_bicarbonat ?? '') == 'Bicarbonat' ? 'checked' : '' }}>
-                                                                        <label class="form-check-label" for="dialisat_bicarbonat">Bicarbonat</label>
+                                                                        <label class="form-check-label"
+                                                                            for="dialisat_bicarbonat">Bicarbonat</label>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1188,16 +1438,18 @@
                                                         <div class="col-sm-2"></div>
                                                         <div class="col-sm-4">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" id="conductivity_check"
-                                                                    name="conductivity_check" value="1"
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    id="conductivity_check" name="conductivity_check"
+                                                                    value="1"
                                                                     {{ !empty($asesmen->keperawatanMonitoringPreekripsi->preop_conductivity) ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="conductivity_check">Conductivity</label>
+                                                                <label class="form-check-label"
+                                                                    for="conductivity_check">Conductivity</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="conductivity"
-                                                                    name="preop_conductivity"
+                                                                <input type="text" class="form-control"
+                                                                    id="conductivity" name="preop_conductivity"
                                                                     value="{{ $asesmen->keperawatanMonitoringPreekripsi->preop_conductivity ?? '' }}">
                                                                 <span class="input-group-text">MS/Cm</span>
                                                             </div>
@@ -1208,10 +1460,11 @@
                                                         <div class="col-sm-2"></div>
                                                         <div class="col-sm-4">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" id="kalium_check"
-                                                                    name="kalium_check" value="1"
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    id="kalium_check" name="kalium_check" value="1"
                                                                     {{ !empty($asesmen->keperawatanMonitoringPreekripsi->preop_kalium) ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="kalium_check">Kalium</label>
+                                                                <label class="form-check-label"
+                                                                    for="kalium_check">Kalium</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-6">
@@ -1228,16 +1481,18 @@
                                                         <div class="col-sm-2"></div>
                                                         <div class="col-sm-4">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" id="suhu_dialisat_check"
-                                                                    name="suhu_dialisat_check" value="1"
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    id="suhu_dialisat_check" name="suhu_dialisat_check"
+                                                                    value="1"
                                                                     {{ !empty($asesmen->keperawatanMonitoringPreekripsi->preop_suhu_dialisat) ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="suhu_dialisat_check">Suhu Dialisat</label>
+                                                                <label class="form-check-label"
+                                                                    for="suhu_dialisat_check">Suhu Dialisat</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="suhu_dialisat"
-                                                                    name="preop_suhu_dialisat"
+                                                                <input type="text" class="form-control"
+                                                                    id="suhu_dialisat" name="preop_suhu_dialisat"
                                                                     value="{{ $asesmen->keperawatanMonitoringPreekripsi->preop_suhu_dialisat ?? '' }}">
                                                                 <span class="input-group-text">°C</span>
                                                             </div>
@@ -1248,16 +1503,18 @@
                                                         <div class="col-sm-2"></div>
                                                         <div class="col-sm-4">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" id="base_na_check"
-                                                                    name="base_na_check" value="1"
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    id="base_na_check" name="base_na_check"
+                                                                    value="1"
                                                                     {{ !empty($asesmen->keperawatanMonitoringPreekripsi->preop_base_na) ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="base_na_check">Base Na</label>
+                                                                <label class="form-check-label" for="base_na_check">Base
+                                                                    Na</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="base_na"
-                                                                    name="preop_base_na"
+                                                                <input type="text" class="form-control"
+                                                                    id="base_na" name="preop_base_na"
                                                                     value="{{ $asesmen->keperawatanMonitoringPreekripsi->preop_base_na ?? '' }}">
                                                                 <span class="input-group-text">MEq/L</span>
                                                             </div>
@@ -1277,23 +1534,28 @@
 
                                                 <div class="row">
                                                     <div class="col-sm-2">
-                                                        <label for="heparinisasi" class="col-form-label">Heparinisasi</label>
+                                                        <label for="heparinisasi"
+                                                            class="col-form-label">Heparinisasi</label>
                                                     </div>
                                                     <div class="col-sm-10">
                                                         <!-- Row 1: Dosis Sirkulasi dan Dosis Awal -->
                                                         <div class="row mb-3">
                                                             <div class="col-md-6">
-                                                                <label for="dosis_sirkulasi" class="form-label">Dosis Sirkulasi</label>
+                                                                <label for="dosis_sirkulasi" class="form-label">Dosis
+                                                                    Sirkulasi</label>
                                                                 <div class="input-group">
-                                                                    <input type="text" class="form-control" id="dosis_sirkulasi" name="dosis_sirkulasi"
+                                                                    <input type="text" class="form-control"
+                                                                        id="dosis_sirkulasi" name="dosis_sirkulasi"
                                                                         value="{{ $asesmen->keperawatanMonitoringHeparinisasi->dosis_sirkulasi ?? '' }}">
                                                                     <span class="input-group-text">IU</span>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <label for="dosis_awal" class="form-label">Dosis Awal</label>
+                                                                <label for="dosis_awal" class="form-label">Dosis
+                                                                    Awal</label>
                                                                 <div class="input-group">
-                                                                    <input type="text" class="form-control" id="dosis_awal" name="dosis_awal"
+                                                                    <input type="text" class="form-control"
+                                                                        id="dosis_awal" name="dosis_awal"
                                                                         value="{{ $asesmen->keperawatanMonitoringHeparinisasi->dosis_awal ?? '' }}">
                                                                     <span class="input-group-text">IU</span>
                                                                 </div>
@@ -1303,17 +1565,23 @@
                                                         <!-- Row 2: Maintenance Kontinyu dan Maintenance Intermiten -->
                                                         <div class="row mb-3">
                                                             <div class="col-md-6">
-                                                                <label for="maintenance_kontinyu" class="form-label">Maintenance Kontinyu</label>
+                                                                <label for="maintenance_kontinyu"
+                                                                    class="form-label">Maintenance Kontinyu</label>
                                                                 <div class="input-group">
-                                                                    <input type="text" class="form-control" id="maintenance_kontinyu" name="maintenance_kontinyu"
+                                                                    <input type="text" class="form-control"
+                                                                        id="maintenance_kontinyu"
+                                                                        name="maintenance_kontinyu"
                                                                         value="{{ $asesmen->keperawatanMonitoringHeparinisasi->maintenance_kontinyu ?? '' }}">
                                                                     <span class="input-group-text">IU/jam</span>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <label for="maintenance_intermiten" class="form-label">Maintenance Intermiten</label>
+                                                                <label for="maintenance_intermiten"
+                                                                    class="form-label">Maintenance Intermiten</label>
                                                                 <div class="input-group">
-                                                                    <input type="text" class="form-control" id="maintenance_intermiten" name="maintenance_intermiten"
+                                                                    <input type="text" class="form-control"
+                                                                        id="maintenance_intermiten"
+                                                                        name="maintenance_intermiten"
                                                                         value="{{ $asesmen->keperawatanMonitoringHeparinisasi->maintenance_intermiten ?? '' }}">
                                                                     <span class="input-group-text">IU/jam</span>
                                                                 </div>
@@ -1323,14 +1591,18 @@
                                                         <!-- Row 3: Tanpa Heparin dan LMWH -->
                                                         <div class="row mb-3">
                                                             <div class="col-md-6">
-                                                                <label for="tanpa_heparin" class="form-label">Tanpa Heparin (sc.)</label>
-                                                                <input type="text" class="form-control" id="tanpa_heparin" name="tanpa_heparin" placeholder="Text"
+                                                                <label for="tanpa_heparin" class="form-label">Tanpa
+                                                                    Heparin (sc.)</label>
+                                                                <input type="text" class="form-control"
+                                                                    id="tanpa_heparin" name="tanpa_heparin"
+                                                                    placeholder="Text"
                                                                     value="{{ $asesmen->keperawatanMonitoringHeparinisasi->tanpa_heparin ?? '' }}">
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <label for="lmwh" class="form-label">LMWH</label>
                                                                 <div class="input-group">
-                                                                    <input type="text" class="form-control" id="lmwh" name="lmwh"
+                                                                    <input type="text" class="form-control"
+                                                                        id="lmwh" name="lmwh"
                                                                         value="{{ $asesmen->keperawatanMonitoringHeparinisasi->lmwh ?? '' }}">
                                                                     <span class="input-group-text">IU</span>
                                                                 </div>
@@ -1340,11 +1612,18 @@
                                                         <!-- Row 4: Program Bilas NaCl -->
                                                         <div class="row mb-3">
                                                             <div class="col-12">
-                                                                <label for="program_bilas_nacl" class="form-label">Program Bilas NaCl 0,9% 100cc/Jam</label>
-                                                                <select class="form-select" id="program_bilas_nacl" name="program_bilas_nacl">
+                                                                <label for="program_bilas_nacl"
+                                                                    class="form-label">Program Bilas NaCl 0,9%
+                                                                    100cc/Jam</label>
+                                                                <select class="form-select" id="program_bilas_nacl"
+                                                                    name="program_bilas_nacl">
                                                                     <option value="" disabled>pilih</option>
-                                                                    <option value="Ya" {{ ($asesmen->keperawatanMonitoringHeparinisasi->program_bilas_nacl ?? '') == 'Ya' ? 'selected' : '' }}>Ya</option>
-                                                                    <option value="Tidak" {{ ($asesmen->keperawatanMonitoringHeparinisasi->program_bilas_nacl ?? '') == 'Tidak' ? 'selected' : '' }}>Tidak</option>
+                                                                    <option value="Ya"
+                                                                        {{ ($asesmen->keperawatanMonitoringHeparinisasi->program_bilas_nacl ?? '') == 'Ya' ? 'selected' : '' }}>
+                                                                        Ya</option>
+                                                                    <option value="Tidak"
+                                                                        {{ ($asesmen->keperawatanMonitoringHeparinisasi->program_bilas_nacl ?? '') == 'Tidak' ? 'selected' : '' }}>
+                                                                        Tidak</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -1372,20 +1651,24 @@
                                                     <div class="row mb-3">
                                                         <label for="waktu_pre_hd" class="col-sm-2 col-form-label text-end">Waktu Pra HD</label>
                                                         <div class="col-sm-10">
-                                                            <input type="time" class="form-control" id="waktu_pre_hd" name="prehd_waktu_pre_hd"
+                                                            <input type="time" class="form-control"
+                                                                id="waktu_pre_hd" name="prehd_waktu_pre_hd"
                                                                 value="{{ isset($asesmen->keperawatanMonitoringTindakan->prehd_waktu_pre_hd) ? \Carbon\Carbon::parse($asesmen->keperawatanMonitoringTindakan->prehd_waktu_pre_hd)->format('H:i') : '' }}">
                                                         </div>
                                                     </div>
 
                                                     <!-- Parameter Mesin HD (QB dan QD) -->
                                                     <div class="row mb-3">
-                                                        <label for="parameter_mesin_hd" class="col-sm-2 col-form-label text-end">Parameter Mesin HD</label>
+                                                        <label for="parameter_mesin_hd"
+                                                            class="col-sm-2 col-form-label text-end">Parameter Mesin
+                                                            HD</label>
                                                         <div class="col-sm-10">
                                                             <div class="row">
                                                                 <div class="col-md-6">
                                                                     <div class="input-group">
                                                                         <span class="input-group-text">QB</span>
-                                                                        <input type="text" class="form-control" id="qb" name="prehd_qb"
+                                                                        <input type="text" class="form-control"
+                                                                            id="qb" name="prehd_qb"
                                                                             value="{{ $asesmen->keperawatanMonitoringTindakan->prehd_qb ?? '' }}">
                                                                         <span class="input-group-text">ml/menit</span>
                                                                     </div>
@@ -1393,7 +1676,8 @@
                                                                 <div class="col-md-6">
                                                                     <div class="input-group">
                                                                         <span class="input-group-text">QD</span>
-                                                                        <input type="text" class="form-control" id="qd" name="prehd_qd"
+                                                                        <input type="text" class="form-control"
+                                                                            id="qd" name="prehd_qd"
                                                                             value="{{ $asesmen->keperawatanMonitoringTindakan->prehd_qd ?? '' }}">
                                                                         <span class="input-group-text">ml/menit</span>
                                                                     </div>
@@ -1404,10 +1688,12 @@
 
                                                     <!-- UF Rate -->
                                                     <div class="row mb-3">
-                                                        <label for="uf_rate" class="col-sm-2 col-form-label text-end">UF Rate</label>
+                                                        <label for="uf_rate"
+                                                            class="col-sm-2 col-form-label text-end">UF Rate</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="uf_rate" name="prehd_uf_rate"
+                                                                <input type="text" class="form-control"
+                                                                    id="uf_rate" name="prehd_uf_rate"
                                                                     value="{{ $asesmen->keperawatanMonitoringTindakan->prehd_uf_rate ?? '' }}">
                                                                 <span class="input-group-text">ml/menit</span>
                                                             </div>
@@ -1416,20 +1702,24 @@
 
                                                     <!-- Tek. Darah (mmHg) - Sistole & Diastole -->
                                                     <div class="row mb-3">
-                                                        <label for="tekanan_darah" class="col-sm-2 col-form-label text-end">Tek. Darah (mmHg)</label>
+                                                        <label for="tekanan_darah"
+                                                            class="col-sm-2 col-form-label text-end">Tek. Darah
+                                                            (mmHg)</label>
                                                         <div class="col-sm-10">
                                                             <div class="row">
                                                                 <div class="col-md-6">
                                                                     <div class="input-group">
                                                                         <span class="input-group-text">Sistole</span>
-                                                                        <input type="number" class="form-control" id="sistole" name="prehd_sistole"
+                                                                        <input type="number" class="form-control"
+                                                                            id="sistole" name="prehd_sistole"
                                                                             value="{{ $asesmen->keperawatanMonitoringTindakan->prehd_sistole ?? '' }}">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <div class="input-group">
                                                                         <span class="input-group-text">Diastole</span>
-                                                                        <input type="number" class="form-control" id="diastole" name="prehd_diastole"
+                                                                        <input type="number" class="form-control"
+                                                                            id="diastole" name="prehd_diastole"
                                                                             value="{{ $asesmen->keperawatanMonitoringTindakan->prehd_diastole ?? '' }}">
                                                                     </div>
                                                                 </div>
@@ -1439,10 +1729,13 @@
 
                                                     <!-- Nadi (Per Menit) -->
                                                     <div class="row mb-3">
-                                                        <label for="nadi" class="col-sm-2 col-form-label text-end">Nadi (Per Menit)</label>
+                                                        <label for="nadi"
+                                                            class="col-sm-2 col-form-label text-end">Nadi (Per
+                                                            Menit)</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="number" class="form-control" id="nadi" name="prehd_nadi"
+                                                                <input type="number" class="form-control"
+                                                                    id="nadi" name="prehd_nadi"
                                                                     value="{{ $asesmen->keperawatanMonitoringTindakan->prehd_nadi ?? '' }}">
                                                                 <span class="input-group-text">x/mnt</span>
                                                             </div>
@@ -1451,10 +1744,13 @@
 
                                                     <!-- Nafas (Per Menit) -->
                                                     <div class="row mb-3">
-                                                        <label for="nafas" class="col-sm-2 col-form-label text-end">Nafas (Per Menit)</label>
+                                                        <label for="nafas"
+                                                            class="col-sm-2 col-form-label text-end">Nafas (Per
+                                                            Menit)</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="number" class="form-control" id="nafas" name="prehd_nafas"
+                                                                <input type="number" class="form-control"
+                                                                    id="nafas" name="prehd_nafas"
                                                                     value="{{ $asesmen->keperawatanMonitoringTindakan->prehd_nafas ?? '' }}">
                                                                 <span class="input-group-text">x/mnt</span>
                                                             </div>
@@ -1463,10 +1759,12 @@
 
                                                     <!-- Suhu (C) -->
                                                     <div class="row mb-3">
-                                                        <label for="suhu" class="col-sm-2 col-form-label text-end">Suhu (C)</label>
+                                                        <label for="suhu"
+                                                            class="col-sm-2 col-form-label text-end">Suhu (C)</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="number" class="form-control" id="suhu" name="prehd_suhu"
+                                                                <input type="number" class="form-control"
+                                                                    id="suhu" name="prehd_suhu"
                                                                     value="{{ $asesmen->keperawatanMonitoringTindakan->prehd_suhu ?? '' }}">
                                                                 <span class="input-group-text">°C</span>
                                                             </div>
@@ -1475,13 +1773,16 @@
 
                                                     <!-- Pemantauan Cairan Intake -->
                                                     <div class="row mb-3">
-                                                        <label for="pemantauan_cairan_intake" class="col-sm-2 col-form-label text-end">Pemantauan Cairan Intake</label>
+                                                        <label for="pemantauan_cairan_intake"
+                                                            class="col-sm-2 col-form-label text-end">Pemantauan Cairan
+                                                            Intake</label>
                                                         <div class="col-sm-10">
                                                             <div class="row">
                                                                 <div class="col-md-6">
                                                                     <div class="input-group">
                                                                         <span class="input-group-text">NaCl</span>
-                                                                        <input type="text" class="form-control" id="nacl" name="prehd_nacl"
+                                                                        <input type="text" class="form-control"
+                                                                            id="nacl" name="prehd_nacl"
                                                                             value="{{ $asesmen->keperawatanMonitoringTindakan->prehd_nacl ?? '' }}">
                                                                         <span class="input-group-text">ml</span>
                                                                     </div>
@@ -1489,7 +1790,8 @@
                                                                 <div class="col-md-6">
                                                                     <div class="input-group">
                                                                         <span class="input-group-text">Minum</span>
-                                                                        <input type="text" class="form-control" id="minum" name="prehd_minum"
+                                                                        <input type="text" class="form-control"
+                                                                            id="minum" name="prehd_minum"
                                                                             value="{{ $asesmen->keperawatanMonitoringTindakan->prehd_minum ?? '' }}">
                                                                         <span class="input-group-text">ml</span>
                                                                     </div>
@@ -1499,7 +1801,8 @@
                                                                 <div class="col-12">
                                                                     <div class="input-group">
                                                                         <span class="input-group-text">Lain-Lain</span>
-                                                                        <input type="text" class="form-control" id="intake_lain" name="prehd_intake_lain"
+                                                                        <input type="text" class="form-control"
+                                                                            id="intake_lain" name="prehd_intake_lain"
                                                                             value="{{ $asesmen->keperawatanMonitoringTindakan->prehd_intake_lain ?? '' }}">
                                                                         <span class="input-group-text">ml</span>
                                                                     </div>
@@ -1510,10 +1813,13 @@
 
                                                     <!-- Pemantauan Cairan Output -->
                                                     <div class="row mb-3">
-                                                        <label for="pemantauan_cairan_output" class="col-sm-2 col-form-label text-end">Pemantauan Cairan Output</label>
+                                                        <label for="pemantauan_cairan_output"
+                                                            class="col-sm-2 col-form-label text-end">Pemantauan Cairan
+                                                            Output</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="output" name="prehd_output"
+                                                                <input type="text" class="form-control"
+                                                                    id="output" name="prehd_output"
                                                                     value="{{ $asesmen->keperawatanMonitoringTindakan->prehd_output ?? '' }}">
                                                                 <span class="input-group-text">ml</span>
                                                             </div>
@@ -1533,22 +1839,28 @@
 
                                                 <!-- Waktu Intra Pre HD -->
                                                 <div class="row mb-3">
-                                                    <label for="waktu_intra_pre_hd" class="col-sm-2 col-form-label text-end">Waktu Intra Pre HD</label>
+                                                    <label for="waktu_intra_pre_hd"
+                                                        class="col-sm-2 col-form-label text-end">Waktu Intra Pre
+                                                        HD</label>
                                                     <div class="col-sm-10">
-                                                        <input type="time" class="form-control" id="waktu_intra_pre_hd" name="waktu_intra_pre_hd"
+                                                        <input type="time" class="form-control"
+                                                            id="waktu_intra_pre_hd" name="waktu_intra_pre_hd"
                                                             value="{{ isset($asesmen->keperawatanMonitoringIntrahd->waktu_intra_pre_hd) ? \Carbon\Carbon::parse($asesmen->keperawatanMonitoringIntrahd->waktu_intra_pre_hd)->format('H:i') : '' }}">
                                                     </div>
                                                 </div>
 
                                                 <!-- Parameter Mesin HD (QB dan QD) -->
                                                 <div class="row mb-3">
-                                                    <label for="parameter_mesin_hd_intra" class="col-sm-2 col-form-label text-end">Parameter Mesin HD</label>
+                                                    <label for="parameter_mesin_hd_intra"
+                                                        class="col-sm-2 col-form-label text-end">Parameter Mesin
+                                                        HD</label>
                                                     <div class="col-sm-10">
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">QB</span>
-                                                                    <input type="number" class="form-control" id="qb_intra" name="qb_intra"
+                                                                    <input type="number" class="form-control"
+                                                                        id="qb_intra" name="qb_intra"
                                                                         value="{{ $asesmen->keperawatanMonitoringIntrahd->qb_intra ?? '' }}">
                                                                     <span class="input-group-text">ml/menit</span>
                                                                 </div>
@@ -1556,7 +1868,8 @@
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">QD</span>
-                                                                    <input type="number" class="form-control" id="qd_intra" name="qd_intra"
+                                                                    <input type="number" class="form-control"
+                                                                        id="qd_intra" name="qd_intra"
                                                                         value="{{ $asesmen->keperawatanMonitoringIntrahd->qd_intra ?? '' }}">
                                                                     <span class="input-group-text">ml/menit</span>
                                                                 </div>
@@ -1567,10 +1880,12 @@
 
                                                 <!-- UF Rate -->
                                                 <div class="row mb-3">
-                                                    <label for="uf_rate_intra" class="col-sm-2 col-form-label text-end">UF Rate</label>
+                                                    <label for="uf_rate_intra"
+                                                        class="col-sm-2 col-form-label text-end">UF Rate</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
-                                                            <input type="number" class="form-control" id="uf_rate_intra" name="uf_rate_intra"
+                                                            <input type="number" class="form-control"
+                                                                id="uf_rate_intra" name="uf_rate_intra"
                                                                 value="{{ $asesmen->keperawatanMonitoringIntrahd->uf_rate_intra ?? '' }}">
                                                             <span class="input-group-text">ml/menit</span>
                                                         </div>
@@ -1579,20 +1894,23 @@
 
                                                 <!-- Tek. Darah (mmHg) - Sistole & Diastole -->
                                                 <div class="row mb-3">
-                                                    <label for="tekanan_darah_intra" class="col-sm-2 col-form-label text-end">Tek. Darah (mmHg)</label>
+                                                    <label for="tekanan_darah_intra"
+                                                        class="col-sm-2 col-form-label text-end">Tek. Darah (mmHg)</label>
                                                     <div class="col-sm-10">
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">Sistole</span>
-                                                                    <input type="number" class="form-control" id="sistole_intra" name="sistole_intra"
+                                                                    <input type="number" class="form-control"
+                                                                        id="sistole_intra" name="sistole_intra"
                                                                         value="{{ $asesmen->keperawatanMonitoringIntrahd->sistole_intra ?? '' }}">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">Diastole</span>
-                                                                    <input type="number" class="form-control" id="diastole_intra" name="diastole_intra"
+                                                                    <input type="number" class="form-control"
+                                                                        id="diastole_intra" name="diastole_intra"
                                                                         value="{{ $asesmen->keperawatanMonitoringIntrahd->diastole_intra ?? '' }}">
                                                                 </div>
                                                             </div>
@@ -1602,10 +1920,12 @@
 
                                                 <!-- Nadi (Per Menit) -->
                                                 <div class="row mb-3">
-                                                    <label for="nadi_intra" class="col-sm-2 col-form-label text-end">Nadi (Per Menit)</label>
+                                                    <label for="nadi_intra"
+                                                        class="col-sm-2 col-form-label text-end">Nadi (Per Menit)</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
-                                                            <input type="number" class="form-control" id="nadi_intra" name="nadi_intra"
+                                                            <input type="number" class="form-control" id="nadi_intra"
+                                                                name="nadi_intra"
                                                                 value="{{ $asesmen->keperawatanMonitoringIntrahd->nadi_intra ?? '' }}">
                                                             <span class="input-group-text">x/mnt</span>
                                                         </div>
@@ -1614,10 +1934,12 @@
 
                                                 <!-- Nafas (Per Menit) -->
                                                 <div class="row mb-3">
-                                                    <label for="nafas_intra" class="col-sm-2 col-form-label text-end">Nafas (Per Menit)</label>
+                                                    <label for="nafas_intra"
+                                                        class="col-sm-2 col-form-label text-end">Nafas (Per Menit)</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
-                                                            <input type="number" class="form-control" id="nafas_intra" name="nafas_intra"
+                                                            <input type="number" class="form-control"
+                                                                id="nafas_intra" name="nafas_intra"
                                                                 value="{{ $asesmen->keperawatanMonitoringIntrahd->nafas_intra ?? '' }}">
                                                             <span class="input-group-text">x/mnt</span>
                                                         </div>
@@ -1626,7 +1948,8 @@
 
                                                 <!-- Suhu (C) -->
                                                 <div class="row mb-3">
-                                                    <label for="suhu_intra" class="col-sm-2 col-form-label text-end">Suhu (C)</label>
+                                                    <label for="suhu_intra"
+                                                        class="col-sm-2 col-form-label text-end">Suhu (C)</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
                                                             <input type="number" class="form-control" id="suhu_intra" name="suhu_intra"
@@ -1639,13 +1962,16 @@
 
                                                 <!-- Pemantauan Cairan Intake -->
                                                 <div class="row mb-3">
-                                                    <label for="pemantauan_cairan_intake_intra" class="col-sm-2 col-form-label text-end">Pemantauan Cairan Intake</label>
+                                                    <label for="pemantauan_cairan_intake_intra"
+                                                        class="col-sm-2 col-form-label text-end">Pemantauan Cairan
+                                                        Intake</label>
                                                     <div class="col-sm-10">
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">NaCl</span>
-                                                                    <input type="number" class="form-control" id="nacl_intra" name="nacl_intra"
+                                                                    <input type="number" class="form-control"
+                                                                        id="nacl_intra" name="nacl_intra"
                                                                         value="{{ $asesmen->keperawatanMonitoringIntrahd->nacl_intra ?? '' }}">
                                                                     <span class="input-group-text">ml</span>
                                                                 </div>
@@ -1653,7 +1979,8 @@
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">Minum</span>
-                                                                    <input type="number" class="form-control" id="minum_intra" name="minum_intra"
+                                                                    <input type="number" class="form-control"
+                                                                        id="minum_intra" name="minum_intra"
                                                                         value="{{ $asesmen->keperawatanMonitoringIntrahd->minum_intra ?? '' }}">
                                                                     <span class="input-group-text">ml</span>
                                                                 </div>
@@ -1663,7 +1990,8 @@
                                                             <div class="col-12">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">Lain-Lain</span>
-                                                                    <input type="text" class="form-control" id="intake_lain_intra" name="intake_lain_intra"
+                                                                    <input type="text" class="form-control"
+                                                                        id="intake_lain_intra" name="intake_lain_intra"
                                                                         value="{{ $asesmen->keperawatanMonitoringIntrahd->intake_lain_intra ?? '' }}">
                                                                     <span class="input-group-text">ml</span>
                                                                 </div>
@@ -1674,10 +2002,13 @@
 
                                                 <!-- Pemantauan Cairan Output -->
                                                 <div class="row mb-3">
-                                                    <label for="pemantauan_cairan_output_intra" class="col-sm-2 col-form-label text-end">Pemantauan Cairan Output</label>
+                                                    <label for="pemantauan_cairan_output_intra"
+                                                        class="col-sm-2 col-form-label text-end">Pemantauan Cairan
+                                                        Output</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
-                                                            <input type="number" class="form-control" id="output_intra" name="output_intra"
+                                                            <input type="number" class="form-control"
+                                                                id="output_intra" name="output_intra"
                                                                 value="{{ $asesmen->keperawatanMonitoringIntrahd->output_intra ?? '' }}">
                                                             <span class="input-group-text">ml</span>
                                                         </div>
@@ -1687,7 +2018,9 @@
                                                 <!-- Tombol Simpan untuk Intra HD -->
                                                 <div class="row mt-4">
                                                     <div class="col-sm-10 offset-sm-2">
-                                                        <button type="button" class="btn btn-primary btn-simpan-intra-hd">Simpan ke Tabel</button>
+                                                        <button type="button"
+                                                            class="btn btn-primary btn-simpan-intra-hd">Simpan ke
+                                                            Tabel</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1750,22 +2083,29 @@
 
                                                 <!-- Lama Waktu Post HD -->
                                                 <div class="row mb-3">
-                                                    <label for="lama_waktu_post_hd" class="col-sm-2 col-form-label text-end">Lama Waktu Post HD</label>
+                                                    <label for="lama_waktu_post_hd"
+                                                        class="col-sm-2 col-form-label text-end">Lama Waktu Post
+                                                        HD</label>
                                                     <div class="col-sm-10">
-                                                        <input type="number" class="form-control" id="lama_waktu_post_hd" name="lama_waktu_post_hd"
-                                                            placeholder="menit" value="{{ $asesmen->keperawatanMonitoringPosthd->lama_waktu_post_hd ?? '' }}">
+                                                        <input type="number" class="form-control"
+                                                            id="lama_waktu_post_hd" name="lama_waktu_post_hd"
+                                                            placeholder="menit"
+                                                            value="{{ $asesmen->keperawatanMonitoringPosthd->lama_waktu_post_hd ?? '' }}">
                                                     </div>
                                                 </div>
 
                                                 <!-- Parameter Mesin HD (QB dan QD) -->
                                                 <div class="row mb-3">
-                                                    <label for="parameter_mesin_hd_post" class="col-sm-2 col-form-label text-end">Parameter Mesin HD</label>
+                                                    <label for="parameter_mesin_hd_post"
+                                                        class="col-sm-2 col-form-label text-end">Parameter Mesin
+                                                        HD</label>
                                                     <div class="col-sm-10">
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">QB</span>
-                                                                    <input type="number" class="form-control" id="qb_post" name="qb_post"
+                                                                    <input type="number" class="form-control"
+                                                                        id="qb_post" name="qb_post"
                                                                         value="{{ $asesmen->keperawatanMonitoringPosthd->qb_post ?? '' }}">
                                                                     <span class="input-group-text">ml/menit</span>
                                                                 </div>
@@ -1773,7 +2113,8 @@
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">QD</span>
-                                                                    <input type="number" class="form-control" id="qd_post" name="qd_post"
+                                                                    <input type="number" class="form-control"
+                                                                        id="qd_post" name="qd_post"
                                                                         value="{{ $asesmen->keperawatanMonitoringPosthd->qd_post ?? '' }}">
                                                                     <span class="input-group-text">ml/menit</span>
                                                                 </div>
@@ -1784,10 +2125,12 @@
 
                                                 <!-- UF Rate -->
                                                 <div class="row mb-3">
-                                                    <label for="uf_rate_post" class="col-sm-2 col-form-label text-end">UF Rate</label>
+                                                    <label for="uf_rate_post"
+                                                        class="col-sm-2 col-form-label text-end">UF Rate</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
-                                                            <input type="number" class="form-control" id="uf_rate_post" name="uf_rate_post"
+                                                            <input type="number" class="form-control"
+                                                                id="uf_rate_post" name="uf_rate_post"
                                                                 value="{{ $asesmen->keperawatanMonitoringPosthd->uf_rate_post ?? '' }}">
                                                             <span class="input-group-text">ml/menit</span>
                                                         </div>
@@ -1796,20 +2139,23 @@
 
                                                 <!-- Tek. Darah (mmHg) - Sistole & Diastole -->
                                                 <div class="row mb-3">
-                                                    <label for="tekanan_darah_post" class="col-sm-2 col-form-label text-end">Tek. Darah (mmHg)</label>
+                                                    <label for="tekanan_darah_post"
+                                                        class="col-sm-2 col-form-label text-end">Tek. Darah (mmHg)</label>
                                                     <div class="col-sm-10">
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">Sistole</span>
-                                                                    <input type="number" class="form-control" id="sistole_post" name="sistole_post"
+                                                                    <input type="number" class="form-control"
+                                                                        id="sistole_post" name="sistole_post"
                                                                         value="{{ $asesmen->keperawatanMonitoringPosthd->sistole_post ?? '' }}">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">Diastole</span>
-                                                                    <input type="number" class="form-control" id="diastole_post" name="diastole_post"
+                                                                    <input type="number" class="form-control"
+                                                                        id="diastole_post" name="diastole_post"
                                                                         value="{{ $asesmen->keperawatanMonitoringPosthd->diastole_post ?? '' }}">
                                                                 </div>
                                                             </div>
@@ -1819,10 +2165,12 @@
 
                                                 <!-- Nadi (Per Menit) -->
                                                 <div class="row mb-3">
-                                                    <label for="nadi_post" class="col-sm-2 col-form-label text-end">Nadi (Per Menit)</label>
+                                                    <label for="nadi_post" class="col-sm-2 col-form-label text-end">Nadi
+                                                        (Per Menit)</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
-                                                            <input type="number" class="form-control" id="nadi_post" name="nadi_post"
+                                                            <input type="number" class="form-control" id="nadi_post"
+                                                                name="nadi_post"
                                                                 value="{{ $asesmen->keperawatanMonitoringPosthd->nadi_post ?? '' }}">
                                                             <span class="input-group-text">x/mnt</span>
                                                         </div>
@@ -1831,10 +2179,12 @@
 
                                                 <!-- Nafas (Per Menit) -->
                                                 <div class="row mb-3">
-                                                    <label for="nafas_post" class="col-sm-2 col-form-label text-end">Nafas (Per Menit)</label>
+                                                    <label for="nafas_post"
+                                                        class="col-sm-2 col-form-label text-end">Nafas (Per Menit)</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
-                                                            <input type="number" class="form-control" id="nafas_post" name="nafas_post"
+                                                            <input type="number" class="form-control" id="nafas_post"
+                                                                name="nafas_post"
                                                                 value="{{ $asesmen->keperawatanMonitoringPosthd->nafas_post ?? '' }}">
                                                             <span class="input-group-text">x/mnt</span>
                                                         </div>
@@ -1843,10 +2193,12 @@
 
                                                 <!-- Suhu (C) -->
                                                 <div class="row mb-3">
-                                                    <label for="suhu_post" class="col-sm-2 col-form-label text-end">Suhu (C)</label>
+                                                    <label for="suhu_post" class="col-sm-2 col-form-label text-end">Suhu
+                                                        (C)</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
-                                                            <input type="number" class="form-control" id="suhu_post" name="suhu_post"
+                                                            <input type="number" class="form-control" id="suhu_post"
+                                                                name="suhu_post"
                                                                 value="{{ $asesmen->keperawatanMonitoringPosthd->suhu_post ?? '' }}">
                                                             <span class="input-group-text">°C</span>
                                                         </div>
@@ -1855,13 +2207,16 @@
 
                                                 <!-- Pemantauan Cairan Intake -->
                                                 <div class="row mb-3">
-                                                    <label for="pemantauan_cairan_intake_post" class="col-sm-2 col-form-label text-end">Pemantauan Cairan Intake</label>
+                                                    <label for="pemantauan_cairan_intake_post"
+                                                        class="col-sm-2 col-form-label text-end">Pemantauan Cairan
+                                                        Intake</label>
                                                     <div class="col-sm-10">
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">NaCl</span>
-                                                                    <input type="number" class="form-control" id="nacl_post" name="nacl_post"
+                                                                    <input type="number" class="form-control"
+                                                                        id="nacl_post" name="nacl_post"
                                                                         value="{{ $asesmen->keperawatanMonitoringPosthd->nacl_post ?? '' }}">
                                                                     <span class="input-group-text">ml</span>
                                                                 </div>
@@ -1869,7 +2224,8 @@
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">Minum</span>
-                                                                    <input type="number" class="form-control" id="minum_post" name="minum_post"
+                                                                    <input type="number" class="form-control"
+                                                                        id="minum_post" name="minum_post"
                                                                         value="{{ $asesmen->keperawatanMonitoringPosthd->minum_post ?? '' }}">
                                                                     <span class="input-group-text">ml</span>
                                                                 </div>
@@ -1879,7 +2235,8 @@
                                                             <div class="col-12">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">Lain-Lain</span>
-                                                                    <input type="number" class="form-control" id="intake_lain_post" name="intake_lain_post"
+                                                                    <input type="number" class="form-control"
+                                                                        id="intake_lain_post" name="intake_lain_post"
                                                                         value="{{ $asesmen->keperawatanMonitoringPosthd->intake_lain_post ?? '' }}">
                                                                     <span class="input-group-text">ml</span>
                                                                 </div>
@@ -1890,10 +2247,13 @@
 
                                                 <!-- Pemantauan Cairan Output -->
                                                 <div class="row mb-3">
-                                                    <label for="pemantauan_cairan_output_post" class="col-sm-2 col-form-label text-end">Pemantauan Cairan Output</label>
+                                                    <label for="pemantauan_cairan_output_post"
+                                                        class="col-sm-2 col-form-label text-end">Pemantauan Cairan
+                                                        Output</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
-                                                            <input type="number" class="form-control" id="output_post" name="output_post"
+                                                            <input type="number" class="form-control"
+                                                                id="output_post" name="output_post"
                                                                 value="{{ $asesmen->keperawatanMonitoringPosthd->output_post ?? '' }}">
                                                             <span class="input-group-text">ml</span>
                                                         </div>
@@ -1943,9 +2303,11 @@
 
                                                 <!-- Keterangan SOAPIE -->
                                                 <div class="row mb-3">
-                                                    <label for="keterangan_soapie" class="col-sm-2 col-form-label text-end">Keterangan SOAPIE</label>
+                                                    <label for="keterangan_soapie"
+                                                        class="col-sm-2 col-form-label text-end">Keterangan SOAPIE</label>
                                                     <div class="col-sm-10">
-                                                        <textarea class="form-control" id="keterangan_soapie" name="keterangan_soapie" rows="3" placeholder="text">{{ $asesmen->keperawatanMonitoringPosthd->keterangan_soapie ?? '' }}</textarea>
+                                                        <textarea class="form-control" id="keterangan_soapie" name="keterangan_soapie" rows="3"
+                                                            placeholder="text">{{ $asesmen->keperawatanMonitoringPosthd->keterangan_soapie ?? '' }}</textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1956,11 +2318,12 @@
                                             <h5 class="section-title">11. Penyulit Selama HD</h5>
 
                                             <div class="row mb-3">
-                                                <label for="klinis" class="col-sm-2 col-form-label text-end">Klinis</label>
+                                                <label for="klinis"
+                                                    class="col-sm-2 col-form-label text-end">Klinis</label>
                                                 <div class="col-sm-10">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" id="klinis_display" readonly
-                                                            placeholder="pilih" data-bs-toggle="modal"
+                                                        <input type="text" class="form-control" id="klinis_display"
+                                                            readonly placeholder="pilih" data-bs-toggle="modal"
                                                             data-bs-target="#klinisModal">
                                                         <button class="btn btn-outline-secondary" type="button"
                                                             data-bs-toggle="modal" data-bs-target="#klinisModal">
@@ -1975,11 +2338,12 @@
                                             </div>
 
                                             <div class="row mb-3">
-                                                <label for="teknis" class="col-sm-2 col-form-label text-end">Teknis</label>
+                                                <label for="teknis"
+                                                    class="col-sm-2 col-form-label text-end">Teknis</label>
                                                 <div class="col-sm-10">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" id="teknis_display" readonly
-                                                            placeholder="pilih" data-bs-toggle="modal"
+                                                        <input type="text" class="form-control" id="teknis_display"
+                                                            readonly placeholder="pilih" data-bs-toggle="modal"
                                                             data-bs-target="#teknisModal">
                                                         <button class="btn btn-outline-secondary" type="button"
                                                             data-bs-toggle="modal" data-bs-target="#teknisModal">
@@ -1994,10 +2358,12 @@
                                             </div>
 
                                             <div class="row mb-3">
-                                                <label for="mesin" class="col-sm-2 col-form-label text-end">Mesin</label>
+                                                <label for="mesin"
+                                                    class="col-sm-2 col-form-label text-end">Mesin</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="mesin" name="mesin"
-                                                        placeholder="Freetext" value="{{ $asesmen->keperawatan->mesin ?? '' }}">
+                                                    <input type="text" class="form-control" id="mesin"
+                                                        name="mesin" placeholder="Freetext"
+                                                        value="{{ $asesmen->keperawatan->mesin ?? '' }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -2006,21 +2372,25 @@
                                             <h5 class="section-title">12. Disharge Planning</h5>
 
                                             <div class="row mb-3">
-                                                <label for="rencana_pulang" class="col-sm-2 col-form-label text-end">Rencana Pulang</label>
+                                                <label for="rencana_pulang"
+                                                    class="col-sm-2 col-form-label text-end">Rencana Pulang</label>
                                                 <div class="col-sm-10">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" id="rencana_pulang_display"
-                                                            readonly placeholder="Pemulangan Asupan Cairan"
+                                                        <input type="text" class="form-control"
+                                                            id="rencana_pulang_display" readonly
+                                                            placeholder="Pemulangan Asupan Cairan"
                                                             data-bs-toggle="modal" data-bs-target="#rencanaPulangModal">
                                                         <button class="btn btn-outline-secondary" type="button"
                                                             data-bs-toggle="modal" data-bs-target="#rencanaPulangModal">
                                                             <i class="fas fa-list"></i>
                                                         </button>
                                                     </div>
-                                                    <div id="rencana_pulang_selected_items" class="mt-2 small text-muted">
+                                                    <div id="rencana_pulang_selected_items"
+                                                        class="mt-2 small text-muted">
                                                     </div>
                                                     <!-- Hidden input untuk menyimpan nilai yang dipilih -->
-                                                    <input type="hidden" id="rencana_pulang_values" name="rencana_pulang_values"
+                                                    <input type="hidden" id="rencana_pulang_values"
+                                                        name="rencana_pulang_values"
                                                         value="{{ $asesmen->keperawatan->rencana_pulang_values ?? '[]' }}">
                                                 </div>
                                             </div>
@@ -2030,29 +2400,23 @@
                                             <h5 class="fw-semibold mb-4">14. Diagnosis</h5>
 
                                             @php
-                                            // Parse existing diagnosis data from database
-                                            $diagnosisBanding =
-                                            !empty($asesmen->keperawatan->diagnosis_banding)
-                                            ? json_decode(
-                                            $asesmen->keperawatan->diagnosis_banding,
-                                            true
-                                            )
-                                            : [];
-                                            $diagnosisKerja =
-                                            !empty($asesmen->keperawatan->diagnosis_kerja)
-                                            ? json_decode(
-                                            $asesmen->keperawatan->diagnosis_kerja,
-                                            true
-                                            )
-                                            : [];
+                                                // Parse existing diagnosis data from database
+                                                $diagnosisBanding = !empty($asesmen->keperawatan->diagnosis_banding)
+                                                    ? json_decode($asesmen->keperawatan->diagnosis_banding, true)
+                                                    : [];
+                                                $diagnosisKerja = !empty($asesmen->keperawatan->diagnosis_kerja)
+                                                    ? json_decode($asesmen->keperawatan->diagnosis_kerja, true)
+                                                    : [];
                                             @endphp
 
                                             <!-- Diagnosis Banding -->
                                             <div class="mb-4">
                                                 <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
-                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk
+                                                    mencari
                                                     diagnosis banding,
-                                                    apabila tidak ada, Pilih tanda tambah untuk menambah keterangan diagnosis
+                                                    apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
+                                                    diagnosis
                                                     banding yang tidak ditemukan.</small>
 
                                                 <div class="input-group mb-3">
@@ -2067,7 +2431,8 @@
                                                     </span>
                                                 </div>
 
-                                                <div id="diagnosis-banding-list" class="diagnosis-list bg-light p-3 rounded">
+                                                <div id="diagnosis-banding-list"
+                                                    class="diagnosis-list bg-light p-3 rounded">
                                                     <!-- Existing diagnosis will be loaded here -->
                                                 </div>
 
@@ -2079,9 +2444,11 @@
                                             <!-- Diagnosis Kerja -->
                                             <div class="mb-4">
                                                 <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
-                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk
+                                                    mencari
                                                     diagnosis kerja,
-                                                    apabila tidak ada, Pilih tanda tambah untuk menambah keterangan diagnosis
+                                                    apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
+                                                    diagnosis
                                                     kerja yang tidak ditemukan.</small>
 
                                                 <div class="input-group mb-3">
@@ -2096,7 +2463,8 @@
                                                     </span>
                                                 </div>
 
-                                                <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
+                                                <div id="diagnosis-kerja-list"
+                                                    class="diagnosis-list bg-light p-3 rounded">
                                                     <!-- Existing diagnosis will be loaded here -->
                                                 </div>
 
@@ -2110,33 +2478,32 @@
                                             <h5 class="fw-semibold mb-4">15. Implementasi</h5>
 
                                             @php
-                                            // Parse existing implementation data
-                                            $implementationData = [
-                                            'observasi' => !empty($asesmen->keperawatan->observasi)
-                                            ? json_decode($asesmen->keperawatan->observasi, true) :
-                                            [],
-                                            'terapeutik' =>
-                                            !empty($asesmen->keperawatan->terapeutik)
-                                            ? json_decode($asesmen->keperawatan->terapeutik, true) :
-                                            [],
-                                            'edukasi' => !empty($asesmen->keperawatan->edukasi)
-                                            ? json_decode($asesmen->keperawatan->edukasi, true) :
-                                            [],
-                                            'kolaborasi' =>
-                                            !empty($asesmen->keperawatan->kolaborasi)
-                                            ? json_decode($asesmen->keperawatan->kolaborasi, true) :
-                                            [],
-                                            'prognosis' => !empty($asesmen->keperawatan->prognosis)
-                                            ? json_decode($asesmen->keperawatan->prognosis, true) :
-                                            []
-                                            ];
+                                                // Parse existing implementation data
+                                                $implementationData = [
+                                                    'observasi' => !empty($asesmen->keperawatan->observasi)
+                                                        ? json_decode($asesmen->keperawatan->observasi, true)
+                                                        : [],
+                                                    'terapeutik' => !empty($asesmen->keperawatan->terapeutik)
+                                                        ? json_decode($asesmen->keperawatan->terapeutik, true)
+                                                        : [],
+                                                    'edukasi' => !empty($asesmen->keperawatan->edukasi)
+                                                        ? json_decode($asesmen->keperawatan->edukasi, true)
+                                                        : [],
+                                                    'kolaborasi' => !empty($asesmen->keperawatan->kolaborasi)
+                                                        ? json_decode($asesmen->keperawatan->kolaborasi, true)
+                                                        : [],
+                                                    'prognosis' => !empty($asesmen->keperawatan->prognosis)
+                                                        ? json_decode($asesmen->keperawatan->prognosis, true)
+                                                        : [],
+                                                ];
                                             @endphp
 
                                             <!-- Rencana Penatalaksanaan dan Pengobatan -->
                                             <div class="mb-4">
                                                 <label class="text-primary fw-semibold">Rencana Penatalaksanaan dan
                                                     Pengobatan</label>
-                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk
+                                                    mencari
                                                     rencana, apabila tidak ada,
                                                     Pilih tanda tambah untuk menambah keterangan rencana yang tidak
                                                     ditemukan.</small>
@@ -2156,7 +2523,8 @@
                                                         <i class="bi bi-plus-circle text-primary"></i>
                                                     </span>
                                                 </div>
-                                                <div id="observasi-list" class="list-group mb-2 mt-2 bg-light p-3 rounded">
+                                                <div id="observasi-list"
+                                                    class="list-group mb-2 mt-2 bg-light p-3 rounded">
                                                     <!-- Items will be added here dynamically -->
                                                 </div>
                                                 <input type="hidden" id="observasi" name="observasi"
@@ -2177,7 +2545,8 @@
                                                         <i class="bi bi-plus-circle text-primary"></i>
                                                     </span>
                                                 </div>
-                                                <div id="terapeutik-list" class="list-group mb-2 mt-2 bg-light p-3 rounded">
+                                                <div id="terapeutik-list"
+                                                    class="list-group mb-2 mt-2 bg-light p-3 rounded">
                                                     <!-- Items will be added here dynamically -->
                                                 </div>
                                                 <input type="hidden" id="terapeutik" name="terapeutik"
@@ -2198,7 +2567,8 @@
                                                         <i class="bi bi-plus-circle text-primary"></i>
                                                     </span>
                                                 </div>
-                                                <div id="edukasi-list" class="list-group mb-2 mt-2 bg-light p-3 rounded">
+                                                <div id="edukasi-list"
+                                                    class="list-group mb-2 mt-2 bg-light p-3 rounded">
                                                     <!-- Items will be added here dynamically -->
                                                 </div>
                                                 <input type="hidden" id="edukasi" name="edukasi"
@@ -2219,7 +2589,8 @@
                                                         <i class="bi bi-plus-circle text-primary"></i>
                                                     </span>
                                                 </div>
-                                                <div id="kolaborasi-list" class="list-group mb-2 mt-2 bg-light p-3 rounded">
+                                                <div id="kolaborasi-list"
+                                                    class="list-group mb-2 mt-2 bg-light p-3 rounded">
                                                     <!-- Items will be added here dynamically -->
                                                 </div>
                                                 <input type="hidden" id="kolaborasi" name="kolaborasi"
@@ -2229,9 +2600,11 @@
                                             <!-- Prognosis Section -->
                                             <div class="mb-4">
                                                 <label class="text-primary fw-semibold">Prognosis</label>
-                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk
+                                                    mencari
                                                     Prognosis,
-                                                    apabila tidak ada, Pilih tanda tambah untuk menambah keterangan Prognosis
+                                                    apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
+                                                    Prognosis
                                                     yang tidak ditemukan.</small>
                                                 <div class="input-group mt-2">
                                                     <span class="input-group-text bg-white border-end-0">
@@ -2244,7 +2617,8 @@
                                                         <i class="bi bi-plus-circle text-primary"></i>
                                                     </span>
                                                 </div>
-                                                <div id="prognosis-list" class="list-group mb-2 mt-2 bg-light p-3 rounded">
+                                                <div id="prognosis-list"
+                                                    class="list-group mb-2 mt-2 bg-light p-3 rounded">
                                                     <!-- Items will be added here dynamically -->
                                                 </div>
                                                 <input type="hidden" id="prognosis" name="prognosis"
@@ -2291,15 +2665,18 @@
                                             <!-- E-Signature Perawat Pemeriksa Akses Vaskular (Single) -->
                                             <div class="row mb-4">
                                                 <div class="col-md-3">
-                                                    <label class="form-label">E-Signature Nama Perawat Pemeriksa Akses Vaskular</label>
+                                                    <label class="form-label">E-Signature Nama Perawat Pemeriksa Akses
+                                                        Vaskular</label>
                                                 </div>
                                                 <div class="col-md-9">
                                                     <div class="row">
                                                         <div class="col-md-8">
-                                                            <select name="perawat_pemeriksa" id="perawat-pemeriksa" class="form-select select2">
+                                                            <select name="perawat_pemeriksa" id="perawat-pemeriksa"
+                                                                class="form-select select2">
                                                                 <option value="">--Pilih--</option>
                                                                 @foreach ($perawat as $prwt)
-                                                                    <option value="{{ $prwt->kd_karyawan }}" {{ ($asesmen->keperawatan->perawat_pemeriksa ?? '') == $prwt->kd_karyawan ? 'selected' : '' }}>
+                                                                    <option value="{{ $prwt->kd_karyawan }}"
+                                                                        {{ ($asesmen->keperawatan->perawat_pemeriksa ?? '') == $prwt->kd_karyawan ? 'selected' : '' }}>
                                                                         {{ "$prwt->gelar_depan $prwt->nama $prwt->gelar_belakang" }}
                                                                     </option>
                                                                 @endforeach
@@ -2316,7 +2693,8 @@
                                             <!-- E-Signature Perawat Yang Bertugas (Multiple) -->
                                             <div class="row mb-4">
                                                 <div class="col-md-3">
-                                                    <label class="form-label">E-Signature Nama Perawat Yang Bertugas</label>
+                                                    <label class="form-label">E-Signature Nama Perawat Yang
+                                                        Bertugas</label>
                                                 </div>
                                                 <div class="col-md-9">
                                                     <div class="row mb-3">
@@ -2324,7 +2702,7 @@
                                                             <select id="perawat-selector" class="form-select select2">
                                                                 <option value="">--Pilih Perawat--</option>
                                                                 @foreach ($perawat as $prwt)
-                                                                    <option value="{{ $prwt->kd_karyawan }}" 
+                                                                    <option value="{{ $prwt->kd_karyawan }}"
                                                                             data-nama="{{ $prwt->gelar_depan }} {{ $prwt->nama }} {{ $prwt->gelar_belakang }}">
                                                                         {{ "$prwt->gelar_depan $prwt->nama $prwt->gelar_belakang" }}
                                                                     </option>
@@ -2390,7 +2768,8 @@
     </div>
 
     <!-- Modal Tambah Obat Pasien -->
-    <div class="modal fade" id="modalTambahObat" tabindex="-1" aria-labelledby="modalTambahObatLabel" aria-hidden="true">
+    <div class="modal fade" id="modalTambahObat" tabindex="-1" aria-labelledby="modalTambahObatLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -2468,7 +2847,8 @@
                         <label class="form-check-label" for="masalah_akses">Masalah akses</label>
                     </div>
                     <div class="form-check mb-2">
-                        <input class="form-check-input teknis-option" type="checkbox" id="clotting" value="Clotting">
+                        <input class="form-check-input teknis-option" type="checkbox" id="clotting"
+                            value="Clotting">
                         <label class="form-check-label" for="clotting">Clotting</label>
                     </div>
                     <div class="form-check mb-2">
@@ -2482,7 +2862,8 @@
                         <label class="form-check-label" for="emboli_udara">Emboli udara</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input teknis-option" type="checkbox" id="lainnya" value="Lainnya">
+                        <input class="form-check-input teknis-option" type="checkbox" id="lainnya"
+                            value="Lainnya">
                         <label class="form-check-label" for="lainnya">Lainnya</label>
                     </div>
                 </div>
@@ -2505,7 +2886,8 @@
                 <div class="modal-body">
                     <div class="bg-light p-3 rounded">
                         <div class="form-check mb-2">
-                            <input class="form-check-input klinis-option" type="checkbox" id="hipotensi" value="Hipotensi">
+                            <input class="form-check-input klinis-option" type="checkbox" id="hipotensi"
+                                value="Hipotensi">
                             <label class="form-check-label" for="hipotensi">Hipotensi</label>
                         </div>
                         <div class="form-check mb-2">
@@ -2529,7 +2911,8 @@
                             <label class="form-check-label" for="perdarahan">Perdarahan</label>
                         </div>
                         <div class="form-check mb-2">
-                            <input class="form-check-input klinis-option" type="checkbox" id="nyeri" value="Nyeri">
+                            <input class="form-check-input klinis-option" type="checkbox" id="nyeri"
+                                value="Nyeri">
                             <label class="form-check-label" for="nyeri">Nyeri</label>
                         </div>
                     </div>
@@ -2572,7 +2955,8 @@
                                 <div>
                                     <div class="form-check">
                                         <input class="form-check-input rencana-pulang-option" type="checkbox"
-                                            id="pembatasan_asupan_tinggi_kalium" value="Pembatasan Asupan Tinggi Kalium">
+                                            id="pembatasan_asupan_tinggi_kalium"
+                                            value="Pembatasan Asupan Tinggi Kalium">
                                         <label class="form-check-label" for="pembatasan_asupan_tinggi_kalium">Pembatasan
                                             Asupan Tinggi Kalium</label>
                                     </div>
@@ -2601,6 +2985,4 @@
             </div>
         </div>
     </div>
-
 @endsection
-

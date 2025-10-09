@@ -10,7 +10,7 @@
         </div>
 
         <div class="col-md-9">
-            @include('unit-pelayanan.hemodialisa.component.navigation')
+            @include('components.navigation-hemodialisa')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
@@ -192,16 +192,18 @@
 
         function editData(id) {
             // Redirect ke halaman edit
-            window.location.href = `{{ route('hemodialisa.pelayanan.berat-badan-kering.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}/${id}/edit`;
+            window.location.href =
+                `{{ route('hemodialisa.pelayanan.berat-badan-kering.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}/${id}/edit`;
         }
 
         function confirmDelete(id) {
-        if (confirm('Yakin ingin menghapus data ini?')) {
-            const form = document.getElementById('deleteForm');
-            form.action = `{{ route('hemodialisa.pelayanan.berat-badan-kering.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}/${id}`;
-            form.submit();
+            if (confirm('Yakin ingin menghapus data ini?')) {
+                const form = document.getElementById('deleteForm');
+                form.action =
+                    `{{ route('hemodialisa.pelayanan.berat-badan-kering.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}/${id}`;
+                form.submit();
+            }
         }
-    }
 
         // Auto dismiss alerts
         setTimeout(function() {
