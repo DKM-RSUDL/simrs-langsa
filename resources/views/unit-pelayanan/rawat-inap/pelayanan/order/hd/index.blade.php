@@ -1,42 +1,25 @@
 @extends('layouts.administrator.master')
 
 @section('content')
-    @push('css')
-        <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
-        <style>
-            .header-background {
-                height: 100%;
-                background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-            }
-        </style>
-    @endpush
-
     <div class="row">
         <div class="col-md-3">
             @include('components.patient-card')
         </div>
 
         <div class="col-md-9">
-            {{-- <div class="text-center mt-1 mb-2">
-                <h5 class="text-secondary fw-bold">Transfer Pasien Ke Rawat Inap</h5>
-            </div>
+            <x-content-card>
+                <x-button-previous />
 
-            <hr> --}}
-
-            <div class="form-section">
+                @include('components.page-header', [
+                    'title' => 'Serah Terima / Order HD',
+                    'description' =>
+                        'Order pelayanan Hemodialisa (HD) pasien rawat inap dengan mengisi formulir di bawah ini.',
+                ])
 
                 <form
-                    action="{{ route('transfer-rwi.store', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                    action="{{ route('rawat-inap.order-hd.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
                     method="post">
                     @csrf
-
-                    <div class="row mb-5">
-                        <div class="col-12">
-                            <div class="w-100 p-3 bg-light text-center border border-4">
-                                <p class="m-0 fw-bold fs-4">Serah Terima / Order HD</p>
-                            </div>
-                        </div>
-                    </div>
 
                     {{-- START : HANDOVER --}}
                     <div class="row">
@@ -87,13 +70,11 @@
                                             {{ auth()->user()->karyawan->gelar_depan . ' ' . str()->title(auth()->user()->karyawan->nama) . ' ' . auth()->user()->karyawan->gelar_belakang }}
                                         </option>
 
-                                        {{-- @foreach ($petugasIGD as $item)
-                                            @if ($item->kd_karyawan != auth()->user()->kd_karyawan)
-                                                <option value="{{ $item->kd_karyawan }}">
-                                                    {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' . $item->gelar_belakang }}
-                                                </option>
-                                            @endif
-                                        @endforeach --}}
+                                        @foreach ($petugas as $item)
+                                            <option value="{{ $item->kd_karyawan }}">
+                                                {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' . $item->gelar_belakang }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
 
@@ -116,181 +97,45 @@
 
                     <div class="row mt-3">
                         <div class="col-12 text-end">
-                            <button type="submit" class="btn btn-primary">Transfer</button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <span class="normal-text">Order</span>
+                                <span class="spinner d-none">
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    Processing...
+                                </span>
+                            </button>
                         </div>
                     </div>
                 </form>
 
-            </div>
+            </x-content-card>
+
         </div>
     </div>
 @endsection
 
 @push('js')
     <script>
-        $('#kd_spesial').change(function(e) {
-            let $this = $(this);
-            let kdSpesial = $this.val();
+        $('form').on('submit', function() {
+            var $btn = $('#submitBtn');
+            var $normalText = $btn.find('.normal-text');
+            var $spinner = $btn.find('.spinner');
 
-            $.ajax({
-                type: "post",
-                url: "{{ route('transfer-rwi.get-dokter-spesial-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    kd_spesial: kdSpesial
-                },
-                dataType: "json",
-                success: function(res) {
-                    let status = res.status;
-                    let msg = res.message;
-                    let data = res.data;
+            // Disable the button
+            $btn.prop('disabled', true);
 
-                    if (status == 'error') {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'error',
-                            text: msg
-                        });
+            // Hide normal text, show spinner
+            $normalText.addClass('d-none');
+            $spinner.removeClass('d-none');
 
-                        return false;
-                    }
+            // Enable button after 30 seconds (failsafe)
+            // setTimeout(function() {
+            //     $btn.prop('disabled', false);
+            //     $normalText.removeClass('d-none');
+            //     $spinner.addClass('d-none');
+            // }, 30000);
 
-                    $('#kd_dokter').html(data.dokterOption);
-                    $('#kd_kelas').html(data.kelasOption);
-                },
-                error: function() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'error',
-                        text: 'Dokter dan Kelas gagal di cari !'
-                    });
-                }
-            });
+            return true;
         });
-
-        $('#kd_kelas').change(function(e) {
-            let $this = $(this);
-            let kdKelas = $this.val();
-
-            $.ajax({
-                type: "post",
-                url: "{{ route('transfer-rwi.get-ruang-kelas-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    kd_kelas: kdKelas
-                },
-                dataType: "json",
-                success: function(res) {
-                    let status = res.status;
-                    let msg = res.message;
-                    let data = res.data;
-
-                    if (status == 'error') {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'error',
-                            text: msg
-                        });
-
-                        return false;
-                    }
-
-                    $('#kd_unit').html(data);
-                },
-                error: function() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'error',
-                        text: 'Ruangan gagal di cari !'
-                    });
-                }
-            });
-        });
-
-
-        $('#kd_unit').change(function(e) {
-            let $this = $(this);
-            let kdUnit = $this.val();
-
-            $.ajax({
-                type: "post",
-                url: "{{ route('transfer-rwi.get-kamar-ruang-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    kd_unit: kdUnit
-                },
-                dataType: "json",
-                success: function(res) {
-                    let status = res.status;
-                    let msg = res.message;
-                    let data = res.data;
-
-                    if (status == 'error') {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'error',
-                            text: msg
-                        });
-
-                        return false;
-                    }
-
-                    $('#no_kamar').html(data);
-                },
-                error: function() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'error',
-                        text: 'Kamar gagal di cari !'
-                    });
-                }
-            });
-        });
-
-
-        $('#no_kamar').change(function(e) {
-            let $this = $(this);
-            let noKamar = $this.val();
-
-            $.ajax({
-                type: "post",
-                url: "{{ route('transfer-rwi.get-sisa-bed-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    no_kamar: noKamar
-                },
-                dataType: "json",
-                success: function(res) {
-                    let status = res.status;
-                    let msg = res.message;
-                    let data = res.data;
-
-                    if (status == 'error') {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'error',
-                            text: msg
-                        });
-
-                        return false;
-                    }
-
-                    $('#sisa_bed').val(data);
-                },
-                error: function() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'error',
-                        text: 'Sisa Bed gagal di cari !'
-                    });
-                }
-            });
-        });
-
-        @cannot('is-admin')
-            $('#petugas_menyerahkan').on('mousedown focusin touchstart', function(e) {
-                e.preventDefault();
-            });
-        @endcannot
     </script>
 @endpush

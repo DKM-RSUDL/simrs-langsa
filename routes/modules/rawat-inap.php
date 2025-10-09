@@ -1389,6 +1389,7 @@ Route::prefix('rawat-inap')->group(function () {
                     Route::name('.order-hd')->group(function () {
                         Route::controller(OrderHemodialisaController::class)->group(function () {
                             Route::get('/', 'index')->name('.index');
+                            Route::post('/', 'store')->name('.store');
                         });
                     });
                 });

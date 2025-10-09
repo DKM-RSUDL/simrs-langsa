@@ -13,4 +13,8 @@ class RmeHdAsesmenKeperawatanMonitoringIntrahd extends Model
     public $timestamps = false;
 
     protected $guarded = ['id'];
+
+    protected $casts = [
+        // 'observasi_data' => 'array'
+    ];
 }
