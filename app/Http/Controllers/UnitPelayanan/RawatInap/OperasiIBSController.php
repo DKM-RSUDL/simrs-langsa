@@ -3,81 +3,39 @@
 namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
-use App\Models\Kunjungan;
 use App\Models\RawatInap\OperasiIBS;
+use App\Services\BaseService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 
 class OperasiIBSController extends Controller
 {
+    private $baseService;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->baseService = new BaseService();
     }
 
     public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $kd_unit)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
 
-        $informedConsent = new Collection();
-        $operasiIbs = new Collection();
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
-        try {
-            if (class_exists(\App\Models\InformedConsent::class) && Schema::hasTable((new \App\Models\InformedConsent)->getTable())) {
-                $informedConsent = \App\Models\InformedConsent::where('kd_pasien', $kd_pasien)
-                    ->where('kd_unit', $kd_unit)
-                    ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tgl_masuk)))
-                    ->where('urut_masuk', $urut_masuk)
-                    ->get();
-            }
-        } catch (\Exception $e) {
-            $informedConsent = new Collection();
-        }
-
-        try {
-            if (class_exists(OperasiIBS::class) && Schema::hasTable((new OperasiIBS)->getTable())) {
-                $operasiIbs = OperasiIBS::where('kd_pasien', $kd_pasien)
-                    ->where('kd_unit', $kd_unit)
-                    ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tgl_masuk)))
-                    ->where('urut_masuk', $urut_masuk)
-                    ->get();
-            }
-        } catch (\Exception $e) {
-            $operasiIbs = new Collection();
-        }
+        $operasiIbs = OperasiIBS::with(['produk:kd_produk,deskripsi', 'kamar:no_kamar,nama_kamar', 'dokter:kd_dokter,nama', 'jenisOperasi', 'spesialisasi:kd_spesial,spesialisasi', 'subSpesialisasi:kd_sub_spc,sub_spesialisasi', 'pasien:kd_pasien,nama'])
+            ->where('kd_kasir', $dataMedis->kd_kasir)
+            ->where('no_transaksi', $dataMedis->no_transaksi)
+            ->get();
 
         return view('unit-pelayanan.rawat-inap.pelayanan.operasi-ibs.index', compact('dataMedis', 'operasiIbs'));
     }
 
     public function create($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $kd_unit)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         // HANYA ambil data yang TIDAK ditangani AJAX
         $kamarOperasi = DB::table('kamar')
@@ -116,43 +74,60 @@ class OperasiIBSController extends Controller
 
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $request->validate([
-            'tanggal_registrasi' => 'required|date',
-            'tanggal_jadwal' => 'required|date',
-            'jam_operasi' => 'required',
-            'jenis_tindakan' => 'required|string',
-            'jenis_operasi' => 'required|string',
-            'spesialisasi' => 'required|string',
-            'sub_spesialisasi' => 'required|string',
-            'kamar_operasi' => 'required|string',
-            'dokter' => 'required|string',
-            'diagnosa_medis' => 'required|string|max:500',
-            'catatan' => 'nullable|string|max:1000',
-        ]);
+        DB::beginTransaction();
+        try {
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
-        OperasiIBS::create([
-            'Tgl_Op' => $request->input('tanggal_registrasi'),
-            'Jam_Op' => $request->input('jam_operasi'),
-            'Kd_Unit' => $kd_unit,
-            'No_Kamar' => $request->input('kamar_operasi'),
-            'kd_Sub_Spc' => $request->input('sub_spesialisasi'),
-            'kd_Spc' => $request->input('spesialisasi'),
-            'kd_Jenis_Op' => $request->input('jenis_operasi'),
-            'kd_tindakan' => $request->input('jenis_tindakan'),
-            'Tgl_Jadwal' => $request->input('tanggal_jadwal'),
-            'Status' => 0,
-            'Kd_Produk' => $request->input('jenis_tindakan'),
-            'kd_pasien' => $kd_pasien,
-            'KD_UNIT_KAMAR' => $request->input('kamar_operasi'),
-            'KD_DOKTER' => $request->input('dokter'),
-            'BATAL' => 0,
-            'KD_USER' => Auth::id(),
-            'diagnosis' => $request->input('diagnosa_medis'),
-            'catatan' => $request->input('catatan'),
-        ]);
+            // dd($dataMedis);
 
-        return redirect()->route('unit-pelayanan.rawat-inap.operasi-ibs.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])
-            ->with('success', 'Data Operasi IBS berhasil disimpan.');
+            $request->validate([
+                'tanggal_registrasi' => 'required|date',
+                'tanggal_jadwal' => 'required|date',
+                'jam_operasi' => 'required',
+                'jenis_tindakan' => 'required|string',
+                'jenis_operasi' => 'required|string',
+                'spesialisasi' => 'required|string',
+                'sub_spesialisasi' => 'required|string',
+                'kamar_operasi' => 'required|string',
+                'dokter' => 'required|string',
+                'diagnosa_medis' => 'required|string|max:500',
+                'catatan' => 'nullable|string|max:1000',
+            ]);
+
+            OperasiIBS::create([
+                'tgl_op' => $request->input('tanggal_registrasi'),
+                'jam_op' => $request->input('jam_operasi'),
+                'tgl_jadwal' => $request->input('tanggal_jadwal'),
+                'kd_unit' => $kd_unit,
+                'no_kamar' => $request->input('kamar_operasi'),
+                'kd_unit_kamar' => $request->input('kamar_operasi'),
+                'kd_sub_spc' => $request->input('sub_spesialisasi'),
+                'kd_spc' => $request->input('spesialisasi'),
+                'kd_jenis_op' => $request->input('jenis_operasi'),
+                'status' => 0,
+                'kd_tindakan' => '',
+                'kd_produk' => $request->input('jenis_tindakan'),
+                'no_transaksi' => $dataMedis->no_transaksi,
+                'kd_kasir' => $dataMedis->kd_kasir,
+                'kd_pasien' => $kd_pasien,
+                'kd_unit_kamar' => $request->input('kamar_operasi'),
+                'kd_dokter' => $request->input('dokter'),
+                'batal' => 0,
+                'user_create' => Auth::id(),
+                'diagnosis' => $request->input('diagnosa_medis'),
+                'catatan' => $request->input('catatan'),
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('rawat-inap.operasi-ibs.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])
+                ->with('success', 'Data Operasi IBS berhasil disimpan.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
     public function productDetails($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
