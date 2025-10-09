@@ -250,37 +250,6 @@ class FarmasiController extends Controller
 
     public function searchObat(Request $request)
     {
-<<<<<<< HEAD
-        $search = $request->get('term');
-        
-
-        $obats = AptObat::join('APT_PRODUK', 'APT_OBAT.KD_PRD', '=', 'APT_PRODUK.KD_PRD')
-            ->join('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
-            ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
-                           FROM DATA_BATCH AS db
-                           WHERE TGL_MASUK = (
-                               SELECT MAX(TGL_MASUK)
-                               FROM DATA_BATCH
-                               WHERE KD_PRD = db.KD_PRD
-                           )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
-            ->where(function ($query) use ($search) {
-                // Optimize search conditions
-                $query->where('APT_OBAT.nama_obat', 'LIKE', $search.'%')
-                    ->orWhere('APT_OBAT.nama_obat', 'LIKE', '% '.$search.'%');
-            })
-            ->select(
-                'APT_OBAT.KD_PRD as id',
-                'APT_OBAT.nama_obat as text',
-                'latest_price.HRG_BELI_OBT as harga',
-                'APT_SATUAN.SATUAN as satuan'
-            )
-            ->groupBy('APT_OBAT.KD_PRD', 'APT_OBAT.nama_obat', 'latest_price.HRG_BELI_OBT', 'APT_SATUAN.SATUAN')
-            ->limit(10)
-            ->get();
-
-       
-        return response()->json($obats);
-=======
         $kdMilik  = 1;
         $limit    = 10;
         $term     = trim((string) $request->get('term', ''));
@@ -352,7 +321,6 @@ class FarmasiController extends Controller
         Cache::put($cacheKey, $rows, now()->addMinutes(5));
 
         return response()->json($rows);
->>>>>>> bd8ebdea40b646d00fbba9bf9fe0a91c95d43878
     }
 
     private function getRiwayatObat($kd_pasien)

@@ -324,15 +324,10 @@ class FarmasiController extends Controller
                 DB::raw('COALESCE(stok_depo.total_stok, 0) as stok'),
             ]);
 
-<<<<<<< HEAD
-        
-        return response()->json($obats);
-=======
         // Cache 5 menit
         Cache::put($cacheKey, $rows, now()->addMinutes(5));
 
         return response()->json($rows);
->>>>>>> bd8ebdea40b646d00fbba9bf9fe0a91c95d43878
     }
 
 

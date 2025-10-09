@@ -165,10 +165,6 @@ class FarmasiController extends Controller
 
     public function searchObat(Request $request)
     {
-<<<<<<< HEAD
-        $search = $request->get('term');
-       
-=======
         $kdMilik  = 1;
         $limit    = 10;
         $term     = trim((string) $request->get('term', ''));
@@ -184,7 +180,6 @@ class FarmasiController extends Controller
         if (Cache::has($cacheKey)) {
             return response()->json(Cache::get($cacheKey));
         }
->>>>>>> bd8ebdea40b646d00fbba9bf9fe0a91c95d43878
 
         // Subquery: latest price per KD_PRD (mengambil HRG_BELI_OBT dari TGL_MASUK terbaru)
         $latestPriceSub = DB::table('DATA_BATCH as db')
@@ -223,15 +218,10 @@ class FarmasiController extends Controller
                 DB::raw('COALESCE(stok_depo.total_stok, 0) as stok'),
             ]);
 
-<<<<<<< HEAD
-       
-        return response()->json($obats);
-=======
         // Cache 5 menit
         Cache::put($cacheKey, $rows, now()->addMinutes(5));
 
         return response()->json($rows);
->>>>>>> bd8ebdea40b646d00fbba9bf9fe0a91c95d43878
     }
 
     private function getRiwayatObat($kd_pasien)
