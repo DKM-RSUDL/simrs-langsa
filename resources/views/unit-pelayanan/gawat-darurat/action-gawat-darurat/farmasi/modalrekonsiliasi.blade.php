@@ -206,7 +206,9 @@
                 }
 
                 if (query.length < 2) {
-                    $('#obatListRekon').html('<div class="dropdown-item text-muted">Ketik minimal 2 karakter...</div>').show();
+                    $('#obatListRekon').html(
+                            '<div class="dropdown-item text-muted">Ketik minimal 2 karakter...</div>')
+                        .show();
                     return;
                 }
 
@@ -222,13 +224,16 @@
                     $.ajax({
                         url: '{{ route("farmasi.searchObat", ['kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk]) }}',
                         method: 'GET',
-                        data: { term: query },
+                        data: {
+                            term: query
+                        },
                         dataType: 'json',
                         success: function (data) {
                             let html = '';
                             if (data && data.length > 0) {
                                 data.forEach(function (obat) {
                                     html += `
+<<<<<<< HEAD
                                             <a href="#" class="dropdown-item py-2" 
                                             data-id="${obat.id || ''}" 
                                             data-harga="${obat.harga || ''}" 
@@ -238,14 +243,33 @@
                                                     <span class="badge bg-light text-dark">Satuan: ${obat.satuan || 'N/A'}</span>
                                                 </div>
                                             </a>`;
+=======
+                                        <a href="#" class="dropdown-item py-2"
+                                        data-id="${obat.id || ''}"
+                                        data-harga="${obat.harga || ''}"
+                                        data-satuan="${obat.satuan || ''}">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="fw-medium">${obat.text || 'Tidak ada nama'}</div>
+                                                <span class="badge bg-light text-dark">Satuan: ${obat.satuan || 'N/A'}</span>
+                                            </div>
+                                        </a>`;
+>>>>>>> bd8ebdea40b646d00fbba9bf9fe0a91c95d43878
                                 });
                             } else {
-                                html = '<div class="dropdown-item text-muted py-2">Tidak ada hasil yang ditemukan</div>';
+                                html =
+                                    '<div class="dropdown-item text-muted py-2">Tidak ada hasil yang ditemukan</div>';
                             }
                             $('#obatListRekon').html(html).show();
                         },
+<<<<<<< HEAD
                         error: function (xhr) {
                             $('#obatListRekon').html('<div class="dropdown-item text-danger py-2">Terjadi kesalahan saat mencari obat</div>').show();
+=======
+                        error: function(xhr) {
+                            $('#obatListRekon').html(
+                                '<div class="dropdown-item text-danger py-2">Terjadi kesalahan saat mencari obat</div>'
+                            ).show();
+>>>>>>> bd8ebdea40b646d00fbba9bf9fe0a91c95d43878
                         }
                     });
                 }, 300);
@@ -291,15 +315,15 @@
             // Submit form
             $('#btnSaveObat').on('click', function () {
                 const obatId = $('#selectedObatId').val();
-                if (!obatId) {
-                    iziToast.error({
-                        title: 'Error',
-                        message: 'Silakan pilih obat terlebih dahulu!',
-                        position: 'topRight'
-                    });
-                    $('#cariObatRekon').focus();
-                    return;
-                }
+                // if (!obatId) {
+                //     iziToast.error({
+                //         title: 'Error',
+                //         message: 'Silakan pilih obat terlebih dahulu!',
+                //         position: 'topRight'
+                //     });
+                //     $('#cariObatRekon').focus();
+                //     return;
+                // }
 
                 if ($('#rekonsiliasiForm')[0].checkValidity()) {
                     const $btn = $(this);
@@ -314,8 +338,15 @@
                         url: $('#rekonsiliasiForm').attr('action'),
                         method: 'POST',
                         data: $('#rekonsiliasiForm').serialize(),
+<<<<<<< HEAD
                         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                         success: function (response) {
+=======
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+>>>>>>> bd8ebdea40b646d00fbba9bf9fe0a91c95d43878
                             $btn.html(originalBtnText).prop('disabled', false);
                             $('#loadingOverlay').addClass('d-none'); // Sembunyikan overlay
 
@@ -343,7 +374,8 @@
 
                             let errorMessage = 'Terjadi kesalahan saat menyimpan data.';
                             if (xhr.responseJSON && xhr.responseJSON.errors) {
-                                errorMessage = Object.values(xhr.responseJSON.errors).flat().join('<br>');
+                                errorMessage = Object.values(xhr.responseJSON.errors).flat()
+                                    .join('<br>');
                             } else if (xhr.responseJSON && xhr.responseJSON.message) {
                                 errorMessage = xhr.responseJSON.message;
                             }

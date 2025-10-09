@@ -4,11 +4,11 @@
 @section('content')
     <div class="row">
         <div class="col-md-3">
-            @include('unit-pelayanan.hemodialisa.component.patient-card')
+            @include('components.patient-card-hemodialisa')
         </div>
 
         <div class="col-md-9">
-            @include('unit-pelayanan.hemodialisa.component.navigation')
+            @include('components.navigation-hemodialisa')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
@@ -23,12 +23,24 @@
                                             <!-- Select Option -->
                                             <div class="col-md-2">
                                                 <select class="form-select" id="SelectOption" aria-label="Pilih...">
-                                                    <option value="semua" {{ request('option') == 'semua' ? 'selected' : '' }}>Semua Episode</option>
-                                                    <option value="option1" {{ request('option') == 'option1' ? 'selected' : '' }}>Episode Sekarang</option>
-                                                    <option value="option2" {{ request('option') == 'option2' ? 'selected' : '' }}>1 Bulan</option>
-                                                    <option value="option3" {{ request('option') == 'option3' ? 'selected' : '' }}>3 Bulan</option>
-                                                    <option value="option4" {{ request('option') == 'option4' ? 'selected' : '' }}>6 Bulan</option>
-                                                    <option value="option5" {{ request('option') == 'option5' ? 'selected' : '' }}>9 Bulan</option>
+                                                    <option value="semua"
+                                                        {{ request('option') == 'semua' ? 'selected' : '' }}>Semua Episode
+                                                    </option>
+                                                    <option value="option1"
+                                                        {{ request('option') == 'option1' ? 'selected' : '' }}>Episode
+                                                        Sekarang</option>
+                                                    <option value="option2"
+                                                        {{ request('option') == 'option2' ? 'selected' : '' }}>1 Bulan
+                                                    </option>
+                                                    <option value="option3"
+                                                        {{ request('option') == 'option3' ? 'selected' : '' }}>3 Bulan
+                                                    </option>
+                                                    <option value="option4"
+                                                        {{ request('option') == 'option4' ? 'selected' : '' }}>6 Bulan
+                                                    </option>
+                                                    <option value="option5"
+                                                        {{ request('option') == 'option5' ? 'selected' : '' }}>9 Bulan
+                                                    </option>
                                                 </select>
                                             </div>
 
@@ -162,7 +174,7 @@
                                     </div>
 
                                     <!-- Pagination -->
-                                    @if($hdHasilEkg->hasPages())
+                                    @if ($hdHasilEkg->hasPages())
                                         <div class="d-flex justify-content-center mt-4">
                                             {{ $hdHasilEkg->links() }}
                                         </div>
@@ -180,7 +192,7 @@
 
 @push('js')
     <script>
-        document.getElementById('filterButton').addEventListener('click', function () {
+        document.getElementById('filterButton').addEventListener('click', function() {
             const selectOption = document.getElementById('SelectOption').value;
             const startDate = document.getElementById('start_date').value;
             const endDate = document.getElementById('end_date').value;
@@ -195,7 +207,7 @@
 
         // SweetAlert untuk konfirmasi hapus
         document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', function (e) {
+            button.addEventListener('click', function(e) {
                 e.preventDefault();
                 const id = this.getAttribute('data-id');
                 const form = document.getElementById(`deleteForm_${id}`);
@@ -232,7 +244,7 @@
         });
 
         // Auto-dismiss alerts after 5 seconds
-        setTimeout(function () {
+        setTimeout(function() {
             const alerts = document.querySelectorAll('.alert-success');
             alerts.forEach(alert => {
                 const bsAlert = new bootstrap.Alert(alert);

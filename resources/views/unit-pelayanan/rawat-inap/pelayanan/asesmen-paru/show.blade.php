@@ -1091,127 +1091,11 @@
                         </div>
                     </div>
 
-                    <!-- 8. Perencanaan Pulang Pasien -->
-                    <div class="section-separator mb-4">
-                        <h5 class="section-title">8. Perencanaan Pulang Pasien (Discharge Planning)</h5>
-                        <div class="card">
-                            <div class="card-body">
-                                @if ($asesmen->rmeAsesmenParuPerencanaanPulang)
-                                    @php $dischargePlanning = $asesmen->rmeAsesmenParuPerencanaanPulang; @endphp
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            {{-- <div class="mb-3">
-                                                <label class="form-label fw-bold">Diagnosis medis:</label>
-                                                <p class="form-control-plaintext border-bottom">
-                                                    {{ $dischargePlanning->diagnosis_medis ?? '-' }}
-                                                </p>
-                                            </div> --}}
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Usia lanjut (>60 th):</label>
-                                                <span
-                                                    class="badge {{ $dischargePlanning->usia_lanjut == '0' ? 'bg-success' : 'bg-secondary' }}">
-                                                    {{ $dischargePlanning->usia_lanjut == '0' ? 'Ya' : 'Tidak' }}
-                                                </span>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Hambatan mobilitas:</label>
-                                                <span
-                                                    class="badge {{ $dischargePlanning->hambatan_mobilisasi == '0' ? 'bg-success' : 'bg-secondary' }}">
-                                                    {{ $dischargePlanning->hambatan_mobilisasi == '0' ? 'Ya' : 'Tidak' }}
-                                                </span>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Membutuhkan pelayanan medis
-                                                    berkelanjutan:</label>
-                                                <span
-                                                    class="badge {{ $dischargePlanning->penggunaan_media_berkelanjutan == 'ya' ? 'bg-success' : 'bg-secondary' }}">
-                                                    {{ ucfirst($dischargePlanning->penggunaan_media_berkelanjutan ?? 'Tidak') }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Keteraturan dalam mengonsumsi obat dalam
-                                                    aktivitas harian:</label>
-                                                <span
-                                                    class="badge {{ $dischargePlanning->ketergantungan_aktivitas == 'ya' ? 'bg-success' : 'bg-secondary' }}">
-                                                    {{ ucfirst($dischargePlanning->ketergantungan_aktivitas ?? 'Tidak') }}
-                                                </span>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Rencana Pulang Khusus:</label>
-                                                <p class="form-control-plaintext border-bottom">
-                                                    {{ $dischargePlanning->rencana_pulang_khusus ?? '-' }}
-                                                </p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Rencana Lama Perawatan:</label>
-                                                <p class="form-control-plaintext border-bottom">
-                                                    {{ $dischargePlanning->rencana_lama_perawatan ?? '-' }}
-                                                </p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Rencana Tanggal Pulang:</label>
-                                                <p class="form-control-plaintext border-bottom">
-                                                    {{ $dischargePlanning->rencana_tgl_pulang ? date('d M Y', strtotime($dischargePlanning->rencana_tgl_pulang)) : '-' }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-4">
-                                        <label class="form-label fw-bold">KESIMPULAN:</label>
-                                        <div
-                                            class="alert {{ strpos(strtolower($dischargePlanning->kesimpulan_planing ?? ''), 'tidak membutuhkan') !== false ? 'alert-success' : 'alert-warning' }}">
-                                            {{ $dischargePlanning->kesimpulan_planing ?? 'Tidak ada kesimpulan' }}
-                                        </div>
-                                    </div>
-                                @else
-                                    <p class="text-muted">Data perencanaan pulang tidak tersedia</p>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- 9. Diagnosis -->
                     <div class="section-separator mb-4">
                         <h5 class="section-title">9. Diagnosis</h5>
                         <div class="card">
                             <div class="card-body">
-
-                                <div class="mb-4">
-                                    <label class="text-primary fw-semibold">Prognosis</label>
-
-                                    @php
-                                        $prognosisValue = null;
-                                        $prognosisId = null;
-
-                                        // Ambil ID prognosis yang tersimpan
-                                        if (isset($asesmen->rmeAsesmenParu)) {
-                                            $prognosisId =
-                                                $asesmen->rmeAsesmenParu->paru_prognosis ??
-                                                ($asesmen->rmeAsesmenParu->prognosis ??
-                                                    ($asesmen->rmeAsesmenParu->prognosis_id ?? null));
-                                        }
-
-                                        // Cari nilai prognosis berdasarkan ID
-                                        if ($prognosisId && isset($satsetPrognosis)) {
-                                            $selectedPrognosis = $satsetPrognosis
-                                                ->where('prognosis_id', $prognosisId)
-                                                ->first();
-                                            $prognosisValue = $selectedPrognosis->value ?? null;
-                                        }
-                                    @endphp
-
-                                    <div class="form-control bg-light"
-                                        style="min-height: 38px; display: flex; align-items: center;">
-                                        @if ($prognosisValue)
-                                            <span class="text-dark">{{ $prognosisValue }}</span>
-                                        @else
-                                            <span class="text-muted">Belum ada data prognosis</span>
-                                        @endif
-                                    </div>
-                                </div>
-
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
@@ -1325,6 +1209,124 @@
                                             </div>
                                         </div>
                                     </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-separator mb-4">
+                        <h5 class="section-title">9. Prognosis</h5>
+                        <div class="card">
+                            <div class="card-body">
+                                @php
+                                    $prognosisValue = null;
+                                    $prognosisId = null;
+
+                                    // Ambil ID prognosis yang tersimpan
+                                    if (isset($asesmen->rmeAsesmenParu)) {
+                                        $prognosisId =
+                                            $asesmen->rmeAsesmenParu->paru_prognosis ??
+                                            ($asesmen->rmeAsesmenParu->prognosis ??
+                                                ($asesmen->rmeAsesmenParu->prognosis_id ?? null));
+                                    }
+
+                                    // Cari nilai prognosis berdasarkan ID
+                                    if ($prognosisId && isset($satsetPrognosis)) {
+                                        $selectedPrognosis = $satsetPrognosis
+                                            ->where('prognosis_id', $prognosisId)
+                                            ->first();
+                                        $prognosisValue = $selectedPrognosis->value ?? null;
+                                    }
+                                @endphp
+
+                                <div class="form-control bg-light"
+                                    style="min-height: 38px; display: flex; align-items: center;">
+                                    @if ($prognosisValue)
+                                        <span class="text-dark">{{ $prognosisValue }}</span>
+                                    @else
+                                        <span class="text-muted">Belum ada data prognosis</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 8. Perencanaan Pulang Pasien -->
+                    <div class="section-separator mb-4">
+                        <h5 class="section-title">10. Perencanaan Pulang Pasien (Discharge Planning)</h5>
+                        <div class="card">
+                            <div class="card-body">
+                                @if ($asesmen->rmeAsesmenParuPerencanaanPulang)
+                                    @php $dischargePlanning = $asesmen->rmeAsesmenParuPerencanaanPulang; @endphp
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            {{-- <div class="mb-3">
+                                                <label class="form-label fw-bold">Diagnosis medis:</label>
+                                                <p class="form-control-plaintext border-bottom">
+                                                    {{ $dischargePlanning->diagnosis_medis ?? '-' }}
+                                                </p>
+                                            </div> --}}
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Usia lanjut (>60 th):</label>
+                                                <span
+                                                    class="badge {{ $dischargePlanning->usia_lanjut == '0' ? 'bg-success' : 'bg-secondary' }}">
+                                                    {{ $dischargePlanning->usia_lanjut == '0' ? 'Ya' : 'Tidak' }}
+                                                </span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Hambatan mobilitas:</label>
+                                                <span
+                                                    class="badge {{ $dischargePlanning->hambatan_mobilisasi == '0' ? 'bg-success' : 'bg-secondary' }}">
+                                                    {{ $dischargePlanning->hambatan_mobilisasi == '0' ? 'Ya' : 'Tidak' }}
+                                                </span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Membutuhkan pelayanan medis
+                                                    berkelanjutan:</label>
+                                                <span
+                                                    class="badge {{ $dischargePlanning->penggunaan_media_berkelanjutan == 'ya' ? 'bg-success' : 'bg-secondary' }}">
+                                                    {{ ucfirst($dischargePlanning->penggunaan_media_berkelanjutan ?? 'Tidak') }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Keteraturan dalam mengonsumsi obat dalam
+                                                    aktivitas harian:</label>
+                                                <span
+                                                    class="badge {{ $dischargePlanning->ketergantungan_aktivitas == 'ya' ? 'bg-success' : 'bg-secondary' }}">
+                                                    {{ ucfirst($dischargePlanning->ketergantungan_aktivitas ?? 'Tidak') }}
+                                                </span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Rencana Pulang Khusus:</label>
+                                                <p class="form-control-plaintext border-bottom">
+                                                    {{ $dischargePlanning->rencana_pulang_khusus ?? '-' }}
+                                                </p>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Rencana Lama Perawatan:</label>
+                                                <p class="form-control-plaintext border-bottom">
+                                                    {{ $dischargePlanning->rencana_lama_perawatan ?? '-' }}
+                                                </p>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Rencana Tanggal Pulang:</label>
+                                                <p class="form-control-plaintext border-bottom">
+                                                    {{ $dischargePlanning->rencana_tgl_pulang ? date('d M Y', strtotime($dischargePlanning->rencana_tgl_pulang)) : '-' }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <label class="form-label fw-bold">KESIMPULAN:</label>
+                                        <div
+                                            class="alert {{ strpos(strtolower($dischargePlanning->kesimpulan_planing ?? ''), 'tidak membutuhkan') !== false ? 'alert-success' : 'alert-warning' }}">
+                                            {{ $dischargePlanning->kesimpulan_planing ?? 'Tidak ada kesimpulan' }}
+                                        </div>
+                                    </div>
+                                @else
+                                    <p class="text-muted">Data perencanaan pulang tidak tersedia</p>
                                 @endif
                             </div>
                         </div>

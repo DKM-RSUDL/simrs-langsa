@@ -59,10 +59,11 @@ class RanapPermintaanDarahController extends Controller
         // $permintaanDarah = BdrsPermintaanDarah::orderBy('TGL_PENGIRIMAN', 'desc')->paginate(10);
         $permintaanDarah = BdrsPermintaanDarah::where('kd_pasien', $dataMedis->kd_pasien)
             // ->where('kd_unit', $dataMedis->kd_unit)
-            ->whereDate('tgl_masuk', '>=', date('Y-m-d', strtotime('-3 month', strtotime(date('Y-m-d')))))
+            ->whereDate('tgl_pengiriman', '>=', date('Y-m-d', strtotime('-3 month', strtotime(date('Y-m-d')))))
             // ->where('urut_masuk', $dataMedis->urut_masuk)
             ->orderBy('TGL_PENGIRIMAN', 'desc')
             ->paginate(10);
+
 
         return view('unit-pelayanan.rawat-inap.pelayanan.permintaan-darah.index', compact(
             'dataMedis',

@@ -47,7 +47,8 @@
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Tanggal Dan Jam Masuk</label>
-                                        <p>{{ Carbon\Carbon::parse($asesmenPsikiatri->waktu_masuk)->format('d/m/Y H:i') }}</p>
+                                        <p>{{ Carbon\Carbon::parse($asesmenPsikiatri->waktu_masuk)->format('d/m/Y H:i') }}
+                                        </p>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Kondisi Masuk</label>
@@ -88,7 +89,8 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Tekanan Darah</label>
-                                        <p>{{ $asesmenPsikiatri->tekanan_darah_sistole ?: '-' }}/{{ $asesmenPsikiatri->tekanan_darah_diastole ?: '-' }} mmHg</p>
+                                        <p>{{ $asesmenPsikiatri->tekanan_darah_sistole ?: '-' }}/{{ $asesmenPsikiatri->tekanan_darah_diastole ?: '-' }}
+                                            mmHg</p>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Suhu</label>
@@ -107,8 +109,8 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Skala Nyeri</label>
-                                        <p>{{ $asesmenPsikiatri->skala_nyeri ?: '-' }} 
-                                            @if($asesmenPsikiatri->kategori_nyeri)
+                                        <p>{{ $asesmenPsikiatri->skala_nyeri ?: '-' }}
+                                            @if ($asesmenPsikiatri->kategori_nyeri)
                                                 <span class="badge bg-info">{{ $asesmenPsikiatri->kategori_nyeri }}</span>
                                             @endif
                                         </p>
@@ -162,12 +164,12 @@
                                                         <td>{{ $alergi->nama_alergi }}</td>
                                                         <td>{{ $alergi->reaksi }}</td>
                                                         <td>
-                                                            <span class="badge 
-                                                                @if($alergi->tingkat_keparahan == 'Ringan') bg-success
+                                                            <span
+                                                                class="badge
+                                                                @if ($alergi->tingkat_keparahan == 'Ringan') bg-success
                                                                 @elseif($alergi->tingkat_keparahan == 'Sedang') bg-warning
                                                                 @elseif($alergi->tingkat_keparahan == 'Berat') bg-danger
-                                                                @else bg-secondary
-                                                                @endif">
+                                                                @else bg-secondary @endif">
                                                                 {{ $alergi->tingkat_keparahan }}
                                                             </span>
                                                         </td>
@@ -182,175 +184,182 @@
                             </div>
 
                             <!-- 4. Pengkajian Medis -->
-                            @if($asesmenPsikiatriDtl)
-                            <div class="section-separator" id="pengkajian-medis">
-                                <h5 class="section-title">4. Pengkajian Medis</h5>
+                            @if ($asesmenPsikiatriDtl)
+                                <div class="section-separator" id="pengkajian-medis">
+                                    <h5 class="section-title">4. Pengkajian Medis</h5>
 
-                                <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <label class="form-label fw-bold">Riwayat Penyakit Sekarang</label>
-                                        <p class="text-justify">{{ $asesmenPsikiatriDtl->riwayat_penyakit_sekarang ?: '-' }}</p>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label class="form-label fw-bold">Riwayat Penyakit Sekarang</label>
+                                            <p class="text-justify">
+                                                {{ $asesmenPsikiatriDtl->riwayat_penyakit_sekarang ?: '-' }}</p>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <label class="form-label fw-bold">Riwayat Penyakit Terdahulu</label>
-                                        <p>{{ $asesmenPsikiatriDtl->riwayat_penyakit_terdahulu ?: '-' }}</p>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label class="form-label fw-bold">Riwayat Penyakit Terdahulu</label>
+                                            <p>{{ $asesmenPsikiatriDtl->riwayat_penyakit_terdahulu ?: '-' }}</p>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <label class="form-label fw-bold">Riwayat Perkembangan Masa Kanak</label>
-                                        <p>{{ $asesmenPsikiatriDtl->riwayat_penyakit_perkembangan_masa_kanak ?: '-' }}</p>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label class="form-label fw-bold">Riwayat Perkembangan Masa Kanak</label>
+                                            <p>{{ $asesmenPsikiatriDtl->riwayat_penyakit_perkembangan_masa_kanak ?: '-' }}
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <label class="form-label fw-bold">Riwayat Penyakit Masa Dewasa</label>
-                                        <p>{{ $asesmenPsikiatriDtl->riwayat_penyakit_masa_dewasa ?: '-' }}</p>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label class="form-label fw-bold">Riwayat Penyakit Masa Dewasa</label>
+                                            <p>{{ $asesmenPsikiatriDtl->riwayat_penyakit_masa_dewasa ?: '-' }}</p>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <label class="form-label fw-bold">Riwayat Kesehatan Keluarga</label>
-                                        @php
-                                            $riwayatKeluarga = json_decode(
-                                                $asesmenPsikiatriDtl->riwayat_kesehatan_keluarga ?? '[]',
-                                                true,
-                                            );
-                                        @endphp
-                                        @if (!empty($riwayatKeluarga) && is_array($riwayatKeluarga) && count($riwayatKeluarga) > 0)
-                                            <ol class="ps-3">
-                                                @foreach ($riwayatKeluarga as $riwayat)
-                                                    <li>{{ $riwayat }}</li>
-                                                @endforeach
-                                            </ol>
-                                        @else
-                                            <p class="text-muted">Tidak ada riwayat kesehatan keluarga</p>
-                                        @endif
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label class="form-label fw-bold">Riwayat Kesehatan Keluarga</label>
+                                            @php
+                                                $riwayatKeluarga = json_decode(
+                                                    $asesmenPsikiatriDtl->riwayat_kesehatan_keluarga ?? '[]',
+                                                    true,
+                                                );
+                                            @endphp
+                                            @if (!empty($riwayatKeluarga) && is_array($riwayatKeluarga) && count($riwayatKeluarga) > 0)
+                                                <ol class="ps-3">
+                                                    @foreach ($riwayatKeluarga as $riwayat)
+                                                        <li>{{ $riwayat }}</li>
+                                                    @endforeach
+                                                </ol>
+                                            @else
+                                                <p class="text-muted">Tidak ada riwayat kesehatan keluarga</p>
+                                            @endif
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <label class="form-label fw-bold">Terapi yang Diberikan</label>
-                                        <p class="text-justify">{{ $asesmenPsikiatriDtl->terapi_diberikan ?: '-' }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            @endif
-
-                            <!-- 5. Pemeriksaan Fisik -->
-                            @if($asesmenPsikiatriDtl)
-                            <div class="section-separator" id="pemeriksaan-fisik">
-                                <h5 class="section-title">5. Pemeriksaan Fisik</h5>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <label class="form-label fw-bold">Pemeriksaan Psikiatri</label>
-                                        <p class="text-justify">{{ $asesmenPsikiatriDtl->pemeriksaan_psikiatri ?: '-' }}</p>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <label class="form-label fw-bold">Status Internis</label>
-                                        <p class="text-justify">{{ $asesmenPsikiatriDtl->status_internis ?: '-' }}</p>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <label class="form-label fw-bold">Status Neurologi</label>
-                                        <p class="text-justify">{{ $asesmenPsikiatriDtl->status_neorologi ?: '-' }}</p>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <label class="form-label fw-bold">Pemeriksaan Penunjang</label>
-                                        <p class="text-justify">{{ $asesmenPsikiatriDtl->pemeriksaan_penunjang ?: '-' }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            @endif
-
-                            <!-- 6. Diagnosis -->
-                            @if($asesmenPsikiatriDtl)
-                            <div class="section-separator" id="diagnosis">
-                                <h5 class="section-title">6. Diagnosis</h5>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <label class="form-label fw-bold text-primary">Diagnosis Banding</label>
-                                        @php
-                                            $diagnosisBanding = json_decode($asesmenPsikiatriDtl->diagnosis_banding ?? '[]', true);
-                                        @endphp
-                                        @if (!empty($diagnosisBanding) && count($diagnosisBanding) > 0)
-                                            <ol class="ps-3">
-                                                @foreach ($diagnosisBanding as $diagnosis)
-                                                    <li>{{ $diagnosis }}</li>
-                                                @endforeach
-                                            </ol>
-                                        @else
-                                            <p class="text-muted">Tidak ada diagnosis banding</p>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">Axis I</label>
-                                        <p>{{ $asesmenPsikiatriDtl->axis_i ?: '-' }}</p>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">Axis II</label>
-                                        <p>{{ $asesmenPsikiatriDtl->axis_ii ?: '-' }}</p>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">Axis III</label>
-                                        <p>{{ $asesmenPsikiatriDtl->axis_iii ?: '-' }}</p>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold">Axis IV</label>
-                                        <p>{{ $asesmenPsikiatriDtl->axis_iv ?: '-' }}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold">Axis V</label>
-                                        <p>{{ $asesmenPsikiatriDtl->axis_v ?: '-' }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            @endif
-
-                            <!-- 7. Prognosis dan Therapy -->
-                            @if($asesmenPsikiatriDtl)
-                            <div class="section-separator" id="prognosis-therapy">
-                                <h5 class="section-title">7. Prognosis dan Therapy</h5>
-
-                                <div class="row mb-3">
-                                    <div class="mb-4">
-                                        <label class="text-primary fw-semibold">Prognosis</label>
-                                        <div class="form-control bg-light" style="min-height: 38px; display: flex; align-items: center;">
-                                                <span class="text-dark">{{ $asesmenPsikiatriDtl->prognosisValue->value ?? "Belum ada Prognosis" }}</span>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label class="form-label fw-bold">Terapi yang Diberikan</label>
+                                            <p class="text-justify">{{ $asesmenPsikiatriDtl->terapi_diberikan ?: '-' }}</p>
                                         </div>
                                     </div>
                                 </div>
+                            @endif
 
-                                <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <label class="form-label fw-bold">Terapi</label>
-                                        <p class="text-justify">{{ $asesmenPsikiatriDtl->therapi ?: '-' }}</p>
+                            <!-- 5. Pemeriksaan Fisik -->
+                            @if ($asesmenPsikiatriDtl)
+                                <div class="section-separator" id="pemeriksaan-fisik">
+                                    <h5 class="section-title">5. Pemeriksaan Fisik</h5>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label class="form-label fw-bold">Pemeriksaan Psikiatri</label>
+                                            <p class="text-justify">
+                                                {{ $asesmenPsikiatriDtl->pemeriksaan_psikiatri ?: '-' }}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label class="form-label fw-bold">Status Internis</label>
+                                            <p class="text-justify">{{ $asesmenPsikiatriDtl->status_internis ?: '-' }}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label class="form-label fw-bold">Status Neurologi</label>
+                                            <p class="text-justify">{{ $asesmenPsikiatriDtl->status_neorologi ?: '-' }}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label class="form-label fw-bold">Pemeriksaan Penunjang</label>
+                                            <p class="text-justify">
+                                                {{ $asesmenPsikiatriDtl->pemeriksaan_penunjang ?: '-' }}</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
+
+                            <!-- 6. Diagnosis -->
+                            @if ($asesmenPsikiatriDtl)
+                                <div class="section-separator" id="diagnosis">
+                                    <h5 class="section-title">6. Diagnosis</h5>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label class="form-label fw-bold text-primary">Diagnosis Banding</label>
+                                            @php
+                                                $diagnosisBanding = json_decode(
+                                                    $asesmenPsikiatriDtl->diagnosis_banding ?? '[]',
+                                                    true,
+                                                );
+                                            @endphp
+                                            @if (!empty($diagnosisBanding) && count($diagnosisBanding) > 0)
+                                                <ol class="ps-3">
+                                                    @foreach ($diagnosisBanding as $diagnosis)
+                                                        <li>{{ $diagnosis }}</li>
+                                                    @endforeach
+                                                </ol>
+                                            @else
+                                                <p class="text-muted">Tidak ada diagnosis banding</p>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Axis I</label>
+                                            <p>{{ $asesmenPsikiatriDtl->axis_i ?: '-' }}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Axis II</label>
+                                            <p>{{ $asesmenPsikiatriDtl->axis_ii ?: '-' }}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Axis III</label>
+                                            <p>{{ $asesmenPsikiatriDtl->axis_iii ?: '-' }}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold">Axis IV</label>
+                                            <p>{{ $asesmenPsikiatriDtl->axis_iv ?: '-' }}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold">Axis V</label>
+                                            <p>{{ $asesmenPsikiatriDtl->axis_v ?: '-' }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            <!-- 7. Prognosis dan Therapy -->
+                            @if ($asesmenPsikiatriDtl)
+                                <div class="section-separator" id="prognosis-therapy">
+                                    <h5 class="section-title">7. Prognosis dan Therapy</h5>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label class="text-primary fw-semibold">Theraphy</label>
+                                            <p class="text-justify">
+                                                {{ $asesmenPsikiatriDtl->therapi ?: 'Belum ada Terapi' }}</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="mb-4">
+                                            <label class="text-primary fw-semibold">Prognosis</label>
+                                            <p class="text-justify">
+                                                {{ $asesmenPsikiatriDtl->prognosisValue->value ?? 'Belum ada Prognosis' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             @endif
 
                             <!-- Info Tambahan -->

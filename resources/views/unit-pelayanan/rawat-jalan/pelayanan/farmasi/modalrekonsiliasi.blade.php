@@ -237,6 +237,7 @@
                                 if (data && data.length > 0) {
                                     data.forEach(function (obat) {
                                         html += `
+<<<<<<< HEAD
                                             <a href="#" class="dropdown-item py-2" 
                                                data-id="${obat.id || ''}" 
                                                data-harga="${obat.harga || ''}" 
@@ -246,6 +247,17 @@
                                                     <span class="badge bg-light text-dark">Satuan: ${obat.satuan || 'N/A'}</span>
                                                 </div>
                                             </a>`;
+=======
+                                        <a href="#" class="dropdown-item py-2"
+                                           data-id="${obat.id || ''}"
+                                           data-harga="${obat.harga || ''}"
+                                           data-satuan="${obat.satuan || ''}">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="fw-medium">${obat.text || 'Tidak ada nama'}</div>
+                                                <span class="badge bg-light text-dark">Satuan: ${obat.satuan || 'N/A'}</span>
+                                            </div>
+                                        </a>`;
+>>>>>>> bd8ebdea40b646d00fbba9bf9fe0a91c95d43878
                                     });
                                 } else {
                                     html =
@@ -305,15 +317,15 @@
                 $(document).on('click', '#btnSaveObat', function () {
 
                     const obatId = $('#selectedObatId').val();
-                    if (!obatId) {
-                        iziToast.error({
-                            title: 'Error',
-                            message: 'Silakan pilih obat terlebih dahulu!',
-                            position: 'topRight'
-                        });
-                        $('#cariObatRekon').focus();
-                        return;
-                    }
+                    // if (!obatId) {
+                    //     iziToast.error({
+                    //         title: 'Error',
+                    //         message: 'Silakan pilih obat terlebih dahulu!',
+                    //         position: 'topRight'
+                    //     });
+                    //     $('#cariObatRekon').focus();
+                    //     return;
+                    // }
 
                     if ($('#rekonsiliasiForm')[0].checkValidity()) {
                         const $btn = $(this);

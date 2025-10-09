@@ -52,8 +52,8 @@ class DataUmumController extends Controller
         $dataUmum = RmeHdDataUmum::with(['userCreate'])
             ->where('kd_pasien', $kd_pasien)
             ->where('kd_unit', $this->kdUnitDef_)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
+            // ->whereDate('tgl_masuk', $tgl_masuk)
+            // ->where('urut_masuk', $urut_masuk)
             ->get();
 
         return view('unit-pelayanan.hemodialisa.pelayanan.data-umum.index', compact(

@@ -207,8 +207,6 @@
                                                 </button>
 
                                                 <ul class="dropdown-menu shadow-lg">
-                                                    <li><a class="dropdown-item m-1" href="#">Update Informasi Pasien</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Identitas Pasien</a></li>
                                                     <li class="dropdown-submenu">
                                                         <a class="dropdown-item m-1 dropdown-toggle" href="#">Persetujuan</a>
                                                         <ul class="dropdown-menu shadow-lg">
@@ -218,18 +216,12 @@
                                                             <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/covid-19'}">Covid 19</a></li>
                                                         </ul>
                                                     </li>
-                                                    <li><a class="dropdown-item m-1" href="#">Edukasi dan Informasi</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Jaminan/Asuransi</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Registrasi Rawat Inap</a></li>
                                                     <li class="dropdown-submenu">
-                                                        <a class="dropdown-item m-1 dropdown-toggle" href="#">Mutasi Pasien</a>
+                                                        <a class="dropdown-item m-1 dropdown-toggle" href="#">Order / Mutasi Pasien</a>
                                                         <ul class="dropdown-menu shadow-lg">
-                                                            <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/transfer-pasien-antar-ruang'}">Pindah Ruangan / Rawat Inap</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Pulangkan (Berobat Jalan)</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Pulangkan (APS)</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Rujuk Keluar RS</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Meninggal Dunia</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Batal Berobat</a></li>
+                                                            <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/transfer-pasien-antar-ruang'}">Pindah Ruangan Rawat Inap</a></li>
+                                                            <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/order-hd'}">Hemodialisa (HD)</a></li>
+                                                            <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/operasi-ibs'}">Operasi (IBS)</a></li>
                                                         </ul>
                                                     </li>
                                                     <li class="dropdown-submenu">
@@ -247,9 +239,6 @@
                                                             <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/pengawasan-transportasi'}">Pengawasan Transportasi</a></li>
                                                         </ul>
                                                     </li>
-                                                    <li><a class="dropdown-item m-1" href="#">Billing System</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Finalisasi</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Status Pasien</a></li>
                                                     <li class="dropdown-submenu">
                                                         <a class="dropdown-item m-1 dropdown-toggle" href="#">Transfusi Darah</a>
                                                         <ul class="dropdown-menu shadow-lg">

@@ -1,42 +1,3 @@
-@push('css')
-    <style>
-        .nav-icons {
-            display: flex;
-            gap: 5px;
-            padding: 5px;
-            background: white;
-        }
-
-        .nav-icons .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 2px 2px;
-            text-decoration: none;
-            color: #ffffff;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            border: 1px solid #cecece;
-        }
-
-        .nav-icons .nav-item:hover {
-            background-color: #e9ecef;
-        }
-
-        .nav-icons .nav-item.active {
-            background-color: #0d6efd;
-        }
-
-        .nav-icons .nav-item.active span {
-            color: white;
-        }
-
-        .nav-icons .nav-item.active img {
-            filter: none;
-        }
-    </style>
-@endpush
-
 @php
     $currentUrl = url()->current();
 
@@ -403,6 +364,7 @@
 
 @endphp
 
+<<<<<<< HEAD
 {{-- <div class="header-background">
     <div class="nav-icons">
         @foreach ($navItems as $item)
@@ -450,3 +412,6 @@
         @endforeach
     </div>
 </div> --}}
+=======
+<x-navigation-action :nav-items="$navItems" :current-url="$currentUrl" :data-medis="$dataMedis" />
+>>>>>>> bd8ebdea40b646d00fbba9bf9fe0a91c95d43878

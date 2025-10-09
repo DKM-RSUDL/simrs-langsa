@@ -16,6 +16,7 @@ use App\Http\Controllers\UnitPelayanan\Hemodialisa\PersetujuanImplementasiEvalua
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\PersetujuanTindakanHDController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\PersetujuanTindakanMedisController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\TravelingDialysisController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\PersetujuanTransfusiDarahController;
 use App\Http\Controllers\UnitPelayanan\HemodialisaController;
 
 Route::prefix('hemodialisa')->group(function () {
@@ -254,6 +255,24 @@ Route::prefix('hemodialisa')->group(function () {
                         });
                     });
                 });
+
+                // persetujuan transfusi darah
+                Route::prefix('persetujuan-transfusi-darah')->group(function () {
+                    Route::name('.persetujuan-transfusi-darah')->group(function () {
+                        Route::controller(PersetujuanTransfusiDarahController::class)->group(function () {
+                            Route::get('/', 'index')->name('.index');
+                            Route::post('/', 'store')->name('.store');
+                            Route::get('/create', 'create')->name('.create');
+                            Route::post('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
+                            Route::get('/{data}', 'show')->name('.show');
+                            Route::get('/{data}/edit', 'edit')->name('.edit');
+                            Route::put('/{data}', 'update')->name('.update');
+                            Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                            Route::delete('/{data}', 'destroy')->name('.destroy');
+                        });
+                    });
+                });
+                
             });
         });
     });

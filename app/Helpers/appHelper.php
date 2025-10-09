@@ -448,6 +448,7 @@ if (!function_exists('countUnfinishedPatientWithTglKeluar')) {
             ->where('kunjungan.kd_unit', $kd_unit)
             ->whereNull('kunjungan.tgl_keluar')
             ->whereNull('kunjungan.jam_keluar')
+            ->whereYear('kunjungan.tgl_masuk', '>=', 2025)
             ->count();
 
         return $result;

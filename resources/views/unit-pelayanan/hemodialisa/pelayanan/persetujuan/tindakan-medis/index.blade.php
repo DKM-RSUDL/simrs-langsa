@@ -6,14 +6,17 @@
             background-color: #28a745;
             color: white;
         }
+
         .badge-menolak {
             background-color: #dc3545;
             color: white;
         }
+
         .badge-pasien {
             background-color: #17a2b8;
             color: white;
         }
+
         .badge-keluarga {
             background-color: #ffc107;
             color: black;
@@ -48,7 +51,7 @@
         </div>
 
         <div class="col-md-9">
-            @include('unit-pelayanan.hemodialisa.component.navigation')
+            @include('components.navigation-hemodialisa')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
@@ -90,31 +93,36 @@
                             <div class="tab-pane fade show active">
 
                                 <div class="row">
-                                    <form method="GET" action="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-medis.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                                    <form method="GET"
+                                        action="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-medis.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
                                         <div class="row m-3">
                                             <div class="col-md-3">
                                                 <div class="input-group">
                                                     <span class="input-group-text">
                                                         <i class="ti-search"></i>
                                                     </span>
-                                                    <input type="text" name="search" class="form-control" placeholder="Cari dokter, tipe penerima..." value="{{ request('search') }}">
+                                                    <input type="text" name="search" class="form-control"
+                                                        placeholder="Cari dokter, tipe penerima..."
+                                                        value="{{ request('search') }}">
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="col-md-2">
-                                                <input type="date" name="dari_tanggal" class="form-control" placeholder="Dari Tanggal" value="{{ request('dari_tanggal') }}">
+                                                <input type="date" name="dari_tanggal" class="form-control"
+                                                    placeholder="Dari Tanggal" value="{{ request('dari_tanggal') }}">
                                             </div>
-                                            
+
                                             <div class="col-md-2">
-                                                <input type="date" name="sampai_tanggal" class="form-control" placeholder="Sampai Tanggal" value="{{ request('sampai_tanggal') }}">
+                                                <input type="date" name="sampai_tanggal" class="form-control"
+                                                    placeholder="Sampai Tanggal" value="{{ request('sampai_tanggal') }}">
                                             </div>
-                                            
+
                                             <div class="col-md-2">
                                                 <button class="btn btn-outline-secondary" type="submit">
                                                     <i class="ti-filter"></i> Filter
                                                 </button>
                                             </div>
-                                            
+
                                             <div class="col-md-3 text-end">
                                                 <a href="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-medis.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                                     class="btn btn-primary">
@@ -141,35 +149,48 @@
                                                     <tr>
                                                         <td>{{ $dataPersetujuan->firstItem() + $key }}</td>
                                                         <td>
-                                                            {{ date('d-m-Y', strtotime($item->tanggal_implementasi)) }} 
+                                                            {{ date('d-m-Y', strtotime($item->tanggal_implementasi)) }}
                                                             {{ date('H:i', strtotime($item->jam_implementasi)) }}
                                                         </td>
                                                         <td>
-                                                            <span class="badge badge-{{ $item->tipe_penerima }}">{{ ucfirst($item->tipe_penerima) }}</span>
+                                                            <span
+                                                                class="badge badge-{{ $item->tipe_penerima }}">{{ ucfirst($item->tipe_penerima) }}</span>
                                                             @if ($item->tipe_penerima == 'pasien')
                                                                 <div class="info-breakdown">
-                                                                    Nama: {{ $dataMedis->pasien->nama }} | Umur: {{ $dataMedis->pasien->umur }} | JK: {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : 'Perempuan' }} | Alamat: {{ $dataMedis->pasien->alamat }}
+                                                                    Nama: {{ $dataMedis->pasien->nama }} | Umur:
+                                                                    {{ $dataMedis->pasien->umur }} | JK:
+                                                                    {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : 'Perempuan' }}
+                                                                    | Alamat: {{ $dataMedis->pasien->alamat }}
                                                                 </div>
                                                             @else
                                                                 <div class="info-breakdown">
-                                                                    Nama: {{ $item->nama_keluarga }} | Umur: {{ $item->umur_keluarga }} | JK: {{ $item->jk_keluarga }} | Status: {{ ucfirst($item->status_keluarga) }} | Alamat: {{ $item->alamat_keluarga }}
+                                                                    Nama: {{ $item->nama_keluarga }} | Umur:
+                                                                    {{ $item->umur_keluarga }} | JK:
+                                                                    {{ $item->jk_keluarga }} | Status:
+                                                                    {{ ucfirst($item->status_keluarga) }} | Alamat:
+                                                                    {{ $item->alamat_keluarga }}
                                                                 </div>
                                                             @endif
                                                         </td>
                                                         <td>
                                                             <ul class="list-unstyled m-0">
                                                                 @php
-                                                                    $tindakanList = json_decode($item->tindakan, true) ?? [];
+                                                                    $tindakanList =
+                                                                        json_decode($item->tindakan, true) ?? [];
                                                                     $allTindakan = [
                                                                         'hemodialisis' => 'HEMODIALISIS',
-                                                                        'akses_vascular_fmoralis' => 'AKSES VASCULAR FMORALIS',
-                                                                        'akses_vascular_subclavicula' => 'AKSES VASCULAR SUBCLAVICULA CATHETER',
-                                                                        'akses_vascular_cimino' => 'AKSES VASCULAR ANTERIOR VENOUS FISTULA (CIMINO)'
+                                                                        'akses_vascular_fmoralis' =>
+                                                                            'AKSES VASCULAR FMORALIS',
+                                                                        'akses_vascular_subclavicula' =>
+                                                                            'AKSES VASCULAR SUBCLAVICULA CATHETER',
+                                                                        'akses_vascular_cimino' =>
+                                                                            'AKSES VASCULAR ANTERIOR VENOUS FISTULA (CIMINO)',
                                                                     ];
                                                                 @endphp
                                                                 @foreach ($allTindakan as $key => $label)
                                                                     @if (in_array($key, $tindakanList))
-                                                                        <li class="info-item info-checked">{{ $label }}</li>
+                                                                        <li class="info-item info-checked">
+                                                                            {{ $label }}</li>
                                                                     @endif
                                                                 @endforeach
                                                                 @if (empty($tindakanList))
@@ -180,20 +201,23 @@
                                                         <td>{{ $item->userCreated->name ?? 'Tidak Diketahui' }}</td>
                                                         <td>
                                                             <div class="btn-group" role="group">
-                                                                <a href="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-medis.print-pdf', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
-                                                                class="btn btn-info btn-sm me-2" target="_blank" title="Lihat Detail">
+                                                                <a href="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-medis.print-pdf', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                    class="btn btn-info btn-sm me-2" target="_blank"
+                                                                    title="Lihat Detail">
                                                                     <i class="fas fa-print"></i>
                                                                 </a>
-                                                                <a href="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-medis.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
-                                                                class="btn btn-warning btn-sm me-2" title="Edit">
+                                                                <a href="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-medis.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                    class="btn btn-warning btn-sm me-2" title="Edit">
                                                                     <i class="ti-pencil"></i>
                                                                 </a>
-                                                                <form action="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-medis.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" 
-                                                                    method="POST" style="display: inline;" 
+                                                                <form
+                                                                    action="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-medis.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                    method="POST" style="display: inline;"
                                                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                                     @csrf
                                                                     @method('DELETE')
-                                                                    <button type="submit" class="btn btn-danger btn-sm" title="Hapus">
+                                                                    <button type="submit" class="btn btn-danger btn-sm"
+                                                                        title="Hapus">
                                                                         <i class="ti-trash"></i>
                                                                     </button>
                                                                 </form>
@@ -210,7 +234,7 @@
                                         </table>
                                         {{ $dataPersetujuan->links() }}
                                     </div>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -223,6 +247,5 @@
 @endsection
 
 @push('js')
-<script>
-</script>
+    <script></script>
 @endpush

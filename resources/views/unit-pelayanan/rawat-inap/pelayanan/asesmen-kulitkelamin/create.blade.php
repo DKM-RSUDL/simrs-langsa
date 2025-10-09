@@ -74,13 +74,13 @@
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Anamnesis</label>
                                             <input type="text" class="form-control" name="anamnesis"
-                                                placeholder="Masukkan anamnesis" required>
+                                                placeholder="Masukkan anamnesis">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Keluhan Utama/Alasan Masuk RS</label>
                                             <textarea class="form-control" name="keluhan_utama" rows="4"
-                                                placeholder="Masukkan keluhan utama atau alasan masuk rumah sakit" required></textarea>
+                                                placeholder="Masukkan keluhan utama atau alasan masuk rumah sakit"></textarea>
                                         </div>
 
                                         <div class="form-group">
@@ -447,33 +447,31 @@
                                             <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja"
                                                 value="[]">
                                         </div>
+                                    </div>
 
-                                        <div class="mb-4">
-                                            <label class="text-primary fw-semibold">Prognosis</label>
+                                    <div class="section-separator" id="prognosis">
+                                        <h5 class="fw-semibold mb-4">9. Rencana Penatalaksanaan dan Pengobatan</h5>
+                                        <textarea class="form-control" name="rencana_pengobatan" rows="4"
+                                            placeholder="Rencana Penatalaksanaan Dan Pengobatan"></textarea>
+                                    </div>
 
-                                            <select class="form-select" name="prognosis">
-                                                <option value="">--Pilih Prognosis--</option>
-                                                @forelse ($satsetPrognosis as $item)
-                                                    <option value="{{ $item->prognosis_id }}">
-                                                        {{ $item->value ?? 'Field tidak ditemukan' }}
-                                                    </option>
-                                                @empty
-                                                    <option value="" disabled>Tidak ada data</option>
-                                                @endforelse
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group mb-4">
-                                            <label style="min-width: 200px;">Rencana Penatalaksanaan <br> Dan
-                                                Pengobatan</label>
-                                            <textarea class="form-control" name="rencana_pengobatan" rows="4"
-                                                placeholder="Rencana Penatalaksanaan Dan Pengobatan"></textarea>
-                                        </div>
+                                    <div class="section-separator" id="rencana_pengobatan">
+                                        <h5 class="fw-semibold mb-4">10. Prognosis</h5>
+                                        <select class="form-select" name="prognosis">
+                                            <option value="">--Pilih Prognosis--</option>
+                                            @forelse ($satsetPrognosis as $item)
+                                                <option value="{{ $item->prognosis_id }}">
+                                                    {{ $item->value ?? 'Field tidak ditemukan' }}
+                                                </option>
+                                            @empty
+                                                <option value="" disabled>Tidak ada data</option>
+                                            @endforelse
+                                        </select>
                                     </div>
 
 
                                     <div class="section-separator" id="discharge-planning">
-                                        <h5 class="section-title">9. Discharge Planning</h5>
+                                        <h5 class="section-title">11. Discharge Planning</h5>
 
                                         {{-- <div class="mb-4">
                                             <label class="form-label">Diagnosis medis</label>

@@ -165,35 +165,73 @@ class FarmasiController extends Controller
 
     public function searchObat(Request $request)
     {
+<<<<<<< HEAD
         $search = $request->get('term');
        
+=======
+        $kdMilik  = 1;
+        $limit    = 10;
+        $term     = trim((string) $request->get('term', ''));
+        $depo     = $request->get('depo', 'DP3'); // default DP3 for gawat darurat
 
-        $obats = AptObat::join('APT_PRODUK', 'APT_OBAT.KD_PRD', '=', 'APT_PRODUK.KD_PRD')
+        // Hindari query berat saat term kosong/terlalu pendek
+        if ($term === '' || mb_strlen($term) < 2) {
+            return response()->json([]);
+        }
+
+        $cacheKey = 'gd_obat_search_' . md5(json_encode([$term, $depo, $kdMilik, $limit]));
+
+        if (Cache::has($cacheKey)) {
+            return response()->json(Cache::get($cacheKey));
+        }
+>>>>>>> bd8ebdea40b646d00fbba9bf9fe0a91c95d43878
+
+        // Subquery: latest price per KD_PRD (mengambil HRG_BELI_OBT dari TGL_MASUK terbaru)
+        $latestPriceSub = DB::table('DATA_BATCH as db')
+            ->select('db.KD_PRD', 'db.HRG_BELI_OBT')
+            ->whereRaw('db.TGL_MASUK = (SELECT MAX(TGL_MASUK) FROM DATA_BATCH WHERE KD_PRD = db.KD_PRD)');
+
+        // Subquery: stok per KD_PRD pada depo tertentu (DP1/DPF/DP3), di-SUM agar 1 baris per produk
+        $stokDepoSub = DB::table('APT_STOK_UNIT as su')
+            ->select('su.KD_PRD', DB::raw('SUM(su.JML_STOK_APT) as total_stok'))
+            ->where('su.KD_UNIT_FAR', $depo)
+            ->groupBy('su.KD_PRD');
+
+        // Query utama: hasil siap pakai
+        $rows = DB::table('APT_OBAT')
+            ->join('APT_PRODUK', 'APT_OBAT.KD_PRD', '=', 'APT_PRODUK.KD_PRD')
             ->join('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
-            ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
-                           FROM DATA_BATCH AS db
-                           WHERE TGL_MASUK = (
-                               SELECT MAX(TGL_MASUK)
-                               FROM DATA_BATCH
-                               WHERE KD_PRD = db.KD_PRD
-                           )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
-            ->where(function ($query) use ($search) {
-                // Optimize search conditions
-                $query->where('APT_OBAT.nama_obat', 'LIKE', $search . '%')
-                    ->orWhere('APT_OBAT.nama_obat', 'LIKE', '% ' . $search . '%');
+            ->leftJoinSub($latestPriceSub, 'latest_price', function ($join) {
+                $join->on('APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD');
             })
-            ->select(
+            ->leftJoinSub($stokDepoSub, 'stok_depo', function ($join) {
+                $join->on('APT_OBAT.KD_PRD', '=', 'stok_depo.KD_PRD');
+            })
+            ->where('APT_PRODUK.KD_MILIK', $kdMilik)
+            ->where('APT_PRODUK.TAG_BERLAKU', 1)
+            ->where(function ($q) use ($term) {
+                $q->where('APT_OBAT.NAMA_OBAT', 'like', $term . '%')
+                  ->orWhere('APT_OBAT.NAMA_OBAT', 'like', '% ' . $term . '%');
+            })
+            ->orderBy('APT_OBAT.NAMA_OBAT')
+            ->limit($limit)
+            ->get([
                 'APT_OBAT.KD_PRD as id',
-                'APT_OBAT.nama_obat as text',
-                'latest_price.HRG_BELI_OBT as harga',
-                'APT_SATUAN.SATUAN as satuan'
-            )
-            ->groupBy('APT_OBAT.KD_PRD', 'APT_OBAT.nama_obat', 'latest_price.HRG_BELI_OBT', 'APT_SATUAN.SATUAN')
-            ->limit(10)
-            ->get();
+                'APT_OBAT.NAMA_OBAT as text',
+                'APT_SATUAN.SATUAN as satuan',
+                DB::raw('COALESCE(latest_price.HRG_BELI_OBT, 0) as harga'),
+                DB::raw('COALESCE(stok_depo.total_stok, 0) as stok'),
+            ]);
 
+<<<<<<< HEAD
        
         return response()->json($obats);
+=======
+        // Cache 5 menit
+        Cache::put($cacheKey, $rows, now()->addMinutes(5));
+
+        return response()->json($rows);
+>>>>>>> bd8ebdea40b646d00fbba9bf9fe0a91c95d43878
     }
 
     private function getRiwayatObat($kd_pasien)

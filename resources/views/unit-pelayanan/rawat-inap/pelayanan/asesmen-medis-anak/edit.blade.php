@@ -1421,23 +1421,6 @@
                             <!-- 7. Diagnosis -->
                             <div class="section-separator" id="diagnosis">
                                 <h5 class="fw-semibold mb-4">11. Diagnosis</h5>
-
-                                <div class="mb-4">
-                                    <label class="text-primary fw-semibold">Prognosis</label>
-
-                                    <select class="form-select" name="paru_prognosis">
-                                        <option value="" disabled>--Pilih Prognosis--</option>
-                                        @forelse ($satsetPrognosis as $item)
-                                            <option value="{{ $item->prognosis_id }}"
-                                                {{ old('paru_prognosis', $asesmen->asesmenMedisAnakDtl->paru_prognosis ?? '') == $item->prognosis_id ? 'selected' : '' }}>
-                                                {{ $item->value ?? 'Field tidak ditemukan' }}
-                                            </option>
-                                        @empty
-                                            <option value="" disabled>Tidak ada data</option>
-                                        @endforelse
-                                    </select>
-                                </div>
-
                                 <!-- Diagnosis Banding -->
                                 <div class="mb-4">
                                     <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
@@ -1494,18 +1477,32 @@
                                     <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja"
                                         value="{{ old('diagnosis_kerja', json_encode($asesmen->asesmenMedisAnakDtl->diagnosis_kerja ?? [])) }}">
                                 </div>
+                            </div>
 
-                                <div class="form-group">
-                                    <label style="min-width: 200px;">Rencana Penatalaksanaan<br> dan Pengobatan</label>
-                                    <textarea class="form-control" name="rencana_pengobatan" rows="4"
-                                        placeholder="Rencana Penatalaksanaan Dan Pengobatan">{{ old('rencana_pengobatan', $asesmen->asesmenMedisAnakDtl->rencana_pengobatan ?? '') }}</textarea>
-                                </div>
+                            <div class="section-separator" id="rencana_pengobatan">
+                                <h5 class="fw-semibold mb-4">12. Rencana Penatalaksanaan dan Pengobatan</h5>
+                                <textarea class="form-control" name="rencana_pengobatan" rows="4"
+                                    placeholder="Rencana Penatalaksanaan Dan Pengobatan">{{ old('rencana_pengobatan', $asesmen->asesmenMedisAnakDtl->rencana_pengobatan ?? '') }}</textarea>
+                            </div>
 
+                            <div class="section-separator" id="prognosis">
+                                <h5 class="fw-semibold mb-4">13. Prognosis</h5>
+                                <select class="form-select" name="paru_prognosis">
+                                    <option value="" disabled>--Pilih Prognosis--</option>
+                                    @forelse ($satsetPrognosis as $item)
+                                        <option value="{{ $item->prognosis_id }}"
+                                            {{ old('paru_prognosis', $asesmen->asesmenMedisAnakDtl->paru_prognosis ?? '') == $item->prognosis_id ? 'selected' : '' }}>
+                                            {{ $item->value ?? 'Field tidak ditemukan' }}
+                                        </option>
+                                    @empty
+                                        <option value="" disabled>Tidak ada data</option>
+                                    @endforelse
+                                </select>
                             </div>
 
                             <!-- 12. Perencanaan Pulang Pasien -->
                             <div class="section-separator" id="discharge-planning">
-                                <h5 class="section-title">12. Perencanaan Pulang Pasien (Discharge Planning)</h5>
+                                <h5 class="section-title">14. Perencanaan Pulang Pasien (Discharge Planning)</h5>
 
                                 {{-- <div class="mb-4">
                                     <label class="form-label">Diagnosis medis</label>
@@ -1658,7 +1655,7 @@
                             if (this.value !== yesValue) {
                                 input.value = ''; // Clear input when disabled
                                 input.classList.remove(
-                                'is-invalid'); // Remove validation error styling
+                                    'is-invalid'); // Remove validation error styling
                             }
                         });
                     });

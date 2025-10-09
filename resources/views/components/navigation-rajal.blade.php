@@ -1,42 +1,3 @@
-@push('css')
-    <style>
-        .nav-icons {
-            display: flex;
-            gap: 5px;
-            padding: 5px;
-            background: white;
-        }
-
-        .nav-icons .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 2px 2px;
-            text-decoration: none;
-            color: #ffffff;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            border: 1px solid #cecece;
-        }
-
-        .nav-icons .nav-item:hover {
-            background-color: #e9ecef;
-        }
-
-        .nav-icons .nav-item.active {
-            background-color: #0d6efd;
-        }
-
-        .nav-icons .nav-item.active span {
-            color: white;
-        }
-
-        .nav-icons .nav-item.active img {
-            filter: none;
-        }
-    </style>
-@endpush
-
 @php
     $currentUrl = url()->current();
     $tglMasukData = date('Y-m-d', strtotime($dataMedis->tgl_masuk));
@@ -45,8 +6,17 @@
         [
             'icon' => 'verified_badge.png',
             'label' => 'Asesmen',
+<<<<<<< HEAD
             'link' => route('rawat-jalan.asesmen.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
             'route-name' => 'rawat-jalan.asesmen',
+=======
+            'link' => route('rawat-jalan.asesmen.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+>>>>>>> bd8ebdea40b646d00fbba9bf9fe0a91c95d43878
         ],
         [
             'icon' => 'positive_dynamic.png',
@@ -194,6 +164,7 @@
     ];
 @endphp
 
+<<<<<<< HEAD
 <div class="card" style="height: fit-content; margin-bottom:10px !important;">
     <div class="card-body p-2">
         <div class="d-flex flex-wrap gap-2">
@@ -214,3 +185,6 @@
         </div>
     </div>
 </div>
+=======
+<x-navigation-action :nav-items="$navItems" :current-url="$currentUrl" :data-medis="$dataMedis" />
+>>>>>>> bd8ebdea40b646d00fbba9bf9fe0a91c95d43878

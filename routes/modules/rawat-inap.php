@@ -78,6 +78,8 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\EchocardiographyController as R
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenPengkajianAwalMedis as RawatInapAsesmenPengkajianAwalMedis;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenMedisAnakController as RawatInapAsesmenMedisAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenMedisNeonatologiController as RawatInapAsesmenMedisNeonatologiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\OperasiIBSController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\OrderHemodialisaController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PneumoniaCurb65Controller;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PneumoniaPsiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SurveilansA1Controller;
@@ -374,6 +376,11 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::post('/rekonsiliasiObat', 'rekonsiliasiObat')->name('.rekonsiliasiObat');
                             Route::post('/copy-cpo', 'copyCPO')->name('.copy-cpo');
                             Route::delete('/deleteRekonsiliasiObat', 'deleteRekonsiliasiObat')->name('.rekonsiliasiObatDelete');
+                            // Rekonsiliasi Obat transfer
+                            Route::post('/rekonsiliasiObatTransfer', 'rekonsiliasiObatTransfer')->name('.rekonsiliasiObatTransfer');
+                            Route::get('/rekonsiliasiObatTransfer/{id}/edit', 'editRekonsiliasiObatTransfer')->name('.editRekonsiliasiObatTransfer');
+                            Route::put('/rekonsiliasiObatTransfer/{id}', 'updateRekonsiliasiObatTransfer')->name('.updateRekonsiliasiObatTransfer');
+                            Route::delete('/rekonsiliasiObatTransfer/{id}', 'deleteRekonsiliasiObatTransfer')->name('.deleteRekonsiliasiObatTransfer');
                         });
                     });
                 });
@@ -1276,6 +1283,7 @@ Route::prefix('rawat-inap')->group(function () {
                         });
                     });
                 });
+
                 //Surveilans ppi
                 Route::prefix('surveilans-ppi')->group(function () {
                     Route::name('.surveilans-ppi')->group(function () {
@@ -1380,8 +1388,34 @@ Route::prefix('rawat-inap')->group(function () {
                         });
                     });
                 });
+
+                // Order Hemodialisa
+                Route::prefix('order-hd')->group(function () {
+                    Route::name('.order-hd')->group(function () {
+                        Route::controller(OrderHemodialisaController::class)->group(function () {
+                            Route::get('/', 'index')->name('.index');
+                            Route::post('/', 'store')->name('.store');
+                        });
+                    });
+                });
+
+                // Informed Consent
+                Route::prefix('operasi-ibs')->group(function () {
+                    Route::name('.operasi-ibs')->group(function () {
+                        Route::controller(OperasiIBSController::class)->group(function () {
+                            Route::get('/product-details', 'productDetails')
+                            ->name('.product-details');
+                            Route::get('/sub-spesialisasi', 'subSpesialisasi')->name('.sub-spesialisasi');
+                            Route::get('/', 'index')->name('.index');
+                            Route::get('/create', 'create')->name('.create');
+                            Route::post('/show', 'show')->name('.show');
+                            Route::post('/', 'store')->name('.store');
+                            Route::delete('/{data}', 'delete')->name('.delete');
+                            Route::get('/print/{data}', 'print')->name('.print');
+                        });
+                    });
+                });
             });
         });
-        // });
     });
 });

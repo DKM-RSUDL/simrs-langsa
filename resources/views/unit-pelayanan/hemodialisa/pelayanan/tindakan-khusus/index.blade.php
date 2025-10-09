@@ -4,11 +4,11 @@
 @section('content')
     <div class="row">
         <div class="col-md-3">
-            @include('unit-pelayanan.hemodialisa.component.patient-card')
+            @include('components.patient-card-hemodialisa')
         </div>
 
         <div class="col-md-9">
-            @include('unit-pelayanan.hemodialisa.component.navigation')
+            @include('components.navigation-hemodialisa')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
@@ -23,27 +23,37 @@
                                             <!-- Select Option -->
                                             <div class="col-md-2">
                                                 <select class="form-select" id="SelectOption" aria-label="Pilih...">
-                                                    <option value="semua" {{ request('option') == 'semua' ? 'selected' : '' }}>Semua Episode</option>
-                                                    <option value="option1" {{ request('option') == 'option1' ? 'selected' : '' }}>Episode Sekarang</option>
-                                                    <option value="option2" {{ request('option') == 'option2' ? 'selected' : '' }}>1 Bulan</option>
-                                                    <option value="option3" {{ request('option') == 'option3' ? 'selected' : '' }}>3 Bulan</option>
-                                                    <option value="option4" {{ request('option') == 'option4' ? 'selected' : '' }}>6 Bulan</option>
-                                                    <option value="option5" {{ request('option') == 'option5' ? 'selected' : '' }}>9 Bulan</option>
+                                                    <option value="semua"
+                                                        {{ request('option') == 'semua' ? 'selected' : '' }}>Semua Episode
+                                                    </option>
+                                                    <option value="option1"
+                                                        {{ request('option') == 'option1' ? 'selected' : '' }}>Episode
+                                                        Sekarang</option>
+                                                    <option value="option2"
+                                                        {{ request('option') == 'option2' ? 'selected' : '' }}>1 Bulan
+                                                    </option>
+                                                    <option value="option3"
+                                                        {{ request('option') == 'option3' ? 'selected' : '' }}>3 Bulan
+                                                    </option>
+                                                    <option value="option4"
+                                                        {{ request('option') == 'option4' ? 'selected' : '' }}>6 Bulan
+                                                    </option>
+                                                    <option value="option5"
+                                                        {{ request('option') == 'option5' ? 'selected' : '' }}>9 Bulan
+                                                    </option>
                                                 </select>
                                             </div>
 
                                             <!-- Start Date -->
                                             <div class="col-md-2">
-                                                <input type="date" name="start_date" id="start_date" 
-                                                       class="form-control" placeholder="Dari Tanggal"
-                                                       value="{{ request('start_date') }}">
+                                                <input type="date" name="start_date" id="start_date" class="form-control"
+                                                    placeholder="Dari Tanggal" value="{{ request('start_date') }}">
                                             </div>
 
                                             <!-- End Date -->
                                             <div class="col-md-2">
-                                                <input type="date" name="end_date" id="end_date" 
-                                                       class="form-control" placeholder="S.d Tanggal"
-                                                       value="{{ request('end_date') }}">
+                                                <input type="date" name="end_date" id="end_date" class="form-control"
+                                                    placeholder="S.d Tanggal" value="{{ request('end_date') }}">
                                             </div>
 
                                             <!-- Button Filter -->
@@ -55,7 +65,8 @@
 
                                             <!-- Search Bar -->
                                             <div class="col-md-3">
-                                                <form method="GET" action="{{ route('hemodialisa.pelayanan.tindakan-khusus.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                                                <form method="GET"
+                                                    action="{{ route('hemodialisa.pelayanan.tindakan-khusus.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
                                                     <div class="input-group">
                                                         <input type="text" name="search" class="form-control"
                                                             placeholder="Cari Diagnosis" aria-label="Cari"
@@ -106,13 +117,19 @@
                                                                         {{ strtoupper(substr($item->userCreate->name ?? 'U', 0, 1)) }}
                                                                     </div>
                                                                     <div class="flex-grow-1">
-                                                                        <h6 class="assessment-title mb-1">Pemakaian Obat-Obatan / Tindakan Khusus</h6>
-                                                                        <p class="doctor-name">By: {{ str()->title($item->userCreate->name ?? 'Unknown') }}</p>
-                                                                        
+                                                                        <h6 class="assessment-title mb-1">Pemakaian
+                                                                            Obat-Obatan / Tindakan Khusus</h6>
+                                                                        <p class="doctor-name">By:
+                                                                            {{ str()->title($item->userCreate->name ?? 'Unknown') }}
+                                                                        </p>
+
                                                                         {{-- Preview Content --}}
                                                                         <div class="mt-2">
-                                                                            @if($item->diagnosis)
-                                                                                <p class="mb-1"><strong>Diagnosis:</strong> {{ \Str::limit($item->diagnosis, 100) }}</p>
+                                                                            @if ($item->diagnosis)
+                                                                                <p class="mb-1">
+                                                                                    <strong>Diagnosis:</strong>
+                                                                                    {{ \Str::limit($item->diagnosis, 100) }}
+                                                                                </p>
                                                                             @endif
                                                                         </div>
                                                                     </div>
@@ -137,7 +154,8 @@
                                                                         method="POST" class="d-inline">
                                                                         @csrf
                                                                         @method('DELETE')
-                                                                        <button type="button" class="btn btn-danger btn-sm delete-btn"
+                                                                        <button type="button"
+                                                                            class="btn btn-danger btn-sm delete-btn"
                                                                             data-id="{{ $item->id }}" title="Hapus">
                                                                             <i class="ti-trash"></i>
                                                                         </button>
@@ -159,7 +177,7 @@
                                     </div>
 
                                     <!-- Pagination -->
-                                    @if($hdTindakanKhusus->hasPages())
+                                    @if ($hdTindakanKhusus->hasPages())
                                         <div class="d-flex justify-content-center mt-4">
                                             {{ $hdTindakanKhusus->links() }}
                                         </div>
@@ -177,7 +195,7 @@
 
 @push('js')
     <script>
-        document.getElementById('filterButton').addEventListener('click', function () {
+        document.getElementById('filterButton').addEventListener('click', function() {
             const selectOption = document.getElementById('SelectOption').value;
             const startDate = document.getElementById('start_date').value;
             const endDate = document.getElementById('end_date').value;
@@ -192,7 +210,7 @@
 
         // SweetAlert untuk konfirmasi hapus
         document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', function (e) {
+            button.addEventListener('click', function(e) {
                 e.preventDefault();
                 const id = this.getAttribute('data-id');
                 const form = document.getElementById(`deleteForm_${id}`);

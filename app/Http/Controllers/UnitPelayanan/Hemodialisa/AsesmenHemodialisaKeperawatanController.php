@@ -81,6 +81,27 @@ class AsesmenHemodialisaKeperawatanController extends Controller
             ->where('kd_detail_jenis_tenaga', 1)
             ->get();
 
+        // Ambil data monitoring preekripsi terbaru dari pasien yang sama
+        $latestMonitoringPreekripsi = RmeHdAsesmenKeperawatanMonitoringPreekripsi::select('rme_hd_asesmen_keperawatan_monitoring_preekripsi.*')
+            ->join('rme_hd_asesmen', 'rme_hd_asesmen_keperawatan_monitoring_preekripsi.id_asesmen', '=', 'rme_hd_asesmen.id')
+            ->where('rme_hd_asesmen.kd_pasien', $kd_pasien)
+            ->where('rme_hd_asesmen.kd_unit', $this->kdUnitDef_)
+            ->where('rme_hd_asesmen.kategori', 2) // kategori keperawatan
+            ->whereNotNull('rme_hd_asesmen_keperawatan_monitoring_preekripsi.preop_conductivity') // Pastikan ada data pre op
+            ->orderBy('rme_hd_asesmen.waktu_asesmen', 'desc')
+            ->first();
+
+        // Jika tidak ada data dengan pre op, ambil data terbaru apapun
+        if (!$latestMonitoringPreekripsi) {
+            $latestMonitoringPreekripsi = RmeHdAsesmenKeperawatanMonitoringPreekripsi::select('rme_hd_asesmen_keperawatan_monitoring_preekripsi.*')
+                ->join('rme_hd_asesmen', 'rme_hd_asesmen_keperawatan_monitoring_preekripsi.id_asesmen', '=', 'rme_hd_asesmen.id')
+                ->where('rme_hd_asesmen.kd_pasien', $kd_pasien)
+                ->where('rme_hd_asesmen.kd_unit', $this->kdUnitDef_)
+                ->where('rme_hd_asesmen.kategori', 2) // kategori keperawatan
+                ->orderBy('rme_hd_asesmen.waktu_asesmen', 'desc')
+                ->first();
+        }
+
         return view('unit-pelayanan.hemodialisa.pelayanan.asesmen.keperawatan.create', compact(
             'dataMedis',
             'itemFisik',
@@ -88,7 +109,8 @@ class AsesmenHemodialisaKeperawatanController extends Controller
             'dokterPelaksana',
             'dokter',
             'perawat',
-            'rmeMasterImplementasi'
+            'rmeMasterImplementasi',
+            'latestMonitoringPreekripsi'
         ));
     }
 
@@ -143,6 +165,11 @@ class AsesmenHemodialisaKeperawatanController extends Controller
             // 16. Evaluasi
             $keperawatan->evaluasi_keperawatan = $request->evaluasi_keperawatan;
             $keperawatan->evaluasi_medis = $request->evaluasi_medis;
+
+            $keperawatan->soap_s = $request->soap_s;
+            $keperawatan->soap_o = $request->soap_o;
+            $keperawatan->soap_a = $request->soap_a;
+            $keperawatan->soap_p = $request->soap_p;
 
             $keperawatan->perawat_pemeriksa = $request->perawat_pemeriksa;
             $keperawatan->perawat_bertugas = $request->perawat_bertugas;
@@ -300,26 +327,50 @@ class AsesmenHemodialisaKeperawatanController extends Controller
             $keperawatanMonitoringTindakan->save();
 
 
-            $keperawatanMonitoringIntrahd = new RmeHdAsesmenKeperawatanMonitoringIntrahd();
-            $keperawatanMonitoringIntrahd->id_asesmen = $asesmen->id;
-            $keperawatanMonitoringIntrahd->waktu_intra_pre_hd = $request->waktu_intra_pre_hd;
-            $keperawatanMonitoringIntrahd->qb_intra = $request->qb_intra;
-            $keperawatanMonitoringIntrahd->qd_intra = $request->qd_intra;
-            $keperawatanMonitoringIntrahd->uf_rate_intra = $request->uf_rate_intra;
-            $keperawatanMonitoringIntrahd->sistole_intra = $request->sistole_intra;
-            $keperawatanMonitoringIntrahd->diastole_intra = $request->diastole_intra;
-            $keperawatanMonitoringIntrahd->nadi_intra = $request->nadi_intra;
-            $keperawatanMonitoringIntrahd->nafas_intra = $request->nafas_intra;
-            $keperawatanMonitoringIntrahd->suhu_intra = $request->suhu_intra;
-            $keperawatanMonitoringIntrahd->nacl_intra = $request->nacl_intra;
-            $keperawatanMonitoringIntrahd->minum_intra = $request->minum_intra;
-            $keperawatanMonitoringIntrahd->intake_lain_intra = $request->intake_lain_intra;
-            $keperawatanMonitoringIntrahd->output_intra = $request->output_intra;
+            // Validasi observasi_data
+            if (empty($request->observasi_data) || $request->observasi_data === '[]') {
+                return back()->with('error', 'Data observasi tidak boleh kosong')->withInput();
+            }
 
-            // Save the table data as JSON
+            // Parse JSON observasi_data
+            $observasiData = json_decode($request->observasi_data, true);
+
+            if (!is_array($observasiData) || empty($observasiData)) {
+                return back()->with('error', 'Format data observasi tidak valid')->withInput();
+            }
+
+            // Ambil data terakhir dari observasi sebagai summary
+            $latestData = end($observasiData);
+
+            // Simpan data monitoring Intra HD
+            $keperawatanMonitoringIntrahd = new RmeHdAsesmenKeperawatanMonitoringIntrahd();
+            $keperawatanMonitoringIntrahd->id_asesmen = $asesmen->id; // Pastikan $asesmen sudah ada
+            
+            // Ambil data dari array terakhir
+            $keperawatanMonitoringIntrahd->waktu_intra_pre_hd = $latestData['waktu'] ?? null;
+            $keperawatanMonitoringIntrahd->qb_intra = $latestData['qb'] ?? null;
+            $keperawatanMonitoringIntrahd->qd_intra = $latestData['qd'] ?? null;
+            $keperawatanMonitoringIntrahd->uf_rate_intra = $latestData['uf_rate'] ?? null;
+            
+            // Pecah TD menjadi sistole dan diastole
+            if (!empty($latestData['td']) && strpos($latestData['td'], '/') !== false) {
+                $tdParts = explode('/', $latestData['td']);
+                $keperawatanMonitoringIntrahd->sistole_intra = trim($tdParts[0]) ?: null;
+                $keperawatanMonitoringIntrahd->diastole_intra = isset($tdParts[1]) ? trim($tdParts[1]) : null;
+            }
+            
+            $keperawatanMonitoringIntrahd->nadi_intra = $latestData['nadi'] ?? null;
+            $keperawatanMonitoringIntrahd->nafas_intra = $latestData['nafas'] ?? null;
+            $keperawatanMonitoringIntrahd->suhu_intra = $latestData['suhu'] ?? null;
+            $keperawatanMonitoringIntrahd->nacl_intra = $latestData['nacl'] ?? null;
+            $keperawatanMonitoringIntrahd->minum_intra = $latestData['minum'] ?? null;
+            $keperawatanMonitoringIntrahd->intake_lain_intra = $latestData['lain_lain'] ?? null;
+            $keperawatanMonitoringIntrahd->output_intra = $latestData['output'] ?? null;
+
+            // Simpan semua data observasi sebagai JSON
             $keperawatanMonitoringIntrahd->observasi_data = $request->observasi_data;
 
-            // Save to database
+            // Simpan ke database
             $keperawatanMonitoringIntrahd->save();
 
             $keperawatanMonitoringPosthd = new RmeHdAsesmenKeperawatanMonitoringPosthd();
@@ -576,6 +627,11 @@ class AsesmenHemodialisaKeperawatanController extends Controller
             $keperawatan->evaluasi_keperawatan = $request->evaluasi_keperawatan;
             $keperawatan->evaluasi_medis = $request->evaluasi_medis;
 
+            $keperawatan->soap_s = $request->soap_s;
+            $keperawatan->soap_o = $request->soap_o;
+            $keperawatan->soap_a = $request->soap_a;
+            $keperawatan->soap_p = $request->soap_p;
+
             $keperawatan->perawat_pemeriksa = $request->perawat_pemeriksa;
             $keperawatan->perawat_bertugas = $request->perawat_bertugas;
             $keperawatan->dokter_pelaksana = $request->dokter_pelaksana;
@@ -731,27 +787,51 @@ class AsesmenHemodialisaKeperawatanController extends Controller
             $keperawatanMonitoringTindakan->prehd_output = $request->prehd_output;
             $keperawatanMonitoringTindakan->save();
 
+            // Validasi observasi_data
+            if (empty($request->observasi_data) || $request->observasi_data === '[]') {
+                return back()->with('error', 'Data observasi tidak boleh kosong')->withInput();
+            }
 
+            // Parse JSON observasi_data
+            $observasiData = json_decode($request->observasi_data, true);
+
+            if (!is_array($observasiData) || empty($observasiData)) {
+                return back()->with('error', 'Format data observasi tidak valid')->withInput();
+            }
+
+            // Ambil data terakhir
+            $latestData = end($observasiData);
+
+            // Cari atau buat record monitoring
             $keperawatanMonitoringIntrahd = RmeHdAsesmenKeperawatanMonitoringIntrahd::firstOrNew(['id_asesmen' => $asesmen->id]);
-            $keperawatanMonitoringIntrahd->id_asesmen = $asesmen->id;
-            $keperawatanMonitoringIntrahd->waktu_intra_pre_hd = $request->waktu_intra_pre_hd;
-            $keperawatanMonitoringIntrahd->qb_intra = $request->qb_intra;
-            $keperawatanMonitoringIntrahd->qd_intra = $request->qd_intra;
-            $keperawatanMonitoringIntrahd->uf_rate_intra = $request->uf_rate_intra;
-            $keperawatanMonitoringIntrahd->sistole_intra = $request->sistole_intra;
-            $keperawatanMonitoringIntrahd->diastole_intra = $request->diastole_intra;
-            $keperawatanMonitoringIntrahd->nadi_intra = $request->nadi_intra;
-            $keperawatanMonitoringIntrahd->nafas_intra = $request->nafas_intra;
-            $keperawatanMonitoringIntrahd->suhu_intra = $request->suhu_intra;
-            $keperawatanMonitoringIntrahd->nacl_intra = $request->nacl_intra;
-            $keperawatanMonitoringIntrahd->minum_intra = $request->minum_intra;
-            $keperawatanMonitoringIntrahd->intake_lain_intra = $request->intake_lain_intra;
-            $keperawatanMonitoringIntrahd->output_intra = $request->output_intra;
+            
+            if (!$keperawatanMonitoringIntrahd) {
+                $keperawatanMonitoringIntrahd = new RmeHdAsesmenKeperawatanMonitoringIntrahd();
+                $keperawatanMonitoringIntrahd->id_asesmen = $id;
+            }
 
-            // Save the table data as JSON
+            // Update data
+            $keperawatanMonitoringIntrahd->waktu_intra_pre_hd = $latestData['waktu'] ?? null;
+            $keperawatanMonitoringIntrahd->qb_intra = $latestData['qb'] ?? null;
+            $keperawatanMonitoringIntrahd->qd_intra = $latestData['qd'] ?? null;
+            $keperawatanMonitoringIntrahd->uf_rate_intra = $latestData['uf_rate'] ?? null;
+            
+            // Pecah TD
+            if (!empty($latestData['td']) && strpos($latestData['td'], '/') !== false) {
+                $tdParts = explode('/', $latestData['td']);
+                $keperawatanMonitoringIntrahd->sistole_intra = trim($tdParts[0]) ?: null;
+                $keperawatanMonitoringIntrahd->diastole_intra = isset($tdParts[1]) ? trim($tdParts[1]) : null;
+            }
+            
+            $keperawatanMonitoringIntrahd->nadi_intra = $latestData['nadi'] ?? null;
+            $keperawatanMonitoringIntrahd->nafas_intra = $latestData['nafas'] ?? null;
+            $keperawatanMonitoringIntrahd->suhu_intra = $latestData['suhu'] ?? null;
+            $keperawatanMonitoringIntrahd->nacl_intra = $latestData['nacl'] ?? null;
+            $keperawatanMonitoringIntrahd->minum_intra = $latestData['minum'] ?? null;
+            $keperawatanMonitoringIntrahd->intake_lain_intra = $latestData['lain_lain'] ?? null;
+            $keperawatanMonitoringIntrahd->output_intra = $latestData['output'] ?? null;
             $keperawatanMonitoringIntrahd->observasi_data = $request->observasi_data;
 
-            // Save to database
             $keperawatanMonitoringIntrahd->save();
 
             $keperawatanMonitoringPosthd = RmeHdAsesmenKeperawatanMonitoringPosthd::firstOrNew(['id_asesmen' => $asesmen->id]);

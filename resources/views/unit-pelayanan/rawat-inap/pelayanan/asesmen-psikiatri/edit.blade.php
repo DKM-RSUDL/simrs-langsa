@@ -418,8 +418,8 @@
                                     <div class="section-separator" id="implemetasi" style="margin-bottom: 2rem;">
                                         <h5 class="fw-semibold mb-4">7. Prognosis dan Therapy</h5>
 
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Therapi</label>
+                                        <div class="mb-4">
+                                            <label class="text-primary fw-semibold">Therapy</label>
                                             <textarea class="form-control" name="therapi" rows="4" placeholder="Masukkan terapi">{{ $asesmenPsikiatriDtl ? $asesmenPsikiatriDtl->therapi : '' }}</textarea>
                                         </div>
 

@@ -1,41 +1,3 @@
-@push('css')
-    <style>
-        .nav-icons {
-            display: flex;
-            gap: 5px;
-            padding: 5px;
-            background: white;
-        }
-
-        .nav-icons .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 2px 2px;
-            text-decoration: none;
-            color: #ffffff;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-        }
-
-        .nav-icons .nav-item:hover {
-            background-color: #e9ecef;
-        }
-
-        .nav-icons .nav-item.active {
-            background-color: #0d6efd;
-        }
-
-        .nav-icons .nav-item.active span {
-            color: white;
-        }
-
-        .nav-icons .nav-item.active img {
-            filter: none;
-        }
-    </style>
-@endpush
-
 @php
     $currentUrl = url()->current();
 
@@ -45,27 +7,47 @@
         [
             'icon' => 'check.svg',
             'label' => 'Asesmen',
-            'link' => route('operasi.pelayanan.asesmen.index', [$dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+            'link' => route('operasi.pelayanan.asesmen.index', [
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
         [
             'icon' => 'rrrr.png',
             'label' => 'Site Marking',
-            'link' => route('operasi.pelayanan.site-marking.index', [$dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+            'link' => route('operasi.pelayanan.site-marking.index', [
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
         [
             'icon' => 'ceklis.png',
             'label' => 'Cek List Keselamatan',
-            'link' => route('operasi.pelayanan.ceklist-keselamatan.index', [$dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+            'link' => route('operasi.pelayanan.ceklist-keselamatan.index', [
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
         [
             'icon' => 'check.svg',
             'label' => 'Laporan Operatif',
-            'link' => route('operasi.pelayanan.laporan-operasi.index', [$dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+            'link' => route('operasi.pelayanan.laporan-operasi.index', [
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
         [
             'icon' => 'check.svg',
             'label' => 'Laporan Anestesi',
-            'link' => route('operasi.pelayanan.laporan-anastesi.index', [$dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+            'link' => route('operasi.pelayanan.laporan-anastesi.index', [
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
         [
             'icon' => 'agree.png',
@@ -90,14 +72,4 @@
     ];
 @endphp
 
-<div class="header-background">
-    <div class="nav-icons shadow-sm">
-        @foreach ($navItems as $item)
-            <a href="{{ $item['link'] }}" class="nav-item {{ $currentUrl === $item['link'] ? 'active' : '' }}">
-                <img id="image" src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }} Icon"
-                    width="20">
-                <span>{{ $item['label'] }}</span>
-            </a>
-        @endforeach
-    </div>
-</div>
+<x-navigation-action :nav-items="$navItems" :current-url="$currentUrl" :data-medis="$dataMedis" />

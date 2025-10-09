@@ -183,10 +183,9 @@
     </style>
 @endpush
 @section('content')
-
     <div class="row">
         <div class="col-md-3">
-            @include('unit-pelayanan.hemodialisa.component.patient-card')
+            @include('components.patient-card-hemodialisa')
         </div>
 
         <div class="col-md-9">
@@ -218,7 +217,7 @@
                                     <label class="form-label">Tinggal Bersama <i class="fas fa-info-circle tooltip-icon"
                                             data-bs-toggle="tooltip" title="Pilih dengan siapa pasien tinggal"></i></label>
                                     <div class="checkbox-group">
-                                        @foreach($tinggalBersamaOptions as $option)
+                                        @foreach ($tinggalBersamaOptions as $option)
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" name="tinggal_bersama[]"
                                                     value="{{ $option['value'] }}"
@@ -233,15 +232,27 @@
                                 @php
                                     $kemampuanBahasaOptions = [
                                         ['value' => 'Indonesia', 'label' => 'Indonesia'],
-                                        ['value' => 'Daerah', 'label' => 'Daerah', 'has_detail' => true, 'detail_name' => 'bahasa_daerah_detail', 'placeholder' => 'Sebutkan'],
-                                        ['value' => 'Asing', 'label' => 'Asing', 'has_detail' => true, 'detail_name' => 'bahasa_asing_detail', 'placeholder' => 'Sebutkan'],
+                                        [
+                                            'value' => 'Daerah',
+                                            'label' => 'Daerah',
+                                            'has_detail' => true,
+                                            'detail_name' => 'bahasa_daerah_detail',
+                                            'placeholder' => 'Sebutkan',
+                                        ],
+                                        [
+                                            'value' => 'Asing',
+                                            'label' => 'Asing',
+                                            'has_detail' => true,
+                                            'detail_name' => 'bahasa_asing_detail',
+                                            'placeholder' => 'Sebutkan',
+                                        ],
                                     ];
                                 @endphp
                                 <div class="form-group">
                                     <label class="form-label">Kemampuan Bahasa <i class="fas fa-info-circle tooltip-icon"
                                             data-bs-toggle="tooltip" title="Pilih bahasa yang dikuasai pasien"></i></label>
                                     <div class="checkbox-group">
-                                        @foreach($kemampuanBahasaOptions as $option)
+                                        @foreach ($kemampuanBahasaOptions as $option)
                                             <div class="form-check">
                                                 <input class="form-check-input bahasa-checkbox" type="checkbox"
                                                     name="kemampuan_bahasa[]" value="{{ $option['value'] }}"
@@ -249,9 +260,11 @@
                                                     data-target="{{ isset($option['detail_name']) ? $option['detail_name'] : '' }}">
                                                 <label class="form-check-label"
                                                     for="bahasa_{{ str_replace(' ', '_', strtolower($option['value'])) }}">{{ $option['label'] }}</label>
-                                                @if(isset($option['has_detail']) && $option['has_detail'])
-                                                    <input type="text" class="form-control form-control-sm ms-2 detail-input"
-                                                        name="{{ $option['detail_name'] }}" id="{{ $option['detail_name'] }}"
+                                                @if (isset($option['has_detail']) && $option['has_detail'])
+                                                    <input type="text"
+                                                        class="form-control form-control-sm ms-2 detail-input"
+                                                        name="{{ $option['detail_name'] }}"
+                                                        id="{{ $option['detail_name'] }}"
                                                         placeholder="{{ $option['placeholder'] }}" disabled>
                                                 @endif
                                             </div>
@@ -270,7 +283,7 @@
                                             data-bs-toggle="tooltip"
                                             title="Apakah pasien memerlukan penerjemah?"></i></label>
                                     <div class="checkbox-group">
-                                        @foreach($perluPenerjemahOptions as $option)
+                                        @foreach ($perluPenerjemahOptions as $option)
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="perlu_penerjemah"
                                                     value="{{ $option['value'] }}"
@@ -293,7 +306,7 @@
                                             data-bs-toggle="tooltip"
                                             title="Apakah pasien dapat membaca dan menulis?"></i></label>
                                     <div class="checkbox-group">
-                                        @foreach($bacaTulisOptions as $option)
+                                        @foreach ($bacaTulisOptions as $option)
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="baca_tulis"
                                                     value="{{ $option['value'] }}"
@@ -318,7 +331,7 @@
                                             data-bs-toggle="tooltip"
                                             title="Pilih metode edukasi yang digunakan"></i></label>
                                     <div class="checkbox-group">
-                                        @foreach($caraEdukasiOptions as $option)
+                                        @foreach ($caraEdukasiOptions as $option)
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" name="cara_edukasi[]"
                                                     value="{{ $option['value'] }}"
@@ -349,11 +362,12 @@
                                             data-bs-toggle="tooltip"
                                             title="Pilih apakah ada hambatan yang dialami pasien"></i></label>
                                     <div class="checkbox-group">
-                                        @foreach($hambatanStatusOptions as $option)
+                                        @foreach ($hambatanStatusOptions as $option)
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="hambatan_status"
                                                     value="{{ $option['value'] }}"
-                                                    id="hambatan_status_{{ strtolower($option['value']) }}" {{ isset($option['checked']) && $option['checked'] ? 'checked' : '' }}>
+                                                    id="hambatan_status_{{ strtolower($option['value']) }}"
+                                                    {{ isset($option['checked']) && $option['checked'] ? 'checked' : '' }}>
                                                 <label class="form-check-label"
                                                     for="hambatan_status_{{ strtolower($option['value']) }}">{{ $option['label'] }}</label>
                                             </div>
@@ -361,7 +375,7 @@
                                     </div>
                                     <div class="hambatan-details" id="hambatan-details">
                                         <div class="checkbox-group">
-                                            @foreach($hambatanOptions as $hambatan)
+                                            @foreach ($hambatanOptions as $hambatan)
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="hambatan[]"
                                                         value="{{ $hambatan }}"
@@ -385,10 +399,10 @@
                                             class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
                                             title="Apakah pasien bersedia menerima edukasi?"></i></label>
                                     <div class="checkbox-group">
-                                        @foreach($ketersediaanEdukasiOptions as $option)
+                                        @foreach ($ketersediaanEdukasiOptions as $option)
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="ketersediaan_edukasi"
-                                                    value="{{ $option['value'] }}"
+                                                <input class="form-check-input" type="radio"
+                                                    name="ketersediaan_edukasi" value="{{ $option['value'] }}"
                                                     id="ketersediaan_{{ strtolower($option['value']) }}">
                                                 <label class="form-check-label"
                                                     for="ketersediaan_{{ strtolower($option['value']) }}">{{ $option['label'] }}</label>
@@ -399,136 +413,155 @@
                             </div>
 
                             <div class="section-separator">
-                            <h5 class="section-title">2. Kebutuhan Edukasi</h5>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-lg-6 col-md-12">
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
-                                                value="kebutuhan_hak_berpartisipasi_pada_proses_pelayanan"
-                                                id="kebutuhan_hak_berpartisipasi_pada_proses_pelayanan">
-                                            <label class="form-check-label"
-                                                for="kebutuhan_hak_berpartisipasi_pada_proses_pelayanan">Hak berpartisipasi
-                                                pada proses pelayanan</label>
+                                <h5 class="section-title">2. Kebutuhan Edukasi</h5>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-12">
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox"
+                                                    name="kebutuhan_edukasi[]"
+                                                    value="kebutuhan_hak_berpartisipasi_pada_proses_pelayanan"
+                                                    id="kebutuhan_hak_berpartisipasi_pada_proses_pelayanan">
+                                                <label class="form-check-label"
+                                                    for="kebutuhan_hak_berpartisipasi_pada_proses_pelayanan">Hak
+                                                    berpartisipasi
+                                                    pada proses pelayanan</label>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox"
+                                                    name="kebutuhan_edukasi[]"
+                                                    value="kebutuhan_prosedur_pemeriksaan_penunjang"
+                                                    id="kebutuhan_prosedur_pemeriksaan_penunjang">
+                                                <label class="form-check-label"
+                                                    for="kebutuhan_prosedur_pemeriksaan_penunjang">Prosedur pemeriksaan
+                                                    penunjang</label>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox"
+                                                    name="kebutuhan_edukasi[]"
+                                                    value="kebutuhan_kondisi_kesehatan_daignosis_dan_penatalaksanaannya"
+                                                    id="kebutuhan_kondisi_kesehatan_daignosis_dan_penatalaksanaannya">
+                                                <label class="form-check-label"
+                                                    for="kebutuhan_kondisi_kesehatan_daignosis_dan_penatalaksanaannya">Kondisi
+                                                    kesehatan, diagnosis, dan penatalaksanaannya</label>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox"
+                                                    name="kebutuhan_edukasi[]"
+                                                    value="kebutuhan_proses_pemberian_informed_concent"
+                                                    id="kebutuhan_proses_pemberian_informed_concent">
+                                                <label class="form-check-label"
+                                                    for="kebutuhan_proses_pemberian_informed_concent">Proses pemberian
+                                                    informed
+                                                    consent</label>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox"
+                                                    name="kebutuhan_edukasi[]" value="kebutuhan_diet_dan_nutrisi"
+                                                    id="kebutuhan_diet_dan_nutrisi">
+                                                <label class="form-check-label" for="kebutuhan_diet_dan_nutrisi">Diet dan
+                                                    nutrisi</label>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox"
+                                                    name="kebutuhan_edukasi[]"
+                                                    value="kebutuhan_pengguanaan_obat_secara_efektif_dan_aman_serta_efek_samping_serta_interaksinya"
+                                                    id="kebutuhan_pengguanaan_obat_secara_efektif_dan_aman_serta_efek_samping_serta_interaksinya">
+                                                <label class="form-check-label"
+                                                    for="kebutuhan_pengguanaan_obat_secara_efektif_dan_aman_serta_efek_samping_serta_interaksinya">Penggunaan
+                                                    obat secara efektif dan aman serta efek samping serta
+                                                    interaksinya</label>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox"
+                                                    name="kebutuhan_edukasi[]"
+                                                    value="kebutuhan_penggunaan_alat_medis_yang_aman"
+                                                    id="kebutuhan_penggunaan_alat_medis_yang_aman">
+                                                <label class="form-check-label"
+                                                    for="kebutuhan_penggunaan_alat_medis_yang_aman">Penggunaan alat medis
+                                                    yang
+                                                    aman</label>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox"
+                                                    name="kebutuhan_edukasi[]" value="kebutuhan_manajemen_nyeri"
+                                                    id="kebutuhan_manajemen_nyeri">
+                                                <label class="form-check-label" for="kebutuhan_manajemen_nyeri">Manajemen
+                                                    nyeri</label>
+                                            </div>
                                         </div>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
-                                                value="kebutuhan_prosedur_pemeriksaan_penunjang"
-                                                id="kebutuhan_prosedur_pemeriksaan_penunjang">
-                                            <label class="form-check-label"
-                                                for="kebutuhan_prosedur_pemeriksaan_penunjang">Prosedur pemeriksaan
-                                                penunjang</label>
-                                        </div>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
-                                                value="kebutuhan_kondisi_kesehatan_daignosis_dan_penatalaksanaannya"
-                                                id="kebutuhan_kondisi_kesehatan_daignosis_dan_penatalaksanaannya">
-                                            <label class="form-check-label"
-                                                for="kebutuhan_kondisi_kesehatan_daignosis_dan_penatalaksanaannya">Kondisi
-                                                kesehatan, diagnosis, dan penatalaksanaannya</label>
-                                        </div>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
-                                                value="kebutuhan_proses_pemberian_informed_concent"
-                                                id="kebutuhan_proses_pemberian_informed_concent">
-                                            <label class="form-check-label"
-                                                for="kebutuhan_proses_pemberian_informed_concent">Proses pemberian informed
-                                                consent</label>
-                                        </div>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
-                                                value="kebutuhan_diet_dan_nutrisi" id="kebutuhan_diet_dan_nutrisi">
-                                            <label class="form-check-label" for="kebutuhan_diet_dan_nutrisi">Diet dan
-                                                nutrisi</label>
-                                        </div>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
-                                                value="kebutuhan_pengguanaan_obat_secara_efektif_dan_aman_serta_efek_samping_serta_interaksinya"
-                                                id="kebutuhan_pengguanaan_obat_secara_efektif_dan_aman_serta_efek_samping_serta_interaksinya">
-                                            <label class="form-check-label"
-                                                for="kebutuhan_pengguanaan_obat_secara_efektif_dan_aman_serta_efek_samping_serta_interaksinya">Penggunaan
-                                                obat secara efektif dan aman serta efek samping serta interaksinya</label>
-                                        </div>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
-                                                value="kebutuhan_penggunaan_alat_medis_yang_aman"
-                                                id="kebutuhan_penggunaan_alat_medis_yang_aman">
-                                            <label class="form-check-label"
-                                                for="kebutuhan_penggunaan_alat_medis_yang_aman">Penggunaan alat medis yang
-                                                aman</label>
-                                        </div>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
-                                                value="kebutuhan_manajemen_nyeri" id="kebutuhan_manajemen_nyeri">
-                                            <label class="form-check-label" for="kebutuhan_manajemen_nyeri">Manajemen
-                                                nyeri</label>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-lg-6 col-md-12">
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
-                                                value="kebutuhan_teknik_rehabilitasi" id="kebutuhan_teknik_rehabilitasi">
-                                            <label class="form-check-label" for="kebutuhan_teknik_rehabilitasi">Teknik
-                                                rehabilitasi</label>
-                                        </div>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
-                                                value="kebutuhan_cuci_tangan_yang_benar" id="kebutuhan_cuci_tangan_yang_benar">
-                                            <label class="form-check-label" for="kebutuhan_cuci_tangan_yang_benar">Cuci
-                                                tangan yang benar</label>
-                                        </div>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
-                                                value="kebutuhan_bahaya_merokok" id="kebutuhan_bahaya_merokok">
-                                            <label class="form-check-label" for="kebutuhan_bahaya_merokok">Bahaya
-                                                merokok</label>
-                                        </div>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
-                                                value="kebutuhan_rujukan_edukasi" id="kebutuhan_rujukan_edukasi">
-                                            <label class="form-check-label" for="kebutuhan_rujukan_edukasi">Rujukan
-                                                edukasi</label>
-                                        </div>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
-                                                value="kebutuhan_perawatan_av_shunt" id="kebutuhan_perawatan_av_shunt">
-                                            <label class="form-check-label" for="kebutuhan_perawatan_av_shunt">Perawatan
-                                                AV-Shunt</label>
-                                        </div>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
-                                                value="kebutuhan_perawatan_cdl" id="kebutuhan_perawatan_cdl">
-                                            <label class="form-check-label" for="kebutuhan_perawatan_cdl">Perawatan
-                                                CDL</label>
-                                        </div>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
-                                                value="kebutuhan_kepatuhan_minum_obat" id="kebutuhan_kepatuhan_minum_obat">
-                                            <label class="form-check-label" for="kebutuhan_kepatuhan_minum_obat">Kepatuhan
-                                                minum obat</label>
-                                        </div>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" name="kebutuhan_edukasi[]"
-                                                value="kebutuhan_perawatan_luka_akses_femoralis"
-                                                id="kebutuhan_perawatan_luka_akses_femoralis">
-                                            <label class="form-check-label"
-                                                for="kebutuhan_perawatan_luka_akses_femoralis">Perawatan luka akses
-                                                femoralis</label>
+
+                                        <div class="col-lg-6 col-md-12">
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox"
+                                                    name="kebutuhan_edukasi[]" value="kebutuhan_teknik_rehabilitasi"
+                                                    id="kebutuhan_teknik_rehabilitasi">
+                                                <label class="form-check-label" for="kebutuhan_teknik_rehabilitasi">Teknik
+                                                    rehabilitasi</label>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox"
+                                                    name="kebutuhan_edukasi[]" value="kebutuhan_cuci_tangan_yang_benar"
+                                                    id="kebutuhan_cuci_tangan_yang_benar">
+                                                <label class="form-check-label"
+                                                    for="kebutuhan_cuci_tangan_yang_benar">Cuci
+                                                    tangan yang benar</label>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox"
+                                                    name="kebutuhan_edukasi[]" value="kebutuhan_bahaya_merokok"
+                                                    id="kebutuhan_bahaya_merokok">
+                                                <label class="form-check-label" for="kebutuhan_bahaya_merokok">Bahaya
+                                                    merokok</label>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox"
+                                                    name="kebutuhan_edukasi[]" value="kebutuhan_rujukan_edukasi"
+                                                    id="kebutuhan_rujukan_edukasi">
+                                                <label class="form-check-label" for="kebutuhan_rujukan_edukasi">Rujukan
+                                                    edukasi</label>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox"
+                                                    name="kebutuhan_edukasi[]" value="kebutuhan_perawatan_av_shunt"
+                                                    id="kebutuhan_perawatan_av_shunt">
+                                                <label class="form-check-label"
+                                                    for="kebutuhan_perawatan_av_shunt">Perawatan
+                                                    AV-Shunt</label>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox"
+                                                    name="kebutuhan_edukasi[]" value="kebutuhan_perawatan_cdl"
+                                                    id="kebutuhan_perawatan_cdl">
+                                                <label class="form-check-label" for="kebutuhan_perawatan_cdl">Perawatan
+                                                    CDL</label>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox"
+                                                    name="kebutuhan_edukasi[]" value="kebutuhan_kepatuhan_minum_obat"
+                                                    id="kebutuhan_kepatuhan_minum_obat">
+                                                <label class="form-check-label"
+                                                    for="kebutuhan_kepatuhan_minum_obat">Kepatuhan
+                                                    minum obat</label>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox"
+                                                    name="kebutuhan_edukasi[]"
+                                                    value="kebutuhan_perawatan_luka_akses_femoralis"
+                                                    id="kebutuhan_perawatan_luka_akses_femoralis">
+                                                <label class="form-check-label"
+                                                    for="kebutuhan_perawatan_luka_akses_femoralis">Perawatan luka akses
+                                                    femoralis</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
                             <div class="section-separator">
                                 <h5 class="section-title">3. Edukasi Pasien</h5>
                                 @php
-                                    $hasilVerifikasiOptions = [
-                                        'Sudah mengerti',
-                                        'Re-demonstrasi',
-                                        'Re-edukasi',
-                                    ];
+                                    $hasilVerifikasiOptions = ['Sudah mengerti', 'Re-demonstrasi', 'Re-edukasi'];
                                 @endphp
                                 <div class="row row-cols-1 row-cols-md-2 g-4">
                                     <div class="col">
@@ -538,13 +571,12 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_1" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[hak_kewajiban_pasien][tgl_jam]"
-                                                        id="tgl_jam_1">
+                                                        name="edukasi[hak_kewajiban_pasien][tgl_jam]" id="tgl_jam_1">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
                                                     <div class="checkbox-group">
-                                                        @foreach($hasilVerifikasiOptions as $hasil)
+                                                        @foreach ($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="edukasi[hak_kewajiban_pasien][hasil_verifikasi]"
@@ -566,10 +598,9 @@
                                                 <div class="mb-3">
                                                     <label for="edukator_1" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[hak_kewajiban_pasien][edukator_kd]"
-                                                        id="edukator_1">
+                                                        name="edukasi[hak_kewajiban_pasien][edukator_kd]" id="edukator_1">
                                                         <option value="" selected disabled>Pilih Edukator</option>
-                                                        @foreach($perawat as $staff)
+                                                        @foreach ($perawat as $staff)
                                                             <option value="{{ $staff->kd_karyawan }}">
                                                                 {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                                 ({{ $staff->profesi ?? 'Perawat' }})
@@ -579,7 +610,8 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="pasien_nama_1" class="form-label">Pasien/Keluarga <i
-                                                            class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                            class="fas fa-info-circle tooltip-icon"
+                                                            data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
                                                         name="edukasi[hak_kewajiban_pasien][pasien_nama]"
@@ -596,13 +628,12 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_2" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[identitas_pasien_gelang][tgl_jam]"
-                                                        id="tgl_jam_2">
+                                                        name="edukasi[identitas_pasien_gelang][tgl_jam]" id="tgl_jam_2">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
                                                     <div class="checkbox-group">
-                                                        @foreach($hasilVerifikasiOptions as $hasil)
+                                                        @foreach ($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="edukasi[identitas_pasien_gelang][hasil_verifikasi]"
@@ -627,7 +658,7 @@
                                                         name="edukasi[identitas_pasien_gelang][edukator_kd]"
                                                         id="edukator_2">
                                                         <option value="" selected disabled>Pilih Edukator</option>
-                                                        @foreach($perawat as $staff)
+                                                        @foreach ($perawat as $staff)
                                                             <option value="{{ $staff->kd_karyawan }}">
                                                                 {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                                 ({{ $staff->profesi ?? 'Perawat' }})
@@ -637,7 +668,8 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="pasien_nama_2" class="form-label">Pasien/Keluarga <i
-                                                            class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                            class="fas fa-info-circle tooltip-icon"
+                                                            data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
                                                         name="edukasi[identitas_pasien_gelang][pasien_nama]"
@@ -658,7 +690,7 @@
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
                                                     <div class="checkbox-group">
-                                                        @foreach($hasilVerifikasiOptions as $hasil)
+                                                        @foreach ($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="edukasi[penyebab_gagal_ginjal][hasil_verifikasi]"
@@ -683,7 +715,7 @@
                                                         name="edukasi[penyebab_gagal_ginjal][edukator_kd]"
                                                         id="edukator_3">
                                                         <option value="" selected disabled>Pilih Edukator</option>
-                                                        @foreach($perawat as $staff)
+                                                        @foreach ($perawat as $staff)
                                                             <option value="{{ $staff->kd_karyawan }}">
                                                                 {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                                 ({{ $staff->profesi ?? 'Perawat' }})
@@ -693,7 +725,8 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="pasien_nama_3" class="form-label">Pasien/Keluarga <i
-                                                            class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                            class="fas fa-info-circle tooltip-icon"
+                                                            data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
                                                         name="edukasi[penyebab_gagal_ginjal][pasien_nama]"
@@ -715,7 +748,7 @@
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
                                                     <div class="checkbox-group">
-                                                        @foreach($hasilVerifikasiOptions as $hasil)
+                                                        @foreach ($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="edukasi[arti_kegunaan_hemodialisis][hasil_verifikasi]"
@@ -740,7 +773,7 @@
                                                         name="edukasi[arti_kegunaan_hemodialisis][edukator_kd]"
                                                         id="edukator_4">
                                                         <option value="" selected disabled>Pilih Edukator</option>
-                                                        @foreach($perawat as $staff)
+                                                        @foreach ($perawat as $staff)
                                                             <option value="{{ $staff->kd_karyawan }}">
                                                                 {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                                 ({{ $staff->profesi ?? 'Perawat' }})
@@ -750,7 +783,8 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="pasien_nama_4" class="form-label">Pasien/Keluarga <i
-                                                            class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                            class="fas fa-info-circle tooltip-icon"
+                                                            data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
                                                         name="edukasi[arti_kegunaan_hemodialisis][pasien_nama]"
@@ -761,18 +795,18 @@
                                     </div>
                                     <div class="col">
                                         <div class="card h-100">
-                                            <div class="card-header">Jumlah/jam hemodialisis dan frekuensi hemodialisi</div>
+                                            <div class="card-header">Jumlah/jam hemodialisis dan frekuensi hemodialisi
+                                            </div>
                                             <div class="card-body">
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_5" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[jumlah_jam_hemodialisis][tgl_jam]"
-                                                        id="tgl_jam_5">
+                                                        name="edukasi[jumlah_jam_hemodialisis][tgl_jam]" id="tgl_jam_5">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
                                                     <div class="checkbox-group">
-                                                        @foreach($hasilVerifikasiOptions as $hasil)
+                                                        @foreach ($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="edukasi[jumlah_jam_hemodialisis][hasil_verifikasi]"
@@ -797,7 +831,7 @@
                                                         name="edukasi[jumlah_jam_hemodialisis][edukator_kd]"
                                                         id="edukator_5">
                                                         <option value="" selected disabled>Pilih Edukator</option>
-                                                        @foreach($perawat as $staff)
+                                                        @foreach ($perawat as $staff)
                                                             <option value="{{ $staff->kd_karyawan }}">
                                                                 {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                                 ({{ $staff->profesi ?? 'Perawat' }})
@@ -807,7 +841,8 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="pasien_nama_5" class="form-label">Pasien/Keluarga <i
-                                                            class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                            class="fas fa-info-circle tooltip-icon"
+                                                            data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
                                                         name="edukasi[jumlah_jam_hemodialisis][pasien_nama]"
@@ -823,13 +858,12 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_6" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[kepatuhan_intake_cairan][tgl_jam]"
-                                                        id="tgl_jam_6">
+                                                        name="edukasi[kepatuhan_intake_cairan][tgl_jam]" id="tgl_jam_6">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
                                                     <div class="checkbox-group">
-                                                        @foreach($hasilVerifikasiOptions as $hasil)
+                                                        @foreach ($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="edukasi[kepatuhan_intake_cairan][hasil_verifikasi]"
@@ -854,7 +888,7 @@
                                                         name="edukasi[kepatuhan_intake_cairan][edukator_kd]"
                                                         id="edukator_6">
                                                         <option value="" selected disabled>Pilih Edukator</option>
-                                                        @foreach($perawat as $staff)
+                                                        @foreach ($perawat as $staff)
                                                             <option value="{{ $staff->kd_karyawan }}">
                                                                 {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                                 ({{ $staff->profesi ?? 'Perawat' }})
@@ -864,7 +898,8 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="pasien_nama_6" class="form-label">Pasien/Keluarga <i
-                                                            class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                            class="fas fa-info-circle tooltip-icon"
+                                                            data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
                                                         name="edukasi[kepatuhan_intake_cairan][pasien_nama]"
@@ -880,13 +915,12 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_7" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[makanan_tidak_boleh][tgl_jam]"
-                                                        id="tgl_jam_7">
+                                                        name="edukasi[makanan_tidak_boleh][tgl_jam]" id="tgl_jam_7">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
                                                     <div class="checkbox-group">
-                                                        @foreach($hasilVerifikasiOptions as $hasil)
+                                                        @foreach ($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="edukasi[makanan_tidak_boleh][hasil_verifikasi]"
@@ -908,10 +942,9 @@
                                                 <div class="mb-3">
                                                     <label for="edukator_7" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[makanan_tidak_boleh][edukator_kd]"
-                                                        id="edukator_7">
+                                                        name="edukasi[makanan_tidak_boleh][edukator_kd]" id="edukator_7">
                                                         <option value="" selected disabled>Pilih Edukator</option>
-                                                        @foreach($perawat as $staff)
+                                                        @foreach ($perawat as $staff)
                                                             <option value="{{ $staff->kd_karyawan }}">
                                                                 {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                                 ({{ $staff->profesi ?? 'Perawat' }})
@@ -921,7 +954,8 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="pasien_nama_7" class="form-label">Pasien/Keluarga <i
-                                                            class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                            class="fas fa-info-circle tooltip-icon"
+                                                            data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
                                                         name="edukasi[makanan_tidak_boleh][pasien_nama]"
@@ -937,13 +971,12 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_8" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[cara_konsumsi_buah][tgl_jam]"
-                                                        id="tgl_jam_8">
+                                                        name="edukasi[cara_konsumsi_buah][tgl_jam]" id="tgl_jam_8">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
                                                     <div class="checkbox-group">
-                                                        @foreach($hasilVerifikasiOptions as $hasil)
+                                                        @foreach ($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="edukasi[cara_konsumsi_buah][hasil_verifikasi]"
@@ -965,10 +998,9 @@
                                                 <div class="mb-3">
                                                     <label for="edukator_8" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[cara_konsumsi_buah][edukator_kd]"
-                                                        id="edukator_8">
+                                                        name="edukasi[cara_konsumsi_buah][edukator_kd]" id="edukator_8">
                                                         <option value="" selected disabled>Pilih Edukator</option>
-                                                        @foreach($perawat as $staff)
+                                                        @foreach ($perawat as $staff)
                                                             <option value="{{ $staff->kd_karyawan }}">
                                                                 {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                                 ({{ $staff->profesi ?? 'Perawat' }})
@@ -978,11 +1010,12 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="pasien_nama_8" class="form-label">Pasien/Keluarga <i
-                                                            class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                            class="fas fa-info-circle tooltip-icon"
+                                                            data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[cara_konsumsi_buah][pasien_nama]"
-                                                        id="pasien_nama_8" placeholder="Nama Keluarga">
+                                                        name="edukasi[cara_konsumsi_buah][pasien_nama]" id="pasien_nama_8"
+                                                        placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
                                         </div>
@@ -999,7 +1032,7 @@
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
                                                     <div class="checkbox-group">
-                                                        @foreach($hasilVerifikasiOptions as $hasil)
+                                                        @foreach ($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="edukasi[komplikasi_hemodialisis][hasil_verifikasi]"
@@ -1024,7 +1057,7 @@
                                                         name="edukasi[komplikasi_hemodialisis][edukator_kd]"
                                                         id="edukator_9">
                                                         <option value="" selected disabled>Pilih Edukator</option>
-                                                        @foreach($perawat as $staff)
+                                                        @foreach ($perawat as $staff)
                                                             <option value="{{ $staff->kd_karyawan }}">
                                                                 {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                                 ({{ $staff->profesi ?? 'Perawat' }})
@@ -1034,7 +1067,8 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="pasien_nama_9" class="form-label">Pasien/Keluarga <i
-                                                            class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                            class="fas fa-info-circle tooltip-icon"
+                                                            data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
                                                         name="edukasi[komplikasi_hemodialisis][pasien_nama]"
@@ -1050,13 +1084,12 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_10" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[penyebab_anemis][tgl_jam]"
-                                                        id="tgl_jam_10">
+                                                        name="edukasi[penyebab_anemis][tgl_jam]" id="tgl_jam_10">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
                                                     <div class="checkbox-group">
-                                                        @foreach($hasilVerifikasiOptions as $hasil)
+                                                        @foreach ($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="edukasi[penyebab_anemis][hasil_verifikasi]"
@@ -1078,10 +1111,9 @@
                                                 <div class="mb-3">
                                                     <label for="edukator_10" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[penyebab_anemis][edukator_kd]"
-                                                        id="edukator_10">
+                                                        name="edukasi[penyebab_anemis][edukator_kd]" id="edukator_10">
                                                         <option value="" selected disabled>Pilih Edukator</option>
-                                                        @foreach($perawat as $staff)
+                                                        @foreach ($perawat as $staff)
                                                             <option value="{{ $staff->kd_karyawan }}">
                                                                 {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                                 ({{ $staff->profesi ?? 'Perawat' }})
@@ -1091,11 +1123,12 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="pasien_nama_10" class="form-label">Pasien/Keluarga <i
-                                                            class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                            class="fas fa-info-circle tooltip-icon"
+                                                            data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[penyebab_anemis][pasien_nama]"
-                                                        id="pasien_nama_10" placeholder="Nama Keluarga">
+                                                        name="edukasi[penyebab_anemis][pasien_nama]" id="pasien_nama_10"
+                                                        placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
                                         </div>
@@ -1112,7 +1145,7 @@
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
                                                     <div class="checkbox-group">
-                                                        @foreach($hasilVerifikasiOptions as $hasil)
+                                                        @foreach ($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="edukasi[monitor_tekanan_darah][hasil_verifikasi]"
@@ -1137,7 +1170,7 @@
                                                         name="edukasi[monitor_tekanan_darah][edukator_kd]"
                                                         id="edukator_11">
                                                         <option value="" selected disabled>Pilih Edukator</option>
-                                                        @foreach($perawat as $staff)
+                                                        @foreach ($perawat as $staff)
                                                             <option value="{{ $staff->kd_karyawan }}">
                                                                 {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                                 ({{ $staff->profesi ?? 'Perawat' }})
@@ -1147,7 +1180,8 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="pasien_nama_11" class="form-label">Pasien/Keluarga <i
-                                                            class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                            class="fas fa-info-circle tooltip-icon"
+                                                            data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
                                                         name="edukasi[monitor_tekanan_darah][pasien_nama]"
@@ -1164,13 +1198,12 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_12" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[kepatuhan_proses_hd][tgl_jam]"
-                                                        id="tgl_jam_12">
+                                                        name="edukasi[kepatuhan_proses_hd][tgl_jam]" id="tgl_jam_12">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
                                                     <div class="checkbox-group">
-                                                        @foreach($hasilVerifikasiOptions as $hasil)
+                                                        @foreach ($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="edukasi[kepatuhan_proses_hd][hasil_verifikasi]"
@@ -1192,10 +1225,9 @@
                                                 <div class="mb-3">
                                                     <label for="edukator_12" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[kepatuhan_proses_hd][edukator_kd]"
-                                                        id="edukator_12">
+                                                        name="edukasi[kepatuhan_proses_hd][edukator_kd]" id="edukator_12">
                                                         <option value="" selected disabled>Pilih Edukator</option>
-                                                        @foreach($perawat as $staff)
+                                                        @foreach ($perawat as $staff)
                                                             <option value="{{ $staff->kd_karyawan }}">
                                                                 {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                                 ({{ $staff->profesi ?? 'Perawat' }})
@@ -1205,7 +1237,8 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="pasien_nama_12" class="form-label">Pasien/Keluarga <i
-                                                            class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                            class="fas fa-info-circle tooltip-icon"
+                                                            data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
                                                         name="edukasi[kepatuhan_proses_hd][pasien_nama]"
@@ -1226,7 +1259,7 @@
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
                                                     <div class="checkbox-group">
-                                                        @foreach($hasilVerifikasiOptions as $hasil)
+                                                        @foreach ($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="edukasi[kenaikan_bb_pasien][hasil_verifikasi]"
@@ -1250,7 +1283,7 @@
                                                     <select class="foem-control select2" style="width: 100%"
                                                         name="edukasi[kenaikan_bb_pasien][edukator_kd]" id="edukator_13">
                                                         <option value="" selected disabled>Pilih Edukator</option>
-                                                        @foreach($perawat as $staff)
+                                                        @foreach ($perawat as $staff)
                                                             <option value="{{ $staff->kd_karyawan }}">
                                                                 {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                                 ({{ $staff->profesi ?? 'Perawat' }})
@@ -1260,11 +1293,12 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="pasien_nama_13" class="form-label">Pasien/Keluarga <i
-                                                            class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                            class="fas fa-info-circle tooltip-icon"
+                                                            data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        name="edukasi[kenaikan_bb_pasien][pasien_nama]" id="pasien_nama_13"
-                                                        placeholder="Nama Keluarga">
+                                                        name="edukasi[kenaikan_bb_pasien][pasien_nama]"
+                                                        id="pasien_nama_13" placeholder="Nama Keluarga">
                                                 </div>
                                             </div>
                                         </div>
@@ -1281,7 +1315,7 @@
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
                                                     <div class="checkbox-group">
-                                                        @foreach($hasilVerifikasiOptions as $hasil)
+                                                        @foreach ($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="edukasi[kualitas_hidup_pasien][hasil_verifikasi]"
@@ -1306,7 +1340,7 @@
                                                         name="edukasi[kualitas_hidup_pasien][edukator_kd]"
                                                         id="edukator_14">
                                                         <option value="" selected disabled>Pilih Edukator</option>
-                                                        @foreach($perawat as $staff)
+                                                        @foreach ($perawat as $staff)
                                                             <option value="{{ $staff->kd_karyawan }}">
                                                                 {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                                 ({{ $staff->profesi ?? 'Perawat' }})
@@ -1316,7 +1350,8 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="pasien_nama_14" class="form-label">Pasien/Keluarga <i
-                                                            class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                            class="fas fa-info-circle tooltip-icon"
+                                                            data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
                                                         name="edukasi[kualitas_hidup_pasien][pasien_nama]"
@@ -1332,13 +1367,12 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_15" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[kegunaan_cimino_femoral][tgl_jam]"
-                                                        id="tgl_jam_15">
+                                                        name="edukasi[kegunaan_cimino_femoral][tgl_jam]" id="tgl_jam_15">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
                                                     <div class="checkbox-group">
-                                                        @foreach($hasilVerifikasiOptions as $hasil)
+                                                        @foreach ($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="edukasi[kegunaan_cimino_femoral][hasil_verifikasi]"
@@ -1363,7 +1397,7 @@
                                                         name="edukasi[kegunaan_cimino_femoral][edukator_kd]"
                                                         id="edukator_15">
                                                         <option value="" selected disabled>Pilih Edukator</option>
-                                                        @foreach($perawat as $staff)
+                                                        @foreach ($perawat as $staff)
                                                             <option value="{{ $staff->kd_karyawan }}">
                                                                 {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                                 ({{ $staff->profesi ?? 'Perawat' }})
@@ -1373,7 +1407,8 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="pasien_nama_15" class="form-label">Pasien/Keluarga <i
-                                                            class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                            class="fas fa-info-circle tooltip-icon"
+                                                            data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
                                                         name="edukasi[kegunaan_cimino_femoral][pasien_nama]"
@@ -1389,13 +1424,12 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_16" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[cara_perawatan_cimino][tgl_jam]"
-                                                        id="tgl_jam_16">
+                                                        name="edukasi[cara_perawatan_cimino][tgl_jam]" id="tgl_jam_16">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
                                                     <div class="checkbox-group">
-                                                        @foreach($hasilVerifikasiOptions as $hasil)
+                                                        @foreach ($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="edukasi[cara_perawatan_cimino][hasil_verifikasi]"
@@ -1420,7 +1454,7 @@
                                                         name="edukasi[cara_perawatan_cimino][edukator_kd]"
                                                         id="edukator_16">
                                                         <option value="" selected disabled>Pilih Edukator</option>
-                                                        @foreach($perawat as $staff)
+                                                        @foreach ($perawat as $staff)
                                                             <option value="{{ $staff->kd_karyawan }}">
                                                                 {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                                 ({{ $staff->profesi ?? 'Perawat' }})
@@ -1430,7 +1464,8 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="pasien_nama_16" class="form-label">Pasien/Keluarga <i
-                                                            class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                            class="fas fa-info-circle tooltip-icon"
+                                                            data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
                                                         name="edukasi[cara_perawatan_cimino][pasien_nama]"
@@ -1451,7 +1486,7 @@
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
                                                     <div class="checkbox-group">
-                                                        @foreach($hasilVerifikasiOptions as $hasil)
+                                                        @foreach ($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="edukasi[kepatuhan_minum_obat][hasil_verifikasi]"
@@ -1476,7 +1511,7 @@
                                                         name="edukasi[kepatuhan_minum_obat][edukator_kd]"
                                                         id="edukator_17">
                                                         <option value="" selected disabled>Pilih Edukator</option>
-                                                        @foreach($perawat as $staff)
+                                                        @foreach ($perawat as $staff)
                                                             <option value="{{ $staff->kd_karyawan }}">
                                                                 {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                                 ({{ $staff->profesi ?? 'Perawat' }})
@@ -1486,7 +1521,8 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="pasien_nama_17" class="form-label">Pasien/Keluarga <i
-                                                            class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                            class="fas fa-info-circle tooltip-icon"
+                                                            data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
                                                         name="edukasi[kepatuhan_minum_obat][pasien_nama]"
@@ -1502,13 +1538,12 @@
                                                 <div class="mb-3">
                                                     <label for="tgl_jam_18" class="form-label">Tgl/Jam Edukasi</label>
                                                     <input type="datetime-local" class="form-control form-control-sm"
-                                                        name="edukasi[cara_cuci_tangan][tgl_jam]"
-                                                        id="tgl_jam_18">
+                                                        name="edukasi[cara_cuci_tangan][tgl_jam]" id="tgl_jam_18">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
                                                     <div class="checkbox-group">
-                                                        @foreach($hasilVerifikasiOptions as $hasil)
+                                                        @foreach ($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="edukasi[cara_cuci_tangan][hasil_verifikasi]"
@@ -1530,10 +1565,9 @@
                                                 <div class="mb-3">
                                                     <label for="edukator_18" class="form-label">Edukator</label>
                                                     <select class="foem-control select2" style="width: 100%"
-                                                        name="edukasi[cara_cuci_tangan][edukator_kd]"
-                                                        id="edukator_18">
+                                                        name="edukasi[cara_cuci_tangan][edukator_kd]" id="edukator_18">
                                                         <option value="" selected disabled>Pilih Edukator</option>
-                                                        @foreach($perawat as $staff)
+                                                        @foreach ($perawat as $staff)
                                                             <option value="{{ $staff->kd_karyawan }}">
                                                                 {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                                 ({{ $staff->profesi ?? 'Perawat' }})
@@ -1543,7 +1577,8 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="pasien_nama_18" class="form-label">Pasien/Keluarga <i
-                                                            class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                            class="fas fa-info-circle tooltip-icon"
+                                                            data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
                                                         name="edukasi[cara_cuci_tangan][pasien_nama]"
@@ -1565,7 +1600,7 @@
                                                 <div class="mb-3">
                                                     <label class="form-label">Hasil Verifikasi</label>
                                                     <div class="checkbox-group">
-                                                        @foreach($hasilVerifikasiOptions as $hasil)
+                                                        @foreach ($hasilVerifikasiOptions as $hasil)
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="edukasi[kepatuhan_membawa_rujukan][hasil_verifikasi]"
@@ -1590,7 +1625,7 @@
                                                         name="edukasi[kepatuhan_membawa_rujukan][edukator_kd]"
                                                         id="edukator_19">
                                                         <option value="" selected disabled>Pilih Edukator</option>
-                                                        @foreach($perawat as $staff)
+                                                        @foreach ($perawat as $staff)
                                                             <option value="{{ $staff->kd_karyawan }}">
                                                                 {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                                 ({{ $staff->profesi ?? 'Perawat' }})
@@ -1600,7 +1635,8 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="pasien_nama_19" class="form-label">Pasien/Keluarga <i
-                                                            class="fas fa-info-circle tooltip-icon" data-bs-toggle="tooltip"
+                                                            class="fas fa-info-circle tooltip-icon"
+                                                            data-bs-toggle="tooltip"
                                                             title="Masukkan nama pasien atau anggota keluarga yang menerima edukasi"></i></label>
                                                     <input type="text" class="form-control form-control-sm"
                                                         name="edukasi[kepatuhan_membawa_rujukan][pasien_nama]"
@@ -1621,15 +1657,14 @@
             </form>
         </div>
     </div>
-
 @endsection
 @push('js')
     <script>
         // Enable/disable detail inputs based on checkbox state
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Handle bahasa checkbox change
-            document.querySelectorAll('.bahasa-checkbox').forEach(function (checkbox) {
-                checkbox.addEventListener('change', function () {
+            document.querySelectorAll('.bahasa-checkbox').forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
                     const targetName = this.getAttribute('data-target');
                     if (targetName) {
                         const targetInput = document.getElementById(targetName);
@@ -1669,7 +1704,10 @@
         const sectionTitles = document.querySelectorAll('.section-title');
         sectionTitles.forEach(title => {
             title.addEventListener('click', () => {
-                title.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                title.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
             });
         });
 

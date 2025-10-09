@@ -269,7 +269,7 @@
 
                                             <div class="form-group mb-3">
                                                 <label class="form-label">Suhu (°C)</label>
-                                                <input type="number" step="0.1" class="form-control"
+                                                <input type="text" step="0.1" class="form-control"
                                                     name="vital_sign[suhu]" value="{{ $triaseVitalSign['suhu'] ?? '' }}">
                                             </div>
 
