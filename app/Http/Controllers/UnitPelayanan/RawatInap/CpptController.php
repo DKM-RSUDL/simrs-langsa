@@ -672,17 +672,20 @@ class CpptController extends Controller
         }
 
         DB::beginTransaction();
+        
 
         try {
             // Get kunjungan using private function
+
+         
             $kunjungan = $this->getKunjungan($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
             if (!$kunjungan) {
                 throw new Exception('Data kunjungan tidak ditemukan!');
             }
 
-            $tanggal = date('Y-m-d');
-            $jam = date('H:i:s');
+            $tanggal = $request->tanggal_masuk;
+            $jam = $request->jam_masuk;
 
             // Store CPPT
             $lastUrutTotalCpptMax = Cppt::where('no_transaksi', $kunjungan->no_transaksi)
@@ -860,11 +863,14 @@ class CpptController extends Controller
             'tindak_lanjut' => 'nullable',
         ], $validatorMessage);
 
+        
+
         if (empty($request->diagnose_name)) {
             return back()->with('error', 'Diagnosis harus di tambah minimal 1!');
         }
 
         DB::beginTransaction();
+       
 
         try {
             // Get kunjungan using private function
