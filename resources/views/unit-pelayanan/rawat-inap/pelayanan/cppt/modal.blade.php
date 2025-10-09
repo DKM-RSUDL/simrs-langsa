@@ -529,7 +529,7 @@
 
                             @if(!$isDokterSpesialis)
                                 {{-- S (SUBJECTIVE) - Skala Nyeri --}}
-                                <div class="mb-4" >
+                                <div class="mb-4"  >
                                     <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">S (SUBJECTIVE) - Skala Nyeri
                                     </h6>
                                     <div class="row g-3">

@@ -6,17 +6,12 @@
         [
             'icon' => 'verified_badge.png',
             'label' => 'Asesmen',
-<<<<<<< HEAD
-            'link' => route('rawat-jalan.asesmen.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
-            'route-name' => 'rawat-jalan.asesmen',
-=======
             'link' => route('rawat-jalan.asesmen.index', [
                 $dataMedis->kd_unit,
                 $dataMedis->kd_pasien,
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
->>>>>>> bd8ebdea40b646d00fbba9bf9fe0a91c95d43878
         ],
         [
             'icon' => 'positive_dynamic.png',
@@ -164,27 +159,4 @@
     ];
 @endphp
 
-<<<<<<< HEAD
-<div class="card" style="height: fit-content; margin-bottom:10px !important;">
-    <div class="card-body p-2">
-        <div class="d-flex flex-wrap gap-2">
-            @foreach ($navItems as $item)
-                @php
-                    $isActive = isset($item['route-name'])
-                        ? request()->routeIs($item['route-name'] . '*')
-                        : ($currentUrl === $item['link']);
-                @endphp
-
-                <a href="{{ $item['link'] }}"
-                    class="btn {{ $isActive ? 'btn-primary' : 'btn-light' }} d-flex align-items-center"
-                    style="border-radius: 20px; padding: 6px 12px; font-size: 14px;">
-                    <img src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }}" width="18" height="18" class="me-1">
-                    <span>{{ $item['label'] }}</span>
-                </a>
-            @endforeach
-        </div>
-    </div>
-</div>
-=======
 <x-navigation-action :nav-items="$navItems" :current-url="$currentUrl" :data-medis="$dataMedis" />
->>>>>>> bd8ebdea40b646d00fbba9bf9fe0a91c95d43878
