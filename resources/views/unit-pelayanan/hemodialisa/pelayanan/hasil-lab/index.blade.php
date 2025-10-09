@@ -8,52 +8,52 @@
             font-weight: 600;
             border-bottom: 2px solid #1976d2;
         }
-        
+
         .btn-action {
             margin: 0 2px;
             padding: 5px 8px;
             font-size: 12px;
         }
-        
+
         .table-responsive {
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        
+
         .table {
             margin-bottom: 0;
         }
-        
+
         .empty-state {
             text-align: center;
             padding: 3rem;
             color: #6c757d;
         }
-        
+
         .empty-state i {
             font-size: 3rem;
             margin-bottom: 1rem;
             opacity: 0.5;
         }
-        
+
         .serologic-tests .test-item {
             margin-bottom: 4px;
         }
-        
+
         .serologic-tests .badge {
             font-size: 10px;
             padding: 3px 6px;
         }
-        
+
         .badge-success {
             background-color: #28a745;
         }
-        
+
         .badge-danger {
             background-color: #dc3545;
         }
-        
+
         .serologic-tests small {
             font-size: 9px;
             margin-left: 5px;
@@ -96,7 +96,7 @@
         </div>
 
         <div class="col-md-9">
-            @include('unit-pelayanan.hemodialisa.component.navigation')
+            @include('components.navigation-hemodialisa')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
@@ -110,7 +110,7 @@
                                 <i class="ti-plus"></i> Tambah Data
                             </a>
                         </div>
-                        
+
                         <div class="table-responsive">
                             <table class="table table-striped table-hover">
                                 <thead class="table-primary">
@@ -140,32 +140,36 @@
                                             </td>
                                             <td>
                                                 <div class="lab-summary">
-                                                    @if($lab->pemeriksaan_urine_rutin)
+                                                    @if ($lab->pemeriksaan_urine_rutin)
                                                         <span class="badge badge-success">Urine</span>
                                                     @endif
-                                                    @if($lab->pemeriksaan_feres_rutin)
+                                                    @if ($lab->pemeriksaan_feres_rutin)
                                                         <span class="badge badge-warning">Feses</span>
                                                     @endif
-                                                    @if($lab->pemeriksaan_lain_lain)
+                                                    @if ($lab->pemeriksaan_lain_lain)
                                                         <span class="badge badge-info">Lainnya</span>
                                                     @endif
                                                 </div>
                                             </td>
                                             <td>
-                                                @if($lab->detail && $lab->detail->count() > 0)
+                                                @if ($lab->detail && $lab->detail->count() > 0)
                                                     @php $detail = $lab->detail->first(); @endphp
                                                     <div class="lab-summary">
-                                                        @if($detail->hb)
-                                                            <div><strong>HB:</strong> {{ number_format($detail->hb, 1) }} g/dL</div>
+                                                        @if ($detail->hb)
+                                                            <div><strong>HB:</strong> {{ number_format($detail->hb, 1) }}
+                                                                g/dL</div>
                                                         @endif
-                                                        @if($detail->ureum_pre)
-                                                            <div><strong>Ureum Pre:</strong> {{ number_format($detail->ureum_pre, 1) }} mg/dL</div>
+                                                        @if ($detail->ureum_pre)
+                                                            <div><strong>Ureum Pre:</strong>
+                                                                {{ number_format($detail->ureum_pre, 1) }} mg/dL</div>
                                                         @endif
-                                                        @if($detail->kreatinin_pre)
-                                                            <div><strong>Kreatinin Pre:</strong> {{ number_format($detail->kreatinin_pre, 1) }} mg/dL</div>
+                                                        @if ($detail->kreatinin_pre)
+                                                            <div><strong>Kreatinin Pre:</strong>
+                                                                {{ number_format($detail->kreatinin_pre, 1) }} mg/dL</div>
                                                         @endif
-                                                        @if($detail->glukosa_sewaktu)
-                                                            <div><strong>Glukosa:</strong> {{ number_format($detail->glukosa_sewaktu, 1) }} mg/dL</div>
+                                                        @if ($detail->glukosa_sewaktu)
+                                                            <div><strong>Glukosa:</strong>
+                                                                {{ number_format($detail->glukosa_sewaktu, 1) }} mg/dL</div>
                                                         @endif
                                                     </div>
                                                 @else
@@ -173,28 +177,31 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                @if($lab->detail && $lab->detail->count() > 0)
+                                                @if ($lab->detail && $lab->detail->count() > 0)
                                                     @php $detail = $lab->detail->first(); @endphp
                                                     <div class="serologic-tests">
-                                                        @if($detail->hbsag_rapid)
+                                                        @if ($detail->hbsag_rapid)
                                                             <div class="test-item">
-                                                                <span class="badge {{ $detail->hbsag_rapid == 'Positif' ? 'badge-danger' : 'badge-success' }}">
+                                                                <span
+                                                                    class="badge {{ $detail->hbsag_rapid == 'Positif' ? 'badge-danger' : 'badge-success' }}">
                                                                     HBsAg
                                                                 </span>
                                                                 <small>{{ $detail->hbsag_rapid }}</small>
                                                             </div>
                                                         @endif
-                                                        @if($detail->anti_hcv_rapid)
+                                                        @if ($detail->anti_hcv_rapid)
                                                             <div class="test-item">
-                                                                <span class="badge {{ $detail->anti_hcv_rapid == 'Positif' ? 'badge-danger' : 'badge-success' }}">
+                                                                <span
+                                                                    class="badge {{ $detail->anti_hcv_rapid == 'Positif' ? 'badge-danger' : 'badge-success' }}">
                                                                     Anti-HCV
                                                                 </span>
                                                                 <small>{{ $detail->anti_hcv_rapid }}</small>
                                                             </div>
                                                         @endif
-                                                        @if($detail->anti_hiv_rapid)
+                                                        @if ($detail->anti_hiv_rapid)
                                                             <div class="test-item">
-                                                                <span class="badge {{ $detail->anti_hiv_rapid == 'Positif' ? 'badge-danger' : 'badge-success' }}">
+                                                                <span
+                                                                    class="badge {{ $detail->anti_hiv_rapid == 'Positif' ? 'badge-danger' : 'badge-success' }}">
                                                                     Anti-HIV
                                                                 </span>
                                                                 <small>{{ $detail->anti_hiv_rapid }}</small>
@@ -209,27 +216,24 @@
                                                 <div class="btn-group" role="group">
                                                     <!-- Tombol Lihat -->
                                                     <a href="{{ route('hemodialisa.pelayanan.hasil-lab.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $lab->id]) }}"
-                                                        class="btn btn-info btn-sm btn-action"
-                                                        title="Lihat Detail">
+                                                        class="btn btn-info btn-sm btn-action" title="Lihat Detail">
                                                         <i class="ti-eye"></i>
                                                     </a>
-                                                    
+
                                                     <!-- Tombol Edit -->
                                                     <a href="{{ route('hemodialisa.pelayanan.hasil-lab.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $lab->id]) }}"
-                                                        class="btn btn-warning btn-sm btn-action"
-                                                        title="Edit Data">
+                                                        class="btn btn-warning btn-sm btn-action" title="Edit Data">
                                                         <i class="ti-pencil"></i>
                                                     </a>
-                                                    
+
                                                     <!-- Tombol Delete -->
-                                                    <form method="POST" 
-                                                          action="{{ route('hemodialisa.pelayanan.hasil-lab.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $lab->id]) }}"
-                                                          class="d-inline">
+                                                    <form method="POST"
+                                                        action="{{ route('hemodialisa.pelayanan.hasil-lab.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $lab->id]) }}"
+                                                        class="d-inline">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" 
-                                                                class="btn btn-danger btn-sm btn-action"
-                                                                title="Hapus Data">
+                                                        <button type="submit" class="btn btn-danger btn-sm btn-action"
+                                                            title="Hapus Data">
                                                             <i class="ti-trash"></i>
                                                         </button>
                                                     </form>
@@ -242,7 +246,8 @@
                                                 <div class="empty-state">
                                                     <i class="ti-clipboard"></i>
                                                     <h6>Belum ada data hasil lab</h6>
-                                                    <p class="text-muted">Klik tombol "Tambah Data" untuk menambahkan hasil lab baru</p>
+                                                    <p class="text-muted">Klik tombol "Tambah Data" untuk menambahkan hasil
+                                                        lab baru</p>
                                                 </div>
                                             </td>
                                         </tr>
@@ -261,12 +266,12 @@
 @push('js')
     <script>
         $(document).ready(function() {
-            
+
             // Loading state for Tambah Data button
             $('.btn-primary').on('click', function(e) {
                 const $btn = $(this);
                 const originalHtml = $btn.html();
-                
+
                 // Show loading state
                 $btn.prop('disabled', true);
                 $btn.html('<i class="spinner-border spinner-border-sm mr-2" role="status"></i> Memuat...');
@@ -277,7 +282,7 @@
             $('.btn-info').on('click', function(e) {
                 const $btn = $(this);
                 const originalHtml = $btn.html();
-                
+
                 // Show loading state
                 $btn.prop('disabled', true);
                 $btn.html('<i class="spinner-border spinner-border-sm" role="status"></i>');
@@ -288,7 +293,7 @@
             $('.btn-warning').on('click', function(e) {
                 const $btn = $(this);
                 const originalHtml = $btn.html();
-                
+
                 // Show loading state
                 $btn.prop('disabled', true);
                 $btn.html('<i class="spinner-border spinner-border-sm" role="status"></i>');
@@ -300,14 +305,14 @@
                 e.preventDefault();
                 const $btn = $(this);
                 const $form = $btn.closest('form');
-                
+
                 // Show confirmation dialog
                 if (confirm('Apakah Anda yakin ingin menghapus data hasil lab ini?')) {
                     // Show loading state
                     $btn.prop('disabled', true);
                     $btn.html('<i class="spinner-border spinner-border-sm" role="status"></i>');
                     $btn.addClass('btn-loading');
-                    
+
                     // Submit form after short delay for visual feedback
                     setTimeout(function() {
                         $form.submit();
@@ -318,12 +323,12 @@
             // Generic loading for any link that navigates away
             $('a:not([href^="#"]):not([href^="javascript:"]):not(.no-loading)').on('click', function(e) {
                 const $link = $(this);
-                
+
                 // Skip if already has loading or is external link
                 if ($link.hasClass('btn-loading') || $link.attr('href').startsWith('http')) {
                     return;
                 }
-                
+
                 // Add loading class for visual feedback
                 $link.addClass('btn-loading');
             });
@@ -335,7 +340,7 @@
                         const $btn = $(this);
                         $btn.prop('disabled', false);
                         $btn.removeClass('btn-loading');
-                        
+
                         // Restore original content based on button type
                         if ($btn.hasClass('btn-primary')) {
                             $btn.html('<i class="ti-plus"></i> Tambah Data');

@@ -4,7 +4,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-3">
-            @include('unit-pelayanan.hemodialisa.component.patient-card')
+            @include('components.patient-card-hemodialisa')
         </div>
 
         <div class="col-md-9">
@@ -13,7 +13,9 @@
                 <i class="ti-arrow-left"></i> Kembali
             </a>
 
-            <form action="{{ route('hemodialisa.pelayanan.hasil-ekg.update', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $hasilEkg->id]) }}" method="post">
+            <form
+                action="{{ route('hemodialisa.pelayanan.hasil-ekg.update', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $hasilEkg->id]) }}"
+                method="post">
                 @csrf
                 @method('PUT')
 
@@ -37,9 +39,8 @@
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">LEAD I</label>
-                                    <textarea class="form-control @error('lead_i') is-invalid @enderror" name="lead_i"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead I...">{{ old('lead_i', $hasilEkg->lead_i) }}</textarea>
+                                    <textarea class="form-control @error('lead_i') is-invalid @enderror" name="lead_i" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead I...">{{ old('lead_i', $hasilEkg->lead_i) }}</textarea>
                                     @error('lead_i')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -47,9 +48,8 @@
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">LEAD II</label>
-                                    <textarea class="form-control @error('lead_ii') is-invalid @enderror" name="lead_ii"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead II...">{{ old('lead_ii', $hasilEkg->lead_ii) }}</textarea>
+                                    <textarea class="form-control @error('lead_ii') is-invalid @enderror" name="lead_ii" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead II...">{{ old('lead_ii', $hasilEkg->lead_ii) }}</textarea>
                                     @error('lead_ii')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -57,9 +57,8 @@
 
                                 <div class="mb-4">
                                     <label class="form-label fw-semibold">LEAD III</label>
-                                    <textarea class="form-control @error('lead_iii') is-invalid @enderror" name="lead_iii"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead III...">{{ old('lead_iii', $hasilEkg->lead_iii) }}</textarea>
+                                    <textarea class="form-control @error('lead_iii') is-invalid @enderror" name="lead_iii" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead III...">{{ old('lead_iii', $hasilEkg->lead_iii) }}</textarea>
                                     @error('lead_iii')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -70,9 +69,8 @@
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">LEAD AVR</label>
-                                    <textarea class="form-control @error('lead_avr') is-invalid @enderror" name="lead_avr"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead AVR...">{{ old('lead_avr', $hasilEkg->lead_avr) }}</textarea>
+                                    <textarea class="form-control @error('lead_avr') is-invalid @enderror" name="lead_avr" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead AVR...">{{ old('lead_avr', $hasilEkg->lead_avr) }}</textarea>
                                     @error('lead_avr')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -80,9 +78,8 @@
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">LEAD AVL</label>
-                                    <textarea class="form-control @error('lead_avl') is-invalid @enderror" name="lead_avl"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead AVL...">{{ old('lead_avl', $hasilEkg->lead_avl) }}</textarea>
+                                    <textarea class="form-control @error('lead_avl') is-invalid @enderror" name="lead_avl" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead AVL...">{{ old('lead_avl', $hasilEkg->lead_avl) }}</textarea>
                                     @error('lead_avl')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -90,9 +87,8 @@
 
                                 <div class="mb-4">
                                     <label class="form-label fw-semibold">LEAD AVF</label>
-                                    <textarea class="form-control @error('lead_avf') is-invalid @enderror" name="lead_avf"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead AVF...">{{ old('lead_avf', $hasilEkg->lead_avf) }}</textarea>
+                                    <textarea class="form-control @error('lead_avf') is-invalid @enderror" name="lead_avf" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead AVF...">{{ old('lead_avf', $hasilEkg->lead_avf) }}</textarea>
                                     @error('lead_avf')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -103,9 +99,8 @@
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">LEAD V1</label>
-                                    <textarea class="form-control @error('lead_v1') is-invalid @enderror" name="lead_v1"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead V1...">{{ old('lead_v1', $hasilEkg->lead_v1) }}</textarea>
+                                    <textarea class="form-control @error('lead_v1') is-invalid @enderror" name="lead_v1" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead V1...">{{ old('lead_v1', $hasilEkg->lead_v1) }}</textarea>
                                     @error('lead_v1')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -113,9 +108,8 @@
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">LEAD V2</label>
-                                    <textarea class="form-control @error('lead_v2') is-invalid @enderror" name="lead_v2"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead V2...">{{ old('lead_v2', $hasilEkg->lead_v2) }}</textarea>
+                                    <textarea class="form-control @error('lead_v2') is-invalid @enderror" name="lead_v2" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead V2...">{{ old('lead_v2', $hasilEkg->lead_v2) }}</textarea>
                                     @error('lead_v2')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -123,9 +117,8 @@
 
                                 <div class="mb-4">
                                     <label class="form-label fw-semibold">LEAD V3</label>
-                                    <textarea class="form-control @error('lead_v3') is-invalid @enderror" name="lead_v3"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead V3...">{{ old('lead_v3', $hasilEkg->lead_v3) }}</textarea>
+                                    <textarea class="form-control @error('lead_v3') is-invalid @enderror" name="lead_v3" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead V3...">{{ old('lead_v3', $hasilEkg->lead_v3) }}</textarea>
                                     @error('lead_v3')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -136,9 +129,8 @@
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">LEAD V4</label>
-                                    <textarea class="form-control @error('lead_v4') is-invalid @enderror" name="lead_v4"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead V4...">{{ old('lead_v4', $hasilEkg->lead_v4) }}</textarea>
+                                    <textarea class="form-control @error('lead_v4') is-invalid @enderror" name="lead_v4" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead V4...">{{ old('lead_v4', $hasilEkg->lead_v4) }}</textarea>
                                     @error('lead_v4')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -146,9 +138,8 @@
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">LEAD V5</label>
-                                    <textarea class="form-control @error('lead_v5') is-invalid @enderror" name="lead_v5"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead V5...">{{ old('lead_v5', $hasilEkg->lead_v5) }}</textarea>
+                                    <textarea class="form-control @error('lead_v5') is-invalid @enderror" name="lead_v5" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead V5...">{{ old('lead_v5', $hasilEkg->lead_v5) }}</textarea>
                                     @error('lead_v5')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -156,9 +147,8 @@
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">LEAD V6</label>
-                                    <textarea class="form-control @error('lead_v6') is-invalid @enderror" name="lead_v6"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead V6...">{{ old('lead_v6', $hasilEkg->lead_v6) }}</textarea>
+                                    <textarea class="form-control @error('lead_v6') is-invalid @enderror" name="lead_v6" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead V6...">{{ old('lead_v6', $hasilEkg->lead_v6) }}</textarea>
                                     @error('lead_v6')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -177,10 +167,8 @@
                                         <label class="form-label fw-semibold">
                                             <i class="fas fa-clipboard-check me-1"></i>Diagnosis
                                         </label>
-                                        <textarea
-                                            class="form-control diagnosis-textarea @error('diagnosis') is-invalid @enderror"
-                                            name="diagnosis" rows="10" 
-                                            style="min-height: 250px; resize: vertical;"
+                                        <textarea class="form-control diagnosis-textarea @error('diagnosis') is-invalid @enderror" name="diagnosis"
+                                            rows="10" style="min-height: 250px; resize: vertical;"
                                             placeholder="Masukkan diagnosis berdasarkan hasil EKG...">{{ old('diagnosis', $hasilEkg->diagnosis) }}</textarea>
                                         @error('diagnosis')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -207,7 +195,9 @@
                                             <i class="fas fa-clock me-1"></i>Jam <span class="text-danger">*</span>
                                         </label>
                                         <input type="time" class="form-control @error('jam') is-invalid @enderror"
-                                            name="jam" value="{{ old('jam', $hasilEkg->jam ? date('H:i', strtotime($hasilEkg->jam)) : '') }}" required>
+                                            name="jam"
+                                            value="{{ old('jam', $hasilEkg->jam ? date('H:i', strtotime($hasilEkg->jam)) : '') }}"
+                                            required>
                                         @error('jam')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -227,11 +217,10 @@
                                         <label class="form-label fw-semibold">
                                             <i class="fas fa-user-nurse me-1"></i>Nama Perawat
                                         </label>
-                                        <select class="form-control select2" style="width: 100%"
-                                            name="kd_perawat">
+                                        <select class="form-control select2" style="width: 100%" name="kd_perawat">
                                             <option value="">Pilih Perawat</option>
-                                            @foreach($perawat as $staff)
-                                                <option value="{{ $staff->kd_karyawan }}" 
+                                            @foreach ($perawat as $staff)
+                                                <option value="{{ $staff->kd_karyawan }}"
                                                     {{ old('kd_perawat', $hasilEkg->kd_perawat) == $staff->kd_karyawan ? 'selected' : '' }}>
                                                     {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                     ({{ $staff->profesi ?? 'Perawat' }})
@@ -249,7 +238,7 @@
                                         <select name="kd_dokter" id="dokter_pelaksana" class="form-select select2">
                                             <option value="">--Pilih--</option>
                                             @foreach ($dokter as $item)
-                                                <option value="{{ $item->kd_dokter }}" 
+                                                <option value="{{ $item->kd_dokter }}"
                                                     {{ old('kd_dokter', $hasilEkg->kd_dokter) == $item->kd_dokter ? 'selected' : '' }}>
                                                     {{ $item->nama_lengkap }}
                                                 </option>
@@ -284,14 +273,15 @@
             if (textarea.name === 'diagnosis') {
                 textarea.style.minHeight = '250px';
             }
-            
+
             // Auto-resize function
             const autoResize = function() {
                 this.style.height = 'auto';
-                const minHeight = textarea.name === 'diagnosis' ? 250 : parseInt(getComputedStyle(this).lineHeight) * 3;
+                const minHeight = textarea.name === 'diagnosis' ? 250 : parseInt(getComputedStyle(this)
+                    .lineHeight) * 3;
                 this.style.height = Math.max(this.scrollHeight, minHeight) + 'px';
             };
-            
+
             // Apply auto-resize on input and initial load
             textarea.addEventListener('input', autoResize);
             textarea.addEventListener('focus', autoResize);
@@ -299,7 +289,7 @@
         });
 
         // Enhanced form validation before submit
-        document.querySelector('form').addEventListener('submit', function (e) {
+        document.querySelector('form').addEventListener('submit', function(e) {
             const tanggal = document.querySelector('input[name="tanggal"]').value;
             const jam = document.querySelector('input[name="jam"]').value;
 
@@ -317,7 +307,7 @@
         });
 
         // Auto-dismiss success alerts after 5 seconds
-        setTimeout(function () {
+        setTimeout(function() {
             const alerts = document.querySelectorAll('.alert-success');
             alerts.forEach(alert => {
                 const bsAlert = new bootstrap.Alert(alert);
@@ -376,12 +366,15 @@
             // Ctrl+S to save
             if (e.ctrlKey && e.key === 's') {
                 e.preventDefault();
-                document.querySelector('form').dispatchEvent(new Event('submit', { cancelable: true }));
+                document.querySelector('form').dispatchEvent(new Event('submit', {
+                    cancelable: true
+                }));
             }
-            
+
             // Escape to cancel
             if (e.key === 'Escape') {
-                window.location.href = "{{ route('hemodialisa.pelayanan.hasil-ekg.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $hasilEkg->id]) }}";
+                window.location.href =
+                    "{{ route('hemodialisa.pelayanan.hasil-ekg.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $hasilEkg->id]) }}";
             }
         });
 
@@ -427,12 +420,14 @@
         }
 
         /* Smooth transition for form elements */
-        .form-control, .form-select {
+        .form-control,
+        .form-select {
             transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
 
         /* Custom focus state */
-        .form-control:focus, .form-select:focus {
+        .form-control:focus,
+        .form-select:focus {
             box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
         }
 
@@ -471,7 +466,7 @@
             .diagnosis-textarea {
                 min-height: 200px !important;
             }
-            
+
             .btn-lg {
                 font-size: 1rem;
                 padding: 0.5rem 1rem;

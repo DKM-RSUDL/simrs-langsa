@@ -4,7 +4,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-3">
-            @include('unit-pelayanan.hemodialisa.component.patient-card')
+            @include('components.patient-card-hemodialisa')
         </div>
 
         <div class="col-md-9">
@@ -14,25 +14,25 @@
             </a>
 
             {{-- Display Success/Error Messages --}}
-            @if(session('success'))
+            @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             @endif
 
-            @if(session('error'))
+            @if (session('error'))
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <i class="fas fa-exclamation-triangle me-2"></i>{{ session('error') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             @endif
 
-            @if($errors->any())
+            @if ($errors->any())
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <h6><i class="fas fa-exclamation-triangle me-2"></i>Terjadi kesalahan validasi:</h6>
                     <ul class="mb-0">
-                        @foreach($errors->all() as $error)
+                        @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
@@ -67,9 +67,8 @@
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">LEAD I</label>
-                                    <textarea class="form-control @error('lead_i') is-invalid @enderror" name="lead_i"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead I...">{{ old('lead_i') }}</textarea>
+                                    <textarea class="form-control @error('lead_i') is-invalid @enderror" name="lead_i" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead I...">{{ old('lead_i') }}</textarea>
                                     @error('lead_i')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -77,9 +76,8 @@
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">LEAD II</label>
-                                    <textarea class="form-control @error('lead_ii') is-invalid @enderror" name="lead_ii"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead II...">{{ old('lead_ii') }}</textarea>
+                                    <textarea class="form-control @error('lead_ii') is-invalid @enderror" name="lead_ii" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead II...">{{ old('lead_ii') }}</textarea>
                                     @error('lead_ii')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -87,9 +85,8 @@
 
                                 <div class="mb-4">
                                     <label class="form-label fw-semibold">LEAD III</label>
-                                    <textarea class="form-control @error('lead_iii') is-invalid @enderror" name="lead_iii"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead III...">{{ old('lead_iii') }}</textarea>
+                                    <textarea class="form-control @error('lead_iii') is-invalid @enderror" name="lead_iii" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead III...">{{ old('lead_iii') }}</textarea>
                                     @error('lead_iii')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -100,9 +97,8 @@
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">LEAD AVR</label>
-                                    <textarea class="form-control @error('lead_avr') is-invalid @enderror" name="lead_avr"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead AVR...">{{ old('lead_avr') }}</textarea>
+                                    <textarea class="form-control @error('lead_avr') is-invalid @enderror" name="lead_avr" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead AVR...">{{ old('lead_avr') }}</textarea>
                                     @error('lead_avr')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -110,9 +106,8 @@
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">LEAD AVL</label>
-                                    <textarea class="form-control @error('lead_avl') is-invalid @enderror" name="lead_avl"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead AVL...">{{ old('lead_avl') }}</textarea>
+                                    <textarea class="form-control @error('lead_avl') is-invalid @enderror" name="lead_avl" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead AVL...">{{ old('lead_avl') }}</textarea>
                                     @error('lead_avl')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -120,9 +115,8 @@
 
                                 <div class="mb-4">
                                     <label class="form-label fw-semibold">LEAD AVF</label>
-                                    <textarea class="form-control @error('lead_avf') is-invalid @enderror" name="lead_avf"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead AVF...">{{ old('lead_avf') }}</textarea>
+                                    <textarea class="form-control @error('lead_avf') is-invalid @enderror" name="lead_avf" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead AVF...">{{ old('lead_avf') }}</textarea>
                                     @error('lead_avf')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -133,9 +127,8 @@
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">LEAD V1</label>
-                                    <textarea class="form-control @error('lead_v1') is-invalid @enderror" name="lead_v1"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead V1...">{{ old('lead_v1') }}</textarea>
+                                    <textarea class="form-control @error('lead_v1') is-invalid @enderror" name="lead_v1" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead V1...">{{ old('lead_v1') }}</textarea>
                                     @error('lead_v1')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -143,9 +136,8 @@
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">LEAD V2</label>
-                                    <textarea class="form-control @error('lead_v2') is-invalid @enderror" name="lead_v2"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead V2...">{{ old('lead_v2') }}</textarea>
+                                    <textarea class="form-control @error('lead_v2') is-invalid @enderror" name="lead_v2" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead V2...">{{ old('lead_v2') }}</textarea>
                                     @error('lead_v2')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -153,9 +145,8 @@
 
                                 <div class="mb-4">
                                     <label class="form-label fw-semibold">LEAD V3</label>
-                                    <textarea class="form-control @error('lead_v3') is-invalid @enderror" name="lead_v3"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead V3...">{{ old('lead_v3') }}</textarea>
+                                    <textarea class="form-control @error('lead_v3') is-invalid @enderror" name="lead_v3" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead V3...">{{ old('lead_v3') }}</textarea>
                                     @error('lead_v3')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -166,9 +157,8 @@
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">LEAD V4</label>
-                                    <textarea class="form-control @error('lead_v4') is-invalid @enderror" name="lead_v4"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead V4...">{{ old('lead_v4') }}</textarea>
+                                    <textarea class="form-control @error('lead_v4') is-invalid @enderror" name="lead_v4" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead V4...">{{ old('lead_v4') }}</textarea>
                                     @error('lead_v4')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -176,9 +166,8 @@
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">LEAD V5</label>
-                                    <textarea class="form-control @error('lead_v5') is-invalid @enderror" name="lead_v5"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead V5...">{{ old('lead_v5') }}</textarea>
+                                    <textarea class="form-control @error('lead_v5') is-invalid @enderror" name="lead_v5" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead V5...">{{ old('lead_v5') }}</textarea>
                                     @error('lead_v5')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -186,9 +175,8 @@
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">LEAD V6</label>
-                                    <textarea class="form-control @error('lead_v6') is-invalid @enderror" name="lead_v6"
-                                        rows="4" style="min-height: 100px;"
-                                        placeholder="Hasil pembacaan Lead V6...">{{ old('lead_v6') }}</textarea>
+                                    <textarea class="form-control @error('lead_v6') is-invalid @enderror" name="lead_v6" rows="4"
+                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead V6...">{{ old('lead_v6') }}</textarea>
                                     @error('lead_v6')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -207,10 +195,8 @@
                                         <label class="form-label fw-semibold">
                                             <i class="fas fa-clipboard-check me-1"></i>Diagnosis
                                         </label>
-                                        <textarea
-                                            class="form-control diagnosis-textarea @error('diagnosis') is-invalid @enderror"
-                                            name="diagnosis" rows="3"
-                                            placeholder="Masukkan diagnosis berdasarkan hasil EKG...">{{ old('diagnosis') }}</textarea>
+                                        <textarea class="form-control diagnosis-textarea @error('diagnosis') is-invalid @enderror" name="diagnosis"
+                                            rows="3" placeholder="Masukkan diagnosis berdasarkan hasil EKG...">{{ old('diagnosis') }}</textarea>
                                         @error('diagnosis')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -256,10 +242,9 @@
                                         <label class="form-label fw-semibold">
                                             <i class="fas fa-user-nurse me-1"></i>Nama Perawat
                                         </label>
-                                        <select class="foem-control select2" style="width: 100%"
-                                            name="kd_perawat" >
+                                        <select class="foem-control select2" style="width: 100%" name="kd_perawat">
                                             <option value="" selected disabled>Pilih Edukator</option>
-                                            @foreach($perawat as $staff)
+                                            @foreach ($perawat as $staff)
                                                 <option value="{{ $staff->kd_karyawan }}">
                                                     {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
                                                     ({{ $staff->profesi ?? 'Perawat' }})
@@ -301,19 +286,20 @@
             if (textarea.name === 'diagnosis') {
                 textarea.style.minHeight = '250px';
             }
-            
+
             const autoResize = function() {
                 this.style.height = 'auto';
-                const minHeight = textarea.name === 'diagnosis' ? 250 : parseInt(getComputedStyle(this).lineHeight) * 3;
+                const minHeight = textarea.name === 'diagnosis' ? 250 : parseInt(getComputedStyle(this)
+                    .lineHeight) * 3;
                 this.style.height = Math.max(this.scrollHeight, minHeight) + 'px';
             };
-            
+
             textarea.addEventListener('input', autoResize);
             textarea.addEventListener('focus', autoResize);
             autoResize.call(textarea);
         });
 
-        document.querySelector('form').addEventListener('submit', function (e) {
+        document.querySelector('form').addEventListener('submit', function(e) {
             const tanggal = document.querySelector('input[name="tanggal"]').value;
             const jam = document.querySelector('input[name="jam"]').value;
             const diagnosis = document.querySelector('textarea[name="diagnosis"]').value.trim();
@@ -337,7 +323,7 @@
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
         });
 
-        setTimeout(function () {
+        setTimeout(function() {
             const alerts = document.querySelectorAll('.alert-success');
             alerts.forEach(alert => {
                 const bsAlert = new bootstrap.Alert(alert);

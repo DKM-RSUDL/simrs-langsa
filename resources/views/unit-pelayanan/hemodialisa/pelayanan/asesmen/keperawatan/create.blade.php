@@ -5,7 +5,7 @@
 
     <div class="row">
         <div class="col-md-3">
-            @include('unit-pelayanan.hemodialisa.component.patient-card')
+            @include('components.patient-card-hemodialisa')
         </div>
 
         <div class="col-md-9">
@@ -13,7 +13,8 @@
                 <i class="ti-arrow-left"></i> Kembali
             </a>
             <form
-                action="{{ route('hemodialisa.pelayanan.asesmen.keperawatan.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" method="post">
+                action="{{ route('hemodialisa.pelayanan.asesmen.keperawatan.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                method="post">
                 @csrf
 
                 <div class="d-flex justify-content-center">
@@ -60,7 +61,8 @@
 
                                             <div class="form-group">
                                                 <label for="nafas" style="min-width: 200px;">Nafas (Per Menit)</label>
-                                                <input type="number" name="fisik_nafas" id="nafas" class="form-control">
+                                                <input type="number" name="fisik_nafas" id="nafas"
+                                                    class="form-control">
                                             </div>
 
                                             <div class="form-group">
@@ -91,7 +93,8 @@
                                                     <option value="">--Pilih--</option>
                                                     <option value="0">Sadar Baik/Alert: 0</option>
                                                     <option value="1">Berespon dengan kata-kata/Voice: 1</option>
-                                                    <option value="2">Hanya berespons jika dirangsang nyeri/Pain: 2</option>
+                                                    <option value="2">Hanya berespons jika dirangsang nyeri/Pain: 2
+                                                    </option>
                                                     <option value="3">Pasien tidak sadar/Unresponsive: 3</option>
                                                     <option value="4">Gelisah atau bingung: 4</option>
                                                     <option value="5">Acute Confusional States: 5</option>
@@ -135,20 +138,24 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="berat_badan" style="min-width: 200px;">Berat Badan (Kg)</label>
+                                                <label for="berat_badan" style="min-width: 200px;">Berat Badan
+                                                    (Kg)</label>
                                                 <input type="number" name="berat_badan" id="berat_badan"
                                                     class="form-control">
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="imt" style="min-width: 200px;">Index Massa Tubuh (IMT)</label>
-                                                <input type="number" name="imt" id="imt" class="form-control" readonly>
+                                                <label for="imt" style="min-width: 200px;">Index Massa Tubuh
+                                                    (IMT)</label>
+                                                <input type="number" name="imt" id="imt" class="form-control"
+                                                    readonly>
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="lpt" style="min-width: 200px;">Luas Permukaan Tubuh
                                                     (LPT)</label>
-                                                <input type="number" name="lpt" id="lpt" class="form-control" readonly>
+                                                <input type="number" name="lpt" id="lpt" class="form-control"
+                                                    readonly>
                                             </div>
 
 
@@ -164,40 +171,41 @@
 
                                             <div class="row g-3">
                                                 @foreach ($itemFisik->chunk(ceil($itemFisik->count() / 2)) as $chunk)
-                                                <div class="col-md-6">
-                                                    <div class="d-flex flex-column gap-3">
-                                                        @foreach ($chunk as $item)
-                                                            <div class="pemeriksaan-item">
-                                                                <div
-                                                                    class="d-flex align-items-center border-bottom pb-2">
-                                                                    <div class="flex-grow-1">{{ $item->nama }}
+                                                    <div class="col-md-6">
+                                                        <div class="d-flex flex-column gap-3">
+                                                            @foreach ($chunk as $item)
+                                                                <div class="pemeriksaan-item">
+                                                                    <div
+                                                                        class="d-flex align-items-center border-bottom pb-2">
+                                                                        <div class="flex-grow-1">{{ $item->nama }}
+                                                                        </div>
+                                                                        <div class="form-check me-3">
+                                                                            <input type="checkbox"
+                                                                                class="form-check-input"
+                                                                                id="{{ $item->id }}-normal"
+                                                                                name="{{ $item->id }}-normal" checked>
+                                                                            <label class="form-check-label"
+                                                                                for="{{ $item->id }}-normal">Normal</label>
+                                                                        </div>
+                                                                        <button
+                                                                            class="btn btn-sm btn-outline-primary tambah-keterangan"
+                                                                            type="button"
+                                                                            data-target="{{ $item->id }}-keterangan">
+                                                                            <i class="bi bi-plus"></i>
+                                                                        </button>
                                                                     </div>
-                                                                    <div class="form-check me-3">
-                                                                        <input type="checkbox" class="form-check-input"
-                                                                            id="{{ $item->id }}-normal"
-                                                                            name="{{ $item->id }}-normal" checked>
-                                                                        <label class="form-check-label"
-                                                                            for="{{ $item->id }}-normal">Normal</label>
+                                                                    <div class="keterangan mt-2"
+                                                                        id="{{ $item->id }}-keterangan"
+                                                                        style="display:none;">
+                                                                        <input type="text" class="form-control"
+                                                                            name="{{ $item->id }}_keterangan"
+                                                                            placeholder="Tambah keterangan jika tidak normal...">
                                                                     </div>
-                                                                    <button
-                                                                        class="btn btn-sm btn-outline-primary tambah-keterangan"
-                                                                        type="button"
-                                                                        data-target="{{ $item->id }}-keterangan">
-                                                                        <i class="bi bi-plus"></i>
-                                                                    </button>
                                                                 </div>
-                                                                <div class="keterangan mt-2"
-                                                                    id="{{ $item->id }}-keterangan"
-                                                                    style="display:none;">
-                                                                    <input type="text" class="form-control"
-                                                                        name="{{ $item->id }}_keterangan"
-                                                                        placeholder="Tambah keterangan jika tidak normal...">
-                                                                </div>
-                                                            </div>
-                                                        @endforeach
+                                                            @endforeach
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            @endforeach
+                                                @endforeach
                                             </div>
 
                                         </div>
@@ -212,12 +220,14 @@
                                             </div>
 
                                             <div class="form-group justify-content-center">
-                                                <img src="{{ asset('assets/img/cppt/cppt.jpeg') }}" alt="" class="w-50">
+                                                <img src="{{ asset('assets/img/cppt/cppt.jpeg') }}" alt=""
+                                                    class="w-50">
                                             </div>
 
                                             <div class="form-group">
                                                 <label style="min-width: 200px;">Nilai Skala Nyeri</label>
-                                                <input type="number" name="status_skala_nyeri" class="form-control" min="0" max="10">
+                                                <input type="number" name="status_skala_nyeri" class="form-control"
+                                                    min="0" max="10">
                                             </div>
 
                                         </div>
@@ -279,8 +289,9 @@
                                             <div class="mb-4">
                                                 <p class="mb-2">Riwayat penggunaan obat pada pasien</p>
 
-                                                <button type="button" class="btn btn-sm btn-outline-primary d-flex align-items-center mb-3"
-                                                        data-bs-toggle="modal" data-bs-target="#modalTambahObat">
+                                                <button type="button"
+                                                    class="btn btn-sm btn-outline-primary d-flex align-items-center mb-3"
+                                                    data-bs-toggle="modal" data-bs-target="#modalTambahObat">
                                                     <i class="bi bi-plus-circle me-1"></i> Tambah
                                                 </button>
 
@@ -307,8 +318,9 @@
                                             <div class="mb-4">
                                                 <p class="mb-2">Jika terdapat obat tambahan dokter</p>
 
-                                                <button type="button" class="btn btn-sm btn-outline-primary d-flex align-items-center mb-3"
-                                                        data-bs-toggle="modal" data-bs-target="#modalTambahObatDokter">
+                                                <button type="button"
+                                                    class="btn btn-sm btn-outline-primary d-flex align-items-center mb-3"
+                                                    data-bs-toggle="modal" data-bs-target="#modalTambahObatDokter">
                                                     <i class="bi bi-plus-circle me-1"></i> Tambah
                                                 </button>
 
@@ -340,30 +352,38 @@
                                                 <p class="fw-medium mb-3">Pre Hemodialisis</p>
 
                                                 <div class="row mb-3">
-                                                    <label for="pre-ekg" class="col-sm-2 col-form-label text-end">EKG</label>
+                                                    <label for="pre-ekg"
+                                                        class="col-sm-2 col-form-label text-end">EKG</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="pre-ekg" name="pre_ekg" placeholder="freetext">
+                                                        <input type="text" class="form-control" id="pre-ekg"
+                                                            name="pre_ekg" placeholder="freetext">
                                                     </div>
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label for="pre-rontgent" class="col-sm-2 col-form-label text-end">Rontgent</label>
+                                                    <label for="pre-rontgent"
+                                                        class="col-sm-2 col-form-label text-end">Rontgent</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="pre-rontgent" name="pre_rontgent" placeholder="freetext">
+                                                        <input type="text" class="form-control" id="pre-rontgent"
+                                                            name="pre_rontgent" placeholder="freetext">
                                                     </div>
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label for="pre-usg" class="col-sm-2 col-form-label text-end">USG</label>
+                                                    <label for="pre-usg"
+                                                        class="col-sm-2 col-form-label text-end">USG</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="pre-usg" name="pre_usg" placeholder="freetext">
+                                                        <input type="text" class="form-control" id="pre-usg"
+                                                            name="pre_usg" placeholder="freetext">
                                                     </div>
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label for="pre-dll" class="col-sm-2 col-form-label text-end">Dll</label>
+                                                    <label for="pre-dll"
+                                                        class="col-sm-2 col-form-label text-end">Dll</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="pre-dll" name="pre_dll" placeholder="freetext">
+                                                        <input type="text" class="form-control" id="pre-dll"
+                                                            name="pre_dll" placeholder="freetext">
                                                     </div>
                                                 </div>
                                             </div>
@@ -373,30 +393,38 @@
                                                 <p class="fw-medium mb-3">Post Hemodialisis</p>
 
                                                 <div class="row mb-3">
-                                                    <label for="post-ekg" class="col-sm-2 col-form-label text-end">EKG</label>
+                                                    <label for="post-ekg"
+                                                        class="col-sm-2 col-form-label text-end">EKG</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="post-ekg" name="post_ekg" placeholder="freetext">
+                                                        <input type="text" class="form-control" id="post-ekg"
+                                                            name="post_ekg" placeholder="freetext">
                                                     </div>
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label for="post-rontgent" class="col-sm-2 col-form-label text-end">Rontgent</label>
+                                                    <label for="post-rontgent"
+                                                        class="col-sm-2 col-form-label text-end">Rontgent</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="post-rontgent" name="post_rontgent" placeholder="freetext">
+                                                        <input type="text" class="form-control" id="post-rontgent"
+                                                            name="post_rontgent" placeholder="freetext">
                                                     </div>
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label for="post-usg" class="col-sm-2 col-form-label text-end">USG</label>
+                                                    <label for="post-usg"
+                                                        class="col-sm-2 col-form-label text-end">USG</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="post-usg" name="post_usg" placeholder="freetext">
+                                                        <input type="text" class="form-control" id="post-usg"
+                                                            name="post_usg" placeholder="freetext">
                                                     </div>
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label for="post-dll" class="col-sm-2 col-form-label text-end">Dll</label>
+                                                    <label for="post-dll"
+                                                        class="col-sm-2 col-form-label text-end">Dll</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="post-dll" name="post_dll" placeholder="freetext">
+                                                        <input type="text" class="form-control" id="post-dll"
+                                                            name="post_dll" placeholder="freetext">
                                                     </div>
                                                 </div>
                                             </div>
@@ -404,8 +432,10 @@
 
                                         <div class="section-separator" id="alergi">
                                             <h5 class="section-title">7. Alergi</h5>
-                                            <input type="hidden" name="alergi" value="{{ isset($dataResume->alergi) ? json_encode($dataResume->alergi) : '[]' }}">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openAlergiModal">
+                                            <input type="hidden" name="alergi"
+                                                value="{{ isset($dataResume->alergi) ? json_encode($dataResume->alergi) : '[]' }}">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
+                                                id="openAlergiModal">
                                                 <i class="ti-plus"></i> Tambah
                                             </button>
 
@@ -433,13 +463,13 @@
                                             <h5 class="section-title">8. Status Gizi</h5>
 
                                             <div class="row mb-3">
-                                                <label for="gizi_tanggal_pengkajian" class="col-sm-3 col-form-label">Tanggal Pengkajian</label>
+                                                <label for="gizi_tanggal_pengkajian"
+                                                    class="col-sm-3 col-form-label">Tanggal Pengkajian</label>
                                                 <div class="col-sm-9">
                                                     <div class="input-group">
                                                         <input type="datetime-local" class="form-control"
-                                                               id="gizi_tanggal_pengkajian"
-                                                               name="gizi_tanggal_pengkajian"
-                                                               value="{{ old('gizi_tanggal_pengkajian', isset($keperawatanStatusGizi) ? Carbon\Carbon::parse($keperawatanStatusGizi->gizi_tanggal_pengkajian)->format('Y-m-d\TH:i') : '') }}">
+                                                            id="gizi_tanggal_pengkajian" name="gizi_tanggal_pengkajian"
+                                                            value="{{ old('gizi_tanggal_pengkajian', isset($keperawatanStatusGizi) ? Carbon\Carbon::parse($keperawatanStatusGizi->gizi_tanggal_pengkajian)->format('Y-m-d\TH:i') : '') }}">
                                                     </div>
                                                     @error('gizi_tanggal_pengkajian')
                                                         <div class="invalid-feedback d-block">
@@ -450,17 +480,20 @@
                                             </div>
 
                                             <div class="row mb-3">
-                                                <label for="gizi_skore_mis" class="col-sm-3 col-form-label">Skore MIS</label>
+                                                <label for="gizi_skore_mis" class="col-sm-3 col-form-label">Skore
+                                                    MIS</label>
                                                 <div class="col-sm-9">
-                                                    <input type="number" class="form-control" id="gizi_skore_mis" name="gizi_skore_mis"
-                                                        placeholder="Angka">
+                                                    <input type="number" class="form-control" id="gizi_skore_mis"
+                                                        name="gizi_skore_mis" placeholder="Angka">
                                                 </div>
                                             </div>
 
                                             <div class="row mb-3">
-                                                <label for="gizi_kesimpulan" class="col-sm-3 col-form-label">Kesimpulan</label>
+                                                <label for="gizi_kesimpulan"
+                                                    class="col-sm-3 col-form-label">Kesimpulan</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-select" id="gizi_kesimpulan" name="gizi_kesimpulan">
+                                                    <select class="form-select" id="gizi_kesimpulan"
+                                                        name="gizi_kesimpulan">
                                                         <option value="" selected disabled>pilih</option>
                                                         <option value="Tampa mainutrisi (<6)">Tampa mainutrisi (6)</option>
                                                         <option value="Malnutrisi(>6)">Malnutrisi(>6)</option>
@@ -469,16 +502,19 @@
                                             </div>
 
                                             <div class="row mb-3">
-                                                <label for="gizi_rencana_pengkajian" class="col-sm-3 col-form-label">Rencana
+                                                <label for="gizi_rencana_pengkajian"
+                                                    class="col-sm-3 col-form-label">Rencana
                                                     Pengkajian Ulang MIS</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" id="gizi_rencana_pengkajian"
-                                                        name="gizi_rencana_pengkajian" placeholder="jelaskan">
+                                                    <input type="text" class="form-control"
+                                                        id="gizi_rencana_pengkajian" name="gizi_rencana_pengkajian"
+                                                        placeholder="jelaskan">
                                                 </div>
                                             </div>
 
                                             <div class="row mb-3">
-                                                <label for="gizi_rekomendasi" class="col-sm-3 col-form-label">Rekomendasi</label>
+                                                <label for="gizi_rekomendasi"
+                                                    class="col-sm-3 col-form-label">Rekomendasi</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" class="form-control" id="gizi_rekomendasi"
                                                         name="gizi_rekomendasi" placeholder="jelaskan">
@@ -519,9 +555,11 @@
                                                 <select class="form-select risiko-jatuh-select" id="alat_bantu"
                                                     name="alat_bantu" data-skor="30">
                                                     <option value="" selected disabled>pilih</option>
-                                                    <option value="Tidak ada/ bed rest/ bantuan perawat" data-skor="0">Tidak
+                                                    <option value="Tidak ada/ bed rest/ bantuan perawat" data-skor="0">
+                                                        Tidak
                                                         ada/ bed rest/ bantuan perawat</option>
-                                                    <option value="kruk/ tongkat/ alat bantu berjalan" data-skor="15">kruk/
+                                                    <option value="kruk/ tongkat/ alat bantu berjalan" data-skor="15">
+                                                        kruk/
                                                         tongkat/ alat bantu berjalan</option>
                                                     <option value="Meja/ Kursi" data-skor="30">Meja/ Kursi</option>
                                                 </select>
@@ -529,8 +567,8 @@
 
                                             <div class="form-group mb-3">
                                                 <label class="form-label">Pasien terpasang infus?</label>
-                                                <select class="form-select risiko-jatuh-select" id="infus" name="infus"
-                                                    data-skor="20">
+                                                <select class="form-select risiko-jatuh-select" id="infus"
+                                                    name="infus" data-skor="20">
                                                     <option value="" selected disabled>pilih</option>
                                                     <option value="Ya" data-skor="20">Ya</option>
                                                     <option value="Tidak" data-skor="0">Tidak</option>
@@ -542,7 +580,8 @@
                                                 <select class="form-select risiko-jatuh-select" id="cara_berjalan"
                                                     name="cara_berjalan" data-skor="20">
                                                     <option value="" selected disabled>pilih</option>
-                                                    <option value="Normal/ bed rest/ kursi roda" data-skor="0">Normal/ bed
+                                                    <option value="Normal/ bed rest/ kursi roda" data-skor="0">Normal/
+                                                        bed
                                                         rest/ kursi roda</option>
                                                     <option value="Lemah" data-skor="10">Lemah</option>
                                                     <option value="Terganggu" data-skor="20">Terganggu</option>
@@ -573,22 +612,26 @@
                                             </div>
 
                                             <!-- Hidden input untuk menyimpan data ke database -->
-                                            <input type="hidden" name="risiko_jatuh_skor" id="risiko_jatuh_skor" value="0">
-                                            <input type="hidden" name="risiko_jatuh_kesimpulan" id="risiko_jatuh_kesimpulan"
-                                                value="">
+                                            <input type="hidden" name="risiko_jatuh_skor" id="risiko_jatuh_skor"
+                                                value="0">
+                                            <input type="hidden" name="risiko_jatuh_kesimpulan"
+                                                id="risiko_jatuh_kesimpulan" value="">
                                         </div>
 
                                         <div class="section-separator">
                                             <h5 class="section-title">10. Status Psikososial</h5>
 
                                             <div class="row mb-3">
-                                                <label for="tanggal_pengkajian_psiko" class="col-sm-3 col-form-label">Tanggal Pengkajian</label>
+                                                <label for="tanggal_pengkajian_psiko"
+                                                    class="col-sm-3 col-form-label">Tanggal Pengkajian</label>
                                                 <div class="col-sm-9">
                                                     <div class="input-group">
                                                         <input type="date" class="form-control"
                                                             id="tanggal_pengkajian_psiko" name="tanggal_pengkajian_psiko"
-                                                            value="{{ old('tanggal_pengkajian_psiko') }}" autocomplete="off">
-                                                        <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                                                            value="{{ old('tanggal_pengkajian_psiko') }}"
+                                                            autocomplete="off">
+                                                        <span class="input-group-text"><i
+                                                                class="bi bi-calendar"></i></span>
                                                     </div>
                                                     @error('tanggal_pengkajian_psiko')
                                                         <div class="invalid-feedback d-block">
@@ -629,25 +672,29 @@
                                                 <div class="col-sm-9">
                                                     <div class="btn-group" role="group">
                                                         <input type="checkbox" class="btn-check" id="kondisi_cemas"
-                                                            name="kondisi_psikologis[]" value="Cemas" autocomplete="off">
+                                                            name="kondisi_psikologis[]" value="Cemas"
+                                                            autocomplete="off">
                                                         <label class="btn btn-outline-secondary" for="kondisi_cemas">
                                                             Cemas <i class="bi bi-check"></i>
                                                         </label>
 
                                                         <input type="checkbox" class="btn-check" id="kondisi_marah"
-                                                            name="kondisi_psikologis[]" value="Marah" autocomplete="off">
+                                                            name="kondisi_psikologis[]" value="Marah"
+                                                            autocomplete="off">
                                                         <label class="btn btn-outline-secondary" for="kondisi_marah">
                                                             Marah <i class="bi bi-check"></i>
                                                         </label>
 
                                                         <input type="checkbox" class="btn-check" id="kondisi_sedih"
-                                                            name="kondisi_psikologis[]" value="Sedih" autocomplete="off">
+                                                            name="kondisi_psikologis[]" value="Sedih"
+                                                            autocomplete="off">
                                                         <label class="btn btn-outline-secondary" for="kondisi_sedih">
                                                             Sedih <i class="bi bi-check"></i>
                                                         </label>
 
                                                         <input type="checkbox" class="btn-check" id="kondisi_takut"
-                                                            name="kondisi_psikologis[]" value="Takut" autocomplete="off">
+                                                            name="kondisi_psikologis[]" value="Takut"
+                                                            autocomplete="off">
                                                         <label class="btn btn-outline-secondary" for="kondisi_takut">
                                                             Takut <i class="bi bi-check"></i>
                                                         </label>
@@ -678,7 +725,8 @@
                                                 </div>
                                             </div>
 
-                                            <input type="hidden" name="kondisi_psikologis_json" id="kondisi_psikologis_json">
+                                            <input type="hidden" name="kondisi_psikologis_json"
+                                                id="kondisi_psikologis_json">
                                         </div>
 
                                         <div class="section-separator">
@@ -704,8 +752,8 @@
                                                         <label for="hd_ke" class="col-sm-2 col-form-label text-end">HD
                                                             Ke</label>
                                                         <div class="col-sm-10">
-                                                            <input type="number" class="form-control" id="hd_ke" name="inisiasi_hd_ke"
-                                                                placeholder="angka">
+                                                            <input type="number" class="form-control" id="hd_ke"
+                                                                name="inisiasi_hd_ke" placeholder="angka">
                                                         </div>
                                                     </div>
 
@@ -720,14 +768,15 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="bb_hd_lalu" class="col-sm-2 col-form-label text-end">BB
+                                                        <label for="bb_hd_lalu"
+                                                            class="col-sm-2 col-form-label text-end">BB
                                                             HD
                                                             Yang
                                                             Lalu</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="bb_hd_lalu"
-                                                                    name="inisiasi_bb_hd_lalu">
+                                                                <input type="text" class="form-control"
+                                                                    id="bb_hd_lalu" name="inisiasi_bb_hd_lalu">
                                                                 <span class="input-group-text">kg</span>
                                                             </div>
                                                         </div>
@@ -739,15 +788,16 @@
                                                             Vena</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="tekanan_vena"
-                                                                    name="inisiasi_tekanan_vena">
+                                                                <input type="text" class="form-control"
+                                                                    id="tekanan_vena" name="inisiasi_tekanan_vena">
                                                                 <span class="input-group-text">ml/mnt</span>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="lama_hd" class="col-sm-2 col-form-label text-end">Lama
+                                                        <label for="lama_hd"
+                                                            class="col-sm-2 col-form-label text-end">Lama
                                                             HD</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
@@ -776,7 +826,8 @@
                                                                 </div>
                                                                 <div class="col-md-9">
                                                                     <input type="text" class="form-control"
-                                                                        id="uf_profiling_detail" name="inisiasi_uf_profiling_detail"
+                                                                        id="uf_profiling_detail"
+                                                                        name="inisiasi_uf_profiling_detail"
                                                                         placeholder="Freetext">
                                                                 </div>
                                                             </div>
@@ -814,7 +865,8 @@
                                                                 </div>
                                                                 <div class="col-md-9">
                                                                     <input type="text" class="form-control"
-                                                                        id="na_profiling_detail" name="inisiasi_na_profiling_detail"
+                                                                        id="na_profiling_detail"
+                                                                        name="inisiasi_na_profiling_detail"
                                                                         placeholder="Freetext">
                                                                 </div>
                                                             </div>
@@ -868,15 +920,16 @@
                                                             Arteri</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="tekanan_arteri"
-                                                                    name="akut_tekanan_arteri">
+                                                                <input type="text" class="form-control"
+                                                                    id="tekanan_arteri" name="akut_tekanan_arteri">
                                                                 <span class="input-group-text">ml/mnt</span>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="laju_uf" class="col-sm-2 col-form-label text-end">laju
+                                                        <label for="laju_uf"
+                                                            class="col-sm-2 col-form-label text-end">laju
                                                             UF</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
@@ -894,8 +947,8 @@
                                                             UF</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="lama_laju_uf"
-                                                                    name="akut_lama_laju_uf">
+                                                                <input type="text" class="form-control"
+                                                                    id="lama_laju_uf" name="akut_lama_laju_uf">
                                                                 <span class="input-group-text">jam</span>
                                                             </div>
                                                         </div>
@@ -914,8 +967,8 @@
                                                         <label for="nr_ke" class="col-sm-2 col-form-label text-end">N/R
                                                             Ke</label>
                                                         <div class="col-sm-10">
-                                                            <input type="text" class="form-control" id="nr_ke" name="rutin_nr_ke"
-                                                                placeholder="freetext">
+                                                            <input type="text" class="form-control" id="nr_ke"
+                                                                name="rutin_nr_ke" placeholder="freetext">
                                                         </div>
                                                     </div>
 
@@ -932,13 +985,14 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="bb_post_hd" class="col-sm-2 col-form-label text-end">BB
+                                                        <label for="bb_post_hd"
+                                                            class="col-sm-2 col-form-label text-end">BB
                                                             Post
                                                             HD</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="bb_post_hd"
-                                                                    name="rutin_bb_post_hd">
+                                                                <input type="text" class="form-control"
+                                                                    id="bb_post_hd" name="rutin_bb_post_hd">
                                                                 <span class="input-group-text">kg</span>
                                                             </div>
                                                         </div>
@@ -949,7 +1003,8 @@
                                                             (Transmembrane Pressure)</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="tmp" name="rutin_tmp">
+                                                                <input type="text" class="form-control" id="tmp"
+                                                                    name="rutin_tmp">
                                                                 <span class="input-group-text">mmHg</span>
                                                             </div>
                                                         </div>
@@ -973,7 +1028,8 @@
                                                                 <div class="col-md-9">
                                                                     <select class="form-select" id="av_shunt_detail"
                                                                         name="rutin_av_shunt_detail">
-                                                                        <option value="" selected disabled>Pilih</option>
+                                                                        <option value="" selected disabled>Pilih
+                                                                        </option>
                                                                         <option value="Kiri">Kiri</option>
                                                                         <option value="Kanan">Kanan</option>
                                                                     </select>
@@ -993,7 +1049,8 @@
                                                                 <div class="col-md-9">
                                                                     <select class="form-select" id="cdl_detail"
                                                                         name="rutin_cdl_detail">
-                                                                        <option value="" selected disabled>Pilih</option>
+                                                                        <option value="" selected disabled>Pilih
+                                                                        </option>
                                                                         <option value="Jugularis">Jugularis</option>
                                                                         <option value="Subelavia">Subelavia</option>
                                                                     </select>
@@ -1013,7 +1070,8 @@
                                                                 <div class="col-md-9">
                                                                     <select class="form-select" id="femoral_detail"
                                                                         name="rutin_femoral_detail">
-                                                                        <option value="" selected disabled>Pilih</option>
+                                                                        <option value="" selected disabled>Pilih
+                                                                        </option>
                                                                         <option value="Kiri">Kiri</option>
                                                                         <option value="Kanan">Kanan</option>
                                                                     </select>
@@ -1048,8 +1106,8 @@
                                                                 <div class="col-6">
                                                                     <div class="form-check">
                                                                         <input class="form-check-input" type="checkbox"
-                                                                            id="dialisat_bicarbonat" name="preop_bicarbonat"
-                                                                            value="Bicarbonat">
+                                                                            id="dialisat_bicarbonat"
+                                                                            name="preop_bicarbonat" value="Bicarbonat">
                                                                         <label class="form-check-label"
                                                                             for="dialisat_bicarbonat">Bicarbonat</label>
                                                                     </div>
@@ -1071,8 +1129,8 @@
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="conductivity"
-                                                                    name="preop_conductivity">
+                                                                <input type="text" class="form-control"
+                                                                    id="conductivity" name="preop_conductivity">
                                                                 <span class="input-group-text">MS/Cm</span>
                                                             </div>
                                                         </div>
@@ -1110,8 +1168,8 @@
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="suhu_dialisat"
-                                                                    name="preop_suhu_dialisat">
+                                                                <input type="text" class="form-control"
+                                                                    id="suhu_dialisat" name="preop_suhu_dialisat">
                                                                 <span class="input-group-text">°C</span>
                                                             </div>
                                                         </div>
@@ -1122,7 +1180,8 @@
                                                         <div class="col-sm-4">
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    id="base_na_check" name="base_na_check" value="1">
+                                                                    id="base_na_check" name="base_na_check"
+                                                                    value="1">
                                                                 <label class="form-check-label" for="base_na_check">Base
                                                                     Na</label>
                                                             </div>
@@ -1167,8 +1226,8 @@
                                                                 <label for="dosis_awal" class="form-label">Dosis
                                                                     Awal</label>
                                                                 <div class="input-group">
-                                                                    <input type="text" class="form-control" id="dosis_awal"
-                                                                        name="dosis_awal">
+                                                                    <input type="text" class="form-control"
+                                                                        id="dosis_awal" name="dosis_awal">
                                                                     <span class="input-group-text">IU</span>
                                                                 </div>
                                                             </div>
@@ -1201,16 +1260,18 @@
                                                         <!-- Row 3: Tanpa Heparin dan LMWH -->
                                                         <div class="row mb-3">
                                                             <div class="col-md-6">
-                                                                <label for="tanpa_heparin" class="form-label">Tanpa Heparin
+                                                                <label for="tanpa_heparin" class="form-label">Tanpa
+                                                                    Heparin
                                                                     (sc.)</label>
-                                                                <input type="text" class="form-control" id="tanpa_heparin"
-                                                                    name="tanpa_heparin" placeholder="Text">
+                                                                <input type="text" class="form-control"
+                                                                    id="tanpa_heparin" name="tanpa_heparin"
+                                                                    placeholder="Text">
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <label for="lmwh" class="form-label">LMWH</label>
                                                                 <div class="input-group">
-                                                                    <input type="text" class="form-control" id="lmwh"
-                                                                        name="lmwh">
+                                                                    <input type="text" class="form-control"
+                                                                        id="lmwh" name="lmwh">
                                                                     <span class="input-group-text">IU</span>
                                                                 </div>
                                                             </div>
@@ -1219,11 +1280,13 @@
                                                         <!-- Row 4: Program Bilas NaCl -->
                                                         <div class="row mb-3">
                                                             <div class="col-12">
-                                                                <label for="program_bilas_nacl" class="form-label">Program
+                                                                <label for="program_bilas_nacl"
+                                                                    class="form-label">Program
                                                                     Bilas NaCl 0,9% 100cc/Jam</label>
                                                                 <select class="form-select" id="program_bilas_nacl"
                                                                     name="program_bilas_nacl">
-                                                                    <option value="" selected disabled>pilih</option>
+                                                                    <option value="" selected disabled>pilih
+                                                                    </option>
                                                                     <option value="Ya">Ya</option>
                                                                     <option value="Tidak">Tidak</option>
                                                                 </select>
@@ -1255,8 +1318,8 @@
                                                             class="col-sm-2 col-form-label text-end">Waktu
                                                             Pre HD</label>
                                                         <div class="col-sm-10">
-                                                            <input type="time" class="form-control" id="waktu_pre_hd"
-                                                                name="prehd_waktu_pre_hd">
+                                                            <input type="time" class="form-control"
+                                                                id="waktu_pre_hd" name="prehd_waktu_pre_hd">
                                                         </div>
                                                     </div>
 
@@ -1270,16 +1333,16 @@
                                                                 <div class="col-md-6">
                                                                     <div class="input-group">
                                                                         <span class="input-group-text">QB</span>
-                                                                        <input type="text" class="form-control" id="qb"
-                                                                            name="prehd_qb">
+                                                                        <input type="text" class="form-control"
+                                                                            id="qb" name="prehd_qb">
                                                                         <span class="input-group-text">ml/menit</span>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <div class="input-group">
                                                                         <span class="input-group-text">QD</span>
-                                                                        <input type="text" class="form-control" id="qd"
-                                                                            name="prehd_qd">
+                                                                        <input type="text" class="form-control"
+                                                                            id="qd" name="prehd_qd">
                                                                         <span class="input-group-text">ml/menit</span>
                                                                     </div>
                                                                 </div>
@@ -1289,12 +1352,13 @@
 
                                                     <!-- UF Rate -->
                                                     <div class="row mb-3">
-                                                        <label for="uf_rate" class="col-sm-2 col-form-label text-end">UF
+                                                        <label for="uf_rate"
+                                                            class="col-sm-2 col-form-label text-end">UF
                                                             Rate</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="uf_rate"
-                                                                    name="prehd_uf_rate">
+                                                                <input type="text" class="form-control"
+                                                                    id="uf_rate" name="prehd_uf_rate">
                                                                 <span class="input-group-text">ml/menit</span>
                                                             </div>
                                                         </div>
@@ -1310,8 +1374,8 @@
                                                                 <div class="col-md-6">
                                                                     <div class="input-group">
                                                                         <span class="input-group-text">Sistole</span>
-                                                                        <input type="number" class="form-control" id="sistole"
-                                                                            name="prehd_sistole">
+                                                                        <input type="number" class="form-control"
+                                                                            id="sistole" name="prehd_sistole">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
@@ -1327,12 +1391,13 @@
 
                                                     <!-- Nadi (Per Menit) -->
                                                     <div class="row mb-3">
-                                                        <label for="nadi" class="col-sm-2 col-form-label text-end">Nadi (Per
+                                                        <label for="nadi"
+                                                            class="col-sm-2 col-form-label text-end">Nadi (Per
                                                             Menit)</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="number" class="form-control" id="nadi"
-                                                                    name="prehd_nadi">
+                                                                <input type="number" class="form-control"
+                                                                    id="nadi" name="prehd_nadi">
                                                                 <span class="input-group-text">x/mnt</span>
                                                             </div>
                                                         </div>
@@ -1340,13 +1405,14 @@
 
                                                     <!-- Nafas (Per Menit) -->
                                                     <div class="row mb-3">
-                                                        <label for="nafas" class="col-sm-2 col-form-label text-end">Nafas
+                                                        <label for="nafas"
+                                                            class="col-sm-2 col-form-label text-end">Nafas
                                                             (Per
                                                             Menit)</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="number" class="form-control" id="nafas"
-                                                                    name="prehd_nafas">
+                                                                <input type="number" class="form-control"
+                                                                    id="nafas" name="prehd_nafas">
                                                                 <span class="input-group-text">x/mnt</span>
                                                             </div>
                                                         </div>
@@ -1354,12 +1420,13 @@
 
                                                     <!-- Suhu (C) -->
                                                     <div class="row mb-3">
-                                                        <label for="suhu" class="col-sm-2 col-form-label text-end">Suhu
+                                                        <label for="suhu"
+                                                            class="col-sm-2 col-form-label text-end">Suhu
                                                             (C)</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="number" class="form-control" id="suhu"
-                                                                    name="prehd_suhu">
+                                                                <input type="number" class="form-control"
+                                                                    id="suhu" name="prehd_suhu">
                                                                 <span class="input-group-text">°C</span>
                                                             </div>
                                                         </div>
@@ -1375,16 +1442,16 @@
                                                                 <div class="col-md-6">
                                                                     <div class="input-group">
                                                                         <span class="input-group-text">NaCl</span>
-                                                                        <input type="text" class="form-control" id="nacl"
-                                                                            name="prehd_nacl">
+                                                                        <input type="text" class="form-control"
+                                                                            id="nacl" name="prehd_nacl">
                                                                         <span class="input-group-text">ml</span>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <div class="input-group">
                                                                         <span class="input-group-text">Minum</span>
-                                                                        <input type="text" class="form-control" id="minum"
-                                                                            name="prehd_minum">
+                                                                        <input type="text" class="form-control"
+                                                                            id="minum" name="prehd_minum">
                                                                         <span class="input-group-text">ml</span>
                                                                     </div>
                                                                 </div>
@@ -1409,8 +1476,8 @@
                                                             Output</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" id="output"
-                                                                    name="prehd_output">
+                                                                <input type="text" class="form-control"
+                                                                    id="output" name="prehd_output">
                                                                 <span class="input-group-text">ml</span>
                                                             </div>
                                                         </div>
@@ -1430,32 +1497,34 @@
                                                 <!-- Waktu Intra Pre HD -->
                                                 <div class="row mb-3">
                                                     <label for="waktu_intra_pre_hd"
-                                                        class="col-sm-2 col-form-label text-end">Waktu Intra Pre HD</label>
+                                                        class="col-sm-2 col-form-label text-end">Waktu Intra Pre
+                                                        HD</label>
                                                     <div class="col-sm-10">
-                                                        <input type="time" class="form-control" id="waktu_intra_pre_hd"
-                                                            name="waktu_intra_pre_hd">
+                                                        <input type="time" class="form-control"
+                                                            id="waktu_intra_pre_hd" name="waktu_intra_pre_hd">
                                                     </div>
                                                 </div>
 
                                                 <!-- Parameter Mesin HD (QB dan QD) -->
                                                 <div class="row mb-3">
                                                     <label for="parameter_mesin_hd_intra"
-                                                        class="col-sm-2 col-form-label text-end">Parameter Mesin HD</label>
+                                                        class="col-sm-2 col-form-label text-end">Parameter Mesin
+                                                        HD</label>
                                                     <div class="col-sm-10">
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">QB</span>
-                                                                    <input type="number" class="form-control" id="qb_intra"
-                                                                        name="qb_intra">
+                                                                    <input type="number" class="form-control"
+                                                                        id="qb_intra" name="qb_intra">
                                                                     <span class="input-group-text">ml/menit</span>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">QD</span>
-                                                                    <input type="number" class="form-control" id="qd_intra"
-                                                                        name="qd_intra">
+                                                                    <input type="number" class="form-control"
+                                                                        id="qd_intra" name="qd_intra">
                                                                     <span class="input-group-text">ml/menit</span>
                                                                 </div>
                                                             </div>
@@ -1465,12 +1534,13 @@
 
                                                 <!-- UF Rate -->
                                                 <div class="row mb-3">
-                                                    <label for="uf_rate_intra" class="col-sm-2 col-form-label text-end">UF
+                                                    <label for="uf_rate_intra"
+                                                        class="col-sm-2 col-form-label text-end">UF
                                                         Rate</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
-                                                            <input type="number" class="form-control" id="uf_rate_intra"
-                                                                name="uf_rate_intra">
+                                                            <input type="number" class="form-control"
+                                                                id="uf_rate_intra" name="uf_rate_intra">
                                                             <span class="input-group-text">ml/menit</span>
                                                         </div>
                                                     </div>
@@ -1502,7 +1572,8 @@
 
                                                 <!-- Nadi (Per Menit) -->
                                                 <div class="row mb-3">
-                                                    <label for="nadi_intra" class="col-sm-2 col-form-label text-end">Nadi
+                                                    <label for="nadi_intra"
+                                                        class="col-sm-2 col-form-label text-end">Nadi
                                                         (Per Menit)</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
@@ -1515,12 +1586,13 @@
 
                                                 <!-- Nafas (Per Menit) -->
                                                 <div class="row mb-3">
-                                                    <label for="nafas_intra" class="col-sm-2 col-form-label text-end">Nafas
+                                                    <label for="nafas_intra"
+                                                        class="col-sm-2 col-form-label text-end">Nafas
                                                         (Per Menit)</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
-                                                            <input type="number" class="form-control" id="nafas_intra"
-                                                                name="nafas_intra">
+                                                            <input type="number" class="form-control"
+                                                                id="nafas_intra" name="nafas_intra">
                                                             <span class="input-group-text">x/mnt</span>
                                                         </div>
                                                     </div>
@@ -1528,7 +1600,8 @@
 
                                                 <!-- Suhu (C) -->
                                                 <div class="row mb-3">
-                                                    <label for="suhu_intra" class="col-sm-2 col-form-label text-end">Suhu
+                                                    <label for="suhu_intra"
+                                                        class="col-sm-2 col-form-label text-end">Suhu
                                                         (C)</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
@@ -1549,16 +1622,16 @@
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">NaCl</span>
-                                                                    <input type="number" class="form-control" id="nacl_intra"
-                                                                        name="nacl_intra">
+                                                                    <input type="number" class="form-control"
+                                                                        id="nacl_intra" name="nacl_intra">
                                                                     <span class="input-group-text">ml</span>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">Minum</span>
-                                                                    <input type="number" class="form-control" id="minum_intra"
-                                                                        name="minum_intra">
+                                                                    <input type="number" class="form-control"
+                                                                        id="minum_intra" name="minum_intra">
                                                                     <span class="input-group-text">ml</span>
                                                                 </div>
                                                             </div>
@@ -1583,8 +1656,8 @@
                                                         Output</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
-                                                            <input type="number" class="form-control" id="output_intra"
-                                                                name="output_intra">
+                                                            <input type="number" class="form-control"
+                                                                id="output_intra" name="output_intra">
                                                             <span class="input-group-text">ml</span>
                                                         </div>
                                                     </div>
@@ -1593,7 +1666,9 @@
                                                 <!-- Tombol Simpan untuk Intra HD -->
                                                 <div class="row mt-4">
                                                     <div class="col-sm-10 offset-sm-2">
-                                                        <button type="button" class="btn btn-primary btn-simpan-intra-hd">Simpan ke Tabel</button>
+                                                        <button type="button"
+                                                            class="btn btn-primary btn-simpan-intra-hd">Simpan ke
+                                                            Tabel</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1607,7 +1682,8 @@
                                                 </div>
 
                                                 <div class="table-responsive">
-                                                    <table class="table table-bordered table-striped" id="observasiTable">
+                                                    <table class="table table-bordered table-striped"
+                                                        id="observasiTable">
                                                         <thead class="table-primary">
                                                             <tr class="text-center">
                                                                 <th>Waktu</th>
@@ -1627,7 +1703,8 @@
                                                 </div>
 
                                                 <!-- Hidden input for observasi_data -->
-                                                <input type="hidden" name="observasi_data" id="observasi_data" value="{{ $keperawatanMonitoringIntrahd->observasi_data ?? '' }}">
+                                                <input type="hidden" name="observasi_data" id="observasi_data"
+                                                    value="{{ $keperawatanMonitoringIntrahd->observasi_data ?? '' }}">
                                             </div>
 
                                             <div class="post__HD">
@@ -1641,32 +1718,35 @@
                                                 <!-- Lama Waktu Post HD -->
                                                 <div class="row mb-3">
                                                     <label for="lama_waktu_post_hd"
-                                                        class="col-sm-2 col-form-label text-end">Lama Waktu Post HD</label>
+                                                        class="col-sm-2 col-form-label text-end">Lama Waktu Post
+                                                        HD</label>
                                                     <div class="col-sm-10">
-                                                        <input type="number" class="form-control" id="lama_waktu_post_hd"
-                                                            name="lama_waktu_post_hd" placeholder="menit">
+                                                        <input type="number" class="form-control"
+                                                            id="lama_waktu_post_hd" name="lama_waktu_post_hd"
+                                                            placeholder="menit">
                                                     </div>
                                                 </div>
 
                                                 <!-- Parameter Mesin HD (QB dan QD) -->
                                                 <div class="row mb-3">
                                                     <label for="parameter_mesin_hd_post"
-                                                        class="col-sm-2 col-form-label text-end">Parameter Mesin HD</label>
+                                                        class="col-sm-2 col-form-label text-end">Parameter Mesin
+                                                        HD</label>
                                                     <div class="col-sm-10">
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">QB</span>
-                                                                    <input type="number" class="form-control" id="qb_post"
-                                                                        name="qb_post">
+                                                                    <input type="number" class="form-control"
+                                                                        id="qb_post" name="qb_post">
                                                                     <span class="input-group-text">ml/menit</span>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">QD</span>
-                                                                    <input type="number" class="form-control" id="qd_post"
-                                                                        name="qd_post">
+                                                                    <input type="number" class="form-control"
+                                                                        id="qd_post" name="qd_post">
                                                                     <span class="input-group-text">ml/menit</span>
                                                                 </div>
                                                             </div>
@@ -1676,12 +1756,13 @@
 
                                                 <!-- UF Rate -->
                                                 <div class="row mb-3">
-                                                    <label for="uf_rate_post" class="col-sm-2 col-form-label text-end">UF
+                                                    <label for="uf_rate_post"
+                                                        class="col-sm-2 col-form-label text-end">UF
                                                         Rate</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
-                                                            <input type="number" class="form-control" id="uf_rate_post"
-                                                                name="uf_rate_post">
+                                                            <input type="number" class="form-control"
+                                                                id="uf_rate_post" name="uf_rate_post">
                                                             <span class="input-group-text">ml/menit</span>
                                                         </div>
                                                     </div>
@@ -1726,7 +1807,8 @@
 
                                                 <!-- Nafas (Per Menit) -->
                                                 <div class="row mb-3">
-                                                    <label for="nafas_post" class="col-sm-2 col-form-label text-end">Nafas
+                                                    <label for="nafas_post"
+                                                        class="col-sm-2 col-form-label text-end">Nafas
                                                         (Per Menit)</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
@@ -1760,16 +1842,16 @@
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">NaCl</span>
-                                                                    <input type="number" class="form-control" id="nacl_post"
-                                                                        name="nacl_post">
+                                                                    <input type="number" class="form-control"
+                                                                        id="nacl_post" name="nacl_post">
                                                                     <span class="input-group-text">ml</span>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">Minum</span>
-                                                                    <input type="number" class="form-control" id="minum_post"
-                                                                        name="minum_post">
+                                                                    <input type="number" class="form-control"
+                                                                        id="minum_post" name="minum_post">
                                                                     <span class="input-group-text">ml</span>
                                                                 </div>
                                                             </div>
@@ -1794,8 +1876,8 @@
                                                         Output</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group">
-                                                            <input type="number" class="form-control" id="output_post"
-                                                                name="output_post">
+                                                            <input type="number" class="form-control"
+                                                                id="output_post" name="output_post">
                                                             <span class="input-group-text">ml</span>
                                                         </div>
                                                     </div>
@@ -1835,8 +1917,8 @@
                                                         class="col-sm-2 col-form-label text-end">Ultrafiltration
                                                         Total</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="ultrafiltration_total"
-                                                            name="ultrafiltration_total"
+                                                        <input type="text" class="form-control"
+                                                            id="ultrafiltration_total" name="ultrafiltration_total"
                                                             placeholder="input angka, otomatis menghitung total cairan yang diambil selama HD ml">
                                                     </div>
                                                 </div>
@@ -1846,8 +1928,8 @@
                                                     <label for="keterangan_soapie"
                                                         class="col-sm-2 col-form-label text-end">Keterangan SOAPIE</label>
                                                     <div class="col-sm-10">
-                                                        <textarea class="form-control" id="keterangan_soapie"
-                                                            name="keterangan_soapie" rows="3" placeholder="text"></textarea>
+                                                        <textarea class="form-control" id="keterangan_soapie" name="keterangan_soapie" rows="3"
+                                                            placeholder="text"></textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1858,11 +1940,12 @@
                                             <h5 class="section-title">12. Penyulit Selama HD</h5>
 
                                             <div class="row mb-3">
-                                                <label for="klinis" class="col-sm-2 col-form-label text-end">Klinis</label>
+                                                <label for="klinis"
+                                                    class="col-sm-2 col-form-label text-end">Klinis</label>
                                                 <div class="col-sm-10">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" id="klinis_display" readonly
-                                                            placeholder="pilih" data-bs-toggle="modal"
+                                                        <input type="text" class="form-control" id="klinis_display"
+                                                            readonly placeholder="pilih" data-bs-toggle="modal"
                                                             data-bs-target="#klinisModal">
                                                         <button class="btn btn-outline-secondary" type="button"
                                                             data-bs-toggle="modal" data-bs-target="#klinisModal">
@@ -1876,11 +1959,12 @@
                                             </div>
 
                                             <div class="row mb-3">
-                                                <label for="teknis" class="col-sm-2 col-form-label text-end">Teknis</label>
+                                                <label for="teknis"
+                                                    class="col-sm-2 col-form-label text-end">Teknis</label>
                                                 <div class="col-sm-10">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" id="teknis_display" readonly
-                                                            placeholder="pilih" data-bs-toggle="modal"
+                                                        <input type="text" class="form-control" id="teknis_display"
+                                                            readonly placeholder="pilih" data-bs-toggle="modal"
                                                             data-bs-target="#teknisModal">
                                                         <button class="btn btn-outline-secondary" type="button"
                                                             data-bs-toggle="modal" data-bs-target="#teknisModal">
@@ -1894,10 +1978,11 @@
                                             </div>
 
                                             <div class="row mb-3">
-                                                <label for="mesin" class="col-sm-2 col-form-label text-end">Mesin</label>
+                                                <label for="mesin"
+                                                    class="col-sm-2 col-form-label text-end">Mesin</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="mesin" name="mesin"
-                                                        placeholder="Freetext">
+                                                    <input type="text" class="form-control" id="mesin"
+                                                        name="mesin" placeholder="Freetext">
                                                 </div>
                                             </div>
                                         </div>
@@ -1906,19 +1991,22 @@
                                             <h5 class="section-title">13. Disharge Planning</h5>
 
                                             <div class="row mb-3">
-                                                <label for="rencana_pulang" class="col-sm-2 col-form-label text-end">Rencana
+                                                <label for="rencana_pulang"
+                                                    class="col-sm-2 col-form-label text-end">Rencana
                                                     Pulang</label>
                                                 <div class="col-sm-10">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" id="rencana_pulang_display"
-                                                            readonly placeholder="Pemulangan Asupan Cairan"
+                                                        <input type="text" class="form-control"
+                                                            id="rencana_pulang_display" readonly
+                                                            placeholder="Pemulangan Asupan Cairan"
                                                             data-bs-toggle="modal" data-bs-target="#rencanaPulangModal">
                                                         <button class="btn btn-outline-secondary" type="button"
                                                             data-bs-toggle="modal" data-bs-target="#rencanaPulangModal">
                                                             <i class="fas fa-list"></i>
                                                         </button>
                                                     </div>
-                                                    <div id="rencana_pulang_selected_items" class="mt-2 small text-muted">
+                                                    <div id="rencana_pulang_selected_items"
+                                                        class="mt-2 small text-muted">
                                                     </div>
                                                     <!-- Hidden input untuk menyimpan nilai yang dipilih -->
                                                     <input type="hidden" id="rencana_pulang_values"
@@ -1933,7 +2021,8 @@
                                             <!-- Diagnosis Banding -->
                                             <div class="mb-4">
                                                 <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
-                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk
+                                                    mencari
                                                     diagnosis banding,
                                                     apabila tidak ada, Pilih tanda tambah untuk menambah
                                                     keterangan diagnosis banding yang tidak ditemukan.</small>
@@ -1963,7 +2052,8 @@
                                             <!-- Diagnosis Kerja -->
                                             <div class="mb-4">
                                                 <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
-                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk
+                                                    mencari
                                                     diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah
                                                     keterangan diagnosis kerja yang tidak ditemukan.</small>
 
@@ -1979,12 +2069,14 @@
                                                     </span>
                                                 </div>
 
-                                                <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
+                                                <div id="diagnosis-kerja-list"
+                                                    class="diagnosis-list bg-light p-3 rounded">
                                                     <!-- Diagnosis items will be added here dynamically -->
                                                 </div>
 
                                                 <!-- Hidden input to store JSON data -->
-                                                <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja" value="[]">
+                                                <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja"
+                                                    value="[]">
                                             </div>
                                         </div>
 
@@ -1995,7 +2087,8 @@
                                             <div class="mb-4">
                                                 <label class="text-primary fw-semibold">Rencana Penatalaksanaan dan
                                                     Pengobatan</label>
-                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk
+                                                    mencari
                                                     rencana, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
                                                     rencana Penatalaksanaan dan Pengobatan kerja yang tidak
                                                     ditemukan.</small>
@@ -2019,7 +2112,8 @@
                                                     <!-- Items will be added here dynamically -->
                                                 </div>
                                                 <!-- Hidden input to store JSON data -->
-                                                <input type="hidden" id="observasi" name="observasi" value="[]">
+                                                <input type="hidden" id="observasi" name="observasi"
+                                                    value="[]">
                                             </div>
 
                                             <!-- Terapeutik Section -->
@@ -2040,7 +2134,8 @@
                                                     <!-- Items will be added here dynamically -->
                                                 </div>
                                                 <!-- Hidden input to store JSON data -->
-                                                <input type="hidden" id="terapeutik" name="terapeutik" value="[]">
+                                                <input type="hidden" id="terapeutik" name="terapeutik"
+                                                    value="[]">
                                             </div>
 
                                             <!-- Edukasi Section -->
@@ -2082,13 +2177,15 @@
                                                     <!-- Items will be added here dynamically -->
                                                 </div>
                                                 <!-- Hidden input to store JSON data -->
-                                                <input type="hidden" id="kolaborasi" name="kolaborasi" value="[]">
+                                                <input type="hidden" id="kolaborasi" name="kolaborasi"
+                                                    value="[]">
                                             </div>
 
                                             <!-- Kolaborasi Section -->
                                             <div class="mb-4">
                                                 <label class="text-primary fw-semibold">Prognosis</label>
-                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk
+                                                    mencari
                                                     Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
                                                     keterangan
                                                     Prognosis yang tidak ditemukan.</small>
@@ -2123,8 +2220,7 @@
                                                 <div class="col-12">
                                                     <label for="evaluasi_keperawatan" class="form-label">Tambah Evaluasi
                                                         Keperawatan</label>
-                                                    <textarea class="form-control" id="evaluasi_keperawatan"
-                                                        name="evaluasi_keperawatan" rows="4"></textarea>
+                                                    <textarea class="form-control" id="evaluasi_keperawatan" name="evaluasi_keperawatan" rows="4"></textarea>
                                                 </div>
                                             </div>
 
@@ -2133,8 +2229,7 @@
                                                 <div class="col-12">
                                                     <label for="evaluasi_medis" class="form-label">Tambah Evaluasi
                                                         Medis</label>
-                                                    <textarea class="form-control" id="evaluasi_medis" name="evaluasi_medis"
-                                                        rows="4"></textarea>
+                                                    <textarea class="form-control" id="evaluasi_medis" name="evaluasi_medis" rows="4"></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -2152,7 +2247,8 @@
                                                 <div class="col-md-9">
                                                     <div class="row">
                                                         <div class="col-md-8">
-                                                            <select name="perawat_pemeriksa" id="perawat-pemeriksa" class="form-select select2">
+                                                            <select name="perawat_pemeriksa" id="perawat-pemeriksa"
+                                                                class="form-select select2">
                                                                 <option value="">--Pilih--</option>
                                                                 @foreach ($perawat as $prwt)
                                                                     <option value="{{ $prwt->kd_karyawan }}">
@@ -2174,12 +2270,14 @@
                                             <!-- E-Signature Perawat Yang Bertugas -->
                                             <div class="row mb-4">
                                                 <div class="col-md-3">
-                                                    <label class="form-label">E-Signature Nama Perawat Yang Bertugas</label>
+                                                    <label class="form-label">E-Signature Nama Perawat Yang
+                                                        Bertugas</label>
                                                 </div>
                                                 <div class="col-md-9">
                                                     <div class="row">
                                                         <div class="col-md-8">
-                                                            <select name="perawat_bertugas" id="perawat" class="form-select select2">
+                                                            <select name="perawat_bertugas" id="perawat"
+                                                                class="form-select select2">
                                                                 <option value="">--Pilih--</option>
                                                                 @foreach ($perawat as $prwt)
                                                                     <option value="{{ $prwt->kd_karyawan }}">
@@ -2206,10 +2304,12 @@
                                                 <div class="col-md-9">
                                                     <div class="row">
                                                         <div class="col-md-8">
-                                                            <select name="dokter_pelaksana" id="dokter_pelaksana" class="form-select">
+                                                            <select name="dokter_pelaksana" id="dokter_pelaksana"
+                                                                class="form-select">
                                                                 <option value="">--Pilih--</option>
                                                                 @foreach ($dokterPelaksana as $item)
-                                                                    <option value="{{ $item->dokter->kd_dokter }}">{{ $item->dokter->nama_lengkap }}</option>
+                                                                    <option value="{{ $item->dokter->kd_dokter }}">
+                                                                        {{ $item->dokter->nama_lengkap }}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -2240,7 +2340,8 @@
     </div>
 
     <!-- Modal Tambah Obat Pasien -->
-    <div class="modal fade" id="modalTambahObat" tabindex="-1" aria-labelledby="modalTambahObatLabel" aria-hidden="true">
+    <div class="modal fade" id="modalTambahObat" tabindex="-1" aria-labelledby="modalTambahObatLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -2271,7 +2372,8 @@
     </div>
 
     <!-- Modal Tambah Obat Dokter -->
-    <div class="modal fade" id="modalTambahObatDokter" tabindex="-1" aria-labelledby="modalTambahObatDokterLabel" aria-hidden="true">
+    <div class="modal fade" id="modalTambahObatDokter" tabindex="-1" aria-labelledby="modalTambahObatDokterLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -2317,7 +2419,8 @@
                         <label class="form-check-label" for="masalah_akses">Masalah akses</label>
                     </div>
                     <div class="form-check mb-2">
-                        <input class="form-check-input teknis-option" type="checkbox" id="clotting" value="Clotting">
+                        <input class="form-check-input teknis-option" type="checkbox" id="clotting"
+                            value="Clotting">
                         <label class="form-check-label" for="clotting">Clotting</label>
                     </div>
                     <div class="form-check mb-2">
@@ -2331,7 +2434,8 @@
                         <label class="form-check-label" for="emboli_udara">Emboli udara</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input teknis-option" type="checkbox" id="lainnya" value="Lainnya">
+                        <input class="form-check-input teknis-option" type="checkbox" id="lainnya"
+                            value="Lainnya">
                         <label class="form-check-label" for="lainnya">Lainnya</label>
                     </div>
                 </div>
@@ -2354,7 +2458,8 @@
                 <div class="modal-body">
                     <div class="bg-light p-3 rounded">
                         <div class="form-check mb-2">
-                            <input class="form-check-input klinis-option" type="checkbox" id="hipotensi" value="Hipotensi">
+                            <input class="form-check-input klinis-option" type="checkbox" id="hipotensi"
+                                value="Hipotensi">
                             <label class="form-check-label" for="hipotensi">Hipotensi</label>
                         </div>
                         <div class="form-check mb-2">
@@ -2378,7 +2483,8 @@
                             <label class="form-check-label" for="perdarahan">Perdarahan</label>
                         </div>
                         <div class="form-check mb-2">
-                            <input class="form-check-input klinis-option" type="checkbox" id="nyeri" value="Nyeri">
+                            <input class="form-check-input klinis-option" type="checkbox" id="nyeri"
+                                value="Nyeri">
                             <label class="form-check-label" for="nyeri">Nyeri</label>
                         </div>
                     </div>
@@ -2421,7 +2527,8 @@
                                 <div>
                                     <div class="form-check">
                                         <input class="form-check-input rencana-pulang-option" type="checkbox"
-                                            id="pembatasan_asupan_tinggi_kalium" value="Pembatasan Asupan Tinggi Kalium">
+                                            id="pembatasan_asupan_tinggi_kalium"
+                                            value="Pembatasan Asupan Tinggi Kalium">
                                         <label class="form-check-label" for="pembatasan_asupan_tinggi_kalium">Pembatasan
                                             Asupan Tinggi Kalium</label>
                                     </div>
