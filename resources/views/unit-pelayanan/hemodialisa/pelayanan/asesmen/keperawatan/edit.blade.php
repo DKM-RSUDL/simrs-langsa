@@ -880,7 +880,7 @@
                                                     value="{{ $asesmen->keperawatanMonitoringPreekripsi->data ?? '{}' }}">
                                                 <div class="row mt-3">
                                                     <div class="col-12">
-                                                        <h6 class="fw-bold">1. Preekripsi Hemodialisis</h6>
+                                                        <h6 class="fw-bold">1. Preskripsi Hemodialisis</h6>
                                                     </div>
                                                 </div>
 

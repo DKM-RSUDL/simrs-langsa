@@ -2469,23 +2469,31 @@
             
             // Cek apakah ada data monitoring preekripsi terbaru
             @if(isset($latestMonitoringPreekripsi) && $latestMonitoringPreekripsi)
-                console.log('Data preekripsi ditemukan:', @json($latestMonitoringPreekripsi));
+                // console.log('Data preekripsi ditemukan:', @json($latestMonitoringPreekripsi));
                 
                 // Jalankan after a short delay to ensure all other scripts are loaded
                 setTimeout(function() {
                     console.log('Memulai loading data preekripsi...');
                     
                     // === BAGIAN INISIASI ===
-                    // HD Ke
-                    @if($latestMonitoringPreekripsi->inisiasi_hd_ke)
-                        const hdKeElement = document.querySelector('input[name="inisiasi_hd_ke"]');
-                        if (hdKeElement) {
-                            hdKeElement.value = '{{ $latestMonitoringPreekripsi->inisiasi_hd_ke + 1 }}'; // Increment untuk sesi berikutnya
+                    // HD Ke - Auto increment dari data sebelumnya atau mulai dari 1
+                    const hdKeElement = document.querySelector('input[name="inisiasi_hd_ke"]');
+                    if (hdKeElement) {
+                        @if($latestMonitoringPreekripsi->inisiasi_hd_ke)
+                            const lastHdKe = {{ $latestMonitoringPreekripsi->inisiasi_hd_ke }};
+                            const nextHdKe = lastHdKe + 1;
+                            hdKeElement.value = nextHdKe;
                             hdKeElement.classList.add('loaded-from-previous');
-                            addLoadedIndicator(hdKeElement, 'Sesi HD ke-{{ $latestMonitoringPreekripsi->inisiasi_hd_ke + 1 }} (dari data sebelumnya)');
-                            console.log('HD Ke loaded:', hdKeElement.value);
-                        }
-                    @endif
+                            addLoadedIndicator(hdKeElement, 'Sesi HD ke-' + nextHdKe + ' (dari data sebelumnya: ' + lastHdKe + ')');
+                            console.log('HD Ke loaded and incremented:', nextHdKe);
+                        @else
+                            // Jika data ada tapi field hd_ke kosong, mulai dari 1
+                            hdKeElement.value = '1';
+                            hdKeElement.classList.add('loaded-from-previous');
+                            addLoadedIndicator(hdKeElement, 'Sesi HD pertama (data sebelumnya tidak ada HD Ke)');
+                            console.log('HD Ke set to 1 (no previous HD Ke data)');
+                        @endif
+                    }
 
                     // Nomor Mesin (biasanya sama)
                     @if($latestMonitoringPreekripsi->inisiasi_nomor_mesin)
@@ -2494,7 +2502,7 @@
                             nomorMesinElement.value = '{{ $latestMonitoringPreekripsi->inisiasi_nomor_mesin }}';
                             nomorMesinElement.classList.add('loaded-from-previous');
                             addLoadedIndicator(nomorMesinElement, 'Mesin yang sama dengan sesi sebelumnya');
-                            console.log('Nomor Mesin loaded:', nomorMesinElement.value);
+                            // console.log('Nomor Mesin loaded:', nomorMesinElement.value);
                         }
                     @endif
 
@@ -2505,7 +2513,7 @@
                             lamaHdElement.value = '{{ $latestMonitoringPreekripsi->inisiasi_lama_hd }}';
                             lamaHdElement.classList.add('loaded-from-previous');
                             addLoadedIndicator(lamaHdElement, 'Durasi HD sama dengan sesi sebelumnya');
-                            console.log('Lama HD loaded:', lamaHdElement.value);
+                            // console.log('Lama HD loaded:', lamaHdElement.value);
                         }
                     @endif
 
@@ -2517,7 +2525,7 @@
                             bbKeringElement.value = '{{ $latestMonitoringPreekripsi->rutin_bb_kering }}';
                             bbKeringElement.classList.add('loaded-from-previous');
                             addLoadedIndicator(bbKeringElement, 'BB kering dari sesi sebelumnya - sesuaikan jika perlu');
-                            console.log('BB Kering loaded:', bbKeringElement.value);
+                            // console.log('BB Kering loaded:', bbKeringElement.value);
                         }
                     @endif
 
@@ -2528,7 +2536,7 @@
                             tmpElement.value = '{{ $latestMonitoringPreekripsi->rutin_tmp }}';
                             tmpElement.classList.add('loaded-from-previous');
                             addLoadedIndicator(tmpElement, 'TMP dari sesi sebelumnya');
-                            console.log('TMP loaded:', tmpElement.value);
+                            // console.log('TMP loaded:', tmpElement.value);
                         }
                     @endif
 
@@ -2566,7 +2574,7 @@
                     @if($latestMonitoringPreekripsi->preop_conductivity)
                         const conductivityCheckElement = document.getElementById('conductivity_check');
                         const conductivityElement = document.getElementById('conductivity');
-                        console.log('Setting conductivity:', '{{ $latestMonitoringPreekripsi->preop_conductivity }}');
+                        // console.log('Setting conductivity:', '{{ $latestMonitoringPreekripsi->preop_conductivity }}');
                         if (conductivityCheckElement && conductivityElement) {
                             conductivityCheckElement.checked = true;
                             conductivityCheckElement.classList.add('loaded-from-previous');
@@ -2579,7 +2587,7 @@
                             if (conductivityLabel) {
                                 conductivityLabel.innerHTML += ' <small class="loaded-indicator">✓</small>';
                             }
-                            console.log('Conductivity loaded - checkbox:', conductivityCheckElement.checked, 'value:', conductivityElement.value);
+                            // console.log('Conductivity loaded - checkbox:', conductivityCheckElement.checked, 'value:', conductivityElement.value);
                         } else {
                             console.error('Conductivity elements not found!');
                         }
@@ -2589,7 +2597,7 @@
                     @if($latestMonitoringPreekripsi->preop_kalium)
                         const kaliumCheckElement = document.getElementById('kalium_check');
                         const kaliumElement = document.getElementById('kalium');
-                        console.log('Setting kalium:', '{{ $latestMonitoringPreekripsi->preop_kalium }}');
+                        // console.log('Setting kalium:', '{{ $latestMonitoringPreekripsi->preop_kalium }}');
                         if (kaliumCheckElement && kaliumElement) {
                             kaliumCheckElement.checked = true;
                             kaliumCheckElement.classList.add('loaded-from-previous');
@@ -2612,7 +2620,7 @@
                     @if($latestMonitoringPreekripsi->preop_suhu_dialisat)
                         const suhuDialisatCheckElement = document.getElementById('suhu_dialisat_check');
                         const suhuDialisatElement = document.getElementById('suhu_dialisat');
-                        console.log('Setting suhu dialisat:', '{{ $latestMonitoringPreekripsi->preop_suhu_dialisat }}');
+                        // console.log('Setting suhu dialisat:', '{{ $latestMonitoringPreekripsi->preop_suhu_dialisat }}');
                         if (suhuDialisatCheckElement && suhuDialisatElement) {
                             suhuDialisatCheckElement.checked = true;
                             suhuDialisatCheckElement.classList.add('loaded-from-previous');
@@ -2625,7 +2633,7 @@
                             if (suhuLabel) {
                                 suhuLabel.innerHTML += ' <small class="loaded-indicator">✓</small>';
                             }
-                            console.log('Suhu Dialisat loaded - checkbox:', suhuDialisatCheckElement.checked, 'value:', suhuDialisatElement.value);
+                            // console.log('Suhu Dialisat loaded - checkbox:', suhuDialisatCheckElement.checked, 'value:', suhuDialisatElement.value);
                         } else {
                             console.error('Suhu Dialisat elements not found!');
                         }
@@ -2635,7 +2643,7 @@
                     @if($latestMonitoringPreekripsi->preop_base_na)
                         const baseNaCheckElement = document.getElementById('base_na_check');
                         const baseNaElement = document.getElementById('base_na');
-                        console.log('Setting base na:', '{{ $latestMonitoringPreekripsi->preop_base_na }}');
+                        // console.log('Setting base na:', '{{ $latestMonitoringPreekripsi->preop_base_na }}');
                         if (baseNaCheckElement && baseNaElement) {
                             baseNaCheckElement.checked = true;
                             baseNaCheckElement.classList.add('loaded-from-previous');
@@ -2648,7 +2656,7 @@
                             if (baseNaLabel) {
                                 baseNaLabel.innerHTML += ' <small class="loaded-indicator">✓</small>';
                             }
-                            console.log('Base Na loaded - checkbox:', baseNaCheckElement.checked, 'value:', baseNaElement.value);
+                            // console.log('Base Na loaded - checkbox:', baseNaCheckElement.checked, 'value:', baseNaElement.value);
                         } else {
                             console.error('Base Na elements not found!');
                         }
@@ -2713,6 +2721,21 @@
                 
             @else
                 console.log('Tidak ada data monitoring preekripsi sebelumnya untuk pasien ini');
+                
+                // Set default values untuk sesi pertama
+                setTimeout(function() {
+                    console.log('Setting default values untuk sesi pertama...');
+                    
+                    // HD Ke - set ke 1 untuk sesi pertama
+                    const hdKeElement = document.querySelector('input[name="inisiasi_hd_ke"]');
+                    if (hdKeElement) {
+                        hdKeElement.value = '1';
+                        hdKeElement.classList.add('loaded-from-previous');
+                        addLoadedIndicator(hdKeElement, 'Sesi HD pertama');
+                        console.log('HD Ke set to 1 (sesi pertama)');
+                    }
+                    
+                }, 1000); // 1 second delay to ensure all scripts are loaded
             @endif
         });
     </script>
