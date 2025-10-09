@@ -16,8 +16,7 @@
                         'description' =>
                         'Tambah data asesmen keperawatan pasien hemodialisa di unit pelayanan hemodialisa.',
                     ])
-                <form
-                    action="{{ route('hemodialisa.pelayanan.asesmen.keperawatan.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" method="post">
+                <form action="{{ route('hemodialisa.pelayanan.asesmen.keperawatan.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" method="post">
                     @csrf
 
                     <div class="d-flex justify-content-center">
