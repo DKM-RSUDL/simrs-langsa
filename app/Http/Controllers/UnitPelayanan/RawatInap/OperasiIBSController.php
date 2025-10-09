@@ -72,6 +72,102 @@ class OperasiIBSController extends Controller
         ));
     }
 
+    public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+        $operasi = OperasiIBS::findOrFail($id);
+
+        // data not handled by AJAX
+        $kamarOperasi = DB::table('kamar')
+            ->where('kd_unit', 71)
+            ->where('AKTIF', 1)
+            ->orderBy('nama_kamar')
+            ->get();
+
+        $dokters = DB::table('Dokter_Inap as di')
+            ->join('Dokter as d', 'di.kd_dokter', '=', 'd.kd_dokter')
+            ->select('d.kd_dokter', 'd.nama')
+            ->where('di.Kd_Unit', 71)
+            ->where('di.Dokter_luar', 0)
+            ->where('d.STATUS', 1)
+            ->orderBy('d.nama')
+            ->get();
+
+        $products = Cache::remember("products:unit:{$kd_unit}:klas:61", 60, function () use ($kd_unit) {
+            return DB::table('produk')
+                ->join('tarif', 'produk.kd_produk', '=', 'tarif.kd_produk')
+                ->where('tarif.kd_unit', $kd_unit)
+                ->whereRaw('LEFT(produk.kd_klas, 2) = ?', ['61'])
+                ->select('produk.kd_produk', 'produk.deskripsi')
+                ->groupBy('produk.kd_produk', 'produk.deskripsi')
+                ->orderBy('produk.deskripsi')
+                ->get();
+        });
+
+        return view('unit-pelayanan.rawat-inap.pelayanan.operasi-ibs.edit', compact(
+            'dataMedis',
+            'kamarOperasi',
+            'dokters',
+            'products',
+            'operasi'
+        ));
+    }
+
+    public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+            $request->validate([
+                'tanggal_registrasi' => 'required|date',
+                'tanggal_jadwal' => 'required|date',
+                'jam_operasi' => 'required',
+                'jenis_tindakan' => 'required|string',
+                'jenis_operasi' => 'required|string',
+                'spesialisasi' => 'required|string',
+                'sub_spesialisasi' => 'required|string',
+                'kamar_operasi' => 'required|string',
+                'dokter' => 'required|string',
+                'diagnosa_medis' => 'required|string|max:500',
+                'catatan' => 'nullable|string|max:1000',
+            ]);
+
+            $operasi = OperasiIBS::findOrFail($id);
+
+            $operasi->tgl_op = $request->input('tanggal_registrasi');
+            $operasi->jam_op = $request->input('jam_operasi');
+            $operasi->tgl_jadwal = $request->input('tanggal_jadwal');
+            $operasi->kd_unit = $kd_unit;
+            $operasi->no_kamar = $request->input('kamar_operasi');
+            $operasi->kd_unit_kamar = $request->input('kamar_operasi');
+            $operasi->kd_sub_spc = $request->input('sub_spesialisasi');
+            $operasi->kd_spc = $request->input('spesialisasi');
+            $operasi->kd_jenis_op = $request->input('jenis_operasi');
+            $operasi->kd_produk = $request->input('jenis_tindakan');
+            $operasi->no_transaksi = $dataMedis->no_transaksi;
+            $operasi->kd_kasir = $dataMedis->kd_kasir;
+            $operasi->kd_pasien = $kd_pasien;
+            $operasi->kd_unit_kamar = $request->input('kamar_operasi');
+            $operasi->kd_dokter = $request->input('dokter');
+            $operasi->diagnosis = $request->input('diagnosa_medis');
+            $operasi->catatan = $request->input('catatan');
+            $operasi->user_edit = Auth::id();
+            $operasi->save();
+
+            DB::commit();
+
+            return redirect()->route('rawat-inap.operasi-ibs.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])
+                ->with('success', 'Data Operasi IBS berhasil diperbarui.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         DB::beginTransaction();

@@ -1404,12 +1404,14 @@ Route::prefix('rawat-inap')->group(function () {
                     Route::name('.operasi-ibs')->group(function () {
                         Route::controller(OperasiIBSController::class)->group(function () {
                             Route::get('/product-details', 'productDetails')
-                            ->name('.product-details');
+                                ->name('.product-details');
                             Route::get('/sub-spesialisasi', 'subSpesialisasi')->name('.sub-spesialisasi');
                             Route::get('/', 'index')->name('.index');
                             Route::get('/create', 'create')->name('.create');
+                            Route::get('/{id}/edit', 'edit')->name('.edit');
                             Route::post('/show', 'show')->name('.show');
                             Route::post('/', 'store')->name('.store');
+                            Route::put('/{id}', 'update')->name('.update');
                             Route::delete('/{data}', 'delete')->name('.delete');
                             Route::get('/print/{data}', 'print')->name('.print');
                         });
