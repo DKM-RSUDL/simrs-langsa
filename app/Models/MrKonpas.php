@@ -19,5 +19,6 @@ class MrKonpas extends Model
         'tgl_masuk',
         'urut_masuk',
         'catatan',
+        'urut_cppt'
     ];
 }

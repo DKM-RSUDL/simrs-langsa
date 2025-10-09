@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AdimeController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenAnakController;
