@@ -1397,6 +1397,9 @@ Route::prefix('rawat-inap')->group(function () {
                 Route::prefix('operasi-ibs')->group(function () {
                     Route::name('.operasi-ibs')->group(function () {
                         Route::controller(OperasiIBSController::class)->group(function () {
+                            Route::get('/product-details', 'productDetails')
+                            ->name('.product-details');
+                            Route::get('/sub-spesialisasi', 'subSpesialisasi')->name('.sub-spesialisasi');
                             Route::get('/', 'index');
                             Route::get('/create', 'create')->name('.create');
                             Route::post('/show', 'show')->name('.show');
