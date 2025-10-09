@@ -117,9 +117,8 @@
                                 <textarea class="form-control" id="catatan" name="catatan" rows="4" placeholder="Masukkan catatan..."></textarea>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-end gap-2">
-                            <button type="reset" class="btn btn-secondary">Batal</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        <div class="text-end">
+                            <x-button-submit />
                         </div>
                     </div>
                 </form>
