@@ -17,7 +17,7 @@
                 ])
 
                 <form
-                    action="{{ route('transfer-rwi.store', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                    action="{{ route('rawat-inap.order-hd.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
                     method="post">
                     @csrf
 
@@ -97,7 +97,13 @@
 
                     <div class="row mt-3">
                         <div class="col-12 text-end">
-                            <button type="submit" class="btn btn-primary">Order</button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <span class="normal-text">Order</span>
+                                <span class="spinner d-none">
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    Processing...
+                                </span>
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -107,3 +113,29 @@
         </div>
     </div>
 @endsection
+
+@push('js')
+    <script>
+        $('form').on('submit', function() {
+            var $btn = $('#submitBtn');
+            var $normalText = $btn.find('.normal-text');
+            var $spinner = $btn.find('.spinner');
+
+            // Disable the button
+            $btn.prop('disabled', true);
+
+            // Hide normal text, show spinner
+            $normalText.addClass('d-none');
+            $spinner.removeClass('d-none');
+
+            // Enable button after 30 seconds (failsafe)
+            // setTimeout(function() {
+            //     $btn.prop('disabled', false);
+            //     $normalText.removeClass('d-none');
+            //     $spinner.addClass('d-none');
+            // }, 30000);
+
+            return true;
+        });
+    </script>
+@endpush
