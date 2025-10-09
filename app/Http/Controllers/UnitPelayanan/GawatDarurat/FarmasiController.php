@@ -386,6 +386,7 @@ class FarmasiController extends Controller
                 'frekuensi_obat' => $request->frekuensi,
                 'keterangan_obat' => $request->keterangan,
                 'dosis_obat' => $request->dosis,
+                'cara_pemberian' => $request->cara_pemberian,
                 'tindak_lanjut_dpjp' => $tindakLanjutValue,
                 'obat_dibawa_pulang' => $request->dibawa,
                 'perubahan_aturan_pakai' => $request->perubahanpakai,

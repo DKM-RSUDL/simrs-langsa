@@ -1,5 +1,6 @@
 <!-- Modal Riwayat Obat -->
-<div class="modal fade" id="tambahRekonsiliasi" tabindex="-1" aria-labelledby="tambahRekonsiliasiLabel" aria-hidden="true">
+<div class="modal fade" id="tambahRekonsiliasi" tabindex="-1" aria-labelledby="tambahRekonsiliasiLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
@@ -31,8 +32,8 @@
                         <div class="row g-2">
                             <div class="col-md-4">
                                 <label class="form-label small">Frekuensi/Interval</label>
-                                <input type="text" class="form-control form-control-sm" id="frekuensi"
-                                    name="frekuensi" placeholder="Frekuensi/Interval" required>
+                                <input type="text" class="form-control form-control-sm" id="frekuensi" name="frekuensi"
+                                    placeholder="Frekuensi/Interval" required>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label small">Keterangan</label>
@@ -48,6 +49,11 @@
                                     placeholder="Dosis" required>
                             </div>
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small">Cara Pemberian Obat</label>
+                        <input type="text" class="form-control" id="cara_pemberian" name="cara_pemberian"
+                             autocomplete="off" required>
                     </div>
 
                     <!-- Tindak Lanjut dan Obat Dibawa -->
@@ -70,8 +76,8 @@
                                                 berubah</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="tindak_lanjut"
-                                                id="stop" value="Stop">
+                                            <input class="form-check-input" type="radio" name="tindak_lanjut" id="stop"
+                                                value="Stop">
                                             <label class="form-check-label" for="stop">Stop</label>
                                         </div>
                                     </div>
@@ -87,8 +93,8 @@
                                             <label class="form-check-label" for="bawaYa">Ya</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="dibawa"
-                                                id="bawaTidak" value="0">
+                                            <input class="form-check-input" type="radio" name="dibawa" id="bawaTidak"
+                                                value="0">
                                             <label class="form-check-label" for="bawaTidak">Tidak</label>
                                         </div>
                                     </div>
@@ -179,10 +185,12 @@
 
 @push('js')
     <script>
-        $(document).ready(function() {
+
+
+        $(document).ready(function () {
             // Debounce untuk event input
             let timeout;
-            $(document).on('input', '#cariObatRekon', function() {
+            $(document).on('input', '#cariObatRekon', function () {
                 if ($(this).prop('readonly')) {
                     $('#obatListRekon').hide();
                     return;
@@ -198,60 +206,53 @@
                 }
 
                 if (query.length < 2) {
-                    $('#obatListRekon').html(
-                            '<div class="dropdown-item text-muted">Ketik minimal 2 karakter...</div>')
-                        .show();
+                    $('#obatListRekon').html('<div class="dropdown-item text-muted">Ketik minimal 2 karakter...</div>').show();
                     return;
                 }
 
                 $('#obatListRekon').html(`
-                    <div class="dropdown-item text-center py-3">
-                        <div class="spinner-border spinner-border-sm text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
+                        <div class="dropdown-item text-center py-3">
+                            <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
                         </div>
-                    </div>
-                `).show();
+                    `).show();
 
                 timeout = setTimeout(() => {
                     $.ajax({
-                        url: '{{ route('farmasi.searchObat', ['kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk]) }}',
+                        url: '{{ route("farmasi.searchObat", ['kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk]) }}',
                         method: 'GET',
-                        data: {
-                            term: query
-                        },
+                        data: { term: query },
                         dataType: 'json',
-                        success: function(data) {
+                        success: function (data) {
                             let html = '';
                             if (data && data.length > 0) {
-                                data.forEach(function(obat) {
+                                data.forEach(function (obat) {
                                     html += `
-                                        <a href="#" class="dropdown-item py-2"
-                                        data-id="${obat.id || ''}"
-                                        data-harga="${obat.harga || ''}"
-                                        data-satuan="${obat.satuan || ''}">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div class="fw-medium">${obat.text || 'Tidak ada nama'}</div>
-                                                <span class="badge bg-light text-dark">Satuan: ${obat.satuan || 'N/A'}</span>
-                                            </div>
-                                        </a>`;
+                                            <a href="#" class="dropdown-item py-2"
+                                            data-id="${obat.id || ''}"
+                                            data-harga="${obat.harga || ''}"
+                                            data-satuan="${obat.satuan || ''}">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="fw-medium">${obat.text || 'Tidak ada nama'}</div>
+                                                    <span class="badge bg-light text-dark">Satuan: ${obat.satuan || 'N/A'}</span>
+                                                </div>
+                                            </a>`;
                                 });
                             } else {
-                                html =
-                                    '<div class="dropdown-item text-muted py-2">Tidak ada hasil yang ditemukan</div>';
+                                html = '<div class="dropdown-item text-muted py-2">Tidak ada hasil yang ditemukan</div>';
                             }
                             $('#obatListRekon').html(html).show();
                         },
-                        error: function(xhr) {
-                            $('#obatListRekon').html(
-                                '<div class="dropdown-item text-danger py-2">Terjadi kesalahan saat mencari obat</div>'
-                            ).show();
+                        error: function (xhr) {
+                            $('#obatListRekon').html('<div class="dropdown-item text-danger py-2">Terjadi kesalahan saat mencari obat</div>').show();
                         }
                     });
                 }, 300);
             });
 
             // Pilih obat
-            $(document).on('click', '#obatListRekon a', function(e) {
+            $(document).on('click', '#obatListRekon a', function (e) {
                 e.preventDefault();
                 const $this = $(this);
                 const obatId = $this.data('id');
@@ -273,7 +274,7 @@
             });
 
             // Clear input
-            $(document).on('click', '#clearObatRekon', function() {
+            $(document).on('click', '#clearObatRekon', function () {
                 $('#cariObatRekon').val('').prop('readonly', false).focus();
                 $('#selectedObatId').val('');
                 $('#obatListRekon').hide().empty();
@@ -281,14 +282,14 @@
             });
 
             // Klik luar
-            $(document).on('click', function(e) {
+            $(document).on('click', function (e) {
                 if (!$(e.target).closest('#cariObatRekon, #obatListRekon, #clearObatRekon').length) {
                     $('#obatListRekon').hide().empty();
                 }
             });
 
             // Submit form
-            $('#btnSaveObat').on('click', function() {
+            $('#btnSaveObat').on('click', function () {
                 const obatId = $('#selectedObatId').val();
                 // if (!obatId) {
                 //     iziToast.error({
@@ -304,8 +305,8 @@
                     const $btn = $(this);
                     const originalBtnText = $btn.html();
                     $btn.html(`
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...
-                    `).prop('disabled', true);
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...
+                        `).prop('disabled', true);
                     // Tampilkan overlay
                     $('#loadingOverlay').removeClass('d-none');
 
@@ -313,10 +314,8 @@
                         url: $('#rekonsiliasiForm').attr('action'),
                         method: 'POST',
                         data: $('#rekonsiliasiForm').serialize(),
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function(response) {
+                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                        success: function (response) {
                             $btn.html(originalBtnText).prop('disabled', false);
                             $('#loadingOverlay').addClass('d-none'); // Sembunyikan overlay
 
@@ -338,14 +337,13 @@
                                 });
                             }
                         },
-                        error: function(xhr) {
+                        error: function (xhr) {
                             $btn.html(originalBtnText).prop('disabled', false);
                             $('#loadingOverlay').addClass('d-none'); // Sembunyikan overlay
 
                             let errorMessage = 'Terjadi kesalahan saat menyimpan data.';
                             if (xhr.responseJSON && xhr.responseJSON.errors) {
-                                errorMessage = Object.values(xhr.responseJSON.errors).flat()
-                                    .join('<br>');
+                                errorMessage = Object.values(xhr.responseJSON.errors).flat().join('<br>');
                             } else if (xhr.responseJSON && xhr.responseJSON.message) {
                                 errorMessage = xhr.responseJSON.message;
                             }
