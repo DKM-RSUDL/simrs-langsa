@@ -875,7 +875,7 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="laju_uf" class="col-sm-2 col-form-label text-end">laju ISO</label>
+                                                        <label for="laju_uf" class="col-sm-2 col-form-label text-end">ISO UF</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
                                                                 <input type="text" class="form-control" id="laju_uf"
@@ -887,7 +887,7 @@
 
                                                     <div class="row mb-3">
                                                         <label for="lama_laju_uf"
-                                                            class="col-sm-2 col-form-label text-end">Lama laju ISO</label>
+                                                            class="col-sm-2 col-form-label text-end">Lama ISO UF</label>
                                                         <div class="col-sm-10">
                                                             <div class="input-group">
                                                                 <input type="text" class="form-control" id="lama_laju_uf"

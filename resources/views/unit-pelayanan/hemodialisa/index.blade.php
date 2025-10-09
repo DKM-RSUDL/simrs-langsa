@@ -232,73 +232,44 @@
 @endsection
 
 @push('js')
-    <script>
-        var hdIndexUrl = "{{ route('hemodialisa.index') }}";
-        var hdPelayananUrl = "{{ url('unit-pelayanan/hemodialisa/pelayanan/') }}/";
+    <script>    
+    var hdIndexUrl = "{{ route('hemodialisa.index') }}";
+    var hdPelayananUrl = "{{ url('unit-pelayanan/hemodialisa/pelayanan/') }}/";
+    // Untuk persetujuan transfusi darah, gunakan URL yang sesuai dengan route
+    // var persetujuanTransfusiUrl = "{{ url('unit-pelayanan/hemodialisa/pelayanan/') }}/";
 
-        $(document).ready(function() {
-            $('#hemodialisaTable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: hdIndexUrl,
-                    data: function(d) {
-                        d.dokter = $('#dokterSelect').val();
-                    }
-                },
-                columns: [{
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false,
-                        render: function(data, type, row) {
-                            return `<div class="d-flex justify-content-center">
-                                        <a href="${hdPelayananUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}" class="edit btn btn-outline-primary btn-sm">
-                                                <i class="ti-pencil-alt"></i>
-                                        </a>
-
-                                        <div class="dropdown mx-1">
-                                            <button class="btn btn-outline-secondary btn-sm btn-dropdown disabled" type="button" data-bs-toggle="dropdown">
-                                                <i class="bi bi-three-dots"></i>
-                                            </button>
-
-                                            <ul class="dropdown-menu shadow-lg">
-                                                <li><a class="dropdown-item m-1" href="#">Update Informasi Pasien</a></li>
-                                                <li><a class="dropdown-item m-1" href="#">Identitas Pasien</a></li>
-                                                <li><a class="dropdown-item m-1" href="${hdPelayananUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/general-consent'}">General Concent</a></li>
-                                                <li><a class="dropdown-item m-1" href="#">Edukasi dan Informasi</a></li>
-                                                <li><a class="dropdown-item m-1" href="#">Jaminan/Asuransi</a></li>
-                                                <li><a class="dropdown-item m-1" href="#">Registrasi Rawat Inap</a></li>
-                                                <li class="dropdown-submenu">
-                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Mutasi Pasien</a>
-                                                    <ul class="dropdown-menu shadow-lg">
-                                                        <li><a class="dropdown-item m-1" href="${hdPelayananUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/serah-terima-pasien'}">Pindah Ruangan / Rawat Inap</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Pulangkan (Berobat Jalan)</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Pulangkan (APS)</a></li>
-                                                        <li><a class="dropdown-item m-1" href="${hdPelayananUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/rujuk-antar-rs'}">Rujuk Keluar RS</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Meninggal Dunia</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Batal Berobat</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li class="dropdown-submenu">
-                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Order Pelayanan</a>
-                                                    <ul class="dropdown-menu shadow-lg">
-                                                        <li><a class="dropdown-item m-1" href="#">Operasi</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Rehabilitasi Medis</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Hemodialisa</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Forensik</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Cath Lab</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Rujukan/Ambulance</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Tindakan Klinik</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li><a class="dropdown-item m-1" href="#">Billing System</a></li>
-                                                <li><a class="dropdown-item m-1" href="#">Finalisasi</a></li>
-                                                <li><a class="dropdown-item m-1" href="#">Status Pasien</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    `;
+    $(document).ready(function() {
+        $('#hemodialisaTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: hdIndexUrl,
+                data: function(d) {
+                    d.dokter = $('#dokterSelect').val();
+                }
+            },
+            columns: [{
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false,
+                render: function(data, type, row) {
+                    return `
+                        <div class="d-flex justify-content-center">
+                            <a href="${hdPelayananUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}" 
+                                class="btn btn-outline-primary btn-sm me-1">
+                                <i class="ti-pencil-alt"></i>
+                            </a>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary btn-sm" type="button" 
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="${hdPelayananUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/persetujuan-transfusi-darah">Persetujuan Transfusi Darah</a></li>
+                                </ul>
+                            </div>
+                        </div>`;
                         }
                     },
                     {
@@ -376,6 +347,9 @@
                         }
                     },
                 ],
+                deferRender: true,
+                pageLength: 25,
+                lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
                 paging: true,
                 lengthChange: true,
                 searching: true,
