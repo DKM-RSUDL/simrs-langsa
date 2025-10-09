@@ -269,7 +269,9 @@ class FarmasiController extends Controller
 
         $cacheKey = 'obat_search_' . md5(json_encode([$term, $depo, $kdMilik, $limit]));
 
-       
+        if (Cache::has($cacheKey)) {
+            return response()->json(Cache::get($cacheKey));
+        }
 
         // Subquery: latest price per KD_PRD (mengambil HRG_BELI_OBT dari TGL_MASUK terbaru)
         $latestPriceSub = DB::table('DATA_BATCH as db')
@@ -329,7 +331,6 @@ class FarmasiController extends Controller
 
         return response()->json($rows);
     }
-
 
     private function getRiwayatObat($kd_pasien)
     {
@@ -651,7 +652,6 @@ class FarmasiController extends Controller
                 'frekuensi_obat' => $request->frekuensi,
                 'keterangan_obat' => $request->keterangan,
                 'dosis_obat' => $request->dosis,
-                'cara_pemberian' => $request->cara_pemberian,
                 'tindak_lanjut_dpjp' => $tindakLanjutValue,
                 'obat_dibawa_pulang' => $request->dibawa,
                 'perubahan_aturan_pakai' => $request->perubahanpakai,

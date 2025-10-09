@@ -16,7 +16,7 @@
             flex-grow: 1;
             width: 350px;
         }
-        
+
     </style>
 @endpush
 
@@ -132,7 +132,7 @@
                                 // dd($cppt);
                                 $j = 0;
                             @endphp
-                            
+
                             @foreach ($cppt as $key => $value)
                                 <div class="tab-pane fade @if ($j == 0) show active @endif" id="v-pills-home-{{ $j }}" role="tabpanel">
                                     <!-- HEADER -->
@@ -159,7 +159,7 @@
                                         @if (!empty($value['tipe_cppt']) && $value['tipe_cppt'] != 4)
                                             {{-- Format SOAP --}}
                                             @php $sections = ['S' => $value['anamnesis'], 'O' => $value['pemeriksaan_fisik'], 'A' => '', 'P' => $value['planning']]; @endphp
-                                            
+
                                             <!-- Subjective -->
                                             <div class="mb-3 border-start border-primary ps-3">
                                                 <h6 class="fw-bold text-primary mb-1">S (Subjective)</h6>
@@ -261,10 +261,10 @@
                                                             @php
                                                                 $ppa_kode = is_array($instruksi) ? $instruksi['ppa'] : $instruksi->ppa;
                                                                 $karyawan_ppa = $karyawan->where('kd_karyawan', $ppa_kode)->first();
-                                                                $nama_ppa = $karyawan_ppa ? 
-                                                                    trim(($karyawan_ppa->gelar_depan ? $karyawan_ppa->gelar_depan.' ' : '') . 
-                                                                        $karyawan_ppa->nama . 
-                                                                        ($karyawan_ppa->gelar_belakang ? ', '.$karyawan_ppa->gelar_belakang : '')) 
+                                                                $nama_ppa = $karyawan_ppa ?
+                                                                    trim(($karyawan_ppa->gelar_depan ? $karyawan_ppa->gelar_depan.' ' : '') .
+                                                                        $karyawan_ppa->nama .
+                                                                        ($karyawan_ppa->gelar_belakang ? ', '.$karyawan_ppa->gelar_belakang : ''))
                                                                     : $ppa_kode;
                                                             @endphp
                                                             <tr>

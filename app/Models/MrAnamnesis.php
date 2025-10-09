@@ -17,7 +17,6 @@ class MrAnamnesis extends Model
         'kd_unit',
         'tgl_masuk',
         'urut_masuk',
-        'urut_cppt',
         'urut',
         'anamnesis',
         'dd',

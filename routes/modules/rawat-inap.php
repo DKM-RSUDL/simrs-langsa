@@ -134,7 +134,7 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::get('/gizi', 'cpptGizi')->name('.cppt-gizi');
                         });
 
-                        
+
 
                     });
                 });

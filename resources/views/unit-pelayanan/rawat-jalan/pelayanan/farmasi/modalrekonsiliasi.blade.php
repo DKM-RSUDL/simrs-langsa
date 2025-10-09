@@ -1,5 +1,4 @@
-<div class="modal fade" id="tambahRekonsiliasi" tabindex="-1" aria-labelledby="tambahRekonsiliasiLabel"
-    aria-hidden="true">
+<div class="modal fade" id="tambahRekonsiliasi" tabindex="-1" aria-labelledby="tambahRekonsiliasiLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
@@ -7,12 +6,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="rekonsiliasiForm" action="{{ route('rawat-jalan.farmasi.rekonsiliasiObat', [
-    $dataMedis->kd_pasien,
-    $dataMedis->kd_unit,
-    date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
-    $dataMedis->urut_masuk,
-]) }}" method="post">
+                <form id="rekonsiliasiForm"
+                    action="{{ route('rawat-jalan.farmasi.rekonsiliasiObat', [
+                        $dataMedis->kd_pasien,
+                        $dataMedis->kd_unit,
+                        date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
+                        $dataMedis->urut_masuk,
+                    ]) }}"
+                    method="post">
                     @csrf
                     <!-- Cari Nama Obat -->
                     <div class="mb-3 position-relative">
@@ -34,8 +35,8 @@
                         <div class="row g-2">
                             <div class="col-md-4">
                                 <label class="form-label small">Frekuensi/Interval</label>
-                                <input type="text" class="form-control form-control-sm" id="frekuensi" name="frekuensi"
-                                    placeholder="Frekuensi/Interval" required>
+                                <input type="text" class="form-control form-control-sm" id="frekuensi"
+                                    name="frekuensi" placeholder="Frekuensi/Interval" required>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label small">Keterangan</label>
@@ -51,11 +52,6 @@
                                     placeholder="Dosis" required>
                             </div>
                         </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small">Cara Pemberian Obat</label>
-                        <input type="text" class="form-control" id="cara_pemberian" name="cara_pemberian"
-                             autocomplete="off" required>
                     </div>
 
                     <!-- Tindak Lanjut dan Obat Dibawa -->
@@ -78,8 +74,8 @@
                                                 berubah</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="tindak_lanjut" id="stop"
-                                                value="Stop">
+                                            <input class="form-check-input" type="radio" name="tindak_lanjut"
+                                                id="stop" value="Stop">
                                             <label class="form-check-label" for="stop">Stop</label>
                                         </div>
                                     </div>
@@ -95,8 +91,8 @@
                                             <label class="form-check-label" for="bawaYa">Ya</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="dibawa" id="bawaTidak"
-                                                value="0">
+                                            <input class="form-check-input" type="radio" name="dibawa"
+                                                id="bawaTidak" value="0">
                                             <label class="form-check-label" for="bawaTidak">Tidak</label>
                                         </div>
                                     </div>
@@ -189,12 +185,12 @@
 @push('js')
     <script>
         jQuery.noConflict();
-        (function ($) {
-            $(document).ready(function () {
+        (function($) {
+            $(document).ready(function() {
 
                 // Debounce untuk event input
                 let timeout;
-                $(document).on('input', '#cariObatRekon', function () {
+                $(document).on('input', '#cariObatRekon', function() {
                     if ($(this).prop('readonly')) {
                         $('#obatListRekon').hide();
                         return;
@@ -217,37 +213,26 @@
                     }
 
                     $('#obatListRekon').html(`
-                        <div class="dropdown-item text-center py-3">
-                            <div class="spinner-border spinner-border-sm text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
+                    <div class="dropdown-item text-center py-3">
+                        <div class="spinner-border spinner-border-sm text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
                         </div>
-                    `).show();
+                    </div>
+                `).show();
 
                     timeout = setTimeout(() => {
                         $.ajax({
-                            url: '{{ route("rawat-jalan.farmasi.searchObat", [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}',
+                            url: '{{ route('farmasi.searchObat', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}',
                             method: 'GET',
                             data: {
-                                term: query 
+                                term: query
                             },
                             dataType: 'json',
-                            success: function (data) {
+                            success: function(data) {
                                 let html = '';
                                 if (data && data.length > 0) {
-                                    data.forEach(function (obat) {
+                                    data.forEach(function(obat) {
                                         html += `
-<<<<<<< HEAD
-                                            <a href="#" class="dropdown-item py-2" 
-                                               data-id="${obat.id || ''}" 
-                                               data-harga="${obat.harga || ''}" 
-                                               data-satuan="${obat.satuan || ''}">
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <div class="fw-medium">${obat.text || 'Tidak ada nama'}</div>
-                                                    <span class="badge bg-light text-dark">Satuan: ${obat.satuan || 'N/A'}</span>
-                                                </div>
-                                            </a>`;
-=======
                                         <a href="#" class="dropdown-item py-2"
                                            data-id="${obat.id || ''}"
                                            data-harga="${obat.harga || ''}"
@@ -257,7 +242,6 @@
                                                 <span class="badge bg-light text-dark">Satuan: ${obat.satuan || 'N/A'}</span>
                                             </div>
                                         </a>`;
->>>>>>> bd8ebdea40b646d00fbba9bf9fe0a91c95d43878
                                     });
                                 } else {
                                     html =
@@ -265,7 +249,7 @@
                                 }
                                 $('#obatListRekon').html(html).show();
                             },
-                            error: function (xhr) {
+                            error: function(xhr) {
                                 $('#obatListRekon').html(
                                     '<div class="dropdown-item text-danger py-2">Terjadi kesalahan saat mencari obat</div>'
                                 ).show();
@@ -275,7 +259,7 @@
                 });
 
                 // Pilih obat
-                $(document).on('click', '#obatListRekon a', function (e) {
+                $(document).on('click', '#obatListRekon a', function(e) {
                     e.preventDefault();
                     const $this = $(this);
                     const obatId = $this.data('id');
@@ -298,7 +282,7 @@
                 });
 
                 // Clear input
-                $(document).on('click', '#clearObatRekon', function () {
+                $(document).on('click', '#clearObatRekon', function() {
                     $('#cariObatRekon').val('').prop('readonly', false).focus();
                     $('#selectedObatId').val('');
                     $('#obatListRekon').hide().empty();
@@ -306,7 +290,7 @@
                 });
 
                 // Klik di luar dropdown
-                $(document).on('click', function (e) {
+                $(document).on('click', function(e) {
                     if (!$(e.target).closest('#cariObatRekon, #obatListRekon, #clearObatRekon')
                         .length) {
                         $('#obatListRekon').hide().empty();
@@ -314,7 +298,7 @@
                 });
 
                 // Submit form
-                $(document).on('click', '#btnSaveObat', function () {
+                $(document).on('click', '#btnSaveObat', function() {
 
                     const obatId = $('#selectedObatId').val();
                     // if (!obatId) {
@@ -331,8 +315,8 @@
                         const $btn = $(this);
                         const originalBtnText = $btn.html();
                         $btn.html(`
-                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...
-                        `).prop('disabled', true);
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...
+                    `).prop('disabled', true);
                         $('#loadingOverlay').removeClass('d-none');
 
                         $.ajax({
@@ -342,7 +326,7 @@
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function (response) {
+                            success: function(response) {
                                 $btn.html(originalBtnText).prop('disabled', false);
                                 $('#loadingOverlay').addClass('d-none');
 
@@ -364,7 +348,7 @@
                                     });
                                 }
                             },
-                            error: function (xhr) {
+                            error: function(xhr) {
                                 $btn.html(originalBtnText).prop('disabled', false);
                                 $('#loadingOverlay').addClass('d-none');
 

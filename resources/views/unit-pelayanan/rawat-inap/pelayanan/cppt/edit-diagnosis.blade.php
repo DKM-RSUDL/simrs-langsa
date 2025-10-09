@@ -45,7 +45,7 @@
 </div>
 
 
-<script>
+{{-- <script>
     document.getElementById('openEditDiagnosisModal').addEventListener('click', function() {
         var modalKedua = new bootstrap.Modal(document.getElementById('editDiagnosisModal'), {
             backdrop: 'static', // Agar tidak menutup modal pertama ketika klik di luar modal kedua
@@ -53,4 +53,4 @@
         });
         modalKedua.show();
     });
-</script>
+</script> --}}
