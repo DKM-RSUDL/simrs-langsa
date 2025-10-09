@@ -29,12 +29,12 @@ class BaseService
     public function getNginapData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $nginap = Nginap::join('unit as u', 'nginap.kd_unit_kamar', '=', 'u.kd_unit')
-                            ->where('nginap.kd_pasien', $kd_pasien)
-                            ->where('nginap.kd_unit', $kd_unit)
-                            ->where('nginap.tgl_masuk', $tgl_masuk)
-                            ->where('nginap.urut_masuk', $urut_masuk)
-                            ->where('nginap.akhir', 1)
-                            ->first();
+            ->where('nginap.kd_pasien', $kd_pasien)
+            ->where('nginap.kd_unit', $kd_unit)
+            ->where('nginap.tgl_masuk', $tgl_masuk)
+            ->where('nginap.urut_masuk', $urut_masuk)
+            ->where('nginap.akhir', 1)
+            ->first();
 
         return $nginap;
     }

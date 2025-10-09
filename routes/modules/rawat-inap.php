@@ -1401,7 +1401,7 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::get('/product-details', 'productDetails')
                             ->name('.product-details');
                             Route::get('/sub-spesialisasi', 'subSpesialisasi')->name('.sub-spesialisasi');
-                            Route::get('/', 'index');
+                            Route::get('/', 'index')->name('.index');
                             Route::get('/create', 'create')->name('.create');
                             Route::post('/show', 'show')->name('.show');
                             Route::post('/', 'store')->name('.store');
