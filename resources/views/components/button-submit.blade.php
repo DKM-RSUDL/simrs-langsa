@@ -4,7 +4,7 @@
     'class' => 'btn btn-primary',
     'size' => null,               // contoh: 'btn-sm'
     'label' => 'Simpan',
-    'loadingLabel' => 'Menyimpan...',
+    'loadingLabel' => 'Memproses...',
     'spinner' => true,            // true = tampilkan spinner
     'title' => null,              // tooltip optional
     'icon' => null,               // HTML ikon awal optional
@@ -41,7 +41,7 @@
                     try {
                         btn.disabled = true;
                         var showSpinner = btn.dataset.spinner === '1';
-                        var loadingLabel = btn.dataset.loadingLabel || 'Processing...';
+                        var loadingLabel = btn.dataset.loadingLabel || 'Memproses...';
 
                         if (showSpinner) {
                             btn.innerHTML =
