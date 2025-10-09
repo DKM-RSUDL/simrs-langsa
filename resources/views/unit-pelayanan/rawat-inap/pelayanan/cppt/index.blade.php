@@ -16,7 +16,6 @@
             flex-grow: 1;
             width: 350px;
         }
-
     </style>
 @endpush
 

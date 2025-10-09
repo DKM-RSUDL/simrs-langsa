@@ -46,21 +46,6 @@
     ]) }}" method="post" id="formAddCppt">
                         @csrf
                         <input type="hidden" name="tipe_cppt" value="4">
-                        <div class="border rounded p-3 bg-light mt-4">
-                            <div class="row align-items-center">
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold mb-0">Tanggal & Jam Masuk</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="d-flex gap-3">
-                                        <input type="date" class="form-control" name="tanggal_masuk" id="tanggal_masuk"
-                                            value="{{ date('Y-m-d') }}">
-                                        <input type="time" class="form-control" name="jam_masuk" id="jam_masuk"
-                                            value="{{ date('H:i') }}">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="row g-4">
                             <!-- Kolom Kiri -->
