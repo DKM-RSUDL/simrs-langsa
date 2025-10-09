@@ -4,7 +4,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-3">
-            @include('unit-pelayanan.hemodialisa.component.patient-card')
+            @include('components.patient-card-hemodialisa')
         </div>
 
         <div class="col-md-9">
@@ -13,10 +13,8 @@
                 <i class="ti-arrow-left"></i> Kembali
             </a>
 
-            <form
-                action=""
-                method="">
-                @csrf                
+            <form action="" method="">
+                @csrf
 
                 <div class="card shadow-sm">
                     <div class="card-header bg-warning text-dark">
@@ -64,8 +62,7 @@
                                         <label class="form-label fw-semibold">
                                             <i class="fas fa-stethoscope me-1"></i>Diagnosis
                                         </label>
-                                        <textarea class="form-control @error('diagnosis') is-invalid @enderror"
-                                            name="diagnosis" rows="3"
+                                        <textarea class="form-control @error('diagnosis') is-invalid @enderror" name="diagnosis" rows="3"
                                             placeholder="Masukkan diagnosis pasien..." disabled>{{ old('diagnosis', $tindakanKhusus->diagnosis) }}</textarea>
                                         @error('diagnosis')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -77,8 +74,7 @@
                                         <label class="form-label fw-semibold">
                                             <i class="fas fa-flask me-1"></i>Hasil Lab dan Penunjang
                                         </label>
-                                        <textarea class="form-control @error('hasil_lab') is-invalid @enderror"
-                                            name="hasil_lab" rows="3"
+                                        <textarea class="form-control @error('hasil_lab') is-invalid @enderror" name="hasil_lab" rows="3"
                                             placeholder="Masukkan hasil laboratorium dan pemeriksaan penunjang..." disabled>{{ old('hasil_lab', $tindakanKhusus->hasil_lab) }}</textarea>
                                         @error('hasil_lab')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -90,8 +86,7 @@
                                         <label class="form-label fw-semibold">
                                             <i class="fas fa-pills me-1"></i>Obat-obatan dan Tindakan
                                         </label>
-                                        <textarea class="form-control @error('obat_tindakan') is-invalid @enderror"
-                                            name="obat_tindakan" rows="4"
+                                        <textarea class="form-control @error('obat_tindakan') is-invalid @enderror" name="obat_tindakan" rows="4"
                                             placeholder="Masukkan detail obat-obatan dan tindakan yang diberikan..." disabled>{{ old('obat_tindakan', $tindakanKhusus->obat_tindakan) }}</textarea>
                                         @error('obat_tindakan')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -103,8 +98,7 @@
                                         <label class="form-label fw-semibold">
                                             <i class="fas fa-arrow-right me-1"></i>Follow Up
                                         </label>
-                                        <textarea class="form-control @error('follow_up') is-invalid @enderror"
-                                            name="follow_up" rows="3"
+                                        <textarea class="form-control @error('follow_up') is-invalid @enderror" name="follow_up" rows="3"
                                             placeholder="Rencana follow up..." disabled>{{ old('follow_up', $tindakanKhusus->follow_up) }}</textarea>
                                         @error('follow_up')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -116,8 +110,7 @@
                                         <label class="form-label fw-semibold">
                                             <i class="fas fa-sticky-note me-1"></i>Catatan
                                         </label>
-                                        <textarea class="form-control @error('catatan') is-invalid @enderror" name="catatan"
-                                            rows="3"
+                                        <textarea class="form-control @error('catatan') is-invalid @enderror" name="catatan" rows="3"
                                             placeholder="Catatan tambahan..." disabled>{{ old('catatan', $tindakanKhusus->catatan) }}</textarea>
                                         @error('catatan')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -138,17 +131,17 @@
                         </div>
 
                         <!-- Last Updated Info -->
-                        @if($tindakanKhusus->updated_at && $tindakanKhusus->updated_at != $tindakanKhusus->created_at)
+                        @if ($tindakanKhusus->updated_at && $tindakanKhusus->updated_at != $tindakanKhusus->created_at)
                             <div class="alert alert-info d-flex align-items-center mb-4" role="alert">
                                 <i class="fas fa-info-circle me-2"></i>
                                 <div>
-                                    <strong>Terakhir diperbarui:</strong> 
-                                    @if(is_string($tindakanKhusus->updated_at))
+                                    <strong>Terakhir diperbarui:</strong>
+                                    @if (is_string($tindakanKhusus->updated_at))
                                         {{ date('d/m/Y H:i', strtotime($tindakanKhusus->updated_at)) }}
                                     @else
                                         {{ $tindakanKhusus->updated_at->format('d/m/Y H:i') }}
                                     @endif
-                                    @if($tindakanKhusus->userEdit)
+                                    @if ($tindakanKhusus->userEdit)
                                         oleh {{ $tindakanKhusus->userEdit->name }}
                                     @endif
                                 </div>
@@ -166,14 +159,14 @@
     <script>
         // Auto-resize textareas
         document.querySelectorAll('textarea').forEach(textarea => {
-            textarea.addEventListener('input', function () {
+            textarea.addEventListener('input', function() {
                 this.style.height = 'auto';
                 this.style.height = this.scrollHeight + 'px';
             });
         });
 
         // Form validation before submit
-        document.querySelector('form').addEventListener('submit', function (e) {
+        document.querySelector('form').addEventListener('submit', function(e) {
             const tanggal = document.querySelector('input[name="tanggal"]').value;
             const jam = document.querySelector('input[name="jam"]').value; // Fixed: was jam_masuk
 

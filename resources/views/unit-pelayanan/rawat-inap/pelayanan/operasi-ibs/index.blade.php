@@ -12,8 +12,7 @@
 
                 @include('components.page-header', [
                     'title' => 'Daftar Operasi (IBS)',
-                    'description' =>
-                        'Daftar data operasi (IBS) pasien rawat inap.',
+                    'description' => 'Daftar data operasi (IBS) pasien rawat inap.',
                 ])
 
                 <a class="btn btn-primary w-min ms-auto"
@@ -24,34 +23,66 @@
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th>Waktu</th>
+                                <th>Waktu</th> {{-- gabungan tgl_op + jam_op --}}
+                                <th>Tgl Jadwal</th>
+                                <th>Kamar</th>
+                                <th>Spesialisasi</th>
+                                <th>Sub Spesialisasi</th>
+                                <th>Jenis Op</th>
+                                <th>Status</th>
                                 <th>Petugas</th>
-                                <th>Tindakan</th>
-                                <th>Catatan</th>
+                                <th>Diagnosis</th>
                                 <th>#</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($operasiIbs as $item)
                                 <tr>
-                                    <td>{{ date('d M Y', strtotime($item->tanggal)) . ' ' . date('H:i', strtotime($item->jam)) }}
+                                    <td>
+                                        {{ $item->tgl_op ? date('Y-m-d', strtotime($item->tgl_op)) : '-' }}
+                                        {{ $item->jam_op ? ' ' . date('H:i', strtotime($item->jam_op)) : '' }}
                                     </td>
-                                    <td>{{ $item->dokter->name ?? ($item->dokter->nama ?? '—') }}</td>
-                                    <td>{{ $item->tindakan ?? ($item->tindakan ?? '-') }}</td>
-                                    <td>{{ Str::limit($item->catatan ?? '-', 80) }}</td>
+                                    <td>{{ optional($item->tgl_jadwal) ? date('Y-m-d', strtotime($item->tgl_jadwal)) : '-' }}
+                                    </td>
+                                    <td>{{ optional($item->kamar)->nama_kamar ?? ($item->no_kamar ?? ($item->kd_unit_kamar ?? '-')) }}
+                                    </td>
+                                    <td>{{ optional($item->spesialisasi)->spesialisasi ?? ($item->kd_spc ?? '-') }}</td>
+                                    <td>{{ optional($item->subSpesialisasi)->sub_spesialisasi ?? ($item->kd_sub_spc ?? '-') }}
+                                    </td>
+                                    <td>{{ optional($item->jenisOperasi)->jenis_op ?? ($item->kd_jenis_op ?? '-') }}</td>
+                                    <td>
+                                        @if ($item->status === 0 || $item->status === '0')
+                                            <span class="badge bg-warning">Menunggu</span>
+                                        @elseif ($item->status === 1 || $item->status === '1')
+                                            <span class="badge bg-primary">Disetujui</span>
+                                        @else
+                                            <span class="badge bg-success">Selesai</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ optional($item->dokter)->nama ?? (optional($item->dokter)->name ?? ($item->kd_dokter ?? '-')) }}
+                                    </td>
+                                    <td>{{ Str::limit($item->diagnosis ?? '-', 120) }}</td>
                                     <td>
                                         <div class="d-flex gap-2">
-                                            <a href="#" class="btn btn-sm btn-primary"
+                                            <a href="#" class="btn btn-sm btn-info"
                                                 data-item='@json($item)' data-bs-target="#showOperasiModal">
                                                 <i class="fas fa-eye"></i>
                                             </a>
+                                            <a href="#" class="btn btn-sm btn-warning"
+                                                data-item='@json($item)' data-bs-target="#showOperasiModal">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button class="btn btn-sm btn-danger"
+                                                data-item='@json($item)' data-bs-target="#showOperasiModal">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
                             @endforeach
                             @if ($operasiIbs->isEmpty())
                                 <tr>
-                                    <td colspan="5" class="text-center text-muted">Belum ada data operasi IBS.</td>
+                                    <td colspan="12" class="text-center text-muted">Belum ada data operasi IBS.</td>
                                 </tr>
                             @endif
                         </tbody>

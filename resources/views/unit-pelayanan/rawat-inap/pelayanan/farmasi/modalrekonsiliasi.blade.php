@@ -52,6 +52,11 @@
                                     placeholder="Dosis" required>
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label small">Cara Pemberian Obat</label>
+                            <input type="text" class="form-control" id="cara_pemberian" name="cara_pemberian"
+                                autocomplete="off" required>
+                        </div>
                     </div>
 
                     <!-- Tindak Lanjut dan Obat Dibawa -->
@@ -86,8 +91,8 @@
                                     <div class="card-header bg-light">Obat Dibawa Pulang?</div>
                                     <div class="card-body">
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="radio" name="dibawa" id="bawaYa"
-                                                value="1" required>
+                                            <input class="form-check-input" type="radio" name="dibawa"
+                                                id="bawaYa" value="1" required>
                                             <label class="form-check-label" for="bawaYa">Ya</label>
                                         </div>
                                         <div class="form-check">
@@ -133,56 +138,54 @@
     </div>
 </div>
 
-@push('css')
-    <style>
-        #obatListRekon {
-            position: absolute;
-            width: 100%;
-            max-height: 250px;
-            overflow-y: auto;
-            z-index: 1050;
-            display: block;
-            margin-top: 0;
-            border-radius: 0.375rem;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-        }
+<style>
+    #obatListRekon {
+        position: absolute;
+        width: 100%;
+        max-height: 250px;
+        overflow-y: auto;
+        z-index: 1050;
+        display: block;
+        margin-top: 0;
+        border-radius: 0.375rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
 
-        #obatListRekon a {
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
-            border-bottom: 1px solid #e9ecef;
-        }
+    #obatListRekon a {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        border-bottom: 1px solid #e9ecef;
+    }
 
-        #obatListRekon a:last-child {
-            border-bottom: none;
-        }
+    #obatListRekon a:last-child {
+        border-bottom: none;
+    }
 
-        .position-relative {
-            position: relative !important;
-        }
+    .position-relative {
+        position: relative !important;
+    }
 
-        .modal-content {
-            border: none;
-            border-radius: 0.5rem;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-        }
+    .modal-content {
+        border: none;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
 
-        .modal-header {
-            border-top-left-radius: 0.5rem;
-            border-top-right-radius: 0.5rem;
-        }
+    .modal-header {
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
+    }
 
-        .card-header {
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-        }
+    .card-header {
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+    }
 
-        .form-check-input:checked {
-            background-color: #0d6efd;
-            border-color: #0d6efd;
-        }
-    </style>
-@endpush
+    .form-check-input:checked {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+</style>
 
 @push('js')
     <script>
@@ -215,16 +218,16 @@
                     }
 
                     $('#obatListRekon').html(`
-                    <div class="dropdown-item text-center py-3">
-                        <div class="spinner-border spinner-border-sm text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
+                        <div class="dropdown-item text-center py-3">
+                            <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
                         </div>
-                    </div>
-                `).show();
+                    `).show();
 
                     timeout = setTimeout(() => {
                         $.ajax({
-                            url: '{{ route('farmasi.searchObat', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}',
+                            url: '{{ route('rawat-inap.farmasi.searchObat', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}',
                             method: 'GET',
                             data: {
                                 term: query
@@ -235,15 +238,15 @@
                                 if (data && data.length > 0) {
                                     data.forEach(function(obat) {
                                         html += `
-                                        <a href="#" class="dropdown-item py-2"
-                                           data-id="${obat.id || ''}"
-                                           data-harga="${obat.harga || ''}"
-                                           data-satuan="${obat.satuan || ''}">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div class="fw-medium">${obat.text || 'Tidak ada nama'}</div>
-                                                <span class="badge bg-light text-dark">Satuan: ${obat.satuan || 'N/A'}</span>
-                                            </div>
-                                        </a>`;
+                                            <a href="#" class="dropdown-item py-2"
+                                               data-id="${obat.id || ''}"
+                                               data-harga="${obat.harga || ''}"
+                                               data-satuan="${obat.satuan || ''}">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="fw-medium">${obat.text || 'Tidak ada nama'}</div>
+                                                    <span class="badge bg-light text-dark">Satuan: ${obat.satuan || 'N/A'}</span>
+                                                </div>
+                                            </a>`;
                                     });
                                 } else {
                                     html =
@@ -317,8 +320,8 @@
                         const $btn = $(this);
                         const originalBtnText = $btn.html();
                         $btn.html(`
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...
-                    `).prop('disabled', true);
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...
+                        `).prop('disabled', true);
                         $('#loadingOverlay').removeClass('d-none');
 
                         $.ajax({

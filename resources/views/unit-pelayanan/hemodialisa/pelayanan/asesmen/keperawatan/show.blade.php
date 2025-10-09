@@ -141,7 +141,7 @@
 
     <div class="row">
         <div class="col-md-3">
-            @include('unit-pelayanan.hemodialisa.component.patient-card')
+            @include('components.patient-card-hemodialisa')
         </div>
 
         <div class="col-md-9">
@@ -303,6 +303,41 @@
                                                                     $keterangan = '';
                                                                     $isNormal = true;
 
+                                                                if ($pemeriksaanData) {
+                                                                $keterangan = $pemeriksaanData->keterangan;
+                                                                $isNormal = empty($keterangan);
+                                                                }
+                                                                @endphp
+                                                                <div class="pemeriksaan-item">
+                                                                    <div class="d-flex align-items-center border-bottom pb-2">
+                                                                        <div class="flex-grow-1">{{ $item->nama }}
+                                                                        </div>
+                                                                        <div class="form-check me-3">
+                                                                            <input disabled type="checkbox" class="form-check-input"
+                                                                                id="{{ $item->id }}-normal"
+                                                                                name="{{ $item->id }}-normal" {{ $isNormal
+                                                                                ? 'checked' : '' }}>
+                                                                            <label class="form-check-label"
+                                                                                for="{{ $item->id }}-normal">Normal</label>
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <div class="keterangan mt-2" id="{{ $item->id }}-keterangan"
+                                                                        style="display:{{ $isNormal ? 'none' : 'block' }};">
+                                                                        <input disabled type="text" class="form-control"
+                                                                            name="{{ $item->id }}_keterangan"
+                                                                            placeholder="Tambah keterangan jika tidak normal..."
+                                                                            value="{{ $keterangan }}">
+                                                                    </div>
+                                                                </div>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </div>
                                                                     if ($pemeriksaanData) {
                                                                     $keterangan = $pemeriksaanData->keterangan;
                                                                     $isNormal = empty($keterangan);
@@ -320,7 +355,7 @@
                                                                                 <label class="form-check-label"
                                                                                     for="{{ $item->id }}-normal">Normal</label>
                                                                             </div>
-                                                                        
+
                                                                         </div>
                                                                         <div class="keterangan mt-2" id="{{ $item->id }}-keterangan"
                                                                             style="display:{{ $isNormal ? 'none' : 'block' }};">
@@ -2047,6 +2082,30 @@
                                                     </div>
                                                 </div>
 
+                                            <!-- E-Signature Perawat Yang Bertugas (Multiple) -->
+                                            <div class="row mb-4">
+                                                <div class="col-md-3">
+                                                    <label class="form-label">E-Signature Nama Perawat Yang Bertugas</label>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-8">
+                                                            <select id="perawat-selector" class="form-select select2">
+                                                                <option value="">--Pilih Perawat--</option>
+                                                                @foreach ($perawat as $prwt)
+                                                                    <option value="{{ $prwt->kd_karyawan }}"
+                                                                            data-nama="{{ $prwt->gelar_depan }} {{ $prwt->nama }} {{ $prwt->gelar_belakang }}">
+                                                                        {{ "$prwt->gelar_depan $prwt->nama $prwt->gelar_belakang" }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        {{-- <div class="col-md-4">
+                                                            <button type="button" id="btn-tambah-perawat" class="btn btn-primary w-100">
+                                                                <i class="fas fa-plus"></i> Tambah
+                                                            </button>
+                                                        </div> --}}
+                                                    </div>
                                                 <!-- E-Signature Perawat Yang Bertugas (Multiple) -->
                                                 <div class="row mb-4">
                                                     <div class="col-md-3">
@@ -2058,7 +2117,7 @@
                                                                 <select id="perawat-selector" class="form-select select2">
                                                                     <option value="">--Pilih Perawat--</option>
                                                                     @foreach ($perawat as $prwt)
-                                                                        <option value="{{ $prwt->kd_karyawan }}" 
+                                                                        <option value="{{ $prwt->kd_karyawan }}"
                                                                                 data-nama="{{ $prwt->gelar_depan }} {{ $prwt->nama }} {{ $prwt->gelar_belakang }}">
                                                                             {{ "$prwt->gelar_depan $prwt->nama $prwt->gelar_belakang" }}
                                                                         </option>
@@ -2211,9 +2270,9 @@
                         </div>
                     </div>
                 `;
-                
+
                 listContainer.appendChild(petugasItem);
-                
+
                 // Generate QR Code - tunggu library ready
                 waitForQRCode(() => {
                     const qrContainer = document.getElementById(`qr-bertugas-${perawat.kd_karyawan}`);
@@ -2269,7 +2328,7 @@
                 items.forEach((item, index) => {
                     const badge = item.querySelector('.badge');
                     const kdKaryawan = item.dataset.kode;
-                    
+
                     if (badge) {
                         badge.textContent = index + 1;
                     }
@@ -2281,7 +2340,7 @@
                     }
                 });
                 petugasCounter = items.length;
-                
+
                 // Update JSON input
                 updateJSONInput();
             }
@@ -2290,14 +2349,14 @@
             @if(isset($asesmen->keperawatan->perawat_bertugas) && !empty($asesmen->keperawatan->perawat_bertugas))
                 try {
                     const existingData = @json(json_decode($asesmen->keperawatan->perawat_bertugas, true));
-                    
+
                     if (existingData && Array.isArray(existingData) && existingData.length > 0) {
                         existingData.forEach((perawat) => {
                             petugasList.push(perawat);
                             petugasCounter = Math.max(petugasCounter, perawat.urutan);
                             renderPetugasItem(perawat);
                         });
-                        
+
                         const emptyMsg = document.getElementById('empty-message');
                         if (emptyMsg) {
                             emptyMsg.style.display = 'none';
@@ -2315,7 +2374,7 @@
                     const kdPemeriksa = '{{ $asesmen->keperawatan->perawat_pemeriksa }}';
                     const qrContainerPemeriksa = document.getElementById('qr-pemeriksa');
                     const noContainerPemeriksa = document.getElementById('no-pemeriksa');
-                    
+
                     if (kdPemeriksa && qrContainerPemeriksa) {
                         qrPemeriksa = new QRCode(qrContainerPemeriksa, {
                             text: `PERAWAT_PEMERIKSA:${kdPemeriksa}`,
@@ -2338,7 +2397,7 @@
                     const kdDokter = '{{ $asesmen->keperawatan->dokter_pelaksana }}';
                     const qrContainerDokter = document.getElementById('qr-dokter');
                     const noContainerDokter = document.getElementById('no-dokter');
-                    
+
                     if (kdDokter && qrContainerDokter) {
                         qrDokter = new QRCode(qrContainerDokter, {
                             text: `DOKTER_DPJP:${kdDokter}`,
@@ -2362,12 +2421,12 @@
                     const kdKaryawan = this.value;
                     const qrContainer = document.getElementById('qr-pemeriksa');
                     const noContainer = document.getElementById('no-pemeriksa');
-                    
+
                     if (!qrContainer) return;
-                    
+
                     // Clear previous QR
                     qrContainer.innerHTML = '';
-                    
+
                     if (kdKaryawan) {
                         waitForQRCode(() => {
                             qrPemeriksa = new QRCode(qrContainer, {
@@ -2378,7 +2437,7 @@
                                 colorLight: "#ffffff",
                                 correctLevel: QRCode.CorrectLevel.H
                             });
-                            
+
                             if (noContainer) {
                                 noContainer.textContent = `No. ${kdKaryawan}`;
                             }
@@ -2396,12 +2455,12 @@
                     const kdDokter = this.value;
                     const qrContainer = document.getElementById('qr-dokter');
                     const noContainer = document.getElementById('no-dokter');
-                    
+
                     if (!qrContainer) return;
-                    
+
                     // Clear previous QR
                     qrContainer.innerHTML = '';
-                    
+
                     if (kdDokter) {
                         waitForQRCode(() => {
                             qrDokter = new QRCode(qrContainer, {
@@ -2412,7 +2471,7 @@
                                 colorLight: "#ffffff",
                                 correctLevel: QRCode.CorrectLevel.H
                             });
-                            
+
                             if (noContainer) {
                                 noContainer.textContent = `No. ${kdDokter}`;
                             }
@@ -2429,7 +2488,7 @@
                 btnTambahPerawat.addEventListener('click', function() {
                     const selector = document.getElementById('perawat-selector');
                     if (!selector) return;
-                    
+
                     const selectedOption = selector.options[selector.selectedIndex];
                     const kdKaryawan = selectedOption.value;
                     const namaPetugas = selectedOption.text;
@@ -2501,7 +2560,7 @@
             $('form').on('submit', function (e) {
                 // Pastikan observasi_data ter-update sebelum submit
                 updateObservasiData();
-                
+
                 // Validasi apakah ada data observasi
                 const observasiData = $('#observasi_data').val();
                 if (!observasiData || observasiData === '[]' || observasiData === '') {
@@ -2513,7 +2572,7 @@
                     });
                     return false;
                 }
-                
+
                 return true;
             });
 
@@ -2546,7 +2605,7 @@
                                 item.output || ''
                             );
                         });
-                        
+
                         // Calculate totals after loading
                         calculateTotals();
                     }
@@ -2633,7 +2692,7 @@
 
             // Calculate totals
             calculateTotals();
-            
+
             // Update observasi_data JSON
             updateObservasiData();
 
@@ -2660,76 +2719,76 @@
             const rowHtml = `
                 <tr>
                     <td style="min-width: 120px;">
-                        <input type="time" 
-                            class="form-control form-control-sm observasi-waktu" 
+                        <input type="time"
+                            class="form-control form-control-sm observasi-waktu"
                             value="${waktu || ''}"
                             style="min-width: 110px; font-size: 13px;">
                     </td>
                     <td style="min-width: 80px;">
-                        <input type="number" 
-                            class="form-control form-control-sm observasi-qb text-center" 
+                        <input type="number"
+                            class="form-control form-control-sm observasi-qb text-center"
                             value="${qb || ''}"
                             style="min-width: 70px; font-size: 13px;">
                     </td>
                     <td style="min-width: 80px;">
-                        <input type="number" 
-                            class="form-control form-control-sm observasi-qd text-center" 
+                        <input type="number"
+                            class="form-control form-control-sm observasi-qd text-center"
                             value="${qd || ''}"
                             style="min-width: 70px; font-size: 13px;">
                     </td>
                     <td style="min-width: 90px;">
-                        <input type="number" 
-                            class="form-control form-control-sm observasi-uf-rate text-center" 
+                        <input type="number"
+                            class="form-control form-control-sm observasi-uf-rate text-center"
                             value="${ufRate || ''}"
                             style="min-width: 80px; font-size: 13px;">
                     </td>
                     <td style="min-width: 110px;">
-                        <input type="text" 
-                            class="form-control form-control-sm observasi-td text-center" 
+                        <input type="text"
+                            class="form-control form-control-sm observasi-td text-center"
                             value="${td || ''}"
                             placeholder="120/80"
                             style="min-width: 100px; font-size: 13px;">
                     </td>
                     <td style="min-width: 80px;">
-                        <input type="number" 
-                            class="form-control form-control-sm observasi-nadi text-center" 
+                        <input type="number"
+                            class="form-control form-control-sm observasi-nadi text-center"
                             value="${nadi || ''}"
                             style="min-width: 70px; font-size: 13px;">
                     </td>
                     <td style="min-width: 80px;">
-                        <input type="number" 
-                            class="form-control form-control-sm observasi-nafas text-center" 
+                        <input type="number"
+                            class="form-control form-control-sm observasi-nafas text-center"
                             value="${nafas || ''}"
                             style="min-width: 70px; font-size: 13px;">
                     </td>
                     <td style="min-width: 80px;">
-                        <input type="number" 
-                            class="form-control form-control-sm observasi-suhu text-center" 
+                        <input type="number"
+                            class="form-control form-control-sm observasi-suhu text-center"
                             value="${suhu || ''}"
                             step="0.1"
                             style="min-width: 70px; font-size: 13px;">
                     </td>
                     <td style="min-width: 90px;">
-                        <input type="number" 
-                            class="form-control form-control-sm observasi-nacl text-center" 
+                        <input type="number"
+                            class="form-control form-control-sm observasi-nacl text-center"
                             value="${nacl || ''}"
                             style="min-width: 80px; font-size: 13px;">
                     </td>
                     <td style="min-width: 90px;">
-                        <input type="number" 
-                            class="form-control form-control-sm observasi-minum text-center" 
+                        <input type="number"
+                            class="form-control form-control-sm observasi-minum text-center"
                             value="${minum || ''}"
                             style="min-width: 80px; font-size: 13px;">
                     </td>
                     <td style="min-width: 100px;">
-                        <input type="number" 
-                            class="form-control form-control-sm observasi-lain text-center" 
+                        <input type="number"
+                            class="form-control form-control-sm observasi-lain text-center"
                             value="${lainLain || ''}"
                             style="min-width: 90px; font-size: 13px;">
                     </td>
                     <td style="min-width: 90px;">
-                        <input type="number" 
-                            class="form-control form-control-sm observasi-output text-center" 
+                        <input type="number"
+                            class="form-control form-control-sm observasi-output text-center"
                             value="${output || ''}"
                             style="min-width: 80px; font-size: 13px;">
                     </td>
@@ -2748,7 +2807,7 @@
             // Loop through all rows and sum up the values
             $('#observasiTableBody tr').each(function () {
                 const row = $(this);
-                
+
                 const nacl = parseFloat(row.find('.observasi-nacl').val()) || 0;
                 const minum = parseFloat(row.find('.observasi-minum').val()) || 0;
                 const lain = parseFloat(row.find('.observasi-lain').val()) || 0;
@@ -2805,7 +2864,709 @@
 
             // Set the JSON string to the hidden input
             $('#observasi_data').val(JSON.stringify(tableRows));
-            
+
+            // Debug: tampilkan di console
+            console.log('Observasi Data Updated:', tableRows);
+        }
+
+        // Helper function untuk debug
+        function checkObservasiData() {
+            const data = $('#observasi_data').val();
+            console.log('Current observasi_data:', data);
+            try {
+                const parsed = JSON.parse(data);
+                console.log('Parsed data:', parsed);
+            } catch(e) {
+                console.log('Not valid JSON');
+            }
+            return data;
+        }
+    </script>
+@endpush
+
+
+@push('js')
+    <script>
+        //pemeriksaan fisik
+        document.addEventListener('DOMContentLoaded', function () {
+            //------------------------------------------------------------//
+            // Event handler untuk tombol tambah keterangan di pemeriksaan fisik //
+            document.querySelectorAll('.tambah-keterangan').forEach(button => {
+                button.addEventListener('click', function () {
+                    const targetId = this.getAttribute('data-target');
+                    const keteranganDiv = document.getElementById(targetId);
+                    const normalCheckbox = this.closest('.pemeriksaan-item').querySelector(
+                        '.form-check-input');
+
+                    // Toggle tampilan keterangan
+                    if (keteranganDiv.style.display === 'none') {
+                        keteranganDiv.style.display = 'block';
+                        normalCheckbox.checked = false; // Uncheck normal checkbox
+                    } else {
+                        keteranganDiv.style.display = 'block';
+                    }
+                });
+            });
+
+            // Event handler untuk checkbox normal
+            document.querySelectorAll('.form-check-input').forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    const keteranganDiv = this.closest('.pemeriksaan-item').querySelector(
+                        '.keterangan');
+                    if (this.checked) {
+                        keteranganDiv.style.display = 'none';
+                        keteranganDiv.querySelector('input').value = ''; // Reset input value
+                    }
+                });
+            });
+        });
+
+        // 17. Tanda Tangan dan Verifikasi
+        document.addEventListener('DOMContentLoaded', function() {
+            let petugasCounter = 0;
+            const petugasList = []; // Array untuk menyimpan data perawat
+            let qrPemeriksa = null;
+            let qrDokter = null;
+
+            // Cek apakah QRCode library ada
+            function waitForQRCode(callback) {
+                if (typeof QRCode !== 'undefined') {
+                    callback();
+                } else {
+                    setTimeout(() => waitForQRCode(callback), 100);
+                }
+            }
+
+            // Fungsi untuk update JSON di hidden input
+            function updateJSONInput() {
+                const jsonInput = document.getElementById('perawat-bertugas-json');
+                if (jsonInput) {
+                    jsonInput.value = JSON.stringify(petugasList);
+                    // console.log('Data JSON:', jsonInput.value);
+                }
+            }
+
+            // Fungsi untuk render item perawat
+            function renderPetugasItem(perawat) {
+                const listContainer = document.getElementById('list-perawat-bertugas');
+                if (!listContainer) return;
+
+                const petugasItem = document.createElement('div');
+                petugasItem.className = 'border-bottom pb-2 mb-2';
+                petugasItem.dataset.kode = perawat.kd_karyawan;
+                petugasItem.innerHTML = `
+                    <div class="row align-items-center py-2">
+                        <div class="col-auto">
+                            <span class="badge bg-primary rounded-circle" style="width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; font-size: 13px;">
+                                ${perawat.urutan}
+                            </span>
+                        </div>
+                        <div class="col">
+                            <strong>${perawat.nama}</strong>
+                        </div>
+                        <div class="col-auto">
+                            <div id="qr-bertugas-${perawat.kd_karyawan}" class="d-inline-block"></div>
+                        </div>
+                        <div class="col-auto">
+                            <small class="text-muted">No. ${perawat.kd_karyawan}</small>
+                        </div>
+                    </div>
+                `;
+
+                listContainer.appendChild(petugasItem);
+
+                // Generate QR Code - tunggu library ready
+                waitForQRCode(() => {
+                    const qrContainer = document.getElementById(`qr-bertugas-${perawat.kd_karyawan}`);
+                    if (qrContainer) {
+                        new QRCode(qrContainer, {
+                            text: `PERAWAT_BERTUGAS:${perawat.kd_karyawan}`,
+                            width: 60,
+                            height: 60,
+                            colorDark: "#000000",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.H
+                        });
+                    }
+                });
+            }
+
+            // Fungsi hapus petugas
+            function removePetugas(kdKaryawan) {
+                if (confirm('Apakah Anda yakin ingin menghapus perawat ini?')) {
+                    // Hapus dari array
+                    const index = petugasList.findIndex(p => p.kd_karyawan === kdKaryawan);
+                    if (index > -1) {
+                        petugasList.splice(index, 1);
+                    }
+
+                    // Update JSON input
+                    updateJSONInput();
+
+                    // Hapus elemen dari DOM
+                    const item = document.querySelector(`[data-kode="${kdKaryawan}"]`);
+                    if (item) {
+                        item.remove();
+                    }
+
+                    // Update nomor urut
+                    updatePetugasNumbers();
+
+                    // Tampilkan pesan kosong jika tidak ada petugas
+                    const emptyMsg = document.getElementById('empty-message');
+                    if (petugasList.length === 0 && emptyMsg) {
+                        emptyMsg.style.display = 'block';
+                        petugasCounter = 0;
+                    }
+                }
+            }
+
+            // Expose ke window agar bisa dipanggil dari onclick
+            window.removePetugasHandler = removePetugas;
+
+            // Fungsi update nomor urut
+            function updatePetugasNumbers() {
+                const items = document.querySelectorAll('#list-perawat-bertugas > div[data-kode]');
+                items.forEach((item, index) => {
+                    const badge = item.querySelector('.badge');
+                    const kdKaryawan = item.dataset.kode;
+
+                    if (badge) {
+                        badge.textContent = index + 1;
+                    }
+
+                    // Update urutan di array
+                    const petugas = petugasList.find(p => p.kd_karyawan === kdKaryawan);
+                    if (petugas) {
+                        petugas.urutan = index + 1;
+                    }
+                });
+                petugasCounter = items.length;
+
+                // Update JSON input
+                updateJSONInput();
+            }
+
+            // ===== LOAD DATA EXISTING (UNTUK EDIT) =====
+            @if(isset($asesmen->keperawatan->perawat_bertugas) && !empty($asesmen->keperawatan->perawat_bertugas))
+                try {
+                    const existingData = @json(json_decode($asesmen->keperawatan->perawat_bertugas, true));
+
+                    if (existingData && Array.isArray(existingData) && existingData.length > 0) {
+                        existingData.forEach((perawat) => {
+                            petugasList.push(perawat);
+                            petugasCounter = Math.max(petugasCounter, perawat.urutan);
+                            renderPetugasItem(perawat);
+                        });
+
+                        const emptyMsg = document.getElementById('empty-message');
+                        if (emptyMsg) {
+                            emptyMsg.style.display = 'none';
+                        }
+                        updateJSONInput();
+                    }
+                } catch (e) {
+                    console.error('Error loading existing data:', e);
+                }
+            @endif
+
+            // ===== LOAD QR CODE PERAWAT PEMERIKSA (JIKA ADA) =====
+            @if(isset($asesmen->keperawatan->perawat_pemeriksa) && !empty($asesmen->keperawatan->perawat_pemeriksa))
+                waitForQRCode(() => {
+                    const kdPemeriksa = '{{ $asesmen->keperawatan->perawat_pemeriksa }}';
+                    const qrContainerPemeriksa = document.getElementById('qr-pemeriksa');
+                    const noContainerPemeriksa = document.getElementById('no-pemeriksa');
+
+                    if (kdPemeriksa && qrContainerPemeriksa) {
+                        qrPemeriksa = new QRCode(qrContainerPemeriksa, {
+                            text: `PERAWAT_PEMERIKSA:${kdPemeriksa}`,
+                            width: 100,
+                            height: 100,
+                            colorDark: "#000000",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.H
+                        });
+                        if (noContainerPemeriksa) {
+                            noContainerPemeriksa.textContent = `No. ${kdPemeriksa}`;
+                        }
+                    }
+                });
+            @endif
+
+            // ===== LOAD QR CODE DOKTER DPJP (JIKA ADA) =====
+            @if(isset($asesmen->keperawatan->dokter_pelaksana) && !empty($asesmen->keperawatan->dokter_pelaksana))
+                waitForQRCode(() => {
+                    const kdDokter = '{{ $asesmen->keperawatan->dokter_pelaksana }}';
+                    const qrContainerDokter = document.getElementById('qr-dokter');
+                    const noContainerDokter = document.getElementById('no-dokter');
+
+                    if (kdDokter && qrContainerDokter) {
+                        qrDokter = new QRCode(qrContainerDokter, {
+                            text: `DOKTER_DPJP:${kdDokter}`,
+                            width: 100,
+                            height: 100,
+                            colorDark: "#000000",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.H
+                        });
+                        if (noContainerDokter) {
+                            noContainerDokter.textContent = `No. ${kdDokter}`;
+                        }
+                    }
+                });
+            @endif
+
+            // ===== PERAWAT PEMERIKSA (Single Select dengan QR) =====
+            const perawatPemeriksaEl = document.getElementById('perawat-pemeriksa');
+            if (perawatPemeriksaEl) {
+                perawatPemeriksaEl.addEventListener('change', function() {
+                    const kdKaryawan = this.value;
+                    const qrContainer = document.getElementById('qr-pemeriksa');
+                    const noContainer = document.getElementById('no-pemeriksa');
+
+                    if (!qrContainer) return;
+
+                    // Clear previous QR
+                    qrContainer.innerHTML = '';
+
+                    if (kdKaryawan) {
+                        waitForQRCode(() => {
+                            qrPemeriksa = new QRCode(qrContainer, {
+                                text: `PERAWAT_PEMERIKSA:${kdKaryawan}`,
+                                width: 100,
+                                height: 100,
+                                colorDark: "#000000",
+                                colorLight: "#ffffff",
+                                correctLevel: QRCode.CorrectLevel.H
+                            });
+
+                            if (noContainer) {
+                                noContainer.textContent = `No. ${kdKaryawan}`;
+                            }
+                        });
+                    } else if (noContainer) {
+                        noContainer.textContent = 'No..........................';
+                    }
+                });
+            }
+
+            // ===== DOKTER DPJP (Single Select dengan QR) =====
+            const dokterPelaksanaEl = document.getElementById('dokter-pelaksana');
+            if (dokterPelaksanaEl) {
+                dokterPelaksanaEl.addEventListener('change', function() {
+                    const kdDokter = this.value;
+                    const qrContainer = document.getElementById('qr-dokter');
+                    const noContainer = document.getElementById('no-dokter');
+
+                    if (!qrContainer) return;
+
+                    // Clear previous QR
+                    qrContainer.innerHTML = '';
+
+                    if (kdDokter) {
+                        waitForQRCode(() => {
+                            qrDokter = new QRCode(qrContainer, {
+                                text: `DOKTER_DPJP:${kdDokter}`,
+                                width: 100,
+                                height: 100,
+                                colorDark: "#000000",
+                                colorLight: "#ffffff",
+                                correctLevel: QRCode.CorrectLevel.H
+                            });
+
+                            if (noContainer) {
+                                noContainer.textContent = `No. ${kdDokter}`;
+                            }
+                        });
+                    } else if (noContainer) {
+                        noContainer.textContent = 'No..........................';
+                    }
+                });
+            }
+
+            // ===== PERAWAT BERTUGAS (Multiple Select dengan QR) =====
+            const btnTambahPerawat = document.getElementById('btn-tambah-perawat');
+            if (btnTambahPerawat) {
+                btnTambahPerawat.addEventListener('click', function() {
+                    const selector = document.getElementById('perawat-selector');
+                    if (!selector) return;
+
+                    const selectedOption = selector.options[selector.selectedIndex];
+                    const kdKaryawan = selectedOption.value;
+                    const namaPetugas = selectedOption.text;
+
+                    if (!kdKaryawan) {
+                        alert('Silakan pilih perawat terlebih dahulu!');
+                        return;
+                    }
+
+                    // Cek apakah sudah ada
+                    const exists = petugasList.find(p => p.kd_karyawan === kdKaryawan);
+                    if (exists) {
+                        alert('Perawat ini sudah ditambahkan!');
+                        return;
+                    }
+
+                    petugasCounter++;
+
+                    // Tambahkan ke array
+                    const petugasData = {
+                        kd_karyawan: kdKaryawan,
+                        nama: namaPetugas,
+                        urutan: petugasCounter,
+                        timestamp: new Date().toISOString()
+                    };
+                    petugasList.push(petugasData);
+
+                    // Update JSON input
+                    updateJSONInput();
+
+                    // Sembunyikan pesan kosong
+                    const emptyMsg = document.getElementById('empty-message');
+                    if (emptyMsg) {
+                        emptyMsg.style.display = 'none';
+                    }
+
+                    // Render item
+                    renderPetugasItem(petugasData);
+
+                    // Reset selector
+                    selector.value = '';
+                    if (typeof $ !== 'undefined' && typeof $(selector).select2 !== 'undefined') {
+                        $(selector).val(null).trigger('change');
+                    }
+                });
+            }
+        });
+
+        // Edit lanjutan bagian Intra HD
+        $(document).ready(function () {
+            // Save button for Intra HD form
+            $('.btn-simpan-intra-hd').click(function (e) {
+                e.preventDefault();
+                addDataToTable();
+            });
+
+            // Auto-calculate on input change in table
+            $('#observasiTableBody').on('input', '.observasi-nacl, .observasi-minum, .observasi-lain, .observasi-output', function() {
+                calculateTotals();
+                updateObservasiData();
+            });
+
+            // Update observasi_data setiap ada perubahan di tabel
+            $('#observasiTableBody').on('input', 'input', function() {
+                updateObservasiData();
+            });
+
+            // Form submission handler
+            $('form').on('submit', function (e) {
+                // Pastikan observasi_data ter-update sebelum submit
+                updateObservasiData();
+
+                // Validasi apakah ada data observasi
+                const observasiData = $('#observasi_data').val();
+                if (!observasiData || observasiData === '[]' || observasiData === '') {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Peringatan',
+                        text: 'Belum ada data observasi yang ditambahkan. Silakan tambahkan minimal 1 data observasi.'
+                    });
+                    return false;
+                }
+
+                return true;
+            });
+
+            // Load existing data on page load
+            loadExistingData();
+        });
+
+        // Load existing data if available
+        function loadExistingData() {
+            const existingData = $('#observasi_data').val();
+            if (existingData) {
+                try {
+                    const observasiData = JSON.parse(existingData);
+
+                    // Populate table with rows
+                    if (Array.isArray(observasiData) && observasiData.length > 0) {
+                        observasiData.forEach(item => {
+                            addRowToTable(
+                                item.waktu || '',
+                                item.qb || '',
+                                item.qd || '',
+                                item.uf_rate || '',
+                                item.td || '',
+                                item.nadi || '',
+                                item.nafas || '',
+                                item.suhu || '',
+                                item.nacl || '',
+                                item.minum || '',
+                                item.lain_lain || '',
+                                item.output || ''
+                            );
+                        });
+
+                        // Calculate totals after loading
+                        calculateTotals();
+                    }
+                } catch (e) {
+                    console.error('Error parsing existing data:', e);
+                }
+            }
+        }
+
+        function addDataToTable() {
+            const waktu = $('#waktu_intra_pre_hd').val();
+            const qb = $('#qb_intra').val();
+            const qd = $('#qd_intra').val();
+            const ufRate = $('#uf_rate_intra').val();
+            const sistole = $('#sistole_intra').val();
+            const diastole = $('#diastole_intra').val();
+            const td = (sistole || diastole) ? `${sistole || ''}/${diastole || ''}` : '';
+            const nadi = $('#nadi_intra').val();
+            const nafas = $('#nafas_intra').val();
+            const suhu = $('#suhu_intra').val();
+            const nacl = $('#nacl_intra').val();
+            const minum = $('#minum_intra').val();
+            const lainLain = $('#intake_lain_intra').val();
+            const output = $('#output_intra').val();
+
+            // Validate minimum data
+            if (!waktu) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Data Tidak Lengkap',
+                    text: 'Waktu Intra Pre HD harus diisi!'
+                });
+                return;
+            }
+
+            // Check if in edit mode
+            const editMode = $('.btn-simpan-intra-hd').data('mode') === 'edit';
+
+            if (editMode) {
+                // Update the row being edited
+                const editingRow = $('#observasiTableBody tr.editing');
+                if (editingRow.length) {
+                    editingRow.find('.observasi-waktu').val(waktu);
+                    editingRow.find('.observasi-qb').val(qb);
+                    editingRow.find('.observasi-qd').val(qd);
+                    editingRow.find('.observasi-uf-rate').val(ufRate);
+                    editingRow.find('.observasi-td').val(td);
+                    editingRow.find('.observasi-nadi').val(nadi);
+                    editingRow.find('.observasi-nafas').val(nafas);
+                    editingRow.find('.observasi-suhu').val(suhu);
+                    editingRow.find('.observasi-nacl').val(nacl);
+                    editingRow.find('.observasi-minum').val(minum);
+                    editingRow.find('.observasi-lain').val(lainLain);
+                    editingRow.find('.observasi-output').val(output);
+
+                    // Remove editing class
+                    editingRow.removeClass('editing');
+
+                    // Reset button to "Save"
+                    $('.btn-simpan-intra-hd').text('Simpan ke Tabel').removeData('mode');
+
+                    // Show success notification
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: 'Data observasi berhasil diperbarui!',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                }
+            } else {
+                // Add new data to the table
+                addRowToTable(waktu, qb, qd, ufRate, td, nadi, nafas, suhu, nacl, minum, lainLain, output);
+
+                // Show success notification
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: 'Data observasi berhasil ditambahkan!',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            }
+
+            // Calculate totals
+            calculateTotals();
+
+            // Update observasi_data JSON
+            updateObservasiData();
+
+            // Reset form fields untuk input baru
+            $('#waktu_intra_pre_hd').val('');
+            $('#qb_intra').val('');
+            $('#qd_intra').val('');
+            $('#uf_rate_intra').val('');
+            $('#sistole_intra').val('');
+            $('#diastole_intra').val('');
+            $('#nadi_intra').val('');
+            $('#nafas_intra').val('');
+            $('#suhu_intra').val('');
+            $('#nacl_intra').val('');
+            $('#minum_intra').val('');
+            $('#intake_lain_intra').val('');
+            $('#output_intra').val('');
+
+            // Focus ke field waktu untuk input berikutnya
+            $('#waktu_intra_pre_hd').focus();
+        }
+
+        function addRowToTable(waktu, qb, qd, ufRate, td, nadi, nafas, suhu, nacl, minum, lainLain, output) {
+            const rowHtml = `
+                <tr>
+                    <td style="min-width: 120px;">
+                        <input type="time"
+                            class="form-control form-control-sm observasi-waktu"
+                            value="${waktu || ''}"
+                            style="min-width: 110px; font-size: 13px;">
+                    </td>
+                    <td style="min-width: 80px;">
+                        <input type="number"
+                            class="form-control form-control-sm observasi-qb text-center"
+                            value="${qb || ''}"
+                            style="min-width: 70px; font-size: 13px;">
+                    </td>
+                    <td style="min-width: 80px;">
+                        <input type="number"
+                            class="form-control form-control-sm observasi-qd text-center"
+                            value="${qd || ''}"
+                            style="min-width: 70px; font-size: 13px;">
+                    </td>
+                    <td style="min-width: 90px;">
+                        <input type="number"
+                            class="form-control form-control-sm observasi-uf-rate text-center"
+                            value="${ufRate || ''}"
+                            style="min-width: 80px; font-size: 13px;">
+                    </td>
+                    <td style="min-width: 110px;">
+                        <input type="text"
+                            class="form-control form-control-sm observasi-td text-center"
+                            value="${td || ''}"
+                            placeholder="120/80"
+                            style="min-width: 100px; font-size: 13px;">
+                    </td>
+                    <td style="min-width: 80px;">
+                        <input type="number"
+                            class="form-control form-control-sm observasi-nadi text-center"
+                            value="${nadi || ''}"
+                            style="min-width: 70px; font-size: 13px;">
+                    </td>
+                    <td style="min-width: 80px;">
+                        <input type="number"
+                            class="form-control form-control-sm observasi-nafas text-center"
+                            value="${nafas || ''}"
+                            style="min-width: 70px; font-size: 13px;">
+                    </td>
+                    <td style="min-width: 80px;">
+                        <input type="number"
+                            class="form-control form-control-sm observasi-suhu text-center"
+                            value="${suhu || ''}"
+                            step="0.1"
+                            style="min-width: 70px; font-size: 13px;">
+                    </td>
+                    <td style="min-width: 90px;">
+                        <input type="number"
+                            class="form-control form-control-sm observasi-nacl text-center"
+                            value="${nacl || ''}"
+                            style="min-width: 80px; font-size: 13px;">
+                    </td>
+                    <td style="min-width: 90px;">
+                        <input type="number"
+                            class="form-control form-control-sm observasi-minum text-center"
+                            value="${minum || ''}"
+                            style="min-width: 80px; font-size: 13px;">
+                    </td>
+                    <td style="min-width: 100px;">
+                        <input type="number"
+                            class="form-control form-control-sm observasi-lain text-center"
+                            value="${lainLain || ''}"
+                            style="min-width: 90px; font-size: 13px;">
+                    </td>
+                    <td style="min-width: 90px;">
+                        <input type="number"
+                            class="form-control form-control-sm observasi-output text-center"
+                            value="${output || ''}"
+                            style="min-width: 80px; font-size: 13px;">
+                    </td>
+                </tr>
+            `;
+
+            $('#observasiTableBody').append(rowHtml);
+        }
+
+        function calculateTotals() {
+            let totalNacl = 0;
+            let totalMinum = 0;
+            let totalLain = 0;
+            let totalOutput = 0;
+
+            // Loop through all rows and sum up the values
+            $('#observasiTableBody tr').each(function () {
+                const row = $(this);
+
+                const nacl = parseFloat(row.find('.observasi-nacl').val()) || 0;
+                const minum = parseFloat(row.find('.observasi-minum').val()) || 0;
+                const lain = parseFloat(row.find('.observasi-lain').val()) || 0;
+                const output = parseFloat(row.find('.observasi-output').val()) || 0;
+
+                totalNacl += nacl;
+                totalMinum += minum;
+                totalLain += lain;
+                totalOutput += output;
+            });
+
+            // Update footer totals
+            $('#total-nacl').text(totalNacl);
+            $('#total-minum').text(totalMinum);
+            $('#total-lain').text(totalLain);
+            $('#total-output').text(totalOutput);
+
+            // Calculate intake and ultrafiltration
+            const totalIntake = totalNacl + totalMinum + totalLain;
+            const ultrafiltrationTotal = totalIntake - totalOutput;
+
+            // Update the summary fields (jika ada di form Anda)
+            $('#jumlah_cairan_intake').val(totalIntake);
+            $('#jumlah_cairan_output').val(totalOutput);
+            $('#ultrafiltration_total').val(ultrafiltrationTotal);
+        }
+
+        function updateObservasiData() {
+            const tableRows = [];
+
+            // Collect the table data
+            $('#observasiTableBody tr').each(function () {
+                const row = $(this);
+                const rowData = {
+                    waktu: row.find('.observasi-waktu').val() || '',
+                    qb: row.find('.observasi-qb').val() || '',
+                    qd: row.find('.observasi-qd').val() || '',
+                    uf_rate: row.find('.observasi-uf-rate').val() || '',
+                    td: row.find('.observasi-td').val() || '',
+                    nadi: row.find('.observasi-nadi').val() || '',
+                    nafas: row.find('.observasi-nafas').val() || '',
+                    suhu: row.find('.observasi-suhu').val() || '',
+                    nacl: row.find('.observasi-nacl').val() || '',
+                    minum: row.find('.observasi-minum').val() || '',
+                    lain_lain: row.find('.observasi-lain').val() || '',
+                    output: row.find('.observasi-output').val() || ''
+                };
+
+                // Only add rows that have at least time
+                if (rowData.waktu) {
+                    tableRows.push(rowData);
+                }
+            });
+
+            // Set the JSON string to the hidden input
+            $('#observasi_data').val(JSON.stringify(tableRows));
+
             // Debug: tampilkan di console
             console.log('Observasi Data Updated:', tableRows);
         }

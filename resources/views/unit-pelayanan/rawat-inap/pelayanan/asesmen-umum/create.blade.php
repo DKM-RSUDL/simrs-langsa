@@ -4306,40 +4306,12 @@
                                 </tbody>
                             </table>
                         </div>
-
                     </div>
 
 
                     <div class="text-end">
-                        <button type="submit" id="submitBtn" class="btn btn-primary">Simpan</button>
+                        <x-button-submit />
                     </div>
-
-                    {{-- Disable submit button after first click to prevent double submit --}}
-                    <script>
-                        (function(){
-                            var form = document.getElementById('asesmenForm');
-                            if (!form) return;
-                            var btn = document.getElementById('submitBtn');
-                            form.addEventListener('submit', function(e){
-                                // If button already disabled, prevent further submits
-                                if (btn && btn.disabled) {
-                                    e.preventDefault();
-                                    return;
-                                }
-                                if (btn) {
-                                    try {
-                                        // Show simple loading state
-                                        btn.disabled = true;
-                                        // If bootstrap spinner is available, show it, otherwise just change text
-                                        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Menyimpan...';
-                                    } catch (err) {
-                                        btn.textContent = 'Menyimpan...';
-                                        btn.disabled = true;
-                                    }
-                                }
-                            });
-                        })();
-                    </script>
                 </form>
             </div>
         </div>

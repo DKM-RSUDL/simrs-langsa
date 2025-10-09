@@ -12,11 +12,13 @@
 
                 @include('components.page-header', [
                     'title' => 'Tambah Operasi (IBS)',
-                    'description' =>
-                        'Tambah data operasi (IBS) pasien rawat inap dengan mengisi formulir di bawah ini.',
+                    'description' => 'Tambah data operasi (IBS) pasien rawat inap dengan mengisi formulir di bawah ini.',
                 ])
 
-                <form action="">
+                <form
+                    action="{{ route('rawat-inap.operasi-ibs.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                    method="POST">
+                    @csrf
                     <div class="row">
                         <div class="col-md-5">
                             <div class="mb-3">
@@ -45,11 +47,11 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="jenis_tindakan" class="form-label">Jenis Tindakan</label>
-                                <select class="form-select" id="jenis_tindakan" name="jenis_tindakan" required>
+                                <select class="form-select select2" id="jenis_tindakan" name="jenis_tindakan" required>
                                     <option value="">-- Pilih Tindakan --</option>
-                                    {{-- @foreach ($dokters as $dokter)
-                                            <option value="{{ $dokter->id }}">{{ $dokter->name ?? $dokter->nama }}</option>
-                                        @endforeach --}}
+                                    @foreach ($products ?? [] as $prod)
+                                        <option value="{{ $prod->kd_produk }}">{{ $prod->deskripsi }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -58,9 +60,6 @@
                                 <label for="jenis_operasi" class="form-label">Jenis Operasi</label>
                                 <select class="form-select" id="jenis_operasi" name="jenis_operasi" required>
                                     <option value="">-- Pilih Jenis Operasi --</option>
-                                    {{-- @foreach ($jenis_operasis as $jenis_operasi)
-                                            <option value="{{ $dokter->id }}">{{ $dokter->name ?? $dokter->nama }}</option>
-                                        @endforeach --}}
                                 </select>
                             </div>
                         </div>
@@ -69,9 +68,6 @@
                                 <label for="spesialisasi" class="form-label">Spesialisasi</label>
                                 <select class="form-select" id="spesialisasi" name="spesialisasi" required>
                                     <option value="">-- Pilih Spesialisasi --</option>
-                                    {{-- @foreach ($spesialisasis as $dokter)
-                                            <option value="{{ $dokter->id }}">{{ $dokter->name ?? $dokter->nama }}</option>
-                                        @endforeach --}}
                                 </select>
                             </div>
                         </div>
@@ -80,9 +76,6 @@
                                 <label for="sub_spesialisasi" class="form-label">Sub Spesialisasi</label>
                                 <select class="form-select" id="sub_spesialisasi" name="sub_spesialisasi" required>
                                     <option value="">-- Pilih Sub Spesialisasi --</option>
-                                    {{-- @foreach ($sub_spesialisasis as $sub_spesialisasi)
-                                            <option value="{{ $dokter->id }}">{{ $dokter->name ?? $dokter->nama }}</option>
-                                        @endforeach --}}
                                 </select>
                             </div>
                         </div>
@@ -92,22 +85,22 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="kamar_operasi" class="form-label">Kamar Operasi</label>
-                                <select class="form-select" id="kamar_operasi" name="kamar_operasi" required>
+                                <select class="form-select select2" id="kamar_operasi" name="kamar_operasi" required>
                                     <option value="">-- Pilih Kamar Operasi --</option>
-                                    {{-- @foreach ($kamar_operasis as $kamar_operasi)
-                                            <option value="{{ $kamar_operasi->id }}">{{ $kamar_operasi->name ?? $kamar_operasi->nama }}</option>
-                                        @endforeach --}}
+                                    @foreach ($kamarOperasi ?? [] as $kr)
+                                        <option value="{{ $kr->no_kamar }}">{{ $kr->nama_kamar }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="dokter" class="form-label">Dokter</label>
-                                <select class="form-select" id="dokter" name="dokter" required>
+                                <select class="form-select select2" id="dokter" name="dokter" required>
                                     <option value="">-- Pilih Dokter --</option>
-                                    {{-- @foreach ($dokters as $dokter)
-                                            <option value="{{ $dokter->id }}">{{ $dokter->name ?? $dokter->nama }}</option>
-                                        @endforeach --}}
+                                    @foreach ($dokters ?? [] as $d)
+                                        <option value="{{ $d->kd_dokter }}">{{ $d->nama }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -124,9 +117,8 @@
                                 <textarea class="form-control" id="catatan" name="catatan" rows="4" placeholder="Masukkan catatan..."></textarea>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-end gap-2">
-                            <button type="reset" class="btn btn-secondary">Batal</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        <div class="text-end">
+                            <x-button-submit />
                         </div>
                     </div>
                 </form>
@@ -136,5 +128,69 @@
 @endsection
 
 @push('js')
-    <script></script>
+    <script>
+        $(function() {
+            // URL sudah include 4 parameter wajib dari route helper
+            const url = "{{ route('rawat-inap.operasi-ibs.product-details', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}";
+            const kdUnit = "{{ $dataMedis->kd_unit }}";
+
+            $('#jenis_tindakan').on('change', function() {
+                const kdProduk = $(this).val();
+
+                if (!kdProduk) {
+                    // Reset semua select jika tindakan dikosongkan
+                    $('#jenis_operasi').empty().append('<option value="">-- Pilih Jenis Operasi --</option>');
+                    $('#spesialisasi').empty().append('<option value="">-- Pilih Spesialisasi --</option>');
+                    $('#sub_spesialisasi').empty().append('<option value="">-- Pilih Sub Spesialisasi --</option>');
+                    return;
+                }
+
+                // TAMPILKAN LOADING STATE
+                $('#jenis_operasi').empty().append('<option value="">Memproses...</option>').prop('disabled', true);
+                $('#spesialisasi').empty().append('<option value="">Memproses...</option>').prop('disabled', true);
+                $('#sub_spesialisasi').empty().append('<option value="">Memproses...</option>').prop('disabled', true);
+
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    data: {
+                        kd_produk: kdProduk
+                    },
+                    success: function(r) {
+                        // Jenis Operasi
+                        let jo = $('#jenis_operasi').empty().append('<option value="">-- Pilih Jenis Operasi --</option>').prop('disabled', false);
+                        (r.jenisOperasi || []).forEach(x => jo.append(`<option value="${x.kd_jenis_op}">${x.jenis_op}</option>`));
+                        if (r.selected.jenis_operasi) {
+                            jo.val(r.selected.jenis_operasi);
+                            console.log('✅ Auto-selected Jenis Operasi:', r.selected.jenis_operasi);
+                        }
+
+                        // Spesialisasi
+                        let sp = $('#spesialisasi').empty().append('<option value="">-- Pilih Spesialisasi --</option>').prop('disabled', false);
+                        (r.spesialisasi || []).forEach(x => sp.append(`<option value="${x.kd_spesial}">${x.spesialisasi}</option>`));
+                        if (r.selected.spesialisasi) {
+                            sp.val(r.selected.spesialisasi);
+                            console.log('✅ Auto-selected Spesialisasi:', r.selected.spesialisasi);
+                        }
+
+                        // Sub Spesialisasi
+                        let ssp = $('#sub_spesialisasi').empty().append('<option value="">-- Pilih Sub Spesialisasi --</option>').prop('disabled', false);
+                        (r.subSpesialisasi || []).forEach(x => ssp.append(`<option value="${x.kd_sub_spc}">${x.sub_spesialisasi}</option>`));
+                        if (r.selected.sub_spesialisasi) {
+                            ssp.val(r.selected.sub_spesialisasi);
+                            console.log('✅ Auto-selected Sub Spesialisasi:', r.selected.sub_spesialisasi);
+                        }
+                    },
+                    error: function(xhr) {
+                        // KEMBALIKAN KE STATE NORMAL JIKA ERROR
+                        $('#jenis_operasi').empty().append('<option value="">-- Pilih Jenis Operasi --</option>').prop('disabled', false);
+                        $('#spesialisasi').empty().append('<option value="">-- Pilih Spesialisasi --</option>').prop('disabled', false);
+                        $('#sub_spesialisasi').empty().append('<option value="">-- Pilih Sub Spesialisasi --</option>').prop('disabled', false);
+
+                        alert('Error loading data');
+                    }
+                });
+            });
+        });
+    </script>
 @endpush

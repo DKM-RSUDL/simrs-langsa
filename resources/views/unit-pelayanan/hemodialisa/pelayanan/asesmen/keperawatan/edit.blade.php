@@ -142,7 +142,7 @@
 
     <div class="row">
         <div class="col-md-3">
-            @include('unit-pelayanan.hemodialisa.component.patient-card')
+            @include('components.patient-card-hemodialisa')
         </div>
 
         <div class="col-md-9">
@@ -2670,7 +2670,8 @@
     </div>
 
     <!-- Modal Tambah Obat Pasien -->
-    <div class="modal fade" id="modalTambahObat" tabindex="-1" aria-labelledby="modalTambahObatLabel" aria-hidden="true">
+    <div class="modal fade" id="modalTambahObat" tabindex="-1" aria-labelledby="modalTambahObatLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -2748,7 +2749,8 @@
                         <label class="form-check-label" for="masalah_akses">Masalah akses</label>
                     </div>
                     <div class="form-check mb-2">
-                        <input class="form-check-input teknis-option" type="checkbox" id="clotting" value="Clotting">
+                        <input class="form-check-input teknis-option" type="checkbox" id="clotting"
+                            value="Clotting">
                         <label class="form-check-label" for="clotting">Clotting</label>
                     </div>
                     <div class="form-check mb-2">
@@ -2762,7 +2764,8 @@
                         <label class="form-check-label" for="emboli_udara">Emboli udara</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input teknis-option" type="checkbox" id="lainnya" value="Lainnya">
+                        <input class="form-check-input teknis-option" type="checkbox" id="lainnya"
+                            value="Lainnya">
                         <label class="form-check-label" for="lainnya">Lainnya</label>
                     </div>
                 </div>
@@ -2785,7 +2788,8 @@
                 <div class="modal-body">
                     <div class="bg-light p-3 rounded">
                         <div class="form-check mb-2">
-                            <input class="form-check-input klinis-option" type="checkbox" id="hipotensi" value="Hipotensi">
+                            <input class="form-check-input klinis-option" type="checkbox" id="hipotensi"
+                                value="Hipotensi">
                             <label class="form-check-label" for="hipotensi">Hipotensi</label>
                         </div>
                         <div class="form-check mb-2">
@@ -2809,7 +2813,8 @@
                             <label class="form-check-label" for="perdarahan">Perdarahan</label>
                         </div>
                         <div class="form-check mb-2">
-                            <input class="form-check-input klinis-option" type="checkbox" id="nyeri" value="Nyeri">
+                            <input class="form-check-input klinis-option" type="checkbox" id="nyeri"
+                                value="Nyeri">
                             <label class="form-check-label" for="nyeri">Nyeri</label>
                         </div>
                     </div>
@@ -2852,7 +2857,8 @@
                                 <div>
                                     <div class="form-check">
                                         <input class="form-check-input rencana-pulang-option" type="checkbox"
-                                            id="pembatasan_asupan_tinggi_kalium" value="Pembatasan Asupan Tinggi Kalium">
+                                            id="pembatasan_asupan_tinggi_kalium"
+                                            value="Pembatasan Asupan Tinggi Kalium">
                                         <label class="form-check-label" for="pembatasan_asupan_tinggi_kalium">Pembatasan
                                             Asupan Tinggi Kalium</label>
                                     </div>
@@ -2881,5 +2887,4 @@
             </div>
         </div>
     </div>
-
 @endsection

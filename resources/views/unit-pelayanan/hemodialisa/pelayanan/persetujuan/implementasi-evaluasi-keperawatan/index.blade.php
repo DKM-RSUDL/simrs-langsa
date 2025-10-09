@@ -7,14 +7,17 @@
             background-color: #28a745;
             color: white;
         }
+
         .badge-menolak {
             background-color: #dc3545;
             color: white;
         }
+
         .badge-pasien {
             background-color: #17a2b8;
             color: white;
         }
+
         .badge-keluarga {
             background-color: #ffc107;
             color: black;
@@ -126,7 +129,7 @@
             margin-right: -0.5rem;
         }
 
-        .row > [class*="col-"] {
+        .row>[class*="col-"] {
             padding-left: 0.5rem;
             padding-right: 0.5rem;
         }
@@ -166,7 +169,7 @@
         </div>
 
         <div class="col-md-9">
-            @include('unit-pelayanan.hemodialisa.component.navigation')
+            @include('components.navigation-hemodialisa')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
@@ -207,33 +210,39 @@
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active">
                                 <div class="row">
-                                    <form method="GET" action="{{ route('hemodialisa.pelayanan.persetujuan.implementasi-evaluasi-keperawatan.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                                    <form method="GET"
+                                        action="{{ route('hemodialisa.pelayanan.persetujuan.implementasi-evaluasi-keperawatan.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
                                         <div class="row m-3">
                                             <div class="col-md-3">
                                                 <div class="input-group">
                                                     <span class="input-group-text">
                                                         <i class="ti-search"></i>
                                                     </span>
-                                                    <input type="text" name="search" class="form-control" placeholder="Cari dokter, tipe penerima..." value="{{ request('search') }}">
+                                                    <input type="text" name="search" class="form-control"
+                                                        placeholder="Cari dokter, tipe penerima..."
+                                                        value="{{ request('search') }}">
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="col-md-2">
-                                                <input type="date" name="dari_tanggal" class="form-control" placeholder="Dari Tanggal" value="{{ request('dari_tanggal') }}">
+                                                <input type="date" name="dari_tanggal" class="form-control"
+                                                    placeholder="Dari Tanggal" value="{{ request('dari_tanggal') }}">
                                             </div>
-                                            
+
                                             <div class="col-md-2">
-                                                <input type="date" name="sampai_tanggal" class="form-control" placeholder="Sampai Tanggal" value="{{ request('sampai_tanggal') }}">
+                                                <input type="date" name="sampai_tanggal" class="form-control"
+                                                    placeholder="Sampai Tanggal" value="{{ request('sampai_tanggal') }}">
                                             </div>
-                                            
+
                                             <div class="col-md-2">
                                                 <button class="btn btn-outline-secondary" type="submit">
                                                     <i class="ti-filter"></i> Filter
                                                 </button>
                                             </div>
-                                            
+
                                             <div class="col-md-3 text-end">
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#createModal">
                                                     <i class="ti-plus"></i> Tambah Data
                                                 </button>
                                             </div>
@@ -258,7 +267,7 @@
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>
-                                                            {{ \Carbon\Carbon::parse($item->tanggal_implementasi)->format('d-m-Y') }} 
+                                                            {{ \Carbon\Carbon::parse($item->tanggal_implementasi)->format('d-m-Y') }}
                                                             {{ \Carbon\Carbon::parse($item->jam_implementasi)->format('H:i') }}
                                                         </td>
                                                         <td>{{ $item->diagnosis_keperawatan }}</td>
@@ -266,18 +275,19 @@
                                                         <td>{{ $item->evaluasi_keperawatan }}</td>
                                                         <td>{{ $item->userCreated->name ?? 'Tidak Diketahui' }}</td>
                                                         <td>
-                                                            <button type="button" class="btn btn-sm btn-warning edit-btn" 
-                                                                data-bs-toggle="modal" 
-                                                                data-bs-target="#editModal" 
+                                                            <button type="button" class="btn btn-sm btn-warning edit-btn"
+                                                                data-bs-toggle="modal" data-bs-target="#editModal"
                                                                 data-id="{{ $item->id }}"
                                                                 data-url="{{ route('hemodialisa.pelayanan.persetujuan.implementasi-evaluasi-keperawatan.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}">
                                                                 <i class="ti-pencil"></i> Edit
                                                             </button>
-                                                            <form action="{{ route('hemodialisa.pelayanan.persetujuan.implementasi-evaluasi-keperawatan.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                            <form
+                                                                action="{{ route('hemodialisa.pelayanan.persetujuan.implementasi-evaluasi-keperawatan.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                 method="POST" style="display: inline;">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                                                <button type="submit" class="btn btn-sm btn-danger"
+                                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                                     <i class="ti-trash"></i> Hapus
                                                                 </button>
                                                             </form>
@@ -296,12 +306,15 @@
                         </div>
 
                         <!-- Create Modal -->
-                        <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel"
+                            aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title header-asesmen" id="createModalLabel">Form Persetujuan Implementasi Evaluasi Keperawatan</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <h5 class="modal-title header-asesmen" id="createModalLabel">Form Persetujuan
+                                            Implementasi Evaluasi Keperawatan</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
                                         <form id="createForm" method="POST"
@@ -313,11 +326,13 @@
                                                 <div class="datetime-group">
                                                     <div class="datetime-item">
                                                         <label>Tanggal</label>
-                                                        <input type="date" class="form-control" name="tanggal_implementasi" id="create_tanggal_implementasi">
+                                                        <input type="date" class="form-control"
+                                                            name="tanggal_implementasi" id="create_tanggal_implementasi">
                                                     </div>
                                                     <div class="datetime-item">
                                                         <label>Jam</label>
-                                                        <input type="time" class="form-control" name="jam_implementasi" id="create_jam_implementasi">
+                                                        <input type="time" class="form-control"
+                                                            name="jam_implementasi" id="create_jam_implementasi">
                                                     </div>
                                                 </div>
                                             </div>
@@ -326,7 +341,9 @@
                                             <div class="form-section">
                                                 <h5 class="section-title">Diagnosis Keperawatan</h5>
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control" name="diagnosis_keperawatan" placeholder="Masukkan diagnosis keperawatan" required>
+                                                    <input type="text" class="form-control"
+                                                        name="diagnosis_keperawatan"
+                                                        placeholder="Masukkan diagnosis keperawatan" required>
                                                 </div>
                                             </div>
 
@@ -348,10 +365,13 @@
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                        <button type="submit" form="createForm" class="btn btn-primary" id="create_simpan">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Batal</button>
+                                        <button type="submit" form="createForm" class="btn btn-primary"
+                                            id="create_simpan">
                                             <span class="btn-text"><i class="ti-save mr-2"></i> Simpan Data</span>
-                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            <span class="spinner-border spinner-border-sm" role="status"
+                                                aria-hidden="true"></span>
                                         </button>
                                     </div>
                                 </div>
@@ -359,12 +379,15 @@
                         </div>
 
                         <!-- Edit Modal -->
-                        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel"
+                            aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title header-asesmen" id="editModalLabel">Edit Persetujuan Implementasi Evaluasi Keperawatan</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <h5 class="modal-title header-asesmen" id="editModalLabel">Edit Persetujuan
+                                            Implementasi Evaluasi Keperawatan</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
                                         <form id="editForm" method="POST" action="">
@@ -378,11 +401,13 @@
                                                 <div class="datetime-group">
                                                     <div class="datetime-item">
                                                         <label>Tanggal</label>
-                                                        <input type="date" class="form-control" name="tanggal_implementasi" id="edit_tanggal_implementasi">
+                                                        <input type="date" class="form-control"
+                                                            name="tanggal_implementasi" id="edit_tanggal_implementasi">
                                                     </div>
                                                     <div class="datetime-item">
                                                         <label>Jam</label>
-                                                        <input type="time" class="form-control" name="jam_implementasi" id="edit_jam_implementasi">
+                                                        <input type="time" class="form-control"
+                                                            name="jam_implementasi" id="edit_jam_implementasi">
                                                     </div>
                                                 </div>
                                             </div>
@@ -391,7 +416,9 @@
                                             <div class="form-section">
                                                 <h5 class="section-title">Diagnosis Keperawatan</h5>
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control" name="diagnosis_keperawatan" id="edit_diagnosis_keperawatan" required>
+                                                    <input type="text" class="form-control"
+                                                        name="diagnosis_keperawatan" id="edit_diagnosis_keperawatan"
+                                                        required>
                                                 </div>
                                             </div>
 
@@ -413,10 +440,12 @@
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Batal</button>
                                         <button type="submit" form="editForm" class="btn btn-primary" id="edit_simpan">
                                             <span class="btn-text"><i class="ti-save mr-2"></i> Simpan Perubahan</span>
-                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            <span class="spinner-border spinner-border-sm" role="status"
+                                                aria-hidden="true"></span>
                                         </button>
                                     </div>
                                 </div>
@@ -430,89 +459,93 @@
 @endsection
 
 @push('js')
-<script>
-    $(document).ready(function() {
-        // Auto submit form when filter dates change
-        $('input[name="dari_tanggal"], input[name="sampai_tanggal"]').on('change', function() {
-            $(this).closest('form').submit();
-        });
+    <script>
+        $(document).ready(function() {
+            // Auto submit form when filter dates change
+            $('input[name="dari_tanggal"], input[name="sampai_tanggal"]').on('change', function() {
+                $(this).closest('form').submit();
+            });
 
-        // Set current date and time in create modal form
-        var currentDate = new Date();
-        var formattedDate = currentDate.toISOString().split('T')[0];
-        $('#create_tanggal_implementasi').val(formattedDate);
-        var formattedTime = currentDate.toTimeString().split(' ')[0].substring(0, 5);
-        $('#create_jam_implementasi').val(formattedTime);
+            // Set current date and time in create modal form
+            var currentDate = new Date();
+            var formattedDate = currentDate.toISOString().split('T')[0];
+            $('#create_tanggal_implementasi').val(formattedDate);
+            var formattedTime = currentDate.toTimeString().split(' ')[0].substring(0, 5);
+            $('#create_jam_implementasi').val(formattedTime);
 
-        // Handle create form submission via AJAX
-        $('#createForm').on('submit', function(e) {
-            e.preventDefault();
-            var $button = $('#create_simpan');
-            $button.addClass('btn-loading').prop('disabled', true);
-            var form = $(this);
-            $.ajax({
-                url: form.attr('action'),
-                method: 'POST',
-                data: form.serialize(),
-                success: function(response) {
-                    $('#createModal').modal('hide');
-                    location.reload(); // Refresh page to update table
-                },
-                error: function(xhr) {
-                    alert('Terjadi kesalahan saat menyimpan data: ' + (xhr.responseJSON?.message || 'Silakan coba lagi.'));
-                },
-                complete: function() {
-                    $button.removeClass('btn-loading').prop('disabled', false);
-                }
+            // Handle create form submission via AJAX
+            $('#createForm').on('submit', function(e) {
+                e.preventDefault();
+                var $button = $('#create_simpan');
+                $button.addClass('btn-loading').prop('disabled', true);
+                var form = $(this);
+                $.ajax({
+                    url: form.attr('action'),
+                    method: 'POST',
+                    data: form.serialize(),
+                    success: function(response) {
+                        $('#createModal').modal('hide');
+                        location.reload(); // Refresh page to update table
+                    },
+                    error: function(xhr) {
+                        alert('Terjadi kesalahan saat menyimpan data: ' + (xhr.responseJSON
+                            ?.message || 'Silakan coba lagi.'));
+                    },
+                    complete: function() {
+                        $button.removeClass('btn-loading').prop('disabled', false);
+                    }
+                });
+            });
+
+            // Handle edit button click to populate edit modal
+            $('.edit-btn').on('click', function() {
+                var editUrl = $(this).data('url');
+                var id = $(this).data('id');
+
+                // Fetch data for the selected item
+                $.ajax({
+                    url: editUrl,
+                    method: 'GET',
+                    success: function(data) {
+                        $('#edit_id').val(id);
+                        $('#editForm').attr('action', editUrl.replace('/edit',
+                        '')); // Set form action to update route
+                        $('#edit_tanggal_implementasi').val(data.tanggal_implementasi);
+                        $('#edit_jam_implementasi').val(data.jam_implementasi);
+                        $('#edit_diagnosis_keperawatan').val(data.diagnosis_keperawatan);
+                        $('#edit_implementasi_keperawatan').val(data.implementasi_keperawatan);
+                        $('#edit_evaluasi_keperawatan').val(data.evaluasi_keperawatan);
+                    },
+                    error: function(xhr) {
+                        alert('Terjadi kesalahan saat mengambil data: ' + (xhr.responseJSON
+                            ?.message || 'Silakan coba lagi.'));
+                    }
+                });
+            });
+
+            // Handle edit form submission via AJAX
+            $('#editForm').on('submit', function(e) {
+                e.preventDefault();
+                var $button = $('#edit_simpan');
+                $button.addClass('btn-loading').prop('disabled', true);
+                var form = $(this);
+                $.ajax({
+                    url: form.attr('action'),
+                    method: 'POST',
+                    data: form.serialize() + '&_method=PUT',
+                    success: function(response) {
+                        $('#editModal').modal('hide');
+                        location.reload(); // Refresh page to update table
+                    },
+                    error: function(xhr) {
+                        alert('Terjadi kesalahan saat memperbarui data: ' + (xhr.responseJSON
+                            ?.message || 'Silakan coba lagi.'));
+                    },
+                    complete: function() {
+                        $button.removeClass('btn-loading').prop('disabled', false);
+                    }
+                });
             });
         });
-
-        // Handle edit button click to populate edit modal
-        $('.edit-btn').on('click', function() {
-            var editUrl = $(this).data('url');
-            var id = $(this).data('id');
-
-            // Fetch data for the selected item
-            $.ajax({
-                url: editUrl,
-                method: 'GET',
-                success: function(data) {
-                    $('#edit_id').val(id);
-                    $('#editForm').attr('action', editUrl.replace('/edit', '')); // Set form action to update route
-                    $('#edit_tanggal_implementasi').val(data.tanggal_implementasi);
-                    $('#edit_jam_implementasi').val(data.jam_implementasi);
-                    $('#edit_diagnosis_keperawatan').val(data.diagnosis_keperawatan);
-                    $('#edit_implementasi_keperawatan').val(data.implementasi_keperawatan);
-                    $('#edit_evaluasi_keperawatan').val(data.evaluasi_keperawatan);
-                },
-                error: function(xhr) {
-                    alert('Terjadi kesalahan saat mengambil data: ' + (xhr.responseJSON?.message || 'Silakan coba lagi.'));
-                }
-            });
-        });
-
-        // Handle edit form submission via AJAX
-        $('#editForm').on('submit', function(e) {
-            e.preventDefault();
-            var $button = $('#edit_simpan');
-            $button.addClass('btn-loading').prop('disabled', true);
-            var form = $(this);
-            $.ajax({
-                url: form.attr('action'),
-                method: 'POST',
-                data: form.serialize() + '&_method=PUT',
-                success: function(response) {
-                    $('#editModal').modal('hide');
-                    location.reload(); // Refresh page to update table
-                },
-                error: function(xhr) {
-                    alert('Terjadi kesalahan saat memperbarui data: ' + (xhr.responseJSON?.message || 'Silakan coba lagi.'));
-                },
-                complete: function() {
-                    $button.removeClass('btn-loading').prop('disabled', false);
-                }
-            });
-        });
-    });
-</script>
+    </script>
 @endpush
