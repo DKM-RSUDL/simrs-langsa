@@ -72,4 +72,48 @@ class AsesmenService
             return null;
         }
     }
+
+    /**
+     * Get latest vital signs data for a patient
+     * This method can be used globally across the application
+     * 
+     * @param string $kd_unit
+     * @param string $kd_pasien
+     * @param string $tgl_masuk
+     * @param string $urut_masuk
+     * @return object|null
+     */
+    public function getLatestVitalSignsByPatient($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        try {
+            // Get transaction data first
+            $transactionData = $this->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            
+            if (!$transactionData) {
+                return null;
+            }
+
+            // Get vital signs data using transaction info
+            $vitalSign = $this->getVitalSignData($transactionData->kd_kasir, $transactionData->no_transaksi);
+            
+            if ($vitalSign) {
+                // Map vital signs data to form field names for better usability
+                return (object) [
+                    'nadi' => $vitalSign->nadi,
+                    'sistole' => $vitalSign->sistole,
+                    'distole' => $vitalSign->diastole,
+                    'nafas' => $vitalSign->respiration,
+                    'suhu' => $vitalSign->suhu,
+                    'sao2' => $vitalSign->spo2_tanpa_o2,
+                    'tb' => $vitalSign->tinggi_badan,
+                    'bb' => $vitalSign->berat_badan,
+                    'original' => $vitalSign
+                ];
+            }
+
+            return null;
+        } catch (Exception $e) {
+            return null;
+        }
+    }
 }

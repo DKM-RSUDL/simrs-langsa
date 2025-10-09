@@ -189,6 +189,9 @@ class AsesmenKetDewasaRanapController extends Controller
             }
 
             $masterData = $this->getMasterData($kd_pasien);
+            
+            // Get latest vital signs data for the patient
+            $vitalSignsData = $this->asesmenService->getLatestVitalSignsByPatient($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
             return view(
                 'unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.create',
@@ -198,6 +201,7 @@ class AsesmenKetDewasaRanapController extends Controller
                     'tgl_masuk' => $tgl_masuk,
                     'urut_masuk' => $urut_masuk,
                     'dataMedis' => $dataMedis,
+                    'vitalSigns' => $vitalSignsData,
                 ], $masterData)
             );
         }

@@ -11,7 +11,6 @@ class VitalSign extends Model
     protected $fillable = [
         'kd_kasir',
         'no_transaksi',
-        'no_rm',
         'sistole',
         'diastole',
         'nadi',
