@@ -64,10 +64,18 @@
                                     <td>{{ Str::limit($item->diagnosis ?? '-', 120) }}</td>
                                     <td>
                                         <div class="d-flex gap-2">
-                                            <a href="#" class="btn btn-sm btn-primary"
+                                            <a href="#" class="btn btn-sm btn-info"
                                                 data-item='@json($item)' data-bs-target="#showOperasiModal">
                                                 <i class="fas fa-eye"></i>
                                             </a>
+                                            <a href="#" class="btn btn-sm btn-warning"
+                                                data-item='@json($item)' data-bs-target="#showOperasiModal">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button class="btn btn-sm btn-danger"
+                                                data-item='@json($item)' data-bs-target="#showOperasiModal">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
