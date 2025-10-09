@@ -575,7 +575,7 @@ class CpptController extends Controller
         }
     }
 
-    
+
 
     private function getKunjungan($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk){
     return Kunjungan::join('transaksi as t', function ($join) {
@@ -605,7 +605,7 @@ class CpptController extends Controller
 
     private function saveInstruksiPpa($kunjungan, $urutTotal, Request $request){
         CpptInstruksiPpa::where('urut_total_cppt', $urutTotal)->delete();
-    
+
         if ($request->has('perawat_kode') && is_array($request->perawat_kode)) {
                 $perawatKodes = $request->perawat_kode;
                 $instruksis = $request->instruksi_text ?? [];
@@ -672,12 +672,12 @@ class CpptController extends Controller
         }
 
         DB::beginTransaction();
-        
+
 
         try {
             // Get kunjungan using private function
 
-         
+
             $kunjungan = $this->getKunjungan($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
             if (!$kunjungan) {
@@ -863,14 +863,14 @@ class CpptController extends Controller
             'tindak_lanjut' => 'nullable',
         ], $validatorMessage);
 
-        
+
 
         if (empty($request->diagnose_name)) {
             return back()->with('error', 'Diagnosis harus di tambah minimal 1!');
         }
 
         DB::beginTransaction();
-       
+
 
         try {
             // Get kunjungan using private function
@@ -1142,7 +1142,7 @@ class CpptController extends Controller
                 'kf.kondisi',
                 'kf.satuan',
                 'kpd.hasil',
-                'p.kd_penyakit', 
+                'p.kd_penyakit',
                 'p.penyakit',
                 'cp.nama_penyakit',
             ])

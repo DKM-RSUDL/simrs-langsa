@@ -97,13 +97,7 @@
 
                     <div class="row mt-3">
                         <div class="col-12 text-end">
-                            <button type="submit" class="btn btn-primary" id="submitBtn">
-                                <span class="normal-text">Order</span>
-                                <span class="spinner d-none">
-                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                    Processing...
-                                </span>
-                            </button>
+                            <x-button-submit>Order</x-button-submit>
                         </div>
                     </div>
                 </form>
@@ -114,7 +108,7 @@
     </div>
 @endsection
 
-@push('js')
+{{-- @push('js')
     <script>
         $('form').on('submit', function() {
             var $btn = $('#submitBtn');
@@ -138,4 +132,4 @@
             return true;
         });
     </script>
-@endpush
+@endpush --}}
