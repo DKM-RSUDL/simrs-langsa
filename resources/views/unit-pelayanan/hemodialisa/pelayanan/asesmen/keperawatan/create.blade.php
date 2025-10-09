@@ -687,7 +687,7 @@
                                             <div class="preekripsi__hemodialisis">
                                                 <div class="row mt-3">
                                                     <div class="col-12">
-                                                        <h6 class="fw-bold">1. Preekripsi Hemodialisis</h6>
+                                                        <h6 class="fw-bold">1. Prekripsi Hemodialisis</h6>
                                                     </div>
                                                 </div>
 

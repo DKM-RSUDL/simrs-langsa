@@ -81,6 +81,27 @@ class AsesmenHemodialisaKeperawatanController extends Controller
             ->where('kd_detail_jenis_tenaga', 1)
             ->get();
 
+        // Ambil data monitoring preekripsi terbaru dari pasien yang sama
+        $latestMonitoringPreekripsi = RmeHdAsesmenKeperawatanMonitoringPreekripsi::select('rme_hd_asesmen_keperawatan_monitoring_preekripsi.*')
+            ->join('rme_hd_asesmen', 'rme_hd_asesmen_keperawatan_monitoring_preekripsi.id_asesmen', '=', 'rme_hd_asesmen.id')
+            ->where('rme_hd_asesmen.kd_pasien', $kd_pasien)
+            ->where('rme_hd_asesmen.kd_unit', $this->kdUnitDef_)
+            ->where('rme_hd_asesmen.kategori', 2) // kategori keperawatan
+            ->whereNotNull('rme_hd_asesmen_keperawatan_monitoring_preekripsi.preop_conductivity') // Pastikan ada data pre op
+            ->orderBy('rme_hd_asesmen.waktu_asesmen', 'desc')
+            ->first();
+
+        // Jika tidak ada data dengan pre op, ambil data terbaru apapun
+        if (!$latestMonitoringPreekripsi) {
+            $latestMonitoringPreekripsi = RmeHdAsesmenKeperawatanMonitoringPreekripsi::select('rme_hd_asesmen_keperawatan_monitoring_preekripsi.*')
+                ->join('rme_hd_asesmen', 'rme_hd_asesmen_keperawatan_monitoring_preekripsi.id_asesmen', '=', 'rme_hd_asesmen.id')
+                ->where('rme_hd_asesmen.kd_pasien', $kd_pasien)
+                ->where('rme_hd_asesmen.kd_unit', $this->kdUnitDef_)
+                ->where('rme_hd_asesmen.kategori', 2) // kategori keperawatan
+                ->orderBy('rme_hd_asesmen.waktu_asesmen', 'desc')
+                ->first();
+        }
+
         return view('unit-pelayanan.hemodialisa.pelayanan.asesmen.keperawatan.create', compact(
             'dataMedis',
             'itemFisik',
@@ -88,7 +109,8 @@ class AsesmenHemodialisaKeperawatanController extends Controller
             'dokterPelaksana',
             'dokter',
             'perawat',
-            'rmeMasterImplementasi'
+            'rmeMasterImplementasi',
+            'latestMonitoringPreekripsi'
         ));
     }
 

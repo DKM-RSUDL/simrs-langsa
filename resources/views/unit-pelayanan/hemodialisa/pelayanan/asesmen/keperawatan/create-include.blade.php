@@ -132,6 +132,64 @@
             background-color: #0d6efd;
             color: white;
         }
+
+        /* Style untuk field yang dimuat dari data lama */
+        .loaded-from-previous {
+            border-left: 3px solid #0d6efd !important;
+            background-color: #f8fff9 !important;
+        }
+
+        .loaded-indicator {
+            font-size: 12px;
+            color: #0d6efd;
+            font-style: italic;
+            margin-top: 2px;
+        }
+
+        /* Perbaikan styling checkbox agar tanda centang terlihat jelas */
+        .form-check-input {
+            width: 1.2em !important;
+            height: 1.2em !important;
+            margin-top: 0.1em !important;
+            border: 2px solid #6c757d !important;
+            border-radius: 0.25em !important;
+            background-color: #fff !important;
+            position: relative !important;
+        }
+
+        .form-check-input:checked {
+            background-color: #0d6efd !important;
+            border-color: #0d6efd !important;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e") !important;
+            background-size: 100% 100% !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+        }
+
+        .form-check-input:focus {
+            border-color: #86b7fe !important;
+            outline: 0 !important;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
+        }
+
+        .form-check-input:checked.loaded-from-previous {
+            background-color: #0d6efd !important;
+            border-color: #0d6efd !important;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
+        }
+
+        /* Styling untuk checkbox label */
+        .form-check-label {
+            font-weight: 500 !important;
+            margin-left: 0.5rem !important;
+            cursor: pointer !important;
+        }
+
+        /* Hover effect untuk checkbox */
+        .form-check-input:hover {
+            border-color: #0d6efd !important;
+            box-shadow: 0 0 0 0.1rem rgba(13, 110, 253, 0.15) !important;
+        }
     </style>
 @endpush
 
@@ -2402,6 +2460,260 @@
                 // Update JSON input
                 updateJSONInput();
             }
+        });
+
+        // Load data terbaru untuk Pre Op fields
+        document.addEventListener('DOMContentLoaded', function() {
+            // Debug: Log bahwa script dimuat
+            console.log('Script preload data dimuat!');
+            
+            // Cek apakah ada data monitoring preekripsi terbaru
+            @if(isset($latestMonitoringPreekripsi) && $latestMonitoringPreekripsi)
+                console.log('Data preekripsi ditemukan:', @json($latestMonitoringPreekripsi));
+                
+                // Jalankan after a short delay to ensure all other scripts are loaded
+                setTimeout(function() {
+                    console.log('Memulai loading data preekripsi...');
+                    
+                    // === BAGIAN INISIASI ===
+                    // HD Ke
+                    @if($latestMonitoringPreekripsi->inisiasi_hd_ke)
+                        const hdKeElement = document.querySelector('input[name="inisiasi_hd_ke"]');
+                        if (hdKeElement) {
+                            hdKeElement.value = '{{ $latestMonitoringPreekripsi->inisiasi_hd_ke + 1 }}'; // Increment untuk sesi berikutnya
+                            hdKeElement.classList.add('loaded-from-previous');
+                            addLoadedIndicator(hdKeElement, 'Sesi HD ke-{{ $latestMonitoringPreekripsi->inisiasi_hd_ke + 1 }} (dari data sebelumnya)');
+                            console.log('HD Ke loaded:', hdKeElement.value);
+                        }
+                    @endif
+
+                    // Nomor Mesin (biasanya sama)
+                    @if($latestMonitoringPreekripsi->inisiasi_nomor_mesin)
+                        const nomorMesinElement = document.querySelector('input[name="inisiasi_nomor_mesin"]');
+                        if (nomorMesinElement) {
+                            nomorMesinElement.value = '{{ $latestMonitoringPreekripsi->inisiasi_nomor_mesin }}';
+                            nomorMesinElement.classList.add('loaded-from-previous');
+                            addLoadedIndicator(nomorMesinElement, 'Mesin yang sama dengan sesi sebelumnya');
+                            console.log('Nomor Mesin loaded:', nomorMesinElement.value);
+                        }
+                    @endif
+
+                    // Lama HD (biasanya sama)
+                    @if($latestMonitoringPreekripsi->inisiasi_lama_hd)
+                        const lamaHdElement = document.querySelector('input[name="inisiasi_lama_hd"]');
+                        if (lamaHdElement) {
+                            lamaHdElement.value = '{{ $latestMonitoringPreekripsi->inisiasi_lama_hd }}';
+                            lamaHdElement.classList.add('loaded-from-previous');
+                            addLoadedIndicator(lamaHdElement, 'Durasi HD sama dengan sesi sebelumnya');
+                            console.log('Lama HD loaded:', lamaHdElement.value);
+                        }
+                    @endif
+
+                    // === BAGIAN RUTIN ===
+                    // BB Kering (data penting untuk dirujuk)
+                    @if($latestMonitoringPreekripsi->rutin_bb_kering)
+                        const bbKeringElement = document.querySelector('input[name="rutin_bb_kering"]');
+                        if (bbKeringElement) {
+                            bbKeringElement.value = '{{ $latestMonitoringPreekripsi->rutin_bb_kering }}';
+                            bbKeringElement.classList.add('loaded-from-previous');
+                            addLoadedIndicator(bbKeringElement, 'BB kering dari sesi sebelumnya - sesuaikan jika perlu');
+                            console.log('BB Kering loaded:', bbKeringElement.value);
+                        }
+                    @endif
+
+                    // TMP (biasanya konsisten)
+                    @if($latestMonitoringPreekripsi->rutin_tmp)
+                        const tmpElement = document.querySelector('input[name="rutin_tmp"]');
+                        if (tmpElement) {
+                            tmpElement.value = '{{ $latestMonitoringPreekripsi->rutin_tmp }}';
+                            tmpElement.classList.add('loaded-from-previous');
+                            addLoadedIndicator(tmpElement, 'TMP dari sesi sebelumnya');
+                            console.log('TMP loaded:', tmpElement.value);
+                        }
+                    @endif
+
+                    // === BAGIAN PRE OP ===
+                    // Set nilai checkbox dan input untuk Dialisat
+                    @if($latestMonitoringPreekripsi->preop_dialisat === 'Asetat')
+                        const dialAsetatElement = document.getElementById('dialisat_asetat');
+                        if (dialAsetatElement) {
+                            dialAsetatElement.checked = true;
+                            dialAsetatElement.classList.add('loaded-from-previous');
+                            // Tambahkan label indicator
+                            const asetatLabel = document.querySelector('label[for="dialisat_asetat"]');
+                            if (asetatLabel) {
+                                asetatLabel.innerHTML += ' <small class="loaded-indicator">(dari sesi sebelumnya)</small>';
+                            }
+                            console.log('Dialisat Asetat checked');
+                        }
+                    @endif
+                    
+                    @if($latestMonitoringPreekripsi->preop_bicarbonat === 'Bicarbonat')
+                        const dialBicarbonatElement = document.getElementById('dialisat_bicarbonat');
+                        if (dialBicarbonatElement) {
+                            dialBicarbonatElement.checked = true;
+                            dialBicarbonatElement.classList.add('loaded-from-previous');
+                            // Tambahkan label indicator
+                            const bicarbonatLabel = document.querySelector('label[for="dialisat_bicarbonat"]');
+                            if (bicarbonatLabel) {
+                                bicarbonatLabel.innerHTML += ' <small class="loaded-indicator">(dari sesi sebelumnya)</small>';
+                            }
+                            console.log('Dialisat Bicarbonat checked');
+                        }
+                    @endif
+
+                    // Set nilai untuk Conductivity
+                    @if($latestMonitoringPreekripsi->preop_conductivity)
+                        const conductivityCheckElement = document.getElementById('conductivity_check');
+                        const conductivityElement = document.getElementById('conductivity');
+                        console.log('Setting conductivity:', '{{ $latestMonitoringPreekripsi->preop_conductivity }}');
+                        if (conductivityCheckElement && conductivityElement) {
+                            conductivityCheckElement.checked = true;
+                            conductivityCheckElement.classList.add('loaded-from-previous');
+                            conductivityElement.value = '{{ $latestMonitoringPreekripsi->preop_conductivity }}';
+                            conductivityElement.disabled = false;
+                            conductivityElement.classList.add('loaded-from-previous');
+                            addLoadedIndicator(conductivityElement, 'Nilai conductivity dari sesi sebelumnya: {{ $latestMonitoringPreekripsi->preop_conductivity }}');
+                            // Tambahkan indicator pada label checkbox
+                            const conductivityLabel = document.querySelector('label[for="conductivity_check"]');
+                            if (conductivityLabel) {
+                                conductivityLabel.innerHTML += ' <small class="loaded-indicator">✓</small>';
+                            }
+                            console.log('Conductivity loaded - checkbox:', conductivityCheckElement.checked, 'value:', conductivityElement.value);
+                        } else {
+                            console.error('Conductivity elements not found!');
+                        }
+                    @endif
+
+                    // Set nilai untuk Kalium
+                    @if($latestMonitoringPreekripsi->preop_kalium)
+                        const kaliumCheckElement = document.getElementById('kalium_check');
+                        const kaliumElement = document.getElementById('kalium');
+                        console.log('Setting kalium:', '{{ $latestMonitoringPreekripsi->preop_kalium }}');
+                        if (kaliumCheckElement && kaliumElement) {
+                            kaliumCheckElement.checked = true;
+                            kaliumCheckElement.classList.add('loaded-from-previous');
+                            kaliumElement.value = '{{ $latestMonitoringPreekripsi->preop_kalium }}';
+                            kaliumElement.disabled = false;
+                            kaliumElement.classList.add('loaded-from-previous');
+                            addLoadedIndicator(kaliumElement, 'Nilai kalium dari sesi sebelumnya: {{ $latestMonitoringPreekripsi->preop_kalium }}');
+                            // Tambahkan indicator pada label checkbox
+                            const kaliumLabel = document.querySelector('label[for="kalium_check"]');
+                            if (kaliumLabel) {
+                                kaliumLabel.innerHTML += ' <small class="loaded-indicator">✓</small>';
+                            }
+                            console.log('Kalium loaded - checkbox:', kaliumCheckElement.checked, 'value:', kaliumElement.value);
+                        } else {
+                            console.error('Kalium elements not found!');
+                        }
+                    @endif
+
+                    // Set nilai untuk Suhu Dialisat
+                    @if($latestMonitoringPreekripsi->preop_suhu_dialisat)
+                        const suhuDialisatCheckElement = document.getElementById('suhu_dialisat_check');
+                        const suhuDialisatElement = document.getElementById('suhu_dialisat');
+                        console.log('Setting suhu dialisat:', '{{ $latestMonitoringPreekripsi->preop_suhu_dialisat }}');
+                        if (suhuDialisatCheckElement && suhuDialisatElement) {
+                            suhuDialisatCheckElement.checked = true;
+                            suhuDialisatCheckElement.classList.add('loaded-from-previous');
+                            suhuDialisatElement.value = '{{ $latestMonitoringPreekripsi->preop_suhu_dialisat }}';
+                            suhuDialisatElement.disabled = false;
+                            suhuDialisatElement.classList.add('loaded-from-previous');
+                            addLoadedIndicator(suhuDialisatElement, 'Suhu dialisat dari sesi sebelumnya: {{ $latestMonitoringPreekripsi->preop_suhu_dialisat }}');
+                            // Tambahkan indicator pada label checkbox
+                            const suhuLabel = document.querySelector('label[for="suhu_dialisat_check"]');
+                            if (suhuLabel) {
+                                suhuLabel.innerHTML += ' <small class="loaded-indicator">✓</small>';
+                            }
+                            console.log('Suhu Dialisat loaded - checkbox:', suhuDialisatCheckElement.checked, 'value:', suhuDialisatElement.value);
+                        } else {
+                            console.error('Suhu Dialisat elements not found!');
+                        }
+                    @endif
+
+                    // Set nilai untuk Base Na
+                    @if($latestMonitoringPreekripsi->preop_base_na)
+                        const baseNaCheckElement = document.getElementById('base_na_check');
+                        const baseNaElement = document.getElementById('base_na');
+                        console.log('Setting base na:', '{{ $latestMonitoringPreekripsi->preop_base_na }}');
+                        if (baseNaCheckElement && baseNaElement) {
+                            baseNaCheckElement.checked = true;
+                            baseNaCheckElement.classList.add('loaded-from-previous');
+                            baseNaElement.value = '{{ $latestMonitoringPreekripsi->preop_base_na }}';
+                            baseNaElement.disabled = false;
+                            baseNaElement.classList.add('loaded-from-previous');
+                            addLoadedIndicator(baseNaElement, 'Base Na dari sesi sebelumnya: {{ $latestMonitoringPreekripsi->preop_base_na }}');
+                            // Tambahkan indicator pada label checkbox
+                            const baseNaLabel = document.querySelector('label[for="base_na_check"]');
+                            if (baseNaLabel) {
+                                baseNaLabel.innerHTML += ' <small class="loaded-indicator">✓</small>';
+                            }
+                            console.log('Base Na loaded - checkbox:', baseNaCheckElement.checked, 'value:', baseNaElement.value);
+                        } else {
+                            console.error('Base Na elements not found!');
+                        }
+                    @endif
+
+                    // Function untuk menambahkan indikator visual
+                    function addLoadedIndicator(element, message) {
+                        const indicator = document.createElement('small');
+                        indicator.className = 'loaded-indicator';
+                        indicator.textContent = message;
+                        
+                        // Insert indicator setelah element atau setelah parent terdekat
+                        const parentDiv = element.closest('.col-sm-10, .col-sm-6, .form-group');
+                        if (parentDiv) {
+                            parentDiv.appendChild(indicator);
+                        } else {
+                            element.parentNode.insertBefore(indicator, element.nextSibling);
+                        }
+                    }
+
+                    // Trigger toggle untuk memastikan field yang sesuai aktif/non-aktif
+                    if (typeof togglePreOpFields === 'function') {
+                        console.log('Triggering togglePreOpFields...');
+                        togglePreOpFields();
+                    } else {
+                        console.warn('togglePreOpFields function not found');
+                    }
+
+                    // Show notification that data has been loaded
+                    console.log('Data monitoring preekripsi terbaru telah dimuat untuk:', {
+                        hdKe: '{{ $latestMonitoringPreekripsi->inisiasi_hd_ke ?? 'N/A' }}',
+                        nomorMesin: '{{ $latestMonitoringPreekripsi->inisiasi_nomor_mesin ?? 'N/A' }}',
+                        bbKering: '{{ $latestMonitoringPreekripsi->rutin_bb_kering ?? 'N/A' }}',
+                        conductivity: '{{ $latestMonitoringPreekripsi->preop_conductivity ?? 'N/A' }}',
+                        kalium: '{{ $latestMonitoringPreekripsi->preop_kalium ?? 'N/A' }}',
+                        suhuDialisat: '{{ $latestMonitoringPreekripsi->preop_suhu_dialisat ?? 'N/A' }}',
+                        baseNa: '{{ $latestMonitoringPreekripsi->preop_base_na ?? 'N/A' }}',
+                        tanggalData: '{{ $latestMonitoringPreekripsi->created_at ?? 'N/A' }}'
+                    });
+
+                    // Optional: Tambahkan notifikasi visual jika menggunakan library notifikasi
+                    if (typeof toastr !== 'undefined') {
+                        toastr.info('Data monitoring preekripsi terbaru telah dimuat', 'Info', {
+                            "closeButton": true,
+                            "progressBar": true,
+                            "positionClass": "toast-top-right",
+                            "timeOut": "5000"
+                        });
+                    } else if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Data Dimuat',
+                            text: 'Data monitoring preekripsi terbaru telah dimuat otomatis',
+                            timer: 3000,
+                            showConfirmButton: false,
+                            toast: true,
+                            position: 'top-end'
+                        });
+                    }
+                    
+                }, 1000); // 1 second delay to ensure all scripts are loaded
+                
+            @else
+                console.log('Tidak ada data monitoring preekripsi sebelumnya untuk pasien ini');
+            @endif
         });
     </script>
 @endpush
