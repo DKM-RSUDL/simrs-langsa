@@ -37,7 +37,7 @@
                 </p>
 
                 <div class="small text-body-secondary mb-2">
-                    {{ $dataMedis->pasien->umur ?? 'Tidak Diketahui' }} Thn
+                    {{ !empty($dataMedis->pasien->tgl_lahir) ? hitungUmur($dataMedis->pasien->tgl_lahir) : 'Tidak Diketahui' }} Thn
                     (
                     {{ $dataMedis->pasien->tgl_lahir
                         ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y')
