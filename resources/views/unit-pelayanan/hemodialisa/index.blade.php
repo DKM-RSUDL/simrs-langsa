@@ -45,80 +45,6 @@
             color: #777;
         }
 
-        .select2-container {
-            z-index: 9999;
-        }
-
-        .modal-dialog {
-            z-index: 1050 !important;
-        }
-
-        .modal-content {
-            overflow: visible !important;
-        }
-
-        .select2-dropdown {
-            z-index: 99999 !important;
-        }
-
-        /* Menghilangkan elemen Select2 yang tidak diinginkan */
-        .select2-container+.select2-container {
-            display: none;
-        }
-
-        /* Menyamakan tampilan Select2 dengan Bootstrap */
-        .select2-container--default .select2-selection--single {
-            height: calc(1.5em + 0.75rem + 2px);
-            padding: 0.375rem 0.75rem;
-            font-size: 1rem;
-            font-weight: 400;
-            line-height: 1.5;
-            color: #495057;
-            background-color: #fff;
-            border: 1px solid #ced4da;
-            border-radius: 0.25rem;
-            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-        }
-
-        .select2-container--default .select2-selection--single .select2-selection__rendered {
-            line-height: 1.5;
-            padding-left: 0;
-            padding-right: 0;
-            color: #495057;
-        }
-
-        .select2-container--default .select2-selection--single .select2-selection__arrow {
-            height: calc(1.5em + 0.75rem);
-            position: absolute;
-            top: 1px;
-            right: 1px;
-            width: 20px;
-        }
-
-        .select2-container--default .select2-selection--single .select2-selection__arrow b {
-            border-color: #6c757d transparent transparent transparent;
-        }
-
-        .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
-            border-color: transparent transparent #6c757d transparent;
-        }
-
-        .select2-container--default .select2-dropdown {
-            border-color: #80bdff;
-            border-radius: 0.25rem;
-        }
-
-        .select2-container--default .select2-results__option--highlighted[aria-selected] {
-            background-color: #007bff;
-        }
-
-        /* Fokus */
-        .select2-container--default.select2-container--focus .select2-selection--single {
-            border-color: #80bdff;
-            outline: 0;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
-
         .emergency__container {
             display: flex;
             align-items: center;
@@ -126,20 +52,45 @@
         }
 
         .custom__card {
-            background: linear-gradient(to bottom, #e0f7ff, #a5d8ff);
-            border: 2px solid #a100c9;
             border-radius: 15px;
             padding: 8px 15px;
             width: fit-content;
             min-width: 150px;
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 20px
         }
 
-        .user__icon {
-            width: 40px;
-            height: 40px;
+        .all__patients {
+            background: linear-gradient(to bottom, #e0f7ff, #a5d8ff);
+            border: 2px solid #a100c9;
+        }
+
+        .Pending {
+            background: linear-gradient(to bottom, #ffffff, #ffe499);
+            border: 2px solid #ffbb00;
+        }
+
+        .custom__icon {
+            margin-bottom: 5px;
+        }
+
+        .card__content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .check__icon {
+            color: #00cc00;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .emergency__container a {
+            text-decoration: none;
+            color: #000;
         }
 
         .dropdown-submenu {
@@ -176,18 +127,37 @@
 @endpush
 
 @section('content')
-
     <div class="row">
         <div class="col-md-12">
             <div class="emergency__container">
                 <h4 class="fw-bold">Hemodialisa</h4>
-                <div class="custom__card">
+                {{-- <div class="custom__card">
                     <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="User Icon" class="user__icon">
                     <div class="text-center">
                         <p class="m-0 p-0">Aktif</p>
                         <p class="m-0 p-0 fs-4 fw-bold">{{ countUnfinishedPatientWithTglKeluar(72) }}</p>
                     </div>
-                </div>
+                </div> --}}
+
+                <a href="#">
+                    <div class="custom__card all__patients">
+                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                        <div class="text-center">
+                            <p class="m-0 p-0">Aktif</p>
+                            <p class="m-0 p-0 fs-4 fw-bold">{{ countUnfinishedPatientWithTglKeluar(72) }}</p>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="#">
+                    <div class="custom__card Pending">
+                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                        <div class="text-center">
+                            <p class="m-0 p-0">Pending Order Masuk</p>
+                            <p class="m-0 p-0 fs-4 fw-bold">0</p>
+                        </div>
+                    </div>
+                </a>
             </div>
 
             <div class="d-flex justify-content-end align-items-end gap-3">
@@ -232,36 +202,36 @@
 @endsection
 
 @push('js')
-    <script>    
-    var hdIndexUrl = "{{ route('hemodialisa.index') }}";
-    var hdPelayananUrl = "{{ url('unit-pelayanan/hemodialisa/pelayanan/') }}/";
-    // Untuk persetujuan transfusi darah, gunakan URL yang sesuai dengan route
-    // var persetujuanTransfusiUrl = "{{ url('unit-pelayanan/hemodialisa/pelayanan/') }}/";
+    <script>
+        var hdIndexUrl = "{{ route('hemodialisa.index') }}";
+        var hdPelayananUrl = "{{ url('unit-pelayanan/hemodialisa/pelayanan/') }}/";
+        // Untuk persetujuan transfusi darah, gunakan URL yang sesuai dengan route
+        // var persetujuanTransfusiUrl = "{{ url('unit-pelayanan/hemodialisa/pelayanan/') }}/";
 
-    $(document).ready(function() {
-        $('#hemodialisaTable').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: hdIndexUrl,
-                data: function(d) {
-                    d.dokter = $('#dokterSelect').val();
-                }
-            },
-            columns: [{
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false,
-                render: function(data, type, row) {
-                    return `
+        $(document).ready(function() {
+            $('#hemodialisaTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: hdIndexUrl,
+                    data: function(d) {
+                        d.dokter = $('#dokterSelect').val();
+                    }
+                },
+                columns: [{
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row) {
+                            return `
                         <div class="d-flex justify-content-center">
-                            <a href="${hdPelayananUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}" 
+                            <a href="${hdPelayananUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}"
                                 class="btn btn-outline-primary btn-sm me-1">
                                 <i class="ti-pencil-alt"></i>
                             </a>
                             <div class="dropdown">
-                                <button class="btn btn-outline-secondary btn-sm" type="button" 
+                                <button class="btn btn-outline-secondary btn-sm" type="button"
                                         data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-three-dots"></i>
                                 </button>
@@ -349,7 +319,10 @@
                 ],
                 deferRender: true,
                 pageLength: 25,
-                lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+                lengthMenu: [
+                    [10, 25, 50, 100],
+                    [10, 25, 50, 100]
+                ],
                 paging: true,
                 lengthChange: true,
                 searching: true,
