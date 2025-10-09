@@ -131,15 +131,8 @@
         <div class="col-md-12">
             <div class="emergency__container">
                 <h4 class="fw-bold">Hemodialisa</h4>
-                {{-- <div class="custom__card">
-                    <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="User Icon" class="user__icon">
-                    <div class="text-center">
-                        <p class="m-0 p-0">Aktif</p>
-                        <p class="m-0 p-0 fs-4 fw-bold">{{ countUnfinishedPatientWithTglKeluar(72) }}</p>
-                    </div>
-                </div> --}}
 
-                <a href="#">
+                <a href="{{ route('hemodialisa.index') }}">
                     <div class="custom__card all__patients">
                         <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
                         <div class="text-center">
