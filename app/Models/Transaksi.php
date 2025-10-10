@@ -40,4 +40,14 @@ class Transaksi extends Model
         'jumlah_jaminan',
         'konsul_rwi',
     ];
+
+    public function pasien()
+    {
+        return $this->belongsTo(Pasien::class, 'kd_pasien', 'kd_pasien');
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class, 'kd_unit', 'kd_unit');
+    }
 }

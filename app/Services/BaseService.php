@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Kunjungan;
 use App\Models\Nginap;
+use App\Models\Transaksi;
 
 class BaseService
 {
@@ -37,5 +38,22 @@ class BaseService
             ->first();
 
         return $nginap;
+    }
+
+    // Get data medis
+    public function getDataMedisbyTransaksi($kd_kasir, $no_transaksi)
+    {
+        $dataMedis =  Transaksi::with(['pasien', 'unit'])
+            ->join('kunjungan as k', function ($join) {
+                $join->on('k.kd_pasien', '=', 'transaksi.kd_pasien');
+                $join->on('k.kd_unit', '=', 'transaksi.kd_unit');
+                $join->on('k.tgl_masuk', '=', 'transaksi.tgl_transaksi');
+                $join->on('k.urut_masuk', '=', 'transaksi.urut_masuk');
+            })
+            ->where('transaksi.kd_kasir', $kd_kasir)
+            ->where('transaksi.no_transaksi', $no_transaksi)
+            ->first();
+
+        return $dataMedis;
     }
 }

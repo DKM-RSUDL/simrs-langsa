@@ -22,6 +22,8 @@ use App\Http\Controllers\UnitPelayanan\HemodialisaController;
 Route::prefix('hemodialisa')->group(function () {
     Route::name('hemodialisa')->group(function () {
         Route::get('/', [HemodialisaController::class, 'index'])->name('.index');
+        Route::get('/pending-order', [HemodialisaController::class, 'pendingOrder'])->name('.pending-order');
+        Route::get('/terima-order/{data}', [HemodialisaController::class, 'terimaOrder'])->name('.terima-order');
 
         // Pelayanan
         Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
@@ -272,7 +274,6 @@ Route::prefix('hemodialisa')->group(function () {
                         });
                     });
                 });
-                
             });
         });
     });

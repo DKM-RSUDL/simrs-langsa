@@ -142,12 +142,12 @@
                     </div>
                 </a>
 
-                <a href="#">
+                <a href="{{ route('hemodialisa.pending-order') }}">
                     <div class="custom__card Pending">
                         <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
                         <div class="text-center">
                             <p class="m-0 p-0">Pending Order Masuk</p>
-                            <p class="m-0 p-0 fs-4 fw-bold">0</p>
+                            <p class="m-0 p-0 fs-4 fw-bold">{{ countPendingOrderHD() }}</p>
                         </div>
                     </div>
                 </a>
