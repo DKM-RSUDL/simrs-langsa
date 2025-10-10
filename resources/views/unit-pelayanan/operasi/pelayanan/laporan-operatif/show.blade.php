@@ -16,7 +16,7 @@
 
                 @include('components.page-header', [
                     'title' => 'Rincian Laporan Operasi',
-                    'description' => 'Rincian data laporan operasi pasien rawat inap.',
+                    'description' => 'Rincian data laporan operasi pasien.',
                 ])
 
                 <div class="section-separator mt-0" id="jenisAnestesi">

@@ -16,7 +16,7 @@
                 @include('components.page-header', [
                     'title' => 'Perbarui Laporan Operasi',
                     'description' =>
-                        'Perbarui data laporan operasi pasien rawat inap dengan mengisi formulir di bawah ini.',
+                        'Perbarui data laporan operasi dengan mengisi formulir di bawah ini.',
                 ])
 
                 <form method="POST"
