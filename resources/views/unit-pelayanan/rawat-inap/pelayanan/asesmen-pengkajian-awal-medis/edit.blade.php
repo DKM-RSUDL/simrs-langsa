@@ -10,15 +10,12 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ route('rawat-inap.asesmen.medis.umum.index', [
-                'kd_unit' => request()->route('kd_unit'),
-                'kd_pasien' => request()->route('kd_pasien'),
-                'tgl_masuk' => request()->route('tgl_masuk'),
-                'urut_masuk' => request()->route('urut_masuk'),
-            ]) }}"
-                class="btn btn-outline-info mb-3">
-                <i class="ti-arrow-left"></i> Kembali
-            </a>
+            <x-content-card>
+            <x-button-previous />
+                @include('components.page-header', [
+                    'title' => 'Asesmen Pengkajian Awal Medis',
+                    'description' => 'Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan',
+                ])
 
 
             <form method="POST" enctype="multipart/form-data"
@@ -39,754 +36,732 @@
                 <input type="hidden" name="tgl_masuk" value="{{ $dataMedis->tgl_masuk }}">
                 <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
 
-                <div class="card">
-                    <div class="card-body">
-                        <div class="px-3">
-                            <div class="row g-3">
-                                <div class="col-md-8">
-                                    <h4 class="header-asesmen">
-                                        {{ isset($asesmen) ? ($readonly ?? false ? 'Detail' : 'Edit') : 'Tambah' }} Asesmen
-                                        Pengkajian Awal Medis
-                                    </h4>
-                                    <p class="text-muted">
-                                        {{ isset($asesmen)
-                                            ? ($readonly ?? false
-                                                ? 'Detail asesmen yang telah disimpan'
-                                                : 'Edit asesmen yang
-                                                                                                                                                            telah disimpan')
-                                            : 'Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan' }}
-                                    </p>
+                    <!-- FORM ASESMEN -->
+                    <div class="px-3">
+                        <div class="section-separator" id="data-masuk">
+                            <h5 class="section-title">1. Data masuk</h5>
+
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
+                                <div class="d-flex gap-3" style="width: 100%;">
+                                    <input type="date" class="form-control" name="tanggal"
+                                        value="{{ $asesmen->asesmenMedisRanap->tanggal ? \Carbon\Carbon::parse($asesmen->asesmenMedisRanap->tanggal)->format('Y-m-d') : date('Y-m-d') }}"
+                                        {{ $readonly ?? false ? 'readonly' : '' }}>
+                                    <input type="time" class="form-control" name="jam_masuk"
+                                        value="{{ $asesmen->asesmenMedisRanap->jam ? \Carbon\Carbon::parse($asesmen->asesmenMedisRanap->jam)->format('H:i') : date('H:i') }}"
+                                        {{ $readonly ?? false ? 'readonly' : '' }}>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- FORM ASESMEN -->
-                        <div class="px-3">
-                            <div class="section-separator" id="data-masuk">
-                                <h5 class="section-title">1. Data masuk</h5>
+                        <div class="section-separator" id="">
+                            <h5 class="section-title">2. Anamnesis</h5>
 
-                                <div class="form-group">
-                                    <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
-                                    <div class="d-flex gap-3" style="width: 100%;">
-                                        <input type="date" class="form-control" name="tanggal"
-                                            value="{{ $asesmen->asesmenMedisRanap->tanggal ? \Carbon\Carbon::parse($asesmen->asesmenMedisRanap->tanggal)->format('Y-m-d') : date('Y-m-d') }}"
-                                            {{ $readonly ?? false ? 'readonly' : '' }}>
-                                        <input type="time" class="form-control" name="jam_masuk"
-                                            value="{{ $asesmen->asesmenMedisRanap->jam ? \Carbon\Carbon::parse($asesmen->asesmenMedisRanap->jam)->format('H:i') : date('H:i') }}"
-                                            {{ $readonly ?? false ? 'readonly' : '' }}>
-                                    </div>
-                                </div>
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Keluhan Utama</label>
+                                <textarea class="form-control" name="keluhan_utama" rows="3" placeholder="Keluhan utama pasien"
+                                    {{ $readonly ?? false ? 'readonly' : '' }}>{{ old('keluhan_utama', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->keluhan_utama : '') }}</textarea>
                             </div>
 
-                            <div class="section-separator" id="">
-                                <h5 class="section-title">2. Anamnesis</h5>
-
-                                <div class="form-group">
-                                    <label style="min-width: 200px;">Keluhan Utama</label>
-                                    <textarea class="form-control" name="keluhan_utama" rows="3" placeholder="Keluhan utama pasien"
-                                        {{ $readonly ?? false ? 'readonly' : '' }}>{{ old('keluhan_utama', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->keluhan_utama : '') }}</textarea>
-                                </div>
-
-                                <div class="form-group">
-                                    <label style="min-width: 200px;">Riwayat penyakit sekarang</label>
-                                    <textarea class="form-control" name="riwayat_penyakit_sekarang" rows="4" placeholder="Riwayat penyakit sekarang"
-                                        {{ $readonly ?? false ? 'readonly' : '' }}>{{ old('riwayat_penyakit_sekarang', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->riwayat_penyakit_sekarang : '') }}</textarea>
-                                </div>
-
-                                <div class="form-group">
-                                    <label style="min-width: 200px;">Riwayat penyakit terdahulu</label>
-                                    <textarea class="form-control" name="riwayat_penyakit_terdahulu" rows="4" placeholder="Riwayat penyakit terdahulu"
-                                        {{ $readonly ?? false ? 'readonly' : '' }}>{{ old('riwayat_penyakit_terdahulu', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->riwayat_penyakit_terdahulu : '') }}</textarea>
-                                </div>
-
-                                <div class="form-group">
-                                    <label style="min-width: 200px;">Riwayat penyakit keluarga</label>
-                                    <textarea class="form-control" name="riwayat_penyakit_keluarga" rows="4"
-                                        placeholder="Riwayat penyakit dalam keluarga" {{ $readonly ?? false ? 'readonly' : '' }}>{{ old('riwayat_penyakit_keluarga', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->riwayat_penyakit_keluarga : '') }}</textarea>
-                                </div>
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Riwayat penyakit sekarang</label>
+                                <textarea class="form-control" name="riwayat_penyakit_sekarang" rows="4" placeholder="Riwayat penyakit sekarang"
+                                    {{ $readonly ?? false ? 'readonly' : '' }}>{{ old('riwayat_penyakit_sekarang', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->riwayat_penyakit_sekarang : '') }}</textarea>
                             </div>
 
-                            <div class="section-separator" id="riwayatObat">
-                                <h5 class="section-title">3. Riwayat Penggunaan Obat</h5>
-
-                                @if (!($readonly ?? false))
-                                    <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openObatModal">
-                                        <i class="ti-plus"></i> Tambah
-                                    </button>
-                                @endif
-
-                                <input type="hidden" name="riwayat_penggunaan_obat" id="riwayatObatData"
-                                    value="{{ old('riwayat_penggunaan_obat', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->riwayat_penggunaan_obat : '[]') }}">
-
-                                <div class="table-responsive">
-                                    <table class="table" id="createRiwayatObatTable">
-                                        <thead>
-                                            <tr>
-                                                <th>Nama Obat</th>
-                                                <th>Dosis</th>
-                                                <th>Aturan Pakai</th>
-                                                @if (!($readonly ?? false))
-                                                    <th></th>
-                                                @endif
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <!-- Table content will be dynamically populated -->
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                @if (!($readonly ?? false))
-                                    @push('modals')
-                                        @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-pengkajian-awal-medis.modal-edit-obat')
-                                    @endpush
-                                @endif
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Riwayat penyakit terdahulu</label>
+                                <textarea class="form-control" name="riwayat_penyakit_terdahulu" rows="4" placeholder="Riwayat penyakit terdahulu"
+                                    {{ $readonly ?? false ? 'readonly' : '' }}>{{ old('riwayat_penyakit_terdahulu', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->riwayat_penyakit_terdahulu : '') }}</textarea>
                             </div>
 
-                            <div class="section-separator" id="alergi">
-                                <h5 class="section-title">4. Alergi</h5>
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Riwayat penyakit keluarga</label>
+                                <textarea class="form-control" name="riwayat_penyakit_keluarga" rows="4"
+                                    placeholder="Riwayat penyakit dalam keluarga" {{ $readonly ?? false ? 'readonly' : '' }}>{{ old('riwayat_penyakit_keluarga', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->riwayat_penyakit_keluarga : '') }}</textarea>
+                            </div>
+                        </div>
 
-                                @if (!($readonly ?? false))
-                                    <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                        id="openAlergiModal" data-bs-toggle="modal" data-bs-target="#alergiModal">
-                                        <i class="ti-plus"></i> Tambah Alergi
-                                    </button>
-                                @endif
+                        <div class="section-separator" id="riwayatObat">
+                            <h5 class="section-title">3. Riwayat Penggunaan Obat</h5>
 
-                                <input type="hidden" name="alergis" id="alergisInput"
-                                    value="{{ old('alergis', isset($asesmen) ? $asesmen->alergis : '[]') }}">
+                            @if (!($readonly ?? false))
+                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openObatModal">
+                                    <i class="ti-plus"></i> Tambah
+                                </button>
+                            @endif
 
-                                <div class="table-responsive">
-                                    <table class="table table-bordered" id="createAlergiTable">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th width="20%">Jenis Alergi</th>
-                                                <th width="25%">Alergen</th>
-                                                <th width="25%">Reaksi</th>
-                                                <th width="20%">Tingkat Keparahan</th>
-                                                @if (!($readonly ?? false))
-                                                    <th width="10%">Aksi</th>
-                                                @endif
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr id="no-alergi-row">
-                                                <td colspan="{{ $readonly ?? false ? '4' : '5' }}"
-                                                    class="text-center text-muted">Tidak ada data alergi</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                            <input type="hidden" name="riwayat_penggunaan_obat" id="riwayatObatData"
+                                value="{{ old('riwayat_penggunaan_obat', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->riwayat_penggunaan_obat : '[]') }}">
 
+                            <div class="table-responsive">
+                                <table class="table" id="createRiwayatObatTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Nama Obat</th>
+                                            <th>Dosis</th>
+                                            <th>Aturan Pakai</th>
+                                            @if (!($readonly ?? false))
+                                                <th></th>
+                                            @endif
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Table content will be dynamically populated -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            @if (!($readonly ?? false))
                                 @push('modals')
-                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-pengkajian-awal-medis.modal-create-alergi')
+                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-pengkajian-awal-medis.modal-edit-obat')
                                 @endpush
+                            @endif
+                        </div>
+
+                        <div class="section-separator" id="alergi">
+                            <h5 class="section-title">4. Alergi</h5>
+
+                            @if (!($readonly ?? false))
+                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
+                                    id="openAlergiModal" data-bs-toggle="modal" data-bs-target="#alergiModal">
+                                    <i class="ti-plus"></i> Tambah Alergi
+                                </button>
+                            @endif
+
+                            <input type="hidden" name="alergis" id="alergisInput"
+                                value="{{ old('alergis', isset($asesmen) ? $asesmen->alergis : '[]') }}">
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="createAlergiTable">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th width="20%">Jenis Alergi</th>
+                                            <th width="25%">Alergen</th>
+                                            <th width="25%">Reaksi</th>
+                                            <th width="20%">Tingkat Keparahan</th>
+                                            @if (!($readonly ?? false))
+                                                <th width="10%">Aksi</th>
+                                            @endif
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr id="no-alergi-row">
+                                            <td colspan="{{ $readonly ?? false ? '4' : '5' }}"
+                                                class="text-center text-muted">Tidak ada data alergi</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
 
-                            <div class="section-separator" id="riwayat-pengobatan">
-                                <h5 class="section-title">5. Status present</h5>
+                            @push('modals')
+                                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-pengkajian-awal-medis.modal-create-alergi')
+                            @endpush
+                        </div>
 
-                                <div class="form-group">
-                                    <label style="min-width: 200px;">Tek. Darah (mmHg)</label>
-                                    <div class="d-flex gap-3" style="width: 100%;">
-                                        <div class="flex-grow-1">
-                                            <label class="form-label">Sistole</label>
-                                            <input type="number" class="form-control" name="sistole"
-                                                placeholder="Sistole"
-                                                value="{{ old('sistole', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->sistole : '') }}"
-                                                {{ $readonly ?? false ? 'readonly' : '' }}>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <label class="form-label">Diastole</label>
-                                            <input type="number" class="form-control" name="diastole"
-                                                placeholder="Diastole"
-                                                value="{{ old('diastole', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->diastole : '') }}"
-                                                {{ $readonly ?? false ? 'readonly' : '' }}>
-                                        </div>
+                        <div class="section-separator" id="riwayat-pengobatan">
+                            <h5 class="section-title">5. Status present</h5>
+
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Tek. Darah (mmHg)</label>
+                                <div class="d-flex gap-3" style="width: 100%;">
+                                    <div class="flex-grow-1">
+                                        <label class="form-label">Sistole</label>
+                                        <input type="number" class="form-control" name="sistole"
+                                            placeholder="Sistole"
+                                            value="{{ old('sistole', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->sistole : '') }}"
+                                            {{ $readonly ?? false ? 'readonly' : '' }}>
                                     </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label style="min-width: 200px;">Respirasi (x/menit)</label>
-                                    <input type="number" class="form-control" name="respirasi"
-                                        placeholder="Respirasi per menit"
-                                        value="{{ old('respirasi', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->respirasi : '') }}"
-                                        {{ $readonly ?? false ? 'readonly' : '' }}>
-                                </div>
-
-                                <div class="form-group">
-                                    <label style="min-width: 200px;">Suhu (C)</label>
-                                    <input type="text" class="form-control" name="suhu" placeholder="Suhu"
-                                        value="{{ old('suhu', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->suhu : '') }}"
-                                        {{ $readonly ?? false ? 'readonly' : '' }}>
-                                </div>
-
-                                <div class="form-group">
-                                    <label style="min-width: 200px;">Nadi (x/menit)</label>
-                                    <input type="number" class="form-control" name="nadi" placeholder="Nadi"
-                                        value="{{ old('nadi', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->nadi : '') }}"
-                                        {{ $readonly ?? false ? 'readonly' : '' }}>
-                                </div>
-                            </div>
-
-                            <!-- 6. Pemeriksaan Fisik -->
-                            <div class="section-separator" id="pemeriksaan-fisik">
-                                <h5 class="section-title">6. Pemeriksaan Fisik</h5>
-                                <div class="" id="pemeriksaan-fisik">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-asesmen">
-                                            <tbody>
-                                                @php
-                                                    $pemeriksaanFisik = [
-                                                        ['key' => 'kepala', 'label' => 'a. Kepala:'],
-                                                        ['key' => 'mata', 'label' => 'b. Mata:'],
-                                                        ['key' => 'tht', 'label' => 'c. THT:'],
-                                                        ['key' => 'leher', 'label' => 'd. Leher:'],
-                                                        ['key' => 'mulut', 'label' => 'e. Mulut:'],
-                                                        [
-                                                            'key' => 'jantung',
-                                                            'label' => 'f. Jantung dan pembuluh darah:',
-                                                        ],
-                                                        ['key' => 'thorax', 'label' => 'g. Thorax:'],
-                                                        ['key' => 'abdomen', 'label' => 'h. Abdomen:'],
-                                                        [
-                                                            'key' => 'tulang_belakang',
-                                                            'label' => 'i. Tulang belakang dan anggota
-                                            gerak:',
-                                                        ],
-                                                        ['key' => 'sistem_syaraf', 'label' => 'j. Sistem Syaraf:'],
-                                                        ['key' => 'genetalia', 'label' => 'k. Genetalia:'],
-                                                        ['key' => 'status_lokasi', 'label' => 'l. Status Lokasi:'],
-                                                    ];
-                                                @endphp
-
-                                                @foreach ($pemeriksaanFisik as $item)
-                                                    @php
-                                                        $fieldName = 'pengkajian_' . $item['key'];
-                                                        $keteranganName = $fieldName . '_keterangan';
-                                                        $currentValue = old(
-                                                            $fieldName,
-                                                            isset($asesmen->asesmenMedisRanapFisik) &&
-                                                            $asesmen->asesmenMedisRanapFisik
-                                                                ? $asesmen->asesmenMedisRanapFisik->{$fieldName}
-                                                                : 1,
-                                                        );
-                                                        $currentKeterangan = old(
-                                                            $keteranganName,
-                                                            isset($asesmen->asesmenMedisRanapFisik) &&
-                                                            $asesmen->asesmenMedisRanapFisik
-                                                                ? $asesmen->asesmenMedisRanapFisik->{$keteranganName}
-                                                                : '',
-                                                        );
-                                                    @endphp
-
-                                                    <tr>
-                                                        <td>
-                                                            <div class="row">
-                                                                <div class="col-md-2">
-                                                                    <label
-                                                                        class="fw-semibold">{{ $item['label'] }}</label>
-                                                                </div>
-                                                                <div class="col-md-10">
-                                                                    @if ($readonly ?? false)
-                                                                        <div class="d-flex align-items-center gap-3">
-                                                                            <span
-                                                                                class="badge {{ $currentValue == 1 ? 'bg-success' : 'bg-warning' }}">
-                                                                                {{ $currentValue == 1 ? 'Normal' : 'Tidak Normal' }}
-                                                                            </span>
-                                                                            @if ($currentValue == 0 && $currentKeterangan)
-                                                                                <span
-                                                                                    class="text-muted">{{ $currentKeterangan }}</span>
-                                                                            @endif
-                                                                        </div>
-                                                                    @else
-                                                                        <div class="d-flex align-items-center gap-3">
-                                                                            <div class="form-check">
-                                                                                <input class="form-check-input"
-                                                                                    type="radio"
-                                                                                    name="{{ $fieldName }}"
-                                                                                    value="1"
-                                                                                    id="{{ $fieldName }}_normal"
-                                                                                    {{ $currentValue == 1 ? 'checked' : '' }}>
-                                                                                <label class="form-check-label"
-                                                                                    for="{{ $fieldName }}_normal">Normal</label>
-                                                                            </div>
-                                                                            <div class="form-check">
-                                                                                <input class="form-check-input"
-                                                                                    type="radio"
-                                                                                    name="{{ $fieldName }}"
-                                                                                    value="0"
-                                                                                    id="{{ $fieldName }}_tidak_normal"
-                                                                                    {{ $currentValue == 0 ? 'checked' : '' }}>
-                                                                                <label class="form-check-label"
-                                                                                    for="{{ $fieldName }}_tidak_normal">Tidak
-                                                                                    Normal</label>
-                                                                            </div>
-                                                                            <input type="text" class="form-control"
-                                                                                name="{{ $keteranganName }}"
-                                                                                id="{{ $keteranganName }}"
-                                                                                placeholder="Keterangan jika tidak normal..."
-                                                                                value="{{ $currentKeterangan }}"
-                                                                                {{ $currentValue == 1 ? 'disabled' : '' }}>
-                                                                        </div>
-                                                                    @endif
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                    <div class="flex-grow-1">
+                                        <label class="form-label">Diastole</label>
+                                        <input type="number" class="form-control" name="diastole"
+                                            placeholder="Diastole"
+                                            value="{{ old('diastole', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->diastole : '') }}"
+                                            {{ $readonly ?? false ? 'readonly' : '' }}>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="section-separator">
-                                <h5 class="section-title">7. Skala Nyeri</h5>
-                                <div class="row mb-4">
-                                    <div class="col-md-6">
-                                        <div class="d-flex align-items-start gap-4">
-                                            <div class="d-flex align-items-center gap-3" style="min-width: 350px;">
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Respirasi (x/menit)</label>
+                                <input type="number" class="form-control" name="respirasi"
+                                    placeholder="Respirasi per menit"
+                                    value="{{ old('respirasi', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->respirasi : '') }}"
+                                    {{ $readonly ?? false ? 'readonly' : '' }}>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Suhu (C)</label>
+                                <input type="text" class="form-control" name="suhu" placeholder="Suhu"
+                                    value="{{ old('suhu', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->suhu : '') }}"
+                                    {{ $readonly ?? false ? 'readonly' : '' }}>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Nadi (x/menit)</label>
+                                <input type="number" class="form-control" name="nadi" placeholder="Nadi"
+                                    value="{{ old('nadi', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->nadi : '') }}"
+                                    {{ $readonly ?? false ? 'readonly' : '' }}>
+                            </div>
+                        </div>
+
+                        <!-- 6. Pemeriksaan Fisik -->
+                        <div class="section-separator" id="pemeriksaan-fisik">
+                            <h5 class="section-title">6. Pemeriksaan Fisik</h5>
+                            <div class="" id="pemeriksaan-fisik">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-asesmen">
+                                        <tbody>
+                                            @php
+                                                $pemeriksaanFisik = [
+                                                    ['key' => 'kepala', 'label' => 'a. Kepala:'],
+                                                    ['key' => 'mata', 'label' => 'b. Mata:'],
+                                                    ['key' => 'tht', 'label' => 'c. THT:'],
+                                                    ['key' => 'leher', 'label' => 'd. Leher:'],
+                                                    ['key' => 'mulut', 'label' => 'e. Mulut:'],
+                                                    [
+                                                        'key' => 'jantung',
+                                                        'label' => 'f. Jantung dan pembuluh darah:',
+                                                    ],
+                                                    ['key' => 'thorax', 'label' => 'g. Thorax:'],
+                                                    ['key' => 'abdomen', 'label' => 'h. Abdomen:'],
+                                                    [
+                                                        'key' => 'tulang_belakang',
+                                                        'label' => 'i. Tulang belakang dan anggota
+                                        gerak:',
+                                                    ],
+                                                    ['key' => 'sistem_syaraf', 'label' => 'j. Sistem Syaraf:'],
+                                                    ['key' => 'genetalia', 'label' => 'k. Genetalia:'],
+                                                    ['key' => 'status_lokasi', 'label' => 'l. Status Lokasi:'],
+                                                ];
+                                            @endphp
+
+                                            @foreach ($pemeriksaanFisik as $item)
                                                 @php
-                                                    $skalaNyeri = old(
-                                                        'skala_nyeri',
-                                                        isset($asesmen->asesmenMedisRanap)
-                                                            ? $asesmen->asesmenMedisRanap->skala_nyeri_nilai
-                                                            : 0,
+                                                    $fieldName = 'pengkajian_' . $item['key'];
+                                                    $keteranganName = $fieldName . '_keterangan';
+                                                    $currentValue = old(
+                                                        $fieldName,
+                                                        isset($asesmen->asesmenMedisRanapFisik) &&
+                                                        $asesmen->asesmenMedisRanapFisik
+                                                            ? $asesmen->asesmenMedisRanapFisik->{$fieldName}
+                                                            : 1,
+                                                    );
+                                                    $currentKeterangan = old(
+                                                        $keteranganName,
+                                                        isset($asesmen->asesmenMedisRanapFisik) &&
+                                                        $asesmen->asesmenMedisRanapFisik
+                                                            ? $asesmen->asesmenMedisRanapFisik->{$keteranganName}
+                                                            : '',
                                                     );
                                                 @endphp
 
-                                                <!-- Input utama untuk skala nyeri -->
-                                                <input type="number"
-                                                    class="form-control @error('skala_nyeri') is-invalid @enderror"
-                                                    name="skala_nyeri" style="width: 100px;" value="{{ $skalaNyeri }}"
-                                                    min="0" max="10" placeholder="0-10"
-                                                    {{ $readonly ?? false ? 'readonly' : '' }}>
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-2">
+                                                                <label
+                                                                    class="fw-semibold">{{ $item['label'] }}</label>
+                                                            </div>
+                                                            <div class="col-md-10">
+                                                                @if ($readonly ?? false)
+                                                                    <div class="d-flex align-items-center gap-3">
+                                                                        <span
+                                                                            class="badge {{ $currentValue == 1 ? 'bg-success' : 'bg-warning' }}">
+                                                                            {{ $currentValue == 1 ? 'Normal' : 'Tidak Normal' }}
+                                                                        </span>
+                                                                        @if ($currentValue == 0 && $currentKeterangan)
+                                                                            <span
+                                                                                class="text-muted">{{ $currentKeterangan }}</span>
+                                                                        @endif
+                                                                    </div>
+                                                                @else
+                                                                    <div class="d-flex align-items-center gap-3">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input"
+                                                                                type="radio"
+                                                                                name="{{ $fieldName }}"
+                                                                                value="1"
+                                                                                id="{{ $fieldName }}_normal"
+                                                                                {{ $currentValue == 1 ? 'checked' : '' }}>
+                                                                            <label class="form-check-label"
+                                                                                for="{{ $fieldName }}_normal">Normal</label>
+                                                                        </div>
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input"
+                                                                                type="radio"
+                                                                                name="{{ $fieldName }}"
+                                                                                value="0"
+                                                                                id="{{ $fieldName }}_tidak_normal"
+                                                                                {{ $currentValue == 0 ? 'checked' : '' }}>
+                                                                            <label class="form-check-label"
+                                                                                for="{{ $fieldName }}_tidak_normal">Tidak
+                                                                                Normal</label>
+                                                                        </div>
+                                                                        <input type="text" class="form-control"
+                                                                            name="{{ $keteranganName }}"
+                                                                            id="{{ $keteranganName }}"
+                                                                            placeholder="Keterangan jika tidak normal..."
+                                                                            value="{{ $currentKeterangan }}"
+                                                                            {{ $currentValue == 1 ? 'disabled' : '' }}>
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
 
-                                                @error('skala_nyeri')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
+                        <div class="section-separator">
+                            <h5 class="section-title">7. Skala Nyeri</h5>
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-start gap-4">
+                                        <div class="d-flex align-items-center gap-3" style="min-width: 350px;">
+                                            @php
+                                                $skalaNyeri = old(
+                                                    'skala_nyeri',
+                                                    isset($asesmen->asesmenMedisRanap)
+                                                        ? $asesmen->asesmenMedisRanap->skala_nyeri_nilai
+                                                        : 0,
+                                                );
+                                            @endphp
 
-                                                <!-- Button status nyeri -->
-                                                <button type="button" class="btn btn-sm btn-success" id="skalaNyeriBtn"
-                                                    style="min-width: 150px;">
-                                                    @if (isset($asesmen->asesmenMedisRanap))
-                                                        {{ $asesmen->asesmenMedisRanap->skala_nyeri_status }}
-                                                    @else
-                                                        Tidak Nyeri
-                                                    @endif
-                                                </button>
-                                            </div>
+                                            <!-- Input utama untuk skala nyeri -->
+                                            <input type="number"
+                                                class="form-control @error('skala_nyeri') is-invalid @enderror"
+                                                name="skala_nyeri" style="width: 100px;" value="{{ $skalaNyeri }}"
+                                                min="0" max="10" placeholder="0-10"
+                                                {{ $readonly ?? false ? 'readonly' : '' }}>
+
+                                            @error('skala_nyeri')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+
+                                            <!-- Button status nyeri -->
+                                            <button type="button" class="btn btn-sm btn-success" id="skalaNyeriBtn"
+                                                style="min-width: 150px;">
+                                                @if (isset($asesmen->asesmenMedisRanap))
+                                                    {{ $asesmen->asesmenMedisRanap->skala_nyeri_status }}
+                                                @else
+                                                    Tidak Nyeri
+                                                @endif
+                                            </button>
                                         </div>
-
-                                        <!-- Hidden input untuk nilai skala nyeri (jika diperlukan backend) -->
-                                        <input type="hidden" name="skala_nyeri_nilai" value="{{ $skalaNyeri }}">
                                     </div>
 
-                                    <div class="col-md-6">
-                                        <!-- Pain Scale Images - Tampil langsung -->
-                                        <div id="wongBakerScale" class="pain-scale-image">
-                                            <img src="{{ asset('assets/img/asesmen/asesmen.jpeg') }}"
-                                                alt="Wong Baker Pain Scale" class="img-fluid"
-                                                style="max-width: auto; height: auto;">
-                                        </div>
+                                    <!-- Hidden input untuk nilai skala nyeri (jika diperlukan backend) -->
+                                    <input type="hidden" name="skala_nyeri_nilai" value="{{ $skalaNyeri }}">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <!-- Pain Scale Images - Tampil langsung -->
+                                    <div id="wongBakerScale" class="pain-scale-image">
+                                        <img src="{{ asset('assets/img/asesmen/asesmen.jpeg') }}"
+                                            alt="Wong Baker Pain Scale" class="img-fluid"
+                                            style="max-width: auto; height: auto;">
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- 8. Diagnosis -->
-                            <div class="section-separator" id="diagnosis">
-                                <h5 class="fw-semibold mb-4">8. Diagnosis</h5>
+                        <!-- 8. Diagnosis -->
+                        <div class="section-separator" id="diagnosis">
+                            <h5 class="fw-semibold mb-4">8. Diagnosis</h5>
 
-                                <!-- Diagnosis Banding -->
-                                <div class="mb-4">
-                                    <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
+                            <!-- Diagnosis Banding -->
+                            <div class="mb-4">
+                                <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
 
-                                    @if (!($readonly ?? false))
-                                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                            diagnosis banding,
-                                            apabila tidak ada, Pilih tanda tambah untuk menambah
-                                            keterangan diagnosis banding yang tidak ditemukan.</small>
+                                @if (!($readonly ?? false))
+                                    <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                        diagnosis banding,
+                                        apabila tidak ada, Pilih tanda tambah untuk menambah
+                                        keterangan diagnosis banding yang tidak ditemukan.</small>
 
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="diagnosis-banding-input"
-                                                class="form-control border-start-0 ps-0"
-                                                placeholder="Cari dan tambah Diagnosis Banding">
-                                            <span class="input-group-text bg-white" id="add-diagnosis-banding">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
-                                        </div>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text bg-white border-end-0">
+                                            <i class="bi bi-search text-secondary"></i>
+                                        </span>
+                                        <input type="text" id="diagnosis-banding-input"
+                                            class="form-control border-start-0 ps-0"
+                                            placeholder="Cari dan tambah Diagnosis Banding">
+                                        <span class="input-group-text bg-white" id="add-diagnosis-banding">
+                                            <i class="bi bi-plus-circle text-primary"></i>
+                                        </span>
+                                    </div>
+                                @endif
+
+                                <div id="diagnosis-banding-list" class="diagnosis-list bg-light p-3 rounded">
+                                    <!-- Diagnosis items will be added here dynamically -->
+                                </div>
+
+                                <!-- Hidden input to store JSON data -->
+                                <input type="hidden" id="diagnosis_banding" name="diagnosis_banding"
+                                    value="{{ old('diagnosis_banding', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->diagnosis_banding : '[]') }}">
+                            </div>
+
+                            <!-- Diagnosis Kerja -->
+                            <div class="mb-4">
+                                <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
+
+                                @if (!($readonly ?? false))
+                                    <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                        diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah
+                                        keterangan diagnosis kerja yang tidak ditemukan.</small>
+
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text bg-white border-end-0">
+                                            <i class="bi bi-search text-secondary"></i>
+                                        </span>
+                                        <input type="text" id="diagnosis-kerja-input"
+                                            class="form-control border-start-0 ps-0"
+                                            placeholder="Cari dan tambah Diagnosis Kerja">
+                                        <span class="input-group-text bg-white" id="add-diagnosis-kerja">
+                                            <i class="bi bi-plus-circle text-primary"></i>
+                                        </span>
+                                    </div>
+                                @endif
+
+                                <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
+                                    <!-- Diagnosis items will be added here dynamically -->
+                                </div>
+
+                                <!-- Hidden input to store JSON data -->
+                                <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja"
+                                    value="{{ old('diagnosis_kerja', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->diagnosis_kerja : '[]') }}">
+                            </div>
+
+
+                        </div>
+
+                        <div class="section-separator" id="rencana_pengobatan">
+                            <h5 class="fw-semibold mb-4">9. Rencana Penatalaksanaan Dan Pengobatan</h5>
+                            <div class="form-group">
+                                <textarea class="form-control" name="rencana_pengobatan" rows="4"
+                                    placeholder="Rencana Penatalaksanaan Dan Pengobatan" {{ $readonly ?? false ? 'readonly' : '' }}>{{ old('rencana_pengobatan', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->rencana_pengobatan : '') }}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="section-separator" id="prognosis">
+                            <h5 class="fw-semibold mb-4">10. Prognosis</h5>
+
+                            @if ($readonly ?? false)
+                                <div class="form-control-plaintext">
+                                    @if (isset($asesmen->asesmenMedisRanap) && $asesmen->asesmenMedisRanap->paru_prognosis)
+                                        @php
+                                            $selectedPrognosis = $satsetPrognosis
+                                                ->where('prognosis_id', $asesmen->asesmenMedisRanap->paru_prognosis)
+                                                ->first();
+                                        @endphp
+                                        {{ $selectedPrognosis ? $selectedPrognosis->value : 'Tidak ditemukan' }}
+                                    @else
+                                        <span class="text-muted">Tidak ada prognosis</span>
                                     @endif
-
-                                    <div id="diagnosis-banding-list" class="diagnosis-list bg-light p-3 rounded">
-                                        <!-- Diagnosis items will be added here dynamically -->
-                                    </div>
-
-                                    <!-- Hidden input to store JSON data -->
-                                    <input type="hidden" id="diagnosis_banding" name="diagnosis_banding"
-                                        value="{{ old('diagnosis_banding', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->diagnosis_banding : '[]') }}">
                                 </div>
+                            @else
+                                <select class="form-select" name="paru_prognosis">
+                                    <option value="" disabled
+                                        {{ !old('paru_prognosis', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->paru_prognosis : '')
+                                            ? 'selected'
+                                            : '' }}>
+                                        --Pilih Prognosis--</option>
+                                    @forelse ($satsetPrognosis as $item)
+                                        <option value="{{ $item->prognosis_id }}"
+                                            {{ old(
+                                                'paru_prognosis',
+                                                isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->paru_prognosis : '',
+                                            ) == $item->prognosis_id
+                                                ? 'selected'
+                                                : '' }}>
+                                            {{ $item->value ?? 'Field tidak ditemukan' }}
+                                        </option>
+                                    @empty
+                                        <option value="" disabled>Tidak ada data</option>
+                                    @endforelse
+                                </select>
+                            @endif
+                        </div>
 
-                                <!-- Diagnosis Kerja -->
-                                <div class="mb-4">
-                                    <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
+                        <!-- 9. Perencanaan Pulang Pasien -->
+                        <div class="section-separator" id="discharge-planning">
+                            <h5 class="section-title">11. Perencanaan Pulang Pasien (Discharge Planning)</h5>
 
-                                    @if (!($readonly ?? false))
-                                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                            diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                            keterangan diagnosis kerja yang tidak ditemukan.</small>
-
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text bg-white border-end-0">
-                                                <i class="bi bi-search text-secondary"></i>
-                                            </span>
-                                            <input type="text" id="diagnosis-kerja-input"
-                                                class="form-control border-start-0 ps-0"
-                                                placeholder="Cari dan tambah Diagnosis Kerja">
-                                            <span class="input-group-text bg-white" id="add-diagnosis-kerja">
-                                                <i class="bi bi-plus-circle text-primary"></i>
-                                            </span>
-                                        </div>
-                                    @endif
-
-                                    <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
-                                        <!-- Diagnosis items will be added here dynamically -->
-                                    </div>
-
-                                    <!-- Hidden input to store JSON data -->
-                                    <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja"
-                                        value="{{ old('diagnosis_kerja', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->diagnosis_kerja : '[]') }}">
-                                </div>
-
-
+                            {{-- <div class="mb-4">
+                            <label class="form-label fw-bold">Diagnosis medis:</label>
+                            @if ($readonly ?? false)
+                            <div class="form-control-plaintext">
+                                {{ isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->diagnosis_medis : 'Tidak ada diagnosis medis' }}
                             </div>
+                            @else
+                            <input type="text" class="form-control" name="diagnosis_medis" placeholder="Diagnosis"
+                                value="{{ old('diagnosis_medis', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->diagnosis_medis : '') }}">
+                            @endif
+                        </div> --}}
 
-                            <div class="section-separator" id="rencana_pengobatan">
-                                <h5 class="fw-semibold mb-4">9. Rencana Penatalaksanaan Dan Pengobatan</h5>
-                                <div class="form-group">
-                                    <textarea class="form-control" name="rencana_pengobatan" rows="4"
-                                        placeholder="Rencana Penatalaksanaan Dan Pengobatan" {{ $readonly ?? false ? 'readonly' : '' }}>{{ old('rencana_pengobatan', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->rencana_pengobatan : '') }}</textarea>
-                                </div>
-                            </div>
-
-                            <div class="section-separator" id="prognosis">
-                                <h5 class="fw-semibold mb-4">10. Prognosis</h5>
-
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Usia lanjut (>60 th):</label>
                                 @if ($readonly ?? false)
                                     <div class="form-control-plaintext">
-                                        @if (isset($asesmen->asesmenMedisRanap) && $asesmen->asesmenMedisRanap->paru_prognosis)
-                                            @php
-                                                $selectedPrognosis = $satsetPrognosis
-                                                    ->where('prognosis_id', $asesmen->asesmenMedisRanap->paru_prognosis)
-                                                    ->first();
-                                            @endphp
-                                            {{ $selectedPrognosis ? $selectedPrognosis->value : 'Tidak ditemukan' }}
+                                        @if (isset($asesmen->asesmenMedisRanap))
+                                            {{ $asesmen->asesmenMedisRanap->usia_lanjut == 0 ? 'Ya' : 'Tidak' }}
                                         @else
-                                            <span class="text-muted">Tidak ada prognosis</span>
+                                            <span class="text-muted">Tidak ada data:</span>
                                         @endif
                                     </div>
                                 @else
-                                    <select class="form-select" name="paru_prognosis">
+                                    <select class="form-select" name="usia_lanjut">
                                         <option value="" disabled
-                                            {{ !old('paru_prognosis', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->paru_prognosis : '')
+                                            {{ !old('usia_lanjut', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->usia_lanjut : '') &&
+                                            old('usia_lanjut', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->usia_lanjut : '') !== 0
                                                 ? 'selected'
                                                 : '' }}>
-                                            --Pilih Prognosis--</option>
-                                        @forelse ($satsetPrognosis as $item)
-                                            <option value="{{ $item->prognosis_id }}"
-                                                {{ old(
-                                                    'paru_prognosis',
-                                                    isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->paru_prognosis : '',
-                                                ) == $item->prognosis_id
-                                                    ? 'selected'
-                                                    : '' }}>
-                                                {{ $item->value ?? 'Field tidak ditemukan' }}
-                                            </option>
-                                        @empty
-                                            <option value="" disabled>Tidak ada data</option>
-                                        @endforelse
+                                            --Pilih--</option>
+                                        <option value="0"
+                                            {{ old('usia_lanjut', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->usia_lanjut : '') == 0
+                                                ? 'selected'
+                                                : '' }}>
+                                            Ya</option>
+                                        <option value="1"
+                                            {{ old('usia_lanjut', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->usia_lanjut : '') == 1
+                                                ? 'selected'
+                                                : '' }}>
+                                            Tidak</option>
                                     </select>
                                 @endif
                             </div>
 
-                            <!-- 9. Perencanaan Pulang Pasien -->
-                            <div class="section-separator" id="discharge-planning">
-                                <h5 class="section-title">11. Perencanaan Pulang Pasien (Discharge Planning)</h5>
-
-                                {{-- <div class="mb-4">
-                                <label class="form-label fw-bold">Diagnosis medis:</label>
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Hambatan mobilitas:</label>
                                 @if ($readonly ?? false)
-                                <div class="form-control-plaintext">
-                                    {{ isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->diagnosis_medis : 'Tidak ada diagnosis medis' }}
-                                </div>
-                                @else
-                                <input type="text" class="form-control" name="diagnosis_medis" placeholder="Diagnosis"
-                                    value="{{ old('diagnosis_medis', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->diagnosis_medis : '') }}">
-                                @endif
-                            </div> --}}
-
-                                <div class="mb-4">
-                                    <label class="form-label fw-bold">Usia lanjut (>60 th):</label>
-                                    @if ($readonly ?? false)
-                                        <div class="form-control-plaintext">
-                                            @if (isset($asesmen->asesmenMedisRanap))
-                                                {{ $asesmen->asesmenMedisRanap->usia_lanjut == 0 ? 'Ya' : 'Tidak' }}
-                                            @else
-                                                <span class="text-muted">Tidak ada data:</span>
-                                            @endif
-                                        </div>
-                                    @else
-                                        <select class="form-select" name="usia_lanjut">
-                                            <option value="" disabled
-                                                {{ !old('usia_lanjut', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->usia_lanjut : '') &&
-                                                old('usia_lanjut', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->usia_lanjut : '') !== 0
-                                                    ? 'selected'
-                                                    : '' }}>
-                                                --Pilih--</option>
-                                            <option value="0"
-                                                {{ old('usia_lanjut', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->usia_lanjut : '') == 0
-                                                    ? 'selected'
-                                                    : '' }}>
-                                                Ya</option>
-                                            <option value="1"
-                                                {{ old('usia_lanjut', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->usia_lanjut : '') == 1
-                                                    ? 'selected'
-                                                    : '' }}>
-                                                Tidak</option>
-                                        </select>
-                                    @endif
-                                </div>
-
-                                <div class="mb-4">
-                                    <label class="form-label fw-bold">Hambatan mobilitas:</label>
-                                    @if ($readonly ?? false)
-                                        <div class="form-control-plaintext">
-                                            @if (isset($asesmen->asesmenMedisRanap))
-                                                {{ $asesmen->asesmenMedisRanap->hambatan_mobilisasi == 0 ? 'Ya' : 'Tidak' }}
-                                            @else
-                                                <span class="text-muted">Tidak ada data</span>
-                                            @endif
-                                        </div>
-                                    @else
-                                        <select class="form-select" name="hambatan_mobilisasi">
-                                            <option value="" disabled
-                                                {{ !old(
-                                                    'hambatan_mobilisasi',
-                                                    isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->hambatan_mobilisasi : '',
-                                                ) &&
-                                                old(
-                                                    'hambatan_mobilisasi',
-                                                    isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->hambatan_mobilisasi : '',
-                                                ) !== 0
-                                                    ? 'selected'
-                                                    : '' }}>
-                                                --Pilih--</option>
-                                            <option value="0"
-                                                {{ old(
-                                                    'hambatan_mobilisasi',
-                                                    isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->hambatan_mobilisasi : '',
-                                                ) == 0
-                                                    ? 'selected'
-                                                    : '' }}>
-                                                Ya</option>
-                                            <option value="1"
-                                                {{ old(
-                                                    'hambatan_mobilisasi',
-                                                    isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->hambatan_mobilisasi : '',
-                                                ) == 1
-                                                    ? 'selected'
-                                                    : '' }}>
-                                                Tidak</option>
-                                        </select>
-                                    @endif
-                                </div>
-
-                                <div class="mb-4">
-                                    <label class="form-label fw-bold">Membutuhkan pelayanan medis berkelanjutan:</label>
-                                    @if ($readonly ?? false)
-                                        <div class="form-control-plaintext">
-                                            @if (isset($asesmen->asesmenMedisRanap))
-                                                {{ ucfirst($asesmen->asesmenMedisRanap->penggunaan_media_berkelanjutan ?? 'Tidak ada data') }}
-                                            @else
-                                                <span class="text-muted">Tidak ada data</span>
-                                            @endif
-                                        </div>
-                                    @else
-                                        <select class="form-select" name="penggunaan_media_berkelanjutan">
-                                            <option value="" disabled
-                                                {{ !old(
-                                                    'penggunaan_media_berkelanjutan',
-                                                    isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->penggunaan_media_berkelanjutan : '',
-                                                )
-                                                    ? 'selected'
-                                                    : '' }}>
-                                                --Pilih--
-                                            </option>
-                                            <option value="ya"
-                                                {{ old(
-                                                    'penggunaan_media_berkelanjutan',
-                                                    isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->penggunaan_media_berkelanjutan : '',
-                                                ) == 'ya'
-                                                    ? 'selected'
-                                                    : '' }}>
-                                                Ya
-                                            </option>
-                                            <option value="tidak"
-                                                {{ old(
-                                                    'penggunaan_media_berkelanjutan',
-                                                    isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->penggunaan_media_berkelanjutan : '',
-                                                ) == 'tidak'
-                                                    ? 'selected'
-                                                    : '' }}>
-                                                Tidak</option>
-                                        </select>
-                                    @endif
-                                </div>
-
-                                <div class="mb-4">
-                                    <label class="form-label fw-bold">Keteraturan dalam mengonsumsi obat dalam aktivitas
-                                        harian:</label>
-                                    @if ($readonly ?? false)
-                                        <div class="form-control-plaintext">
-                                            @if (isset($asesmen->asesmenMedisRanap))
-                                                {{ ucfirst($asesmen->asesmenMedisRanap->ketergantungan_aktivitas ?? 'Tidak ada data') }}
-                                            @else
-                                                <span class="text-muted">Tidak ada data</span>
-                                            @endif
-                                        </div>
-                                    @else
-                                        <select class="form-select" name="ketergantungan_aktivitas">
-                                            <option value="" disabled
-                                                {{ !old(
-                                                    'ketergantungan_aktivitas',
-                                                    isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->ketergantungan_aktivitas : '',
-                                                )
-                                                    ? 'selected'
-                                                    : '' }}>
-                                                --Pilih--</option>
-                                            <option value="ya"
-                                                {{ old(
-                                                    'ketergantungan_aktivitas',
-                                                    isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->ketergantungan_aktivitas : '',
-                                                ) == 'ya'
-                                                    ? 'selected'
-                                                    : '' }}>
-                                                Ya</option>
-                                            <option value="tidak"
-                                                {{ old(
-                                                    'ketergantungan_aktivitas',
-                                                    isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->ketergantungan_aktivitas : '',
-                                                ) == 'tidak'
-                                                    ? 'selected'
-                                                    : '' }}>
-                                                Tidak
-                                            </option>
-                                        </select>
-                                    @endif
-                                </div>
-
-                                <div class="mb-4">
-                                    <label class="form-label fw-bold">Rencana Pulang Khusus:</label>
-                                    @if ($readonly ?? false)
-                                        <div class="form-control-plaintext">
-                                            {{ isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->rencana_pulang_khusus : 'Tidak ada rencana khusus' }}
-                                        </div>
-                                    @else
-                                        <input type="text" class="form-control" name="rencana_pulang_khusus"
-                                            placeholder="Rencana Pulang Khusus"
-                                            value="{{ old('rencana_pulang_khusus', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->rencana_pulang_khusus : '') }}">
-                                    @endif
-                                </div>
-
-                                <div class="mb-4">
-                                    <label class="form-label fw-bold">Rencana Lama Perawatan:</label>
-                                    @if ($readonly ?? false)
-                                        <div class="form-control-plaintext">
-                                            {{ isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->rencana_lama_perawatan : 'Tidak ada rencana' }}
-                                        </div>
-                                    @else
-                                        <input type="text" class="form-control" name="rencana_lama_perawatan"
-                                            placeholder="Rencana Lama Perawatan"
-                                            value="{{ old('rencana_lama_perawatan', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->rencana_lama_perawatan : '') }}">
-                                    @endif
-                                </div>
-
-                                <div class="mb-4">
-                                    <label class="form-label fw-bold">Rencana Tanggal Pulang:</label>
-                                    @if ($readonly ?? false)
-                                        <div class="form-control-plaintext">
-                                            @if (isset($asesmen->asesmenMedisRanap) && $asesmen->asesmenMedisRanap->rencana_tgl_pulang)
-                                                {{ \Carbon\Carbon::parse($asesmen->asesmenMedisRanap->rencana_tgl_pulang)->format('d/m/Y') }}
-                                            @else
-                                                <span class="text-muted">Tidak ada tanggal pulang</span>
-                                            @endif
-                                        </div>
-                                    @else
-                                        <input type="date" class="form-control" name="rencana_tgl_pulang"
-                                            value="{{ $asesmen->asesmenMedisRanap->rencana_tgl_pulang ? date('Y-m-d', strtotime($asesmen->asesmenMedisRanap->rencana_tgl_pulang)) : date('Y-m-d') }}">
-                                    @endif
-                                </div>
-
-                                <div class="mt-4">
-                                    <label class="form-label fw-bold">KESIMPULAN</label>
-                                    @if ($readonly ?? false)
-                                        <div class="form-control-plaintext">
-                                            @if (isset($asesmen->asesmenMedisRanap) && $asesmen->asesmenMedisRanap->kesimpulan_planing)
-                                                <div class="alert alert-info">
-                                                    {{ $asesmen->asesmenMedisRanap->kesimpulan_planing }}
-                                                </div>
-                                            @else
-                                                <div class="alert alert-secondary">
-                                                    Tidak ada kesimpulan
-                                                </div>
-                                            @endif
-                                        </div>
-                                    @else
-                                        <div class="d-flex flex-column gap-2">
-                                            <div class="alert alert-info d-none">
-                                                <!-- Alasan akan ditampilkan di sini -->
-                                            </div>
-                                            <div class="alert alert-warning d-none">
-                                                Membutuhkan rencana pulang khusus
-                                            </div>
-                                            <div class="alert alert-success">
-                                                Tidak membutuhkan rencana pulang khusus
-                                            </div>
-                                        </div>
-                                        <input type="hidden" id="kesimpulan" name="kesimpulan_planing"
-                                            value="{{ old('kesimpulan_planing', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->kesimpulan_planing : 'Tidak membutuhkan rencana pulang khusus') }}">
-                                    @endif
-                                </div>
-
-                                @if (!($readonly ?? false))
-                                    <!-- Tombol Reset (Opsional) -->
-                                    <div class="mt-3">
-                                        <button type="button" class="btn btn-secondary"
-                                            onclick="resetDischargePlanning()">
-                                            Reset Discharge Planning
-                                        </button>
+                                    <div class="form-control-plaintext">
+                                        @if (isset($asesmen->asesmenMedisRanap))
+                                            {{ $asesmen->asesmenMedisRanap->hambatan_mobilisasi == 0 ? 'Ya' : 'Tidak' }}
+                                        @else
+                                            <span class="text-muted">Tidak ada data</span>
+                                        @endif
                                     </div>
+                                @else
+                                    <select class="form-select" name="hambatan_mobilisasi">
+                                        <option value="" disabled
+                                            {{ !old(
+                                                'hambatan_mobilisasi',
+                                                isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->hambatan_mobilisasi : '',
+                                            ) &&
+                                            old(
+                                                'hambatan_mobilisasi',
+                                                isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->hambatan_mobilisasi : '',
+                                            ) !== 0
+                                                ? 'selected'
+                                                : '' }}>
+                                            --Pilih--</option>
+                                        <option value="0"
+                                            {{ old(
+                                                'hambatan_mobilisasi',
+                                                isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->hambatan_mobilisasi : '',
+                                            ) == 0
+                                                ? 'selected'
+                                                : '' }}>
+                                            Ya</option>
+                                        <option value="1"
+                                            {{ old(
+                                                'hambatan_mobilisasi',
+                                                isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->hambatan_mobilisasi : '',
+                                            ) == 1
+                                                ? 'selected'
+                                                : '' }}>
+                                            Tidak</option>
+                                    </select>
                                 @endif
                             </div>
-                        </div>
 
-                        <!-- Submit Button -->
-                        @if (!($readonly ?? false))
-                            <div class="d-flex justify-content-end mt-4">
-                                <button type="submit" class="btn btn-primary px-4">
-                                    <i class="fas fa-save me-2"></i>{{ isset($asesmen) ? 'Update' : 'Simpan' }}
-                                </button>
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Membutuhkan pelayanan medis berkelanjutan:</label>
+                                @if ($readonly ?? false)
+                                    <div class="form-control-plaintext">
+                                        @if (isset($asesmen->asesmenMedisRanap))
+                                            {{ ucfirst($asesmen->asesmenMedisRanap->penggunaan_media_berkelanjutan ?? 'Tidak ada data') }}
+                                        @else
+                                            <span class="text-muted">Tidak ada data</span>
+                                        @endif
+                                    </div>
+                                @else
+                                    <select class="form-select" name="penggunaan_media_berkelanjutan">
+                                        <option value="" disabled
+                                            {{ !old(
+                                                'penggunaan_media_berkelanjutan',
+                                                isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->penggunaan_media_berkelanjutan : '',
+                                            )
+                                                ? 'selected'
+                                                : '' }}>
+                                            --Pilih--
+                                        </option>
+                                        <option value="ya"
+                                            {{ old(
+                                                'penggunaan_media_berkelanjutan',
+                                                isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->penggunaan_media_berkelanjutan : '',
+                                            ) == 'ya'
+                                                ? 'selected'
+                                                : '' }}>
+                                            Ya
+                                        </option>
+                                        <option value="tidak"
+                                            {{ old(
+                                                'penggunaan_media_berkelanjutan',
+                                                isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->penggunaan_media_berkelanjutan : '',
+                                            ) == 'tidak'
+                                                ? 'selected'
+                                                : '' }}>
+                                            Tidak</option>
+                                    </select>
+                                @endif
                             </div>
-                        @endif
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Keteraturan dalam mengonsumsi obat dalam aktivitas
+                                    harian:</label>
+                                @if ($readonly ?? false)
+                                    <div class="form-control-plaintext">
+                                        @if (isset($asesmen->asesmenMedisRanap))
+                                            {{ ucfirst($asesmen->asesmenMedisRanap->ketergantungan_aktivitas ?? 'Tidak ada data') }}
+                                        @else
+                                            <span class="text-muted">Tidak ada data</span>
+                                        @endif
+                                    </div>
+                                @else
+                                    <select class="form-select" name="ketergantungan_aktivitas">
+                                        <option value="" disabled
+                                            {{ !old(
+                                                'ketergantungan_aktivitas',
+                                                isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->ketergantungan_aktivitas : '',
+                                            )
+                                                ? 'selected'
+                                                : '' }}>
+                                            --Pilih--</option>
+                                        <option value="ya"
+                                            {{ old(
+                                                'ketergantungan_aktivitas',
+                                                isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->ketergantungan_aktivitas : '',
+                                            ) == 'ya'
+                                                ? 'selected'
+                                                : '' }}>
+                                            Ya</option>
+                                        <option value="tidak"
+                                            {{ old(
+                                                'ketergantungan_aktivitas',
+                                                isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->ketergantungan_aktivitas : '',
+                                            ) == 'tidak'
+                                                ? 'selected'
+                                                : '' }}>
+                                            Tidak
+                                        </option>
+                                    </select>
+                                @endif
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Rencana Pulang Khusus:</label>
+                                @if ($readonly ?? false)
+                                    <div class="form-control-plaintext">
+                                        {{ isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->rencana_pulang_khusus : 'Tidak ada rencana khusus' }}
+                                    </div>
+                                @else
+                                    <input type="text" class="form-control" name="rencana_pulang_khusus"
+                                        placeholder="Rencana Pulang Khusus"
+                                        value="{{ old('rencana_pulang_khusus', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->rencana_pulang_khusus : '') }}">
+                                @endif
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Rencana Lama Perawatan:</label>
+                                @if ($readonly ?? false)
+                                    <div class="form-control-plaintext">
+                                        {{ isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->rencana_lama_perawatan : 'Tidak ada rencana' }}
+                                    </div>
+                                @else
+                                    <input type="text" class="form-control" name="rencana_lama_perawatan"
+                                        placeholder="Rencana Lama Perawatan"
+                                        value="{{ old('rencana_lama_perawatan', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->rencana_lama_perawatan : '') }}">
+                                @endif
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Rencana Tanggal Pulang:</label>
+                                @if ($readonly ?? false)
+                                    <div class="form-control-plaintext">
+                                        @if (isset($asesmen->asesmenMedisRanap) && $asesmen->asesmenMedisRanap->rencana_tgl_pulang)
+                                            {{ \Carbon\Carbon::parse($asesmen->asesmenMedisRanap->rencana_tgl_pulang)->format('d/m/Y') }}
+                                        @else
+                                            <span class="text-muted">Tidak ada tanggal pulang</span>
+                                        @endif
+                                    </div>
+                                @else
+                                    <input type="date" class="form-control" name="rencana_tgl_pulang"
+                                        value="{{ $asesmen->asesmenMedisRanap->rencana_tgl_pulang ? date('Y-m-d', strtotime($asesmen->asesmenMedisRanap->rencana_tgl_pulang)) : date('Y-m-d') }}">
+                                @endif
+                            </div>
+
+                            <div class="mt-4">
+                                <label class="form-label fw-bold">KESIMPULAN</label>
+                                @if ($readonly ?? false)
+                                    <div class="form-control-plaintext">
+                                        @if (isset($asesmen->asesmenMedisRanap) && $asesmen->asesmenMedisRanap->kesimpulan_planing)
+                                            <div class="alert alert-info">
+                                                {{ $asesmen->asesmenMedisRanap->kesimpulan_planing }}
+                                            </div>
+                                        @else
+                                            <div class="alert alert-secondary">
+                                                Tidak ada kesimpulan
+                                            </div>
+                                        @endif
+                                    </div>
+                                @else
+                                    <div class="d-flex flex-column gap-2">
+                                        <div class="alert alert-info d-none">
+                                            <!-- Alasan akan ditampilkan di sini -->
+                                        </div>
+                                        <div class="alert alert-warning d-none">
+                                            Membutuhkan rencana pulang khusus
+                                        </div>
+                                        <div class="alert alert-success">
+                                            Tidak membutuhkan rencana pulang khusus
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="kesimpulan" name="kesimpulan_planing"
+                                        value="{{ old('kesimpulan_planing', isset($asesmen->asesmenMedisRanap) ? $asesmen->asesmenMedisRanap->kesimpulan_planing : 'Tidak membutuhkan rencana pulang khusus') }}">
+                                @endif
+                            </div>
+
+                            @if (!($readonly ?? false))
+                                <!-- Tombol Reset (Opsional) -->
+                                <div class="mt-3">
+                                    <button type="button" class="btn btn-secondary"
+                                        onclick="resetDischargePlanning()">
+                                        Reset Discharge Planning
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
                     </div>
-                </div>
+
+                    <!-- Submit Button -->
+                    @if (!($readonly ?? false))
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-save me-2"></i>{{ isset($asesmen) ? 'Update' : 'Simpan' }}
+                            </button>
+                        </div>
+                    @endif
             </form>
         </div>
+    </x-content-card>
     </div>
 @endsection
 

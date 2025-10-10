@@ -59,7 +59,7 @@ class AsesmenPengkajianAwalMedis extends Controller
             'rmeMasterDiagnosis' => RmeMasterDiagnosis::all(),
             'rmeMasterImplementasi' => RmeMasterImplementasi::all(),
             'satsetPrognosis' => SatsetPrognosis::all(),
-            'alergiPasien' => RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get(),
+            'alergiPasien' => RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get(),            
         ];
     }
 
@@ -111,6 +111,8 @@ class AsesmenPengkajianAwalMedis extends Controller
         }
 
         $masterData = $this->getMasterData($kd_pasien);
+        // Get latest vital signs data for the patient
+        $vitalSignsData = $this->asesmenService->getLatestVitalSignsByPatient($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         return view(
             'unit-pelayanan.rawat-inap.pelayanan.asesmen-pengkajian-awal-medis.create',
@@ -120,6 +122,7 @@ class AsesmenPengkajianAwalMedis extends Controller
                 'tgl_masuk' => $tgl_masuk,
                 'urut_masuk' => $urut_masuk,
                 'dataMedis' => $dataMedis,
+                'vitalSignsData' => $vitalSignsData,
             ], $masterData)
         );
     }
