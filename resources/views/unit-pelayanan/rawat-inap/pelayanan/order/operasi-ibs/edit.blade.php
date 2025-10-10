@@ -11,8 +11,8 @@
                 <x-button-previous />
 
                 @include('components.page-header', [
-                    'title' => 'Edit Operasi (IBS)',
-                    'description' => 'Edit data operasi (IBS) pasien rawat inap.',
+                    'title' => 'Perbarui Operasi (IBS)',
+                    'description' => 'Perbarui data operasi (IBS) pasien rawat inap.',
                 ])
 
                 <form
@@ -129,7 +129,7 @@
                             </div>
                         </div>
                         <div class="text-end">
-                            <x-button-submit />
+                            <x-button-submit>Perbarui</x-button-submit>
                         </div>
                     </div>
                 </form>

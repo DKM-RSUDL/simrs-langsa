@@ -23,7 +23,7 @@
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th>Waktu</th> {{-- gabungan tgl_op + jam_op --}}
+                                <th>Tgl. Registrasi</th> {{-- gabungan tgl_op + jam_op --}}
                                 <th>Tgl Jadwal</th>
                                 <th>Kamar</th>
                                 <th>Spesialisasi</th>
@@ -64,18 +64,24 @@
                                     <td>{{ Str::limit($item->diagnosis ?? '-', 120) }}</td>
                                     <td>
                                         <div class="d-flex gap-2">
-                                            <a href="#" class="btn btn-sm btn-info"
-                                                data-item='@json($item)' data-bs-target="#showOperasiModal">
+                                            <a href="{{ route('rawat-inap.operasi-ibs.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->tgl_op, $item->jam_op]) }}"
+                                                class="btn btn-sm btn-info">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             <a href="{{ route('rawat-inap.operasi-ibs.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->tgl_op, $item->jam_op]) }}"
                                                 class="btn btn-sm btn-warning">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <button class="btn btn-sm btn-danger" data-item='@json($item)'
-                                                data-bs-target="#showOperasiModal">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
+                                            <form
+                                                action="{{ route('rawat-inap.operasi-ibs.delete', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $item->tgl_op, $item->jam_op]) }}"
+                                                method="post">
+                                                @csrf
+                                                @method('delete')
+
+                                                <button type="submit" class="btn btn-sm btn-danger btn-del-consent">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
@@ -94,5 +100,24 @@
 @endsection
 
 @push('js')
-    <script></script>
+    <script>
+        $('.btn-del-consent').click(function(e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: "Anda yakin?",
+                text: "Data yang dihapus tidak dapat dikembalikan",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya",
+                cancelButtonText: "Tidak"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $(this).closest('form').submit();
+                }
+            });
+        });
+    </script>
 @endpush
