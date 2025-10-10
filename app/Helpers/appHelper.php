@@ -2,6 +2,7 @@
 
 use App\Models\Kunjungan;
 use App\Models\Navigation;
+use App\Models\OrderHD;
 use App\Models\Role;
 
 if (!function_exists('getMenus')) {
@@ -475,6 +476,14 @@ if (!function_exists('countActivePatientIGD')) {
             ->whereDate('kunjungan.tgl_masuk', '>=', $tglBatasData)
             ->count();
 
+        return $result;
+    }
+}
+
+if (!function_exists('countPendingOrderHD')) {
+    function countPendingOrderHD()
+    {
+        $result = OrderHD::where('status', 0)->count();
         return $result;
     }
 }

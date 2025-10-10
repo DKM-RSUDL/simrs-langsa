@@ -23,4 +23,9 @@ class OrderHD extends Model
         'no_transaksi_hd',
         'id_serah_terima',
     ];
+
+    public function unit_asal()
+    {
+        return $this->belongsTo(Unit::class, 'kd_unit_order', 'kd_unit');
+    }
 }

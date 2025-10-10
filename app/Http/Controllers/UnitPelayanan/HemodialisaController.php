@@ -4,20 +4,28 @@ namespace App\Http\Controllers\UnitPelayanan;
 
 use App\Http\Controllers\Controller;
 use App\Models\DokterKlinik;
+use App\Models\HrdKaryawan;
 use App\Models\Kunjungan;
 use App\Models\OrderHD;
+use App\Models\RmeSerahTerima;
+use App\Services\BaseService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class HemodialisaController extends Controller
 {
     private $kdUnitDef_;
+    private $baseService;
 
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/hemodialisa');
         $this->kdUnitDef_ = 72;
+        $this->baseService = new BaseService();
     }
 
 
@@ -109,90 +117,103 @@ class HemodialisaController extends Controller
 
     public function pendingOrder(Request $request)
     {
-
         if ($request->ajax()) {
-            $dokterFilter = $request->get('dokter');
-
-            $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
-                ->join('transaksi as t', function ($join) {
-                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            $data = OrderHD::select([
+                'order_hd.*',
+                'p.nama as nama_pasien',
+                'p.tgl_lahir',
+                'p.jenis_kelamin',
+                'p.alamat',
+                'c.customer as jaminan',
+                'k.kd_pasien',
+                'u.nama_unit as unit_order'
+            ])
+                ->join('transaksi as t', function ($q) {
+                    $q->on('order_hd.kd_kasir_asal', '=', 't.kd_kasir');
+                    $q->on('order_hd.no_transaksi_asal', '=', 't.no_transaksi');
                 })
-                ->where('t.kd_unit', $this->kdUnitDef_)
-                ->whereNull('kunjungan.tgl_keluar')
-                ->whereNull('kunjungan.jam_keluar');
+                ->join('kunjungan as k', function ($q) {
+                    $q->on('t.kd_pasien', '=', 'k.kd_pasien');
+                    $q->on('t.kd_unit', '=', 'k.kd_unit');
+                    $q->on('t.tgl_transaksi', '=', 'k.tgl_masuk');
+                    $q->on('t.urut_masuk', '=', 'k.urut_masuk');
+                })
+                ->join('customer as c', 'k.kd_customer', '=', 'c.kd_customer')
+                ->join('pasien as p', 't.kd_pasien', '=', 'p.kd_pasien')
+                ->join('unit as u', 'order_hd.kd_unit_order', '=', 'u.kd_unit')
+                ->where('status', 0);
 
-            $data = OrderHD::where()
-
-            // Filte dokter
-            if (!empty($dokterFilter)) $data->where('kd_dokter', $dokterFilter);
 
             return DataTables::of($data)
-                ->filter(function ($query) use ($request) {
-                    if ($searchValue = $request->get('search')['value']) {
-                        $query->where(function ($q) use ($searchValue) {
-                            if (is_numeric($searchValue) && strlen($searchValue) == 4) {
-                                $q->whereRaw("YEAR(kunjungan.tgl_masuk) = ?", [$searchValue]);
-                            } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $searchValue)) {
-                                $q->whereRaw("CONVERT(varchar, kunjungan.tgl_masuk, 23) like ?", ["%{$searchValue}%"]);
-                            } elseif (preg_match('/^\d{2}:\d{2}$/', $searchValue)) {
-                                $q->whereRaw("FORMAT(kunjungan.jam_masuk, 'HH:mm') like ?", ["%{$searchValue}%"]);
-                            } else {
-                                $q->where('kunjungan.kd_pasien', 'like', "%{$searchValue}%")
-                                    ->orWhereHas('pasien', function ($q) use ($searchValue) {
-                                        $q->where('nama', 'like', "%{$searchValue}%")
-                                            ->orWhere('alamat', 'like', "%{$searchValue}%");
-                                    })
-                                    ->orWhereHas('dokter', function ($q) use ($searchValue) {
-                                        $q->where('nama_lengkap', 'like', "%{$searchValue}%");
-                                    })
-                                    ->orWhereHas('customer', function ($q) use ($searchValue) {
-                                        $q->where('customer', 'like', "%{$searchValue}%");
-                                    });
-                            }
-                        });
-                    }
-                })
+                // ->filter(function ($query) use ($request) {
+                //     if ($searchValue = $request->get('search')['value']) {
+                //         $query->where(function ($q) use ($searchValue) {
+                //             if (is_numeric($searchValue) && strlen($searchValue) == 4) {
+                //                 $q->whereRaw("YEAR(kunjungan.tgl_masuk) = ?", [$searchValue]);
+                //             } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $searchValue)) {
+                //                 $q->whereRaw("CONVERT(varchar, kunjungan.tgl_masuk, 23) like ?", ["%{$searchValue}%"]);
+                //             } elseif (preg_match('/^\d{2}:\d{2}$/', $searchValue)) {
+                //                 $q->whereRaw("FORMAT(kunjungan.jam_masuk, 'HH:mm') like ?", ["%{$searchValue}%"]);
+                //             } else {
+                //                 $q->where('kunjungan.kd_pasien', 'like', "%{$searchValue}%")
+                //                     ->orWhereHas('pasien', function ($q) use ($searchValue) {
+                //                         $q->where('nama', 'like', "%{$searchValue}%")
+                //                             ->orWhere('alamat', 'like', "%{$searchValue}%");
+                //                     })
+                //                     ->orWhereHas('dokter', function ($q) use ($searchValue) {
+                //                         $q->where('nama_lengkap', 'like', "%{$searchValue}%");
+                //                     })
+                //                     ->orWhereHas('customer', function ($q) use ($searchValue) {
+                //                         $q->where('customer', 'like', "%{$searchValue}%");
+                //                     });
+                //             }
+                //         });
+                //     }
+                // })
 
                 ->order(function ($query) {
-                    $query->orderBy('kunjungan.tgl_masuk', 'desc')
-                        ->orderBy('kunjungan.antrian', 'desc')
-                        ->orderBy('kunjungan.urut_masuk', 'desc');
+                    $query->orderBy('order_hd.tgl_order', 'desc')
+                        ->orderBy('order_hd.jam_order', 'desc');
                 })
-                ->editColumn('tgl_masuk', fn($row) => date('Y-m-d', strtotime($row->tgl_masuk)) ?: '-')
-                ->addColumn('bed', fn($row) => '' ?: '-')
-                ->addColumn('no_rm', fn($row) => $row->kd_pasien ?: '-')
-                ->addColumn('alamat', fn($row) =>  $row->pasien->alamat ?: '-')
-                ->addColumn('jaminan', fn($row) =>  $row->customer->customer ?: '-')
-                ->addColumn('instruksi', fn($row) => '' ?: '-')
-                ->addColumn('kd_dokter', fn($row) => $row->dokter->nama ?: '-')
-                ->addColumn('waktu_masuk', function ($row) {
-
-                    $tglMasuk = Carbon::parse($row->tgl_masuk)->format('d M Y');
-                    $jamMasuk = date('H:i', strtotime($row->jam_masuk));
-                    return "$tglMasuk $jamMasuk";
+                ->addColumn('waktu_order', function ($row) {
+                    $tglOrder = Carbon::parse($row->tgl_order)->format('d M Y');
+                    $jamOrder = date('H:i', strtotime($row->jam_order));
+                    return "$tglOrder $jamOrder";
                 })
-                // Hitung umur dari tabel pasien
                 ->addColumn('umur', function ($row) {
-                    return $row->pasien && $row->pasien->tgl_lahir
-                        ? Carbon::parse($row->pasien->tgl_lahir)->age . ''
-                        : 'Tidak diketahui';
+                    return hitungUmur($row->tgl_lahir);
                 })
-                ->addColumn('action', fn($row) => $row->kd_pasien)  // Return raw data, no HTML
-                ->addColumn('del', fn($row) => $row->kd_pasien)     // Return raw data
-                ->addColumn('profile', fn($row) => $row)
-                ->rawColumns(['action', 'del', 'profile'])
+                ->addColumn('id_hash', function ($row) {
+                    return encrypt($row->id);
+                })
                 ->make(true);
         }
 
-        $dokter = DokterKlinik::with(['dokter', 'unit'])
-            ->where('kd_unit', 215)
-            ->whereRelation('dokter', 'status', 1)
+        return view('unit-pelayanan.hemodialisa.pending-order');
+    }
+
+    public function terimaOrder($idEncrypt)
+    {
+        $id = decrypt($idEncrypt);
+
+        // cek order
+        $order = OrderHD::find($id);
+        if (empty($order)) return back()->with('error', 'Order tidak ditemukan');
+
+        // get kunjungan asal
+        $dataMedis = $this->baseService->getDataMedisbyTransaksi($order->kd_kasir_asal, $order->no_transaksi_asal);
+        if (empty($dataMedis)) return back()->with('error', 'data kunjungan asal tidak ditemukan');
+
+        // get data serah terima
+        $serahTerima = RmeSerahTerima::find($order->id_serah_terima);
+
+        $petugas = HrdKaryawan::where('kd_jenis_tenaga', 2)
+            ->where('kd_detail_jenis_tenaga', 1)
+            ->where('status_peg', 1)
+            ->where('kd_karyawan', '!=', Auth::user()->kd_karyawan)
             ->get();
 
-        return view('unit-pelayanan.hemodialisa.index', compact('dokter'));
+        return view('unit-pelayanan.hemodialisa.pelayanan.order.terima.index', compact('dataMedis','order', 'serahTerima', 'petugas'));
     }
 
     public function pelayanan($kd_pasien, $tgl_masuk, $urut_masuk)
