@@ -50,8 +50,8 @@
     </style>
 @endpush
 
-<div class="d-flex justify-content-start align-items-center m-3">
-    <div class="row g-3 w-100">
+<div class="d-flex flex-column gap-3">
+    <div class="row g-3">
         <!-- Select Episode Option -->
         <div class="col-md-2">
             <select class="form-select" id="SelectEpisode" aria-label="Pilih...">
@@ -86,94 +86,111 @@
         </div>
 
         <!-- Button "Tambah" di sebelah kanan -->
-        <div class="col-md-4 text-end ms-auto">
+        <div class="col-md-4 text-end">
             <div class="btn-group">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="fas fa-plus"></i> Tambah
+                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <i class="fas fa-plus"></i> Tambah
                 </button>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.medis.create', [$dataMedis->kd_pasien,date('Y-m-d', strtotime($dataMedis->tgl_masuk)),$dataMedis->urut_masuk]) }}">Pra Operatif Medis</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.perawat.create', [$dataMedis->kd_pasien,date('Y-m-d', strtotime($dataMedis->tgl_masuk)),$dataMedis->urut_masuk]) }}">Pra Operatif Perawat</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.edukasi.create', [$dataMedis->kd_pasien,date('Y-m-d', strtotime($dataMedis->tgl_masuk)),$dataMedis->urut_masuk]) }}">Edukasi Anestesi</a></li>
+                    <li><a class="dropdown-item"
+                            href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.medis.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">Pra
+                            Operatif Medis</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item"
+                            href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.perawat.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">Pra
+                            Operatif Perawat</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item"
+                            href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.edukasi.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">Edukasi
+                            Anestesi</a></li>
                 </ul>
             </div>
         </div>
     </div>
+
+    <ul class="list-group d-flex flex-column gap-2" id="asesmenList">
+        @foreach ($asesmen as $item)
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                <div class="d-flex align-items-center gap-4">
+                    <!-- Tanggal -->
+                    <div class="text-center px-3">
+                        <div class="fw-bold fs-4 mb-0 text-primary">
+                            {{ date('d', strtotime($item->waktu_asesmen)) }}
+                        </div>
+                        <div class="text-muted" style="font-size: 0.85rem;">
+                            {{ date('M-y', strtotime($item->waktu_asesmen)) }}
+                        </div>
+                        <div class="text-muted" style="font-size: 0.85rem;">
+                            {{ date('H:i', strtotime($item->waktu_asesmen)) }}
+                        </div>
+                    </div>
+
+                    <!-- Avatar dan Info -->
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle border border-2"
+                            alt="Foto Pasien" width="60" height="60">
+                        <div>
+                            <div class="text-primary fw-bold mb-1">
+                                Asesmen {{ kategoriAsesmenOKlabel($item->kategori) }}
+                            </div>
+                            <div class="text-muted">
+                                By: <span class="fw-semibold">{{ $item->userCreate->name }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex gap-2">
+                    @if ($item->kategori == 1)
+                        <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.medis.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                            class="btn btn-info btn-sm px-3">
+                            <i class="fas fa-eye me-1"></i>
+                            Lihat
+                        </a>
+
+                        <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.medis.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                            class="btn btn-sm btn-secondary">
+                            <i class="fas fa-edit"></i>
+                            Edit
+                        </a>
+                    @endif
+
+                    @if ($item->kategori == 2)
+                        <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.perawat.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                            class="btn btn-info btn-sm px-3">
+                            <i class="fas fa-eye me-1"></i>
+                            Lihat
+                        </a>
+
+                        <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.perawat.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                            class="btn btn-sm btn-secondary">
+                            <i class="fas fa-edit"></i>
+                            Edit
+                        </a>
+                    @endif
+
+                    @if ($item->kategori == 3)
+                        <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.edukasi.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                            class="btn btn-info btn-sm px-3">
+                            <i class="fas fa-eye me-1"></i>
+                            Lihat
+                        </a>
+
+                        <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.edukasi.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                            class="btn btn-sm btn-secondary">
+                            <i class="fas fa-edit"></i>
+                            Edit
+                        </a>
+                    @endif
+                </div>
+            </li>
+        @endforeach
+    </ul>
 </div>
-
-<ul class="list-group" id="asesmenList">
-    @foreach ($asesmen as $item)
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-
-            <div class="d-flex align-items-center gap-4">
-                <!-- Tanggal -->
-                <div class="text-center px-3">
-                    <div class="fw-bold fs-4 mb-0 text-primary">
-                        {{ date('d', strtotime($item->waktu_asesmen)) }}
-                    </div>
-                    <div class="text-muted" style="font-size: 0.85rem;">
-                        {{ date('M-y', strtotime($item->waktu_asesmen)) }}
-                    </div>
-                    <div class="text-muted" style="font-size: 0.85rem;">
-                        {{ date('H:i', strtotime($item->waktu_asesmen)) }}
-                    </div>
-                </div>
-
-                <!-- Avatar dan Info -->
-                <div class="d-flex align-items-center gap-3">
-                    <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle border border-2"
-                        alt="Foto Pasien" width="60" height="60">
-                    <div>
-                        <div class="text-primary fw-bold mb-1">
-                            Asesmen {{ kategoriAsesmenOKlabel($item->kategori) }}
-                        </div>
-                        <div class="text-muted">
-                            By: <span class="fw-semibold">{{ $item->userCreate->name }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="d-flex gap-2">
-                @if($item->kategori == 1)
-                    <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.medis.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-info btn-sm px-3">
-                        <i class="fas fa-eye me-1"></i>
-                        Lihat
-                    </a>
-
-                    <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.medis.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-sm btn-secondary">
-                        <i class="fas fa-edit"></i>
-                        Edit
-                    </a>
-                @endif
-
-                @if($item->kategori == 2)
-                    <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.perawat.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-info btn-sm px-3">
-                        <i class="fas fa-eye me-1"></i>
-                        Lihat
-                    </a>
-
-                    <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.perawat.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-sm btn-secondary">
-                        <i class="fas fa-edit"></i>
-                        Edit
-                    </a>
-                @endif
-
-                @if($item->kategori == 3)
-                    <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.edukasi.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-info btn-sm px-3">
-                        <i class="fas fa-eye me-1"></i>
-                        Lihat
-                    </a>
-
-                    <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.edukasi.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-sm btn-secondary">
-                        <i class="fas fa-edit"></i>
-                        Edit
-                    </a>
-                @endif
-            </div>
-        </li>
-    @endforeach
-</ul>

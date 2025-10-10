@@ -82,13 +82,6 @@ class PraAnestesiMedisController extends Controller
                 'waktu_tindakan'        => "$request->tgl_tindakan $request->jam_tindakan",
                 'alternatif_lain'       => $request->alternatif_lain,
                 'resiko'                => $request->resiko,
-                'sistole'               => $request->sistole,
-                'diastole'              => $request->diastole,
-                'nadi'                  => $request->nadi,
-                'nafas'                 => $request->nafas,
-                'suhu'                  => $request->suhu,
-                'evaluasi'              => $request->evaluasi,
-                'penanganan_nyeri'      => $request->penanganan_nyeri,
             ];
 
             OkPraOperasiMedis::create($data);
@@ -155,13 +148,6 @@ class PraAnestesiMedisController extends Controller
                 'waktu_tindakan'        => "$request->tgl_tindakan $request->jam_tindakan",
                 'alternatif_lain'       => $request->alternatif_lain,
                 'resiko'                => $request->resiko,
-                'sistole'               => $request->sistole,
-                'diastole'              => $request->diastole,
-                'nadi'                  => $request->nadi,
-                'nafas'                 => $request->nafas,
-                'suhu'                  => $request->suhu,
-                'evaluasi'              => $request->evaluasi,
-                'penanganan_nyeri'      => $request->penanganan_nyeri,
             ];
 
             OkPraOperasiMedis::where('id', $id)->update($data);
