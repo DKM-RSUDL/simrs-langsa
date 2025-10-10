@@ -78,7 +78,10 @@
                                                 @csrf
                                                 @method('delete')
 
-                                                <button type="submit" class="btn btn-sm btn-danger btn-del-consent">
+                                                <button type="submit" class="btn btn-sm btn-danger" data-confirm
+                                                    data-confirm-title="Anda yakin?"
+                                                    data-confirm-text="Data yang dihapus tidak dapat dikembalikan"
+                                                    title="Hapus operasi" aria-label="Hapus operasi">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </form>
@@ -100,24 +103,5 @@
 @endsection
 
 @push('js')
-    <script>
-        $('.btn-del-consent').click(function(e) {
-            e.preventDefault();
-
-            Swal.fire({
-                title: "Anda yakin?",
-                text: "Data yang dihapus tidak dapat dikembalikan",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Ya",
-                cancelButtonText: "Tidak"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $(this).closest('form').submit();
-                }
-            });
-        });
-    </script>
+    <script src="{{ asset('js/helpers/confirm.js') }}"></script>
 @endpush
