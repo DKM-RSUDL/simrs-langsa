@@ -211,7 +211,8 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Nafas (Per Menit)</label>
                                         <input type="text" class="form-control" name="nafas"
-                                            placeholder="frekuensi nafas per menit">
+                                            placeholder="frekuensi nafas per menit"
+                                            value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->respiration : '' }}">
                                     </div>
 
                                     <div class="form-group">
@@ -228,13 +229,13 @@
                                                 <label class="form-label">Tanpa O2</label>
                                                 <input type="text" class="form-control" name="spo2_tanpa_bantuan"
                                                     placeholder="tanpa_o2"
-                                                    value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->sao2 : '' }}">
+                                                    value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->spo2_tanpa_o2 : '' }}">
                                             </div>
                                             <div class="flex-grow-1">
                                                 <label class="form-label">Dengan O2</label>
                                                 <input type="text" class="form-control" name="spo2_dengan_bantuan"
                                                     placeholder="dengan_o2"
-                                                    value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->o2 : '' }}">
+                                                    value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->spo2_dengan_o2 : '' }}">
                                             </div>
                                         </div>
                                     </div>

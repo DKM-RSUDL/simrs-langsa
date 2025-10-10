@@ -70,7 +70,7 @@
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
                                     <input type="number" class="form-control" name="distole" placeholder="Diastole"
-                                           value="{{ isset($vitalSigns) && $vitalSigns ? $vitalSigns->distole : '' }}">
+                                           value="{{ isset($vitalSigns) && $vitalSigns ? $vitalSigns->diastole : '' }}">
                                     <span class="input-group-text">mmHg</span>
                                 </div>
                             </div>
@@ -80,7 +80,7 @@
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
                                     <input type="number" class="form-control" name="nafas" placeholder="Nafas"
-                                           value="{{ isset($vitalSigns) && $vitalSigns ? $vitalSigns->nafas : '' }}">
+                                           value="{{ isset($vitalSigns) && $vitalSigns ? $vitalSigns->respiration : '' }}">
                                     <span class="input-group-text">kali/mnt</span>
                                 </div>
                             </div>
@@ -100,7 +100,7 @@
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
                                     <input type="number" class="form-control" name="sao2" placeholder="SaO2"
-                                           value="{{ isset($vitalSigns) && $vitalSigns ? $vitalSigns->sao2 : '' }}">
+                                           value="{{ isset($vitalSigns) && $vitalSigns ? $vitalSigns->spo2_tanpa_o2 : '' }}">
                                     <span class="input-group-text">%</span>
                                 </div>
                             </div>
@@ -110,7 +110,7 @@
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
                                     <input type="number" class="form-control" name="tb" placeholder="TB"
-                                           value="{{ isset($vitalSigns) && $vitalSigns ? $vitalSigns->tb : '' }}">
+                                           value="{{ isset($vitalSigns) && $vitalSigns ? $vitalSigns->tinggi_badan : '' }}">
                                     <span class="input-group-text">cm</span>
                                 </div>
                             </div>
@@ -120,7 +120,7 @@
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
                                     <input type="number" class="form-control" name="bb" placeholder="BB"
-                                           value="{{ isset($vitalSigns) && $vitalSigns ? $vitalSigns->bb : '' }}">
+                                           value="{{ isset($vitalSigns) && $vitalSigns ? $vitalSigns->berat_badan : '' }}">
                                     <span class="input-group-text">Kg</span>
                                 </div>
                             </div>

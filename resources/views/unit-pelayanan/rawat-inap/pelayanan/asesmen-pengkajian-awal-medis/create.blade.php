@@ -142,7 +142,7 @@
                                             <label class="form-label">Diastole</label>
                                             <input type="number" class="form-control" name="diastole"
                                                 placeholder="Diastole"
-                                                value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->distole : '' }}">
+                                                value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->diastole : '' }}">
                                         </div>
                                     </div>
                                 </div>
@@ -151,7 +151,7 @@
                                     <label style="min-width: 200px;">Respirasi (x/menit)</label>
                                     <input type="number" class="form-control" name="respirasi"
                                         placeholder="Respirasi per menit"
-                                        value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->nafas : '' }}">
+                                        value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->respiration : '' }}">
                                 </div>
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Suhu (C)</label>

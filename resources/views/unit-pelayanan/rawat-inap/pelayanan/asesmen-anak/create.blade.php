@@ -270,7 +270,7 @@
                                                 <label class="form-label">Diastole</label>
                                                 <input type="number" class="form-control" name="diastole"
                                                     placeholder="Diastole"
-                                                    value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->distole : '' }}">
+                                                    value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->diastole : '' }}">
                                             </div>
                                         </div>
                                     </div>
@@ -286,7 +286,7 @@
                                         <label style="min-width: 200px;">Nafas (Per Menit)</label>
                                         <input type="number" class="form-control" name="nafas"
                                             placeholder="frekuensi nafas per menit"
-                                            value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->nafas : '' }}">
+                                            value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->respiration : '' }}">
                                     </div>
 
                                     <div class="form-group">
@@ -303,13 +303,13 @@
                                                 <label class="form-label">Tanpa Bantuan O2</label>
                                                 <input type="number" class="form-control" name="saturasi_o2_tanpa"
                                                     placeholder="Tanpa bantuan O2"
-                                                    value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->sao2 : '' }}">
+                                                    value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->spo2_tanpa_o2 : '' }}">
                                             </div>
                                             <div class="flex-grow-1">
                                                 <label class="form-label">Dengan Bantuan O2</label>
                                                 <input type="number" class="form-control" name="saturasi_o2_dengan"
                                                     placeholder="Dengan bantuan O2"
-                                                    value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->o2 : '' }}">
+                                                    value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->spo2_dengan_o2 : '' }}">
                                             </div>
                                         </div>
                                     </div>
@@ -487,14 +487,14 @@
                                             <label style="min-width: 200px;">Tinggi Badan (Cm)</label>
                                             <input type="number" id="tinggi_badan" name="tinggi_badan"
                                                 class="form-control"
-                                                value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->tb : '' }}">
+                                                value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->tinggi_badan : '' }}">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Berat Badan (Kg)</label>
                                             <input type="number" id="berat_badan" name="berat_badan"
                                                 class="form-control"
-                                                value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->bb : '' }}">
+                                                value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->berat_badan : '' }}">
                                         </div>
 
                                         <div class="form-group">

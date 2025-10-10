@@ -101,13 +101,13 @@ class AsesmenService
                 return (object) [
                     'nadi' => $vitalSign->nadi,
                     'sistole' => $vitalSign->sistole,
-                    'distole' => $vitalSign->diastole,
-                    'nafas' => $vitalSign->respiration,
+                    'diastole' => $vitalSign->diastole,
+                    'respiration' => $vitalSign->respiration,
                     'suhu' => $vitalSign->suhu,
-                    'sao2' => $vitalSign->spo2_tanpa_o2,
-                    'o2' => $vitalSign->spo2_dengan_o2,
-                    'tb' => $vitalSign->tinggi_badan,
-                    'bb' => $vitalSign->berat_badan,
+                    'spo2_tanpa_o2' => $vitalSign->spo2_tanpa_o2,
+                    'spo2_dengan_o2' => $vitalSign->spo2_dengan_o2,
+                    'tinggi_badan' => $vitalSign->tinggi_badan,
+                    'berat_badan' => $vitalSign->berat_badan,
                     'original' => $vitalSign
                 ];
             }
