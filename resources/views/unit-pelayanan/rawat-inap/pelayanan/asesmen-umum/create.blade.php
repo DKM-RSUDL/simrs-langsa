@@ -9,22 +9,20 @@
     </div>
 
     <div class="col-md-9">
-        <a href="{{ url()->previous() }}" class="btn btn-secondary mb-3">
-            <i class="ti-arrow-left"></i> Kembali
-        </a>
-        <div class="">
-            <div class="card-body">
-                <h4 class="header-asesmen">Asesmen Awal Keperawatan Rawat Inap Dewasa</h4>
-                <p class="text-muted">
-                    Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan
-                </p>
+        <x-content-card>
+            <x-button-previous />
+                @include('components.page-header', [
+                    'title' => 'Asesmen Awal Keperawatan Rawat Inap Dewasa',
+                    'description' =>
+                    'Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan',
+                ])
 
                 <form id="asesmenForm" method="POST" action="{{ route('rawat-inap.asesmen.keperawatan.umum.create', [
                         'kd_unit' => $kd_unit,
                         'kd_pasien' => $kd_pasien,
                         'tgl_masuk' => $tgl_masuk,
                         'urut_masuk' => $urut_masuk,
-                    ]) }}" class="mt-4">
+                    ]) }}" class="d-flex flex-column gap-4">
                     @csrf
                     <div class="section-separator" id="data-umum">
                         <h5 class="section-title">1. DATA UMUM</h5>
@@ -51,7 +49,7 @@
                             <label class="col-sm-3 col-form-label">Nadi:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="number" class="form-control" name="nadi" placeholder="Nadi" 
+                                    <input type="number" class="form-control" name="nadi" placeholder="Nadi"
                                            value="{{ isset($vitalSigns) && $vitalSigns ? $vitalSigns->nadi : '' }}">
                                     <span class="input-group-text">kali/mnt</span>
                                 </div>
@@ -61,7 +59,7 @@
                             <label class="col-sm-3 col-form-label">Sistole:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="number" class="form-control" name="sistole" placeholder="Sistole" 
+                                    <input type="number" class="form-control" name="sistole" placeholder="Sistole"
                                            value="{{ isset($vitalSigns) && $vitalSigns ? $vitalSigns->sistole : '' }}">
                                     <span class="input-group-text">mmHg</span>
                                 </div>
@@ -71,7 +69,7 @@
                             <label class="col-sm-3 col-form-label">Diastole:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="number" class="form-control" name="distole" placeholder="Diastole" 
+                                    <input type="number" class="form-control" name="distole" placeholder="Diastole"
                                            value="{{ isset($vitalSigns) && $vitalSigns ? $vitalSigns->distole : '' }}">
                                     <span class="input-group-text">mmHg</span>
                                 </div>
@@ -81,7 +79,7 @@
                             <label class="col-sm-3 col-form-label">Nafas:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="number" class="form-control" name="nafas" placeholder="Nafas" 
+                                    <input type="number" class="form-control" name="nafas" placeholder="Nafas"
                                            value="{{ isset($vitalSigns) && $vitalSigns ? $vitalSigns->nafas : '' }}">
                                     <span class="input-group-text">kali/mnt</span>
                                 </div>
@@ -91,7 +89,7 @@
                             <label class="col-sm-3 col-form-label">Suhu:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="text" step="0.1" class="form-control" name="suhu" placeholder="Suhu" 
+                                    <input type="text" step="0.1" class="form-control" name="suhu" placeholder="Suhu"
                                            value="{{ isset($vitalSigns) && $vitalSigns ? $vitalSigns->suhu : '' }}">
                                     <span class="input-group-text">°C</span>
                                 </div>
@@ -101,7 +99,7 @@
                             <label class="col-sm-3 col-form-label">SaO2:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="number" class="form-control" name="sao2" placeholder="SaO2" 
+                                    <input type="number" class="form-control" name="sao2" placeholder="SaO2"
                                            value="{{ isset($vitalSigns) && $vitalSigns ? $vitalSigns->sao2 : '' }}">
                                     <span class="input-group-text">%</span>
                                 </div>
@@ -111,7 +109,7 @@
                             <label class="col-sm-3 col-form-label">TB:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="number" class="form-control" name="tb" placeholder="TB" 
+                                    <input type="number" class="form-control" name="tb" placeholder="TB"
                                            value="{{ isset($vitalSigns) && $vitalSigns ? $vitalSigns->tb : '' }}">
                                     <span class="input-group-text">cm</span>
                                 </div>
@@ -121,7 +119,7 @@
                             <label class="col-sm-3 col-form-label">BB:</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-2">
-                                    <input type="number" class="form-control" name="bb" placeholder="BB" 
+                                    <input type="number" class="form-control" name="bb" placeholder="BB"
                                            value="{{ isset($vitalSigns) && $vitalSigns ? $vitalSigns->bb : '' }}">
                                     <span class="input-group-text">Kg</span>
                                 </div>
@@ -4313,8 +4311,7 @@
                         <x-button-submit />
                     </div>
                 </form>
-            </div>
-        </div>
+        </x-content-card>
     </div>
 </div>
 @endsection

@@ -9,18 +9,14 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ url()->previous() }}" class="btn btn-secondary mb-3">
-                <i class="ti-arrow-left"></i> Kembali
-            </a>
-            <div class="">
-                <div class="card-body">
-                    <h4 class="header-asesmen"><span class="text-info">Detail</span> Asesmen Awal Keperawatan Rawat Inap
-                        Dewasa</h4>
-                    <p class="text-muted">
-                        Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan
-                    </p>
-
-                    <form method="" action="" class="mt-4">
+            <x-content-card>
+                <x-button-previous />
+                    @include('components.page-header', [
+                        'title' => 'Detail Asesmen Awal Keperawatan Rawat Inap Dewasa',
+                        'description' =>
+                        'Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan',
+                    ])
+                    <form method="" action="" class="d-flex flex-column gap-4">
                         @csrf
                         <div class="section-separator" id="data-umum">
                             <h5 class="section-title">1. DATA UMUM</h5>
@@ -6498,8 +6494,7 @@
                         </div>
 
                     </form>
-                </div>
-            </div>
+            </x-content-card>
         </div>
     </div>
 @endsection

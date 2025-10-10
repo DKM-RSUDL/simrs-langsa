@@ -48,7 +48,6 @@
 
         .section-separator {
             border-top: 2px solid #097dd6;
-            margin: 2rem 0;
             padding-top: 1rem;
         }
 
@@ -171,7 +170,6 @@
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
         .section-separator {
-            margin: 2rem 0;
             padding: 2rem;
             border: 2px solid #dee2e6;
             border-radius: 15px;
