@@ -13,22 +13,15 @@
         <div class="col-md-9">
             @include('components.navigation-operasi')
 
-            <div class="d-flex justify-content-center">
-                <div class="card w-100 h-100">
-                    <div class="card-body">
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="pra-anestesi" role="tabpanel"
-                                aria-labelledby="pra-anestesi-tab">
-                                {{-- TAB 1. buatlah list disini --}}
-                                @include('unit-pelayanan.operasi.pelayanan.laporan-operatif.laporan-operasi')
-                            </div>
-                        </div>
+            <x-content-card>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="pra-anestesi" role="tabpanel"
+                        aria-labelledby="pra-anestesi-tab">
+                        {{-- TAB 1. buatlah list disini --}}
+                        @include('unit-pelayanan.operasi.pelayanan.laporan-operatif.laporan-operasi')
                     </div>
                 </div>
-            </div>
+            </x-content-card>
         </div>
     </div>
 @endsection
-
-@push('js')
-@endpush
