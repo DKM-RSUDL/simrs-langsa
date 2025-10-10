@@ -6,12 +6,14 @@
 
     <div class="row">
         <div class="col-md-3">
-            @include('unit-pelayanan.operasi.pelayanan.asesmen.pra-anestesi.medis.patient-card')
+            @include('components.patient-card')
         </div>
 
         <div class="col-md-9">
 
-            <form method="POST" action="{{ route('operasi.pelayanan.asesmen.pra-anestesi.edukasi.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" enctype="multipart/form-data">
+            <form method="POST"
+                action="{{ route('operasi.pelayanan.asesmen.pra-anestesi.edukasi.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                enctype="multipart/form-data">
                 @csrf
 
                 <div class="d-flex justify-content-center">
@@ -38,11 +40,13 @@
                                         <h5 class="section-title">2. Jenis Anestesi</h5>
 
                                         <div class="form-group">
-                                            <label for="jenis_anestesi" style="min-width: 200px;">Jenis Anestesi Yang Digunakan</label>
+                                            <label for="jenis_anestesi" style="min-width: 200px;">Jenis Anestesi Yang
+                                                Digunakan</label>
                                             <select name="jenis_anestesi" id="jenis_anestesi" class="form-select">
                                                 <option value="">--Pilih--</option>
                                                 @foreach ($jenisAnastesi as $item)
-                                                    <option value="{{ $item->kd_jenis_anastesi }}">{{ $item->jenis_anastesi }}</option>
+                                                    <option value="{{ $item->kd_jenis_anastesi }}">
+                                                        {{ $item->jenis_anastesi }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -62,13 +66,15 @@
                                                 <tr>
                                                     <td>Anestesi Umum (GA – General Anesthesia)</td>
                                                     <td>
-                                                        Pasien tidak sadar sepenuhnya selama operasi dan memerlukan alat bantu napas.
+                                                        Pasien tidak sadar sepenuhnya selama operasi dan memerlukan alat
+                                                        bantu napas.
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Anestesi Regional (Spinal, Epidural)</td>
                                                     <td>
-                                                        Membius sebagian tubuh, pasien tetap sadar tetapi tidak merasakan nyeri di area tertentu.
+                                                        Membius sebagian tubuh, pasien tetap sadar tetapi tidak merasakan
+                                                        nyeri di area tertentu.
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -76,19 +82,22 @@
                                                         Blok Perifer
                                                     </td>
                                                     <td>
-                                                        Anestesi regional yang diberikan di sekitar saraf tertentu untuk membius bagian tubuh tertentu tanpa mempengaruhi kesadaran pasien.
+                                                        Anestesi regional yang diberikan di sekitar saraf tertentu untuk
+                                                        membius bagian tubuh tertentu tanpa mempengaruhi kesadaran pasien.
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Sedasi Sedang dan Dalam</td>
                                                     <td>
-                                                        Pasien dalam keadaan rileks atau tertidur ringan tanpa kehilangan kesadaran sepenuhnya
+                                                        Pasien dalam keadaan rileks atau tertidur ringan tanpa kehilangan
+                                                        kesadaran sepenuhnya
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Anestesia Topikal</td>
                                                     <td>
-                                                        Membius area kecil tanpa mempengaruhi kesadaran pasien, misalnya untuk operasi kecil.
+                                                        Membius area kecil tanpa mempengaruhi kesadaran pasien, misalnya
+                                                        untuk operasi kecil.
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -97,7 +106,8 @@
 
                                     <div class="section-separator" id="edukasiPasien">
                                         <h5 class="section-title">3. Edukasi Pasien</h5>
-                                        <p>Bagian ini mencatat informasi yang telah diberikan kepada pasien untuk memastikan mereka memahami prosedur anestesi.</p>
+                                        <p>Bagian ini mencatat informasi yang telah diberikan kepada pasien untuk memastikan
+                                            mereka memahami prosedur anestesi.</p>
 
                                         <div class="text-center">
                                             <p class="fw-bold fs-4">Penjelasan Singkat Jenis Anestesi</p>
@@ -147,7 +157,8 @@
                                                     <td>Instruksi Pra-Anestesi</td>
                                                     <td>
                                                         <ul style="margin: 0; padding-left: 20px;">
-                                                            <li>Pasien harus puasa sebelum anestesi untuk mencegah aspirasi.</li>
+                                                            <li>Pasien harus puasa sebelum anestesi untuk mencegah aspirasi.
+                                                            </li>
                                                             <li>Penghentian obat tertentu sebelum operasi.</li>
                                                             <li>Memberitahu dokter jika memiliki riwayat alergi obat.</li>
                                                         </ul>
@@ -158,7 +169,8 @@
                                                     <td>
                                                         <ul style="margin: 0; padding-left: 20px;">
                                                             <li> Pasien mungkin merasa lelah setelah anestesi.</li>
-                                                            <li>Larangan mengemudi atau mengoperasikan mesin selama 24 jam setelah anestesi.</li>
+                                                            <li>Larangan mengemudi atau mengoperasikan mesin selama 24 jam
+                                                                setelah anestesi.</li>
                                                             <li>Pengelolaan nyeri pasca-tindakan jika diperlukan.</li>
                                                         </ul>
                                                     </td>
@@ -167,7 +179,8 @@
                                         </table>
 
                                         <div class="form-group">
-                                            <label for="edukasi_prosedur" style="min-width: 200px;">Edukasi tentang prosedur operasi</label>
+                                            <label for="edukasi_prosedur" style="min-width: 200px;">Edukasi tentang prosedur
+                                                operasi</label>
                                             <select name="edukasi_prosedur" id="edukasi_prosedur" class="form-select">
                                                 <option value="">--Pilih--</option>
                                                 <option value="1">Sudah</option>
@@ -190,7 +203,8 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="informed_consent" style="max-width: 200px;">Persetujuan Tindakan (Informed Consent)</label>
+                                            <label for="informed_consent" style="max-width: 200px;">Persetujuan Tindakan
+                                                (Informed Consent)</label>
                                             <select name="informed_consent" id="informed_consent" class="form-select">
                                                 <option value="">--Pilih--</option>
                                                 <option value="1">Ya</option>
@@ -198,16 +212,20 @@
                                             </select>
                                         </div>
 
-                                        <p>Data Persetujuan Prosedur Anestesia dan sedasi yang akan dilakukan. Diisi oleh pasien/istri/suami anak/ayah/ibu.</p>
+                                        <p>Data Persetujuan Prosedur Anestesia dan sedasi yang akan dilakukan. Diisi oleh
+                                            pasien/istri/suami anak/ayah/ibu.</p>
 
                                         <div class="form-group">
-                                            <label for="nama_keluarga" style="min-width: 200px;">Nama Yang Bertanda Tangan</label>
-                                            <input type="text" class="form-control" name="nama_keluarga" id="nama_keluarga">
+                                            <label for="nama_keluarga" style="min-width: 200px;">Nama Yang Bertanda
+                                                Tangan</label>
+                                            <input type="text" class="form-control" name="nama_keluarga"
+                                                id="nama_keluarga">
                                         </div>
 
                                         <div class="form-group">
                                             <label for="usia_keluarga" style="min-width: 200px;">Usia (tahun)</label>
-                                            <input type="number" class="form-control" name="usia_keluarga" id="usia_keluarga">
+                                            <input type="number" class="form-control" name="usia_keluarga"
+                                                id="usia_keluarga">
                                         </div>
 
                                         <div class="form-group">
@@ -221,28 +239,37 @@
 
                                         <div class="form-group">
                                             <label for="no_telepon" style="min-width: 200px;">No Telepon</label>
-                                            <input type="number" class="form-control" name="no_telepon" id="no_telepon">
+                                            <input type="number" class="form-control" name="no_telepon"
+                                                id="no_telepon">
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="dokter_edukasi" style="max-width: 200px;">Dokter Yang Memberikan Edukasi</label>
-                                            <select name="dokter_edukasi" id="dokter_edukasi" class="form-select select2">
+                                            <label for="dokter_edukasi" style="max-width: 200px;">Dokter Yang Memberikan
+                                                Edukasi</label>
+                                            <select name="dokter_edukasi" id="dokter_edukasi"
+                                                class="form-select select2">
                                                 <option value="">--Pilih--</option>
                                                 @foreach ($dokterAnastesi as $item)
-                                                    <option value="{{ $item->kd_dokter }}">{{ $item->dokter->nama_lengkap }}</option>
+                                                    <option value="{{ $item->kd_dokter }}">
+                                                        {{ $item->dokter->nama_lengkap }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="" style="min-width: 200px;">Tanggal dan Jam Dilakukan</label>
-                                            <input type="date" class="form-control" name="tgl_dilakukan" id="tgl_dilakukan">
-                                            <input type="time" class="form-control" name="jam_dilakukan" id="jam_dilakukan">
+                                            <label for="" style="min-width: 200px;">Tanggal dan Jam
+                                                Dilakukan</label>
+                                            <input type="date" class="form-control" name="tgl_dilakukan"
+                                                id="tgl_dilakukan">
+                                            <input type="time" class="form-control" name="jam_dilakukan"
+                                                id="jam_dilakukan">
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="file_persetujuan" style="min-width: 200px;">HardCopy Form Persetujuan</label>
-                                            <input type="file" class="form-control" name="file_persetujuan" id="file_persetujuan">
+                                            <label for="file_persetujuan" style="min-width: 200px;">HardCopy Form
+                                                Persetujuan</label>
+                                            <input type="file" class="form-control" name="file_persetujuan"
+                                                id="file_persetujuan">
                                         </div>
                                     </div>
 
@@ -250,12 +277,14 @@
                                         <h5 class="section-title">5. Catatan Tambahan</h5>
 
                                         <div class="form-group">
-                                            <label for="pertanyaan_pasien" style="max-width: 200px;">Pertanyaan atau Kekhawatiran Pasien</label>
+                                            <label for="pertanyaan_pasien" style="max-width: 200px;">Pertanyaan atau
+                                                Kekhawatiran Pasien</label>
                                             <textarea name="pertanyaan_pasien" id="pertanyaan_pasien" class="form-control"></textarea>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="rekomendasi_dokter" style="max-width: 200px;">Rekomendasi Tambahan Dari Dokter</label>
+                                            <label for="rekomendasi_dokter" style="max-width: 200px;">Rekomendasi Tambahan
+                                                Dari Dokter</label>
                                             <textarea name="rekomendasi_dokter" id="rekomendasi_dokter" class="form-control"></textarea>
                                         </div>
 

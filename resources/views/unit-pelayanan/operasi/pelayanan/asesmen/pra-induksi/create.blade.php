@@ -7,7 +7,7 @@
 
     <div class="row">
         <div class="col-md-3">
-            @include('unit-pelayanan.operasi.pelayanan.asesmen.pra-anestesi.medis.patient-card')
+            @include('components.patient-card')
         </div>
 
         <div class="col-md-9">
@@ -16,8 +16,7 @@
 
                 @include('components.page-header', [
                     'title' => 'Tambah Pra Induksi',
-                    'description' =>
-                        'Tambah data pra induksi pasien dengan mengisi formulir di bawah ini.',
+                    'description' => 'Tambah data pra induksi pasien dengan mengisi formulir di bawah ini.',
                 ])
                 <form method="POST"
                     action="{{ route('operasi.pelayanan.asesmen.pra-induksi.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"

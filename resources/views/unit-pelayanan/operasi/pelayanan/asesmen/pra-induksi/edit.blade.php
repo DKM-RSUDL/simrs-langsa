@@ -7,7 +7,7 @@
 
     <div class="row">
         <div class="col-md-3">
-            @include('unit-pelayanan.operasi.pelayanan.asesmen.pra-anestesi.medis.patient-card')
+            @include('components.patient-card')
         </div>
 
         <div class="col-md-9">
@@ -767,7 +767,7 @@
                                 <?php
                                 $kesimpulanNyeri = $okPraInduksi->okPraInduksiCtkp->kesimpulan_nyeri ?? 'Nyeri Ringan';
                                 $nyeriClass = '';
-
+                                
                                 if (in_array($kesimpulanNyeri, ['Tidak Nyeri', 'NYERI RINGAN', 'Nyeri Ringan'])) {
                                     $nyeriClass = 'rounded text-white bg-success';
                                 } elseif (in_array($kesimpulanNyeri, ['NYERI SEDANG', 'Nyeri Sedang'])) {
