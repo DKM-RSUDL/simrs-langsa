@@ -105,6 +105,7 @@ class AsesmenService
                     'nafas' => $vitalSign->respiration,
                     'suhu' => $vitalSign->suhu,
                     'sao2' => $vitalSign->spo2_tanpa_o2,
+                    'o2' => $vitalSign->spo2_dengan_o2,
                     'tb' => $vitalSign->tinggi_badan,
                     'bb' => $vitalSign->berat_badan,
                     'original' => $vitalSign
