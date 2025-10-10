@@ -1407,12 +1407,11 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::get('/sub-spesialisasi', 'subSpesialisasi')->name('.sub-spesialisasi');
                             Route::get('/', 'index')->name('.index');
                             Route::get('/create', 'create')->name('.create');
-                            Route::get('/{id}/edit', 'edit')->name('.edit');
-                            Route::post('/show', 'show')->name('.show');
+                            Route::get('/{tgl_op}/{jam_op}/edit', 'edit')->name('.edit');
+                            Route::get('/{tgl_op}/{jam_op}/show', 'show')->name('.show');
                             Route::post('/', 'store')->name('.store');
-                            Route::put('/{id}', 'update')->name('.update');
-                            Route::delete('/{data}', 'delete')->name('.delete');
-                            Route::get('/print/{data}', 'print')->name('.print');
+                            Route::put('/{tgl_op}/{jam_op}', 'update')->name('.update');
+                            Route::delete('/{tgl_op}/{jam_op}', 'delete')->name('.delete');
                         });
                     });
                 });

@@ -11,12 +11,12 @@
                 <x-button-previous />
 
                 @include('components.page-header', [
-                    'title' => 'Edit Operasi (IBS)',
-                    'description' => 'Edit data operasi (IBS) pasien rawat inap.',
+                    'title' => 'Perbarui Operasi (IBS)',
+                    'description' => 'Perbarui data operasi (IBS) pasien rawat inap.',
                 ])
 
                 <form
-                    action="{{ route('rawat-inap.operasi-ibs.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $operasi->id]) }}"
+                    action="{{ route('rawat-inap.operasi-ibs.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $operasi->tgl_op, $operasi->jam_op]) }}"
                     method="POST">
                     @csrf
                     @method('PUT')
@@ -129,7 +129,7 @@
                             </div>
                         </div>
                         <div class="text-end">
-                            <x-button-submit />
+                            <x-button-submit>Perbarui</x-button-submit>
                         </div>
                     </div>
                 </form>
@@ -148,12 +148,15 @@
 
             // helper to populate selects
             function populateProductDetails(r, selected = {}) {
+                console.log('productDetails response:', r);
+
                 // Jenis Operasi
                 let jo = $('#jenis_operasi').empty().append('<option value="">-- Pilih Jenis Operasi --</option>')
                     .prop('disabled', false);
                 (r.jenisOperasi || []).forEach(x => jo.append(
                     `<option value="${x.kd_jenis_op}">${x.jenis_op}</option>`));
                 if (selected.jenis_operasi) jo.val(selected.jenis_operasi);
+                jo.trigger('change');
 
                 // Spesialisasi
                 let sp = $('#spesialisasi').empty().append('<option value="">-- Pilih Spesialisasi --</option>')
@@ -161,6 +164,7 @@
                 (r.spesialisasi || []).forEach(x => sp.append(
                     `<option value="${x.kd_spesial}">${x.spesialisasi}</option>`));
                 if (selected.spesialisasi) sp.val(selected.spesialisasi);
+                sp.trigger('change');
 
                 // Sub Spesialisasi
                 let ssp = $('#sub_spesialisasi').empty().append(
@@ -168,22 +172,28 @@
                 (r.subSpesialisasi || []).forEach(x => ssp.append(
                     `<option value="${x.kd_sub_spc}">${x.sub_spesialisasi}</option>`));
                 if (selected.sub_spesialisasi) ssp.val(selected.sub_spesialisasi);
+                ssp.trigger('change');
 
-                // Kamar & Dokter may be updated as well, but we keep existing options (server provided)
-                if (r.kamarOperasi) {
+                // only replace kamar list if server returned a non-empty array
+                if (Array.isArray(r.kamarOperasi) && r.kamarOperasi.length > 0) {
                     const kr = $('#kamar_operasi');
-                    // only replace if returned list is not empty to avoid removing current selection
                     kr.empty().append('<option value="">-- Pilih Kamar Operasi --</option>');
-                    (r.kamarOperasi || []).forEach(x => kr.append(
+                    r.kamarOperasi.forEach(x => kr.append(
                         `<option value="${x.no_kamar}">${x.nama_kamar}</option>`));
                     if (selected.kamar) kr.val(selected.kamar);
+                    // refresh select2 if present
+                    kr.trigger('change');
+                    if (kr.hasClass('select2')) kr.trigger('change.select2');
                 }
 
-                if (r.dokters) {
+                // only replace dokter list if server returned a non-empty array
+                if (Array.isArray(r.dokters) && r.dokters.length > 0) {
                     const dk = $('#dokter');
                     dk.empty().append('<option value="">-- Pilih Dokter --</option>');
-                    (r.dokters || []).forEach(x => dk.append(`<option value="${x.kd_dokter}">${x.nama}</option>`));
+                    r.dokters.forEach(x => dk.append(`<option value="${x.kd_dokter}">${x.nama}</option>`));
                     if (selected.dokter) dk.val(selected.dokter);
+                    dk.trigger('change');
+                    if (dk.hasClass('select2')) dk.trigger('change.select2');
                 }
             }
 
@@ -193,10 +203,11 @@
                 if (!kdProduk) {
                     // Reset semua select jika tindakan dikosongkan
                     $('#jenis_operasi').empty().append(
-                        '<option value="">-- Pilih Jenis Operasi --</option>');
-                    $('#spesialisasi').empty().append('<option value="">-- Pilih Spesialisasi --</option>');
+                        '<option value="">-- Pilih Jenis Operasi --</option>').trigger('change');
+                    $('#spesialisasi').empty().append('<option value="">-- Pilih Spesialisasi --</option>')
+                        .trigger('change');
                     $('#sub_spesialisasi').empty().append(
-                        '<option value="">-- Pilih Sub Spesialisasi --</option>');
+                        '<option value="">-- Pilih Sub Spesialisasi --</option>').trigger('change');
                     return;
                 }
 
@@ -221,13 +232,13 @@
                         // KEMBALIKAN KE STATE NORMAL JIKA ERROR
                         $('#jenis_operasi').empty().append(
                             '<option value="">-- Pilih Jenis Operasi --</option>').prop(
-                            'disabled', false);
+                            'disabled', false).trigger('change');
                         $('#spesialisasi').empty().append(
                             '<option value="">-- Pilih Spesialisasi --</option>').prop(
-                            'disabled', false);
+                            'disabled', false).trigger('change');
                         $('#sub_spesialisasi').empty().append(
                             '<option value="">-- Pilih Sub Spesialisasi --</option>').prop(
-                            'disabled', false);
+                            'disabled', false).trigger('change');
 
                         alert('Error loading data');
                     }
@@ -263,4 +274,3 @@
         });
     </script>
 @endpush
-Buatkan editnya kaya di create yaa
