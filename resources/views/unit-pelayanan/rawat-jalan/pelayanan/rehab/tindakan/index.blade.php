@@ -127,7 +127,7 @@
                         <div class="col-md-4 d-flex justify-content-end">
                             @if (count($tindakan) < 1)
                                 <div class="d-flex gap-2">
-                                    <a href="{{ route('rawat-jalan.tindakan-rehab-medik.create', [$dataMedis->kd_unit, $dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-primary">
+                                    <a href="{{ route('rawat-jalan.tindakan-rehab-medik.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-primary">
                                         <i class="ti-plus"></i> Tambah
                                     </a>
                                 </div>
