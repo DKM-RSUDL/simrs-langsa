@@ -16,7 +16,7 @@
                         'Terima Order pelayanan Hemodialisa (HD) dengan mengisi formulir di bawah ini.',
                 ])
 
-                <form action="#" method="post">
+                <form action="{{ route('hemodialisa.terima-order.store', [encrypt($order->id)]) }}" method="post">
                     @csrf
 
                     {{-- START : HANDOVER --}}
@@ -84,7 +84,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label>Petugas yang Menerima</label>
-                                    <select name="petugas_terima" id="petugas_terima" class="form-select select2">
+                                    <select name="petugas_terima" id="petugas_terima" class="form-select select2" required>
                                         <option value="">--Pilih--</option>
                                         <option value="{{ auth()->user()->kd_karyawan }}" selected>
                                             {{ auth()->user()->karyawan->gelar_depan . ' ' . str()->title(auth()->user()->karyawan->nama) . ' ' . auth()->user()->karyawan->gelar_belakang }}
@@ -102,23 +102,57 @@
                                         <label>Tanggal</label>
                                         <input type="date" name="tanggal_terima"
                                             value="{{ !empty($serahTerima->tanggal_terima) ? date('Y-m-d', strtotime($serahTerima->tanggal_terima)) : date('Y-m-d') }}"
-                                            class="form-control">
+                                            class="form-control" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label>Jam</label>
                                         <input type="time" name="jam_terima"
                                             value="{{ !empty($serahTerima->jam_terima) ? date('H:i', strtotime($serahTerima->jam_terima)) : date('H:i') }}"
-                                            class="form-control">
+                                            class="form-control" required>
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="mb-4">
+                                <h5 class="fw-bold">Tindakan:</h5>
+                                <div class="mb-3">
+                                    <label>Nama Tindakan</label>
+                                    <select name="kd_produk" id="kd_produk" class="form-select select2" required>
+                                        <option value="">--Pilih--</option>
+                                        @foreach ($produk as $item)
+                                            <option value="{{ $item->kd_produk }}" data-tarif="{{ $item->tarif }}"
+                                                data-tgl="{{ $item->tgl_berlaku }}">
+                                                {{ $item->deskripsi }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Dokter</label>
+                                    <select name="kd_dokter" id="kd_dokter" class="form-select select2" required>
+                                        <option value="">--Pilih--</option>
+                                        @foreach ($dokter as $item)
+                                            <option value="{{ $item->kd_dokter }}">
+                                                {{ $item->dokter->nama_lengkap }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="asal_pasien" value="2">
+                            <input type="hidden" name="kd_kasir" value="17">
+                            <input type="hidden" name="tarif" id="tarif" class="form-control"
+                                placeholder="Tarif" readonly>
+                            <input type="hidden" name="tgl_berlaku" id="tgl_berlaku" class="form-control"
+                                placeholder="tgl_berlaku" readonly>
                         </div>
                     </div>
                     {{-- END : HANDOVER --}}
 
                     <div class="row mt-3">
                         <div class="col-12 text-end">
-                            <x-button-submit>Order</x-button-submit>
+                            <x-button-submit>Terima</x-button-submit>
                         </div>
                     </div>
                 </form>
@@ -128,3 +162,18 @@
         </div>
     </div>
 @endsection
+
+@push('js')
+    <script>
+        $(document).ready(function() {
+            $('#kd_produk').on('change', function() {
+                var selectedOption = $(this).find('option:selected');
+                var tarif = selectedOption.data('tarif');
+                var tgl_berlaku = selectedOption.data('tgl');
+
+                $('#tarif').val(tarif ? tarif : '');
+                $('#tgl_berlaku').val(tgl_berlaku ? tgl_berlaku : '');
+            });
+        });
+    </script>
+@endpush
