@@ -54,7 +54,7 @@ class AsesmenMedisAnakController extends Controller
         return $dataMedis;
     }
 
-   
+
 
     private function getMasterData($kd_pasien)
     {
@@ -64,6 +64,18 @@ class AsesmenMedisAnakController extends Controller
             'satsetPrognosis' => SatsetPrognosis::all(),
             'alergiPasien' => RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get()
         ];
+    }
+
+    public function getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        $lastTransaction = Transaksi::select('kd_kasir', 'no_transaksi')
+            ->where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_transaksi', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
+
+        return $lastTransaction;
     }
 
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -382,6 +394,8 @@ class AsesmenMedisAnakController extends Controller
         }
 
         $masterData = $this->getMasterData($kd_pasien);
+        // Get latest vital signs data for the patient
+        $vitalSignsData = $this->asesmenService->getLatestVitalSignsByPatient($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         return view(
             'unit-pelayanan.rawat-inap.pelayanan.asesmen-medis-anak.create',
@@ -391,11 +405,12 @@ class AsesmenMedisAnakController extends Controller
                 'tgl_masuk' => $tgl_masuk,
                 'urut_masuk' => $urut_masuk,
                 'dataMedis' => $dataMedis,
+                'vitalSignsData' => $vitalSignsData,
             ], $masterData)
         );
     }
 
-    
+
     public function show(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         try {

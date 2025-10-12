@@ -9,9 +9,12 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ url()->previous() }}" class="btn btn-outline-info mb-3">
-                <i class="ti-arrow-left"></i> Kembali
-            </a>
+            <x-content-card>
+            <x-button-previous />
+                @include('components.page-header', [
+                    'title' => 'Detail Asesmen Pengkajian Awal Medis Pasien Anak',
+                    'description' => 'Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan',
+                ])
 
             <form method="" enctype="multipart/form-data" action="">
                 @csrf
@@ -19,20 +22,6 @@
                 <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
                 <input type="hidden" name="tgl_masuk" value="{{ $dataMedis->tgl_masuk }}">
                 <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
-
-                <div class="card">
-                    <div class="card-body">
-                        <div class="px-3">
-                            <div class="row g-3">
-                                <div class="col-md-8">
-                                    <h4 class="header-asesmen"><span class="text-info">Detail</span> Asesmen Pengkajian Awal
-                                        Medis Pasien Anak</h4>
-                                    <p class="text-muted">
-                                        Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
 
                         <!-- FORM ASESMEN -->
                         <div class="px-3">
@@ -1668,9 +1657,8 @@
 
                         </div>
 
-                    </div>
-                </div>
             </form>
+        </x-content-card>
         </div>
     </div>
 @endsection

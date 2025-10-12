@@ -76,7 +76,7 @@ class AsesmenService
     /**
      * Get latest vital signs data for a patient
      * This method can be used globally across the application
-     * 
+     *
      * @param string $kd_unit
      * @param string $kd_pasien
      * @param string $tgl_masuk
@@ -88,21 +88,21 @@ class AsesmenService
         try {
             // Get transaction data first
             $transactionData = $this->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-            
+
             if (!$transactionData) {
                 return null;
             }
 
             // Get vital signs data using transaction info
             $vitalSign = $this->getVitalSignData($transactionData->kd_kasir, $transactionData->no_transaksi);
-            
+
             if ($vitalSign) {
                 // Map vital signs data to form field names for better usability
                 return (object) [
-                    'nadi' => $vitalSign->nadi,
                     'sistole' => $vitalSign->sistole,
                     'diastole' => $vitalSign->diastole,
                     'respiration' => $vitalSign->respiration,
+                    'nadi' => $vitalSign->nadi,
                     'suhu' => $vitalSign->suhu,
                     'spo2_tanpa_o2' => $vitalSign->spo2_tanpa_o2,
                     'spo2_dengan_o2' => $vitalSign->spo2_dengan_o2,
