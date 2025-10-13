@@ -75,19 +75,18 @@
 
                                         <div class="form-group">
                                             <label for="suhu" style="min-width: 200px;">Suhu (C)</label>
-                                            <input type="number" name="suhu" id="suhu" class="form-control">
+                                            <input type="text" name="suhu" id="suhu" class="form-control">
                                         </div>
 
                                         <div class="form-group">
                                             <label for="skala_nyeri" style="min-width: 200px;">Nilai Skala Nyeri VAS</label>
-                                            <input type="number" name="skala_nyeri" id="skala_nyeri" min="0"
-                                                max="10" class="form-control">
+                                            <input type="number" name="skala_nyeri" id="skala_nyeri" min="0" max="10"
+                                                class="form-control">
                                         </div>
 
                                         <div class="form-group">
                                             <label for="tinggi_badan" style="min-width: 200px;">Tinggi Badan (Cm)</label>
-                                            <input type="number" name="tinggi_badan" id="tinggi_badan"
-                                                class="form-control">
+                                            <input type="number" name="tinggi_badan" id="tinggi_badan" class="form-control">
                                         </div>
 
                                         <div class="form-group">
@@ -97,15 +96,13 @@
 
                                         <div class="form-group">
                                             <label for="imt" style="min-width: 200px;">Indeks Masa Tubuh (IMT)</label>
-                                            <input type="number" name="imt" id="imt" class="form-control"
-                                                readonly>
+                                            <input type="number" name="imt" id="imt" class="form-control" readonly>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="lpt" style="min-width: 200px;">Luas Permukaan Tubuh
                                                 (LPT)</label>
-                                            <input type="number" name="lpt" id="lpt" class="form-control"
-                                                readonly>
+                                            <input type="number" name="lpt" id="lpt" class="form-control" readonly>
                                         </div>
 
                                         <div class="form-group">
@@ -148,8 +145,7 @@
                                                         data-bs-target="#penyakitDahuluModal"><i
                                                             class="bi bi-plus-square"></i> Tambah</button>
 
-                                                    <div class="bg-secondary-subtle rounded-2 p-3"
-                                                        id="penyakitdahulu-list">
+                                                    <div class="bg-secondary-subtle rounded-2 p-3" id="penyakitdahulu-list">
 
                                                     </div>
                                                 </div>
@@ -170,8 +166,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="jenis_operasi" style="min-width: 200px;">Jenis/Nama
-                                                Operasi</label>
+                                            <label for="jenis_operasi" style="min-width: 200px;">Operasi Terdahulu</label>
 
                                             <div class="row w-100">
                                                 <div class="col-12">
@@ -191,10 +186,9 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tanggal dibedah dan dimana</label>
 
-                                            <input type="date" name="tgl_bedah" id="tgl_bedah"
-                                                class="form-control me-3">
-                                            <input type="text" name="tempat_bedah" id="tempat_bedah"
-                                                placeholder="Jelaskan" class="form-control">
+                                            <input type="date" name="tgl_bedah" id="tgl_bedah" class="form-control me-3">
+                                            <input type="text" name="tempat_bedah" id="tempat_bedah" placeholder="Jelaskan"
+                                                class="form-control">
                                         </div>
 
                                         <div class="form-group">
@@ -234,13 +228,11 @@
                                                 <label for="bt">BT</label>
                                             </div>
                                             <div class="">
-                                                <input type="checkbox" name="hasil_lab[]" id="ct"
-                                                    value="CT/APTT">
+                                                <input type="checkbox" name="hasil_lab[]" id="ct" value="CT/APTT">
                                                 <label for="ct">CT/APTT</label>
                                             </div>
                                             <div class="">
-                                                <input type="checkbox" name="hasil_lab[]" id="gol_darah"
-                                                    value="Gol Darah">
+                                                <input type="checkbox" name="hasil_lab[]" id="gol_darah" value="Gol Darah">
                                                 <label for="gol_darah">Gol Darah</label>
                                             </div>
                                             <div class="">
@@ -291,45 +283,43 @@
                                                 <tr>
                                                     <td>Periksa identitas pasien</td>
                                                     <td align="middle">
-                                                        <input type="checkbox" class="form-check-input"
-                                                            name="verifikasi[]" id="" value="identitas_pasien">
+                                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                                            id="" value="identitas_pasien">
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Periksa gelang identitas / gelang operasi / gelang alergi</td>
                                                     <td align="middle">
-                                                        <input type="checkbox" class="form-check-input"
-                                                            name="verifikasi[]" id="" value="periksa_gelang">
+                                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                                            id="" value="periksa_gelang">
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>IPRI dan surat pengantar rawat</td>
                                                     <td align="middle">
-                                                        <input type="checkbox" class="form-check-input"
-                                                            name="verifikasi[]" id="" value="ipri">
+                                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                                            id="" value="ipri">
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Jenis dan lokasi pembedahan dipastikan bersama pasien</td>
                                                     <td align="middle">
-                                                        <input type="checkbox" class="form-check-input"
-                                                            name="verifikasi[]" id="" value="lokasi_pembedahan">
+                                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                                            id="" value="lokasi_pembedahan">
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Periksa kelengkapan persetujuan pembedahan surat ijin operasi</td>
                                                     <td align="middle">
-                                                        <input type="checkbox" class="form-check-input"
-                                                            name="verifikasi[]" id=""
-                                                            value="persetujuan_operasi">
+                                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                                            id="" value="persetujuan_operasi">
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Periksa kelengkapan persetujuan anestesi</td>
                                                     <td align="middle">
-                                                        <input type="checkbox" class="form-check-input"
-                                                            name="verifikasi[]" id=""
-                                                            value="persetujuan_anestesi">
+                                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                                            id="" value="persetujuan_anestesi">
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -339,51 +329,51 @@
                                                 <tr>
                                                     <td>1. Cardiologi</td>
                                                     <td align="middle">
-                                                        <input type="checkbox" class="form-check-input"
-                                                            name="verifikasi[]" id="" value="cardiologi">
+                                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                                            id="" value="cardiologi">
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>2. Pulmonology</td>
                                                     <td align="middle">
-                                                        <input type="checkbox" class="form-check-input"
-                                                            name="verifikasi[]" id="" value="pulmonology">
+                                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                                            id="" value="pulmonology">
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>3. Rehab Medik</td>
                                                     <td align="middle">
-                                                        <input type="checkbox" class="form-check-input"
-                                                            name="verifikasi[]" id="" value="rehab_medik">
+                                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                                            id="" value="rehab_medik">
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>4. Dietation</td>
                                                     <td align="middle">
-                                                        <input type="checkbox" class="form-check-input"
-                                                            name="verifikasi[]" id="" value="dietation">
+                                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                                            id="" value="dietation">
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Surat ketersediaan ICU bila dibutuhkan</td>
                                                     <td align="middle">
-                                                        <input type="checkbox" class="form-check-input"
-                                                            name="verifikasi[]" id="" value="surat_icu">
+                                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                                            id="" value="surat_icu">
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Periksa kelengkapan status rawat inap / rawat jalan</td>
                                                     <td align="middle">
-                                                        <input type="checkbox" class="form-check-input"
-                                                            name="verifikasi[]" id="" value="kelengkapan_ranap">
+                                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                                            id="" value="kelengkapan_ranap">
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Periksa kelengkapan X-ray / CT-Scan / MRI / EKG / Angiografi / Echo
                                                     </td>
                                                     <td align="middle">
-                                                        <input type="checkbox" class="form-check-input"
-                                                            name="verifikasi[]" id="" value="kelengkapan_xray">
+                                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                                            id="" value="kelengkapan_xray">
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -410,8 +400,7 @@
                                                     <td>Prothese luar dilepaskan (gigi palsu, lensa kontak)</td>
                                                     <td align="middle">
                                                         <input type="checkbox" class="form-check-input"
-                                                            name="persiapan_fisik[]" id=""
-                                                            value="prothese_luar">
+                                                            name="persiapan_fisik[]" id="" value="prothese_luar">
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -419,8 +408,7 @@
                                                         VP shunt)</td>
                                                     <td align="middle">
                                                         <input type="checkbox" class="form-check-input"
-                                                            name="persiapan_fisik[]" id=""
-                                                            value="prothese_dalam">
+                                                            name="persiapan_fisik[]" id="" value="prothese_dalam">
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -448,40 +436,35 @@
                                                     <td>Memastikan persediaan darah</td>
                                                     <td align="middle">
                                                         <input type="checkbox" class="form-check-input"
-                                                            name="persiapan_fisik[]" id=""
-                                                            value="persediaan_darah">
+                                                            name="persiapan_fisik[]" id="" value="persediaan_darah">
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Alat bantu (kacamata, alat bantu dengar) disimpan</td>
                                                     <td align="middle">
                                                         <input type="checkbox" class="form-check-input"
-                                                            name="persiapan_fisik[]" id=""
-                                                            value="alat_bantu_disimpan">
+                                                            name="persiapan_fisik[]" id="" value="alat_bantu_disimpan">
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Obat yang disertakan</td>
                                                     <td align="middle">
                                                         <input type="checkbox" class="form-check-input"
-                                                            name="persiapan_fisik[]" id=""
-                                                            value="obat_disertakan">
+                                                            name="persiapan_fisik[]" id="" value="obat_disertakan">
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Obat terakhir yang diberikan</td>
                                                     <td align="middle">
                                                         <input type="checkbox" class="form-check-input"
-                                                            name="persiapan_fisik[]" id=""
-                                                            value="obat_terakhir">
+                                                            name="persiapan_fisik[]" id="" value="obat_terakhir">
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Vaskulerakses (cimino), dll</td>
                                                     <td align="middle">
                                                         <input type="checkbox" class="form-check-input"
-                                                            name="persiapan_fisik[]" id=""
-                                                            value="vaskulerakses">
+                                                            name="persiapan_fisik[]" id="" value="vaskulerakses">
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -496,7 +479,8 @@
                                                 class="form-select select2">
                                                 <option value="">--Pilih Perawat--</option>
                                                 @foreach ($perawat as $prwt)
-                                                    <option value="{{ $prwt->kd_karyawan }}" @selected($prwt->kd_karyawan == auth()->user()->kd_karyawan)>
+                                                    <option value="{{ $prwt->kd_karyawan }}"
+                                                        @selected($prwt->kd_karyawan == auth()->user()->kd_karyawan)>
                                                         {{ $prwt->gelar_depan . ' ' . str()->title($prwt->nama) . ' ' . $prwt->gelar_belakang }}
                                                     </option>
                                                 @endforeach
@@ -505,10 +489,8 @@
 
                                         <div class="form-group">
                                             <label for="waktu_diperiksa" style="min-width: 200px;">Waktu Diperiksa</label>
-                                            <input type="date" class="form-control" name="tgl_periksa"
-                                                id="tgl_diperiksa">
-                                            <input type="time" class="form-control" name="jam_periksa"
-                                                id="jam_diperiksa">
+                                            <input type="date" class="form-control" name="tgl_periksa" id="tgl_diperiksa">
+                                            <input type="time" class="form-control" name="jam_periksa" id="jam_diperiksa">
                                         </div>
 
                                         <p class="mt-4 fw-bold">Persiapan Lain-lain</p>
@@ -528,8 +510,7 @@
                                                 Penjelasan singkat oleh dokter tentang prosedur yang akan dilakukan kepada
                                                 pasien
                                             </label>
-                                            <select name="penjelasan_prosedur" id="penjelasan_prosedur"
-                                                class="form-select">
+                                            <select name="penjelasan_prosedur" id="penjelasan_prosedur" class="form-select">
                                                 <option value="">--Pilih--</option>
                                                 <option value="0">Tidak</option>
                                                 <option value="1">Ya</option>
@@ -562,8 +543,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" class="form-control dropdown-toggle" id="searchInput"
-                        placeholder="Nama Penyakit" aria-expanded="false" autocomplete="off">
+                    <input type="text" class="form-control dropdown-toggle" id="searchInput" placeholder="Nama Penyakit"
+                        aria-expanded="false" autocomplete="off">
                     <button type="button" class="btn btn-sm btn-primary mt-2 float-end btn-add-list">Tambah</button>
 
                     <h6 class="fw-bold mt-5">Daftar Penyakit</h6>
@@ -574,8 +555,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary btn-save-list"
-                        data-type="penyakitsekarang">Simpan</button>
+                    <button type="button" class="btn btn-primary btn-save-list" data-type="penyakitsekarang">Simpan</button>
                 </div>
             </div>
         </div>
@@ -591,8 +571,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" class="form-control dropdown-toggle" id="searchInput"
-                        placeholder="Nama Penyakit" aria-expanded="false" autocomplete="off">
+                    <input type="text" class="form-control dropdown-toggle" id="searchInput" placeholder="Nama Penyakit"
+                        aria-expanded="false" autocomplete="off">
                     <button type="button" class="btn btn-sm btn-primary mt-2 float-end btn-add-list">Tambah</button>
 
                     <h6 class="fw-bold mt-5">Daftar Penyakit</h6>
@@ -603,16 +583,15 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary btn-save-list"
-                        data-type="penyakitdahulu">Simpan</button>
+                    <button type="button" class="btn btn-primary btn-save-list" data-type="penyakitdahulu">Simpan</button>
                 </div>
             </div>
         </div>
     </div>
 
     {{-- MODAL JENIS OPERASI --}}
-    <div class="modal fade" id="jenisOperasiModal" tabindex="-1" aria-labelledby="jenisOperasiModalLabel"
-        aria-hidden="true" style="z-index: 1060;">
+    <div class="modal fade" id="jenisOperasiModal" tabindex="-1" aria-labelledby="jenisOperasiModalLabel" aria-hidden="true"
+        style="z-index: 1060;">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -683,7 +662,7 @@
 
 @push('js')
     <script>
-        $('.btn-add-list').click(function(e) {
+        $('.btn-add-list').click(function (e) {
             let $this = $(this);
             let inputEl = $this.siblings('#searchInput');
             let valInput = $(inputEl).val();
@@ -694,28 +673,28 @@
             }
         });
 
-        $('.btn-save-list').click(function() {
+        $('.btn-save-list').click(function () {
             let $this = $(this);
             let type = $this.attr('data-type');
             let modal = $this.closest('.modal');
             let selectedListEl = $(modal).find('.list-data li');
 
             let selectedInputList = '';
-            $(selectedListEl).each(function(i, e) {
+            $(selectedListEl).each(function (i, e) {
                 selectedInputList += `<div class="d-flex justify-content-between align-items-center">
-                                        <p class="fw-bold text-primary m-0 text-decoration-underline">${$(e).text()}</p>
-                                        <input type="hidden" name="${type}[]" value="${$(e).text()}">
-                                        <button type="button" class="btn text-danger btn-sm btn-delete-list">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>`;
+                                            <p class="fw-bold text-primary m-0 text-decoration-underline">${$(e).text()}</p>
+                                            <input type="hidden" name="${type}[]" value="${$(e).text()}">
+                                            <button type="button" class="btn text-danger btn-sm btn-delete-list">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>`;
             });
 
             $('#' + type + '-list').html(selectedInputList);
             $(modal).modal('hide');
         });
 
-        $('#jenisOperasiModal #jenisOperasiInput').change(function(e) {
+        $('#jenisOperasiModal #jenisOperasiInput').change(function (e) {
             let $this = $(this);
             // let inputEl = $this.siblings('#searchInput');
             let valInput = $this.val();
@@ -726,12 +705,12 @@
             }
         });
 
-        $(document).on('click', '.btn-delete-list', function(e) {
+        $(document).on('click', '.btn-delete-list', function (e) {
             let $this = $(this);
             $this.closest('.d-flex').remove();
         });
 
-        $('#jenisOperasiModal').on('shown.bs.modal', function() {
+        $('#jenisOperasiModal').on('shown.bs.modal', function () {
             $('#jenisOperasiModal .select2').select2({
                 dropdownParent: $('#jenisOperasiModal'), // Menetapkan modal sebagai parent dropdown
                 width: '100%' // Opsional: untuk memastikan lebar dropdown sesuai
@@ -739,7 +718,7 @@
         });
 
 
-        $('#btnSaveAlergen').click(function(e) {
+        $('#btnSaveAlergen').click(function (e) {
             let alergen = $('#alergiModal #alergen').val();
             let reaksi = $('#alergiModal #reaksi').val();
             let severe = $('#alergiModal #severe').val();
@@ -752,17 +731,17 @@
             let valJson = `{"alergen": "${alergen}", "reaksi": "${reaksi}", "severe": "${severe}"}`;
 
             $('#tableAlergi tbody').append(`<tr>
-                                                <td>${alergen}</td>
-                                                <td>${reaksi}</td>
-                                                <td>${severe}</td>
-                                                <td>
-                                                    <button type="button" class="btn btn-sm btn-danger btn-delete-alergi">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                    <input type='hidden' name='alergi[]' value='${valJson}'>
-                                                </td>
+                                                    <td>${alergen}</td>
+                                                    <td>${reaksi}</td>
+                                                    <td>${severe}</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-sm btn-danger btn-delete-alergi">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                        <input type='hidden' name='alergi[]' value='${valJson}'>
+                                                    </td>
 
-                                            </tr>`);
+                                                </tr>`);
 
             $('#alergiModal').modal('hide');
             $('#alergiModal #alergen').val('');
@@ -770,9 +749,35 @@
             $('#alergiModal #severe').val('Ringan');
         });
 
-        $(document).on('click', '.btn-delete-alergi', function(e) {
+        $(document).on('click', '.btn-delete-alergi', function (e) {
             let $this = $(this);
             $this.closest('tr').remove();
         });
+
+        //hitung IMT otomatis
+        function hitungIMT_LPT() {
+            let tinggi = parseFloat($('#tinggi_badan').val());
+            let berat = parseFloat($('#berat_badan').val());
+
+            if (!isNaN(tinggi) && !isNaN(berat) && tinggi > 0 && berat > 0) {
+                // Konversi tinggi cm ke meter untuk IMT
+                let tinggiMeter = tinggi / 100;
+
+                // Rumus IMT
+                let imt = berat / (tinggiMeter * tinggiMeter);
+
+                // Rumus LPT (Du Bois)
+                let lpt = 0.007184 * Math.pow(berat, 0.425) * Math.pow(tinggi, 0.725);
+
+                // Tampilkan hasil (dibulatkan 2 angka desimal)
+                $('#imt').val(imt.toFixed(2));
+                $('#lpt').val(lpt.toFixed(2));
+            } else {
+                $('#imt').val('');
+                $('#lpt').val('');
+            }
+        }
+
+        $('#tinggi_badan, #berat_badan').on('input', hitungIMT_LPT);
     </script>
 @endpush
