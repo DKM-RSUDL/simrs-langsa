@@ -3,10 +3,11 @@
 
 @section('content')
     @include('unit-pelayanan.operasi.pelayanan.include')
+    @include('unit-pelayanan.operasi.pelayanan.laporan-operatif.include-script')
 
     <div class="row">
         <div class="col-md-3">
-            @include('unit-pelayanan.operasi.pelayanan.laporan-operatif.patient-card')
+            @include('components.patient-card')
         </div>
 
         <div class="col-md-9">
@@ -78,25 +79,89 @@
 
                 <div class="section-separator" id="edukasiPasien">
                     <h5 class="section-title">2. Diagnosa dan Komplikasi</h5>
+
+                    @php
+                        // decode kemungkinan JSON, fallback ke array jika kosong / string
+                        $diagnosaPra = json_decode($laporan->diagnosa_pra_operasi, true);
+                        if (!is_array($diagnosaPra)) {
+                            $diagnosaPra = $laporan->diagnosa_pra_operasi ? [$laporan->diagnosa_pra_operasi] : [];
+                        }
+
+                        $diagnosaPasca = json_decode($laporan->diagnosa_pasca_operasi, true);
+                        if (!is_array($diagnosaPasca)) {
+                            $diagnosaPasca = $laporan->diagnosa_pasca_operasi ? [$laporan->diagnosa_pasca_operasi] : [];
+                        }
+
+                        $komplikasi = json_decode($laporan->komplikasi, true);
+                        if (!is_array($komplikasi)) {
+                            $komplikasi = $laporan->komplikasi ? [$laporan->komplikasi] : [];
+                        }
+                    @endphp
+
+                    <!-- Diagnosa Pra-Operasi (inputs disabled, list view) -->
                     <div class="form-group">
-                        <label class="col-md-3 col-form-label" for="diagnosa_pra_operasi" style="min-width: 200px;">Diagnosa
-                            Pra-Operasi</label>
-                        <input placeholder="isi Diagnosa Pra-Operasi" type="text" class="form-control"
-                            name="diagnosa_pra_operasi" id="diagnosa_pra_operasi"
-                            value="{{ $laporan->diagnosa_pra_operasi }}" disabled>
+                        <label class="col-md-3 col-form-label" style="min-width: 200px;">Diagnosa Pra-Operasi</label>
+                        <div class="w-100 d-flex flex-column">
+                            <div class="multi-input-list rounded w-100">
+                                @if (empty($diagnosaPra))
+                                    <p class="text-danger text-small multi-input-empty">Belum ada diagnosa pra-operasi</p>
+                                @else
+                                    @foreach ($diagnosaPra as $item)
+                                        <div class="mb-2">
+                                            <input type="text" class="form-control" value="{{ $item }}" disabled>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+
+                            <!-- keep original hidden value for compatibility -->
+                            <input type="hidden" name="diagnosa_pra_operasi" value="{{ $laporan->diagnosa_pra_operasi }}">
+                        </div>
                     </div>
+
+                    <!-- Diagnosa Pasca-Operasi (inputs disabled, list view) -->
                     <div class="form-group">
-                        <label class="col-md-3 col-form-label" for="diagnosa_pasca_operasi"
-                            style="min-width: 200px;">Diagnosa Pasca-Operasi</label>
-                        <input placeholder="isi Diagnosa Pasca-Operasi" type="text" class="form-control"
-                            name="diagnosa_pasca_operasi" id="diagnosa_pasca_operasi"
-                            value="{{ $laporan->diagnosa_pasca_operasi }}" disabled>
+                        <label class="col-md-3 col-form-label" style="min-width: 200px;">Diagnosa Pasca-Operasi</label>
+                        <div class="w-100 d-flex flex-column">
+                            <div class="multi-input-list rounded w-100">
+                                @if (empty($diagnosaPasca))
+                                    <p class="text-danger text-small multi-input-empty">Belum ada diagnosa pasca-operasi</p>
+                                @else
+                                    @foreach ($diagnosaPasca as $item)
+                                        <div class="mb-2">
+                                            <input type="text" class="form-control" value="{{ $item }}"
+                                                disabled>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+
+                            <input type="hidden" name="diagnosa_pasca_operasi"
+                                value="{{ $laporan->diagnosa_pasca_operasi }}">
+                        </div>
                     </div>
+
+                    <!-- Komplikasi (inputs disabled, list view) -->
                     <div class="form-group">
-                        <label class="col-md-3 col-form-label" for="komplikasi" style="min-width: 200px;">Bila Ada
-                            Komplikasi Selama Pembedahan</label>
-                        <input placeholder="isi Komplikasi Selama Pembedahan" type="text" class="form-control"
-                            name="komplikasi" id="komplikasi" value="{{ $laporan->komplikasi }}" disabled>
+                        <label class="col-md-3 col-form-label" style="min-width: 200px;">Bila Ada Komplikasi Selama
+                            Pembedahan</label>
+                        <div class="w-100 d-flex flex-column">
+                            <div class="multi-input-list rounded w-100">
+                                @if (empty($komplikasi))
+                                    <p class="text-danger text-small multi-input-empty">Belum ada komplikasi pasca-operasi
+                                    </p>
+                                @else
+                                    @foreach ($komplikasi as $item)
+                                        <div class="mb-2">
+                                            <input type="text" class="form-control" value="{{ $item }}"
+                                                disabled>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+
+                            <input type="hidden" name="komplikasi" value="{{ $laporan->komplikasi }}">
+                        </div>
                     </div>
                 </div>
 

@@ -124,10 +124,10 @@ Route::prefix('operasi')->group(function () {
                         Route::controller(LaporanOperasiController::class)->group(function () {
                             Route::get('/', 'index')->name('.index');
                             Route::get('/create', 'create')->name('.create');
-                            Route::get('/edit', 'edit')->name('.edit');
-                            Route::get('/show', 'show')->name('.show');
+                            Route::get('/edit/{id}', 'edit')->name('.edit');
+                            Route::get('/show/{id}', 'show')->name('.show');
                             Route::post('/', 'store')->name('.store');
-                            Route::put('/', 'update')->name('.update');
+                            Route::put('/{id}', 'update')->name('.update');
                         });
                     });
                 });
