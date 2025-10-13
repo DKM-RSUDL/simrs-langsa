@@ -83,6 +83,8 @@ class AsesmenKepThtController extends Controller
         }
 
         $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
+        // Get latest vital signs data for the patient
+        $vitalSignsData = $this->asesmenService->getLatestVitalSignsByPatient($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.create', compact(
             'kd_unit',
@@ -96,11 +98,12 @@ class AsesmenKepThtController extends Controller
             'rmeMasterImplementasi',
             'alergiPasien',
             'satsetPrognosis',
+            'vitalSignsData'
         ));
     }
 
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk){
-         DB::beginTransaction();
+        DB::beginTransaction();
         try {
 
             $asesmenTht = new RmeAsesmen();
@@ -186,11 +189,11 @@ class AsesmenKepThtController extends Controller
             $asesmenThtPemeriksaanFisik = new RmeAsesmenThtPemeriksaanFisik();
             $asesmenThtPemeriksaanFisik->id_asesmen = $asesmenTht->id;
             // Vital sign tidak disimpan di sini lagi karena sudah di-handle via service; gunakan null atau hapus field ini jika duplikat
-            $asesmenThtPemeriksaanFisik->darah_sistole = null; // Atau hapus jika tidak diperlukan
-            $asesmenThtPemeriksaanFisik->darah_diastole = null;
-            $asesmenThtPemeriksaanFisik->nadi = null;
-            $asesmenThtPemeriksaanFisik->nafas = null;
-            $asesmenThtPemeriksaanFisik->suhu = null;
+            $asesmenThtPemeriksaanFisik->darah_sistole = $request->darah_sistole;
+            $asesmenThtPemeriksaanFisik->darah_diastole = $request->darah_diastole;
+            $asesmenThtPemeriksaanFisik->nadi = $request->nadi;
+            $asesmenThtPemeriksaanFisik->nafas = $request->nafas;
+            $asesmenThtPemeriksaanFisik->suhu = $request->suhu;
             $asesmenThtPemeriksaanFisik->sensorium = $request->sensorium;
             $asesmenThtPemeriksaanFisik->ku_kp_kg = $request->ku_kp_kg;
             $asesmenThtPemeriksaanFisik->avpu = $request->avpu;

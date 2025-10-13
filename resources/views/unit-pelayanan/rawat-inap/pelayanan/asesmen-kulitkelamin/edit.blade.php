@@ -7,678 +7,655 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ route('rawat-inap.asesmen.medis.kulit-kelamin.show', [
-                'kd_unit' => $kd_unit,
-                'kd_pasien' => $kd_pasien,
-                'tgl_masuk' => $tgl_masuk,
-                'urut_masuk' => $urut_masuk,
-                'id' => $id,
-            ]) }}"
-                class="btn">
-                <i class="ti-arrow-left"></i> Kembali
-            </a>
-            <div class="d-flex justify-content-center">
-                <div class="card w-100 h-100">
-                    <div class="card-body">
-                        <div class="px-3">
-                            <div class="row g-3">
-                                <div class="col-md-12">
-                                    <h4 class="header-asesmen">Edit Asesmen Medis Kulit dan Kelamin</h4>
-                                    <p>
-                                        Edit asesmen medis kulit dan kelamin pasien
-                                    </p>
+            <x-content-card>
+            <x-button-previous />
+                @include('components.page-header', [
+                    'title' => 'Edit Asesmen Medis Kulit dan Kelamin',
+                    'description' => 'Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan',
+                ])
+
+                {{-- FORM ASESMEN MEDIS KULIT DAN KELAMIN --}}
+                <form method="POST"
+                    action="{{ route('rawat-inap.asesmen.medis.kulit-kelamin.update', [
+                        'kd_unit' => $kd_unit,
+                        'kd_pasien' => $kd_pasien,
+                        'tgl_masuk' => $tgl_masuk,
+                        'urut_masuk' => $urut_masuk,
+                        'id' => $id,
+                    ]) }}"
+                    enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <div class="px-3">
+                        <div>
+
+                            <div class="section-separator mt-0" id="data-masuk">
+                                <h5 class="section-title">1. Data masuk</h5>
+
+                                <div class="form-group">
+                                    <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
+                                    <div class="d-flex gap-3" style="width: 100%;">
+                                        @php
+                                            $waktuMasuk = Carbon\Carbon::parse($asesmen->waktu_masuk);
+                                        @endphp
+                                        <input type="date" class="form-control" name="tanggal_masuk"
+                                            id="tanggal_masuk" value="{{ $waktuMasuk->format('Y-m-d') }}">
+                                        <input type="time" class="form-control" name="jam_masuk" id="jam_masuk"
+                                            value="{{ $waktuMasuk->format('H:i') }}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="min-width: 200px;">Kondisi Masuk</label>
+                                    <select class="form-select" name="kondisi_masuk">
+                                        <option selected disabled>Pilih</option>
+                                        <option value="Mandiri"
+                                            {{ $asesmenKulitKelamin->kondisi_masuk == 'Mandiri' ? 'selected' : '' }}>
+                                            Mandiri</option>
+                                        <option value="Jalan Kaki"
+                                            {{ $asesmenKulitKelamin->kondisi_masuk == 'Jalan Kaki' ? 'selected' : '' }}>
+                                            Jalan Kaki</option>
+                                        <option value="Kursi Roda"
+                                            {{ $asesmenKulitKelamin->kondisi_masuk == 'Kursi Roda' ? 'selected' : '' }}>
+                                            Kursi Roda</option>
+                                        <option value="Brankar"
+                                            {{ $asesmenKulitKelamin->kondisi_masuk == 'Brankar' ? 'selected' : '' }}>
+                                            Brankar</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="min-width: 200px;">Diagnosis Masuk</label>
+                                    <input type="text" class="form-control" name="diagnosis_masuk"
+                                        value="{{ $asesmenKulitKelamin->diagnosis_masuk }}">
                                 </div>
                             </div>
-                        </div>
 
-                        {{-- FORM ASESMEN MEDIS KULIT DAN KELAMIN --}}
-                        <form method="POST"
-                            action="{{ route('rawat-inap.asesmen.medis.kulit-kelamin.update', [
-                                'kd_unit' => $kd_unit,
-                                'kd_pasien' => $kd_pasien,
-                                'tgl_masuk' => $tgl_masuk,
-                                'urut_masuk' => $urut_masuk,
-                                'id' => $id,
-                            ]) }}"
-                            enctype="multipart/form-data">
-                            @csrf
-                            @method('PUT')
-                            <div class="px-3">
-                                <div>
+                            <div class="section-separator" id="anamnesis">
+                                <h5 class="section-title">2. Anamnesis</h5>
 
-                                    <div class="section-separator" id="data-masuk">
-                                        <h5 class="section-title">1. Data masuk</h5>
+                                <div class="form-group">
+                                    <label style="min-width: 220px;">Anamnesis</label>
+                                    <input type="text" class="form-control" name="anamnesis"
+                                        placeholder="Masukkan anamnesis" value="{{ $asesmen->anamnesis }}">
+                                </div>
 
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
-                                            <div class="d-flex gap-3" style="width: 100%;">
-                                                @php
-                                                    $waktuMasuk = Carbon\Carbon::parse($asesmen->waktu_masuk);
-                                                @endphp
-                                                <input type="date" class="form-control" name="tanggal_masuk"
-                                                    id="tanggal_masuk" value="{{ $waktuMasuk->format('Y-m-d') }}">
-                                                <input type="time" class="form-control" name="jam_masuk" id="jam_masuk"
-                                                    value="{{ $waktuMasuk->format('H:i') }}">
-                                            </div>
+                                <div class="form-group">
+                                    <label style="min-width: 220px;">Keluhan Utama/Alasan Masuk RS</label>
+                                    <textarea class="form-control" name="keluhan_utama" rows="4"
+                                        placeholder="Masukkan keluhan utama atau alasan masuk rumah sakit">{{ $asesmenKulitKelamin->keluhan_utama }}</textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="min-width: 220px;">Sensorium</label>
+                                    <select class="form-select" name="sensorium">
+                                        <option value=""
+                                            {{ !$asesmenKulitKelamin->sensorium ? 'selected' : '' }} disabled>
+                                            --Pilih--</option>
+                                        <option value="Compos Mentis"
+                                            {{ $asesmenKulitKelamin->sensorium == 'Compos Mentis' ? 'selected' : '' }}>
+                                            Compos Mentis</option>
+                                        <option value="Apatis"
+                                            {{ $asesmenKulitKelamin->sensorium == 'Apatis' ? 'selected' : '' }}>
+                                            Apatis</option>
+                                        <option value="Somnolen"
+                                            {{ $asesmenKulitKelamin->sensorium == 'Somnolen' ? 'selected' : '' }}>
+                                            Somnolen</option>
+                                        <option value="Sopor"
+                                            {{ $asesmenKulitKelamin->sensorium == 'Sopor' ? 'selected' : '' }}>
+                                            Sopor</option>
+                                        <option value="Coma"
+                                            {{ $asesmenKulitKelamin->sensorium == 'Coma' ? 'selected' : '' }}>Coma
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="min-width: 220px;">Tekanan Darah (mmHg)</label>
+                                    <div class="d-flex gap-3" style="width: 100%;">
+                                        <div class="flex-grow-1">
+                                            <label class="form-label">Sistole</label>
+                                            <input type="number" class="form-control" name="tekanan_darah_sistole"
+                                                placeholder="120"
+                                                value="{{ $asesmenKulitKelamin->tekanan_darah_sistole }}">
                                         </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Kondisi Masuk</label>
-                                            <select class="form-select" name="kondisi_masuk">
-                                                <option selected disabled>Pilih</option>
-                                                <option value="Mandiri"
-                                                    {{ $asesmenKulitKelamin->kondisi_masuk == 'Mandiri' ? 'selected' : '' }}>
-                                                    Mandiri</option>
-                                                <option value="Jalan Kaki"
-                                                    {{ $asesmenKulitKelamin->kondisi_masuk == 'Jalan Kaki' ? 'selected' : '' }}>
-                                                    Jalan Kaki</option>
-                                                <option value="Kursi Roda"
-                                                    {{ $asesmenKulitKelamin->kondisi_masuk == 'Kursi Roda' ? 'selected' : '' }}>
-                                                    Kursi Roda</option>
-                                                <option value="Brankar"
-                                                    {{ $asesmenKulitKelamin->kondisi_masuk == 'Brankar' ? 'selected' : '' }}>
-                                                    Brankar</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Diagnosis Masuk</label>
-                                            <input type="text" class="form-control" name="diagnosis_masuk"
-                                                value="{{ $asesmenKulitKelamin->diagnosis_masuk }}">
+                                        <div class="flex-grow-1">
+                                            <label class="form-label">Diastole</label>
+                                            <input type="number" class="form-control" name="tekanan_darah_diastole"
+                                                placeholder="80"
+                                                value="{{ $asesmenKulitKelamin->tekanan_darah_diastole }}">
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="section-separator" id="anamnesis">
-                                        <h5 class="section-title">2. Anamnesis</h5>
+                                <div class="form-group">
+                                    <label style="min-width: 220px;">Suhu (°C)</label>
+                                    <input type="text" class="form-control" name="suhu"
+                                        placeholder="36.5"
+                                        value="{{ $asesmenKulitKelamin->suhu }}">
+                                </div>
 
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Anamnesis</label>
-                                            <input type="text" class="form-control" name="anamnesis"
-                                                placeholder="Masukkan anamnesis" value="{{ $asesmen->anamnesis }}" required>
-                                        </div>
+                                <div class="form-group">
+                                    <label style="min-width: 220px;">Respirasi (Per Menit)</label>
+                                    <input type="number" class="form-control" name="respirasi" placeholder="20"
+                                        value="{{ $asesmenKulitKelamin->respirasi }}">
+                                </div>
 
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Keluhan Utama/Alasan Masuk RS</label>
-                                            <textarea class="form-control" name="keluhan_utama" rows="4"
-                                                placeholder="Masukkan keluhan utama atau alasan masuk rumah sakit" required>{{ $asesmenKulitKelamin->keluhan_utama }}</textarea>
-                                        </div>
+                                <div class="form-group">
+                                    <label style="min-width: 220px;">Nadi (Per Menit)</label>
+                                    <input type="number" class="form-control" name="nadi" placeholder="80"
+                                        value="{{ $asesmenKulitKelamin->nadi }}">
+                                </div>
 
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Sensorium</label>
-                                            <select class="form-select" name="sensorium">
-                                                <option value=""
-                                                    {{ !$asesmenKulitKelamin->sensorium ? 'selected' : '' }} disabled>
-                                                    --Pilih--</option>
-                                                <option value="Compos Mentis"
-                                                    {{ $asesmenKulitKelamin->sensorium == 'Compos Mentis' ? 'selected' : '' }}>
-                                                    Compos Mentis</option>
-                                                <option value="Apatis"
-                                                    {{ $asesmenKulitKelamin->sensorium == 'Apatis' ? 'selected' : '' }}>
-                                                    Apatis</option>
-                                                <option value="Somnolen"
-                                                    {{ $asesmenKulitKelamin->sensorium == 'Somnolen' ? 'selected' : '' }}>
-                                                    Somnolen</option>
-                                                <option value="Sopor"
-                                                    {{ $asesmenKulitKelamin->sensorium == 'Sopor' ? 'selected' : '' }}>
-                                                    Sopor</option>
-                                                <option value="Coma"
-                                                    {{ $asesmenKulitKelamin->sensorium == 'Coma' ? 'selected' : '' }}>Coma
-                                                </option>
-                                            </select>
-                                        </div>
+                            </div>
 
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Tekanan Darah (mmHg)</label>
-                                            <div class="d-flex gap-3" style="width: 100%;">
-                                                <div class="flex-grow-1">
-                                                    <label class="form-label">Sistole</label>
-                                                    <input type="number" class="form-control" name="tekanan_darah_sistole"
-                                                        placeholder="120" min="70" max="300"
-                                                        value="{{ $asesmenKulitKelamin->tekanan_darah_sistole }}">
-                                                </div>
-                                                <div class="flex-grow-1">
-                                                    <label class="form-label">Diastole</label>
-                                                    <input type="number" class="form-control" name="tekanan_darah_diastole"
-                                                        placeholder="80" min="40" max="150"
-                                                        value="{{ $asesmenKulitKelamin->tekanan_darah_diastole }}">
-                                                </div>
-                                            </div>
-                                        </div>
+                            <div class="section-separator" id="riwayat-kesehatan">
+                                <h5 class="section-title">3. Riwayat Kesehatan</h5>
 
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Suhu (°C)</label>
-                                            <input type="text" class="form-control" name="suhu" step="0.1"
-                                                placeholder="36.5" min="30" max="45"
-                                                value="{{ $asesmenKulitKelamin->suhu }}">
-                                        </div>
+                                <div class="form-group">
+                                    <label style="min-width: 220px;">Riwayat Penyakit Sekarang</label>
+                                    <textarea class="form-control" name="riwayat_penyakit_sekarang" rows="4"
+                                        placeholder="Masukkan riwayat penyakit sekarang">{{ $asesmenKulitKelamin->riwayat_penyakit_sekarang }}</textarea>
+                                </div>
 
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Respirasi (Per Menit)</label>
-                                            <input type="number" class="form-control" name="respirasi" placeholder="20"
-                                                min="10" max="50"
-                                                value="{{ $asesmenKulitKelamin->respirasi }}">
-                                        </div>
+                                <div class="form-group">
+                                    <label style="min-width: 220px;">Riwayat Penyakit Terdahulu</label>
+                                    <input type="text" class="form-control" name="riwayat_penyakit_terdahulu"
+                                        placeholder="Masukkan riwayat penyakit terdahulu"
+                                        value="{{ $asesmenKulitKelamin->riwayat_penyakit_terdahulu }}">
+                                </div>
 
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Nadi (Per Menit)</label>
-                                            <input type="number" class="form-control" name="nadi" placeholder="80"
-                                                min="40" max="200" value="{{ $asesmenKulitKelamin->nadi }}">
-                                        </div>
-
-                                    </div>
-
-                                    <div class="section-separator" id="riwayat-kesehatan">
-                                        <h5 class="section-title">3. Riwayat Kesehatan</h5>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Riwayat Penyakit Sekarang</label>
-                                            <textarea class="form-control" name="riwayat_penyakit_sekarang" rows="4"
-                                                placeholder="Masukkan riwayat penyakit sekarang">{{ $asesmenKulitKelamin->riwayat_penyakit_sekarang }}</textarea>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Riwayat Penyakit Terdahulu</label>
-                                            <input type="text" class="form-control" name="riwayat_penyakit_terdahulu"
-                                                placeholder="Masukkan riwayat penyakit terdahulu"
-                                                value="{{ $asesmenKulitKelamin->riwayat_penyakit_terdahulu }}">
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Riwayat Kesehatan Keluarga</label>
-                                            <div class="w-100">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                                    data-bs-toggle="modal" data-bs-target="#riwayatKeluargaModal">
-                                                    <i class="ti-plus"></i> Tambah
-                                                </button>
-                                                <div id="selectedRiwayatList" class="d-flex flex-column gap-2">
-                                                    <!-- Data akan dimuat dari JavaScript -->
-                                                </div>
-                                                <!-- Hidden input to store the JSON data -->
-                                                <input type="hidden" name="riwayat_kesehatan_keluarga"
-                                                    id="riwayatKesehatanInput">
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="section-separator" id="riwayatObat">
-                                        <h5 class="section-title">4. Riwayat Penggunaan Obat</h5>
-
+                                <div class="form-group">
+                                    <label style="min-width: 220px;">Riwayat Kesehatan Keluarga</label>
+                                    <div class="w-100">
                                         <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                            id="openObatModal">
+                                            data-bs-toggle="modal" data-bs-target="#riwayatKeluargaModal">
                                             <i class="ti-plus"></i> Tambah
                                         </button>
-                                        <input type="hidden" name="riwayat_penggunaan_obat" id="riwayatObatData"
-                                            value="[]">
-                                        <div class="table-responsive">
-                                            <table class="table" id="createRiwayatObatTable">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Nama Obat</th>
-                                                        <th>Dosis</th>
-                                                        <th>Aturan Pakai</th>
-                                                        <th></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <!-- Table content will be dynamically populated -->
-                                                </tbody>
-                                            </table>
+                                        <div id="selectedRiwayatList" class="d-flex flex-column gap-2">
+                                            <!-- Data akan dimuat dari JavaScript -->
                                         </div>
+                                        <!-- Hidden input to store the JSON data -->
+                                        <input type="hidden" name="riwayat_kesehatan_keluarga"
+                                            id="riwayatKesehatanInput">
                                     </div>
+                                </div>
 
-                                    <div class="section-separator" id="skala-nyeri">
-                                        <h5 class="section-title">5. Skala Nyeri</h5>
+                            </div>
 
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label style="min-width: 200px;">Skala Nyeri (1-10)</label>
-                                                    <input type="number" class="form-control" name="skala_nyeri"
-                                                        id="skala_nyeri" min="1" max="10"
-                                                        placeholder="1-10" value="{{ $asesmen->skala_nyeri }}">
-                                                </div>
+                            <div class="section-separator" id="riwayatObat">
+                                <h5 class="section-title">4. Riwayat Penggunaan Obat</h5>
 
-                                                <div class="form-group">
-                                                    <label style="min-width: 200px;">Kategori Nyeri</label>
-                                                    <input type="text" class="form-control" name="kategori_nyeri"
-                                                        id="kategori_nyeri" readonly placeholder="Akan terisi otomatis"
-                                                        value="{{ $asesmen->kategori_nyeri }}">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <div class="text-center">
-                                                    <img src="{{ asset('assets/img/asesmen/asesmen.jpeg') }}"
-                                                        alt="Skala Nyeri Visual" class="img-fluid mb-3"
-                                                        style="max-height: 200px;">
-                                                    <img src="{{ asset('assets/img/asesmen/numerik.png') }}"
-                                                        alt="Skala Nyeri Numerik" class="img-fluid"
-                                                        style="max-height: 150px;">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="section-separator" id="alergi">
-                                        <h5 class="section-title">6. Alergi</h5>
-
-                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                            id="openAlergiModal" data-bs-toggle="modal" data-bs-target="#alergiModal">
-                                            <i class="ti-plus"></i> Tambah Alergi
-                                        </button>
-                                        <input type="hidden" name="alergis" id="alergisInput" value="[]">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered" id="createAlergiTable">
-                                                <thead class="table-light">
-                                                    <tr>
-                                                        <th width="20%">Jenis Alergi</th>
-                                                        <th width="25%">Alergen</th>
-                                                        <th width="25%">Reaksi</th>
-                                                        <th width="20%">Tingkat Keparahan</th>
-                                                        <th width="10%">Aksi</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr id="no-alergi-row">
-                                                        <td colspan="5" class="text-center text-muted">Tidak ada data
-                                                            alergi</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-
-                                    <div class="section-separator" id="pemeriksaan-fisik">
-                                        <h5 class="section-title">7. Pemeriksaan Fisik</h5>
-                                        <div class="row g-3">
-                                            <div class="pemeriksaan-fisik">
-                                                <h6>Pemeriksaan Fisik</h6>
-                                                <p class="text-small">Centang normal jika fisik yang dinilai
-                                                    normal,
-                                                    pilih tanda tambah
-                                                    untuk menambah keterangan fisik yang ditemukan tidak normal.
-                                                    Jika
-                                                    tidak dipilih salah satunya, maka pemeriksaan tidak
-                                                    dilakukan.
-                                                </p>
-                                                <div class="row">
-                                                    @foreach ($itemFisik->chunk(ceil($itemFisik->count() / 2)) as $chunk)
-                                                        <div class="col-md-6">
-                                                            <div class="d-flex flex-column gap-3">
-                                                                @foreach ($chunk as $item)
-                                                                    @php
-                                                                        $pemeriksaanData = $pemeriksaanFisik->get(
-                                                                            $item->id,
-                                                                        );
-                                                                        $isNormal = $pemeriksaanData
-                                                                            ? $pemeriksaanData->is_normal
-                                                                            : false;
-                                                                        $keterangan = $pemeriksaanData
-                                                                            ? $pemeriksaanData->keterangan
-                                                                            : '';
-                                                                    @endphp
-                                                                    <div class="pemeriksaan-item">
-                                                                        <div
-                                                                            class="d-flex align-items-center border-bottom pb-2">
-                                                                            <div class="flex-grow-1">
-                                                                                {{ $item->nama }}
-                                                                            </div>
-                                                                            <div class="form-check me-3">
-                                                                                <input type="checkbox"
-                                                                                    class="form-check-input"
-                                                                                    id="{{ $item->id }}-normal"
-                                                                                    name="{{ $item->id }}-normal"
-                                                                                    {{ $isNormal ? 'checked' : '' }}>
-                                                                                <label class="form-check-label"
-                                                                                    for="{{ $item->id }}-normal">Normal</label>
-                                                                            </div>
-                                                                            <button
-                                                                                class="btn btn-sm btn-outline-primary tambah-keterangan"
-                                                                                type="button"
-                                                                                data-target="{{ $item->id }}-keterangan">
-                                                                                <i class="bi bi-plus"></i>
-                                                                            </button>
-                                                                        </div>
-                                                                        <div class="keterangan mt-2"
-                                                                            id="{{ $item->id }}-keterangan"
-                                                                            style="display:{{ !$isNormal && $keterangan ? 'block' : 'none' }};">
-                                                                            <input type="text" class="form-control"
-                                                                                name="{{ $item->id }}_keterangan"
-                                                                                placeholder="Tambah keterangan jika tidak normal..."
-                                                                                value="{{ $keterangan }}">
-                                                                        </div>
-                                                                    </div>
-                                                                @endforeach
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="section-separator" id="site-marking">
-                                        <h5 class="section-title">7.1. Site Marking - Penandaan Anatomi</h5>
-                                        <div class="row">
-                                            <div class="col-md-8">
-                                                <div class="site-marking-container position-relative">
-                                                    <img src="{{ asset('assets/images/sitemarking/kulit-kelamin.png') }}"
-                                                        id="anatomyImage" class="img-fluid" style="max-width: 100%;">
-                                                    <canvas id="markingCanvas" class="position-absolute top-0 start-0"
-                                                        style="cursor: crosshair; z-index: 10;">
-                                                    </canvas>
-                                                </div>
-                                                <div class="mt-2">
-                                                    <small class="text-muted">
-                                                        <strong>Cara Pakai:</strong> Pilih warna, klik dan drag untuk
-                                                        membuat panah di area yang ingin ditandai.
-                                                    </small>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="marking-controls">
-                                                    <h6>Kontrol Penandaan</h6>
-
-                                                    <!-- Pilihan Warna -->
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Pilih Warna:</label>
-                                                        <div class="d-flex flex-wrap gap-2">
-                                                            <button type="button" class="color-btn active"
-                                                                data-color="#dc3545"
-                                                                style="background: #dc3545;"></button>
-                                                            <button type="button" class="color-btn" data-color="#198754"
-                                                                style="background: #198754;"></button>
-                                                            <button type="button" class="color-btn" data-color="#0d6efd"
-                                                                style="background: #0d6efd;"></button>
-                                                            <button type="button" class="color-btn" data-color="#fd7e14"
-                                                                style="background: #fd7e14;"></button>
-                                                            <button type="button" class="color-btn" data-color="#6f42c1"
-                                                                style="background: #6f42c1;"></button>
-                                                            <button type="button" class="color-btn" data-color="#000000"
-                                                                style="background: #000000;"></button>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Keterangan -->
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Keterangan (opsional):</label>
-                                                        <input type="text" id="markingNote" class="form-control"
-                                                            placeholder="Contoh: Ruam merah">
-                                                    </div>
-
-                                                    <!-- Tombol Kontrol -->
-                                                    <div class="d-grid gap-2">
-                                                        <button type="button" class="btn btn-outline-danger"
-                                                            id="clearAllMarking">
-                                                            <i class="ti-trash"></i> Hapus Semua Penandaan
-                                                        </button>
-                                                    </div>
-
-                                                    <!-- Daftar Penandaan -->
-                                                    <div class="marking-list mt-3">
-                                                        <h6>Daftar Penandaan (<span id="markingCount">0</span>):</h6>
-                                                        <div id="markingsList" class="list-group"
-                                                            style="max-height: 250px; overflow-y: auto;">
-                                                            <div class="text-muted text-center py-3" id="emptyState">
-                                                                <i class="ti-info-alt"></i> Belum ada penandaan
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="site_marking_data" id="siteMarkingData"
-                                            value="{{ $asesmenKulitKelamin->site_marking_data ?? '[]' }}">
-                                    </div>
-
-                                    <div class="section-separator" id="diagnosis">
-                                        <h5 class="fw-semibold mb-4">8. Diagnosis</h5>
-
-                                        <!-- Diagnosis Banding -->
-                                        <div class="mb-4">
-                                            <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
-                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                diagnosis banding, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                keterangan diagnosis banding yang tidak ditemukan.</small>
-
-                                            <div class="input-group mb-3">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="diagnosis-banding-input"
-                                                    class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Diagnosis Banding">
-                                                <span class="input-group-text bg-white" id="add-diagnosis-banding">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-
-                                            <div id="diagnosis-banding-list" class="diagnosis-list bg-light p-3 rounded">
-                                                <!-- Diagnosis items will be added here dynamically -->
-                                            </div>
-
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="diagnosis_banding" name="diagnosis_banding"
-                                                value="{{ $asesmenKulitKelamin->diagnosis_banding ?? '[]' }}">
-                                        </div>
-
-                                        <!-- Diagnosis Kerja -->
-                                        <div class="mb-4">
-                                            <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
-                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                keterangan diagnosis kerja yang tidak ditemukan.</small>
-
-                                            <div class="input-group mb-3">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="diagnosis-kerja-input"
-                                                    class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Diagnosis Kerja">
-                                                <span class="input-group-text bg-white" id="add-diagnosis-kerja">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-
-                                            <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
-                                                <!-- Diagnosis items will be added here dynamically -->
-                                            </div>
-
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja"
-                                                value="{{ $asesmenKulitKelamin->diagnosis_kerja ?? '[]' }}">
-                                        </div>
-                                    </div>
-
-                                    <div class="section-separator" id="rencana_pengobatan">
-                                        <h5 class="fw-semibold mb-4">9. Rencana Penatalaksanaan dan Pengobatan</h5>
-                                        <textarea class="form-control" name="rencana_pengobatan" rows="4"
-                                            placeholder="Rencana Penatalaksanaan Dan Pengobatan">{{ old('rencana_pengobatan', isset($asesmenKulitKelamin) ? $asesmenKulitKelamin->rencana_pengobatan : '') }}</textarea>
-                                    </div>
-
-                                    <div class="section-separator" id="prognosis">
-                                        <h5 class="fw-semibold mb-4">10. Prognosis</h5>
-                                        <select class="form-select" name="prognosis">
-                                            <option value="">--Pilih Prognosis--</option>
-                                            @forelse ($satsetPrognosis as $item)
-                                                <option value="{{ $item->prognosis_id }}"
-                                                    {{ isset($asesmenKulitKelamin->prognosis) && $asesmenKulitKelamin->prognosis == $item->prognosis_id ? 'selected' : '' }}>
-                                                    {{ $item->value ?? 'Field tidak ditemukan' }}
-                                                </option>
-                                            @empty
-                                                <option value="" disabled>Tidak ada data</option>
-                                            @endforelse
-                                        </select>
-                                    </div>
-
-                                    <div class="section-separator" id="discharge-planning">
-                                        <h5 class="section-title">11. Discharge Planning</h5>
-
-                                        {{-- <div class="mb-4">
-                                            <label class="form-label">Diagnosis medis</label>
-                                            <input type="text" class="form-control" name="diagnosis_medis"
-                                                placeholder="Diagnosis"
-                                                value="{{ $rencanaPulang->diagnosis_medis ?? '' }}">
-                                        </div> --}}
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Usia lanjut</label>
-                                            <select class="form-select" name="usia_lanjut" id="usia_lanjut">
-                                                <option value=""
-                                                    {{ !isset($rencanaPulang->usia_lanjut) ? 'selected' : '' }} disabled>
-                                                    --Pilih--</option>
-                                                <option value="0"
-                                                    {{ isset($rencanaPulang->usia_lanjut) && $rencanaPulang->usia_lanjut == '0' ? 'selected' : '' }}>
-                                                    Ya</option>
-                                                <option value="1"
-                                                    {{ isset($rencanaPulang->usia_lanjut) && $rencanaPulang->usia_lanjut == '1' ? 'selected' : '' }}>
-                                                    Tidak</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Hambatan mobilisasi</label>
-                                            <select class="form-select" name="hambatan_mobilisasi"
-                                                id="hambatan_mobilisasi">
-                                                <option value=""
-                                                    {{ !isset($rencanaPulang->hambatan_mobilisasi) ? 'selected' : '' }}
-                                                    disabled>--Pilih--</option>
-                                                <option value="0"
-                                                    {{ isset($rencanaPulang->hambatan_mobilisasi) && $rencanaPulang->hambatan_mobilisasi == '0' ? 'selected' : '' }}>
-                                                    Ya</option>
-                                                <option value="1"
-                                                    {{ isset($rencanaPulang->hambatan_mobilisasi) && $rencanaPulang->hambatan_mobilisasi == '1' ? 'selected' : '' }}>
-                                                    Tidak</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Membutuhkan penggunaan media berkelanjutan</label>
-                                            <select class="form-select" name="penggunaan_media_berkelanjutan"
-                                                id="penggunaan_media_berkelanjutan">
-                                                <option value=""
-                                                    {{ !isset($rencanaPulang->membutuhkan_pelayanan_medis) ? 'selected' : '' }}
-                                                    disabled>--Pilih--</option>
-                                                <option value="ya"
-                                                    {{ isset($rencanaPulang->membutuhkan_pelayanan_medis) && $rencanaPulang->membutuhkan_pelayanan_medis == 'ya' ? 'selected' : '' }}>
-                                                    Ya</option>
-                                                <option value="tidak"
-                                                    {{ isset($rencanaPulang->membutuhkan_pelayanan_medis) && $rencanaPulang->membutuhkan_pelayanan_medis == 'tidak' ? 'selected' : '' }}>
-                                                    Tidak</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Ketergantungan dengan orang lain dalam aktivitas
-                                                harian</label>
-                                            <select class="form-select" name="ketergantungan_aktivitas"
-                                                id="ketergantungan_aktivitas">
-                                                <option value="" selected disabled>--Pilih--</option>
-                                                <option value="ya">Ya</option>
-                                                <option value="tidak">Tidak</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Pasien / Keluarga Memerlukan Keterampilan Khusus
-                                                Setelah Pulang</label>
-                                            <select class="form-select" name="keterampilan_khusus"
-                                                id="keterampilan_khusus">
-                                                <option value=""
-                                                    {{ !isset($rencanaPulang->memerlukan_keterampilan_khusus) ? 'selected' : '' }}
-                                                    disabled>--Pilih--</option>
-                                                <option value="ya"
-                                                    {{ isset($rencanaPulang->memerlukan_keterampilan_khusus) && $rencanaPulang->memerlukan_keterampilan_khusus == 'ya' ? 'selected' : '' }}>
-                                                    Ya</option>
-                                                <option value="tidak"
-                                                    {{ isset($rencanaPulang->memerlukan_keterampilan_khusus) && $rencanaPulang->memerlukan_keterampilan_khusus == 'tidak' ? 'selected' : '' }}>
-                                                    Tidak</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Pasien Memerlukan Alat Bantu Setelah Keluar Rumah
-                                                Sakit</label>
-                                            <select class="form-select" name="alat_bantu" id="alat_bantu">
-                                                <option value=""
-                                                    {{ !isset($rencanaPulang->memerlukan_alat_bantu) ? 'selected' : '' }}
-                                                    disabled>--Pilih--</option>
-                                                <option value="ya"
-                                                    {{ isset($rencanaPulang->memerlukan_alat_bantu) && $rencanaPulang->memerlukan_alat_bantu == 'ya' ? 'selected' : '' }}>
-                                                    Ya</option>
-                                                <option value="tidak"
-                                                    {{ isset($rencanaPulang->memerlukan_alat_bantu) && $rencanaPulang->memerlukan_alat_bantu == 'tidak' ? 'selected' : '' }}>
-                                                    Tidak</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Pasien Memiliki Nyeri Kronis Dan / Kebiasaan Setelah
-                                                Pulang</label>
-                                            <select class="form-select" name="nyeri_kronis" id="nyeri_kronis">
-                                                <option value=""
-                                                    {{ !isset($rencanaPulang->memiliki_nyeri_kronis) ? 'selected' : '' }}
-                                                    disabled>--Pilih--</option>
-                                                <option value="ya"
-                                                    {{ isset($rencanaPulang->memiliki_nyeri_kronis) && $rencanaPulang->memiliki_nyeri_kronis == 'ya' ? 'selected' : '' }}>
-                                                    Ya</option>
-                                                <option value="tidak"
-                                                    {{ isset($rencanaPulang->memiliki_nyeri_kronis) && $rencanaPulang->memiliki_nyeri_kronis == 'tidak' ? 'selected' : '' }}>
-                                                    Tidak</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="row mb-4">
-                                            <div class="col-md-6">
-                                                <label class="form-label">Perkiraan lama hari dirawat</label>
-                                                <input type="text" class="form-control" name="perkiraan_hari"
-                                                    placeholder="hari"
-                                                    value="{{ $rencanaPulang->perkiraan_lama_dirawat ?? '' }}">
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <label class="form-label">Rencana Tanggal Pulang</label>
-                                                <input type="date" class="form-control" name="tanggal_pulang"
-                                                    value="{{ $rencanaPulang->rencana_pulang ? \Carbon\Carbon::parse($rencanaPulang->rencana_pulang)->format('Y-m-d') : '' }}">
-                                            </div>
-                                        </div>
-
-                                        <div class="mt-4">
-                                            <label class="form-label">KESIMPULAN</label>
-                                            <div class="d-flex flex-column gap-2" id="kesimpulan-alerts">
-                                                <div class="alert alert-info" id="alert-info" style="display: none;">
-                                                    Pilih semua Planning
-                                                </div>
-                                                <div class="alert alert-warning" id="alert-warning"
-                                                    style="display: none;">
-                                                    Mebutuhkan rencana pulang khusus
-                                                </div>
-                                                <div class="alert alert-success" id="alert-success"
-                                                    style="display: none;">
-                                                    Tidak mebutuhkan rencana pulang khusus
-                                                </div>
-                                            </div>
-                                            <input type="hidden" id="kesimpulan" name="kesimpulan_planing"
-                                                value="{{ $rencanaPulang->kesimpulan ?? 'Pilih semua Planning' }}">
-                                        </div>
-                                    </div>
-
-                                    {{-- Bagian lain akan ditambahkan secara bertahap --}}
-
-                                    <div class="text-end mt-4">
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="ti-check"></i> Update
-                                        </button>
-                                    </div>
-
+                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
+                                    id="openObatModal">
+                                    <i class="ti-plus"></i> Tambah
+                                </button>
+                                <input type="hidden" name="riwayat_penggunaan_obat" id="riwayatObatData"
+                                    value="[]">
+                                <div class="table-responsive">
+                                    <table class="table" id="createRiwayatObatTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Nama Obat</th>
+                                                <th>Dosis</th>
+                                                <th>Aturan Pakai</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Table content will be dynamically populated -->
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                        </form>
+
+                            <div class="section-separator" id="skala-nyeri">
+                                <h5 class="section-title">5. Skala Nyeri</h5>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label style="min-width: 200px;">Skala Nyeri (1-10)</label>
+                                            <input type="number" class="form-control" name="skala_nyeri"
+                                                id="skala_nyeri" min="1" max="10"
+                                                placeholder="1-10" value="{{ $asesmen->skala_nyeri }}">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label style="min-width: 200px;">Kategori Nyeri</label>
+                                            <input type="text" class="form-control" name="kategori_nyeri"
+                                                id="kategori_nyeri" readonly placeholder="Akan terisi otomatis"
+                                                value="{{ $asesmen->kategori_nyeri }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="text-center">
+                                            <img src="{{ asset('assets/img/asesmen/asesmen.jpeg') }}"
+                                                alt="Skala Nyeri Visual" class="img-fluid mb-3"
+                                                style="max-height: 200px;">
+                                            <img src="{{ asset('assets/img/asesmen/numerik.png') }}"
+                                                alt="Skala Nyeri Numerik" class="img-fluid"
+                                                style="max-height: 150px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="section-separator" id="alergi">
+                                <h5 class="section-title">6. Alergi</h5>
+
+                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
+                                    id="openAlergiModal" data-bs-toggle="modal" data-bs-target="#alergiModal">
+                                    <i class="ti-plus"></i> Tambah Alergi
+                                </button>
+                                <input type="hidden" name="alergis" id="alergisInput" value="[]">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="createAlergiTable">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th width="20%">Jenis Alergi</th>
+                                                <th width="25%">Alergen</th>
+                                                <th width="25%">Reaksi</th>
+                                                <th width="20%">Tingkat Keparahan</th>
+                                                <th width="10%">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr id="no-alergi-row">
+                                                <td colspan="5" class="text-center text-muted">Tidak ada data
+                                                    alergi</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="section-separator" id="pemeriksaan-fisik">
+                                <h5 class="section-title">7. Pemeriksaan Fisik</h5>
+                                <div class="row g-3">
+                                    <div class="pemeriksaan-fisik">
+                                        <h6>Pemeriksaan Fisik</h6>
+                                        <p class="text-small">Centang normal jika fisik yang dinilai
+                                            normal,
+                                            pilih tanda tambah
+                                            untuk menambah keterangan fisik yang ditemukan tidak normal.
+                                            Jika
+                                            tidak dipilih salah satunya, maka pemeriksaan tidak
+                                            dilakukan.
+                                        </p>
+                                        <div class="row">
+                                            @foreach ($itemFisik->chunk(ceil($itemFisik->count() / 2)) as $chunk)
+                                                <div class="col-md-6">
+                                                    <div class="d-flex flex-column gap-3">
+                                                        @foreach ($chunk as $item)
+                                                            @php
+                                                                $pemeriksaanData = $pemeriksaanFisik->get(
+                                                                    $item->id,
+                                                                );
+                                                                $isNormal = $pemeriksaanData
+                                                                    ? $pemeriksaanData->is_normal
+                                                                    : false;
+                                                                $keterangan = $pemeriksaanData
+                                                                    ? $pemeriksaanData->keterangan
+                                                                    : '';
+                                                            @endphp
+                                                            <div class="pemeriksaan-item">
+                                                                <div
+                                                                    class="d-flex align-items-center border-bottom pb-2">
+                                                                    <div class="flex-grow-1">
+                                                                        {{ $item->nama }}
+                                                                    </div>
+                                                                    <div class="form-check me-3">
+                                                                        <input type="checkbox"
+                                                                            class="form-check-input"
+                                                                            id="{{ $item->id }}-normal"
+                                                                            name="{{ $item->id }}-normal"
+                                                                            {{ $isNormal ? 'checked' : '' }}>
+                                                                        <label class="form-check-label"
+                                                                            for="{{ $item->id }}-normal">Normal</label>
+                                                                    </div>
+                                                                    <button
+                                                                        class="btn btn-sm btn-outline-primary tambah-keterangan"
+                                                                        type="button"
+                                                                        data-target="{{ $item->id }}-keterangan">
+                                                                        <i class="bi bi-plus"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="keterangan mt-2"
+                                                                    id="{{ $item->id }}-keterangan"
+                                                                    style="display:{{ !$isNormal && $keterangan ? 'block' : 'none' }};">
+                                                                    <input type="text" class="form-control"
+                                                                        name="{{ $item->id }}_keterangan"
+                                                                        placeholder="Tambah keterangan jika tidak normal..."
+                                                                        value="{{ $keterangan }}">
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="section-separator" id="site-marking">
+                                <h5 class="section-title">7.1. Site Marking - Penandaan Anatomi</h5>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="site-marking-container position-relative">
+                                            <img src="{{ asset('assets/images/sitemarking/kulit-kelamin.png') }}"
+                                                id="anatomyImage" class="img-fluid" style="max-width: 100%;">
+                                            <canvas id="markingCanvas" class="position-absolute top-0 start-0"
+                                                style="cursor: crosshair; z-index: 10;">
+                                            </canvas>
+                                        </div>
+                                        <div class="mt-2">
+                                            <small class="text-muted">
+                                                <strong>Cara Pakai:</strong> Pilih warna, klik dan drag untuk
+                                                membuat panah di area yang ingin ditandai.
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="marking-controls">
+                                            <h6>Kontrol Penandaan</h6>
+
+                                            <!-- Pilihan Warna -->
+                                            <div class="mb-3">
+                                                <label class="form-label">Pilih Warna:</label>
+                                                <div class="d-flex flex-wrap gap-2">
+                                                    <button type="button" class="color-btn active"
+                                                        data-color="#dc3545"
+                                                        style="background: #dc3545;"></button>
+                                                    <button type="button" class="color-btn" data-color="#198754"
+                                                        style="background: #198754;"></button>
+                                                    <button type="button" class="color-btn" data-color="#0d6efd"
+                                                        style="background: #0d6efd;"></button>
+                                                    <button type="button" class="color-btn" data-color="#fd7e14"
+                                                        style="background: #fd7e14;"></button>
+                                                    <button type="button" class="color-btn" data-color="#6f42c1"
+                                                        style="background: #6f42c1;"></button>
+                                                    <button type="button" class="color-btn" data-color="#000000"
+                                                        style="background: #000000;"></button>
+                                                </div>
+                                            </div>
+
+                                            <!-- Keterangan -->
+                                            <div class="mb-3">
+                                                <label class="form-label">Keterangan (opsional):</label>
+                                                <input type="text" id="markingNote" class="form-control"
+                                                    placeholder="Contoh: Ruam merah">
+                                            </div>
+
+                                            <!-- Tombol Kontrol -->
+                                            <div class="d-grid gap-2">
+                                                <button type="button" class="btn btn-outline-danger"
+                                                    id="clearAllMarking">
+                                                    <i class="ti-trash"></i> Hapus Semua Penandaan
+                                                </button>
+                                            </div>
+
+                                            <!-- Daftar Penandaan -->
+                                            <div class="marking-list mt-3">
+                                                <h6>Daftar Penandaan (<span id="markingCount">0</span>):</h6>
+                                                <div id="markingsList" class="list-group"
+                                                    style="max-height: 250px; overflow-y: auto;">
+                                                    <div class="text-muted text-center py-3" id="emptyState">
+                                                        <i class="ti-info-alt"></i> Belum ada penandaan
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="site_marking_data" id="siteMarkingData"
+                                    value="{{ $asesmenKulitKelamin->site_marking_data ?? '[]' }}">
+                            </div>
+
+                            <div class="section-separator" id="diagnosis">
+                                <h5 class="fw-semibold mb-4">8. Diagnosis</h5>
+
+                                <!-- Diagnosis Banding -->
+                                <div class="mb-4">
+                                    <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
+                                    <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                        diagnosis banding, apabila tidak ada, Pilih tanda tambah untuk menambah
+                                        keterangan diagnosis banding yang tidak ditemukan.</small>
+
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text bg-white border-end-0">
+                                            <i class="bi bi-search text-secondary"></i>
+                                        </span>
+                                        <input type="text" id="diagnosis-banding-input"
+                                            class="form-control border-start-0 ps-0"
+                                            placeholder="Cari dan tambah Diagnosis Banding">
+                                        <span class="input-group-text bg-white" id="add-diagnosis-banding">
+                                            <i class="bi bi-plus-circle text-primary"></i>
+                                        </span>
+                                    </div>
+
+                                    <div id="diagnosis-banding-list" class="diagnosis-list bg-light p-3 rounded">
+                                        <!-- Diagnosis items will be added here dynamically -->
+                                    </div>
+
+                                    <!-- Hidden input to store JSON data -->
+                                    <input type="hidden" id="diagnosis_banding" name="diagnosis_banding"
+                                        value="{{ $asesmenKulitKelamin->diagnosis_banding ?? '[]' }}">
+                                </div>
+
+                                <!-- Diagnosis Kerja -->
+                                <div class="mb-4">
+                                    <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
+                                    <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                        diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah
+                                        keterangan diagnosis kerja yang tidak ditemukan.</small>
+
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text bg-white border-end-0">
+                                            <i class="bi bi-search text-secondary"></i>
+                                        </span>
+                                        <input type="text" id="diagnosis-kerja-input"
+                                            class="form-control border-start-0 ps-0"
+                                            placeholder="Cari dan tambah Diagnosis Kerja">
+                                        <span class="input-group-text bg-white" id="add-diagnosis-kerja">
+                                            <i class="bi bi-plus-circle text-primary"></i>
+                                        </span>
+                                    </div>
+
+                                    <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
+                                        <!-- Diagnosis items will be added here dynamically -->
+                                    </div>
+
+                                    <!-- Hidden input to store JSON data -->
+                                    <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja"
+                                        value="{{ $asesmenKulitKelamin->diagnosis_kerja ?? '[]' }}">
+                                </div>
+                            </div>
+
+                            <div class="section-separator" id="rencana_pengobatan">
+                                <h5 class="fw-semibold mb-4">9. Rencana Penatalaksanaan dan Pengobatan</h5>
+                                <textarea class="form-control" name="rencana_pengobatan" rows="4"
+                                    placeholder="Rencana Penatalaksanaan Dan Pengobatan">{{ old('rencana_pengobatan', isset($asesmenKulitKelamin) ? $asesmenKulitKelamin->rencana_pengobatan : '') }}</textarea>
+                            </div>
+
+                            <div class="section-separator" id="prognosis">
+                                <h5 class="fw-semibold mb-4">10. Prognosis</h5>
+                                <select class="form-select" name="prognosis">
+                                    <option value="">--Pilih Prognosis--</option>
+                                    @forelse ($satsetPrognosis as $item)
+                                        <option value="{{ $item->prognosis_id }}"
+                                            {{ isset($asesmenKulitKelamin->prognosis) && $asesmenKulitKelamin->prognosis == $item->prognosis_id ? 'selected' : '' }}>
+                                            {{ $item->value ?? 'Field tidak ditemukan' }}
+                                        </option>
+                                    @empty
+                                        <option value="" disabled>Tidak ada data</option>
+                                    @endforelse
+                                </select>
+                            </div>
+
+                            <div class="section-separator" id="discharge-planning">
+                                <h5 class="section-title">11. Discharge Planning</h5>
+
+                                {{-- <div class="mb-4">
+                                    <label class="form-label">Diagnosis medis</label>
+                                    <input type="text" class="form-control" name="diagnosis_medis"
+                                        placeholder="Diagnosis"
+                                        value="{{ $rencanaPulang->diagnosis_medis ?? '' }}">
+                                </div> --}}
+
+                                <div class="mb-4">
+                                    <label class="form-label">Usia lanjut</label>
+                                    <select class="form-select" name="usia_lanjut" id="usia_lanjut">
+                                        <option value=""
+                                            {{ !isset($rencanaPulang->usia_lanjut) ? 'selected' : '' }} disabled>
+                                            --Pilih--</option>
+                                        <option value="0"
+                                            {{ isset($rencanaPulang->usia_lanjut) && $rencanaPulang->usia_lanjut == '0' ? 'selected' : '' }}>
+                                            Ya</option>
+                                        <option value="1"
+                                            {{ isset($rencanaPulang->usia_lanjut) && $rencanaPulang->usia_lanjut == '1' ? 'selected' : '' }}>
+                                            Tidak</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Hambatan mobilisasi</label>
+                                    <select class="form-select" name="hambatan_mobilisasi"
+                                        id="hambatan_mobilisasi">
+                                        <option value=""
+                                            {{ !isset($rencanaPulang->hambatan_mobilisasi) ? 'selected' : '' }}
+                                            disabled>--Pilih--</option>
+                                        <option value="0"
+                                            {{ isset($rencanaPulang->hambatan_mobilisasi) && $rencanaPulang->hambatan_mobilisasi == '0' ? 'selected' : '' }}>
+                                            Ya</option>
+                                        <option value="1"
+                                            {{ isset($rencanaPulang->hambatan_mobilisasi) && $rencanaPulang->hambatan_mobilisasi == '1' ? 'selected' : '' }}>
+                                            Tidak</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Membutuhkan penggunaan media berkelanjutan</label>
+                                    <select class="form-select" name="penggunaan_media_berkelanjutan"
+                                        id="penggunaan_media_berkelanjutan">
+                                        <option value=""
+                                            {{ !isset($rencanaPulang->membutuhkan_pelayanan_medis) ? 'selected' : '' }}
+                                            disabled>--Pilih--</option>
+                                        <option value="ya"
+                                            {{ isset($rencanaPulang->membutuhkan_pelayanan_medis) && $rencanaPulang->membutuhkan_pelayanan_medis == 'ya' ? 'selected' : '' }}>
+                                            Ya</option>
+                                        <option value="tidak"
+                                            {{ isset($rencanaPulang->membutuhkan_pelayanan_medis) && $rencanaPulang->membutuhkan_pelayanan_medis == 'tidak' ? 'selected' : '' }}>
+                                            Tidak</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Ketergantungan dengan orang lain dalam aktivitas
+                                        harian</label>
+                                    <select class="form-select" name="ketergantungan_aktivitas"
+                                        id="ketergantungan_aktivitas">
+                                        <option value="" selected disabled>--Pilih--</option>
+                                        <option value="ya">Ya</option>
+                                        <option value="tidak">Tidak</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Pasien / Keluarga Memerlukan Keterampilan Khusus
+                                        Setelah Pulang</label>
+                                    <select class="form-select" name="keterampilan_khusus"
+                                        id="keterampilan_khusus">
+                                        <option value=""
+                                            {{ !isset($rencanaPulang->memerlukan_keterampilan_khusus) ? 'selected' : '' }}
+                                            disabled>--Pilih--</option>
+                                        <option value="ya"
+                                            {{ isset($rencanaPulang->memerlukan_keterampilan_khusus) && $rencanaPulang->memerlukan_keterampilan_khusus == 'ya' ? 'selected' : '' }}>
+                                            Ya</option>
+                                        <option value="tidak"
+                                            {{ isset($rencanaPulang->memerlukan_keterampilan_khusus) && $rencanaPulang->memerlukan_keterampilan_khusus == 'tidak' ? 'selected' : '' }}>
+                                            Tidak</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Pasien Memerlukan Alat Bantu Setelah Keluar Rumah
+                                        Sakit</label>
+                                    <select class="form-select" name="alat_bantu" id="alat_bantu">
+                                        <option value=""
+                                            {{ !isset($rencanaPulang->memerlukan_alat_bantu) ? 'selected' : '' }}
+                                            disabled>--Pilih--</option>
+                                        <option value="ya"
+                                            {{ isset($rencanaPulang->memerlukan_alat_bantu) && $rencanaPulang->memerlukan_alat_bantu == 'ya' ? 'selected' : '' }}>
+                                            Ya</option>
+                                        <option value="tidak"
+                                            {{ isset($rencanaPulang->memerlukan_alat_bantu) && $rencanaPulang->memerlukan_alat_bantu == 'tidak' ? 'selected' : '' }}>
+                                            Tidak</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Pasien Memiliki Nyeri Kronis Dan / Kebiasaan Setelah
+                                        Pulang</label>
+                                    <select class="form-select" name="nyeri_kronis" id="nyeri_kronis">
+                                        <option value=""
+                                            {{ !isset($rencanaPulang->memiliki_nyeri_kronis) ? 'selected' : '' }}
+                                            disabled>--Pilih--</option>
+                                        <option value="ya"
+                                            {{ isset($rencanaPulang->memiliki_nyeri_kronis) && $rencanaPulang->memiliki_nyeri_kronis == 'ya' ? 'selected' : '' }}>
+                                            Ya</option>
+                                        <option value="tidak"
+                                            {{ isset($rencanaPulang->memiliki_nyeri_kronis) && $rencanaPulang->memiliki_nyeri_kronis == 'tidak' ? 'selected' : '' }}>
+                                            Tidak</option>
+                                    </select>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Perkiraan lama hari dirawat</label>
+                                        <input type="text" class="form-control" name="perkiraan_hari"
+                                            placeholder="hari"
+                                            value="{{ $rencanaPulang->perkiraan_lama_dirawat ?? '' }}">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Rencana Tanggal Pulang</label>
+                                        <input type="date" class="form-control" name="tanggal_pulang"
+                                            value="{{ $rencanaPulang->rencana_pulang ? \Carbon\Carbon::parse($rencanaPulang->rencana_pulang)->format('Y-m-d') : '' }}">
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    <label class="form-label">KESIMPULAN</label>
+                                    <div class="d-flex flex-column gap-2" id="kesimpulan-alerts">
+                                        <div class="alert alert-info" id="alert-info" style="display: none;">
+                                            Pilih semua Planning
+                                        </div>
+                                        <div class="alert alert-warning" id="alert-warning"
+                                            style="display: none;">
+                                            Mebutuhkan rencana pulang khusus
+                                        </div>
+                                        <div class="alert alert-success" id="alert-success"
+                                            style="display: none;">
+                                            Tidak mebutuhkan rencana pulang khusus
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="kesimpulan" name="kesimpulan_planing"
+                                        value="{{ $rencanaPulang->kesimpulan ?? 'Pilih semua Planning' }}">
+                                </div>
+                            </div>
+
+                            {{-- Bagian lain akan ditambahkan secara bertahap --}}
+                            <div class="text-end">
+                                <x-button-submit>Perbarui</x-button-submit>
+                            </div>
+
+                        </div>
                     </div>
-                </div>
-            </div>
+                </form>
+            </x-content-card>
         </div>
     </div>
 @endsection

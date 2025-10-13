@@ -80,6 +80,8 @@ class AsesmenKulitKelaminController extends Controller
         }
 
         $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
+        // Get latest vital signs data for the patient
+        $vitalSignsData = $this->asesmenService->getLatestVitalSignsByPatient($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-kulitkelamin.create', compact(
             'kd_unit',
@@ -99,7 +101,8 @@ class AsesmenKulitKelaminController extends Controller
             'rmeMasterImplementasi',
             'alergiPasien',
             'satsetPrognosis',
-            'user'
+            'user',
+            'vitalSignsData'
         ));
     }
 

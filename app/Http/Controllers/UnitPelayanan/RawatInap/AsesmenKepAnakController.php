@@ -37,15 +37,17 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use App\Services\CheckResumeService;
 class AsesmenKepAnakController extends Controller
 {
     protected $asesmenService;
+    protected $checkResumeService;
 
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
         $this->asesmenService = new AsesmenService;
+        $this->checkResumeService = new CheckResumeService();
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -90,6 +92,9 @@ class AsesmenKepAnakController extends Controller
 
         $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK.' '.$dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
 
+        // Get latest vital signs data for the patient
+        $vitalSignsData = $this->asesmenService->getLatestVitalSignsByPatient($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
         return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.create', compact(
             'kd_unit',
             'kd_pasien',
@@ -107,7 +112,8 @@ class AsesmenKepAnakController extends Controller
             'alergiPasien',
             'rmeMasterDiagnosis',
             'rmeMasterImplementasi',
-            'user'
+            'user',
+            'vitalSignsData'
         ));
     }
 
@@ -619,7 +625,13 @@ class AsesmenKepAnakController extends Controller
                 'rencana_gangguan_integritas_kulit' => $request->rencana_gangguan_integritas_kulit ?? [],
             ]);
 
-            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+            // Panggil ResumeService
+            $resume = $this->checkResumeService->checkAndCreateResume([
+                'kd_pasien' => $kd_pasien,
+                'kd_unit' => $kd_unit,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk
+            ]);
 
             DB::commit();
 
@@ -1395,7 +1407,13 @@ class AsesmenKepAnakController extends Controller
                 ],
             ];
 
-            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+            // Panggil ResumeService
+            $resume = $this->checkResumeService->checkAndCreateResume([
+                'kd_pasien' => $kd_pasien,
+                'kd_unit' => $kd_unit,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk
+            ]);
 
             DB::commit();
 

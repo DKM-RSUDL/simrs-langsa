@@ -9,29 +9,19 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ url()->previous() }}" class="btn btn-outline-info mb-3">
-                <i class="ti-arrow-left"></i> Kembali
-            </a>
+            <x-content-card>
+            <x-button-previous />
+                @include('components.page-header', [
+                    'title' => 'Asesmen Pengkajian Awal Medis',
+                    'description' => 'Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan',
+                ])
 
-            <form method="POST" enctype="multipart/form-data">
-                @csrf
-                <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
-                <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
-                <input type="hidden" name="tgl_masuk" value="{{ $dataMedis->tgl_masuk }}">
-                <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
-
-                <div class="card">
-                    <div class="card-body">
-                        <div class="px-3">
-                            <div class="row g-3">
-                                <div class="col-md-8">
-                                    <h4 class="header-asesmen">Asesmen Pengkajian Awal Medis</h4>
-                                    <p class="text-muted">
-                                        Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                <form method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
+                    <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
+                    <input type="hidden" name="tgl_masuk" value="{{ $dataMedis->tgl_masuk }}">
+                    <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
 
                         <!-- FORM ASESMEN -->
                         <div class="px-3">
@@ -144,13 +134,15 @@
                                         <div class="flex-grow-1">
                                             <label class="form-label">Sistole</label>
                                             <input type="number" class="form-control" name="sistole"
-                                                placeholder="Sistole">
+                                                placeholder="Sistole"
+                                                value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->sistole : '' }}">
                                         </div>
 
                                         <div class="flex-grow-1">
                                             <label class="form-label">Diastole</label>
                                             <input type="number" class="form-control" name="diastole"
-                                                placeholder="Diastole">
+                                                placeholder="Diastole"
+                                                value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->diastole : '' }}">
                                         </div>
                                     </div>
                                 </div>
@@ -158,15 +150,18 @@
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Respirasi (x/menit)</label>
                                     <input type="number" class="form-control" name="respirasi"
-                                        placeholder="Respirasi per menit">
+                                        placeholder="Respirasi per menit"
+                                        value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->respiration : '' }}">
                                 </div>
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Suhu (C)</label>
-                                    <input type="text" class="form-control" name="suhu" placeholder="Suhu">
+                                    <input type="text" class="form-control" name="suhu" placeholder="Suhu"
+                                    value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->suhu : '' }}">
                                 </div>
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Nadi (x/menit)</label>
-                                    <input type="number" class="form-control" name="nadi" placeholder="Nadi">
+                                    <input type="number" class="form-control" name="nadi" placeholder="Nadi"
+                                    value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->nadi : '' }}">
                                 </div>
 
                             </div>
@@ -827,14 +822,11 @@
                         </div>
 
                         <!-- Submit Button -->
-                        <div class="d-flex justify-content-end mt-4">
-                            <button type="submit" class="btn btn-primary px-4">
-                                <i class="fas fa-save me-2"></i>Simpan
-                            </button>
+                        <div class="text-end">
+                            <x-button-submit />
                         </div>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </x-content-card>
         </div>
     </div>
 @endsection

@@ -54,7 +54,7 @@ class AsesmenMedisAnakController extends Controller
         return $dataMedis;
     }
 
-   
+
 
     private function getMasterData($kd_pasien)
     {
@@ -64,6 +64,111 @@ class AsesmenMedisAnakController extends Controller
             'satsetPrognosis' => SatsetPrognosis::all(),
             'alergiPasien' => RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get()
         ];
+    }
+
+    public function getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        $lastTransaction = Transaksi::select('kd_kasir', 'no_transaksi')
+            ->where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_transaksi', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
+
+        return $lastTransaction;
+    }
+
+    private function saveDiagnosisToMaster($diagnosisList)
+    {
+        foreach ($diagnosisList as $diagnosa) {
+            if (!empty($diagnosa)) {
+                RmeMasterDiagnosis::firstOrCreate(['nama_diagnosis' => $diagnosa]);
+            }
+        }
+    }
+    private function saveImplementasiToMaster($dataList, $column)
+    {
+        foreach ($dataList as $item) {
+            if (!empty($item)) {
+                RmeMasterImplementasi::firstOrCreate([$column => $item]);
+            }
+        }
+    }
+
+    private function handleAlergiData($request, $kd_pasien)
+    {
+        $alergiData = json_decode($request->alergis, true);
+
+        if (!empty($alergiData)) {
+            RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
+
+            foreach ($alergiData as $alergi) {
+                if (!empty($alergi['jenis_alergi']) || !empty($alergi['alergen'])) {
+                    RmeAlergiPasien::create([
+                        'kd_pasien' => $kd_pasien,
+                        'jenis_alergi' => $alergi['jenis_alergi'],
+                        'nama_alergi' => $alergi['alergen'],
+                        'reaksi' => $alergi['reaksi'],
+                        'tingkat_keparahan' => $alergi['tingkat_keparahan']
+                    ]);
+                }
+            }
+        }
+    }
+
+    /**
+     * Helper function to process JSON data correctly
+     */
+    private function processJsonData($jsonString)
+    {
+        if (empty($jsonString) || $jsonString === '[]') {
+            return null;
+        }
+
+        $data = json_decode($jsonString, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return null;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Helper function to format JSON for database storage
+     */
+    private function formatJsonForDatabase($data)
+    {
+        if (empty($data) || !is_array($data)) {
+            return null;
+        }
+
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+        if (!$dataMedis) {
+            abort(404, 'Data tidak ditemukan');
+        }
+
+        $masterData = $this->getMasterData($kd_pasien);
+        // Get latest vital signs data for the patient
+        $vitalSignsData = $this->asesmenService->getLatestVitalSignsByPatient($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+        return view(
+            'unit-pelayanan.rawat-inap.pelayanan.asesmen-medis-anak.create',
+            array_merge([
+                'kd_unit' => $kd_unit,
+                'kd_pasien' => $kd_pasien,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk,
+                'dataMedis' => $dataMedis,
+                'vitalSignsData' => $vitalSignsData,
+            ], $masterData)
+        );
     }
 
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -305,97 +410,7 @@ class AsesmenMedisAnakController extends Controller
         }
     }
 
-    private function saveDiagnosisToMaster($diagnosisList)
-    {
-        foreach ($diagnosisList as $diagnosa) {
-            if (!empty($diagnosa)) {
-                RmeMasterDiagnosis::firstOrCreate(['nama_diagnosis' => $diagnosa]);
-            }
-        }
-    }
-    private function saveImplementasiToMaster($dataList, $column)
-    {
-        foreach ($dataList as $item) {
-            if (!empty($item)) {
-                RmeMasterImplementasi::firstOrCreate([$column => $item]);
-            }
-        }
-    }
 
-    private function handleAlergiData($request, $kd_pasien)
-    {
-        $alergiData = json_decode($request->alergis, true);
-
-        if (!empty($alergiData)) {
-            RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
-
-            foreach ($alergiData as $alergi) {
-                if (!empty($alergi['jenis_alergi']) || !empty($alergi['alergen'])) {
-                    RmeAlergiPasien::create([
-                        'kd_pasien' => $kd_pasien,
-                        'jenis_alergi' => $alergi['jenis_alergi'],
-                        'nama_alergi' => $alergi['alergen'],
-                        'reaksi' => $alergi['reaksi'],
-                        'tingkat_keparahan' => $alergi['tingkat_keparahan']
-                    ]);
-                }
-            }
-        }
-    }
-
-    /**
-     * Helper function to process JSON data correctly
-     */
-    private function processJsonData($jsonString)
-    {
-        if (empty($jsonString) || $jsonString === '[]') {
-            return null;
-        }
-
-        $data = json_decode($jsonString, true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return null;
-        }
-
-        return $data;
-    }
-
-    /**
-     * Helper function to format JSON for database storage
-     */
-    private function formatJsonForDatabase($data)
-    {
-        if (empty($data) || !is_array($data)) {
-            return null;
-        }
-
-        return json_encode($data, JSON_UNESCAPED_UNICODE);
-    }
-
-    public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-
-        if (!$dataMedis) {
-            abort(404, 'Data tidak ditemukan');
-        }
-
-        $masterData = $this->getMasterData($kd_pasien);
-
-        return view(
-            'unit-pelayanan.rawat-inap.pelayanan.asesmen-medis-anak.create',
-            array_merge([
-                'kd_unit' => $kd_unit,
-                'kd_pasien' => $kd_pasien,
-                'tgl_masuk' => $tgl_masuk,
-                'urut_masuk' => $urut_masuk,
-                'dataMedis' => $dataMedis,
-            ], $masterData)
-        );
-    }
-
-    
     public function show(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         try {

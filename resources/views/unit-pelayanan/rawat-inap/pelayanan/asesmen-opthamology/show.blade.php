@@ -7,23 +7,12 @@
         </div>
 
         <div class="col-md-9">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">
-                    <i class="ti-arrow-left"></i> Kembali
-                </a>
-                <div>
-                    <a href="#" class="btn btn-outline-primary" onclick="window.print()">
-                        <i class="fas fa-print"></i> Cetak
-                    </a>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Data Asesmen Keperawatan Ophthalmology</h5>
-                    <p>Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan</p>
-                </div>
-                <div class="card-body">
+            <x-content-card>
+            <x-button-previous />
+                @include('components.page-header', [
+                    'title' => 'Detail Asesmen Awal Medis Opthamology',
+                    'description' => 'Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan',
+                ])
                     <!-- Informasi Dasar -->
                     <div class="mb-4">
                         <!-- 1. Data masuk -->
@@ -1173,9 +1162,7 @@
                             </div>
                         </div>
 
-                    </div>
-                </div>
-            </div>
+            </x-content-card>
         </div>
     </div>
 @endsection

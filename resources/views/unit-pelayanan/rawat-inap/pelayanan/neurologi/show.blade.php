@@ -8,29 +8,12 @@
         </div>
 
         <div class="col-md-9">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">
-                    <i class="ti-arrow-left"></i> Kembali
-                </a>
-                {{-- <div>
-                    <a href="{{ route('rawat-inap.asesmen.medis.neurologi.print-pdf', [
-                        $asesmen->kd_unit,
-                        $asesmen->pasien->kd_pasien,
-                        \Carbon\Carbon::parse($asesmen->tgl_masuk)->format('Y-m-d'),
-                        $asesmen->urut_masuk,
-                        $asesmen->id
-                    ]) }}" class="btn btn-outline-primary" target="_blank">
-                        <i class="bi bi-printer"></i>
-                        Print PDF
-                    </a>
-                </div> --}}
-            </div>
-
-            <div class="">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Data Asesmen Awal Medis Neurologi</h5>
-                    <p>Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan</p>
-                </div>
+            <x-content-card>
+            <x-button-previous />
+                @include('components.page-header', [
+                    'title' => 'Detail Asesmen Awal Medis Penyakit Syaraf (Neurologi)',
+                    'description' => 'Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan',
+                ])
                 <div class="card-body">
                     <!-- Informasi Dasar -->
                     <div class="mb-4">
@@ -1141,7 +1124,7 @@
                         </div> --}}
                     </div>
                 </div>
-            </div>
+            </x-content-card>
         </div>
     </div>
 @endsection
