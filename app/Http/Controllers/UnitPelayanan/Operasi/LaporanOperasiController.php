@@ -114,6 +114,11 @@ class LaporanOperasiController extends Controller
                 abort(404, 'Data not found');
             }
 
+            // Decode JSON dari multi-input fields
+            $diagnosaPraOperasi = json_decode($request->diagnosa_pra_operasi, true) ?: [];
+            $diagnosaPascaOperasi = json_decode($request->diagnosa_pasca_operasi, true) ?: [];
+            $komplikasi = json_decode($request->komplikasi, true) ?: [];
+
             // store
             $data = [
                 'kd_kasir'              => $dataMedis->kd_kasir,
@@ -125,13 +130,16 @@ class LaporanOperasiController extends Controller
                 'kd_dokter_bedah' => $request->kd_dokter_bedah,
                 'kd_dokter_anastesi' => $request->kd_dokter_anastesi,
                 'pendarahan' => $request->pendarahan,
-                'diagnosa_pra_operasi' => $request->diagnosa_pra_operasi,
-                'diagnosa_pasca_operasi' => $request->diagnosa_pasca_operasi,
+
+                // Multi-input fields - simpan sebagai JSON atau serialize
+                'diagnosa_pra_operasi'  => json_encode($diagnosaPraOperasi),
+                'diagnosa_pasca_operasi' => json_encode($diagnosaPascaOperasi),
+                'komplikasi'            => json_encode($komplikasi),
+
                 'laporan_prosedur_operasi' => $request->laporan_prosedur_operasi,
                 'kompleksitas' => $request->kompleksitas,
                 'urgensi' => $request->urgensi,
                 'kebersihan' => $request->kebersihan,
-                'komplikasi' => $request->komplikasi,
                 'kd_perawat_bedah' => $request->kd_perawat_bedah,
                 'kd_penata_anastesi' => $request->kd_penata_anastesi,
                 'wb' => $request->wb,
@@ -155,7 +163,7 @@ class LaporanOperasiController extends Controller
         }
     }
 
-    public function edit($kd_pasien, $tgl_masuk, $urut_masuk)
+    public function edit($kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -186,15 +194,18 @@ class LaporanOperasiController extends Controller
         $dokter = Dokter::where('status', 1)->get();
         $perawat = Perawat::where('aktif', 1)->get();
 
-        $laporan = OkLaporanOperasi::where('kd_kasir', $dataMedis->kd_kasir)
-            ->where('no_transaksi', $dataMedis->no_transaksi)
-            ->first();
+        $laporan = OkLaporanOperasi::findOrFail($id);
+
+        // Pastikan laporan milik transaksi yang sedang dibuka
+        if ($laporan->kd_kasir !== $dataMedis->kd_kasir || $laporan->no_transaksi !== $dataMedis->no_transaksi) {
+            abort(404, 'Laporan tidak ditemukan untuk kunjungan ini');
+        }
 
         return view('unit-pelayanan.operasi.pelayanan.laporan-operatif.edit', compact('dataMedis', 'jenisAnastesi', 'dokterAnastesi', 'dokter', 'perawat', 'laporan'));
     }
 
 
-    public function update($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    public function update($kd_pasien, $tgl_masuk, $urut_masuk, $id, Request $request)
     {
         DB::beginTransaction();
 
@@ -216,7 +227,16 @@ class LaporanOperasiController extends Controller
                 abort(404, 'Data not found');
             }
 
-            // store
+            $laporan = OkLaporanOperasi::findOrFail($id);
+
+            if ($laporan->kd_kasir !== $dataMedis->kd_kasir || $laporan->no_transaksi !== $dataMedis->no_transaksi) {
+                abort(404, 'Laporan tidak ditemukan untuk kunjungan ini');
+            }
+
+            $diagnosaPraOperasi = json_decode($request->diagnosa_pra_operasi, true) ?: [];
+            $diagnosaPascaOperasi = json_decode($request->diagnosa_pasca_operasi, true) ?: [];
+            $komplikasi = json_decode($request->komplikasi, true) ?: [];
+
             $data = [
                 'nama_tindakan_operasi' => $request->nama_tindakan_operasi,
                 'kd_jenis_anastesi' => $request->kd_jenis_anastesi,
@@ -225,13 +245,15 @@ class LaporanOperasiController extends Controller
                 'kd_dokter_bedah' => $request->kd_dokter_bedah,
                 'kd_dokter_anastesi' => $request->kd_dokter_anastesi,
                 'pendarahan' => $request->pendarahan,
-                'diagnosa_pra_operasi' => $request->diagnosa_pra_operasi,
-                'diagnosa_pasca_operasi' => $request->diagnosa_pasca_operasi,
+
+                // Multi-input fields - encode ke JSON string
+                'diagnosa_pra_operasi'  => json_encode($diagnosaPraOperasi),
+                'diagnosa_pasca_operasi' => json_encode($diagnosaPascaOperasi),
+                'komplikasi'            => json_encode($komplikasi),
                 'laporan_prosedur_operasi' => $request->laporan_prosedur_operasi,
                 'kompleksitas' => $request->kompleksitas,
                 'urgensi' => $request->urgensi,
                 'kebersihan' => $request->kebersihan,
-                'komplikasi' => $request->komplikasi,
                 'kd_perawat_bedah' => $request->kd_perawat_bedah,
                 'kd_penata_anastesi' => $request->kd_penata_anastesi,
                 'wb' => $request->wb,
@@ -245,9 +267,7 @@ class LaporanOperasiController extends Controller
                 'user_edit'   => Auth::id()
             ];
 
-            OkLaporanOperasi::where('kd_kasir', $dataMedis->kd_kasir)
-                ->where('no_transaksi', $dataMedis->no_transaksi)
-                ->update($data);
+            $laporan->update($data);
 
             DB::commit();
             return to_route('operasi.pelayanan.laporan-operasi.index', [$kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Laporan berhasil di ubah !');
@@ -258,7 +278,7 @@ class LaporanOperasiController extends Controller
     }
 
 
-    public function show($kd_pasien, $tgl_masuk, $urut_masuk)
+    public function show($kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -289,9 +309,11 @@ class LaporanOperasiController extends Controller
         $dokter = Dokter::where('status', 1)->get();
         $perawat = Perawat::where('aktif', 1)->get();
 
-        $laporan = OkLaporanOperasi::where('kd_kasir', $dataMedis->kd_kasir)
-            ->where('no_transaksi', $dataMedis->no_transaksi)
-            ->first();
+        $laporan = OkLaporanOperasi::findOrFail($id);
+
+        if ($laporan->kd_kasir !== $dataMedis->kd_kasir || $laporan->no_transaksi !== $dataMedis->no_transaksi) {
+            abort(404, 'Laporan tidak ditemukan untuk kunjungan ini');
+        }
 
         return view('unit-pelayanan.operasi.pelayanan.laporan-operatif.show', compact('dataMedis', 'jenisAnastesi', 'dokterAnastesi', 'dokter', 'perawat', 'laporan'));
     }

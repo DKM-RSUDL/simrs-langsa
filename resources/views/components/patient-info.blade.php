@@ -3,7 +3,7 @@
     'photo' => asset('assets/img/profile.jpg'),
 ])
 
-<div {{ $attributes->merge(['class' => 'card h-auto position-relative']) }}>
+<div {{ $attributes->merge(['class' => 'card h-auto sticky-top', 'style' => 'top:1rem; z-index: 10;']) }}>
     <div class="card-body">
 
         <div class="position-absolute top-0 end-0 p-3 d-flex flex-column align-items-center gap-1">
@@ -37,7 +37,8 @@
                 </p>
 
                 <div class="small text-body-secondary mb-2">
-                    {{ !empty($dataMedis->pasien->tgl_lahir) ? hitungUmur($dataMedis->pasien->tgl_lahir) : 'Tidak Diketahui' }} Thn
+                    {{ !empty($dataMedis->pasien->tgl_lahir) ? hitungUmur($dataMedis->pasien->tgl_lahir) : 'Tidak Diketahui' }}
+                    Thn
                     (
                     {{ $dataMedis->pasien->tgl_lahir
                         ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y')

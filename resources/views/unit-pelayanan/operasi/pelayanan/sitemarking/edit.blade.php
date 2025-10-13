@@ -199,11 +199,13 @@
             <div class="card-body">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title mb-0"><i class="fas fa-map-marker-alt me-2"></i>Edit Penandaan Daerah Operasi</h5>
+                        <h5 class="card-title mb-0"><i class="fas fa-map-marker-alt me-2"></i>Edit Penandaan Daerah Operasi
+                        </h5>
                     </div>
                     <div class="card-body">
                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                            <strong>Perhatian!</strong> Mengedit form ini akan mereset tanda site marking. Silakan beri tanda ulang pada gambar.
+                            <strong>Perhatian!</strong> Mengedit form ini akan mereset tanda site marking. Silakan beri
+                            tanda ulang pada gambar.
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                         <form id="siteMarkingForm"
@@ -214,8 +216,10 @@
                             <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
                             <input type="hidden" name="tgl_masuk" value="{{ $dataMedis->tgl_masuk }}">
                             <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
-                            <input type="hidden" name="marking_data" id="markingData" value="{{ htmlspecialchars($siteMarking->marking_data) }}">
-                            <input type="hidden" name="active_template" id="activeTemplate" value="{{ $siteMarking->active_template }}">
+                            <input type="hidden" name="marking_data" id="markingData"
+                                value="{{ htmlspecialchars($siteMarking->marking_data) }}">
+                            <input type="hidden" name="active_template" id="activeTemplate"
+                                value="{{ $siteMarking->active_template }}">
 
                             <input type="hidden" name="template_png_full_body" id="template_png_full_body">
                             <input type="hidden" name="template_png_head_front_back" id="template_png_head_front_back">
@@ -227,17 +231,23 @@
                             <div class="template-selector mb-3">
                                 <label class="d-block mb-2">Pilih Template Anatomi:</label>
                                 <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-outline-primary {{ $siteMarking->active_template == 'full-body' ? 'active' : '' }}"
+                                    <button type="button"
+                                        class="btn btn-outline-primary {{ $siteMarking->active_template == 'full-body' ? 'active' : '' }}"
                                         data-template="full-body">Seluruh Tubuh</button>
-                                    <button type="button" class="btn btn-outline-primary {{ $siteMarking->active_template == 'head-front-back' ? 'active' : '' }}"
+                                    <button type="button"
+                                        class="btn btn-outline-primary {{ $siteMarking->active_template == 'head-front-back' ? 'active' : '' }}"
                                         data-template="head-front-back">Muka Depan/Belakang</button>
-                                    <button type="button" class="btn btn-outline-primary {{ $siteMarking->active_template == 'head-side' ? 'active' : '' }}"
+                                    <button type="button"
+                                        class="btn btn-outline-primary {{ $siteMarking->active_template == 'head-side' ? 'active' : '' }}"
                                         data-template="head-side">Muka Samping Kiri/Kanan</button>
-                                    <button type="button" class="btn btn-outline-primary {{ $siteMarking->active_template == 'hand-dorsal' ? 'active' : '' }}"
+                                    <button type="button"
+                                        class="btn btn-outline-primary {{ $siteMarking->active_template == 'hand-dorsal' ? 'active' : '' }}"
                                         data-template="hand-dorsal">Tangan Dorsal Kiri/Kanan</button>
-                                    <button type="button" class="btn btn-outline-primary {{ $siteMarking->active_template == 'hand-palmar' ? 'active' : '' }}"
+                                    <button type="button"
+                                        class="btn btn-outline-primary {{ $siteMarking->active_template == 'hand-palmar' ? 'active' : '' }}"
                                         data-template="hand-palmar">Tangan Palmar Kiri/Kanan</button>
-                                    <button type="button" class="btn btn-outline-primary {{ $siteMarking->active_template == 'foot' ? 'active' : '' }}"
+                                    <button type="button"
+                                        class="btn btn-outline-primary {{ $siteMarking->active_template == 'foot' ? 'active' : '' }}"
                                         data-template="foot">Kaki</button>
                                 </div>
                             </div>
@@ -268,30 +278,47 @@
 
                                     <div class="color-picker">
                                         <span>Warna:</span>
-                                        <div class="color-option active" data-color="#ff0000" style="background-color: #ff0000;"></div>
-                                        <div class="color-option" data-color="#0000ff" style="background-color: #0000ff;"></div>
-                                        <div class="color-option" data-color="#00cc00" style="background-color: #00cc00;"></div>
-                                        <div class="color-option" data-color="#ffcc00" style="background-color: #ffcc00;"></div>
-                                        <div class="color-option" data-color="#000000" style="background-color: #000000;"></div>
+                                        <div class="color-option active" data-color="#ff0000"
+                                            style="background-color: #ff0000;"></div>
+                                        <div class="color-option" data-color="#0000ff"
+                                            style="background-color: #0000ff;"></div>
+                                        <div class="color-option" data-color="#00cc00"
+                                            style="background-color: #00cc00;"></div>
+                                        <div class="color-option" data-color="#ffcc00"
+                                            style="background-color: #ffcc00;"></div>
+                                        <div class="color-option" data-color="#000000"
+                                            style="background-color: #000000;"></div>
                                     </div>
                                 </div>
 
                                 <div class="drawing-container">
                                     <div class="image-templates">
                                         @if ($dataMedis->pasien->jenis_kelamin == 1)
-                                            <img src="{{ asset('assets/images/sitemarking/7.png') }}" class="body-image" id="template-full-body" alt="Seluruh Tubuh">
-                                            <img src="{{ asset('assets/images/sitemarking/9.png') }}" class="body-image" id="template-head-front-back" alt="Muka Depan/Belakang">
-                                            <img src="{{ asset('assets/images/sitemarking/8.png') }}" class="body-image" id="template-head-side" alt="Muka Samping Kiri/Kanan">
-                                            <img src="{{ asset('assets/images/sitemarking/11.png') }}" class="body-image" id="template-hand-dorsal" alt="Tangan Dorsal Kiri/Kanan">
-                                            <img src="{{ asset('assets/images/sitemarking/10.png') }}" class="body-image" id="template-hand-palmar" alt="Tangan Palmar Kiri/Kanan">
-                                            <img src="{{ asset('assets/images/sitemarking/12.png') }}" class="body-image" id="template-foot" alt="Kaki">
+                                            <img src="{{ asset('assets/images/sitemarking/7.png') }}" class="body-image"
+                                                id="template-full-body" alt="Seluruh Tubuh">
+                                            <img src="{{ asset('assets/images/sitemarking/9.png') }}" class="body-image"
+                                                id="template-head-front-back" alt="Muka Depan/Belakang">
+                                            <img src="{{ asset('assets/images/sitemarking/8.png') }}" class="body-image"
+                                                id="template-head-side" alt="Muka Samping Kiri/Kanan">
+                                            <img src="{{ asset('assets/images/sitemarking/11.png') }}" class="body-image"
+                                                id="template-hand-dorsal" alt="Tangan Dorsal Kiri/Kanan">
+                                            <img src="{{ asset('assets/images/sitemarking/10.png') }}" class="body-image"
+                                                id="template-hand-palmar" alt="Tangan Palmar Kiri/Kanan">
+                                            <img src="{{ asset('assets/images/sitemarking/12.png') }}" class="body-image"
+                                                id="template-foot" alt="Kaki">
                                         @else
-                                            <img src="{{ asset('assets/images/sitemarking/1.png') }}" class="body-image" id="template-full-body" alt="Seluruh Tubuh">
-                                            <img src="{{ asset('assets/images/sitemarking/3.png') }}" class="body-image" id="template-head-front-back" alt="Muka Depan/Belakang">
-                                            <img src="{{ asset('assets/images/sitemarking/2.png') }}" class="body-image" id="template-head-side" alt="Muka Samping Kiri/Kanan">
-                                            <img src="{{ asset('assets/images/sitemarking/6.png') }}" class="body-image" id="template-hand-dorsal" alt="Tangan Dorsal Kiri/Kanan">
-                                            <img src="{{ asset('assets/images/sitemarking/4.png') }}" class="body-image" id="template-hand-palmar" alt="Tangan Palmar Kiri/Kanan">
-                                            <img src="{{ asset('assets/images/sitemarking/5.png') }}" class="body-image" id="template-foot" alt="Kaki">
+                                            <img src="{{ asset('assets/images/sitemarking/1.png') }}" class="body-image"
+                                                id="template-full-body" alt="Seluruh Tubuh">
+                                            <img src="{{ asset('assets/images/sitemarking/3.png') }}" class="body-image"
+                                                id="template-head-front-back" alt="Muka Depan/Belakang">
+                                            <img src="{{ asset('assets/images/sitemarking/2.png') }}" class="body-image"
+                                                id="template-head-side" alt="Muka Samping Kiri/Kanan">
+                                            <img src="{{ asset('assets/images/sitemarking/6.png') }}" class="body-image"
+                                                id="template-hand-dorsal" alt="Tangan Dorsal Kiri/Kanan">
+                                            <img src="{{ asset('assets/images/sitemarking/4.png') }}" class="body-image"
+                                                id="template-hand-palmar" alt="Tangan Palmar Kiri/Kanan">
+                                            <img src="{{ asset('assets/images/sitemarking/5.png') }}" class="body-image"
+                                                id="template-foot" alt="Kaki">
                                         @endif
                                     </div>
 
@@ -305,17 +332,21 @@
                                 <div class="col-12">
                                     <div class="card">
                                         <div class="card-header bg-light">
-                                            <h5 class="card-title mb-0"><i class="fas fa-clipboard-list me-2"></i>Detail Prosedur Operasi</h5>
+                                            <h5 class="card-title mb-0"><i class="fas fa-clipboard-list me-2"></i>Detail
+                                                Prosedur Operasi</h5>
                                         </div>
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="mb-3">
-                                                        <label class="form-label fw-bold"><i class="fas fa-user-md me-2"></i>Dokter Bedah</label>
-                                                        <select class="form-control select2" style="width: 100%;" name="ahli_bedah" required>
+                                                        <label class="form-label fw-bold"><i
+                                                                class="fas fa-user-md me-2"></i>Dokter Bedah</label>
+                                                        <select class="form-control select2" style="width: 100%;"
+                                                            name="ahli_bedah" required>
                                                             <option value="" disabled>Pilih Ahli Bedah</option>
                                                             @foreach ($dokter as $d)
-                                                                <option value="{{ $d->kd_dokter }}" {{ $siteMarking->kd_dokter == $d->kd_dokter ? 'selected' : '' }}>
+                                                                <option value="{{ $d->kd_dokter }}"
+                                                                    {{ $siteMarking->kd_dokter == $d->kd_dokter ? 'selected' : '' }}>
                                                                     {{ $d->nama_lengkap }}
                                                                 </option>
                                                             @endforeach
@@ -324,8 +355,10 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="mb-3">
-                                                        <label for="waktu" class="form-label fw-bold"><i class="fas fa-clock me-2"></i>Tanggal Prosedur</label>
-                                                        <input type="datetime-local" name="waktu" id="waktu" class="form-control"
+                                                        <label for="waktu" class="form-label fw-bold"><i
+                                                                class="fas fa-clock me-2"></i>Tanggal Prosedur</label>
+                                                        <input type="datetime-local" name="waktu" id="waktu"
+                                                            class="form-control"
                                                             value="{{ \Carbon\Carbon::parse($siteMarking->waktu_prosedure)->format('Y-m-d\TH:i') }}"
                                                             required>
                                                     </div>
@@ -333,47 +366,65 @@
                                             </div>
 
                                             <div class="mb-3">
-                                                <label for="prosedur_operasi" class="form-label fw-bold"><i class="fas fa-procedures me-2"></i>Prosedur Operasi</label>
+                                                <label for="prosedur_operasi" class="form-label fw-bold"><i
+                                                        class="fas fa-procedures me-2"></i>Prosedur Operasi</label>
                                                 <textarea name="prosedur_operasi" id="prosedur_operasi" class="form-control" rows="3"
                                                     placeholder="Jelaskan prosedur operasi yang akan dilakukan..." required>{{ $siteMarking->prosedure }}</textarea>
                                             </div>
 
                                             <div class="mb-3">
-                                                <label for="notes" class="form-label fw-bold"><i class="fas fa-clipboard me-2"></i>Catatan Site Marking</label>
+                                                <label for="notes" class="form-label fw-bold"><i
+                                                        class="fas fa-clipboard me-2"></i>Catatan Site Marking</label>
                                                 <textarea name="notes" id="notes" class="form-control" rows="3"
                                                     placeholder="Tambahkan catatan tentang site marking...">{{ $siteMarking->notes }}</textarea>
                                             </div>
 
                                             <div class="mb-3">
-                                                <label for="responsible_person" class="form-label fw-bold"><i class="fas fa-user me-2"></i>Yang Bertanggung Jawab</label>
-                                                <select class="form-control" name="responsible_person" id="responsible_person" required>
+                                                <label for="responsible_person" class="form-label fw-bold"><i
+                                                        class="fas fa-user me-2"></i>Yang Bertanggung Jawab</label>
+                                                <select class="form-control" name="responsible_person"
+                                                    id="responsible_person" required>
                                                     <option value="" disabled>Pilih Yang Bertanggung Jawab</option>
-                                                    <option value="pasien" {{ $siteMarking->responsible_person == 'pasien' ? 'selected' : '' }}>Pasien</option>
-                                                    <option value="keluarga" {{ $siteMarking->responsible_person == 'keluarga' ? 'selected' : '' }}>Keluarga</option>
+                                                    <option value="pasien"
+                                                        {{ $siteMarking->responsible_person == 'pasien' ? 'selected' : '' }}>
+                                                        Pasien</option>
+                                                    <option value="keluarga"
+                                                        {{ $siteMarking->responsible_person == 'keluarga' ? 'selected' : '' }}>
+                                                        Keluarga</option>
                                                 </select>
                                             </div>
 
-                                            <div class="responsible-person-container {{ $siteMarking->responsible_person == 'pasien' ? 'active' : '' }}" id="patient_container">
+                                            <div class="responsible-person-container {{ $siteMarking->responsible_person == 'pasien' ? 'active' : '' }}"
+                                                id="patient_container">
                                                 <div class="mb-3">
                                                     <label class="form-label fw-bold">Nama Pasien</label>
-                                                    <input type="text" name="patient_name" id="patient_name" class="form-control"
-                                                        value="{{ $siteMarking->patient_name ?? $dataMedis->pasien->nama }}" readonly>
+                                                    <input type="text" name="patient_name" id="patient_name"
+                                                        class="form-control"
+                                                        value="{{ $siteMarking->patient_name ?? $dataMedis->pasien->nama }}"
+                                                        readonly>
                                                 </div>
                                             </div>
 
-                                            <div class="responsible-person-container {{ $siteMarking->responsible_person == 'keluarga' ? 'active' : '' }}" id="family_container">
+                                            <div class="responsible-person-container {{ $siteMarking->responsible_person == 'keluarga' ? 'active' : '' }}"
+                                                id="family_container">
                                                 <div class="mb-3">
-                                                    <label for="family_name" class="form-label fw-bold">Nama Keluarga</label>
-                                                    <input type="text" name="family_name" id="family_name" class="form-control"
-                                                        value="{{ $siteMarking->family_name }}" placeholder="Masukkan nama keluarga">
+                                                    <label for="family_name" class="form-label fw-bold">Nama
+                                                        Keluarga</label>
+                                                    <input type="text" name="family_name" id="family_name"
+                                                        class="form-control" value="{{ $siteMarking->family_name }}"
+                                                        placeholder="Masukkan nama keluarga">
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label for="family_relationship" class="form-label fw-bold">Status Hubungan dengan Pasien</label>
-                                                    <input type="text" name="family_relationship" id="family_relationship" class="form-control"
-                                                        value="{{ $siteMarking->family_relationship }}" placeholder="Masukkan hubungan (misal: Istri, Anak)">
+                                                    <label for="family_relationship" class="form-label fw-bold">Status
+                                                        Hubungan dengan Pasien</label>
+                                                    <input type="text" name="family_relationship"
+                                                        id="family_relationship" class="form-control"
+                                                        value="{{ $siteMarking->family_relationship }}"
+                                                        placeholder="Masukkan hubungan (misal: Istri, Anak)">
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label for="family_address" class="form-label fw-bold">Alamat Keluarga</label>
+                                                    <label for="family_address" class="form-label fw-bold">Alamat
+                                                        Keluarga</label>
                                                     <textarea name="family_address" id="family_address" class="form-control" rows="3"
                                                         placeholder="Masukkan alamat keluarga">{{ $siteMarking->family_address }}</textarea>
                                                 </div>
@@ -381,10 +432,12 @@
 
                                             <div class="form-group mt-3">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="confirmation" id="markingConfirmation"
+                                                    <input class="form-check-input" type="checkbox" name="confirmation"
+                                                        id="markingConfirmation"
                                                         {{ $siteMarking->confirmation ? 'checked' : '' }} required>
                                                     <label class="form-check-label" for="markingConfirmation">
-                                                        Saya menyatakan bahwa lokasi operasi yang telah ditetapkan pada diagram di atas adalah benar dan telah dikonfirmasi oleh pasien.
+                                                        Saya menyatakan bahwa lokasi operasi yang telah ditetapkan pada
+                                                        diagram di atas adalah benar dan telah dikonfirmasi oleh pasien.
                                                     </label>
                                                 </div>
                                             </div>
@@ -443,6 +496,12 @@
             let isDrawing = false;
             let lastPosX, lastPosY;
 
+            // tambahkan variabel untuk arrow
+            let currentArrow = null;
+            let currentArrowHead = null;
+            let arrowStartX = 0;
+            let arrowStartY = 0;
+
             function initializeCanvas() {
                 const activeImage = document.getElementById('template-' + activeTemplate);
                 const imageWidth = activeImage.naturalWidth;
@@ -498,8 +557,11 @@
 
             document.querySelectorAll('.template-selector .btn-group button').forEach(button => {
                 button.addEventListener('click', function() {
-                    markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable', 'hasControls']));
-                    document.querySelectorAll('.template-selector .btn-group button').forEach(btn => btn.classList.remove('active'));
+                    markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON([
+                        'selectable', 'hasControls'
+                    ]));
+                    document.querySelectorAll('.template-selector .btn-group button').forEach(btn =>
+                        btn.classList.remove('active'));
                     this.classList.add('active');
                     activeTemplate = this.dataset.template;
                     initializeCanvas();
@@ -508,7 +570,8 @@
 
             document.querySelectorAll('.tool-btn').forEach(button => {
                 button.addEventListener('click', function() {
-                    document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove(
+                        'active'));
                     this.classList.add('active');
                     currentTool = this.dataset.tool;
 
@@ -522,7 +585,8 @@
 
             document.querySelectorAll('.color-option').forEach(color => {
                 color.addEventListener('click', function() {
-                    document.querySelectorAll('.color-option').forEach(c => c.classList.remove('active'));
+                    document.querySelectorAll('.color-option').forEach(c => c.classList.remove(
+                        'active'));
                     this.classList.add('active');
                     currentColor = this.dataset.color;
 
@@ -553,7 +617,8 @@
                 const pointer = canvas.getPointer(o.e);
                 const target = canvas.findTarget(o.e);
 
-                if (target && currentTool !== 'erase') {
+                // jangan pilih object ketika tool adalah arrow atau erase
+                if (target && currentTool !== 'erase' && currentTool !== 'arrow') {
                     canvas.setActiveObject(target);
                     isDrawing = false;
                     return;
@@ -605,16 +670,36 @@
                     canvas.add(text);
                     canvas.setActiveObject(text);
                 } else if (currentTool === 'arrow') {
-                    const line = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
+                    // Buat line dan triangle (arrow head) seperti pada create
+                    arrowStartX = pointer.x;
+                    arrowStartY = pointer.y;
+
+                    const line = new fabric.Line([arrowStartX, arrowStartY, arrowStartX, arrowStartY], {
                         stroke: currentColor,
-                        strokeWidth: 2,
+                        strokeWidth: 3,
+                        selectable: false,
+                        hasControls: false,
+                        evented: false
+                    });
+
+                    const head = new fabric.Triangle({
+                        left: arrowStartX,
+                        top: arrowStartY,
                         originX: 'center',
                         originY: 'center',
-                        selectable: true,
-                        hasControls: true
+                        width: 12,
+                        height: 16,
+                        fill: currentColor,
+                        angle: 0,
+                        selectable: false,
+                        hasControls: false,
+                        evented: false
                     });
+
+                    currentArrow = line;
+                    currentArrowHead = head;
                     canvas.add(line);
-                    canvas.setActiveObject(line);
+                    canvas.add(head);
                 } else if (currentTool === 'erase') {
                     if (target) {
                         canvas.remove(target);
@@ -625,6 +710,30 @@
             canvas.on('mouse:move', function(o) {
                 if (!isDrawing) return;
                 const pointer = canvas.getPointer(o.e);
+
+                if (currentTool === 'arrow' && currentArrow && currentArrowHead) {
+                    // update line end
+                    currentArrow.set({
+                        x2: pointer.x,
+                        y2: pointer.y
+                    });
+
+                    // update head position dan rotasi
+                    currentArrowHead.set({
+                        left: pointer.x,
+                        top: pointer.y
+                    });
+
+                    // hitung sudut (derajat)
+                    const dx = pointer.x - arrowStartX;
+                    const dy = pointer.y - arrowStartY;
+                    let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+                    // triangle default menghadap atas, offset 90 derajat agar menghadap arah line
+                    currentArrowHead.set('angle', angle + 90);
+
+                    canvas.renderAll();
+                    return;
+                }
 
                 if (currentTool === 'arrow') {
                     const activeObject = canvas.getActiveObject();
@@ -640,12 +749,33 @@
 
             canvas.on('mouse:up', function() {
                 isDrawing = false;
-                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable', 'hasControls']));
+
+                // jika sedang membuat arrow, gabungkan line+head menjadi satu group agar bisa dipilih/diubah nanti
+                if (currentTool === 'arrow' && currentArrow && currentArrowHead) {
+                    const arrowGroup = new fabric.Group([currentArrow, currentArrowHead], {
+                        selectable: true,
+                        hasControls: true
+                    });
+
+                    canvas.remove(currentArrow);
+                    canvas.remove(currentArrowHead);
+                    canvas.add(arrowGroup);
+                    canvas.setActiveObject(arrowGroup);
+
+                    currentArrow = null;
+                    currentArrowHead = null;
+                }
+
+                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable',
+                    'hasControls'
+                ]));
                 saveAllMarkingData();
             });
 
             canvas.on('object:modified', function() {
-                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable', 'hasControls']));
+                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable',
+                    'hasControls'
+                ]));
                 saveAllMarkingData();
             });
 
@@ -690,7 +820,8 @@
                             tempCanvas.loadFromJSON(markingDataPerTemplate[template], function() {
                                 tempCanvas.renderAll();
                                 const pngData = tempCanvas.toDataURL('image/png', 0.7);
-                                const inputId = 'template_png_' + template.replace(/-/g, '_');
+                                const inputId = 'template_png_' + template.replace(/-/g,
+                                    '_');
                                 const inputElement = document.getElementById(inputId);
                                 if (inputElement) {
                                     inputElement.value = pngData;
@@ -745,7 +876,9 @@
             document.getElementById('siteMarkingForm').addEventListener('submit', function(e) {
                 e.preventDefault();
 
-                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable', 'hasControls']));
+                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable',
+                    'hasControls'
+                ]));
                 saveAllMarkingData();
                 saveTemplatePngData();
 

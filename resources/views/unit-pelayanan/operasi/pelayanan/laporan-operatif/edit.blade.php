@@ -1,12 +1,12 @@
-<!-- create -->
 @extends('layouts.administrator.master')
 
 @section('content')
     @include('unit-pelayanan.operasi.pelayanan.include')
+    @include('unit-pelayanan.operasi.pelayanan.laporan-operatif.include-script')
 
     <div class="row">
         <div class="col-md-3">
-            @include('unit-pelayanan.operasi.pelayanan.laporan-operatif.patient-card')
+            @include('components.patient-card')
         </div>
 
         <div class="col-md-9">
@@ -15,12 +15,11 @@
 
                 @include('components.page-header', [
                     'title' => 'Perbarui Laporan Operasi',
-                    'description' =>
-                        'Perbarui data laporan operasi dengan mengisi formulir di bawah ini.',
+                    'description' => 'Perbarui data laporan operasi dengan mengisi formulir di bawah ini.',
                 ])
 
                 <form method="POST"
-                    action="{{ route('operasi.pelayanan.laporan-operasi.update', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                    action="{{ route('operasi.pelayanan.laporan-operasi.update', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $laporan->id]) }}">
                     @csrf
                     @method('put')
 
@@ -83,25 +82,81 @@
 
                     <div class="section-separator" id="edukasiPasien">
                         <h5 class="section-title">2. Diagnosa dan Komplikasi</h5>
-                        <div class="form-group">
-                            <label class="col-md-3 col-form-label" for="diagnosa_pra_operasi"
-                                style="min-width: 200px;">Diagnosa Pra-Operasi</label>
-                            <input placeholder="isi Diagnosa Pra-Operasi" type="text" class="form-control"
-                                name="diagnosa_pra_operasi" id="diagnosa_pra_operasi"
-                                value="{{ $laporan->diagnosa_pra_operasi }}">
+
+                        <!-- Diagnosa Pra-Operasi -->
+                        <div class="form-group mt-4">
+                            <label class="col-md-3 col-form-label" style="min-width: 200px;">Diagnosa Pra-Operasi</label>
+                            <div class="w-100 d-flex flex-column">
+                                <div class="input-group mb-2">
+                                    <input type="text" data-multi-input="diagnosa_pra_operasi"
+                                        class="form-control multi-input-field" placeholder="Diagnosa Pra-Operasi">
+                                    <span class="input-group-text bg-white multi-input-add"
+                                        data-target="diagnosa_pra_operasi" style="cursor: pointer;">
+                                        <i class="bi bi-plus-circle text-primary"></i>
+                                    </span>
+                                </div>
+
+                                <!-- List Diagnosis -->
+                                <div data-list="diagnosa_pra_operasi" class="multi-input-list rounded w-100">
+                                    <p class="text-danger text-small multi-input-empty">Belum ada diagnosa pra-operasi</p>
+                                </div>
+
+                                <!-- Hidden input untuk dikirim ke backend -->
+                                <input type="hidden" name="diagnosa_pra_operasi" data-hidden="diagnosa_pra_operasi"
+                                    value="{{ $laporan->diagnosa_pra_operasi }}">
+                            </div>
                         </div>
+
+                        <!-- Diagnosa Pasca-Operasi -->
                         <div class="form-group">
-                            <label class="col-md-3 col-form-label" for="diagnosa_pasca_operasi"
-                                style="min-width: 200px;">Diagnosa Pasca-Operasi</label>
-                            <input placeholder="isi Diagnosa Pasca-Operasi" type="text" class="form-control"
-                                name="diagnosa_pasca_operasi" id="diagnosa_pasca_operasi"
-                                value="{{ $laporan->diagnosa_pasca_operasi }}">
+                            <label class="col-md-3 col-form-label" style="min-width: 200px;">Diagnosa Pasca-Operasi</label>
+                            <div class="w-100 d-flex flex-column">
+                                <div class="input-group mb-2">
+                                    <input type="text" data-multi-input="diagnosa_pasca_operasi"
+                                        class="form-control multi-input-field" placeholder="Diagnosa Pasca-Operasi">
+                                    <span class="input-group-text bg-white multi-input-add"
+                                        data-target="diagnosa_pasca_operasi" style="cursor: pointer;">
+                                        <i class="bi bi-plus-circle text-primary"></i>
+                                    </span>
+                                </div>
+
+                                <!-- List Diagnosis -->
+                                <div data-list="diagnosa_pasca_operasi" class="multi-input-list rounded w-100">
+                                    <p class="text-danger text-small multi-input-empty">Belum ada diagnosa pasca-operasi
+                                    </p>
+                                </div>
+
+                                <!-- Hidden input untuk dikirim ke backend -->
+                                <input type="hidden" name="diagnosa_pasca_operasi" data-hidden="diagnosa_pasca_operasi"
+                                    value="{{ $laporan->diagnosa_pasca_operasi }}">
+                            </div>
                         </div>
+
+                        <!-- Komplikasi -->
                         <div class="form-group">
-                            <label class="col-md-3 col-form-label" for="komplikasi" style="min-width: 200px;">Bila Ada
-                                Komplikasi Selama Pembedahan</label>
-                            <input placeholder="isi Komplikasi Selama Pembedahan" type="text" class="form-control"
-                                name="komplikasi" id="komplikasi" value="{{ $laporan->komplikasi }}">
+                            <label class="col-md-3 col-form-label" style="min-width: 200px;">Bila Ada Komplikasi Selama
+                                Pembedahan</label>
+                            <div class="w-100 d-flex flex-column">
+                                <div class="input-group mb-2">
+                                    <input type="text" data-multi-input="komplikasi"
+                                        class="form-control multi-input-field" placeholder="Komplikasi Selama Pembedahan">
+                                    <span class="input-group-text bg-white multi-input-add" data-target="komplikasi"
+                                        style="cursor: pointer;">
+                                        <i class="bi bi-plus-circle text-primary"></i>
+                                    </span>
+                                </div>
+
+                                <!-- List Komplikasi -->
+                                <div data-list="komplikasi" class="multi-input-list rounded w-100">
+                                    <p class="text-danger text-small multi-input-empty">Belum ada komplikasi pasca-operasi
+                                        ditambahkan
+                                    </p>
+                                </div>
+
+                                <!-- Hidden input untuk dikirim ke backend -->
+                                <input type="hidden" name="komplikasi" data-hidden="komplikasi"
+                                    value="{{ $laporan->komplikasi }}">
+                            </div>
                         </div>
                     </div>
 
@@ -124,7 +179,7 @@
                             <select name="kultur" id="kultur" class="form-select">
                                 <option value="">--Pilih--</option>
                                 <option value="1" @selected($laporan->kultur == '1')>Ya</option>
-                                <option value="0" @selected($laporan->kultur == '2')>Tidak</option>
+                                <option value="0" @selected($laporan->kultur == '0')>Tidak</option>
                             </select>
                         </div>
                     </div>

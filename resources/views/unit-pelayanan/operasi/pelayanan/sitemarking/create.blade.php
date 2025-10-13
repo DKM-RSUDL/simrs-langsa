@@ -367,8 +367,10 @@
                                             <div class="mb-3">
                                                 <label for="responsible_person" class="form-label fw-bold"><i
                                                         class="fas fa-user me-2"></i>Yang Bertanggung Jawab</label>
-                                                <select class="form-control" name="responsible_person" id="responsible_person" required>
-                                                    <option value="" disabled selected>Pilih Yang Bertanggung Jawab</option>
+                                                <select class="form-control" name="responsible_person"
+                                                    id="responsible_person" required>
+                                                    <option value="" disabled selected>Pilih Yang Bertanggung Jawab
+                                                    </option>
                                                     <option value="pasien">Pasien</option>
                                                     <option value="keluarga">Keluarga</option>
                                                 </select>
@@ -376,8 +378,8 @@
 
                                             <div class="responsible-person-container" id="patient_container">
                                                 <div class="mb-3">
-                                                    <label class="form-label fw-bold"><i
-                                                            class="fas fa-user me-2"></i>Nama Pasien</label>
+                                                    <label class="form-label fw-bold"><i class="fas fa-user me-2"></i>Nama
+                                                        Pasien</label>
                                                     <input type="text" name="patient_name" id="patient_name"
                                                         class="form-control" value="{{ $dataMedis->pasien->nama }}"
                                                         readonly>
@@ -386,17 +388,21 @@
 
                                             <div class="responsible-person-container" id="family_container">
                                                 <div class="mb-3">
-                                                    <label for="family_name" class="form-label fw-bold">Nama Keluarga</label>
+                                                    <label for="family_name" class="form-label fw-bold">Nama
+                                                        Keluarga</label>
                                                     <input type="text" name="family_name" id="family_name"
                                                         class="form-control" placeholder="Masukkan nama keluarga">
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label for="family_relationship" class="form-label fw-bold">Status Hubungan dengan Pasien</label>
-                                                    <input type="text" name="family_relationship" id="family_relationship"
-                                                        class="form-control" placeholder="Masukkan hubungan (misal: Istri, Anak)">
+                                                    <label for="family_relationship" class="form-label fw-bold">Status
+                                                        Hubungan dengan Pasien</label>
+                                                    <input type="text" name="family_relationship"
+                                                        id="family_relationship" class="form-control"
+                                                        placeholder="Masukkan hubungan (misal: Istri, Anak)">
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label for="family_address" class="form-label fw-bold">Alamat Keluarga</label>
+                                                    <label for="family_address" class="form-label fw-bold">Alamat
+                                                        Keluarga</label>
                                                     <textarea name="family_address" id="family_address" class="form-control" rows="3"
                                                         placeholder="Masukkan alamat keluarga"></textarea>
                                                 </div>
@@ -449,6 +455,12 @@
             let currentColor = '#ff0000';
             let isDrawing = false;
             let lastPosX, lastPosY;
+
+            // tambahkan variabel untuk arrow
+            let currentArrow = null;
+            let currentArrowHead = null;
+            let arrowStartX = 0;
+            let arrowStartY = 0;
 
             // Fungsi untuk menginisialisasi canvas
             function initializeCanvas() {
@@ -513,10 +525,13 @@
             document.querySelectorAll('.template-selector .btn-group button').forEach(button => {
                 button.addEventListener('click', function() {
                     // Simpan data marking template sebelumnya
-                    markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable', 'hasControls']));
+                    markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON([
+                        'selectable', 'hasControls'
+                    ]));
 
                     // Update UI
-                    document.querySelectorAll('.template-selector .btn-group button').forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.template-selector .btn-group button').forEach(btn =>
+                        btn.classList.remove('active'));
                     this.classList.add('active');
 
                     // Update template aktif
@@ -530,7 +545,8 @@
             // Event handlers untuk toolbar
             document.querySelectorAll('.tool-btn').forEach(button => {
                 button.addEventListener('click', function() {
-                    document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove(
+                        'active'));
                     this.classList.add('active');
                     currentTool = this.dataset.tool;
 
@@ -545,7 +561,8 @@
             // Event handlers untuk color picker
             document.querySelectorAll('.color-option').forEach(color => {
                 color.addEventListener('click', function() {
-                    document.querySelectorAll('.color-option').forEach(c => c.classList.remove('active'));
+                    document.querySelectorAll('.color-option').forEach(c => c.classList.remove(
+                        'active'));
                     this.classList.add('active');
                     currentColor = this.dataset.color;
 
@@ -578,7 +595,7 @@
                 const pointer = canvas.getPointer(o.e);
                 const target = canvas.findTarget(o.e);
 
-                if (target && currentTool !== 'erase') {
+                if (target && currentTool !== 'erase' && currentTool !== 'arrow') {
                     canvas.setActiveObject(target);
                     isDrawing = false;
                     return;
@@ -630,18 +647,39 @@
                     canvas.add(text);
                     canvas.setActiveObject(text);
                 } else if (currentTool === 'arrow') {
-                    const line = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
+                    // Buat line dan triangle (arrow head)
+                    arrowStartX = pointer.x;
+                    arrowStartY = pointer.y;
+
+                    const line = new fabric.Line([arrowStartX, arrowStartY, arrowStartX, arrowStartY], {
                         stroke: currentColor,
-                        strokeWidth: 2,
+                        strokeWidth: 3,
+                        selectable: false,
+                        hasControls: false,
+                        evented: false
+                    });
+
+                    const head = new fabric.Triangle({
+                        left: arrowStartX,
+                        top: arrowStartY,
                         originX: 'center',
                         originY: 'center',
-                        selectable: true,
-                        hasControls: true
+                        width: 12,
+                        height: 16,
+                        fill: currentColor,
+                        angle: 0,
+                        selectable: false,
+                        hasControls: false,
+                        evented: false
                     });
+
+                    currentArrow = line;
+                    currentArrowHead = head;
                     canvas.add(line);
-                    canvas.setActiveObject(line);
+                    canvas.add(head);
                 } else if (currentTool === 'erase') {
                     if (target) {
+                        // jika target adalah group, hapus group; jika objek biasa hapus langsung
                         canvas.remove(target);
                     }
                 }
@@ -651,6 +689,33 @@
             canvas.on('mouse:move', function(o) {
                 if (!isDrawing) return;
                 const pointer = canvas.getPointer(o.e);
+
+                if (currentTool === 'arrow' && currentArrow && currentArrowHead) {
+                    // update line end
+                    currentArrow.set({
+                        x2: pointer.x,
+                        y2: pointer.y
+                    });
+
+                    // update head position dan rotasi
+                    currentArrowHead.set({
+                        left: pointer.x,
+                        top: pointer.y
+                    });
+
+                    // hitung sudut (derajat)
+                    const dx = pointer.x - arrowStartX;
+                    const dy = pointer.y - arrowStartY;
+                    let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+                    // triangle default menghadap atas, offset 90 derajat agar menghadap arah line
+                    currentArrowHead.set('angle', angle + 90);
+
+                    canvas.renderAll();
+                }
+
+                if (currentTool === 'arrow') {
+                    return;
+                }
 
                 if (currentTool === 'arrow') {
                     const activeObject = canvas.getActiveObject();
@@ -667,13 +732,37 @@
             // Mouse up event
             canvas.on('mouse:up', function() {
                 isDrawing = false;
-                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable', 'hasControls']));
+
+                // jika sedang membuat arrow, gabungkan line+head menjadi satu group agar bisa dipilih/diubah nanti
+                if (currentTool === 'arrow' && currentArrow && currentArrowHead) {
+                    // buat group dari objek arrow
+                    const arrowGroup = new fabric.Group([currentArrow, currentArrowHead], {
+                        selectable: true,
+                        hasControls: true
+                    });
+
+                    // hapus objek terpisah dan tambahkan group
+                    canvas.remove(currentArrow);
+                    canvas.remove(currentArrowHead);
+                    canvas.add(arrowGroup);
+                    canvas.setActiveObject(arrowGroup);
+
+                    // reset variabel
+                    currentArrow = null;
+                    currentArrowHead = null;
+                }
+
+                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable',
+                    'hasControls'
+                ]));
                 saveAllMarkingData();
             });
 
             // Object modified event
             canvas.on('object:modified', function() {
-                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable', 'hasControls']));
+                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable',
+                    'hasControls'
+                ]));
                 saveAllMarkingData();
             });
 
@@ -724,7 +813,8 @@
                                 tempCanvas.renderAll();
                                 // Ambil data PNG
                                 const pngData = tempCanvas.toDataURL('image/png');
-                                const inputId = 'template_png_' + template.replace(/-/g, '_');
+                                const inputId = 'template_png_' + template.replace(/-/g,
+                                    '_');
                                 const inputElement = document.getElementById(inputId);
                                 if (inputElement) {
                                     inputElement.value = pngData;
@@ -782,7 +872,9 @@
                 e.preventDefault();
 
                 // Simpan data marking
-                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable', 'hasControls']));
+                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable',
+                    'hasControls'
+                ]));
                 saveAllMarkingData();
 
                 // Simpan data PNG untuk semua template
