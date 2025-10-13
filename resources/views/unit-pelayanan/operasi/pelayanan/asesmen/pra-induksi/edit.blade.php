@@ -4,6 +4,7 @@
 @section('content')
     @include('unit-pelayanan.operasi.pelayanan.include')
     @include('unit-pelayanan.operasi.pelayanan.asesmen.pra-induksi.edit-include')
+    @include('unit-pelayanan.operasi.pelayanan.asesmen.pra-induksi.search-obat-include')
 
     <div class="row">
         <div class="col-md-3">
@@ -420,9 +421,9 @@
                                     <label style="min-width: 200px;">Tek Darah (mmHg)</label>
                                     <div class="d-flex gap-2 w-100">
                                         <input type="number" name="sistole_pantau_pas" id="sistole_pantau_pas"
-                                        class="form-control" placeholder="Sistole">
+                                            class="form-control" placeholder="Sistole">
                                         <input type="number" name="diastole_pantau_pas" id="diastole_pantau_pas"
-                                        class="form-control" placeholder="Diastole">
+                                            class="form-control" placeholder="Diastole">
                                     </div>
                                 </div>
 
@@ -649,9 +650,9 @@
                                     <label style="min-width: 200px;">Tek Darah (mmHg)</label>
                                     <div class="d-flex gap-2 w-100">
                                         <input type="number" name="sistole_pemulihan_ckp" id="sistole_pemulihan_ckp"
-                                        class="form-control" placeholder="Sistole">
+                                            class="form-control" placeholder="Sistole">
                                         <input type="number" name="diastole_pemulihan_ckp" id="diastole_pemulihan_ckp"
-                                        class="form-control" placeholder="Diastole">
+                                            class="form-control" placeholder="Diastole">
                                     </div>
                                 </div>
 
@@ -774,7 +775,7 @@
                                 <?php
                                 $kesimpulanNyeri = $okPraInduksi->okPraInduksiCtkp->kesimpulan_nyeri ?? 'Nyeri Ringan';
                                 $nyeriClass = '';
-
+                                
                                 if (in_array($kesimpulanNyeri, ['Tidak Nyeri', 'NYERI RINGAN', 'Nyeri Ringan'])) {
                                     $nyeriClass = 'rounded text-white bg-success';
                                 } elseif (in_array($kesimpulanNyeri, ['NYERI SEDANG', 'Nyeri Sedang'])) {
@@ -1503,39 +1504,124 @@
                         <div class="section-separator mb-0" id="instruksiPascaBedah">
                             <h5 class="section-title">7. Instruksi Pasca Bedah (IPB)</h5>
 
-                            <div class="form-group">
+                            <!-- Bila Kesakitan -->
+                            <div class="form-group mb-3">
                                 <label style="min-width: 200px;">Bila Kesakitan</label>
-                                <input type="text" name="bila_kesakitan" class="form-control"
-                                    value="{{ $okPraInduksi->okPraInduksiIpb->bila_kesakitan ?? '' }}"
-                                    placeholder="jelaskan">
+                                <div class="obat-search-wrapper">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control obat-search"
+                                            data-target="selectedKesakitanId" data-dropdown="kesakitanList"
+                                            data-clear="clearKesakitan"
+                                            data-search-url="{{ route('operasi.pelayanan.asesmen.pra-induksi.searchObat', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                            id="cariKesakitan" name="bila_kesakitan"
+                                            value="{{ $okPraInduksi->okPraInduksiIpb->bila_kesakitan ?? '' }}"
+                                            placeholder="Ketik nama obat..." autocomplete="off">
+                                        <button class="btn btn-outline-secondary obat-clear" type="button"
+                                            id="clearKesakitan" data-input="cariKesakitan"
+                                            data-hidden="selectedKesakitanId" style="display:none;">
+                                            <i class="bi bi-x"></i>
+                                        </button>
+                                    </div>
+                                    <div id="kesakitanList" class="obat-dropdown"></div>
+                                    <input type="hidden" id="selectedKesakitanId" name="bila_kesakitan_id"
+                                        value="{{ $okPraInduksi->okPraInduksiIpb->bila_kesakitan_id ?? '' }}">
+                                </div>
                             </div>
 
-                            <div class="form-group">
+                            <!-- Bila Mual/Muntah -->
+                            <div class="form-group mb-3">
                                 <label style="min-width: 200px;">Bila Mual/Muntah</label>
-                                <input type="text" name="bila_mual_muntah" class="form-control"
-                                    value="{{ $okPraInduksi->okPraInduksiIpb->bila_mual_muntah ?? '' }}"
-                                    placeholder="jelaskan">
+                                <div class="obat-search-wrapper">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control obat-search"
+                                            data-target="selectedMualId" data-dropdown="mualList"
+                                            data-clear="clearMual"
+                                            data-search-url="{{ route('operasi.pelayanan.asesmen.pra-induksi.searchObat', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                            id="cariMual" name="bila_mual_muntah"
+                                            value="{{ $okPraInduksi->okPraInduksiIpb->bila_mual_muntah ?? '' }}"
+                                            placeholder="Ketik nama obat..." autocomplete="off">
+                                        <button class="btn btn-outline-secondary obat-clear" type="button"
+                                            id="clearMual" data-input="cariMual" data-hidden="selectedMualId"
+                                            style="display:none;">
+                                            <i class="bi bi-x"></i>
+                                        </button>
+                                    </div>
+                                    <div id="mualList" class="obat-dropdown"></div>
+                                    <input type="hidden" id="selectedMualId" name="bila_mual_muntah_id"
+                                        value="{{ $okPraInduksi->okPraInduksiIpb->bila_mual_muntah_id ?? '' }}">
+                                </div>
                             </div>
 
-                            <div class="form-group">
+                            <!-- Antibiotika -->
+                            <div class="form-group mb-3">
                                 <label style="min-width: 200px;">Antibiotika</label>
-                                <input type="text" name="antibiotika" class="form-control"
-                                    value="{{ $okPraInduksi->okPraInduksiIpb->antibiotika ?? '' }}"
-                                    placeholder="Antibiotika yang digunakan">
+                                <div class="obat-search-wrapper">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control obat-search"
+                                            data-target="selectedAntibiotikaId" data-dropdown="antibiotikaList"
+                                            data-clear="clearAntibiotika"
+                                            data-search-url="{{ route('operasi.pelayanan.asesmen.pra-induksi.searchObat', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                            id="cariAntibiotika" name="antibiotika"
+                                            value="{{ $okPraInduksi->okPraInduksiIpb->antibiotika ?? '' }}"
+                                            placeholder="Ketik nama obat..." autocomplete="off">
+                                        <button class="btn btn-outline-secondary obat-clear" type="button"
+                                            id="clearAntibiotika" data-input="cariAntibiotika"
+                                            data-hidden="selectedAntibiotikaId" style="display:none;">
+                                            <i class="bi bi-x"></i>
+                                        </button>
+                                    </div>
+                                    <div id="antibiotikaList" class="obat-dropdown"></div>
+                                    <input type="hidden" id="selectedAntibiotikaId" name="antibiotika_id"
+                                        value="{{ $okPraInduksi->okPraInduksiIpb->antibiotika_id ?? '' }}">
+                                </div>
                             </div>
 
-                            <div class="form-group">
+                            <!-- Obat-Obatan Lain -->
+                            <div class="form-group mb-3">
                                 <label style="min-width: 200px;">Obat-Obatan Lain</label>
-                                <input type="text" name="obat_lain" class="form-control"
-                                    value="{{ $okPraInduksi->okPraInduksiIpb->obat_lain ?? '' }}"
-                                    placeholder="obat lain yang digunakan">
+                                <div class="obat-search-wrapper">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control obat-search"
+                                            data-target="selectedObatLainId" data-dropdown="obatLainList"
+                                            data-clear="clearObatLain"
+                                            data-search-url="{{ route('operasi.pelayanan.asesmen.pra-induksi.searchObat', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                            id="cariObatLain" name="obat_lain"
+                                            value="{{ $okPraInduksi->okPraInduksiIpb->obat_lain ?? '' }}"
+                                            placeholder="Ketik nama obat..." autocomplete="off">
+                                        <button class="btn btn-outline-secondary obat-clear" type="button"
+                                            id="clearObatLain" data-input="cariObatLain"
+                                            data-hidden="selectedObatLainId" style="display:none;">
+                                            <i class="bi bi-x"></i>
+                                        </button>
+                                    </div>
+                                    <div id="obatLainList" class="obat-dropdown"></div>
+                                    <input type="hidden" id="selectedObatLainId" name="obat_lain_id"
+                                        value="{{ $okPraInduksi->okPraInduksiIpb->obat_lain_id ?? '' }}">
+                                </div>
                             </div>
 
-                            <div class="form-group">
+                            <!-- Cairan Infus -->
+                            <div class="form-group mb-3">
                                 <label style="min-width: 200px;">Cairan Infus</label>
-                                <input type="text" name="cairan_infus" class="form-control"
-                                    value="{{ $okPraInduksi->okPraInduksiIpb->cairan_infus ?? '' }}"
-                                    placeholder="cairan infus yang digunakan">
+                                <div class="obat-search-wrapper">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control obat-search"
+                                            data-target="selectedCairanId" data-dropdown="cairanList"
+                                            data-clear="clearCairan"
+                                            data-search-url="{{ route('operasi.pelayanan.asesmen.pra-induksi.searchObat', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                            id="cariCairan" name="cairan_infus"
+                                            value="{{ $okPraInduksi->okPraInduksiIpb->cairan_infus ?? '' }}"
+                                            placeholder="Ketik nama cairan..." autocomplete="off">
+                                        <button class="btn btn-outline-secondary obat-clear" type="button"
+                                            id="clearCairan" data-input="cariCairan" data-hidden="selectedCairanId"
+                                            style="display:none;">
+                                            <i class="bi bi-x"></i>
+                                        </button>
+                                    </div>
+                                    <div id="cairanList" class="obat-dropdown"></div>
+                                    <input type="hidden" id="selectedCairanId" name="cairan_infus_id"
+                                        value="{{ $okPraInduksi->okPraInduksiIpb->cairan_infus_id ?? '' }}">
+                                </div>
                             </div>
 
                             <div class="form-group">

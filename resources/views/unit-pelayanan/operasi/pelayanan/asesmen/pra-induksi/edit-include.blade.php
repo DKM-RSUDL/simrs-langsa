@@ -21,7 +21,8 @@
 
                 // Initial data
                 const timeLabelsPAS = [];
-                const tekananDarahDataPAS = [];
+                const sistoleDataPAS = [];
+                const diastoleDataPAS = [];
                 const nadiDataPAS = [];
                 const nafasDataPAS = [];
                 const spo2DataPAS = [];
