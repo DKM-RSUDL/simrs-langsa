@@ -42,6 +42,8 @@ class NeurologiController extends Controller
         $rmeMasterImplementasi = RmeMasterImplementasi::all();
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
         $satsetPrognosis = SatsetPrognosis::all();
+        // Get latest vital signs data for the patient
+        $vitalSignsData = $this->asesmenService->getLatestVitalSignsByPatient($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -72,7 +74,8 @@ class NeurologiController extends Controller
             'rmeMasterDiagnosis',
             'rmeMasterImplementasi',
             'alergiPasien',
-            'satsetPrognosis'
+            'satsetPrognosis',
+            'vitalSignsData'
         ));
     }
 
