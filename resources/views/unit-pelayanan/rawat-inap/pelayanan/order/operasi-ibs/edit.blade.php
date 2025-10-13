@@ -64,7 +64,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="jenis_operasi" class="form-label">Jenis Operasi</label>
-                                <select class="form-select" id="jenis_operasi" name="jenis_operasi" required>
+                                <select class="form-select select2" id="jenis_operasi" name="jenis_operasi" required>
                                     <option value="">-- Pilih Jenis Operasi --</option>
                                 </select>
                             </div>
@@ -72,7 +72,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="spesialisasi" class="form-label">Spesialisasi</label>
-                                <select class="form-select" id="spesialisasi" name="spesialisasi" required>
+                                <select class="form-select select2" id="spesialisasi" name="spesialisasi" required>
                                     <option value="">-- Pilih Spesialisasi --</option>
                                 </select>
                             </div>
@@ -80,7 +80,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="sub_spesialisasi" class="form-label">Sub Spesialisasi</label>
-                                <select class="form-select" id="sub_spesialisasi" name="sub_spesialisasi" required>
+                                <select class="form-select select2" id="sub_spesialisasi" name="sub_spesialisasi" required>
                                     <option value="">-- Pilih Sub Spesialisasi --</option>
                                 </select>
                             </div>
