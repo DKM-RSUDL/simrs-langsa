@@ -57,6 +57,8 @@ class AsesmenGinekologikController extends Controller
         $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
         $rmeMasterImplementasi = RmeMasterImplementasi::all();
         $satsetPrognosis = SatsetPrognosis::all();
+        // Get latest vital signs data for the patient
+        $vitalSignsData = $this->asesmenService->getLatestVitalSignsByPatient($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -111,7 +113,8 @@ class AsesmenGinekologikController extends Controller
             'rmeMasterDiagnosis',
             'satsetPrognosis',
             'rmeMasterImplementasi',
-            'user'
+            'user',
+            'vitalSignsData'
         ));
     }
 
