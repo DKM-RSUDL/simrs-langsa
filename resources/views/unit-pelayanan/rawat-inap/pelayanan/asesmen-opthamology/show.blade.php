@@ -1162,7 +1162,7 @@
                             </div>
                         </div>
 
-            <x-content-card>
+            </x-content-card>
         </div>
     </div>
 @endsection
