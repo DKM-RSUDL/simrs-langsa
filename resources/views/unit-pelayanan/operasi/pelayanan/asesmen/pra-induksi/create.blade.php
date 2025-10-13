@@ -323,9 +323,18 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label style="min-width: 200px;">Berat Badan (Kg)</label>
+                                    <input type="text" name="antropometri_berat_badan" class="form-control">
+                                </div>
+
+                                <div class="form-group">
                                     <label style="min-width: 200px;">Tek Darah (mmHg)</label>
-                                    <input type="number" name="tekanan_darah_pantau_pas" id="tekanan_darah_pantau_pas"
-                                        class="form-control pas-input" placeholder="tekanan darah">
+                                    <div class="d-flex gap-2 w-100">
+                                        <input type="number" name="sistole_pantau_pas" id="sistole_pantau_pas"
+                                        class="form-control" placeholder="Sistole">
+                                        <input type="number" name="diastole_pantau_pas" id="diastole_pantau_pas"
+                                        class="form-control" placeholder="Diastole">
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
@@ -503,10 +512,13 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label style="min-width: 200px;">Tek. Darah (mmHg)</label>
-                                    <input type="number" name="tekanan_darah_pemulihan_ckp"
-                                        id="tekanan_darah_pemulihan_ckp" class="form-control ckp-input"
-                                        placeholder="tekanan darah">
+                                    <label style="min-width: 200px;">Tek Darah (mmHg)</label>
+                                    <div class="d-flex gap-2 w-100">
+                                        <input type="number" name="sistole_ckp" id="sistole_ckp"
+                                        class="form-control" placeholder="Sistole">
+                                        <input type="number" name="diastole_ckp" id="diastole_ckp"
+                                        class="form-control" placeholder="Diastole">
+                                    </div>
                                 </div>
 
                                 <div class="form-group">

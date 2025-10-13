@@ -314,7 +314,8 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>Waktu</th>
-                                    <th>Tekanan Darah (mmHg)</th>
+                                    <th>Sistole (mmHg)</th>
+                                    <th>Diastole (mmHg)</th>
                                     <th>Nadi (Per Menit)</th>
                                     <th>Nafas (Per Menit)</th>
                                     <th>SpO₂ (%)</th>
@@ -329,7 +330,8 @@
                                 @forelse($monitoringData as $data)
                                     <tr>
                                         <td>{{ $data['time'] ?? '-' }}</td>
-                                        <td>{{ $data['tekananDarah'] ?? '-' }}</td>
+                                        <td>{{ $data['sistole'] ?? '-' }}</td>
+                                        <td>{{ $data['diastole'] ?? '-' }}</td>
                                         <td>{{ $data['nadi'] ?? '-' }}</td>
                                         <td>{{ $data['nafas'] ?? '-' }}</td>
                                         <td>{{ $data['spo2'] ?? '-' }}</td>
@@ -455,7 +457,9 @@
                         <div class="col-12">
                             <div class="d-flex flex-wrap">
                                 <div class="me-3 mb-2">
-                                    <span class="badge bg-primary me-1"></span> Tekanan Darah
+                                    <span class="badge bg-primary me-1"></span> Sistole
+                                <div class="me-3 mb-2">
+                                    <span class="badge bg-primary me-1"></span> Diastole
                                 </div>
                                 <div class="me-3 mb-2">
                                     <span class="badge bg-success me-1"></span> Nadi
@@ -479,7 +483,8 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>Waktu</th>
-                                    <th>Tekanan Darah (mmHg)</th>
+                                    <th>Sistole (mmHg)</th>
+                                    <th>Diastole (mmHg)</th>
                                     <th>Nadi (Per Menit)</th>
                                     <th>Nafas (Per Menit)</th>
                                     <th>SpO₂ (%)</th>
@@ -490,7 +495,8 @@
                                 @forelse ($observasiData as $data)
                                     <tr>
                                         <td>{{ $data['time'] ?? '-' }}</td>
-                                        <td>{{ $data['tekananDarah'] ?? '-' }}</td>
+                                        <td>{{ $data['sistole'] ?? '-' }}</td>
+                                        <td>{{ $data['diastole'] ?? '-' }}</td>
                                         <td>{{ $data['nadi'] ?? '-' }}</td>
                                         <td>{{ $data['nafas'] ?? '-' }}</td>
                                         <td>{{ $data['spo2'] ?? '-' }}</td>
@@ -511,7 +517,8 @@
                             document.addEventListener('DOMContentLoaded', function() {
                                 // Pastikan variabel chart sudah terdefinisi secara eksplisit di PHP
                                 var chartLabels = {!! json_encode($chartLabels ?? []) !!};
-                                var tekananDarahData = {!! json_encode($tekananDarahData ?? []) !!};
+                                var sistoleData = {!! json_encode($sistoleData ?? []) !!};
+                                var diastoleData = {!! json_encode($diastoleData ?? []) !!};
                                 var nadiData = {!! json_encode($nadiData ?? []) !!};
                                 var nafasData = {!! json_encode($nafasData ?? []) !!};
                                 var spo2Data = {!! json_encode($spo2Data ?? []) !!};
@@ -519,7 +526,8 @@
 
                                 console.log('CTKP Chart data:', {
                                     labels: chartLabels,
-                                    tekananDarah: tekananDarahData,
+                                    sistole: sistoleData,
+                                    diastole: diastoleData,
                                     nadi: nadiData,
                                     nafas: nafasData,
                                     spo2: spo2Data,
@@ -537,9 +545,19 @@
                                         type: 'line',
                                         data: {
                                             labels: chartLabels,
-                                            datasets: [{
-                                                    label: 'Tekanan Darah',
-                                                    data: tekananDarahData,
+                                            datasets: [
+                                                {
+                                                    label: 'Sistole',
+                                                    data: sistoleData,
+                                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                                    borderWidth: 2,
+                                                    fill: true,
+                                                    tension: 0.4
+                                                },
+                                                {
+                                                    label: 'Diastole',
+                                                    data: diastoleData,
                                                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                                                     borderColor: 'rgba(54, 162, 235, 1)',
                                                     borderWidth: 2,

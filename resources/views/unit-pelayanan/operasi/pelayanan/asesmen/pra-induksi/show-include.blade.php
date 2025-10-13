@@ -94,8 +94,17 @@
                     labels: chartLabels,
                     datasets: [
                         {
-                            label: 'Tekanan Darah',
-                            data: tekananDarahData,
+                            label: 'Sistole',
+                            data: sistoleData,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Diastole',
+                            data: diastoleData,
                             backgroundColor: 'rgba(54, 162, 235, 0.2)',
                             borderColor: 'rgba(54, 162, 235, 1)',
                             borderWidth: 2,
