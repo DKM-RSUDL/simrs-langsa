@@ -3,7 +3,7 @@
     'photo' => asset('assets/img/profile.jpg'),
 ])
 
-<div {{ $attributes->merge(['class' => 'card h-auto sticky-top', 'style' => 'top:1rem;']) }}>
+<div {{ $attributes->merge(['class' => 'card h-auto sticky-top', 'style' => 'top:1rem; z-index: 10;']) }}>
     <div class="card-body">
 
         <div class="position-absolute top-0 end-0 p-3 d-flex flex-column align-items-center gap-1">
