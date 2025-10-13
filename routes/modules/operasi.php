@@ -76,6 +76,7 @@ Route::prefix('operasi')->group(function () {
                             Route::name('.pra-induksi')->group(function () {
                                 Route::controller(PraInduksitController::class)->group(function () {
                                     Route::get('/create', 'create')->name('.create');
+                                    Route::get('/search-obat', 'searchObat')->name('.searchObat');
                                     Route::post('/', 'store')->name('.store');
                                     Route::get('/edit/{data}', 'edit')->name('.edit');
                                     Route::put('/{data}', 'update')->name('.update');

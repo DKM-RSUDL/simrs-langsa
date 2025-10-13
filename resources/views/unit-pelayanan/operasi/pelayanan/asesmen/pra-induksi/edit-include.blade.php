@@ -21,7 +21,8 @@
 
                 // Initial data
                 const timeLabelsPAS = [];
-                const tekananDarahDataPAS = [];
+                const sistoleDataPAS = [];
+                const diastoleDataPAS = [];
                 const nadiDataPAS = [];
                 const nafasDataPAS = [];
                 const spo2DataPAS = [];
@@ -55,8 +56,17 @@
                             labels: timeLabelsPAS,
                             datasets: [
                                 {
-                                    label: 'Tekanan Darah',
-                                    data: tekananDarahDataPAS,
+                                    label: 'Sistole',
+                                    data: sistoleDataPAS,
+                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                    borderWidth: 2,
+                                    fill: true,
+                                    tension: 0.4
+                                },
+                                {
+                                    label: 'Diastole',
+                                    data: diastoleDataPAS,
                                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                                     borderColor: 'rgba(54, 162, 235, 1)',
                                     borderWidth: 2,
@@ -164,7 +174,8 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Waktu</th>
-                                <th>Tekanan Darah (mmHg)</th>
+                                <th>Sistole (mmHg)</th>
+                                <th>Diastole (mmHg)</th>
                                 <th>Nadi (Per Menit)</th>
                                 <th>Nafas (Per Menit)</th>
                                 <th>SpO₂ (%)</th>
@@ -290,7 +301,8 @@
                     // Remove data point from arrays
                     allMonitoringDataPAS.splice(index, 1);
                     timeLabelsPAS.splice(index, 1);
-                    tekananDarahDataPAS.splice(index, 1);
+                    sistoleDataPAS.splice(index, 1);
+                    diastoleDataPAS.splice(index, 1);
                     nadiDataPAS.splice(index, 1);
                     nafasDataPAS.splice(index, 1);
                     spo2DataPAS.splice(index, 1);
@@ -320,7 +332,8 @@
                     const proceedWithLoading = () => {
                         // Clear existing data
                         timeLabelsPAS.length = 0;
-                        tekananDarahDataPAS.length = 0;
+                        sistoleDataPAS.length = 0;
+                        diastoleDataPAS.length = 0;
                         nadiDataPAS.length = 0;
                         nafasDataPAS.length = 0;
                         spo2DataPAS.length = 0;
@@ -328,16 +341,17 @@
 
                         // Sample data
                         const sampleDataPAS = [
-                            { time: "08:00", tekananDarah: 140, nadi: 90, nafas: 45, spo2: 95 },
-                            { time: "08:05", tekananDarah: 120, nadi: 70, nafas: 25, spo2: 90 },
-                            { time: "08:10", tekananDarah: 135, nadi: 85, nafas: 40, spo2: 92 },
-                            { time: "08:15", tekananDarah: 215, nadi: 100, nafas: 60, spo2: 98 }
+                            { time: "08:00", sistolik: 140, diastolik: 90, nadi: 90, nafas: 45, spo2: 95 },
+                            { time: "08:05", sistolik: 120, diastolik: 80, nadi: 70, nafas: 25, spo2: 90 },
+                            { time: "08:10", sistolik: 135, diastolik: 85, nadi: 85, nafas: 40, spo2: 92 },
+                            { time: "08:15", sistolik: 215, diastolik: 100, nadi: 100, nafas: 60, spo2: 98 }
                         ];
 
                         // Add each data point
                         sampleDataPAS.forEach(item => {
                             timeLabelsPAS.push(item.time);
-                            tekananDarahDataPAS.push(item.tekananDarah);
+                            sistoleDataPAS.push(item.sistolik);
+                            diastoleDataPAS.push(item.diastolik);
                             nadiDataPAS.push(item.nadi);
                             nafasDataPAS.push(item.nafas);
                             spo2DataPAS.push(item.spo2);
@@ -395,7 +409,8 @@
                     const performReset = () => {
                         // Clear all data arrays
                         timeLabelsPAS.length = 0;
-                        tekananDarahDataPAS.length = 0;
+                        sistoleDataPAS.length = 0;
+                        diastoleDataPAS.length = 0;
                         nadiDataPAS.length = 0;
                         nafasDataPAS.length = 0;
                         spo2DataPAS.length = 0;
@@ -489,7 +504,8 @@
 
                         // Get form values
                         const time = document.getElementById('waktu_pemantauan_pas').value;
-                        const tekananDarah = parseFloat(document.getElementById('tekanan_darah_pantau_pas').value);
+                        const sistole = parseFloat(document.getElementById('sistole_pantau_pas').value);
+                        const diastole = parseFloat(document.getElementById('diastole_pantau_pas').value);
                         const nadi = parseFloat(document.getElementById('nadi_pantau_pas').value);
                         const nafas = parseFloat(document.getElementById('nafas_pantau_pas').value);
                         const spo2 = parseFloat(document.getElementById('saturasi_oksigen_pantau_pas').value);
@@ -497,7 +513,8 @@
                         // Create data object
                         const dataPoint = {
                             time: time,
-                            tekananDarah: tekananDarah,
+                            sistole: sistole,
+                            diastole: diastole,
                             nadi: nadi,
                             nafas: nafas,
                             spo2: spo2
@@ -510,7 +527,8 @@
                             // Update data arrays
                             allMonitoringDataPAS[index] = dataPoint;
                             timeLabelsPAS[index] = time;
-                            tekananDarahDataPAS[index] = tekananDarah;
+                            sistoleDataPAS[index] = sistole;
+                            diastoleDataPAS[index] = diastole;
                             nadiDataPAS[index] = nadi;
                             nafasDataPAS[index] = nafas;
                             spo2DataPAS[index] = spo2;
@@ -537,7 +555,8 @@
 
                             // Add to chart arrays
                             timeLabelsPAS.push(time);
-                            tekananDarahDataPAS.push(tekananDarah);
+                            sistoleDataPAS.push(sistole);
+                            diastoleDataPAS.push(diastole);
                             nadiDataPAS.push(nadi);
                             nafasDataPAS.push(nafas);
                             spo2DataPAS.push(spo2);
@@ -575,7 +594,8 @@
                     let isValid = true;
                     const requiredFields = [
                         'waktu_pemantauan_pas',
-                        'tekanan_darah_pantau_pas',
+                        'sistole_pantau_pas',
+                        'diastole_pantau_pas',
                         'nadi_pantau_pas',
                         'nafas_pantau_pas',
                         'saturasi_oksigen_pantau_pas'
@@ -639,7 +659,8 @@
 
                     // Reset other fields
                     const fields = [
-                        { id: 'tekanan_darah_pantau_pas', value: '' },
+                        { id: 'sistole_pantau_pas', value: '' },
+                        { id: 'diastole_pantau_pas', value: '' },
                         { id: 'nadi_pantau_pas', value: '' },
                         { id: 'nafas_pantau_pas', value: '' },
                         { id: 'saturasi_oksigen_pantau_pas', value: '' }
@@ -666,7 +687,8 @@
                 const observasiContainer = document.getElementById('observasiFormCKP');
                 const hiddenInput = document.getElementById('all_observasi_data_ckp');
                 const waktuObservasiInput = document.getElementById('waktu_observasi_ckp');
-                const tekananDarahInput = document.getElementById('tekanan_darah_pemulihan_ckp');
+                const sistoleInput = document.getElementById('sistole_pemulihan_ckp');
+                const diastoleInput = document.getElementById('diastole_pemulihan_ckp');
                 const nadiInput = document.getElementById('nadi_pemulihan_ckp');
                 const nafasInput = document.getElementById('nafas_pemulihan_ckp');
                 const spo2Input = document.getElementById('saturasi_oksigen_pemulihan_ckp');
@@ -695,7 +717,8 @@
 
                 // Data arrays for chart
                 const timeLabels = [];
-                const tekananDarahData = [];
+                const sistoleData = [];
+                const diastoleData = [];
                 const nadiData = [];
                 const nafasData = [];
                 const spo2Data = [];
@@ -713,7 +736,8 @@
                         // Populate chart arrays from saved data
                         allObservasiData.forEach(item => {
                             timeLabels.push(item.time);
-                            tekananDarahData.push(item.tekananDarah);
+                            sistoleData.push(item.sistole);
+                            diastoleData.push(item.diastole);
                             nadiData.push(item.nadi);
                             nafasData.push(item.nafas);
                             spo2Data.push(item.spo2);
@@ -769,8 +793,17 @@
                             labels: timeLabels,
                             datasets: [
                                 {
-                                    label: 'Tekanan Darah',
-                                    data: tekananDarahData,
+                                    label: 'Sistole',
+                                    data: sistoleData,
+                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                    borderWidth: 2,
+                                    fill: true,
+                                    tension: 0.4
+                                },
+                                {
+                                    label: 'Diastole',
+                                    data: diastoleData,
                                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                                     borderColor: 'rgba(54, 162, 235, 1)',
                                     borderWidth: 2,
@@ -863,7 +896,8 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>Waktu</th>
-                                        <th>Tekanan Darah</th>
+                                        <th>Sistole</th>
+                                        <th>Diastole</th>
                                         <th>Nadi</th>
                                         <th>Nafas</th>
                                         <th>SpO₂</th>
@@ -879,7 +913,8 @@
                         tableHTML += `
                                 <tr>
                                     <td>${item.time}</td>
-                                    <td>${item.tekananDarah}</td>
+                                    <td>${item.sistole}</td>
+                                    <td>${item.diastole}</td>
                                     <td>${item.nadi}</td>
                                     <td>${item.nafas}</td>
                                     <td>${item.spo2}</td>
@@ -931,7 +966,8 @@
 
                     // Get values from form
                     const time = waktuObservasiInput.value;
-                    const tekananDarah = parseFloat(tekananDarahInput.value);
+                    const sistole = parseFloat(sistoleInput.value);
+                    const diastole = parseFloat(diastoleInput.value);
                     const nadi = parseFloat(nadiInput.value);
                     const nafas = parseFloat(nafasInput.value);
                     const spo2 = parseFloat(spo2Input.value);
@@ -940,7 +976,8 @@
                     // Create data object
                     const dataPoint = {
                         time: time,
-                        tekananDarah: tekananDarah,
+                        sistole: sistole,
+                        diastole: diastole,
                         nadi: nadi,
                         nafas: nafas,
                         spo2: spo2,
@@ -957,7 +994,8 @@
 
                         // Update chart data arrays
                         timeLabels[index] = time;
-                        tekananDarahData[index] = tekananDarah;
+                        sistoleData[index] = sistole;
+                        diastoleData[index] = diastole;
                         nadiData[index] = nadi;
                         nafasData[index] = nafas;
                         spo2Data[index] = spo2;
@@ -975,7 +1013,8 @@
 
                         // Add to chart arrays
                         timeLabels.push(time);
-                        tekananDarahData.push(tekananDarah);
+                        sistoleData.push(sistole);
+                        diastoleData.push(diastole);
                         nadiData.push(nadi);
                         nafasData.push(nafas);
                         spo2Data.push(spo2);
@@ -1009,7 +1048,8 @@
 
                         // Fill form with data
                         waktuObservasiInput.value = dataPoint.time;
-                        tekananDarahInput.value = dataPoint.tekananDarah;
+                        sistoleInput.value = dataPoint.sistole;
+                        diastoleInput.value = dataPoint.diastole;
                         nadiInput.value = dataPoint.nadi;
                         nafasInput.value = dataPoint.nafas;
                         spo2Input.value = dataPoint.spo2;
@@ -1042,7 +1082,8 @@
                                 // Remove data point from arrays
                                 allObservasiData.splice(index, 1);
                                 timeLabels.splice(index, 1);
-                                tekananDarahData.splice(index, 1);
+                                sistoleData.splice(index, 1);
+                                diastoleData.splice(index, 1);
                                 nadiData.splice(index, 1);
                                 nafasData.splice(index, 1);
                                 spo2Data.splice(index, 1);
@@ -1083,7 +1124,8 @@
                     if (confirm('Perhatian: Data contoh akan menimpa data yang sudah ada. Lanjutkan?')) {
                         // Clear existing data
                         timeLabels.length = 0;
-                        tekananDarahData.length = 0;
+                        sistoleData.length = 0;
+                        diastoleData.length = 0;
                         nadiData.length = 0;
                         nafasData.length = 0;
                         spo2Data.length = 0;
@@ -1092,17 +1134,18 @@
 
                         // Sample data with proper formatting (using clock time format)
                         const sampleData = [
-                            { time: "08:00", tekananDarah: 140, nadi: 80, nafas: 30, spo2: 96, tvs: 2 },
-                            { time: "08:05", tekananDarah: 135, nadi: 78, nafas: 28, spo2: 95, tvs: 1 },
-                            { time: "08:10", tekananDarah: 130, nadi: 75, nafas: 25, spo2: 97, tvs: 1 },
-                            { time: "08:15", tekananDarah: 125, nadi: 72, nafas: 22, spo2: 98, tvs: 2 },
-                            { time: "08:20", tekananDarah: 120, nadi: 70, nafas: 20, spo2: 99, tvs: 2 }
+                            { time: "08:00", sistole: 140, diastole: 90, nadi: 80, nafas: 30, spo2: 96, tvs: 2 },
+                            { time: "08:05", sistole: 135, diastole: 85, nadi: 78, nafas: 28, spo2: 95, tvs: 1 },
+                            { time: "08:10", sistole: 130, diastole: 80, nadi: 75, nafas: 25, spo2: 97, tvs: 1 },
+                            { time: "08:15", sistole: 125, diastole: 75, nadi: 72, nafas: 22, spo2: 98, tvs: 2 },
+                            { time: "08:20", sistole: 120, diastole: 70, nadi: 70, nafas: 20, spo2: 99, tvs: 2 }
                         ];
 
                         // Add each data point
                         sampleData.forEach(item => {
                             timeLabels.push(item.time);
-                            tekananDarahData.push(item.tekananDarah);
+                            sistoleData.push(item.sistole);
+                            diastoleData.push(item.diastole);
                             nadiData.push(item.nadi);
                             nafasData.push(item.nafas);
                             spo2Data.push(item.spo2);
@@ -1132,7 +1175,8 @@
                     if (confirm('Apakah Anda yakin ingin menghapus SEMUA data observasi?')) {
                         // Clear all data arrays
                         timeLabels.length = 0;
-                        tekananDarahData.length = 0;
+                        sistoleData.length = 0;
+                        diastoleData.length = 0;
                         nadiData.length = 0;
                         nafasData.length = 0;
                         spo2Data.length = 0;
@@ -1184,7 +1228,8 @@
                     let isValid = true;
                     const requiredFields = [
                         { element: waktuObservasiInput, name: 'Waktu Observasi' },
-                        { element: tekananDarahInput, name: 'Tekanan Darah' },
+                        { element: sistoleInput, name: 'Sistole' },
+                        { element: diastoleInput, name: 'Diastole' },
                         { element: nadiInput, name: 'Nadi' },
                         { element: nafasInput, name: 'Nafas' },
                         { element: spo2Input, name: 'Saturasi Oksigen' },
@@ -1247,7 +1292,8 @@
                     setCurrentTimeCKP();
 
                     // Reset other fields
-                    if (tekananDarahInput) tekananDarahInput.value = '';
+                    if (sistoleInput) sistoleInput.value = '';
+                    if (diastoleInput) diastoleInput.value = '';
                     if (nadiInput) nadiInput.value = '';
                     if (nafasInput) nafasInput.value = '';
                     if (spo2Input) spo2Input.value = '';

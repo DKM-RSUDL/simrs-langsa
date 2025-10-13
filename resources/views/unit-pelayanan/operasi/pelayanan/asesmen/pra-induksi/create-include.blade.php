@@ -2,7 +2,7 @@
     <script src="{{ asset('vendor/chart.js/Chart.min.js') }}"></script>
     <script>
         // 5. Pemantauan Selama Anestesi dan Sedasi
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Fungsi untuk mengisolasi kode dari pengaruh luar
             initPemantauanAnestesiSedasi();
 
@@ -16,7 +16,8 @@
 
                 // Initial data
                 const timeLabelsPAS = [];
-                const tekananDarahDataPAS = [];
+                const sistoleDataPAS = [];
+                const diastoleDataPAS = [];
                 const nadiDataPAS = [];
                 const nafasDataPAS = [];
                 const spo2DataPAS = [];
@@ -31,7 +32,8 @@
                         // Populate arrays from saved data
                         allMonitoringDataPAS.forEach(item => {
                             timeLabelsPAS.push(item.time);
-                            tekananDarahDataPAS.push(item.tekananDarah);
+                            sistoleDataPAS.push(item.sistolik);
+                            diastoleDataPAS.push(item.diastolik);
                             nadiDataPAS.push(item.nadi);
                             nafasDataPAS.push(item.nafas);
                             spo2DataPAS.push(item.spo2);
@@ -48,10 +50,18 @@
                         type: 'line',
                         data: {
                             labels: timeLabelsPAS,
-                            datasets: [
+                            datasets: [{
+                                    label: 'Sistole',
+                                    data: sistoleDataPAS,
+                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                    borderWidth: 2,
+                                    fill: true,
+                                    tension: 0.4
+                                },
                                 {
-                                    label: 'Tekanan Darah',
-                                    data: tekananDarahDataPAS,
+                                    label: 'Diastole',
+                                    data: diastoleDataPAS,
                                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                                     borderColor: 'rgba(54, 162, 235, 1)',
                                     borderWidth: 2,
@@ -135,24 +145,53 @@
                 function loadSampleDataPAS() {
                     // Clear existing data
                     timeLabelsPAS.length = 0;
-                    tekananDarahDataPAS.length = 0;
+                    sistoleDataPAS.length = 0;
+                    diastoleDataPAS.length = 0;
                     nadiDataPAS.length = 0;
                     nafasDataPAS.length = 0;
                     spo2DataPAS.length = 0;
                     allMonitoringDataPAS = [];
 
                     // Sample data
-                    const sampleDataPAS = [
-                        { time: "1 Jam", tekananDarah: 140, nadi: 90, nafas: 45, spo2: 95 },
-                        { time: "2 Jam", tekananDarah: 120, nadi: 70, nafas: 25, spo2: 90 },
-                        { time: "3 Jam", tekananDarah: 135, nadi: 85, nafas: 40, spo2: 92 },
-                        { time: "4 Jam", tekananDarah: 215, nadi: 100, nafas: 60, spo2: 98 }
+                    const sampleDataPAS = [{
+                            time: "1 Jam",
+                            sistole: 140,
+                            diastole: 90,
+                            nadi: 90,
+                            nafas: 45,
+                            spo2: 95
+                        },
+                        {
+                            time: "2 Jam",
+                            sistole: 120,
+                            diastole: 80,
+                            nadi: 70,
+                            nafas: 25,
+                            spo2: 90
+                        },
+                        {
+                            time: "3 Jam",
+                            sistole: 135,
+                            diastole: 85,
+                            nadi: 85,
+                            nafas: 40,
+                            spo2: 92
+                        },
+                        {
+                            time: "4 Jam",
+                            sistole: 215,
+                            diastole: 110,
+                            nadi: 100,
+                            nafas: 60,
+                            spo2: 98
+                        }
                     ];
 
                     // Add each data point
                     sampleDataPAS.forEach(item => {
                         timeLabelsPAS.push(item.time);
-                        tekananDarahDataPAS.push(item.tekananDarah);
+                        sistoleDataPAS.push(item.sistole);
+                        diastoleDataPAS.push(item.diastole);
                         nadiDataPAS.push(item.nadi);
                         nafasDataPAS.push(item.nafas);
                         spo2DataPAS.push(item.spo2);
@@ -181,17 +220,19 @@
                 // Add event listener to reset data button
                 const resetDataButtonPAS = document.getElementById('resetDataButtonPAS');
                 if (resetDataButtonPAS) {
-                    resetDataButtonPAS.addEventListener('click', function () {
+                    resetDataButtonPAS.addEventListener('click', function() {
                         // Clear all data arrays
                         timeLabelsPAS.length = 0;
-                        tekananDarahDataPAS.length = 0;
+                        sistoleDataPAS.length = 0;
+                        diastoleDataPAS.length = 0;
                         nadiDataPAS.length = 0;
                         nafasDataPAS.length = 0;
                         spo2DataPAS.length = 0;
                         allMonitoringDataPAS = [];
 
                         // Update hidden input
-                        document.getElementById('all_monitoring_data_pas').value = JSON.stringify(allMonitoringDataPAS);
+                        document.getElementById('all_monitoring_data_pas').value = JSON.stringify(
+                            allMonitoringDataPAS);
 
                         // Update chart
                         vitalSignsChartPAS.update();
@@ -207,7 +248,7 @@
                 // Add event listener to the save button
                 const saveButtonPAS = document.getElementById('saveButtonPAS');
                 if (saveButtonPAS) {
-                    saveButtonPAS.addEventListener('click', function () {
+                    saveButtonPAS.addEventListener('click', function() {
                         // Validate form fields
                         if (!validateFormPAS()) {
                             return;
@@ -215,15 +256,18 @@
 
                         // Get form values
                         const time = document.getElementById('waktu_pemantauan_pas').value;
-                        const tekananDarah = parseFloat(document.getElementById('tekanan_darah_pantau_pas').value);
+                        const sistole = parseFloat(document.getElementById('sistole_pantau_pas').value);
+                        const diastole = parseFloat(document.getElementById('diastole_pantau_pas').value);
                         const nadi = parseFloat(document.getElementById('nadi_pantau_pas').value);
                         const nafas = parseFloat(document.getElementById('nafas_pantau_pas').value);
-                        const spo2 = parseFloat(document.getElementById('saturasi_oksigen_pantau_pas').value);
+                        const spo2 = parseFloat(document.getElementById('saturasi_oksigen_pantau_pas')
+                            .value);
 
                         // Create data object
                         const dataPoint = {
                             time: time,
-                            tekananDarah: tekananDarah,
+                            sistole: sistole,
+                            diastole: diastole,
                             nadi: nadi,
                             nafas: nafas,
                             spo2: spo2
@@ -233,11 +277,13 @@
                         allMonitoringDataPAS.push(dataPoint);
 
                         // Update hidden input with JSON string
-                        document.getElementById('all_monitoring_data_pas').value = JSON.stringify(allMonitoringDataPAS);
+                        document.getElementById('all_monitoring_data_pas').value = JSON.stringify(
+                            allMonitoringDataPAS);
 
                         // Add data to chart arrays
                         timeLabelsPAS.push(time);
-                        tekananDarahDataPAS.push(tekananDarah);
+                        sistoleDataPAS.push(sistole);
+                        diastoleDataPAS.push(diastole);
                         nadiDataPAS.push(nadi);
                         nafasDataPAS.push(nafas);
                         spo2DataPAS.push(spo2);
@@ -258,7 +304,8 @@
                     let isValid = true;
                     const requiredFields = [
                         'waktu_pemantauan_pas',
-                        'tekanan_darah_pantau_pas',
+                        'diastole_pantau_pas',
+                        'sistole_pantau_pas',
                         'nadi_pantau_pas',
                         'nafas_pantau_pas',
                         'saturasi_oksigen_pantau_pas'
@@ -312,11 +359,26 @@
                     setCurrentTimePAS();
 
                     // Reset other fields
-                    const fields = [
-                        { id: 'tekanan_darah_pantau_pas', value: '' },
-                        { id: 'nadi_pantau_pas', value: '' },
-                        { id: 'nafas_pantau_pas', value: '' },
-                        { id: 'saturasi_oksigen_pantau_pas', value: '' }
+                    const fields = [{
+                            id: 'diastole_pantau_pas',
+                            value: ''
+                        },
+                        {
+                            id: 'sistole_pantau_pas',
+                            value: ''
+                        },
+                        {
+                            id: 'nadi_pantau_pas',
+                            value: ''
+                        },
+                        {
+                            id: 'nafas_pantau_pas',
+                            value: ''
+                        },
+                        {
+                            id: 'saturasi_oksigen_pantau_pas',
+                            value: ''
+                        }
                     ];
 
                     fields.forEach(field => {
@@ -331,7 +393,7 @@
         });
 
         // 6. Catatan Kamar Pemulihan
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Fungsi untuk mengisolasi kode dari pengaruh luar
             initCatatanKamarPemulihan();
 
@@ -340,7 +402,8 @@
                 const observasiContainer = document.getElementById('observasiFormCKP');
                 const hiddenInput = document.getElementById('all_observasi_data_ckp');
                 const waktuObservasiInput = document.getElementById('waktu_observasi_ckp');
-                const tekananDarahInput = document.getElementById('tekanan_darah_pemulihan_ckp');
+                const sistoleInput = document.getElementById('sistole_ckp');
+                const diastoleInput = document.getElementById('diastole_ckp');
                 const nadiInput = document.getElementById('nadi_pemulihan_ckp');
                 const nafasInput = document.getElementById('nafas_pemulihan_ckp');
                 const spo2Input = document.getElementById('saturasi_oksigen_pemulihan_ckp');
@@ -368,7 +431,8 @@
 
                 // Data arrays for chart
                 const timeLabels = [];
-                const tekananDarahData = [];
+                const sistoleData = [];
+                const diastoleData = [];
                 const nadiData = [];
                 const nafasData = [];
                 const spo2Data = [];
@@ -386,7 +450,8 @@
                         // Populate chart arrays from saved data
                         allObservasiData.forEach(item => {
                             timeLabels.push(item.time);
-                            tekananDarahData.push(item.tekananDarah);
+                            sistoleData.push(item.sistole);
+                            diastoleData.push(item.diastole);
                             nadiData.push(item.nadi);
                             nafasData.push(item.nafas);
                             spo2Data.push(item.spo2);
@@ -419,7 +484,7 @@
 
                 // Add event listener to the main form if it exists
                 if (mainForm) {
-                    mainForm.addEventListener('submit', function (e) {
+                    mainForm.addEventListener('submit', function(e) {
                         // Make sure the hidden input has the most recent data before submission
                         hiddenInput.value = JSON.stringify(allObservasiData);
                         console.log('Form submission - observation data:', hiddenInput.value);
@@ -437,10 +502,18 @@
                         type: 'line',
                         data: {
                             labels: timeLabels,
-                            datasets: [
+                            datasets: [{
+                                    label: 'Sistole',
+                                    data: sistoleData,
+                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                    borderWidth: 2,
+                                    fill: true,
+                                    tension: 0.4
+                                },
                                 {
-                                    label: 'Tekanan Darah',
-                                    data: tekananDarahData,
+                                    label: 'Diastole',
+                                    data: diastoleData,
                                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                                     borderColor: 'rgba(54, 162, 235, 1)',
                                     borderWidth: 2,
@@ -526,7 +599,8 @@
 
                     // Get values from form
                     const time = waktuObservasiInput.value;
-                    const tekananDarah = parseFloat(tekananDarahInput.value);
+                    const sistole = parseFloat(sistoleInput.value);
+                    const diastole = parseFloat(diastoleInput.value);
                     const nadi = parseFloat(nadiInput.value);
                     const nafas = parseFloat(nafasInput.value);
                     const spo2 = parseFloat(spo2Input.value);
@@ -535,7 +609,8 @@
                     // Create data object
                     const dataPoint = {
                         time: time,
-                        tekananDarah: tekananDarah,
+                        sistole: sistole,
+                        diastole: diastole,
                         nadi: nadi,
                         nafas: nafas,
                         spo2: spo2,
@@ -553,7 +628,8 @@
 
                     // Add data to chart arrays
                     timeLabels.push(time);
-                    tekananDarahData.push(tekananDarah);
+                    sistoleData.push(sistole);
+                    diastoleData.push(diastole);
                     nadiData.push(nadi);
                     nafasData.push(nafas);
                     spo2Data.push(spo2);
@@ -573,7 +649,8 @@
                 function loadSampleData() {
                     // Clear existing data
                     timeLabels.length = 0;
-                    tekananDarahData.length = 0;
+                    sistoleData.length = 0;
+                    diastoleData.length = 0;
                     nadiData.length = 0;
                     nafasData.length = 0;
                     spo2Data.length = 0;
@@ -581,18 +658,58 @@
                     allObservasiData = [];
 
                     // Sample data with proper formatting (using clock time format)
-                    const sampleData = [
-                        { time: "08:00", tekananDarah: 140, nadi: 80, nafas: 30, spo2: 96, tvs: 20 },
-                        { time: "08:05", tekananDarah: 135, nadi: 78, nafas: 28, spo2: 95, tvs: 18 },
-                        { time: "08:10", tekananDarah: 130, nadi: 75, nafas: 25, spo2: 97, tvs: 16 },
-                        { time: "08:15", tekananDarah: 125, nadi: 72, nafas: 22, spo2: 98, tvs: 14 },
-                        { time: "08:20", tekananDarah: 120, nadi: 70, nafas: 20, spo2: 99, tvs: 12 }
+                    const sampleData = [{
+                            time: "08:00",
+                            sistole: 140,
+                            diastole: 90,
+                            nadi: 80,
+                            nafas: 30,
+                            spo2: 96,
+                            tvs: 20
+                        },
+                        {
+                            time: "08:05",
+                            sistole: 135,
+                            diastole: 85,
+                            nadi: 78,
+                            nafas: 28,
+                            spo2: 95,
+                            tvs: 18
+                        },
+                        {
+                            time: "08:10",
+                            sistole: 130,
+                            diastole: 80,
+                            nadi: 75,
+                            nafas: 25,
+                            spo2: 97,
+                            tvs: 16
+                        },
+                        {
+                            time: "08:15",
+                            sistole: 125,
+                            diastole: 75,
+                            nadi: 72,
+                            nafas: 22,
+                            spo2: 98,
+                            tvs: 14
+                        },
+                        {
+                            time: "08:20",
+                            sistole: 120,
+                            diastole: 70,
+                            nadi: 70,
+                            nafas: 20,
+                            spo2: 99,
+                            tvs: 12
+                        }
                     ];
 
                     // Add each data point
                     sampleData.forEach(item => {
                         timeLabels.push(item.time);
-                        tekananDarahData.push(item.tekananDarah);
+                        sistoleData.push(item.sistole);
+                        diastoleData.push(item.diastole);
                         nadiData.push(item.nadi);
                         nafasData.push(item.nafas);
                         spo2Data.push(item.spo2);
@@ -617,7 +734,8 @@
                 function resetAllData() {
                     // Clear all data arrays
                     timeLabels.length = 0;
-                    tekananDarahData.length = 0;
+                    sistoleData.length = 0;
+                    diastoleData.length = 0;
                     nadiData.length = 0;
                     nafasData.length = 0;
                     spo2Data.length = 0;
@@ -662,13 +780,34 @@
                 // Validate form input fields
                 function validateFormData() {
                     let isValid = true;
-                    const requiredFields = [
-                        { element: waktuObservasiInput, name: 'Waktu Observasi' },
-                        { element: tekananDarahInput, name: 'Tekanan Darah' },
-                        { element: nadiInput, name: 'Nadi' },
-                        { element: nafasInput, name: 'Nafas' },
-                        { element: spo2Input, name: 'Saturasi Oksigen' },
-                        { element: tvsInput, name: 'Tanda Vital Stabil' }
+                    const requiredFields = [{
+                            element: waktuObservasiInput,
+                            name: 'Waktu Observasi'
+                        },
+                        {
+                            element: sistoleInput,
+                            name: 'Sistolik'
+                        },
+                        {
+                            element: diastoleInput,
+                            name: 'Diastolik'
+                        },
+                        {
+                            element: nadiInput,
+                            name: 'Nadi'
+                        },
+                        {
+                            element: nafasInput,
+                            name: 'Nafas'
+                        },
+                        {
+                            element: spo2Input,
+                            name: 'Saturasi Oksigen'
+                        },
+                        {
+                            element: tvsInput,
+                            name: 'Tanda Vital Stabil'
+                        }
                     ];
 
                     // Check each required field
@@ -727,7 +866,8 @@
                     setCurrentTimeCKP();
 
                     // Reset other fields
-                    if (tekananDarahInput) tekananDarahInput.value = '';
+                    if (sistoleInput) sistoleInput.value = '';
+                    if (diastoleInput) diastoleInput.value = '';
                     if (nadiInput) nadiInput.value = '';
                     if (nafasInput) nafasInput.value = '';
                     if (spo2Input) spo2Input.value = '';
@@ -746,7 +886,7 @@
             Skala Pada Pasien
             6. Catatan Kamar Pemulihan
         */
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Get all required elements
             const skalaPasien = document.getElementById('skalaPasien');
             const bromageScoreForm = document.getElementById('bromageScoreForm');
@@ -773,7 +913,7 @@
             };
 
             // Show form based on selection
-            skalaPasien.addEventListener('change', function () {
+            skalaPasien.addEventListener('change', function() {
                 hideForms();
 
                 // Update the selected score in the data object
@@ -803,7 +943,7 @@
             if (bromageScoreForm) {
                 const bromageInputs = bromageScoreForm.querySelectorAll('input');
                 bromageInputs.forEach(input => {
-                    input.addEventListener('change', function () {
+                    input.addEventListener('change', function() {
                         collectBromageData();
                     });
                 });
@@ -813,7 +953,7 @@
             if (stewardScoreForm) {
                 const stewardInputs = stewardScoreForm.querySelectorAll('input, select');
                 stewardInputs.forEach(input => {
-                    input.addEventListener('change', function () {
+                    input.addEventListener('change', function() {
                         collectStewardData();
                     });
                 });
@@ -823,7 +963,7 @@
             if (aldreteScoreForm) {
                 const aldreteInputs = aldreteScoreForm.querySelectorAll('input, select');
                 aldreteInputs.forEach(input => {
-                    input.addEventListener('change', function () {
+                    input.addEventListener('change', function() {
                         collectAldreteData();
                     });
                 });
@@ -833,7 +973,7 @@
             if (paddsScoreForm) {
                 const paddsInputs = paddsScoreForm.querySelectorAll('input, select');
                 paddsInputs.forEach(input => {
-                    input.addEventListener('change', function () {
+                    input.addEventListener('change', function() {
                         collectPADDSData();
                     });
                 });
@@ -950,8 +1090,7 @@
                     kesadaran: document.querySelector('select[name="aldrete_kesadaran"]').value,
                     warna_kulit: document.querySelector('select[name="aldrete_warna_kulit"]').value,
                     tanggal_pasca_anestesi: document.querySelector('input[name="aldrete_tanggal"]').value,
-                    intervals: [
-                        {
+                    intervals: [{
                             jam: document.querySelector('input[name="interval_jam_1"]').value,
                             skor: document.querySelector('input[name="skor_1"]').value,
                             keterangan: document.querySelector('input[name="keterangan_1"]').value
@@ -971,19 +1110,22 @@
 
                 // Calculate total score
                 let totalScore = 0;
-                if (scoreData.aldrete_data.aktivitas_motorik) totalScore += parseInt(scoreData.aldrete_data.aktivitas_motorik);
+                if (scoreData.aldrete_data.aktivitas_motorik) totalScore += parseInt(scoreData.aldrete_data
+                    .aktivitas_motorik);
                 if (scoreData.aldrete_data.respirasi) totalScore += parseInt(scoreData.aldrete_data.respirasi);
                 if (scoreData.aldrete_data.sirkulasi) totalScore += parseInt(scoreData.aldrete_data.sirkulasi);
                 if (scoreData.aldrete_data.kesadaran) totalScore += parseInt(scoreData.aldrete_data.kesadaran);
                 if (scoreData.aldrete_data.warna_kulit) totalScore += parseInt(scoreData.aldrete_data.warna_kulit);
 
                 scoreData.aldrete_data.total_score = totalScore;
-                scoreData.aldrete_data.conclusion = totalScore >= 8 ? "Boleh pindah ruang" : "Tidak Boleh pindah ruang";
+                scoreData.aldrete_data.conclusion = totalScore >= 8 ? "Boleh pindah ruang" :
+                    "Tidak Boleh pindah ruang";
 
                 // Update the conclusion in the UI
                 const conclusionElements = aldreteScoreForm.querySelectorAll('.bg-success');
                 conclusionElements.forEach(element => {
-                    element.innerHTML = `<strong>Kesimpulan : </strong> ${scoreData.aldrete_data.conclusion}`;
+                    element.innerHTML =
+                        `<strong>Kesimpulan : </strong> ${scoreData.aldrete_data.conclusion}`;
                 });
 
                 updateJSONData();
@@ -1056,9 +1198,10 @@
                 const paddsTimeTable = document.getElementById('paddsTimeTable');
 
                 if (paddsTanggalJam && paddsTimeTable) {
-                    paddsTanggalJam.addEventListener('change', function () {
+                    paddsTanggalJam.addEventListener('change', function() {
                         const currentScore = getCalculatedPADDSScore();
-                        const conclusion = currentScore >= 9 ? "Boleh pindah ruang" : "Tidak Boleh pindah ruang";
+                        const conclusion = currentScore >= 9 ? "Boleh pindah ruang" :
+                            "Tidak Boleh pindah ruang";
 
                         // Clear table first
                         paddsTimeTable.innerHTML = '';
@@ -1096,7 +1239,8 @@
                 const perdarahan = document.querySelector('select[name="padds_perdarahan"]').value || 0;
                 const nyeri = document.querySelector('select[name="padds_nyeri"]').value || 0;
 
-                return parseInt(tandaVital) + parseInt(aktivitas) + parseInt(mualMuntah) + parseInt(perdarahan) + parseInt(nyeri);
+                return parseInt(tandaVital) + parseInt(aktivitas) + parseInt(mualMuntah) + parseInt(perdarahan) +
+                    parseInt(nyeri);
             }
         });
 
@@ -1104,7 +1248,7 @@
         4. Evaluasi Pra Anestesi dan Sedasi
         menghitung IMT dan Luas Permukaan Tubuh (LPT)
         */
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const tinggiInput = document.querySelector('input[name="antropometri_tinggi_badan"]');
             const beratInput = document.querySelector('input[name="antropometri_berat_badan"]');
             const imtInput = document.querySelector('input[name="antropometri_imt"]');

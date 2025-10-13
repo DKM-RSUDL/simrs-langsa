@@ -377,7 +377,7 @@ class TindakanController extends Controller
 
         $tindakan = RmeRehabMedikTindakan::find($id);
 
-        return view('unit-pelayanan.rehab-medis.pelayanan.tindakan.show', compact('dataMedis', 'programs', 'petugas', 'tindakan'));
+        return view('unit-pelayanan.rawat-jalan.pelayanan.rehab.tindakan.show', compact('dataMedis', 'programs', 'petugas', 'tindakan'));
     }
 
     public function destroy($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)

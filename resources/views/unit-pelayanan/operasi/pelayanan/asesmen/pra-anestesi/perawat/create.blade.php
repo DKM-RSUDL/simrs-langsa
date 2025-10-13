@@ -15,7 +15,7 @@
 
     <div class="row">
         <div class="col-md-3">
-            @include('unit-pelayanan.operasi.pelayanan.asesmen.pra-anestesi.medis.patient-card')
+            @include('components.patient-card')
         </div>
 
         <div class="col-md-9">

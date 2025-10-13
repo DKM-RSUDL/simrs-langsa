@@ -50,12 +50,12 @@ class LaporanOperasiController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        $laporan = OkLaporanOperasi::with(['userCreate'])
+        $reportOperations = OkLaporanOperasi::with(['userCreate'])
             ->where('kd_kasir', $dataMedis->kd_kasir)
             ->where('no_transaksi', $dataMedis->no_transaksi)
-            ->first();
+            ->get();
 
-        return view('unit-pelayanan.operasi.pelayanan.laporan-operatif.index', compact('dataMedis', 'laporan'));
+        return view('unit-pelayanan.operasi.pelayanan.laporan-operatif.index', compact('dataMedis', 'reportOperations'));
     }
 
     public function create($kd_pasien, $tgl_masuk, $urut_masuk)
