@@ -1,7 +1,7 @@
 <div class="d-flex flex-column gap-3">
     @include('components.page-header', [
-        'title' => 'Daftar Laporan Operasi',
-        'description' => 'Berikut daftar data laporan operasi.',
+        'title' => 'Daftar Checklist Operasi Anestesi',
+        'description' => 'Berikut daftar data checklist operasi anestesi.',
     ])
 
     <div class="row">
