@@ -84,60 +84,60 @@
 
         <div class="col-md-9">
             @include('components.navigation-operasi')
+            <x-content-card>
 
-            <div class="d-flex justify-content-center">
-                <div class="card w-100 h-100">
-                    <div class="card-body">
-                        <div class="site-marking-info">
-                            <h5><i class="fas fa-map-marker-alt me-2"></i>Penandaan Daerah Operasi</h5>
-                            <p class="mb-3">Site marking adalah proses penandaan lokasi pada tubuh pasien untuk mencegah kesalahan dalam identifikasi area yang akan ditangani. Fitur ini memungkinkan tenaga medis untuk:</p>
-                            <ul>
-                                <li>Menandai lokasi spesifik pada gambar anatomi tubuh</li>
-                                <li>Menambahkan catatan tentang kondisi pasien pada area tertentu</li>
-                                <li>Mendokumentasikan perubahan kondisi secara visual</li>
-                                <li>Meningkatkan akurasi dan keamanan dalam perawatan pasien</li>
-                            </ul>
-                        </div>
+                @include('components.page-header', [
+                    'title' => 'Penandaan Daerah Operasi',
+                    'description' =>
+                        'Site marking adalah proses penandaan lokasi pada tubuh pasien untuk mencegah kesalahan dalam
+                        identifikasi area yang akan ditangani. Fitur ini memungkinkan tenaga medis untuk:',
+                ])
+                <ul list-style-type: disc; class="ms-4 -mt-5">
+                        <li>Menandai lokasi spesifik pada gambar anatomi tubuh</li>
+                        <li>Menambahkan catatan tentang kondisi pasien pada area tertentu</li>
+                        <li>Mendokumentasikan perubahan kondisi secara visual</li>
+                        <li>Meningkatkan akurasi dan keamanan dalam perawatan pasien</li>
+                    </ul>
 
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h6 class="mb-0">Riwayat Site Marking Pasien</h6>
-                            <a href="{{ route('operasi.pelayanan.site-marking.create', ['kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk, 'urut_masuk' => $urut_masuk]) }}" class="btn btn-site-marking">
-                                <i class="fas fa-plus-circle"></i> Tambah Site Marking Baru
-                            </a>
-                        </div>
-
-                        @if($siteMarkings->isNotEmpty())
-                            <div class="list-group" id="markingList">
-                                @foreach($siteMarkings as $marking)
-                                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <div class="fw-bold">Site Marking - {{ $marking->waktu_prosedure }}</div>
-                                            <div class="text-muted">PPA Oleh: {{ $marking->creator ? $marking->creator->name : 'Tidak tersedia' }}</div>
-                                            <div class="text-muted">Prosedur: {{ $marking->prosedure }}</div>
-                                        </div>
-                                        <div class="d-flex gap-2">
-                                            <a href="{{ route('operasi.pelayanan.site-marking.show', ['kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk, 'urut_masuk' => $urut_masuk, 'id' => $marking->id]) }}" class="btn btn-sm btn-info">
-                                                <i class="fas fa-eye"></i> Lihat
-                                            </a>
-                                            <button type="button" class="btn btn-sm btn-danger btn-delete" 
-                                                    data-id="{{ $marking->id }}" 
-                                                    data-kd-pasien="{{ $kd_pasien }}" 
-                                                    data-tgl-masuk="{{ $tgl_masuk }}" 
-                                                    data-urut-masuk="{{ $urut_masuk }}">
-                                                <i class="fas fa-trash"></i> Hapus
-                                            </button>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <div class="alert alert-info">
-                                <i class="fas fa-info-circle me-2"></i> Belum ada site marking untuk pasien ini. Silakan tambahkan dengan menekan tombol "Tambah Site Marking Baru".
-                            </div>
-                        @endif
-                    </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6>Riwayat Site Marking Pasien</h6>
+                    <a href="{{ route('operasi.pelayanan.site-marking.create', ['kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk, 'urut_masuk' => $urut_masuk]) }}"
+                        class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Tambah Site Marking Baru
+                    </a>
                 </div>
-            </div>
+
+                @if ($siteMarkings->isNotEmpty())
+                    <div class="list-group" id="markingList">
+                        @foreach ($siteMarkings as $marking)
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="fw-bold">Site Marking - {{ $marking->waktu_prosedure }}</div>
+                                    <div class="text-muted">PPA Oleh:
+                                        {{ $marking->creator ? $marking->creator->name : 'Tidak tersedia' }}</div>
+                                    <div class="text-muted">Prosedur: {{ $marking->prosedure }}</div>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <a href="{{ route('operasi.pelayanan.site-marking.show', ['kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk, 'urut_masuk' => $urut_masuk, 'id' => $marking->id]) }}"
+                                        class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i> Lihat
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-danger btn-delete"
+                                        data-id="{{ $marking->id }}" data-kd-pasien="{{ $kd_pasien }}"
+                                        data-tgl-masuk="{{ $tgl_masuk }}" data-urut-masuk="{{ $urut_masuk }}">
+                                        <i class="fas fa-trash"></i> Hapus
+                                    </button>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i> Belum ada site marking untuk pasien ini. Silakan tambahkan
+                        dengan menekan tombol "Tambah Site Marking Baru".
+                    </div>
+                @endif
+            </x-content-card>
         </div>
     </div>
 
@@ -150,7 +150,7 @@
 
 @push('js')
     <!-- SweetAlert2 JS -->
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Implementasi SweetAlert untuk konfirmasi delete
@@ -161,7 +161,7 @@
                     const kdPasien = this.getAttribute('data-kd-pasien');
                     const tglMasuk = this.getAttribute('data-tgl-masuk');
                     const urutMasuk = this.getAttribute('data-urut-masuk');
-                    
+
                     Swal.fire({
                         title: 'Konfirmasi Hapus',
                         text: 'Apakah Anda yakin ingin menghapus Site Marking ini?',
@@ -174,7 +174,8 @@
                     }).then((result) => {
                         if (result.isConfirmed) {
                             const form = document.getElementById('delete-form');
-                            form.action = "{{ route('operasi.pelayanan.site-marking.destroy', ['kd_pasien' => ':kd_pasien', 'tgl_masuk' => ':tgl_masuk', 'urut_masuk' => ':urut_masuk', 'id' => ':id']) }}"
+                            form.action =
+                                "{{ route('operasi.pelayanan.site-marking.destroy', ['kd_pasien' => ':kd_pasien', 'tgl_masuk' => ':tgl_masuk', 'urut_masuk' => ':urut_masuk', 'id' => ':id']) }}"
                                 .replace(':kd_pasien', kdPasien)
                                 .replace(':tgl_masuk', tglMasuk)
                                 .replace(':urut_masuk', urutMasuk)
@@ -184,7 +185,7 @@
                     });
                 });
             });
-            
+
             // Get the stored active tab from localStorage
             const activeTab = localStorage.getItem('activeTab');
 
@@ -214,9 +215,9 @@
                     localStorage.setItem('activeTab', tabId);
                 });
             });
-            
+
             // Show success message with SweetAlert if available in session
-            @if(session('success'))
+            @if (session('success'))
                 Swal.fire({
                     icon: 'success',
                     title: 'Berhasil!',
@@ -225,9 +226,9 @@
                     showConfirmButton: false
                 });
             @endif
-            
+
             // Show error message with SweetAlert if available in session
-            @if(session('error'))
+            @if (session('error'))
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
