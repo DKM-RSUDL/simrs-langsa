@@ -1348,696 +1348,679 @@
             Skala Pada Pasien
             6. Catatan Kamar Pemulihan
         */
-        document.addEventListener('DOMContentLoaded', function () {
-    // Get all required elements
-    const skalaPasien = document.getElementById('skalaPasien');
-    const bromageScoreForm = document.getElementById('bromageScoreForm');
-    const stewardScoreForm = document.getElementById('stewardScoreForm');
-    const aldreteScoreForm = document.getElementById('aldreteScoreForm');
-    const paddsScoreForm = document.getElementById('paddsScoreForm');
-    const patientScoreDataJSON = document.getElementById('patientScoreDataJSON');
+        document.addEventListener('DOMContentLoaded', function() {
+            const skalaPasien = document.getElementById('skalaPasien');
+            const bromageScoreForm = document.getElementById('bromageScoreForm');
+            const stewardScoreForm = document.getElementById('stewardScoreForm');
+            const aldreteScoreForm = document.getElementById('aldreteScoreForm');
+            const paddsScoreForm = document.getElementById('paddsScoreForm');
+            const patientScoreDataJSON = document.getElementById('patientScoreDataJSON');
 
-    // Initialize data object
-    let scoreData = {
-        selected_score: "",
-        bromage_data: {},
-        steward_data: {},
-        aldrete_data: {},
-        padds_data: {}
-    };
+            let scoreData = {
+                selected_score: "",
+                bromage_data: {},
+                steward_data: {},
+                aldrete_data: {},
+                padds_data: {}
+            };
 
-    // Function to load data from JSON
-    function loadFromJSON() {
-        try {
-            const jsonValue = patientScoreDataJSON.value;
-            if (jsonValue && jsonValue !== '{}') {
-                scoreData = JSON.parse(jsonValue);
-                console.log("Data loaded:", scoreData);
-
-                // Set the selected scale if it was saved before
-                if (scoreData.selected_score && skalaPasien) {
-                    skalaPasien.value = scoreData.selected_score;
-                    showSelectedForm(scoreData.selected_score);
-                }
-
-                // Pre-populate form values based on saved data
-                populateFormData();
-            }
-        } catch (error) {
-            console.error("Error loading JSON data:", error);
-        }
-    }
-
-    // Hide all forms initially
-    const hideForms = () => {
-        if (bromageScoreForm) bromageScoreForm.style.display = 'none';
-        if (stewardScoreForm) stewardScoreForm.style.display = 'none';
-        if (aldreteScoreForm) aldreteScoreForm.style.display = 'none';
-        if (paddsScoreForm) paddsScoreForm.style.display = 'none';
-    };
-
-    // Show form based on selection
-    function showSelectedForm(selectedValue) {
-        hideForms();
-
-        switch (selectedValue) {
-            case 'bromage':
-                if (bromageScoreForm) bromageScoreForm.style.display = 'block';
-                break;
-            case 'steward':
-                if (stewardScoreForm) stewardScoreForm.style.display = 'block';
-                break;
-            case 'aldrete':
-                if (aldreteScoreForm) aldreteScoreForm.style.display = 'block';
-                break;
-            case 'padds':
-                if (paddsScoreForm) paddsScoreForm.style.display = 'block';
-                break;
-        }
-    }
-
-    // Show form based on selection
-    if (skalaPasien) {
-        skalaPasien.addEventListener('change', function () {
-            // Update the selected score in the data object
-            scoreData.selected_score = this.value;
-
-            // Show the selected form
-            showSelectedForm(this.value);
-
-            // Update the hidden input with the current JSON data
-            updateJSONData();
-        });
-    }
-
-    // Function to update the hidden JSON input
-    function updateJSONData() {
-        if (patientScoreDataJSON) {
-            patientScoreDataJSON.value = JSON.stringify(scoreData);
-            console.log("Data saved:", scoreData);
-        }
-    }
-
-    // Function to populate form fields with saved data
-    function populateFormData() {
-        if (scoreData.selected_score === 'bromage' && bromageScoreForm) {
-            const bromageData = scoreData.bromage_data;
-            if (bromageData) {
-                // Set time radio button
-                if (bromageData.time) {
-                    const timeRadio = document.querySelector(`input[name="bromage_time"][value="${bromageData.time}"]`);
-                    if (timeRadio) timeRadio.checked = true;
-                }
-
-                // Set gerakan penuh data
-                if (bromageData.gerakan_penuh) {
-                    const gerakanPenuh = bromageData.gerakan_penuh;
-                    const jamInput = document.querySelector('input[name="bromage_gerakan_penuh"]');
-                    if (jamInput && gerakanPenuh.jam) jamInput.value = gerakanPenuh.jam;
-
-                    // Set checkboxes
-                    setCheckboxState('bromage_gerakan_penuh_15', gerakanPenuh.checked_15);
-                    setCheckboxState('bromage_gerakan_penuh_30', gerakanPenuh.checked_30);
-                    setCheckboxState('bromage_gerakan_penuh_45', gerakanPenuh.checked_45);
-                    setCheckboxState('bromage_gerakan_penuh_1', gerakanPenuh.checked_1);
-                    setCheckboxState('bromage_gerakan_penuh_2', gerakanPenuh.checked_2);
-                }
-
-                // Set tak ekstensi data
-                if (bromageData.tak_ekstensi) {
-                    const takEkstensi = bromageData.tak_ekstensi;
-                    const jamInput = document.querySelector('input[name="bromage_tak_ekstensi"]');
-                    if (jamInput && takEkstensi.jam) jamInput.value = takEkstensi.jam;
-
-                    // Set checkboxes
-                    setCheckboxState('bromage_tak_ekstensi_15', takEkstensi.checked_15);
-                    setCheckboxState('bromage_tak_ekstensi_30', takEkstensi.checked_30);
-                    setCheckboxState('bromage_tak_ekstensi_45', takEkstensi.checked_45);
-                    setCheckboxState('bromage_tak_ekstensi_1', takEkstensi.checked_1);
-                    setCheckboxState('bromage_tak_ekstensi_2', takEkstensi.checked_2);
-                }
-
-                // Set tak fleksi data
-                if (bromageData.tak_fleksi) {
-                    const takFleksi = bromageData.tak_fleksi;
-                    const jamInput = document.querySelector('input[name="bromage_tak_fleksi"]');
-                    if (jamInput && takFleksi.jam) jamInput.value = takFleksi.jam;
-
-                    // Set checkboxes
-                    setCheckboxState('bromage_tak_fleksi_15', takFleksi.checked_15);
-                    setCheckboxState('bromage_tak_fleksi_30', takFleksi.checked_30);
-                    setCheckboxState('bromage_tak_fleksi_45', takFleksi.checked_45);
-                    setCheckboxState('bromage_tak_fleksi_1', takFleksi.checked_1);
-                    setCheckboxState('bromage_tak_fleksi_2', takFleksi.checked_2);
-                }
-
-                // Set tak pergerakan data
-                if (bromageData.tak_pergerakan) {
-                    const takPergerakan = bromageData.tak_pergerakan;
-                    const jamInput = document.querySelector('input[name="bromage_tak_pergerakan"]');
-                    if (jamInput && takPergerakan.jam) jamInput.value = takPergerakan.jam;
-
-                    // Set checkboxes
-                    setCheckboxState('bromage_tak_pergerakan_15', takPergerakan.checked_15);
-                    setCheckboxState('bromage_tak_pergerakan_30', takPergerakan.checked_30);
-                    setCheckboxState('bromage_tak_pergerakan_45', takPergerakan.checked_45);
-                    setCheckboxState('bromage_tak_pergerakan_1', takPergerakan.checked_1);
-                    setCheckboxState('bromage_tak_pergerakan_2', takPergerakan.checked_2);
-                }
-
-                // Set jam pindah data
-                if (bromageData.jam_pindah) {
-                    const jamPindah = bromageData.jam_pindah;
-                    const jamInput = document.querySelector('input[name="bromage_jam_pindah"]');
-                    if (jamInput && jamPindah.jam) jamInput.value = jamPindah.jam;
-
-                    // Set checkboxes
-                    setCheckboxState('bromage_jam_pindah_15', jamPindah.checked_15);
-                    setCheckboxState('bromage_jam_pindah_30', jamPindah.checked_30);
-                    setCheckboxState('bromage_jam_pindah_45', jamPindah.checked_45);
-                    setCheckboxState('bromage_jam_pindah_1', jamPindah.checked_1);
-                    setCheckboxState('bromage_jam_pindah_2', jamPindah.checked_2);
+            // Load existing data from hidden input if available
+            if (patientScoreDataJSON && patientScoreDataJSON.value && patientScoreDataJSON.value !== '{}') {
+                try {
+                    const existingData = JSON.parse(patientScoreDataJSON.value);
+                    scoreData = { ...scoreData, ...existingData };
+                } catch (e) {
+                    console.error('Error parsing existing score data:', e);
                 }
             }
-        } else if (scoreData.selected_score === 'steward' && stewardScoreForm) {
-            const stewardData = scoreData.steward_data;
-            if (stewardData) {
-                // Set time radio button
-                if (stewardData.time) {
-                    const timeRadio = document.querySelector(`input[name="steward_time"][value="${stewardData.time}"]`);
-                    if (timeRadio) timeRadio.checked = true;
-                }
 
-                // Set kesadaran data
-                if (stewardData.kesadaran) {
-                    const kesadaran = stewardData.kesadaran;
-                    const selectElem = document.querySelector('select[name="steward_kesadaran"]');
-                    if (selectElem && kesadaran.value) selectElem.value = kesadaran.value;
+            const hideForms = () => {
+                if (bromageScoreForm) bromageScoreForm.style.display = 'none';
+                if (stewardScoreForm) stewardScoreForm.style.display = 'none';
+                if (aldreteScoreForm) aldreteScoreForm.style.display = 'none';
+                if (paddsScoreForm) paddsScoreForm.style.display = 'none';
+            };
 
-                    const jamInput = document.querySelector('input[name="steward_kesadaran_jam"]');
-                    if (jamInput && kesadaran.jam) jamInput.value = kesadaran.jam;
+            if (skalaPasien) {
+                skalaPasien.addEventListener('change', function() {
+                    hideForms();
+                    scoreData.selected_score = this.value;
+                    updateJSONData();
 
-                    // Set checkboxes
-                    setCheckboxState('steward_kesadaran_15', kesadaran.checked_15);
-                    setCheckboxState('steward_kesadaran_30', kesadaran.checked_30);
-                    setCheckboxState('steward_kesadaran_45', kesadaran.checked_45);
-                    setCheckboxState('steward_kesadaran_1', kesadaran.checked_1);
-                    setCheckboxState('steward_kesadaran_2', kesadaran.checked_2);
-                }
-
-                // Set respirasi data
-                if (stewardData.respirasi) {
-                    const respirasi = stewardData.respirasi;
-                    const selectElem = document.querySelector('select[name="steward_respirasi"]');
-                    if (selectElem && respirasi.value) selectElem.value = respirasi.value;
-
-                    const jamInput = document.querySelector('input[name="steward_respirasi_jam"]');
-                    if (jamInput && respirasi.jam) jamInput.value = respirasi.jam;
-
-                    // Set checkboxes
-                    setCheckboxState('steward_respirasi_15', respirasi.checked_15);
-                    setCheckboxState('steward_respirasi_30', respirasi.checked_30);
-                    setCheckboxState('steward_respirasi_45', respirasi.checked_45);
-                    setCheckboxState('steward_respirasi_1', respirasi.checked_1);
-                    setCheckboxState('steward_respirasi_2', respirasi.checked_2);
-                }
-
-                // Set motorik data
-                if (stewardData.motorik) {
-                    const motorik = stewardData.motorik;
-                    const selectElem = document.querySelector('select[name="steward_motorik"]');
-                    if (selectElem && motorik.value) selectElem.value = motorik.value;
-
-                    const jamInput = document.querySelector('input[name="steward_motorik_jam"]');
-                    if (jamInput && motorik.jam) jamInput.value = motorik.jam;
-
-                    // Set checkboxes
-                    setCheckboxState('steward_motorik_15', motorik.checked_15);
-                    setCheckboxState('steward_motorik_30', motorik.checked_30);
-                    setCheckboxState('steward_motorik_45', motorik.checked_45);
-                    setCheckboxState('steward_motorik_1', motorik.checked_1);
-                    setCheckboxState('steward_motorik_2', motorik.checked_2);
-                }
-
-                // Set jam pindah
-                if (stewardData.jam_pindah) {
-                    const jamInput = document.querySelector('input[name="steward_jam_pindah"]');
-                    if (jamInput) jamInput.value = stewardData.jam_pindah;
-                }
+                    switch (this.value) {
+                        case 'bromage':
+                            if (bromageScoreForm) bromageScoreForm.style.display = 'block';
+                            break;
+                        case 'steward':
+                            if (stewardScoreForm) stewardScoreForm.style.display = 'block';
+                            break;
+                        case 'aldrete':
+                            if (aldreteScoreForm) aldreteScoreForm.style.display = 'block';
+                            break;
+                        case 'padds':
+                            if (paddsScoreForm) paddsScoreForm.style.display = 'block';
+                            break;
+                    }
+                });
             }
-        } else if (scoreData.selected_score === 'aldrete' && aldreteScoreForm) {
-            const aldreteData = scoreData.aldrete_data;
-            if (aldreteData) {
-                // Set select values
-                setSelectValue('aktivitas_motorik', aldreteData.aktivitas_motorik);
-                setSelectValue('respirasi', aldreteData.respirasi);
-                setSelectValue('aldrete_sirkulasi', aldreteData.sirkulasi);
-                setSelectValue('aldrete_kesadaran', aldreteData.kesadaran);
-                setSelectValue('aldrete_warna_kulit', aldreteData.warna_kulit);
 
-                // Set tanggal pasca anestesi
-                const tanggalInput = document.querySelector('input[name="aldrete_tanggal"]');
-                if (tanggalInput && aldreteData.tanggal_pasca_anestesi) {
-                    tanggalInput.value = aldreteData.tanggal_pasca_anestesi;
+            // Bromage Score - Radio Buttons
+            if (bromageScoreForm) {
+                const bromageRadios = bromageScoreForm.querySelectorAll('.bromage-radio');
+                
+                bromageRadios.forEach(radio => {
+                    radio.addEventListener('change', function() {
+                        calculateBromageTotal();
+                        collectBromageData();
+                    });
+                });
+
+                function calculateBromageTotal() {
+                    let timeScores = {};
+                    const timeColumns = ['15', '30', '45', '60', '120'];
+                    
+                    // Hitung score untuk setiap waktu
+                    timeColumns.forEach(time => {
+                        const selectedRadio = bromageScoreForm.querySelector(`input[name="bromage_time_${time}"]:checked`);
+                        if (selectedRadio) {
+                            timeScores[time] = parseInt(selectedRadio.getAttribute('data-score'));
+                        } else {
+                            timeScores[time] = 0;
+                        }
+                    });
+
+                    // Ambil score tertinggi dari semua waktu observasi
+                    const allScores = Object.values(timeScores).filter(score => score > 0);
+                    const total = allScores.length > 0 ? Math.max(...allScores) : 0;
+                    
+                    document.getElementById('bromage_total_score').textContent = total;
+                    document.getElementById('bromage_total_score_value').value = total;
+
+                    const statusBadge = document.getElementById('bromage_status');
+                    if (total >= 2) {
+                        statusBadge.textContent = '✓ Pasien BOLEH dipindah ke ruang perawatan';
+                        statusBadge.className = 'badge bg-success';
+                    } else {
+                        statusBadge.textContent = '✗ Pasien BELUM BOLEH dipindah (score harus ≥ 2)';
+                        statusBadge.className = 'badge bg-danger';
+                    }
+                    return { total, timeScores };
                 }
 
-                // Set interval data
-                if (aldreteData.intervals && aldreteData.intervals.length > 0) {
-                    for (let i = 0; i < aldreteData.intervals.length && i < 3; i++) {
-                        const interval = aldreteData.intervals[i];
-                        const jamInput = document.querySelector(`input[name="interval_jam_${i+1}"]`);
-                        const skorInput = document.querySelector(`input[name="skor_${i+1}"]`);
-                        const keteranganInput = document.querySelector(`input[name="keterangan_${i+1}"]`);
+                function collectBromageData() {
+                    const timeColumns = ['15', '30', '45', '60', '120'];
+                    
+                    // Collect all time inputs
+                    const timeInputs = {
+                        gerakan_penuh: document.querySelector('input[name="bromage_gerakan_penuh"]')?.value || "",
+                        tak_ekstensi: document.querySelector('input[name="bromage_tak_ekstensi"]')?.value || "",
+                        tak_fleksi_lutut: document.querySelector('input[name="bromage_tak_fleksi_lutut"]')?.value || "",
+                        tak_fleksi_pergelangan: document.querySelector('input[name="bromage_tak_fleksi_pergelangan"]')?.value || ""
+                    };
 
-                        if (jamInput && interval.jam) jamInput.value = interval.jam;
-                        if (skorInput && interval.skor) skorInput.value = interval.skor;
-                        if (keteranganInput && interval.keterangan) keteranganInput.value = interval.keterangan;
+                    // Collect observations per time period
+                    const timeObservations = {};
+                    timeColumns.forEach(time => {
+                        const selectedRadio = bromageScoreForm.querySelector(`input[name="bromage_time_${time}"]:checked`);
+                        if (selectedRadio) {
+                            const group = selectedRadio.getAttribute('data-group');
+                            const score = parseInt(selectedRadio.getAttribute('data-score'));
+                            timeObservations[`time_${time}`] = {
+                                selected_option: group,
+                                score: score,
+                                description: getOptionDescription(group, score)
+                            };
+                        }
+                    });
+
+                    const calculationResult = calculateBromageTotal();
+                    
+                    scoreData.bromage_data = {
+                        total_score: calculationResult.total,
+                        time_scores: calculationResult.timeScores,
+                        time_observations: timeObservations,
+                        time_inputs: timeInputs,
+                        jam_pindah: document.querySelector('input[name="bromage_jam_pindah"]')?.value || "",
+                        status: calculationResult.total >= 2 ? "Boleh pindah ruang" : "Belum boleh pindah ruang"
+                    };
+
+                    updateJSONData();
+                }
+
+                function getOptionDescription(group, score) {
+                    const descriptions = {
+                        'gerakan_penuh': 'Gerakan penuh dari tungkai',
+                        'tak_ekstensi': 'Tak mampu ekstensi tungkai', 
+                        'tak_fleksi_lutut': 'Tak mampu fleksi lutut',
+                        'tak_fleksi_pergelangan': 'Tak mampu fleksi pergelangan kaki'
+                    };
+                    return descriptions[group] || '';
+                }
+
+                const allBromageInputs = bromageScoreForm.querySelectorAll('input[type="time"], input[type="radio"]');
+                allBromageInputs.forEach(input => {
+                    input.addEventListener('change', collectBromageData);
+                });
+            }
+
+            // Steward Score - Radio Buttons
+            if (stewardScoreForm) {
+                const stewardRadios = stewardScoreForm.querySelectorAll('.steward-radio');
+                
+                stewardRadios.forEach(radio => {
+                    radio.addEventListener('change', function() {
+                        calculateStewardTotal();
+                        collectStewardData();
+                    });
+                });
+
+                function calculateStewardTotal() {
+                    let timeScores = {};
+                    const timeColumns = ['15', '30', '45', '60', '120'];
+                    
+                    // Hitung total score per waktu (kesadaran + respirasi + motorik)
+                    timeColumns.forEach(time => {
+                        let scoreForTime = 0;
+                        const categories = ['kesadaran', 'respirasi', 'motorik'];
+                        categories.forEach(category => {
+                            const selectedRadio = stewardScoreForm.querySelector(`input[name="steward_${category}_${time}"]:checked`);
+                            if (selectedRadio) {
+                                scoreForTime += parseInt(selectedRadio.getAttribute('data-score'));
+                            }
+                        });
+                        timeScores[time] = scoreForTime;
+                    });
+
+                    // Ambil score tertinggi dari semua waktu observasi
+                    const allScores = Object.values(timeScores).filter(score => score > 0);
+                    const total = allScores.length > 0 ? Math.max(...allScores) : 0;
+                    
+                    document.getElementById('steward_total_score').textContent = total;
+                    document.getElementById('steward_total_score_value').value = total;
+
+                    const statusBadge = document.getElementById('steward_status');
+                    if (total >= 5) {
+                        statusBadge.textContent = '✓ Pasien BOLEH dipindah ke ruang perawatan';
+                        statusBadge.className = 'badge bg-success';
+                    } else {
+                        statusBadge.textContent = '✗ Pasien BELUM BOLEH dipindah (score harus ≥ 5)';
+                        statusBadge.className = 'badge bg-danger';
+                    }
+                    return { total, timeScores };
+                }
+
+                function collectStewardData() {
+                    const timeColumns = ['15', '30', '45', '60', '120'];
+                    const timeData = {};
+
+                    timeColumns.forEach(time => {
+                        timeData[time] = {
+                            kesadaran: { score: null, description: null },
+                            respirasi: { score: null, description: null },
+                            motorik: { score: null, description: null },
+                            total: 0
+                        };
+
+                        const categories = ['kesadaran', 'respirasi', 'motorik'];
+                        categories.forEach(category => {
+                            const selectedRadio = stewardScoreForm.querySelector(`input[name="steward_${category}_${time}"]:checked`);
+                            if (selectedRadio) {
+                                const score = parseInt(selectedRadio.getAttribute('data-score'));
+                                const value = selectedRadio.value;
+                                const description = getStewardDescription(category, value);
+                                
+                                timeData[time][category] = {
+                                    score: score,
+                                    value: value,
+                                    description: description
+                                };
+                                timeData[time].total += score;
+                            }
+                        });
+                    });
+
+                    const calculationResult = calculateStewardTotal();
+                    
+                    scoreData.steward_data = {
+                        total_score: calculationResult.total,
+                        time_scores: calculationResult.timeScores,
+                        time_observations: timeData,
+                        jam_pindah: document.querySelector('input[name="steward_jam_pindah"]')?.value || "",
+                        status: calculationResult.total >= 5 ? "Boleh pindah ruang" : "Belum boleh pindah ruang"
+                    };
+
+                    updateJSONData();
+                }
+
+                function getStewardDescription(category, value) {
+                    const descriptions = {
+                        kesadaran: {
+                            'sadar_2': 'Sadar penuh, responsif',
+                            'bangun_1': 'Bangun saat dipanggil/nama disebut',
+                            'tidak_responsif_0': 'Tidak responsif'
+                        },
+                        respirasi: {
+                            'normal_2': 'Bernapas normal/menangis',
+                            'dangkal_1': 'Napas dangkal/terbatas',
+                            'apnea_0': 'Apnea/perlu bantuan napas'
+                        },
+                        motorik: {
+                            'aktif_2': 'Gerakan aktif/beraturan',
+                            'lemah_1': 'Gerakan lemah/terbatas',
+                            'tidak_bergerak_0': 'Tidak bergerak'
+                        }
+                    };
+                    return descriptions[category]?.[value] || '';
+                }
+
+                const allStewardInputs = stewardScoreForm.querySelectorAll('input[type="time"], input[type="radio"]');
+                allStewardInputs.forEach(input => {
+                    input.addEventListener('change', collectStewardData);
+                });
+            }
+
+            // Aldrete Score - Unchanged
+            if (aldreteScoreForm) {
+                const aldreteInputs = aldreteScoreForm.querySelectorAll('input, select');
+                aldreteInputs.forEach(input => {
+                    input.addEventListener('change', function() {
+                        collectAldreteData();
+                    });
+                });
+            }
+
+            function collectAldreteData() {
+                scoreData.aldrete_data = {
+                    aktivitas_motorik: document.querySelector('select[name="aktivitas_motorik"]')?.value || "",
+                    respirasi: document.querySelector('select[name="respirasi"]')?.value || "",
+                    sirkulasi: document.querySelector('select[name="aldrete_sirkulasi"]')?.value || "",
+                    kesadaran: document.querySelector('select[name="aldrete_kesadaran"]')?.value || "",
+                    warna_kulit: document.querySelector('select[name="aldrete_warna_kulit"]')?.value || "",
+                    tanggal_pasca_anestesi: document.querySelector('input[name="aldrete_tanggal"]')?.value || "",
+                    intervals: [
+                        {
+                            jam: document.querySelector('input[name="interval_jam_1"]')?.value || "",
+                            skor: document.querySelector('input[name="skor_1"]')?.value || "",
+                            keterangan: document.querySelector('input[name="keterangan_1"]')?.value || ""
+                        },
+                        {
+                            jam: document.querySelector('input[name="interval_jam_2"]')?.value || "",
+                            skor: document.querySelector('input[name="skor_2"]')?.value || "",
+                            keterangan: document.querySelector('input[name="keterangan_2"]')?.value || ""
+                        },
+                        {
+                            jam: document.querySelector('input[name="interval_jam_3"]')?.value || "",
+                            skor: document.querySelector('input[name="skor_3"]')?.value || "",
+                            keterangan: document.querySelector('input[name="keterangan_3"]')?.value || ""
+                        }
+                    ]
+                };
+
+                let totalScore = 0;
+                if (scoreData.aldrete_data.aktivitas_motorik) totalScore += parseInt(scoreData.aldrete_data.aktivitas_motorik);
+                if (scoreData.aldrete_data.respirasi) totalScore += parseInt(scoreData.aldrete_data.respirasi);
+                if (scoreData.aldrete_data.sirkulasi) totalScore += parseInt(scoreData.aldrete_data.sirkulasi);
+                if (scoreData.aldrete_data.kesadaran) totalScore += parseInt(scoreData.aldrete_data.kesadaran);
+                if (scoreData.aldrete_data.warna_kulit) totalScore += parseInt(scoreData.aldrete_data.warna_kulit);
+
+                scoreData.aldrete_data.total_score = totalScore;
+                scoreData.aldrete_data.conclusion = totalScore >= 8 ? "Boleh pindah ruang" : "Tidak Boleh pindah ruang";
+
+                const conclusionElements = aldreteScoreForm.querySelectorAll('.bg-success');
+                conclusionElements.forEach(element => {
+                    element.innerHTML = `<strong>Kesimpulan : </strong> ${scoreData.aldrete_data.conclusion}`;
+                    if (scoreData.aldrete_data.conclusion === "Boleh pindah ruang") {
+                        element.classList.remove('bg-danger');
+                        element.classList.add('bg-success');
+                    } else {
+                        element.classList.remove('bg-success');
+                        element.classList.add('bg-danger');
+                    }
+                });
+
+                updateJSONData();
+            }
+
+            // PADDS Score - Unchanged
+            if (paddsScoreForm) {
+                const paddsInputs = paddsScoreForm.querySelectorAll('input, select');
+                paddsInputs.forEach(input => {
+                    input.addEventListener('change', function() {
+                        collectPADDSData();
+                    });
+                });
+            }
+
+            function collectPADDSData() {
+                const tandaVital = document.querySelector('select[name="padds_tanda_vital"]')?.value || "";
+                const aktivitas = document.querySelector('select[name="padds_aktivitas"]')?.value || "";
+                const mualMuntah = document.querySelector('select[name="padds_mual_muntah"]')?.value || "";
+                const perdarahan = document.querySelector('select[name="padds_perdarahan"]')?.value || "";
+                const nyeri = document.querySelector('select[name="padds_nyeri"]')?.value || "";
+
+                let totalScore = 0;
+                if (tandaVital) totalScore += parseInt(tandaVital);
+                if (aktivitas) totalScore += parseInt(aktivitas);
+                if (mualMuntah) totalScore += parseInt(mualMuntah);
+                if (perdarahan) totalScore += parseInt(perdarahan);
+                if (nyeri) totalScore += parseInt(nyeri);
+
+                const conclusion = totalScore >= 9 ? "Boleh pindah ruang" : "Tidak Boleh pindah ruang";
+
+                scoreData.padds_data = {
+                    tanda_vital: tandaVital,
+                    aktivitas: aktivitas,
+                    mual_muntah: mualMuntah,
+                    perdarahan: perdarahan,
+                    nyeri: nyeri,
+                    total_score: totalScore,
+                    conclusion: conclusion,
+                    tanggal_jam: document.querySelector('input[name="padds_tanggal_jam"]')?.value || "",
+                    observations: []
+                };
+
+                const kesimpulanElement = document.getElementById('paddsKesimpulan');
+                const kesimpulanInput = document.getElementById('paddsKesimpulanInput');
+                if (kesimpulanElement) {
+                    kesimpulanElement.textContent = conclusion;
+                    if (conclusion === "Boleh pindah ruang") {
+                        kesimpulanElement.style.backgroundColor = '#28a745';
+                    } else {
+                        kesimpulanElement.style.backgroundColor = '#dc3545';
                     }
                 }
+                if (kesimpulanInput) {
+                    kesimpulanInput.value = conclusion;
+                }
 
-                // Update conclusion display
-                if (aldreteData.conclusion) {
-                    const conclusionElements = aldreteScoreForm.querySelectorAll('.bg-success');
-                    conclusionElements.forEach(element => {
-                        element.innerHTML = `<strong>Kesimpulan : </strong> ${aldreteData.conclusion}`;
+                const finalKesimpulanElement = document.getElementById('paddsFinalKesimpulan');
+                const finalKesimpulanInput = document.getElementById('paddsFinalKesimpulanInput');
+                if (finalKesimpulanElement) {
+                    finalKesimpulanElement.textContent = conclusion;
+                    if (conclusion === "Boleh pindah ruang") {
+                        finalKesimpulanElement.style.backgroundColor = '#28a745';
+                    } else {
+                        finalKesimpulanElement.style.backgroundColor = '#dc3545';
+                    }
+                }
+                if (finalKesimpulanInput) {
+                    finalKesimpulanInput.value = conclusion;
+                }
+
+                updateJSONData();
+            }
+
+            if (paddsScoreForm) {
+                const paddsTanggalJam = document.getElementById('paddsTanggalJam');
+                const paddsTimeTable = document.getElementById('paddsTimeTable');
+
+                if (paddsTanggalJam && paddsTimeTable) {
+                    paddsTanggalJam.addEventListener('change', function() {
+                        const currentScore = getCalculatedPADDSScore();
+                        const conclusion = currentScore >= 9 ? "Boleh pindah ruang" : "Tidak Boleh pindah ruang";
+
+                        paddsTimeTable.innerHTML = '';
+
+                        const newRow = document.createElement('tr');
+                        newRow.innerHTML = `
+                            <td><i class="far fa-clock me-2"></i> ${this.value}</td>
+                            <td><strong>${currentScore}</strong></td>
+                            <td><span class="badge ${conclusion === 'Boleh pindah ruang' ? 'bg-success' : 'bg-danger'}">${conclusion}</span></td>
+                        `;
+                        paddsTimeTable.appendChild(newRow);
+
+                        if (!scoreData.padds_data.observations) {
+                            scoreData.padds_data.observations = [];
+                        }
+
+                        scoreData.padds_data.observations.push({
+                            datetime: this.value,
+                            score: currentScore,
+                            conclusion: conclusion
+                        });
+
+                        updateJSONData();
                     });
                 }
             }
-        } else if (scoreData.selected_score === 'padds' && paddsScoreForm) {
-            const paddsData = scoreData.padds_data;
-            if (paddsData) {
-                // Set select values
-                setSelectValue('padds_tanda_vital', paddsData.tanda_vital);
-                setSelectValue('padds_aktivitas', paddsData.aktivitas);
-                setSelectValue('padds_mual_muntah', paddsData.mual_muntah);
-                setSelectValue('padds_perdarahan', paddsData.perdarahan);
-                setSelectValue('padds_nyeri', paddsData.nyeri);
 
-                // Set tanggal jam
-                const tanggalJamInput = document.querySelector('input[name="padds_tanggal_jam"]');
-                if (tanggalJamInput && paddsData.tanggal_jam) {
-                    tanggalJamInput.value = paddsData.tanggal_jam;
+            function getCalculatedPADDSScore() {
+                const tandaVital = document.querySelector('select[name="padds_tanda_vital"]')?.value || 0;
+                const aktivitas = document.querySelector('select[name="padds_aktivitas"]')?.value || 0;
+                const mualMuntah = document.querySelector('select[name="padds_mual_muntah"]')?.value || 0;
+                const perdarahan = document.querySelector('select[name="padds_perdarahan"]')?.value || 0;
+                const nyeri = document.querySelector('select[name="padds_nyeri"]')?.value || 0;
+
+                return parseInt(tandaVital) + parseInt(aktivitas) + parseInt(mualMuntah) + 
+                    parseInt(perdarahan) + parseInt(nyeri);
+            }
+
+            function updateJSONData() {
+                if (patientScoreDataJSON) {
+                    patientScoreDataJSON.value = JSON.stringify(scoreData);
+                }
+            }
+
+            // Initialize on page load
+            function initializeOnLoad() {
+                // Set the select value if data exists
+                if (scoreData.selected_score && skalaPasien) {
+                    skalaPasien.value = scoreData.selected_score;
+                    
+                    // Show the appropriate form
+                    hideForms();
+                    switch (scoreData.selected_score) {
+                        case 'bromage':
+                            if (bromageScoreForm) {
+                                bromageScoreForm.style.display = 'block';
+                                restoreBromageData();
+                            }
+                            break;
+                        case 'steward':
+                            if (stewardScoreForm) {
+                                stewardScoreForm.style.display = 'block';
+                                restoreStewardData();
+                            }
+                            break;
+                        case 'aldrete':
+                            if (aldreteScoreForm) {
+                                aldreteScoreForm.style.display = 'block';
+                                restoreAldreteData();
+                            }
+                            break;
+                        case 'padds':
+                            if (paddsScoreForm) {
+                                paddsScoreForm.style.display = 'block';
+                                restorePADDSData();
+                            }
+                            break;
+                    }
+                }
+                updateJSONData();
+            }
+
+            // Restore Bromage data from JSON
+            function restoreBromageData() {
+                if (!scoreData.bromage_data) return;
+                
+                const data = scoreData.bromage_data;
+                
+                // Restore time inputs
+                if (data.time_inputs) {
+                    Object.keys(data.time_inputs).forEach(key => {
+                        const input = document.querySelector(`input[name="bromage_${key}"]`);
+                        if (input) input.value = data.time_inputs[key];
+                    });
                 }
 
-                // Update conclusion display
-                if (paddsData.conclusion) {
-                    const kesimpulanElement = document.getElementById('paddsKesimpulan');
-                    const kesimpulanInput = document.getElementById('paddsKesimpulanInput');
-                    if (kesimpulanElement) kesimpulanElement.textContent = paddsData.conclusion;
-                    if (kesimpulanInput) kesimpulanInput.value = paddsData.conclusion;
-
-                    const finalKesimpulanElement = document.getElementById('paddsFinalKesimpulan');
-                    const finalKesimpulanInput = document.getElementById('paddsFinalKesimpulanInput');
-                    if (finalKesimpulanElement) finalKesimpulanElement.textContent = paddsData.conclusion;
-                    if (finalKesimpulanInput) finalKesimpulanInput.value = paddsData.conclusion;
+                // Restore radio selections
+                if (data.time_observations) {
+                    Object.keys(data.time_observations).forEach(timeKey => {
+                        const time = timeKey.replace('time_', '');
+                        const observation = data.time_observations[timeKey];
+                        const radio = document.querySelector(`input[name="bromage_time_${time}"][data-group="${observation.selected_option}"]`);
+                        if (radio) radio.checked = true;
+                    });
                 }
 
-                // Populate time table
-                if (paddsData.observations && paddsData.observations.length > 0) {
-                    const paddsTimeTable = document.getElementById('paddsTimeTable');
-                    if (paddsTimeTable) {
-                        paddsTimeTable.innerHTML = '';
+                // Restore jam pindah
+                if (data.jam_pindah) {
+                    const jamPindah = document.querySelector('input[name="bromage_jam_pindah"]');
+                    if (jamPindah) jamPindah.value = data.jam_pindah;
+                }
 
-                        paddsData.observations.forEach(obs => {
-                            const newRow = document.createElement('tr');
-                            newRow.innerHTML = `
-                                <td>${obs.datetime}</td>
-                                <td>${obs.score}</td>
-                                <td>${obs.conclusion}</td>
-                            `;
-                            paddsTimeTable.appendChild(newRow);
-                        });
+                // Update displays
+                if (data.total_score !== undefined) {
+                    document.getElementById('bromage_total_score').textContent = data.total_score;
+                    document.getElementById('bromage_total_score_value').value = data.total_score;
+                    
+                    const statusBadge = document.getElementById('bromage_status');
+                    if (data.total_score >= 2) {
+                        statusBadge.textContent = '✓ Pasien BOLEH dipindah ke ruang perawatan';
+                        statusBadge.className = 'badge bg-success';
+                    } else {
+                        statusBadge.textContent = '✗ Pasien BELUM BOLEH dipindah (score harus ≥ 2)';
+                        statusBadge.className = 'badge bg-danger';
                     }
                 }
             }
-        }
-    }
 
-    // Helper function to set checkbox state
-    function setCheckboxState(name, isChecked) {
-        const checkbox = document.querySelector(`input[name="${name}"]`);
-        if (checkbox && isChecked !== undefined) {
-            checkbox.checked = isChecked;
-        }
-    }
-
-    // Helper function to set select value
-    function setSelectValue(name, value) {
-        const select = document.querySelector(`select[name="${name}"]`);
-        if (select && value !== undefined) {
-            select.value = value;
-        }
-    }
-
-    // Bromage Score Form Data Collection
-    if (bromageScoreForm) {
-        const bromageInputs = bromageScoreForm.querySelectorAll('input');
-        bromageInputs.forEach(input => {
-            input.addEventListener('change', function () {
-                collectBromageData();
-            });
-        });
-    }
-
-    // Steward Score Form Data Collection
-    if (stewardScoreForm) {
-        const stewardInputs = stewardScoreForm.querySelectorAll('input, select');
-        stewardInputs.forEach(input => {
-            input.addEventListener('change', function () {
-                collectStewardData();
-            });
-        });
-    }
-
-    // Aldrete Score Form Data Collection
-    if (aldreteScoreForm) {
-        const aldreteInputs = aldreteScoreForm.querySelectorAll('input, select');
-        aldreteInputs.forEach(input => {
-            input.addEventListener('change', function () {
-                collectAldreteData();
-            });
-        });
-    }
-
-    // PADDS Score Form Data Collection
-    if (paddsScoreForm) {
-        const paddsInputs = paddsScoreForm.querySelectorAll('input, select');
-        paddsInputs.forEach(input => {
-            input.addEventListener('change', function () {
-                collectPADDSData();
-            });
-        });
-    }
-
-    // Collect Bromage Score Data
-    function collectBromageData() {
-        const timeRadios = document.querySelectorAll('input[name="bromage_time"]');
-        let selectedTime = "";
-        timeRadios.forEach(radio => {
-            if (radio.checked) {
-                selectedTime = radio.value;
-            }
-        });
-
-        scoreData.bromage_data = {
-            time: selectedTime,
-            gerakan_penuh: {
-                jam: document.querySelector('input[name="bromage_gerakan_penuh"]').value,
-                checked_15: document.querySelector('input[name="bromage_gerakan_penuh_15"]').checked,
-                checked_30: document.querySelector('input[name="bromage_gerakan_penuh_30"]').checked,
-                checked_45: document.querySelector('input[name="bromage_gerakan_penuh_45"]').checked,
-                checked_1: document.querySelector('input[name="bromage_gerakan_penuh_1"]').checked,
-                checked_2: document.querySelector('input[name="bromage_gerakan_penuh_2"]').checked
-            },
-            tak_ekstensi: {
-                jam: document.querySelector('input[name="bromage_tak_ekstensi"]').value,
-                checked_15: document.querySelector('input[name="bromage_tak_ekstensi_15"]').checked,
-                checked_30: document.querySelector('input[name="bromage_tak_ekstensi_30"]').checked,
-                checked_45: document.querySelector('input[name="bromage_tak_ekstensi_45"]').checked,
-                checked_1: document.querySelector('input[name="bromage_tak_ekstensi_1"]').checked,
-                checked_2: document.querySelector('input[name="bromage_tak_ekstensi_2"]').checked
-            },
-            tak_fleksi: {
-                jam: document.querySelector('input[name="bromage_tak_fleksi"]').value,
-                checked_15: document.querySelector('input[name="bromage_tak_fleksi_15"]').checked,
-                checked_30: document.querySelector('input[name="bromage_tak_fleksi_30"]').checked,
-                checked_45: document.querySelector('input[name="bromage_tak_fleksi_45"]').checked,
-                checked_1: document.querySelector('input[name="bromage_tak_fleksi_1"]').checked,
-                checked_2: document.querySelector('input[name="bromage_tak_fleksi_2"]').checked
-            },
-            tak_pergerakan: {
-                jam: document.querySelector('input[name="bromage_tak_pergerakan"]').value,
-                checked_15: document.querySelector('input[name="bromage_tak_pergerakan_15"]').checked,
-                checked_30: document.querySelector('input[name="bromage_tak_pergerakan_30"]').checked,
-                checked_45: document.querySelector('input[name="bromage_tak_pergerakan_45"]').checked,
-                checked_1: document.querySelector('input[name="bromage_tak_pergerakan_1"]').checked,
-                checked_2: document.querySelector('input[name="bromage_tak_pergerakan_2"]').checked
-            },
-            jam_pindah: {
-                jam: document.querySelector('input[name="bromage_jam_pindah"]').value,
-                checked_15: document.querySelector('input[name="bromage_jam_pindah_15"]').checked,
-                checked_30: document.querySelector('input[name="bromage_jam_pindah_30"]').checked,
-                checked_45: document.querySelector('input[name="bromage_jam_pindah_45"]').checked,
-                checked_1: document.querySelector('input[name="bromage_jam_pindah_1"]').checked,
-                checked_2: document.querySelector('input[name="bromage_jam_pindah_2"]').checked
-            }
-        };
-
-        updateJSONData();
-    }
-
-    // Collect Steward Score Data
-    function collectStewardData() {
-        const timeRadios = document.querySelectorAll('input[name="steward_time"]');
-        let selectedTime = "";
-        timeRadios.forEach(radio => {
-            if (radio.checked) {
-                selectedTime = radio.value;
-            }
-        });
-
-        scoreData.steward_data = {
-            time: selectedTime,
-            kesadaran: {
-                value: document.querySelector('select[name="steward_kesadaran"]').value,
-                jam: document.querySelector('input[name="steward_kesadaran_jam"]').value,
-                checked_15: document.querySelector('input[name="steward_kesadaran_15"]').checked,
-                checked_30: document.querySelector('input[name="steward_kesadaran_30"]').checked,
-                checked_45: document.querySelector('input[name="steward_kesadaran_45"]').checked,
-                checked_1: document.querySelector('input[name="steward_kesadaran_1"]').checked,
-                checked_2: document.querySelector('input[name="steward_kesadaran_2"]').checked
-            },
-            respirasi: {
-                value: document.querySelector('select[name="steward_respirasi"]').value,
-                jam: document.querySelector('input[name="steward_respirasi_jam"]').value,
-                checked_15: document.querySelector('input[name="steward_respirasi_15"]').checked,
-                checked_30: document.querySelector('input[name="steward_respirasi_30"]').checked,
-                checked_45: document.querySelector('input[name="steward_respirasi_45"]').checked,
-                checked_1: document.querySelector('input[name="steward_respirasi_1"]').checked,
-                checked_2: document.querySelector('input[name="steward_respirasi_2"]').checked
-            },
-            motorik: {
-                value: document.querySelector('select[name="steward_motorik"]').value,
-                jam: document.querySelector('input[name="steward_motorik_jam"]').value,
-                checked_15: document.querySelector('input[name="steward_motorik_15"]').checked,
-                checked_30: document.querySelector('input[name="steward_motorik_30"]').checked,
-                checked_45: document.querySelector('input[name="steward_motorik_45"]').checked,
-                checked_1: document.querySelector('input[name="steward_motorik_1"]').checked,
-                checked_2: document.querySelector('input[name="steward_motorik_2"]').checked
-            },
-            jam_pindah: document.querySelector('input[name="steward_jam_pindah"]').value
-        };
-
-        updateJSONData();
-    }
-
-    // Collect Aldrete Score Data
-    function collectAldreteData() {
-        scoreData.aldrete_data = {
-            aktivitas_motorik: document.querySelector('select[name="aktivitas_motorik"]').value,
-            respirasi: document.querySelector('select[name="respirasi"]').value,
-            sirkulasi: document.querySelector('select[name="aldrete_sirkulasi"]').value,
-            kesadaran: document.querySelector('select[name="aldrete_kesadaran"]').value,
-            warna_kulit: document.querySelector('select[name="aldrete_warna_kulit"]').value,
-            tanggal_pasca_anestesi: document.querySelector('input[name="aldrete_tanggal"]').value,
-            intervals: [
-                {
-                    jam: document.querySelector('input[name="interval_jam_1"]').value,
-                    skor: document.querySelector('input[name="skor_1"]').value,
-                    keterangan: document.querySelector('input[name="keterangan_1"]').value
-                },
-                {
-                    jam: document.querySelector('input[name="interval_jam_2"]').value,
-                    skor: document.querySelector('input[name="skor_2"]').value,
-                    keterangan: document.querySelector('input[name="keterangan_2"]').value
-                },
-                {
-                    jam: document.querySelector('input[name="interval_jam_3"]').value,
-                    skor: document.querySelector('input[name="skor_3"]').value,
-                    keterangan: document.querySelector('input[name="keterangan_3"]').value
-                }
-            ]
-        };
-
-        // Calculate total score
-        let totalScore = 0;
-        if (scoreData.aldrete_data.aktivitas_motorik) totalScore += parseInt(scoreData.aldrete_data.aktivitas_motorik);
-        if (scoreData.aldrete_data.respirasi) totalScore += parseInt(scoreData.aldrete_data.respirasi);
-        if (scoreData.aldrete_data.sirkulasi) totalScore += parseInt(scoreData.aldrete_data.sirkulasi);
-        if (scoreData.aldrete_data.kesadaran) totalScore += parseInt(scoreData.aldrete_data.kesadaran);
-        if (scoreData.aldrete_data.warna_kulit) totalScore += parseInt(scoreData.aldrete_data.warna_kulit);
-
-        scoreData.aldrete_data.total_score = totalScore;
-        scoreData.aldrete_data.conclusion = totalScore >= 8 ? "Boleh pindah ruang" : "Tidak Boleh pindah ruang";
-
-        // Update the conclusion in the UI
-        const conclusionElements = aldreteScoreForm.querySelectorAll('.bg-success');
-        conclusionElements.forEach(element => {
-            element.innerHTML = `<strong>Kesimpulan : </strong> ${scoreData.aldrete_data.conclusion}`;
-        });
-
-        updateJSONData();
-    }
-
-    // Collect PADDS Score Data
-    function collectPADDSData() {
-        const tandaVital = document.querySelector('select[name="padds_tanda_vital"]').value;
-        const aktivitas = document.querySelector('select[name="padds_aktivitas"]').value;
-        const mualMuntah = document.querySelector('select[name="padds_mual_muntah"]').value;
-        const perdarahan = document.querySelector('select[name="padds_perdarahan"]').value;
-        const nyeri = document.querySelector('select[name="padds_nyeri"]').value;
-
-        let totalScore = 0;
-        if (tandaVital) totalScore += parseInt(tandaVital);
-        if (aktivitas) totalScore += parseInt(aktivitas);
-        if (mualMuntah) totalScore += parseInt(mualMuntah);
-        if (perdarahan) totalScore += parseInt(perdarahan);
-        if (nyeri) totalScore += parseInt(nyeri);
-
-        const conclusion = totalScore >= 9 ? "Boleh pindah ruang" : "Tidak Boleh pindah ruang";
-
-        // Check if we already have PADDS data
-        if (!scoreData.padds_data) {
-            scoreData.padds_data = {
-                observations: []
-            };
-        }
-
-        scoreData.padds_data = {
-            ...scoreData.padds_data,
-            tanda_vital: tandaVital,
-            aktivitas: aktivitas,
-            mual_muntah: mualMuntah,
-            perdarahan: perdarahan,
-            nyeri: nyeri,
-            total_score: totalScore,
-            conclusion: conclusion,
-            tanggal_jam: document.querySelector('input[name="padds_tanggal_jam"]').value
-        };
-
-        // Update the conclusion in the UI
-        const kesimpulanElement = document.getElementById('paddsKesimpulan');
-        const kesimpulanInput = document.getElementById('paddsKesimpulanInput');
-        if (kesimpulanElement) {
-            kesimpulanElement.textContent = conclusion;
-        }
-        if (kesimpulanInput) {
-            kesimpulanInput.value = conclusion;
-        }
-
-        // Also update the final conclusion
-        const finalKesimpulanElement = document.getElementById('paddsFinalKesimpulan');
-        const finalKesimpulanInput = document.getElementById('paddsFinalKesimpulanInput');
-        if (finalKesimpulanElement) {
-            finalKesimpulanElement.textContent = conclusion;
-        }
-        if (finalKesimpulanInput) {
-            finalKesimpulanInput.value = conclusion;
-        }
-
-        updateJSONData();
-    }
-
-    // Additional function to add time entries to PADDS table
-    if (paddsScoreForm) {
-        // Add functionality to dynamically add entries to the PADDS time table
-        const paddsTanggalJam = document.getElementById('paddsTanggalJam');
-        const paddsTimeTable = document.getElementById('paddsTimeTable');
-
-        if (paddsTanggalJam && paddsTimeTable) {
-            paddsTanggalJam.addEventListener('change', function () {
-                const currentScore = getCalculatedPADDSScore();
-                const conclusion = currentScore >= 9 ? "Boleh pindah ruang" : "Tidak Boleh pindah ruang";
-
-                // Check if observations array exists
-                if (!scoreData.padds_data.observations) {
-                    scoreData.padds_data.observations = [];
+            // Restore Steward data from JSON
+            function restoreStewardData() {
+                if (!scoreData.steward_data) return;
+                
+                const data = scoreData.steward_data;
+                
+                // Restore radio selections
+                if (data.time_observations) {
+                    Object.keys(data.time_observations).forEach(time => {
+                        const observation = data.time_observations[time];
+                        ['kesadaran', 'respirasi', 'motorik'].forEach(category => {
+                            if (observation[category] && observation[category].value) {
+                                const radio = document.querySelector(`input[name="steward_${category}_${time}"][value="${observation[category].value}"]`);
+                                if (radio) radio.checked = true;
+                            }
+                        });
+                    });
                 }
 
-                // Create new observation entry
-                const newObservation = {
-                    datetime: this.value,
-                    score: currentScore,
-                    conclusion: conclusion
-                };
+                // Restore jam pindah
+                if (data.jam_pindah) {
+                    const jamPindah = document.querySelector('input[name="steward_jam_pindah"]');
+                    if (jamPindah) jamPindah.value = data.jam_pindah;
+                }
 
-                // Add to observations in the data
-                scoreData.padds_data.observations.push(newObservation);
-
-                // Refresh the table display
-                refreshPADDSTable();
-
-                updateJSONData();
-            });
-        }
-    }
-
-    // Helper function to refresh the PADDS table
-    function refreshPADDSTable() {
-        const paddsTimeTable = document.getElementById('paddsTimeTable');
-        if (paddsTimeTable && scoreData.padds_data && scoreData.padds_data.observations) {
-            // Clear table first
-            paddsTimeTable.innerHTML = '';
-
-            // Add rows for each observation
-            scoreData.padds_data.observations.forEach(obs => {
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td>${obs.datetime}</td>
-                    <td>${obs.score}</td>
-                    <td>${obs.conclusion}</td>
-                `;
-                paddsTimeTable.appendChild(newRow);
-            });
-
-            // If no observations, add a placeholder row
-            if (scoreData.padds_data.observations.length === 0) {
-                paddsTimeTable.innerHTML = `
-                    <tr>
-                        <td colspan="3" class="text-center">Belum ada data</td>
-                    </tr>
-                `;
+                // Update displays
+                if (data.total_score !== undefined) {
+                    document.getElementById('steward_total_score').textContent = data.total_score;
+                    document.getElementById('steward_total_score_value').value = data.total_score;
+                    
+                    const statusBadge = document.getElementById('steward_status');
+                    if (data.total_score >= 5) {
+                        statusBadge.textContent = '✓ Pasien BOLEH dipindah ke ruang perawatan';
+                        statusBadge.className = 'badge bg-success';
+                    } else {
+                        statusBadge.textContent = '✗ Pasien BELUM BOLEH dipindah (score harus ≥ 5)';
+                        statusBadge.className = 'badge bg-danger';
+                    }
+                }
             }
-        }
-    }
 
-    // Helper function to calculate current PADDS score
-    function getCalculatedPADDSScore() {
-        const tandaVital = document.querySelector('select[name="padds_tanda_vital"]').value || "0";
-        const aktivitas = document.querySelector('select[name="padds_aktivitas"]').value || "0";
-        const mualMuntah = document.querySelector('select[name="padds_mual_muntah"]').value || "0";
-        const perdarahan = document.querySelector('select[name="padds_perdarahan"]').value || "0";
-        const nyeri = document.querySelector('select[name="padds_nyeri"]').value || "0";
+            // Restore Aldrete data from JSON
+            function restoreAldreteData() {
+                if (!scoreData.aldrete_data) return;
+                
+                const data = scoreData.aldrete_data;
+                
+                // Restore select values
+                const fields = ['aktivitas_motorik', 'respirasi', 'aldrete_sirkulasi', 'aldrete_kesadaran', 'aldrete_warna_kulit'];
+                fields.forEach(field => {
+                    const select = document.querySelector(`select[name="${field}"]`);
+                    if (select && data[field.replace('aldrete_', '')]) {
+                        select.value = data[field.replace('aldrete_', '')];
+                    }
+                });
 
-        return parseInt(tandaVital) + parseInt(aktivitas) + parseInt(mualMuntah) + parseInt(perdarahan) + parseInt(nyeri);
-    }
+                // Restore datetime
+                if (data.tanggal_pasca_anestesi) {
+                    const datetime = document.querySelector('input[name="aldrete_tanggal"]');
+                    if (datetime) datetime.value = data.tanggal_pasca_anestesi;
+                }
 
-    // Initialize JSON data and load saved data on page load
-    loadFromJSON();
-    updateJSONData();
+                // Restore intervals
+                if (data.intervals) {
+                    data.intervals.forEach((interval, index) => {
+                        const jamInput = document.querySelector(`input[name="interval_jam_${index + 1}"]`);
+                        const skorInput = document.querySelector(`input[name="skor_${index + 1}"]`);
+                        const keteranganInput = document.querySelector(`input[name="keterangan_${index + 1}"]`);
+                        
+                        if (jamInput) jamInput.value = interval.jam;
+                        if (skorInput) skorInput.value = interval.skor;
+                        if (keteranganInput) keteranganInput.value = interval.keterangan;
+                    });
+                }
 
-    // Show the selected form if a score is already selected
-    if (scoreData.selected_score) {
-        showSelectedForm(scoreData.selected_score);
-    } else {
-        hideForms(); // Hide all forms initially
-    }
+                // Update conclusion display
+                if (data.conclusion) {
+                    const conclusionElements = aldreteScoreForm.querySelectorAll('.bg-success, .bg-danger');
+                    conclusionElements.forEach(element => {
+                        element.innerHTML = `<strong>Kesimpulan : </strong> ${data.conclusion}`;
+                        if (data.conclusion === "Boleh pindah ruang") {
+                            element.classList.remove('bg-danger');
+                            element.classList.add('bg-success');
+                        } else {
+                            element.classList.remove('bg-success');
+                            element.classList.add('bg-danger');
+                        }
+                    });
+                }
+            }
 
-    // Fix for setting the value attribute for time inputs
-    document.querySelectorAll('input[type="time"][value="Jam"]').forEach(input => {
-        if (input.value === "Jam") {
-            input.value = "";
-            input.placeholder = "Jam";
-        }
-    });
+            // Restore PADDS data from JSON
+            function restorePADDSData() {
+                if (!scoreData.padds_data) return;
+                
+                const data = scoreData.padds_data;
+                
+                // Restore select values
+                const fields = ['padds_tanda_vital', 'padds_aktivitas', 'padds_mual_muntah', 'padds_perdarahan', 'padds_nyeri'];
+                fields.forEach(field => {
+                    const select = document.querySelector(`select[name="${field}"]`);
+                    const dataKey = field.replace('padds_', '').replace('_', '_');
+                    if (select && data[dataKey]) {
+                        select.value = data[dataKey];
+                    }
+                });
 
-    // Fix for duplicate selection in Steward form
-    document.querySelectorAll('select[name="steward_kesadaran"] option:not(:first-child), select[name="steward_respirasi"] option:not(:first-child), select[name="steward_motorik"] option:not(:first-child)').forEach(option => {
-        if (option.hasAttribute('selected') && option.parentElement.selectedIndex !== option.index) {
-            option.removeAttribute('selected');
-        }
-    });
-});
+                // Restore datetime
+                if (data.tanggal_jam) {
+                    const datetime = document.querySelector('input[name="padds_tanggal_jam"]');
+                    if (datetime) datetime.value = data.tanggal_jam;
+                }
+
+                // Update conclusion display
+                if (data.conclusion) {
+                    const kesimpulanElement = document.getElementById('paddsKesimpulan');
+                    const kesimpulanInput = document.getElementById('paddsKesimpulanInput');
+                    if (kesimpulanElement) {
+                        kesimpulanElement.textContent = data.conclusion;
+                        kesimpulanElement.style.backgroundColor = data.conclusion === "Boleh pindah ruang" ? '#28a745' : '#dc3545';
+                    }
+                    if (kesimpulanInput) kesimpulanInput.value = data.conclusion;
+
+                    const finalKesimpulanElement = document.getElementById('paddsFinalKesimpulan');
+                    const finalKesimpulanInput = document.getElementById('paddsFinalKesimpulanInput');
+                    if (finalKesimpulanElement) {
+                        finalKesimpulanElement.textContent = data.conclusion;
+                        finalKesimpulanElement.style.backgroundColor = data.conclusion === "Boleh pindah ruang" ? '#28a745' : '#dc3545';
+                    }
+                    if (finalKesimpulanInput) finalKesimpulanInput.value = data.conclusion;
+                }
+            }
+
+            // Initialize when page loads
+            initializeOnLoad();
+        });
 
         /*
         4. Evaluasi Pra Anestesi dan Sedasi
@@ -2106,5 +2089,40 @@
             // Hitung metrik pada saat halaman dimuat jika data sudah ada
             calculateMetrics();
         });
+
+        // bagian Score Aldrete
+        // Ambil semua input field
+        const aktivitas = document.getElementById('aktivitas');
+        const sirkulasi = document.getElementById('sirkulasi');
+        const pernafasan = document.getElementById('pernafasan');
+        const kesadaran = document.getElementById('kesadaran');
+        const warnaKulit = document.getElementById('warna_kulit');
+        const total = document.getElementById('total');
+
+        // Fungsi untuk menghitung total
+        function hitungTotal() {
+            const nilaiAktivitas = parseInt(aktivitas.value) || 0;
+            const nilaiSirkulasi = parseInt(sirkulasi.value) || 0;
+            const nilaiPernafasan = parseInt(pernafasan.value) || 0;
+            const nilaiKesadaran = parseInt(kesadaran.value) || 0;
+            const nilaiWarnaKulit = parseInt(warnaKulit.value) || 0;
+            
+            // Hitung total
+            const totalScore = nilaiAktivitas + nilaiSirkulasi + nilaiPernafasan + 
+                            nilaiKesadaran + nilaiWarnaKulit;
+            
+            // Tampilkan hasil di field total
+            total.value = totalScore;
+        }
+
+        // Tambahkan event listener ke setiap input
+        aktivitas.addEventListener('input', hitungTotal);
+        sirkulasi.addEventListener('input', hitungTotal);
+        pernafasan.addEventListener('input', hitungTotal);
+        kesadaran.addEventListener('input', hitungTotal);
+        warnaKulit.addEventListener('input', hitungTotal);
+
+        // Hitung total saat halaman pertama kali dimuat (jika ada nilai default)
+        hitungTotal();
     </script>
 @endpush

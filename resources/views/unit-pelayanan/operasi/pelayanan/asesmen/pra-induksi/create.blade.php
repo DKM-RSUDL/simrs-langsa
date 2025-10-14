@@ -490,6 +490,38 @@
                                 </select>
                             </div>
 
+                            <label style="min-width: 200px;" class=" fw-bold">Score Aldrete</label>
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Aktivitas</label>
+                                <input type="number" name="aktivitas" id="aktivitas"
+                                    class="form-control pas-input" placeholder="Aktivitas">
+                            </div>
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Sirkulasi</label>
+                                <input type="number" name="sirkulasi" id="sirkulasi"
+                                    class="form-control pas-input" placeholder="Sirkulasi">
+                            </div>
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Pernafasan</label>
+                                <input type="number" name="pernafasan" id="pernafasan"
+                                    class="form-control pas-input" placeholder="Pernafasan">
+                            </div>
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Kesadaran</label>
+                                <input type="number" name="kesadaran" id="kesadaran"
+                                    class="form-control pas-input" placeholder="Kesadaran">
+                            </div>
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Warna kulit</label>
+                                <input type="number" name="warna_kulit" id="warna_kulit"
+                                    class="form-control pas-input" placeholder="Warna kulit">
+                            </div>
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Total</label>
+                                <input type="number" name="total" id="total"
+                                    class="form-control pas-input" placeholder="Total">
+                            </div>
+
                             <div class="alert alert-info mt-4">
                                 <small>Data observasi ini wajib di isi setiap 5 menit sekali, data tersebut
                                     berupa Tekanan Darah, Nadi, Nafas, Saturasi Oksigen (SpO₂), dan Tanda Vital
@@ -665,9 +697,8 @@
                             <div class="form-group">
                                 <label style="min-width: 200px;">Skala Pada Pasien</label>
                                 <select name="skala_pasien" id="skalaPasien" class="form-control">
-                                    <option value="" disabled selected>Pilih skala Pemantauan Pasca-Anestesi
-                                    </option>
-                                    <option value="bromage">Bromage Score (SAB/Subarachnoid Block)</option>
+                                    <option value="" disabled selected>Pilih skala Pemantauan Pasca-Anestesi</option>
+                                    <option value="bromage">Bromage Score (SAB/Subarachnoid Block - Anak)</option>
                                     <option value="steward">Steward Score (Anak-anak)</option>
                                     <option value="aldrete">Score Aldrete</option>
                                     <option value="padds">Score PADDS (Khusus Rawat Jalan)</option>
@@ -675,406 +706,374 @@
                             </div>
 
                             <!-- Hidden input untuk menyimpan semua data dalam format JSON -->
-                            <input type="hidden" id="patientScoreDataJSON" name="patient_score_data_json"
-                                value="{}">
+                            <input type="hidden" id="patientScoreDataJSON" name="patient_score_data_json" value="{}">
 
                             <!-- Bromage Score Form - Initially Hidden -->
                             <div id="bromageScoreForm" class="score-form" style="display: none;">
-                                <h5 class="text-center mt-3">Penilaian Bromage Score (SAB/Subarachnoid Block)
-                                </h5>
-
+                                <h5 class="text-center mt-3 mb-4">Penilaian Bromage Score (SAB/Subarachnoid Block - Anak)</h5>
                                 <table class="table table-bordered">
-                                    <thead>
+                                    <thead class="table-light">
                                         <tr>
-                                            <th>Score Pasca Anestesi dan Sedasi</th>
-                                            <th>Jam</th>
+                                            <th width="25%">Score Pasca Anestesi dan Sedasi</th>
+                                            <th width="8%">Score</th>
+                                            <th width="17%">Jam Pasca Anestesi</th>
+                                            <th width="10%">15'</th>
+                                            <th width="10%">30'</th>
+                                            <th width="10%">45'</th>
+                                            <th width="10%">1 jam</th>
+                                            <th width="10%">2 jam</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <!-- Row 1: Gerakan penuh dari tungkai -->
                                         <tr>
-                                            <td>Post anestesi vital sign</td>
+                                            <td><strong>Gerakan penuh dari tungkai</strong></td>
+                                            <td class="text-center"><strong>0</strong></td>
                                             <td>
-                                                <div class="d-flex align-items-center">
-                                                    <span>Jam pasca anestesi</span>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="radio"
-                                                            name="bromage_time" value="15">
-                                                        <label class="form-check-label">15'</label>
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="radio"
-                                                            name="bromage_time" value="30">
-                                                        <label class="form-check-label">30'</label>
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="radio"
-                                                            name="bromage_time" value="45">
-                                                        <label class="form-check-label">45'</label>
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="radio"
-                                                            name="bromage_time" value="1">
-                                                        <label class="form-check-label">1</label>
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="radio"
-                                                            name="bromage_time" value="2">
-                                                        <label class="form-check-label">2</label>
-                                                    </div>
-                                                </div>
+                                                <input type="time" name="bromage_gerakan_penuh" class="form-control form-control-sm">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input bromage-radio" type="radio" name="bromage_time_15" value="gerakan_penuh_0" data-group="gerakan_penuh" data-score="0">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input bromage-radio" type="radio" name="bromage_time_30" value="gerakan_penuh_0" data-group="gerakan_penuh" data-score="0">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input bromage-radio" type="radio" name="bromage_time_45" value="gerakan_penuh_0" data-group="gerakan_penuh" data-score="0">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input bromage-radio" type="radio" name="bromage_time_60" value="gerakan_penuh_0" data-group="gerakan_penuh" data-score="0">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input bromage-radio" type="radio" name="bromage_time_120" value="gerakan_penuh_0" data-group="gerakan_penuh" data-score="0">
                                             </td>
                                         </tr>
+                                        <!-- Row 2: Tak mampu ekstensi tungkai -->
                                         <tr>
-                                            <td>Gerakan penuh dari tungkai</td>
+                                            <td><strong>Tak mampu ekstensi tungkai</strong></td>
+                                            <td class="text-center"><strong>1</strong></td>
                                             <td>
-                                                <div class="d-flex align-items-center">
-                                                    <i class="far fa-clock me-2"></i>
-                                                    <input type="time" name="bromage_gerakan_penuh"
-                                                        class="form-control form-control-sm w-25" value="Jam">
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_gerakan_penuh_15">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_gerakan_penuh_30">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_gerakan_penuh_45">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_gerakan_penuh_1">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_gerakan_penuh_2">
-                                                    </div>
-                                                </div>
+                                                <input type="time" name="bromage_tak_ekstensi" class="form-control form-control-sm">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input bromage-radio" type="radio" name="bromage_time_15" value="tak_ekstensi_1" data-group="tak_ekstensi" data-score="1">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input bromage-radio" type="radio" name="bromage_time_30" value="tak_ekstensi_1" data-group="tak_ekstensi" data-score="1">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input bromage-radio" type="radio" name="bromage_time_45" value="tak_ekstensi_1" data-group="tak_ekstensi" data-score="1">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input bromage-radio" type="radio" name="bromage_time_60" value="tak_ekstensi_1" data-group="tak_ekstensi" data-score="1">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input bromage-radio" type="radio" name="bromage_time_120" value="tak_ekstensi_1" data-group="tak_ekstensi" data-score="1">
                                             </td>
                                         </tr>
+                                        <!-- Row 3: Tak mampu fleksi lutut -->
                                         <tr>
-                                            <td>Tak mampu ekstensi tungkai</td>
+                                            <td><strong>Tak mampu fleksi lutut</strong></td>
+                                            <td class="text-center"><strong>2</strong></td>
                                             <td>
-                                                <div class="d-flex align-items-center">
-                                                    <i class="far fa-clock me-2"></i>
-                                                    <input type="time" name="bromage_tak_ekstensi"
-                                                        class="form-control form-control-sm w-25" value="Jam">
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_tak_ekstensi_15">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_tak_ekstensi_30">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_tak_ekstensi_45">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_tak_ekstensi_1">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_tak_ekstensi_2">
-                                                    </div>
-                                                </div>
+                                                <input type="time" name="bromage_tak_fleksi_lutut" class="form-control form-control-sm">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input bromage-radio" type="radio" name="bromage_time_15" value="tak_fleksi_lutut_2" data-group="tak_fleksi_lutut" data-score="2">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input bromage-radio" type="radio" name="bromage_time_30" value="tak_fleksi_lutut_2" data-group="tak_fleksi_lutut" data-score="2">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input bromage-radio" type="radio" name="bromage_time_45" value="tak_fleksi_lutut_2" data-group="tak_fleksi_lutut" data-score="2">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input bromage-radio" type="radio" name="bromage_time_60" value="tak_fleksi_lutut_2" data-group="tak_fleksi_lutut" data-score="2">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input bromage-radio" type="radio" name="bromage_time_120" value="tak_fleksi_lutut_2" data-group="tak_fleksi_lutut" data-score="2">
                                             </td>
                                         </tr>
+                                        <!-- Row 4: Tak mampu fleksi pergelangan kaki -->
                                         <tr>
-                                            <td>Tak mampu fleksi/lutut</td>
+                                            <td><strong>Tak mampu fleksi pergelangan kaki</strong></td>
+                                            <td class="text-center"><strong>3</strong></td>
                                             <td>
-                                                <div class="d-flex align-items-center">
-                                                    <i class="far fa-clock me-2"></i>
-                                                    <input type="time" name="bromage_tak_fleksi"
-                                                        class="form-control form-control-sm w-25" value="Jam">
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_tak_fleksi_15">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_tak_fleksi_30">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_tak_fleksi_45">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_tak_fleksi_1">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_tak_fleksi_2">
-                                                    </div>
-                                                </div>
+                                                <input type="time" name="bromage_tak_fleksi_pergelangan" class="form-control form-control-sm">
                                             </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Tak mampu fleksi/pergerakan kaki</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <i class="far fa-clock me-2"></i>
-                                                    <input type="time" name="bromage_tak_pergerakan"
-                                                        class="form-control form-control-sm w-25" value="Jam">
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_jam_pindah_15">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_jam_pindah_30">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_jam_pindah_45">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_jam_pindah_1">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_jam_pindah_2">
-                                                    </div>
-                                                </div>
+                                            <td class="text-center">
+                                                <input class="form-check-input bromage-radio" type="radio" name="bromage_time_15" value="tak_fleksi_pergelangan_3" data-group="tak_fleksi_pergelangan" data-score="3">
                                             </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Jam Pindah Ruang Perawatan</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <i class="far fa-clock me-2"></i>
-                                                    <input type="time" name="bromage_jam_pindah"
-                                                        class="form-control form-control-sm w-25" value="Jam">
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_tak_pergerakan_15">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_tak_pergerakan_30">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_tak_pergerakan_45">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_tak_pergerakan_1">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="bromage_tak_pergerakan_2">
-                                                    </div>
-                                                </div>
+                                            <td class="text-center">
+                                                <input class="form-check-input bromage-radio" type="radio" name="bromage_time_30" value="tak_fleksi_pergelangan_3" data-group="tak_fleksi_pergelangan" data-score="3">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input bromage-radio" type="radio" name="bromage_time_45" value="tak_fleksi_pergelangan_3" data-group="tak_fleksi_pergelangan" data-score="3">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input bromage-radio" type="radio" name="bromage_time_60" value="tak_fleksi_pergelangan_3" data-group="tak_fleksi_pergelangan" data-score="3">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input bromage-radio" type="radio" name="bromage_time_120" value="tak_fleksi_pergelangan_3" data-group="tak_fleksi_pergelangan" data-score="3">
                                             </td>
                                         </tr>
                                     </tbody>
+                                    <tfoot>
+                                        <tr class="table-info">
+                                            <td colspan="2"><strong>TOTAL SCORE</strong></td>
+                                            <td colspan="6">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="me-3"><strong id="bromage_total_score">0</strong></span>
+                                                    <span class="badge bg-warning text-dark" id="bromage_status">
+                                                        Boleh pindah ruang jika score ≥ 2
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3"><strong>Jam Pindah Ruang Perawatan</strong></td>
+                                            <td colspan="5">
+                                                <input type="time" name="bromage_jam_pindah" class="form-control form-control-sm">
+                                            </td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
+                                <input type="hidden" name="bromage_total_score_value" id="bromage_total_score_value" value="0">
                             </div>
 
                             <!-- Steward Score Form - Initially Hidden -->
                             <div id="stewardScoreForm" class="score-form" style="display: none;">
-                                <h5 class="text-center mt-3">Penilaian Steward Score (Anak-anak)</h5>
-
+                                <h5 class="text-center mt-3 mb-4">Penilaian Steward Score (Anak-anak)</h5>
                                 <table class="table table-bordered">
-                                    <thead>
+                                    <thead class="table-light">
                                         <tr>
-                                            <th>Score Pasca Anestesi dan Sedasi</th>
-                                            <th>Jam</th>
+                                            <th width="20%" rowspan="2">Score Pasca Anestesi dan Sedasi</th>
+                                            <th width="15%" rowspan="2">Score</th>
+                                            <th width="15%" rowspan="2">Jam Pasca Anestesi</th>
+                                            <th colspan="5" class="text-center">Jam</th>
+                                        </tr>
+                                        <tr>
+                                            <th width="10%">15'</th>
+                                            <th width="10%">30'</th>
+                                            <th width="10%">45'</th>
+                                            <th width="10%">1</th>
+                                            <th width="10%">2</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <!-- Kesadaran -->
                                         <tr>
-                                            <td>Post anestesi vital sign</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <span>Jam pasca anestesi</span>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="radio"
-                                                            name="steward_time" value="15">
-                                                        <label class="form-check-label">15'</label>
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="radio"
-                                                            name="steward_time" value="30">
-                                                        <label class="form-check-label">30'</label>
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="radio"
-                                                            name="steward_time" value="45">
-                                                        <label class="form-check-label">45'</label>
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="radio"
-                                                            name="steward_time" value="1">
-                                                        <label class="form-check-label">1</label>
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="radio"
-                                                            name="steward_time" value="2">
-                                                        <label class="form-check-label">2</label>
-                                                    </div>
-                                                </div>
+                                            <td rowspan="3"><strong>Kesadaran</strong></td>
+                                            <td>Sadar penuh, responsif</td>
+                                            <td class="text-center"><strong>2</strong></td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_kesadaran_15" value="sadar_2" data-group="kesadaran" data-score="2">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_kesadaran_30" value="sadar_2" data-group="kesadaran" data-score="2">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_kesadaran_45" value="sadar_2" data-group="kesadaran" data-score="2">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_kesadaran_60" value="sadar_2" data-group="kesadaran" data-score="2">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_kesadaran_120" value="sadar_2" data-group="kesadaran" data-score="2">
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>
-                                                Kesadaran
-                                                <select name="steward_kesadaran"
-                                                    class="form-select ms-2 d-inline-block w-25">
-                                                    <option value="" selected>Pilih</option>
-                                                    <option value="Sadar Penuh" selected>Sadar Penuh</option>
-                                                    <option value="Bangun jika Dipanggil" selected>Bangun jika
-                                                        Dipanggil</option>
-                                                    <option value="Belum Respon" selected>Belum Respon</option>
-                                                </select>
+                                            <td>Bangun saat dipanggil/nama disebut</td>
+                                            <td class="text-center"><strong>1</strong></td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_kesadaran_15" value="bangun_1" data-group="kesadaran" data-score="1">
                                             </td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <i class="far fa-clock me-2"></i>
-                                                    <input type="time" name="steward_kesadaran_jam"
-                                                        class="form-control form-control-sm w-25" value="Jam">
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="steward_kesadaran_15">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="steward_kesadaran_30">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="steward_kesadaran_45">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="steward_kesadaran_1">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="steward_kesadaran_2">
-                                                    </div>
-                                                </div>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_kesadaran_30" value="bangun_1" data-group="kesadaran" data-score="1">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_kesadaran_45" value="bangun_1" data-group="kesadaran" data-score="1">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_kesadaran_60" value="bangun_1" data-group="kesadaran" data-score="1">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_kesadaran_120" value="bangun_1" data-group="kesadaran" data-score="1">
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>
-                                                Respirasi
-                                                <select name="steward_respirasi"
-                                                    class="form-select ms-2 d-inline-block w-25">
-                                                    <option value="" selected>Pilih</option>
-                                                    <option value="Batuk/ Manangis" selected>Batuk/ Manangis
-                                                    </option>
-                                                    <option value="Berusaha Bernafas" selected>Berusaha Bernafas
-                                                    </option>
-                                                    <option value="Perlu Bantuan Bernafas" selected>Perlu
-                                                        Bantuan Bernafas</option>
-                                                </select>
+                                            <td>Tidak responsif</td>
+                                            <td class="text-center"><strong>0</strong></td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_kesadaran_15" value="tidak_responsif_0" data-group="kesadaran" data-score="0">
                                             </td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <i class="far fa-clock me-2"></i>
-                                                    <input type="time" name="steward_respirasi_jam"
-                                                        class="form-control form-control-sm w-25" value="Jam">
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="steward_respirasi_15">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="steward_respirasi_30">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="steward_respirasi_45">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="steward_respirasi_1">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="steward_respirasi_2">
-                                                    </div>
-                                                </div>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_kesadaran_30" value="tidak_responsif_0" data-group="kesadaran" data-score="0">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_kesadaran_45" value="tidak_responsif_0" data-group="kesadaran" data-score="0">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_kesadaran_60" value="tidak_responsif_0" data-group="kesadaran" data-score="0">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_kesadaran_120" value="tidak_responsif_0" data-group="kesadaran" data-score="0">
+                                            </td>
+                                        </tr>
+                                        <!-- Respirasi -->
+                                        <tr>
+                                            <td rowspan="3"><strong>Respirasi</strong></td>
+                                            <td>Bernapas normal/menangis</td>
+                                            <td class="text-center"><strong>2</strong></td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_respirasi_15" value="normal_2" data-group="respirasi" data-score="2">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_respirasi_30" value="normal_2" data-group="respirasi" data-score="2">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_respirasi_45" value="normal_2" data-group="respirasi" data-score="2">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_respirasi_60" value="normal_2" data-group="respirasi" data-score="2">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_respirasi_120" value="normal_2" data-group="respirasi" data-score="2">
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>
-                                                Aktivitas Motorik
-                                                <select name="steward_motorik"
-                                                    class="form-select ms-2 d-inline-block w-25">
-                                                    <option value="" selected>Pilih</option>
-                                                    <option value="Gerakan Beraturan" selected>Gerakan Beraturan
-                                                    </option>
-                                                    <option value="Gerakan Beraturan" selected>Gerakan Beraturan
-                                                    </option>
-                                                    <option value="Tidak Bergerak" selected>Tidak Bergerak
-                                                    </option>
-                                                </select>
+                                            <td>Napas dangkal/terbatas</td>
+                                            <td class="text-center"><strong>1</strong></td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_respirasi_15" value="dangkal_1" data-group="respirasi" data-score="1">
                                             </td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <i class="far fa-clock me-2"></i>
-                                                    <input type="time" name="steward_motorik_jam"
-                                                        class="form-control form-control-sm w-25" value="Jam">
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="steward_motorik_15">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="steward_motorik_30">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="steward_motorik_45">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="steward_motorik_1">
-                                                    </div>
-                                                    <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="steward_motorik_2">
-                                                    </div>
-                                                </div>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_respirasi_30" value="dangkal_1" data-group="respirasi" data-score="1">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_respirasi_45" value="dangkal_1" data-group="respirasi" data-score="1">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_respirasi_60" value="dangkal_1" data-group="respirasi" data-score="1">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_respirasi_120" value="dangkal_1" data-group="respirasi" data-score="1">
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Jam Pindah Ruang</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <i class="far fa-clock me-2"></i>
-                                                    <input type="time" name="steward_jam_pindah"
-                                                        class="form-control form-control-sm w-25" value="Jam">
-                                                </div>
+                                            <td>Apnea/perlu bantuan napas</td>
+                                            <td class="text-center"><strong>0</strong></td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_respirasi_15" value="apnea_0" data-group="respirasi" data-score="0">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_respirasi_30" value="apnea_0" data-group="respirasi" data-score="0">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_respirasi_45" value="apnea_0" data-group="respirasi" data-score="0">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_respirasi_60" value="apnea_0" data-group="respirasi" data-score="0">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_respirasi_120" value="apnea_0" data-group="respirasi" data-score="0">
+                                            </td>
+                                        </tr>
+                                        <!-- Aktivitas Motorik -->
+                                        <tr>
+                                            <td rowspan="3"><strong>Aktivitas Motorik</strong></td>
+                                            <td>Gerakan aktif/beraturan</td>
+                                            <td class="text-center"><strong>2</strong></td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_motorik_15" value="aktif_2" data-group="motorik" data-score="2">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_motorik_30" value="aktif_2" data-group="motorik" data-score="2">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_motorik_45" value="aktif_2" data-group="motorik" data-score="2">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_motorik_60" value="aktif_2" data-group="motorik" data-score="2">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_motorik_120" value="aktif_2" data-group="motorik" data-score="2">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Gerakan lemah/terbatas</td>
+                                            <td class="text-center"><strong>1</strong></td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_motorik_15" value="lemah_1" data-group="motorik" data-score="1">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_motorik_30" value="lemah_1" data-group="motorik" data-score="1">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_motorik_45" value="lemah_1" data-group="motorik" data-score="1">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_motorik_60" value="lemah_1" data-group="motorik" data-score="1">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_motorik_120" value="lemah_1" data-group="motorik" data-score="1">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tidak bergerak</td>
+                                            <td class="text-center"><strong>0</strong></td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_motorik_15" value="tidak_bergerak_0" data-group="motorik" data-score="0">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_motorik_30" value="tidak_bergerak_0" data-group="motorik" data-score="0">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_motorik_45" value="tidak_bergerak_0" data-group="motorik" data-score="0">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_motorik_60" value="tidak_bergerak_0" data-group="motorik" data-score="0">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="form-check-input steward-radio" type="radio" name="steward_motorik_120" value="tidak_bergerak_0" data-group="motorik" data-score="0">
                                             </td>
                                         </tr>
                                     </tbody>
+                                    <tfoot>
+                                        <tr class="table-info">
+                                            <td colspan="3"><strong>TOTAL SCORE</strong></td>
+                                            <td colspan="5">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="me-3"><strong id="steward_total_score">0</strong></span>
+                                                    <span class="badge bg-warning text-dark" id="steward_status">
+                                                        Boleh pindah ruang jika score ≥ 5
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3"><strong>Jam Pindah Ruang</strong></td>
+                                            <td colspan="5">
+                                                <input type="time" name="steward_jam_pindah" class="form-control form-control-sm">
+                                            </td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
+                                <input type="hidden" name="steward_total_score_value" id="steward_total_score_value" value="0">
                             </div>
 
-                            <!-- Aldrete Score Form - Initially Hidden -->
+                            <!-- Aldrete Score Form - Unchanged -->
                             <div id="aldreteScoreForm" class="score-form" style="display: none;">
                                 <h5 class="text-center mt-3">Penilaian Score Aldrete</h5>
-
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Aktivitas Motorik</label>
                                     <select name="aktivitas_motorik" class="form-control">
                                         <option value="" disabled selected>pilih</option>
                                         <option value="0">Seluruh ekstremitas dapat digerakkan</option>
-                                        <option value="1">Dua akstremitas dapat digerakkan</option>
+                                        <option value="1">Dua ekstremitas dapat digerakkan</option>
                                         <option value="2">Tidak dapat bergerak</option>
                                     </select>
                                 </div>
-
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Respirasi</label>
                                     <select name="respirasi" class="form-control">
@@ -1084,30 +1083,24 @@
                                         <option value="2">Apneu atau obstruksi</option>
                                     </select>
                                 </div>
-
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Sirkulasi</label>
                                     <select name="aldrete_sirkulasi" class="form-control">
                                         <option value="" disabled selected>pilih</option>
-                                        <option value="0">Tekanan darah menyimpang < 20 mmHg dari tekanan darah pre
-                                                anestesi</option>
-                                        <option value="1">Tekanan darah menyimpang 20-50 mmHg dari tekanan darah
-                                            pre anestesi</option>
-                                        <option value="2">Tekanan darah menyimpang >50 mmHg dari tekanan darah
-                                            pre anestesi</option>
+                                        <option value="0">Tekanan darah menyimpang < 20 mmHg dari tekanan darah pre anestesi</option>
+                                        <option value="1">Tekanan darah menyimpang 20-50 mmHg dari tekanan darah pre anestesi</option>
+                                        <option value="2">Tekanan darah menyimpang >50 mmHg dari tekanan darah pre anestesi</option>
                                     </select>
                                 </div>
-
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Kesadaran</label>
                                     <select name="aldrete_kesadaran" class="form-control">
                                         <option value="" disabled selected>pilih</option>
                                         <option value="0">Tidak berespon</option>
-                                        <option value="1">Bangun namun 'epat kembali tertidur</option>
+                                        <option value="1">Bangun namun cepat kembali tertidur</option>
                                         <option value="2">Sadar serta orientasi</option>
                                     </select>
                                 </div>
-
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Warna Kulit</label>
                                     <select name="aldrete_warna_kulit" class="form-control">
@@ -1117,20 +1110,16 @@
                                         <option value="2">Merah muda</option>
                                     </select>
                                 </div>
-
                                 <div class="bg-success text-white p-2 rounded mb-3">
                                     <strong>Kesimpulan : </strong> Boleh pindah ruang / Tidak Boleh pindah ruang
                                 </div>
-
                                 <h6 class="text-center mt-2">Data Penilaian Score Aldrete</h6>
-
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Tanggal Jam Pasca Anestesi</label>
                                     <div class="input-group">
                                         <input type="datetime-local" name="aldrete_tanggal" class="form-control">
                                     </div>
                                 </div>
-
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
@@ -1148,8 +1137,7 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <input type="number" name="skor_1" class="form-control"
-                                                    min="0">
+                                                <input type="number" name="skor_1" class="form-control" min="0">
                                             </td>
                                             <td>
                                                 <input type="text" name="keterangan_1" class="form-control">
@@ -1163,8 +1151,7 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <input type="number" name="skor_2" class="form-control"
-                                                    min="0">
+                                                <input type="number" name="skor_2" class="form-control" min="0">
                                             </td>
                                             <td>
                                                 <input type="text" name="keterangan_2" class="form-control">
@@ -1178,8 +1165,7 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <input type="number" name="skor_3" class="form-control"
-                                                    min="0">
+                                                <input type="number" name="skor_3" class="form-control" min="0">
                                             </td>
                                             <td>
                                                 <input type="text" name="keterangan_3" class="form-control">
@@ -1187,16 +1173,14 @@
                                         </tr>
                                     </tbody>
                                 </table>
-
                                 <div class="bg-success text-white p-2 rounded mb-3">
                                     <strong>Kesimpulan : </strong> Boleh pindah ruang / Tidak Boleh pindah ruang
                                 </div>
                             </div>
 
-                            <!-- PADDS Score Form - Initially Hidden -->
+                            <!-- PADDS Score Form - Unchanged -->
                             <div id="paddsScoreForm" class="score-form" style="display: none;">
                                 <h5 class="text-center mt-3">Penilaian Score PADDS (Khusus Rawat Jalan)</h5>
-
                                 <div class="form-group mb-3">
                                     <label class="d-block mb-2">Tanda Vital</label>
                                     <select class="form-select" name="padds_tanda_vital" id="paddsTandaVital">
@@ -1206,7 +1190,6 @@
                                         <option value="0">Tekanan darah dan nadi >40% dari pre Op</option>
                                     </select>
                                 </div>
-
                                 <div class="form-group mb-3">
                                     <label class="d-block mb-2">Aktivitas</label>
                                     <select class="form-select" name="padds_aktivitas" id="paddsAktivitas">
@@ -1216,7 +1199,6 @@
                                         <option value="0">Tidak dapat berjalan</option>
                                     </select>
                                 </div>
-
                                 <div class="form-group mb-3">
                                     <label class="d-block mb-2">Mual/muntah</label>
                                     <select class="form-select" name="padds_mual_muntah" id="paddsMualMuntah">
@@ -1226,7 +1208,6 @@
                                         <option value="0">Berat, tidak terkontrol dengan obat</option>
                                     </select>
                                 </div>
-
                                 <div class="form-group mb-3">
                                     <label class="d-block mb-2">Perdarahan</label>
                                     <select class="form-select" name="padds_perdarahan" id="paddsPerdarahan">
@@ -1236,43 +1217,30 @@
                                         <option value="0">Berat (perlu ganti verban 3 kali atau lebih)</option>
                                     </select>
                                 </div>
-
                                 <div class="form-group mb-3">
                                     <label class="d-block mb-2">Nyeri</label>
                                     <select class="form-select" name="padds_nyeri" id="paddsNyeri">
                                         <option value="" selected>pilih</option>
                                         <option value="2">Nyeri ringan, nyaman, dapat diterima</option>
-                                        <option value="1">Nyeri sedang sampai berat, terkontrol dengan analgesik
-                                            oral</option>
-                                        <option value="0">Nyeri berat, tidak terkontrol dengan analgesik oral
-                                        </option>
+                                        <option value="1">Nyeri sedang sampai berat, terkontrol dengan analgesik oral</option>
+                                        <option value="0">Nyeri berat, tidak terkontrol dengan analgesik oral</option>
                                     </select>
                                 </div>
-
                                 <div class="form-group mb-3">
-                                    <label class="d-block mb-2"
-                                        style="background-color: #177F75; color: white; padding: 8px;">Kesimpulan
-                                        :</label>
-                                    <div id="paddsKesimpulan" class="p-3 text-white rounded"
-                                        style="background-color: #177F75;">
+                                    <label class="d-block mb-2" style="background-color: #177F75; color: white; padding: 8px;">Kesimpulan :</label>
+                                    <div id="paddsKesimpulan" class="p-3 text-white rounded" style="background-color: #177F75;">
                                         Boleh pindah ruang / Tidak Boleh pindah ruang
                                     </div>
-                                    <input type="hidden" name="padds_kesimpulan" id="paddsKesimpulanInput"
-                                        value="Boleh pindah ruang / Tidak Boleh pindah ruang">
+                                    <input type="hidden" name="padds_kesimpulan" id="paddsKesimpulanInput" value="Boleh pindah ruang / Tidak Boleh pindah ruang">
                                 </div>
-
-                                <!-- Tabel Rekaman Waktu -->
                                 <div class="mt-4">
                                     <h6>Data Penilaian Score PADDS (Khusus Rawat Jalan)</h6>
-
                                     <div class="mb-3">
                                         <label class="form-label">Tanggal Jam Pasca Anestesi</label>
                                         <div class="input-group">
-                                            <input type="datetime-local" class="form-control" name="padds_tanggal_jam"
-                                                id="paddsTanggalJam">
+                                            <input type="datetime-local" class="form-control" name="padds_tanggal_jam" id="paddsTanggalJam">
                                         </div>
                                     </div>
-
                                     <div class="table-responsive">
                                         <table class="table table-bordered">
                                             <thead>
@@ -1288,33 +1256,17 @@
                                                     <td>Skor</td>
                                                     <td>Kesimpulan</td>
                                                 </tr>
-                                                <tr>
-                                                    <td><i class="far fa-clock"></i> Jam</td>
-                                                    <td>Skor</td>
-                                                    <td>Kesimpulan</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><i class="far fa-clock"></i> Jam</td>
-                                                    <td>Skor</td>
-                                                    <td>Kesimpulan</td>
-                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
-
                                 <div class="form-group mb-3 mt-4">
-                                    <label class="d-block mb-2"
-                                        style="background-color: #177F75; color: white; padding: 8px;">Kesimpulan
-                                        :</label>
-                                    <div id="paddsFinalKesimpulan" class="p-3 text-white rounded"
-                                        style="background-color: #177F75;">
+                                    <label class="d-block mb-2" style="background-color: #177F75; color: white; padding: 8px;">Kesimpulan :</label>
+                                    <div id="paddsFinalKesimpulan" class="p-3 text-white rounded" style="background-color: #177F75;">
                                         Boleh pindah ruang / Tidak Boleh pindah ruang
                                     </div>
-                                    <input type="hidden" name="padds_final_kesimpulan" id="paddsFinalKesimpulanInput"
-                                        value="Boleh pindah ruang / Tidak Boleh pindah ruang">
+                                    <input type="hidden" name="padds_final_kesimpulan" id="paddsFinalKesimpulanInput" value="Boleh pindah ruang / Tidak Boleh pindah ruang">
                                 </div>
-
                             </div>
                             {{-- end skala pada pasien --}}
 
