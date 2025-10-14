@@ -450,9 +450,9 @@
                                     <button type="button" id="saveButtonPAS" class="btn btn-primary pas-btn">
                                         <i class="fas fa-save"></i> Simpan
                                     </button>
-                                    <button type="button" id="loadDataButtonPAS" class="btn btn-secondary ms-2 pas-btn">
+                                    {{-- <button type="button" id="loadDataButtonPAS" class="btn btn-secondary ms-2 pas-btn">
                                         <i class="fas fa-sync"></i> Muat Data Contoh
-                                    </button>
+                                    </button> --}}
                                     <button type="button" id="resetDataButtonPAS" class="btn btn-danger ms-2 pas-btn">
                                         <i class="fas fa-trash"></i> Reset Data
                                     </button>
@@ -723,10 +723,10 @@
                                     <button type="button" id="saveObservasiButtonCKP" class="btn btn-primary ckp-btn">
                                         <i class="fas fa-save"></i> Simpan
                                     </button>
-                                    <button type="button" id="loadSampleButtonCKP"
+                                    {{-- <button type="button" id="loadSampleButtonCKP"
                                         class="btn btn-secondary ms-2 ckp-btn">
                                         <i class="fas fa-sync"></i> Muat Data Contoh
-                                    </button>
+                                    </button> --}}
                                     <button type="button" id="resetDataButtonCKP" class="btn btn-danger ms-2 ckp-btn">
                                         <i class="fas fa-trash"></i> Reset Data
                                     </button>
@@ -813,7 +813,7 @@
                                 <?php
                                 $kesimpulanNyeri = $okPraInduksi->okPraInduksiCtkp->kesimpulan_nyeri ?? 'Nyeri Ringan';
                                 $nyeriClass = '';
-                                
+
                                 if (in_array($kesimpulanNyeri, ['Tidak Nyeri', 'NYERI RINGAN', 'Nyeri Ringan'])) {
                                     $nyeriClass = 'rounded text-white bg-success';
                                 } elseif (in_array($kesimpulanNyeri, ['NYERI SEDANG', 'Nyeri Sedang'])) {
