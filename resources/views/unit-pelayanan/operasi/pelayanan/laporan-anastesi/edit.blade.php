@@ -55,8 +55,14 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Dilakukan Operasi/Jenis Operasi</label>
-                                            <input type="text" class="form-control" name="jenis_operasi"
-                                                value="{{ $laporanAnastesi->jenis_operasi }}">
+                                             <select name="jenis_operasi" id="jenis_operasi" class="form-select select2 w-100">
+                                                <option value="">--Pilih--</option>
+                                                @foreach ($products as $item)
+                                                    <option value="{{ $item->kd_produk }}"
+                                                        @selected($item->kd_produk == $laporanAnastesi->jenis_operasi)>
+                                                        {{ $item->deskripsi }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tipe Operasi</label>
@@ -85,7 +91,8 @@
                                             <label style="min-width: 200px;">Time Out (Pengecekan Awal Sebelum
                                                 Operasi)</label>
                                             <select class="form-select me-3" name="time_out">
-                                                <option disabled {{ $laporanAnastesi->time_out == null ? 'selected' : '' }}>
+                                                <option disabled
+                                                    {{ $laporanAnastesi->time_out == null ? 'selected' : '' }}>
                                                     --Pilih--</option>
                                                 <option value="1"
                                                     {{ $laporanAnastesi->time_out == '1' ? 'selected' : '' }}>Ya</option>
@@ -1179,9 +1186,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Inisialisasi Select2 jika belum
-            $('.select2').select2();
-
             // Pasang event listener untuk Perawat Instrumen
             $('#perawat_instrumen').on('select2:select', function(e) {
                 var kodePerawat = $(this).val();

@@ -43,7 +43,7 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="fw-bold text-muted">Jenis Operasi</label>
-                                <p class="fw-medium">{{ $laporanAnastesi->jenis_operasi }}</p>
+                                <p class="fw-medium">{{ $laporanAnastesi->product->deskripsi }}</p>
                             </div>
                             <div class="col-md-6">
                                 <label class="fw-bold text-muted">Tipe Operasi</label>

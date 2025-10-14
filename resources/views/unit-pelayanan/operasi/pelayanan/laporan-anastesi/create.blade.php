@@ -56,7 +56,14 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Dilakukan Operasi/Jenis Operasi</label>
-                                            <input type="text" class="form-control" name="jenis_operasi">
+                                            <select name="jenis_operasi" id="jenis_operasi"
+                                                class="form-select select2 w-100">
+                                                <option value="">--Pilih--</option>
+                                                @foreach ($products as $item)
+                                                    <option value="{{ $item->kd_produk }}">
+                                                        {{ $item->deskripsi }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tipe Operasi</label>
@@ -930,9 +937,8 @@
                                         </div>
                                     </div>
 
-
-                                    <div class="d-flex justify-content-end">
-                                        <button type="submit" class="btn btn-primary" id="simpan">Simpan</button>
+                                    <div class="text-end">
+                                        <x-button-submit id="submit" />
                                     </div>
                                 </div>
                             </div>
@@ -945,7 +951,57 @@
     </div>
 @endsection
 
-
 @push('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Pasang event listener untuk Perawat Instrumen
+            $('#perawat_instrumen').on('select2:select', function(e) {
+                var kodePerawat = $(this).val();
+                var namaPerawat = $(this).find('option:selected').data(
+                'nama'); // Ambil nama perawat dari data-nama
+                console.log("Kode perawat instrumen yang dipilih:", kodePerawat);
+                console.log("Nama perawat instrumen yang dipilih:", namaPerawat);
+
+                // Update nama perawat dan kode perawat
+                $('#nama_perawat_instrumen').text(namaPerawat || '');
+                $('#kode_perawat_instrumen').text(kodePerawat || '.........................');
+                generateQRCode('qrcode_perawat_instrumen', kodePerawat);
+            });
+
+            // Pasang event listener untuk Perawat Sirkuler
+            $('#perawat_sirkuler').on('select2:select', function(e) {
+                var kodePerawat = $(this).val();
+                var namaPerawat = $(this).find('option:selected').data(
+                'nama'); // Ambil nama perawat dari data-nama
+                console.log("Kode perawat sirkuler yang dipilih:", kodePerawat);
+                console.log("Nama perawat sirkuler yang dipilih:", namaPerawat);
+
+                // Update nama perawat dan kode perawat
+                $('#nama_perawat_sirkuler').text(namaPerawat || '');
+                $('#kode_perawat_sirkuler').text(kodePerawat || '.........................');
+                generateQRCode('qrcode_perawat_sirkuler', kodePerawat);
+            });
+
+            // Fungsi untuk membuat QR code
+            function generateQRCode(elementId, text) {
+                // Hapus QR code sebelumnya jika ada
+                $('#' + elementId).empty();
+
+                if (!text) return; // Hindari error jika text kosong
+
+                try {
+                    // Buat QR code baru
+                    var qr = qrcode(0, 'M');
+                    qr.addData(text);
+                    qr.make();
+
+                    // Tampilkan QR code
+                    $('#' + elementId).html(qr.createImgTag(5));
+                } catch (err) {
+                    console.error("Error generating QR code:", err);
+                }
+            }
+        });
+    </script>
 @endpush

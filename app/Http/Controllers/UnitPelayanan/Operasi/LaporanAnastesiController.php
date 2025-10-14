@@ -15,6 +15,7 @@ use App\Models\RmeCeklistKesiapanAnesthesi;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class LaporanAnastesiController extends Controller
@@ -51,12 +52,14 @@ class LaporanAnastesiController extends Controller
         }
 
         // Fetch Laporan Anastesi records for this patient and visit
-        $laporanAnastesi = OkLaporanAnastesi::with('userCreate') // Assuming user_created relation exists
+        $laporanAnastesi = OkLaporanAnastesi::with(['userCreate', 'product:kd_produk,deskripsi'])
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->orderBy('id', 'desc')
             ->get();
+
+        // dd($laporanAnastesi);
 
         $ceklistKesiapanAnesthesi = RmeCeklistKesiapanAnesthesi::with('userCreate')
             ->where('kd_pasien', $kd_pasien)
@@ -88,13 +91,15 @@ class LaporanAnastesiController extends Controller
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->first();
 
+        $kd_unit = $dataMedis->kd_unit;
+        $products = $this->getProducts($kd_unit);
+
         $jenisAnastesi = OkJenisAnastesi::all();
         $dokterAnastesi = DokterAnastesi::all();
         $dokter = Dokter::where('status', 1)->get();
         $perawat = Perawat::where('aktif', 1)->get();
 
-
-        return view('unit-pelayanan.operasi.pelayanan.laporan-anastesi.create', compact('dataMedis', 'jenisAnastesi', 'dokterAnastesi', 'dokter', 'perawat'));
+        return view('unit-pelayanan.operasi.pelayanan.laporan-anastesi.create', compact('dataMedis', 'jenisAnastesi', 'dokterAnastesi', 'dokter', 'perawat', 'products'));
     }
 
 
@@ -290,7 +295,7 @@ class LaporanAnastesiController extends Controller
         }
 
         // Retrieve the specific anesthesia report with its relationships
-        $laporanAnastesi = OkLaporanAnastesi::with('userCreate')
+        $laporanAnastesi = OkLaporanAnastesi::with(['userCreate', 'product:kd_produk,deskripsi']) // Assuming user_created relation exists
             ->where('id', $id)
             ->firstOrFail();
 
@@ -409,6 +414,9 @@ class LaporanAnastesiController extends Controller
             ];
         }
 
+        $kd_unit = $dataMedis->kd_unit;
+        $products = $this->getProducts($kd_unit);
+
         return view('unit-pelayanan.operasi.pelayanan.laporan-anastesi.edit', compact(
             'dataMedis',
             'laporanAnastesi',
@@ -426,7 +434,8 @@ class LaporanAnastesiController extends Controller
             'waktuSelesaiOperasi',
             'jamSelesaiOperasi',
             'tanggalPencatatan',
-            'jamPencatatan'
+            'jamPencatatan',
+            'products'
         ));
     }
 
@@ -592,5 +601,22 @@ class LaporanAnastesiController extends Controller
             DB::rollBack();
             return back()->with('error', $e->getMessage());
         }
+    }
+
+    /**
+     * Ambil produk untuk kd_unit tertentu (dengan cache)
+     */
+    protected function getProducts($kd_unit)
+    {
+        return Cache::remember("products:unit:{$kd_unit}:klas:61", 60, function () use ($kd_unit) {
+            return DB::table('produk')
+                ->join('tarif', 'produk.kd_produk', '=', 'tarif.kd_produk')
+                ->where('tarif.kd_unit', $kd_unit)
+                ->whereRaw('LEFT(produk.kd_klas, 2) = ?', ['61'])
+                ->select('produk.kd_produk', 'produk.deskripsi')
+                ->groupBy('produk.kd_produk', 'produk.deskripsi')
+                ->orderBy('produk.deskripsi')
+                ->get();
+        });
     }
 }

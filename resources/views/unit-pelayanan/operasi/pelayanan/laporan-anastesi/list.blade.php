@@ -72,7 +72,7 @@
                             alt="Foto Pasien" width="60" height="60">
                         <div>
                             <div class="text-primary fw-bold mb-1">
-                                Laporan Anastesi - {{ $item->jenis_operasi ?? 'Tidak Ditentukan' }}
+                                Laporan Anastesi - {{ $item->product?->deskripsi ?? 'Tidak Ditentukan' }}
                             </div>
                             <div class="text-muted">
                                 By: <span class="fw-semibold">{{ $item->userCreate->name ?? 'Unknown' }}</span>
