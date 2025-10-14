@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DokterKlinik;
 use App\Models\DokterPenunjang;
 use App\Models\Kunjungan;
+use App\Models\OrderOK;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -77,6 +78,55 @@ class OperasiController extends Controller
             ->get();
 
         return view('unit-pelayanan.operasi.index', compact('dokter'));
+    }
+
+    public function pendingOrder(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = OrderOK::with(['produk', 'kamar', 'dokter', 'jenisOperasi', 'spesialisasi', 'subSpesialisasi'])
+                ->select([
+                    'order_ok.*',
+                    'p.nama as nama_pasien',
+                    'p.tgl_lahir',
+                    'p.jenis_kelamin',
+                    'p.alamat',
+                    'c.customer as jaminan',
+                    'k.kd_pasien',
+                    'u.nama_unit as unit_order'
+                ])
+                ->join('transaksi as t', function ($q) {
+                    $q->on('order_ok.kd_kasir', '=', 't.kd_kasir');
+                    $q->on('order_ok.no_transaksi', '=', 't.no_transaksi');
+                })
+                ->join('kunjungan as k', function ($q) {
+                    $q->on('t.kd_pasien', '=', 'k.kd_pasien');
+                    $q->on('t.kd_unit', '=', 'k.kd_unit');
+                    $q->on('t.tgl_transaksi', '=', 'k.tgl_masuk');
+                    $q->on('t.urut_masuk', '=', 'k.urut_masuk');
+                })
+                ->join('customer as c', 'order_ok.penjamin', '=', 'c.kd_customer')
+                ->join('pasien as p', 't.kd_pasien', '=', 'p.kd_pasien')
+                ->join('unit as u', 'order_ok.kd_kamar_order', '=', 'u.kd_unit')
+                ->where('status', 0);
+
+
+            return DataTables::of($data)
+                ->order(function ($query) {
+                    $query->orderBy('order_ok.tgl_jadwal', 'desc')
+                        ->orderBy('order_ok.jam_op', 'desc');
+                })
+                ->addColumn('waktu_order', function ($row) {
+                    $tglOrder = Carbon::parse($row->tgl_jadwal)->format('d M Y');
+                    $jamOrder = date('H:i', strtotime($row->jam_op));
+                    return "$tglOrder $jamOrder";
+                })
+                ->addColumn('umur', function ($row) {
+                    return hitungUmur($row->tgl_lahir);
+                })
+                ->make(true);
+        }
+
+        return view('unit-pelayanan.operasi.pending-order');
     }
 
     public function pelayanan($kd_pasien, $tgl_masuk, $urut_masuk)

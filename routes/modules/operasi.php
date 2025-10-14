@@ -19,6 +19,7 @@ use App\Http\Controllers\UnitPelayanan\OperasiController;
 Route::prefix('operasi')->group(function () {
     Route::name('operasi')->group(function () {
         Route::get('/', [OperasiController::class, 'index'])->name('.index');
+        Route::get('/pending-order', [OperasiController::class, 'pendingOrder'])->name('.pending-order');
 
         Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
             Route::name('.pelayanan')->group(function () {

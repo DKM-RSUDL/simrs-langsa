@@ -1,106 +1,107 @@
 @extends('layouts.administrator.master')
 
+@push('css')
+    <style>
+        .badge {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+
+        .badge-triage-yellow {
+            background-color: #ffeb3b;
+        }
+
+        .badge-triage-red {
+            background-color: #f44336;
+        }
+
+        .badge-triage-green {
+            background-color: #4caf50;
+        }
+
+        /* Custom CSS for profile */
+        .profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile img {
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+
+        .profile .info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile .info strong {
+            font-size: 14px;
+        }
+
+        .profile .info span {
+            font-size: 12px;
+            color: #777;
+        }
+
+        .emergency__container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .custom__card {
+            border-radius: 15px;
+            padding: 8px 15px;
+            width: fit-content;
+            min-width: 150px;
+            display: flex;
+            align-items: center;
+            gap: 20px
+        }
+
+        .all__patients {
+            background: linear-gradient(to bottom, #e0f7ff, #a5d8ff);
+            border: 2px solid #a100c9;
+        }
+
+        .Pending {
+            background: linear-gradient(to bottom, #ffffff, #ffe499);
+            border: 2px solid #ffbb00;
+        }
+
+        .custom__icon {
+            margin-bottom: 5px;
+        }
+
+        .card__content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .check__icon {
+            color: #00cc00;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .emergency__container a {
+            text-decoration: none;
+            color: #000;
+        }
+    </style>
+@endpush
+
 @section('content')
-    @push('css')
-        <style>
-            .badge {
-                width: 30px;
-                height: 30px;
-                border-radius: 50%;
-            }
-
-            .badge-triage-yellow {
-                background-color: #ffeb3b;
-            }
-
-            .badge-triage-red {
-                background-color: #f44336;
-            }
-
-            .badge-triage-green {
-                background-color: #4caf50;
-            }
-
-            /* Custom CSS for profile */
-            .profile {
-                display: flex;
-                align-items: center;
-            }
-
-            .profile img {
-                margin-right: 10px;
-                border-radius: 50%;
-            }
-
-            .profile .info {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .profile .info strong {
-                font-size: 14px;
-            }
-
-            .profile .info span {
-                font-size: 12px;
-                color: #777;
-            }
-
-            .emergency__container {
-                display: flex;
-                align-items: center;
-                gap: 20px;
-            }
-
-            .custom__card {
-                border-radius: 15px;
-                padding: 8px 15px;
-                width: fit-content;
-                min-width: 150px;
-                display: flex;
-                align-items: center;
-                gap: 20px
-            }
-
-            .all__patients {
-                background: linear-gradient(to bottom, #e0f7ff, #a5d8ff);
-                border: 2px solid #a100c9;
-            }
-
-            .Pending {
-                background: linear-gradient(to bottom, #ffffff, #ffe499);
-                border: 2px solid #ffbb00;
-            }
-
-            .custom__icon {
-                margin-bottom: 5px;
-            }
-
-            .card__content {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-
-            .check__icon {
-                color: #00cc00;
-                font-style: normal;
-                font-weight: bold;
-                font-size: 14px;
-            }
-
-            .emergency__container a {
-                text-decoration: none;
-                color: #000;
-            }
-        </style>
-    @endpush
-
     <div class="row">
         <div class="col-md-12">
             <div class="emergency__container">
+                <h4 class="fw-bold">Bedah Sentral</h4>
 
-                {{-- <a href="{{ route('rawat-inap.unit.aktif', $unit->kd_unit) }}">
+                <a href="{{ route('operasi.index') }}">
                     <div class="custom__card all__patients">
                         <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
                         <div class="text-center">
@@ -110,7 +111,7 @@
                     </div>
                 </a>
 
-                <a href="{{ route('rawat-inap.unit.pending', $unit->kd_unit) }}">
+                <a href="{{ route('operasi.pending-order') }}">
                     <div class="custom__card Pending">
                         <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
                         <div class="text-center">
@@ -118,8 +119,7 @@
                             <p class="m-0 p-0 fs-4 fw-bold">33</p>
                         </div>
                     </div>
-                </a> --}}
-
+                </a>
             </div>
         </div>
     </div>

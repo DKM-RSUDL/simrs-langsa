@@ -79,7 +79,7 @@ class OperasiIBSController extends Controller
         DB::beginTransaction();
         try {
             $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-
+            $nginap = $this->baseService->getNginapData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
             // dd($dataMedis);
 
             $request->validate([
@@ -102,7 +102,8 @@ class OperasiIBSController extends Controller
                 'tgl_jadwal' => $request->input('tanggal_jadwal'),
                 'kd_unit' => $kd_unit,
                 'no_kamar' => $request->input('kamar_operasi'),
-                'kd_unit_kamar' => $request->input('kamar_operasi'),
+                'kd_unit_kamar' => $nginap ? $nginap->kd_unit_kamar : null,
+                'kd_kamar_order' => $nginap ? $nginap->kd_unit_kamar : null,
                 'kd_sub_spc' => $request->input('sub_spesialisasi'),
                 'kd_spc' => $request->input('spesialisasi'),
                 'kd_jenis_op' => $request->input('jenis_operasi'),
@@ -112,8 +113,8 @@ class OperasiIBSController extends Controller
                 'no_transaksi' => $dataMedis->no_transaksi,
                 'kd_kasir' => $dataMedis->kd_kasir,
                 'kd_pasien' => $kd_pasien,
-                'kd_unit_kamar' => $request->input('kamar_operasi'),
                 'kd_dokter' => $request->input('dokter'),
+                'penjamin' => $dataMedis->customer,
                 'batal' => 0,
                 'user_create' => Auth::id(),
                 'diagnosis' => $request->input('diagnosa_medis'),
