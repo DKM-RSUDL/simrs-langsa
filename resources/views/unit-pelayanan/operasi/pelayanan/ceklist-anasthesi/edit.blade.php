@@ -38,8 +38,13 @@
                             </div>
                             <div class="form-group">
                                 <label style="min-width: 300px;">Teknik Anesthesia</label>
-                                <input type="text" class="form-control" name="teknik_anesthesia"
-                                    value="{{ isset($ceklistKesiapanAnesthesi->teknik_anesthesia) ? $ceklistKesiapanAnesthesi->teknik_anesthesia : '' }}">
+                                <select name="teknik_anesthesia" id="teknik_anesthesia" class="form-select">
+                                    <option value="">--Pilih--</option>
+                                    @foreach ($jenisAnastesi as $item)
+                                        <option value="{{ $item->kd_jenis_anastesi }}" @selected($item->kd_jenis_anastesi == $ceklistKesiapanAnesthesi->teknik_anesthesia)>
+                                            {{ $item->jenis_anastesi }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
 
