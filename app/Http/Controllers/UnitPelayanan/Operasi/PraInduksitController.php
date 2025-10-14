@@ -137,6 +137,14 @@ class PraInduksitController extends Controller
             $praInduksitCtkp->nilai_skala_vas = $request->nilai_skala_vas;
             $praInduksitCtkp->lanjut_ruang = $request->lanjut_ruang;
             $praInduksitCtkp->catatan_pemulihan = $request->catatan_pemulihan;
+
+            // Score Aldrete
+            $praInduksitCtkp->aktivitas = $request->aktivitas;
+            $praInduksitCtkp->sirkulasi = $request->sirkulasi;
+            $praInduksitCtkp->pernafasan = $request->pernafasan;
+            $praInduksitCtkp->kesadaran = $request->kesadaran;
+            $praInduksitCtkp->warna_kulit = $request->warna_kulit;
+            $praInduksitCtkp->total = $request->total;
             $praInduksitCtkp->save();
 
             $request->validate([
@@ -310,6 +318,14 @@ class PraInduksitController extends Controller
             $praInduksitCtkp->nilai_skala_vas = $request->nilai_skala_vas;
             $praInduksitCtkp->lanjut_ruang = $request->lanjut_ruang;
             $praInduksitCtkp->catatan_pemulihan = $request->catatan_pemulihan;
+
+            // Score Aldrete
+            $praInduksitCtkp->aktivitas = $request->aktivitas;
+            $praInduksitCtkp->sirkulasi = $request->sirkulasi;
+            $praInduksitCtkp->pernafasan = $request->pernafasan;
+            $praInduksitCtkp->kesadaran = $request->kesadaran;
+            $praInduksitCtkp->warna_kulit = $request->warna_kulit;
+            $praInduksitCtkp->total = $request->total;
             $praInduksitCtkp->save();
 
             $request->validate([

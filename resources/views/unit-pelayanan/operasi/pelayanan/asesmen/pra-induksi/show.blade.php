@@ -15,7 +15,7 @@
                 <x-button-previous />
 
                 @include('components.page-header', [
-                    'title' => 'Rincian Pra Induksi',
+                    'title' => 'Detail Rincian Pra Induksi',
                     'description' => 'Rincian data pra induksi pasien dengan mengisi formulir di bawah ini.',
                 ])
                 <div class="section-separator mt-0" id="dataMasuk">
@@ -394,6 +394,44 @@
                         <input type="text"
                             value="{{ $okPraInduksi->okPraInduksiCtkp->kesadaran_pemulihan_ckp ?? '' }}"
                             class="form-control" disabled>
+                    </div>
+
+                    <label style="min-width: 200px;" class=" fw-bold">Score Aldrete</label>
+                    <div class="form-group">
+                        <label style="min-width: 200px;">Aktivitas</label>
+                        <input disabled type="number" name="aktivitas" id="aktivitas"
+                            class="form-control pas-input" placeholder="Aktivitas"
+                            value="{{ $okPraInduksi->okPraInduksiCtkp->aktivitas ?? '' }}">
+                    </div>
+                    <div class="form-group">
+                        <label style="min-width: 200px;">Sirkulasi</label>
+                        <input disabled type="number" name="sirkulasi" id="sirkulasi"
+                            class="form-control pas-input" placeholder="Sirkulasi"
+                            value="{{ $okPraInduksi->okPraInduksiCtkp->sirkulasi ?? '' }}">
+                    </div>
+                    <div class="form-group">
+                        <label style="min-width: 200px;">Pernafasan</label>
+                        <input disabled type="number" name="pernafasan" id="pernafasan"
+                            class="form-control pas-input" placeholder="Pernafasan"
+                            value="{{ $okPraInduksi->okPraInduksiCtkp->pernafasan ?? '' }}">
+                    </div>
+                    <div class="form-group">
+                        <label style="min-width: 200px;">Kesadaran</label>
+                        <input disabled type="number" name="kesadaran" id="kesadaran"
+                            class="form-control pas-input" placeholder="Kesadaran"
+                            value="{{ $okPraInduksi->okPraInduksiCtkp->kesadaran ?? '' }}">
+                    </div>
+                    <div class="form-group">
+                        <label style="min-width: 200px;">Warna kulit</label>
+                        <input disabled type="number" name="warna_kulit" id="warna_kulit"
+                            class="form-control pas-input" placeholder="Warna kulit"
+                            value="{{ $okPraInduksi->okPraInduksiCtkp->warna_kulit ?? '' }}">
+                    </div>
+                    <div class="form-group">
+                        <label style="min-width: 200px;">Total</label>
+                        <input disabled type="number" name="total" id="total"
+                            class="form-control pas-input" placeholder="Total"
+                            value="{{ $okPraInduksi->okPraInduksiCtkp->total ?? '' }}">
                     </div>
 
                     <div class="alert alert-info mt-4">
@@ -974,7 +1012,7 @@ bg-success text-white
                             @endif
 
                             <!-- Kesimpulan Nyeri Section -->
-                            <div class="card mt-3">
+                            <div class=" mt-3">
                                 <div class="card-header bg-dark text-white">
                                     <h6 class="card-title mb-0">Kesimpulan Nyeri</h6>
                                 </div>
@@ -1051,542 +1089,579 @@ bg-success
                     </div>
 
                     <!-- Patient Score Information -->
-                    <div class="section-separator mt-4">
-                        <h6 class="fw-bold">Skala Pada Pasien</h6>
-                        @if (isset($patientScoreData['selected_score']))
-                            <div class="form-group">
-                                <label style="min-width: 200px;">Skala yang Digunakan</label>
-                                <input type="text" class="form-control"
-                                    value="{{ ucfirst($patientScoreData['selected_score'] ?? '') }}" disabled>
+                    <div class="form-group">
+                        <label style="min-width: 200px;">Skala Pada Pasien</label>
+                        <select name="skala_pasien" id="skalaPasien" class="form-control" disabled>
+                            <option value="" disabled {{ !isset($okPraInduksi->okPraInduksiCtkp->skala_pasien) ? 'selected' : '' }}>Pilih skala Pemantauan Pasca-Anestesi</option>
+                            <option value="bromage" {{ ($okPraInduksi->okPraInduksiCtkp->skala_pasien ?? '') == 'bromage' ? 'selected' : '' }}>Bromage Score (SAB/Subarachnoid Block - Anak)</option>
+                            <option value="steward" {{ ($okPraInduksi->okPraInduksiCtkp->skala_pasien ?? '') == 'steward' ? 'selected' : '' }}>Steward Score (Anak-anak)</option>
+                            <option value="aldrete" {{ ($okPraInduksi->okPraInduksiCtkp->skala_pasien ?? '') == 'aldrete' ? 'selected' : '' }}>Score Aldrete</option>
+                            <option value="padds" {{ ($okPraInduksi->okPraInduksiCtkp->skala_pasien ?? '') == 'padds' ? 'selected' : '' }}>Score PADDS (Khusus Rawat Jalan)</option>
+                        </select>
+                    </div>
+
+                    <!-- Hidden input untuk menyimpan semua data dalam format JSON -->
+                    <input type="hidden" id="patientScoreDataJSON" name="patient_score_data_json" value="{{ $okPraInduksi->okPraInduksiCtkp->patient_score_data_json ?? '{}' }}">
+
+                    <!-- Bromage Score Form - Initially Hidden -->
+                    <div id="bromageScoreForm" class="score-form" style="display: none;">
+                        <h5 class="text-center mt-3 mb-4">Penilaian Bromage Score (SAB/Subarachnoid Block - Anak)</h5>
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th width="25%">Score Pasca Anestesi dan Sedasi</th>
+                                    <th width="8%">Score</th>
+                                    <th width="17%">Jam Pasca Anestesi</th>
+                                    <th width="10%">15'</th>
+                                    <th width="10%">30'</th>
+                                    <th width="10%">45'</th>
+                                    <th width="10%">1 jam</th>
+                                    <th width="10%">2 jam</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Row 1: Gerakan penuh dari tungkai -->
+                                <tr>
+                                    <td><strong>Gerakan penuh dari tungkai</strong></td>
+                                    <td class="text-center"><strong>0</strong></td>
+                                    <td>
+                                        <input type="time" name="bromage_gerakan_penuh" class="form-control form-control-sm" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input bromage-radio" type="radio" name="bromage_time_15" value="gerakan_penuh_0" data-group="gerakan_penuh" data-score="0" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input bromage-radio" type="radio" name="bromage_time_30" value="gerakan_penuh_0" data-group="gerakan_penuh" data-score="0" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input bromage-radio" type="radio" name="bromage_time_45" value="gerakan_penuh_0" data-group="gerakan_penuh" data-score="0" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input bromage-radio" type="radio" name="bromage_time_60" value="gerakan_penuh_0" data-group="gerakan_penuh" data-score="0" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input bromage-radio" type="radio" name="bromage_time_120" value="gerakan_penuh_0" data-group="gerakan_penuh" data-score="0" disabled>
+                                    </td>
+                                </tr>
+                                <!-- Row 2: Tak mampu ekstensi tungkai -->
+                                <tr>
+                                    <td><strong>Tak mampu ekstensi tungkai</strong></td>
+                                    <td class="text-center"><strong>1</strong></td>
+                                    <td>
+                                        <input type="time" name="bromage_tak_ekstensi" class="form-control form-control-sm" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input bromage-radio" type="radio" name="bromage_time_15" value="tak_ekstensi_1" data-group="tak_ekstensi" data-score="1" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input bromage-radio" type="radio" name="bromage_time_30" value="tak_ekstensi_1" data-group="tak_ekstensi" data-score="1" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input bromage-radio" type="radio" name="bromage_time_45" value="tak_ekstensi_1" data-group="tak_ekstensi" data-score="1" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input bromage-radio" type="radio" name="bromage_time_60" value="tak_ekstensi_1" data-group="tak_ekstensi" data-score="1" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input bromage-radio" type="radio" name="bromage_time_120" value="tak_ekstensi_1" data-group="tak_ekstensi" data-score="1" disabled>
+                                    </td>
+                                </tr>
+                                <!-- Row 3: Tak mampu fleksi lutut -->
+                                <tr>
+                                    <td><strong>Tak mampu fleksi lutut</strong></td>
+                                    <td class="text-center"><strong>2</strong></td>
+                                    <td>
+                                        <input type="time" name="bromage_tak_fleksi_lutut" class="form-control form-control-sm" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input bromage-radio" type="radio" name="bromage_time_15" value="tak_fleksi_lutut_2" data-group="tak_fleksi_lutut" data-score="2" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input bromage-radio" type="radio" name="bromage_time_30" value="tak_fleksi_lutut_2" data-group="tak_fleksi_lutut" data-score="2" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input bromage-radio" type="radio" name="bromage_time_45" value="tak_fleksi_lutut_2" data-group="tak_fleksi_lutut" data-score="2" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input bromage-radio" type="radio" name="bromage_time_60" value="tak_fleksi_lutut_2" data-group="tak_fleksi_lutut" data-score="2" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input bromage-radio" type="radio" name="bromage_time_120" value="tak_fleksi_lutut_2" data-group="tak_fleksi_lutut" data-score="2" disabled>
+                                    </td>
+                                </tr>
+                                <!-- Row 4: Tak mampu fleksi pergelangan kaki -->
+                                <tr>
+                                    <td><strong>Tak mampu fleksi pergelangan kaki</strong></td>
+                                    <td class="text-center"><strong>3</strong></td>
+                                    <td>
+                                        <input type="time" name="bromage_tak_fleksi_pergelangan" class="form-control form-control-sm" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input bromage-radio" type="radio" name="bromage_time_15" value="tak_fleksi_pergelangan_3" data-group="tak_fleksi_pergelangan" data-score="3" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input bromage-radio" type="radio" name="bromage_time_30" value="tak_fleksi_pergelangan_3" data-group="tak_fleksi_pergelangan" data-score="3" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input bromage-radio" type="radio" name="bromage_time_45" value="tak_fleksi_pergelangan_3" data-group="tak_fleksi_pergelangan" data-score="3" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input bromage-radio" type="radio" name="bromage_time_60" value="tak_fleksi_pergelangan_3" data-group="tak_fleksi_pergelangan" data-score="3" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input bromage-radio" type="radio" name="bromage_time_120" value="tak_fleksi_pergelangan_3" data-group="tak_fleksi_pergelangan" data-score="3" disabled>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-info">
+                                    <td colspan="2"><strong>TOTAL SCORE</strong></td>
+                                    <td colspan="6">
+                                        <div class="d-flex align-items-center">
+                                            <span class="me-3"><strong id="bromage_total_score">0</strong></span>
+                                            <span class="badge bg-warning text-dark" id="bromage_status">
+                                                Boleh pindah ruang jika score ≥ 2
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3"><strong>Jam Pindah Ruang Perawatan</strong></td>
+                                    <td colspan="5">
+                                        <input type="time" name="bromage_jam_pindah" class="form-control form-control-sm" disabled>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <input type="hidden" name="bromage_total_score_value" id="bromage_total_score_value" value="0">
+                    </div>
+
+                    <!-- Steward Score Form - Initially Hidden -->
+                    <div id="stewardScoreForm" class="score-form" style="display: none;">
+                        <h5 class="text-center mt-3 mb-4">Penilaian Steward Score (Anak-anak)</h5>
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th width="20%" rowspan="2">Score Pasca Anestesi dan Sedasi</th>
+                                    <th width="15%" rowspan="2">Score</th>
+                                    <th width="15%" rowspan="2">Jam Pasca Anestesi</th>
+                                    <th colspan="5" class="text-center">Jam</th>
+                                </tr>
+                                <tr>
+                                    <th width="10%">15'</th>
+                                    <th width="10%">30'</th>
+                                    <th width="10%">45'</th>
+                                    <th width="10%">1</th>
+                                    <th width="10%">2</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Kesadaran -->
+                                <tr>
+                                    <td rowspan="3"><strong>Kesadaran</strong></td>
+                                    <td>Sadar penuh, responsif</td>
+                                    <td class="text-center"><strong>2</strong></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_kesadaran_15" value="sadar_2" data-group="kesadaran" data-score="2">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_kesadaran_30" value="sadar_2" data-group="kesadaran" data-score="2">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_kesadaran_45" value="sadar_2" data-group="kesadaran" data-score="2">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_kesadaran_60" value="sadar_2" data-group="kesadaran" data-score="2">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_kesadaran_120" value="sadar_2" data-group="kesadaran" data-score="2">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Bangun saat dipanggil/nama disebut</td>
+                                    <td class="text-center"><strong>1</strong></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_kesadaran_15" value="bangun_1" data-group="kesadaran" data-score="1">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_kesadaran_30" value="bangun_1" data-group="kesadaran" data-score="1">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_kesadaran_45" value="bangun_1" data-group="kesadaran" data-score="1">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_kesadaran_60" value="bangun_1" data-group="kesadaran" data-score="1">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_kesadaran_120" value="bangun_1" data-group="kesadaran" data-score="1">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Tidak responsif</td>
+                                    <td class="text-center"><strong>0</strong></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_kesadaran_15" value="tidak_responsif_0" data-group="kesadaran" data-score="0">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_kesadaran_30" value="tidak_responsif_0" data-group="kesadaran" data-score="0">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_kesadaran_45" value="tidak_responsif_0" data-group="kesadaran" data-score="0">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_kesadaran_60" value="tidak_responsif_0" data-group="kesadaran" data-score="0">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_kesadaran_120" value="tidak_responsif_0" data-group="kesadaran" data-score="0">
+                                    </td>
+                                </tr>
+                                <!-- Respirasi -->
+                                <tr>
+                                    <td rowspan="3"><strong>Respirasi</strong></td>
+                                    <td>Bernapas normal/menangis</td>
+                                    <td class="text-center"><strong>2</strong></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_respirasi_15" value="normal_2" data-group="respirasi" data-score="2">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_respirasi_30" value="normal_2" data-group="respirasi" data-score="2">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_respirasi_45" value="normal_2" data-group="respirasi" data-score="2">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_respirasi_60" value="normal_2" data-group="respirasi" data-score="2">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_respirasi_120" value="normal_2" data-group="respirasi" data-score="2">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Napas dangkal/terbatas</td>
+                                    <td class="text-center"><strong>1</strong></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_respirasi_15" value="dangkal_1" data-group="respirasi" data-score="1">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_respirasi_30" value="dangkal_1" data-group="respirasi" data-score="1">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_respirasi_45" value="dangkal_1" data-group="respirasi" data-score="1">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_respirasi_60" value="dangkal_1" data-group="respirasi" data-score="1">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_respirasi_120" value="dangkal_1" data-group="respirasi" data-score="1">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Apnea/perlu bantuan napas</td>
+                                    <td class="text-center"><strong>0</strong></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_respirasi_15" value="apnea_0" data-group="respirasi" data-score="0">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_respirasi_30" value="apnea_0" data-group="respirasi" data-score="0">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_respirasi_45" value="apnea_0" data-group="respirasi" data-score="0">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_respirasi_60" value="apnea_0" data-group="respirasi" data-score="0">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_respirasi_120" value="apnea_0" data-group="respirasi" data-score="0">
+                                    </td>
+                                </tr>
+                                <!-- Aktivitas Motorik -->
+                                <tr>
+                                    <td rowspan="3"><strong>Aktivitas Motorik</strong></td>
+                                    <td>Gerakan aktif/beraturan</td>
+                                    <td class="text-center"><strong>2</strong></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_motorik_15" value="aktif_2" data-group="motorik" data-score="2">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_motorik_30" value="aktif_2" data-group="motorik" data-score="2">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_motorik_45" value="aktif_2" data-group="motorik" data-score="2">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_motorik_60" value="aktif_2" data-group="motorik" data-score="2">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_motorik_120" value="aktif_2" data-group="motorik" data-score="2">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Gerakan lemah/terbatas</td>
+                                    <td class="text-center"><strong>1</strong></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_motorik_15" value="lemah_1" data-group="motorik" data-score="1">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_motorik_30" value="lemah_1" data-group="motorik" data-score="1">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_motorik_45" value="lemah_1" data-group="motorik" data-score="1">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_motorik_60" value="lemah_1" data-group="motorik" data-score="1">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_motorik_120" value="lemah_1" data-group="motorik" data-score="1">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Tidak bergerak</td>
+                                    <td class="text-center"><strong>0</strong></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_motorik_15" value="tidak_bergerak_0" data-group="motorik" data-score="0">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_motorik_30" value="tidak_bergerak_0" data-group="motorik" data-score="0">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_motorik_45" value="tidak_bergerak_0" data-group="motorik" data-score="0">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_motorik_60" value="tidak_bergerak_0" data-group="motorik" data-score="0">
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="form-check-input steward-radio" disabled type="radio" name="steward_motorik_120" value="tidak_bergerak_0" data-group="motorik" data-score="0">
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-info">
+                                    <td colspan="3"><strong>TOTAL SCORE</strong></td>
+                                    <td colspan="5">
+                                        <div class="d-flex align-items-center">
+                                            <span class="me-3"><strong id="steward_total_score">0</strong></span>
+                                            <span class="badge bg-warning text-dark" id="steward_status">
+                                                Boleh pindah ruang jika score ≥ 5
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3"><strong>Jam Pindah Ruang</strong></td>
+                                    <td colspan="5">
+                                        <input type="time" name="steward_jam_pindah" class="form-control form-control-sm" disabled>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <input type="hidden" name="steward_total_score_value" id="steward_total_score_value" value="0">
+                    </div>
+
+                    <!-- Aldrete Score Form - Unchanged -->
+                    <div id="aldreteScoreForm" class="score-form" style="display: none;">
+                        <h5 class="text-center mt-3">Penilaian Score Aldrete</h5>
+                        <div class="form-group">
+                            <label style="min-width: 200px;">Aktivitas Motorik</label>
+                            <select name="aktivitas_motorik" class="form-control" disabled>
+                                <option value="" disabled selected>pilih</option>
+                                <option value="0">Seluruh ekstremitas dapat digerakkan</option>
+                                <option value="1">Dua ekstremitas dapat digerakkan</option>
+                                <option value="2">Tidak dapat bergerak</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label style="min-width: 200px;">Respirasi</label>
+                            <select name="respirasi" class="form-control" disabled>
+                                <option value="" disabled selected>pilih</option>
+                                <option value="0">Dapat bernapas dalam dan batuk</option>
+                                <option value="1">Dangkal namun pertukaran udara adekuat</option>
+                                <option value="2">Apneu atau obstruksi</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label style="min-width: 200px;">Sirkulasi</label>
+                            <select name="aldrete_sirkulasi" class="form-control" disabled>
+                                <option value="" disabled selected>pilih</option>
+                                <option value="0">Tekanan darah menyimpang < 20 mmHg dari tekanan darah pre anestesi</option>
+                                <option value="1">Tekanan darah menyimpang 20-50 mmHg dari tekanan darah pre anestesi</option>
+                                <option value="2">Tekanan darah menyimpang >50 mmHg dari tekanan darah pre anestesi</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label style="min-width: 200px;">Kesadaran</label>
+                            <select name="aldrete_kesadaran" class="form-control" disabled>
+                                <option value="" disabled selected>pilih</option>
+                                <option value="0">Tidak berespon</option>
+                                <option value="1">Bangun namun cepat kembali tertidur</option>
+                                <option value="2">Sadar serta orientasi</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label style="min-width: 200px;">Warna Kulit</label>
+                            <select name="aldrete_warna_kulit" class="form-control" disabled>
+                                <option value="" disabled selected>pilih</option>
+                                <option value="0">Sianosis</option>
+                                <option value="1">Pucat, ikterik</option>
+                                <option value="2">Merah muda</option>
+                            </select>
+                        </div>
+                        <div class="bg-success text-white p-2 rounded mb-3">
+                            <strong>Kesimpulan : </strong> Boleh pindah ruang / Tidak Boleh pindah ruang
+                        </div>
+                        <h6 class="text-center mt-2">Data Penilaian Score Aldrete</h6>
+                        <div class="form-group">
+                            <label style="min-width: 200px;">Tanggal Jam Pasca Anestesi</label>
+                            <div class="input-group">
+                                <input type="datetime-local" name="aldrete_tanggal" class="form-control" disabled>
                             </div>
-
-                            @if ($patientScoreData['selected_score'] == 'bromage')
-                                <div class="mb-3">
-                                    <div class="card-header">
-                                        <h6 class="card-title">Bromage Score (SAB/Subarachnoid Block)</h6>
-                                    </div>
-                                    <div class="">
-                                        <table class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>Score Pasca Anestesi dan Sedasi</th>
-                                                    <th>Jam</th>
-                                                    <th>15'</th>
-                                                    <th>30'</th>
-                                                    <th>45'</th>
-                                                    <th>1</th>
-                                                    <th>2</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Post anestesi vital sign</td>
-                                                    <td>{{ $patientScoreData['bromage_data']['time'] ?? '-' }}</td>
-                                                    <td colspan="5"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Gerakan penuh dari tungkai</td>
-                                                    <td>{{ $patientScoreData['bromage_data']['gerakan_penuh']['jam'] ?? '-' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['gerakan_penuh']['checked_15'] ? '✓' : '' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['gerakan_penuh']['checked_30'] ? '✓' : '' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['gerakan_penuh']['checked_45'] ? '✓' : '' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['gerakan_penuh']['checked_1'] ? '✓' : '' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['gerakan_penuh']['checked_2'] ? '✓' : '' }}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Tak mampu ekstensi tungkai</td>
-                                                    <td>{{ $patientScoreData['bromage_data']['tak_ekstensi']['jam'] ?? '-' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['tak_ekstensi']['checked_15'] ? '✓' : '' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['tak_ekstensi']['checked_30'] ? '✓' : '' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['tak_ekstensi']['checked_45'] ? '✓' : '' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['tak_ekstensi']['checked_1'] ? '✓' : '' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['tak_ekstensi']['checked_2'] ? '✓' : '' }}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Tak mampu fleksi/lutut</td>
-                                                    <td>{{ $patientScoreData['bromage_data']['tak_fleksi']['jam'] ?? '-' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['tak_fleksi']['checked_15'] ? '✓' : '' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['tak_fleksi']['checked_30'] ? '✓' : '' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['tak_fleksi']['checked_45'] ? '✓' : '' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['tak_fleksi']['checked_1'] ? '✓' : '' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['tak_fleksi']['checked_2'] ? '✓' : '' }}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Tak mampu fleksi/pergerakan kaki</td>
-                                                    <td>{{ $patientScoreData['bromage_data']['tak_pergerakan']['jam'] ?? '-' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['tak_pergerakan']['checked_15'] ? '✓' : '' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['tak_pergerakan']['checked_30'] ? '✓' : '' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['tak_pergerakan']['checked_45'] ? '✓' : '' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['tak_pergerakan']['checked_1'] ? '✓' : '' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['tak_pergerakan']['checked_2'] ? '✓' : '' }}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Jam Pindah Ruang Perawatan</td>
-                                                    <td>{{ $patientScoreData['bromage_data']['jam_pindah']['jam'] ?? '-' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['jam_pindah']['checked_15'] ? '✓' : '' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['jam_pindah']['checked_30'] ? '✓' : '' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['jam_pindah']['checked_45'] ? '✓' : '' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['jam_pindah']['checked_1'] ? '✓' : '' }}
-                                                    </td>
-                                                    <td>{{ $patientScoreData['bromage_data']['jam_pindah']['checked_2'] ? '✓' : '' }}
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            @endif
-
-                            @if ($patientScoreData['selected_score'] == 'steward' && !empty($patientScoreData['steward_data']))
-                                <!-- Steward Score Display -->
-                                <div class="mb-3">
-                                    <div class="card-header">
-                                        <h6 class="card-title">Steward Score (Anak-anak)</h6>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>Score Pasca Anestesi dan Sedasi</th>
-                                                    <th>Jam</th>
-                                                    <th>15'</th>
-                                                    <th>30'</th>
-                                                    <th>45'</th>
-                                                    <th>1</th>
-                                                    <th>2</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Post anestesi vital sign</td>
-                                                    <td>{{ $patientScoreData['steward_data']['time'] ?? '-' }}</td>
-                                                    <td colspan="5"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        Kesadaran:
-                                                        <span class="badge bg-info">
-                                                            @if (is_array($patientScoreData['steward_data']['kesadaran'] ?? null))
-                                                                {{ $patientScoreData['steward_data']['kesadaran']['value'] ?? 'Tidak ada data' }}
-                                                            @else
-                                                                {{ $patientScoreData['steward_data']['kesadaran'] ?? '-' }}
-                                                            @endif
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        @if (is_array($patientScoreData['steward_data']['kesadaran'] ?? null))
-                                                            {{ $patientScoreData['steward_data']['kesadaran']['jam'] ?? '-' }}
-                                                        @else
-                                                            {{ $patientScoreData['steward_data']['kesadaran_jam'] ?? '-' }}
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if (is_array($patientScoreData['steward_data']['kesadaran'] ?? null))
-                                                            {{ $patientScoreData['steward_data']['kesadaran']['checked_15'] ? '✓' : '' }}
-                                                        @else
-                                                            {{ isset($patientScoreData['steward_data']['kesadaran_15']) && $patientScoreData['steward_data']['kesadaran_15'] ? '✓' : '' }}
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if (is_array($patientScoreData['steward_data']['kesadaran'] ?? null))
-                                                            {{ $patientScoreData['steward_data']['kesadaran']['checked_30'] ? '✓' : '' }}
-                                                        @else
-                                                            {{ isset($patientScoreData['steward_data']['kesadaran_30']) && $patientScoreData['steward_data']['kesadaran_30'] ? '✓' : '' }}
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if (is_array($patientScoreData['steward_data']['kesadaran'] ?? null))
-                                                            {{ $patientScoreData['steward_data']['kesadaran']['checked_45'] ? '✓' : '' }}
-                                                        @else
-                                                            {{ isset($patientScoreData['steward_data']['kesadaran_45']) && $patientScoreData['steward_data']['kesadaran_45'] ? '✓' : '' }}
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if (is_array($patientScoreData['steward_data']['kesadaran'] ?? null))
-                                                            {{ $patientScoreData['steward_data']['kesadaran']['checked_1'] ? '✓' : '' }}
-                                                        @else
-                                                            {{ isset($patientScoreData['steward_data']['kesadaran_1']) && $patientScoreData['steward_data']['kesadaran_1'] ? '✓' : '' }}
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if (is_array($patientScoreData['steward_data']['kesadaran'] ?? null))
-                                                            {{ $patientScoreData['steward_data']['kesadaran']['checked_2'] ? '✓' : '' }}
-                                                        @else
-                                                            {{ isset($patientScoreData['steward_data']['kesadaran_2']) && $patientScoreData['steward_data']['kesadaran_2'] ? '✓' : '' }}
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        Respirasi:
-                                                        <span class="badge bg-info">
-                                                            @if (is_array($patientScoreData['steward_data']['respirasi'] ?? null))
-                                                                {{ $patientScoreData['steward_data']['respirasi']['value'] ?? 'Tidak ada data' }}
-                                                            @else
-                                                                {{ $patientScoreData['steward_data']['respirasi'] ?? '-' }}
-                                                            @endif
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        @if (is_array($patientScoreData['steward_data']['respirasi'] ?? null))
-                                                            {{ $patientScoreData['steward_data']['respirasi']['jam'] ?? '-' }}
-                                                        @else
-                                                            {{ $patientScoreData['steward_data']['respirasi_jam'] ?? '-' }}
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if (is_array($patientScoreData['steward_data']['respirasi'] ?? null))
-                                                            {{ $patientScoreData['steward_data']['respirasi']['checked_15'] ? '✓' : '' }}
-                                                        @else
-                                                            {{ isset($patientScoreData['steward_data']['respirasi_15']) && $patientScoreData['steward_data']['respirasi_15'] ? '✓' : '' }}
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if (is_array($patientScoreData['steward_data']['respirasi'] ?? null))
-                                                            {{ $patientScoreData['steward_data']['respirasi']['checked_30'] ? '✓' : '' }}
-                                                        @else
-                                                            {{ isset($patientScoreData['steward_data']['respirasi_30']) && $patientScoreData['steward_data']['respirasi_30'] ? '✓' : '' }}
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if (is_array($patientScoreData['steward_data']['respirasi'] ?? null))
-                                                            {{ $patientScoreData['steward_data']['respirasi']['checked_45'] ? '✓' : '' }}
-                                                        @else
-                                                            {{ isset($patientScoreData['steward_data']['respirasi_45']) && $patientScoreData['steward_data']['respirasi_45'] ? '✓' : '' }}
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if (is_array($patientScoreData['steward_data']['respirasi'] ?? null))
-                                                            {{ $patientScoreData['steward_data']['respirasi']['checked_1'] ? '✓' : '' }}
-                                                        @else
-                                                            {{ isset($patientScoreData['steward_data']['respirasi_1']) && $patientScoreData['steward_data']['respirasi_1'] ? '✓' : '' }}
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if (is_array($patientScoreData['steward_data']['respirasi'] ?? null))
-                                                            {{ $patientScoreData['steward_data']['respirasi']['checked_2'] ? '✓' : '' }}
-                                                        @else
-                                                            {{ isset($patientScoreData['steward_data']['respirasi_2']) && $patientScoreData['steward_data']['respirasi_2'] ? '✓' : '' }}
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        Aktivitas Motorik:
-                                                        <span class="badge bg-info">
-                                                            @if (is_array($patientScoreData['steward_data']['motorik'] ?? null))
-                                                                {{ $patientScoreData['steward_data']['motorik']['value'] ?? 'Tidak ada data' }}
-                                                            @else
-                                                                {{ $patientScoreData['steward_data']['motorik'] ?? '-' }}
-                                                            @endif
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        @if (is_array($patientScoreData['steward_data']['motorik'] ?? null))
-                                                            {{ $patientScoreData['steward_data']['motorik']['jam'] ?? '-' }}
-                                                        @else
-                                                            {{ $patientScoreData['steward_data']['motorik_jam'] ?? '-' }}
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if (is_array($patientScoreData['steward_data']['motorik'] ?? null))
-                                                            {{ $patientScoreData['steward_data']['motorik']['checked_15'] ? '✓' : '' }}
-                                                        @else
-                                                            {{ isset($patientScoreData['steward_data']['motorik_15']) && $patientScoreData['steward_data']['motorik_15'] ? '✓' : '' }}
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if (is_array($patientScoreData['steward_data']['motorik'] ?? null))
-                                                            {{ $patientScoreData['steward_data']['motorik']['checked_30'] ? '✓' : '' }}
-                                                        @else
-                                                            {{ isset($patientScoreData['steward_data']['motorik_30']) && $patientScoreData['steward_data']['motorik_30'] ? '✓' : '' }}
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if (is_array($patientScoreData['steward_data']['motorik'] ?? null))
-                                                            {{ $patientScoreData['steward_data']['motorik']['checked_45'] ? '✓' : '' }}
-                                                        @else
-                                                            {{ isset($patientScoreData['steward_data']['motorik_45']) && $patientScoreData['steward_data']['motorik_45'] ? '✓' : '' }}
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if (is_array($patientScoreData['steward_data']['motorik'] ?? null))
-                                                            {{ $patientScoreData['steward_data']['motorik']['checked_1'] ? '✓' : '' }}
-                                                        @else
-                                                            {{ isset($patientScoreData['steward_data']['motorik_1']) && $patientScoreData['steward_data']['motorik_1'] ? '✓' : '' }}
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if (is_array($patientScoreData['steward_data']['motorik'] ?? null))
-                                                            {{ $patientScoreData['steward_data']['motorik']['checked_2'] ? '✓' : '' }}
-                                                        @else
-                                                            {{ isset($patientScoreData['steward_data']['motorik_2']) && $patientScoreData['steward_data']['motorik_2'] ? '✓' : '' }}
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Jam Pindah Ruang</td>
-                                                    <td colspan="6">
-                                                        @if (is_array($patientScoreData['steward_data']['jam_pindah'] ?? null))
-                                                            {{ json_encode($patientScoreData['steward_data']['jam_pindah']) }}
-                                                        @else
-                                                            {{ $patientScoreData['steward_data']['jam_pindah'] ?? '-' }}
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            @endif
-
-                            <!-- Aldrete Score Display -->
-                            @if ($patientScoreData['selected_score'] == 'aldrete' && !empty($patientScoreData['aldrete_data']))
-                                <div class="mb-3">
-                                    <div class="card-header">
-                                        <h6 class="card-title">Score Aldrete</h6>
-                                    </div>
-                                    <div class="">
-                                        <h6 class="text-center mt-4">Data Penilaian Score Aldrete</h6>
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Tanggal Jam Pasca Anestesi</label>
-                                            <input type="text" class="form-control"
-                                                value="{{ $patientScoreData['aldrete_data']['aldrete_tanggal'] ?? '-' }}"
-                                                disabled>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Interval/Jam</th>
+                                    <th>Skor</th>
+                                    <th>Keterangan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>
+                                            <input type="time" name="interval_jam_1" class="form-control">
                                         </div>
-
-                                        <div class="table-responsive mt-3">
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Interval/Jam</th>
-                                                        <th>Skor</th>
-                                                        <th>Keterangan</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @if (isset($patientScoreData['aldrete_data']['interval_data']) &&
-                                                            is_array($patientScoreData['aldrete_data']['interval_data']))
-                                                        @foreach ($patientScoreData['aldrete_data']['interval_data'] as $interval)
-                                                            <tr>
-                                                                <td>{{ $interval['jam'] ?? '-' }}</td>
-                                                                <td>{{ $interval['skor'] ?? '-' }}</td>
-                                                                <td>{{ $interval['keterangan'] ?? '-' }}</td>
-                                                            </tr>
-                                                        @endforeach
-                                                    @else
-                                                        <tr>
-                                                            <td>{{ $patientScoreData['aldrete_data']['interval_jam_1'] ?? '-' }}
-                                                            </td>
-                                                            <td>{{ $patientScoreData['aldrete_data']['skor_1'] ?? '-' }}
-                                                            </td>
-                                                            <td>{{ $patientScoreData['aldrete_data']['keterangan_1'] ?? '-' }}
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>{{ $patientScoreData['aldrete_data']['interval_jam_2'] ?? '-' }}
-                                                            </td>
-                                                            <td>{{ $patientScoreData['aldrete_data']['skor_2'] ?? '-' }}
-                                                            </td>
-                                                            <td>{{ $patientScoreData['aldrete_data']['keterangan_2'] ?? '-' }}
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>{{ $patientScoreData['aldrete_data']['interval_jam_3'] ?? '-' }}
-                                                            </td>
-                                                            <td>{{ $patientScoreData['aldrete_data']['skor_3'] ?? '-' }}
-                                                            </td>
-                                                            <td>{{ $patientScoreData['aldrete_data']['keterangan_3'] ?? '-' }}
-                                                            </td>
-                                                        </tr>
-                                                    @endif
-                                                </tbody>
-                                            </table>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="skor_1" class="form-control" min="0">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="keterangan_1" class="form-control">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>
+                                            <input type="time" name="interval_jam_2" class="form-control">
                                         </div>
-
-                                        <div class="bg-success text-white p-2 rounded mt-3 mb-3">
-                                            <strong>Kesimpulan Akhir: </strong>
-                                            {{ $patientScoreData['aldrete_data']['kesimpulan_akhir'] ?? ($patientScoreData['aldrete_data']['kesimpulan'] ?? 'Belum Ada Kesimpulan') }}
+                                    </td>
+                                    <td>
+                                        <input type="number" name="skor_2" class="form-control" min="0">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="keterangan_2" class="form-control">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>
+                                            <input type="time" name="interval_jam_3" class="form-control">
                                         </div>
-                                    </div>
-                                </div>
-                            @endif
+                                    </td>
+                                    <td>
+                                        <input type="number" name="skor_3" class="form-control" min="0">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="keterangan_3" class="form-control">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="bg-success text-white p-2 rounded mb-3">
+                            <strong>Kesimpulan : </strong> Boleh pindah ruang / Tidak Boleh pindah ruang
+                        </div>
+                    </div>
 
-                            @if ($patientScoreData['selected_score'] == 'padds' && !empty($patientScoreData['padds_data']))
-                                <!-- PADDS Score Display -->
-                                <div class="mb-3">
-                                    <div class="card-header">
-                                        <h6 class="card-title">Score PADDS (Khusus Rawat Jalan)</h6>
-                                    </div>
-                                    <div class="">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group mb-3">
-                                                    <label class="d-block mb-2">Tanda Vital</label>
-                                                    <div class="input-group">
-                                                        <span
-                                                            class="input-group-text">{{ $patientScoreData['padds_data']['padds_tanda_vital'] ?? '0' }}</span>
-                                                        <input type="text" class="form-control"
-                                                            value="@if (isset($patientScoreData['padds_data']['padds_tanda_vital'])) @if ($patientScoreData['padds_data']['padds_tanda_vital'] == '2') Tekanan darah dan nadi 15-24% dari pre Op @elseif($patientScoreData['padds_data']['padds_tanda_vital'] == '1') Tekanan darah dan nadi 25-40% dari pre Op @elseif($patientScoreData['padds_data']['padds_tanda_vital'] == '0') Tekanan darah dan nadi >40% dari pre Op @endif @endif"
-                                                            disabled>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group mb-3">
-                                                    <label class="d-block mb-2">Aktivitas</label>
-                                                    <div class="input-group">
-                                                        <span
-                                                            class="input-group-text">{{ $patientScoreData['padds_data']['padds_aktivitas'] ?? '0' }}</span>
-                                                        <input type="text" class="form-control"
-                                                            value="@if (isset($patientScoreData['padds_data']['padds_aktivitas'])) @if ($patientScoreData['padds_data']['padds_aktivitas'] == '2') Berjalan normal, tidak pusing saat berdiri @elseif($patientScoreData['padds_data']['padds_aktivitas'] == '1') Butuh bantuan untuk berjalan @elseif($patientScoreData['padds_data']['padds_aktivitas'] == '0') Tidak dapat berjalan @endif @endif"
-                                                            disabled>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group mb-3">
-                                                    <label class="d-block mb-2">Mual/muntah</label>
-                                                    <div class="input-group">
-                                                        <span
-                                                            class="input-group-text">{{ $patientScoreData['padds_data']['padds_mual_muntah'] ?? '0' }}</span>
-                                                        <input type="text" class="form-control"
-                                                            value="@if (isset($patientScoreData['padds_data']['padds_mual_muntah'])) @if ($patientScoreData['padds_data']['padds_mual_muntah'] == '2') Tidak ada atau ringan, tetap bisa makan @elseif($patientScoreData['padds_data']['padds_mual_muntah'] == '1') Sedang, terkontrol dengan obat @elseif($patientScoreData['padds_data']['padds_mual_muntah'] == '0') Berat, tidak terkontrol dengan obat @endif @endif"
-                                                            disabled>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group mb-3">
-                                                    <label class="d-block mb-2">Perdarahan</label>
-                                                    <div class="input-group">
-                                                        <span
-                                                            class="input-group-text">{{ $patientScoreData['padds_data']['padds_perdarahan'] ?? '0' }}</span>
-                                                        <input type="text" class="form-control"
-                                                            value="@if (isset($patientScoreData['padds_data']['padds_perdarahan'])) @if ($patientScoreData['padds_data']['padds_perdarahan'] == '2') Minimal (tidak perlu ganti verban) @elseif($patientScoreData['padds_data']['padds_perdarahan'] == '1') Sedang (perlu ganti verban 1-2 kali) @elseif($patientScoreData['padds_data']['padds_perdarahan'] == '0') Berat (perlu ganti verban 3 kali atau lebih) @endif @endif"
-                                                            disabled>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group mb-3">
-                                                    <label class="d-block mb-2">Nyeri</label>
-                                                    <div class="input-group">
-                                                        <span
-                                                            class="input-group-text">{{ $patientScoreData['padds_data']['padds_nyeri'] ?? '0' }}</span>
-                                                        <input type="text" class="form-control"
-                                                            value="@if (isset($patientScoreData['padds_data']['padds_nyeri'])) @if ($patientScoreData['padds_data']['padds_nyeri'] == '2') Nyeri ringan, nyaman, dapat diterima @elseif($patientScoreData['padds_data']['padds_nyeri'] == '1') Nyeri sedang sampai berat, terkontrol dengan analgesik oral @elseif($patientScoreData['padds_data']['padds_nyeri'] == '0') Nyeri berat, tidak terkontrol dengan analgesik oral @endif @endif"
-                                                            disabled>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group mb-3">
-                                                    <label class="d-block mb-2"
-                                                        style="background-color: #177F75; color: white; padding: 8px;">Kesimpulan</label>
-                                                    <div class="p-3 text-white rounded"
-                                                        style="background-color: #177F75;">
-                                                        {{ $patientScoreData['padds_data']['padds_kesimpulan'] ?? 'Belum Ada Kesimpulan' }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="mt-4">
-                                            <h6>Data Penilaian Score PADDS (Khusus Rawat Jalan)</h6>
-
-                                            <div class="mb-3">
-                                                <label class="form-label">Tanggal Jam Pasca Anestesi</label>
-                                                <input type="text" class="form-control"
-                                                    value="{{ $patientScoreData['padds_data']['padds_tanggal_jam'] ?? '-' }}"
-                                                    disabled>
-                                            </div>
-
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Tanggal/Jam</th>
-                                                            <th>Skor</th>
-                                                            <th>Kesimpulan</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @if (isset($patientScoreData['padds_data']['time_data']) && is_array($patientScoreData['padds_data']['time_data']))
-                                                            @foreach ($patientScoreData['padds_data']['time_data'] as $timeData)
-                                                                <tr>
-                                                                    <td>{{ $timeData['jam'] ?? '-' }}</td>
-                                                                    <td>{{ $timeData['skor'] ?? '-' }}</td>
-                                                                    <td>{{ $timeData['kesimpulan'] ?? '-' }}</td>
-                                                                </tr>
-                                                            @endforeach
-                                                        @else
-                                                            @for ($i = 1; $i <= 3; $i++)
-                                                                <tr>
-                                                                    <td>{{ $patientScoreData['padds_data']['time_' . $i] ?? '-' }}
-                                                                    </td>
-                                                                    <td>{{ $patientScoreData['padds_data']['skor_' . $i] ?? '-' }}
-                                                                    </td>
-                                                                    <td>{{ $patientScoreData['padds_data']['kesimpulan_' . $i] ?? '-' }}
-                                                                    </td>
-                                                                </tr>
-                                                            @endfor
-                                                        @endif
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group mb-3 mt-4">
-                                            <label class="d-block mb-2"
-                                                style="background-color: #177F75; color: white; padding: 8px;">Kesimpulan
-                                                Akhir</label>
-                                            <div class="p-3 text-white rounded" style="background-color: #177F75;">
-                                                {{ $patientScoreData['padds_data']['padds_final_kesimpulan'] ?? ($patientScoreData['padds_data']['padds_kesimpulan'] ?? 'Belum Ada Kesimpulan') }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-                        @else
-                            <div class="alert alert-warning">
-                                Tidak ada data skala pasien yang tersimpan
+                    <!-- PADDS Score Form - Unchanged -->
+                    <div id="paddsScoreForm" class="score-form" style="display: none;">
+                        <h5 class="text-center mt-3">Penilaian Score PADDS (Khusus Rawat Jalan)</h5>
+                        <div class="form-group mb-3">
+                            <label class="d-block mb-2">Tanda Vital</label>
+                            <select class="form-select" disabled name="padds_tanda_vital" id="paddsTandaVital">
+                                <option value="" selected>pilih</option>
+                                <option value="2">Tekanan darah dan nadi 15-24% dari pre Op</option>
+                                <option value="1">Tekanan darah dan nadi 25-40% dari pre Op</option>
+                                <option value="0">Tekanan darah dan nadi >40% dari pre Op</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="d-block mb-2">Aktivitas</label>
+                            <select class="form-select" disabled name="padds_aktivitas" id="paddsAktivitas">
+                                <option value="" selected>pilih</option>
+                                <option value="2">Berjalan normal, tidak pusing saat berdiri</option>
+                                <option value="1">Butuh bantuan untuk berjalan</option>
+                                <option value="0">Tidak dapat berjalan</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="d-block mb-2">Mual/muntah</label>
+                            <select class="form-select" disabled name="padds_mual_muntah" id="paddsMualMuntah">
+                                <option value="" selected>pilih</option>
+                                <option value="2">Tidak ada atau ringan, tetap bisa makan</option>
+                                <option value="1">Sedang, terkontrol dengan obat</option>
+                                <option value="0">Berat, tidak terkontrol dengan obat</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="d-block mb-2">Perdarahan</label>
+                            <select class="form-select" disabled name="padds_perdarahan" id="paddsPerdarahan">
+                                <option value="" selected>pilih</option>
+                                <option value="2">Minimal (tidak perlu ganti verban)</option>
+                                <option value="1">Sedang (perlu ganti verban 1-2 kali)</option>
+                                <option value="0">Berat (perlu ganti verban 3 kali atau lebih)</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="d-block mb-2">Nyeri</label>
+                            <select class="form-select" disabled name="padds_nyeri" id="paddsNyeri">
+                                <option value="" selected>pilih</option>
+                                <option value="2">Nyeri ringan, nyaman, dapat diterima</option>
+                                <option value="1">Nyeri sedang sampai berat, terkontrol dengan analgesik oral</option>
+                                <option value="0">Nyeri berat, tidak terkontrol dengan analgesik oral</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="d-block mb-2" style="background-color: #177F75; color: white; padding: 8px;">Kesimpulan :</label>
+                            <div id="paddsKesimpulan" class="p-3 text-white rounded" style="background-color: #177F75;">
+                                Boleh pindah ruang / Tidak Boleh pindah ruang
                             </div>
-                        @endif
+                            <input type="hidden" disabled name="padds_kesimpulan" id="paddsKesimpulanInput" value="Boleh pindah ruang / Tidak Boleh pindah ruang">
+                        </div>
+                        <div class="mt-4">
+                            <h6>Data Penilaian Score PADDS (Khusus Rawat Jalan)</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Tanggal Jam Pasca Anestesi</label>
+                                <div class="input-group">
+                                    <input type="datetime-local" class="form-control" disabled name="padds_tanggal_jam" id="paddsTanggalJam">
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Tanggal/Jam</th>
+                                            <th>Skor</th>
+                                            <th>Kesimpulan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="paddsTimeTable">
+                                        <tr>
+                                            <td><i class="far fa-clock"></i> Jam</td>
+                                            <td>Skor</td>
+                                            <td>Kesimpulan</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3 mt-4">
+                            <label class="d-block mb-2" style="background-color: #177F75; color: white; padding: 8px;">Kesimpulan :</label>
+                            <div id="paddsFinalKesimpulan" class="p-3 text-white rounded" style="background-color: #177F75;">
+                                Boleh pindah ruang / Tidak Boleh pindah ruang
+                            </div>
+                            <input type="hidden" disabled name="padds_final_kesimpulan" id="paddsFinalKesimpulanInput" value="Boleh pindah ruang / Tidak Boleh pindah ruang">
+                        </div>
                     </div>
 
                     <div class="form-group row">
