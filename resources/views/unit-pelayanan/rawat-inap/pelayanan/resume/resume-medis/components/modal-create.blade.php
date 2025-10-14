@@ -351,7 +351,7 @@
                             <div class="bg-light p-3 border rounded">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <a href="javascript:void(0)" id="btn-tgl-kontrol-ulang"
+                                        {{-- <a href="javascript:void(0)" id="btn-tgl-kontrol-ulang"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="kontrol" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Kontrol ulang, tgl:"
@@ -360,9 +360,9 @@
                                             <label for="kontrol">Kontrol ulang, tgl:<span id="selected-date">
                                                     {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '2' ? $dataResume->rmeResumeDet->tgl_kontrol_ulang : '' }}
                                                 </span></label>
-                                        </a>
+                                        </a> --}}
 
-                                        <a href="javascript:void(0)" id="btn-konsul-rujukan"
+                                        {{-- <a href="javascript:void(0)" id="btn-konsul-rujukan"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="konsul" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Konsul/Rujuk Internal Ke:"
@@ -374,19 +374,50 @@
                                                     {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '4' ? $dataResume->rmeResumeDet->unitRujukanInternal?->nama_unit : '' }}
                                                 </span>
                                             </label>
-                                        </a>
+                                        </a> --}}
                                         {{-- <a href="javascript:void(0)" class="tindak-lanjut-option d-block mb-2 text-decoration-none" id="btn-konsul-rujukan">
                                             <input type="radio" id="konsul" name="tindak_lanjut_name" class="form-check-input me-2" value="Konsul/Rujuk Internal Ke:" data-code="2">
                                             <label for="konsul">Konsul/Rujuk Internal Ke:</label>
                                         </a> --}}
 
-                                        <a href="#"
+                                        {{-- <a href="#"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="selesai" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Selesai di Klinik ini"
                                                 data-code="3"
                                                 {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '3' ? 'checked' : '' }}>
                                             <label for="selesai">Selesai di Klinik ini</label>
+                                        </a> --}}
+
+                                        <a href="javascript:void(0)" id="btn-sembuh-ulang"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="sembuh" name="tindak_lanjut_name"
+                                                class="form-check-input me-2" value="sembuh"
+                                                data-code="12"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '12' ? 'checked' : '' }}>
+                                            <label for="sembuh">Sembuh<span id="selected-date">
+                                                    {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '12' ? $dataResume->rmeResumeDet->tindak_lanjut_name : '' }}
+                                                </span></label>
+                                        </a>
+                                        <a href="javascript:void(0)" id="btn-berobat_jalan-ulang"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="berobat_jalan" name="tindak_lanjut_name"
+                                                class="form-check-input me-2" value="Dapat berobat jalan"
+                                                data-code="13"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '13' ? 'checked' : '' }}>
+                                            <label for="berobat_jalan">Dapat berobat jalan<span id="selected-date">
+                                                    {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '13' ? $dataResume->rmeResumeDet->tindak_lanjut_name : '' }}
+                                                </span></label>
+                                        </a>
+                                        <a href="javascript:void(0)" id="btn-paps-ulang"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="paps" name="tindak_lanjut_name"
+                                                class="form-check-input me-2" value="PAPS"
+                                                data-code="14"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '14' ? 'checked' : '' }}>
+                                            <label for="paps">PAPS<span id="selected-date">
+                                                    {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '14' ? $dataResume->rmeResumeDet->tindak_lanjut_name : '' }}
+                                                </span></label>
                                         </a>
                                     </div>
 
@@ -406,14 +437,34 @@
                                                 </span>
                                             </label>
                                         </a>
+                                        <a href="javascript:void(0)" id="btn-meninggal-kurang48"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="meninggal_kurang48" name="tindak_lanjut_name"
+                                                class="form-check-input me-2" value="Meninggal kurang dari 48 Jam"
+                                                data-code="15"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '15' ? 'checked' : '' }}>
+                                            <label for="meninggal_kurang48">Meninggal kurang dari 48 Jam<span id="selected-date">
+                                                    {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '15' ? $dataResume->rmeResumeDet->tindak_lanjut_name : '' }}
+                                                </span></label>
+                                        </a>
+                                        <a href="javascript:void(0)" id="btn-meninggal-lebih48"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="meninggal_lebih48" name="tindak_lanjut_name"
+                                                class="form-check-input me-2" value="Meninggal lebih dari 48 Jam"
+                                                data-code="16"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '16' ? 'checked' : '' }}>
+                                            <label for="meninggal_lebih48">Meninggal lebih dari 48 Jam<span id="selected-date">
+                                                    {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '16' ? $dataResume->rmeResumeDet->tindak_lanjut_name : '' }}
+                                                </span></label>
+                                        </a>
 
-                                        <a href="#"
+                                        {{-- <a href="#"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="rawat" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Rawat Inap" data-code="1"
                                                 {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '1' ? 'checked' : '' }}>
                                             <label for="rawat">Rawat Inap</label>
-                                        </a>
+                                        </a> --}}
                                     </div>
                                 </div>
 
@@ -583,7 +634,7 @@
                 });
                 return;
             }
-            console.log('Data diagnosis yang akan disimpan:', dataDiagnosis);
+            // console.log('Data diagnosis yang akan disimpan:', dataDiagnosis);
             formData.append('diagnosis', JSON.stringify(dataDiagnosis));
 
             // Ambil data ICD
@@ -615,9 +666,22 @@
             // }
             formData.append('icd_9', JSON.stringify(icd9Array));
 
-            // Get control ulang tgl
-            const ControlUlangTgl = $('#selected-date').text().trim() || previousTglKontrolUlang;
-            formData.append('tgl_kontrol_ulang', ControlUlangTgl);
+            // Get control ulang tgl - only if "Kontrol ulang" is selected
+            const tindakLanjutElement = $('input[name="tindak_lanjut_name"]:checked');
+            let ControlUlangTgl = null;
+            
+            if (tindakLanjutElement.length && tindakLanjutElement.data('code') == '2') {
+                // Only get date if "Kontrol ulang" option is selected
+                ControlUlangTgl = $('#selected-date').text().trim() || previousTglKontrolUlang;
+                // Validate if it's a proper date, not text like "sembuh"
+                if (ControlUlangTgl && (ControlUlangTgl === 'sembuh' || ControlUlangTgl === 'meninggal' || ControlUlangTgl.includes('Jam'))) {
+                    ControlUlangTgl = null; // Don't send invalid date strings
+                }
+            }
+            
+            if (ControlUlangTgl) {
+                formData.append('tgl_kontrol_ulang', ControlUlangTgl);
+            }
 
             // Get Rujuk RS lain bagian
             const RujukRSBagian = $('#selected-rs-info').text().trim();
@@ -635,7 +699,7 @@
 
             // Ambil ID unit dari atribut data-unit-id
             const unitId = $('#selected-unit-tujuan').attr('data-unit-id') || previousUnitRujukInternal;
-            console.log('Sending unit_rujuk_internal:', unitId);
+            // console.log('Sending unit_rujuk_internal:', unitId);
             formData.append('unit_rujuk_internal', unitId);
 
             // Get Alergi
@@ -645,7 +709,7 @@
                 }).get().filter(Boolean);
             formData.append('alergi', JSON.stringify(Alergirray));
 
-            const tindakLanjutElement = $('input[name="tindak_lanjut_name"]:checked');
+            // Use the tindakLanjutElement that was already defined above
             formData.append('tindak_lanjut_name', tindakLanjutElement.val());
             formData.append('tindak_lanjut_code', tindakLanjutElement.data('code'));
 
@@ -656,7 +720,7 @@
                 `{{ route('rawat-inap.rawat-inap-resume.update', [
                     'kd_unit' => $dataMedis->kd_unit,
                     'kd_pasien' => $dataMedis->kd_pasien,
-                    'tgl_masuk' => $dataMedis->tgl_masuk,
+                    'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
                     'urut_masuk' => $dataMedis->urut_masuk,
                     'id' => ':id',
                 ]) }}`
@@ -673,6 +737,13 @@
                 showLoaderOnConfirm: true,
                 preConfirm: () => {
                     return new Promise((resolve, reject) => {
+                        // Debug logging
+                        // console.log('URL:', url);
+                        // console.log('FormData entries:');
+                        for (let pair of formData.entries()) {
+                            console.log(pair[0] + ': ' + pair[1]);
+                        }
+                        
                         $.ajax({
                                 url: url,
                                 type: "POST",
@@ -685,7 +756,12 @@
                                 }
                             })
                             .done(response => resolve(response))
-                            .fail(xhr => reject(xhr));
+                            .fail(xhr => {
+                                console.error('AJAX Error:', xhr);
+                                console.error('Status:', xhr.status);
+                                console.error('Response Text:', xhr.responseText);
+                                reject(xhr);
+                            });
                     });
                 },
                 allowOutsideClick: () => !Swal.isLoading()

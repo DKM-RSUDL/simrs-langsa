@@ -193,6 +193,7 @@ class RawatInapResumeController extends Controller
     {
         DB::beginTransaction();
         try {
+
             $validator = Validator::make($request->all(), [
                 'anamnesis' => 'required|string',
                 'pemeriksaan_penunjang' => 'required|string',
@@ -210,6 +211,7 @@ class RawatInapResumeController extends Controller
             ]);
 
             if ($validator->fails()) {
+                DB::rollBack();
                 return response()->json([
                     'success' => false,
                     'errors' => $validator->errors()
@@ -258,17 +260,30 @@ class RawatInapResumeController extends Controller
                 'user_validasi' => Auth::id()
             ]);
 
+            // Prepare data for RmeResumeDtl update
+            $resumeDtlData = [
+                'tindak_lanjut_name' => trim($request->tindak_lanjut_name),
+                'tindak_lanjut_code' => $request->tindak_lanjut_code,
+                'rs_rujuk' => $request->rs_rujuk,
+                'rs_rujuk_bagian' => $request->rs_rujuk_bagian,
+                'unit_rujuk_internal' => $request->unit_rujuk_internal,
+                'unit_rawat_inap' => $request->unit_rawat_inap
+            ];
+
+            // Handle tgl_kontrol_ulang - only set if it's a valid date
+            $tglKontrolUlang = $request->tgl_kontrol_ulang;
+            if ($tglKontrolUlang && $tglKontrolUlang !== 'sembuh' && $tglKontrolUlang !== 'meninggal') {
+                // Validate if it's a proper date format
+                $date = \DateTime::createFromFormat('Y-m-d', $tglKontrolUlang);
+                if ($date && $date->format('Y-m-d') === $tglKontrolUlang) {
+                    $resumeDtlData['tgl_kontrol_ulang'] = $tglKontrolUlang;
+                }
+                // If it's not a valid date, we don't set it (leave as null)
+            }
+
             RmeResumeDtl::updateOrCreate(
                 ['id_resume' => $id],
-                [
-                    'tindak_lanjut_name' => trim($request->tindak_lanjut_name),
-                    'tindak_lanjut_code' => $request->tindak_lanjut_code,
-                    'tgl_kontrol_ulang' => $request->tgl_kontrol_ulang,
-                    'rs_rujuk' => $request->rs_rujuk,
-                    'rs_rujuk_bagian' => $request->rs_rujuk_bagian,
-                    'unit_rujuk_internal' => $request->unit_rujuk_internal,
-                    'unit_rawat_inap' => $request->unit_rawat_inap
-                ]
+                $resumeDtlData
             );
 
             DB::commit();
@@ -283,7 +298,7 @@ class RawatInapResumeController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan saat memperbarui data'
+                'message' => 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage()
             ], 500);
         }
     }
