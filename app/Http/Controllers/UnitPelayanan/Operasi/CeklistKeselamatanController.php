@@ -48,66 +48,34 @@ class CeklistKeselamatanController extends Controller
         }
 
         // Ambil data Sign In
-        $signInList = OkCeklistKeselamatanSignin::where('kd_pasien', $kd_pasien)
+        $signin = OkCeklistKeselamatanSignin::where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->orderBy('waktu_signin', 'desc')
-            ->get();
+            ->with('dokterAnestesi.dokter:kd_dokter,nama_lengkap', 'perawatData:kd_perawat,nama')
+            ->first();
 
         // Ambil data Time Out
-        $timeoutList = OkCeklistKeselamatanTimeout::where('kd_pasien', $kd_pasien)
+        $timeout = OkCeklistKeselamatanTimeout::where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->orderBy('waktu_timeout', 'desc')
-            ->get();
+            ->with('dokterBedah:kd_dokter,nama_lengkap', 'dokterAnastesi.dokter:kd_dokter,nama_lengkap', 'perawatData:kd_perawat,nama')
+            ->first();
 
         // Ambil data Sign Out
-        $signoutList = OkCeklistKeselamatanSignOut::where('kd_pasien', $kd_pasien)
+        $signout = OkCeklistKeselamatanSignOut::where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->orderBy('waktu_signout', 'desc')
-            ->get();
-
-        // Load relasi
-        $signInList->load([
-            'dokterAnestesi' => function ($query) {
-                $query->with('dokter');
-            },
-            'perawatData'
-        ]);
-
-        $timeoutList->load([
-            'dokterBedah',
-            'dokterAnastesi' => function ($query) {
-                $query->with('dokter');
-            },
-            'perawatData'
-        ]);
-
-
-        $signoutList->load([
-            'dokterBedah',
-            'dokterAnastesi' => function ($query) {
-                $query->with('dokter');
-            },
-            'perawatData'
-        ]);
-
-        // Periksa jika sudah ada data
-        $hasSignIn = $signInList->count() > 0;
-        $hasTimeout = $timeoutList->count() > 0;
-        $hasSignout = $signoutList->count() > 0;
-
-        // dd($signoutList);
+            ->with('dokterBedah:kd_dokter,nama_lengkap', 'dokterAnastesi.dokter:kd_dokter,nama_lengkap', 'perawatData:kd_perawat,nama')
+            ->first();
 
         return view('unit-pelayanan.operasi.pelayanan.ceklist-keselamatan.index', compact(
             'dataMedis',
-            'signInList',
-            'timeoutList',
-            'signoutList',
-            'hasSignIn',
-            'hasTimeout',
-            'hasSignout'
+            'signin',
+            'timeout',
+            'signout',
         ));
     }
 
