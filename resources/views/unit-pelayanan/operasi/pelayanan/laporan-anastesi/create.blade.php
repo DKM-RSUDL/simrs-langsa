@@ -3,6 +3,7 @@
 
 @section('content')
     @include('unit-pelayanan.operasi.pelayanan.include')
+    @include('unit-pelayanan.operasi.pelayanan.laporan-anastesi.include-script')
 
     <div class="row">
         <div class="col-md-3">
@@ -42,8 +43,11 @@
                                         <h5 class="section-title">1. Data Masuk</h5>
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tanggal dan Jam Masuk</label>
-                                            <input type="date" name="tgl_data_masuk" id="tgl_masuk" class="form-control me-3" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
-                                            <input type="time" name="jam_masuk" id="jam_masuk" class="form-control" value="{{ \Carbon\Carbon::now()->format('H:i') }}">
+                                            <input type="date" name="tgl_data_masuk" id="tgl_masuk"
+                                                class="form-control me-3"
+                                                value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
+                                            <input type="time" name="jam_masuk" id="jam_masuk" class="form-control"
+                                                value="{{ \Carbon\Carbon::now()->format('H:i') }}">
                                         </div>
                                     </div>
 
@@ -78,7 +82,8 @@
                                                 <option value="1">Ya</option>
                                                 <option value="0">Tidak</option>
                                             </select>
-                                            <input type="time" name="jam_time_out" id="jam_time_out" class="form-control">
+                                            <input type="time" name="jam_time_out" id="jam_time_out"
+                                                class="form-control">
                                         </div>
 
                                         <!-- Tingkat Kesadaran Pasien Saat Masuk Kamar Operasi -->
@@ -91,7 +96,6 @@
                                                 <option value="Mudah Dibangunkan">Mudah Dibangunkan</option>
                                             </select>
                                         </div>
-
 
                                         <!-- Posisi Pasien Selama Operasi -->
                                         <div class="form-group">
@@ -234,8 +238,8 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Kode Unit</label>
-                                            <input type="text" class="form-control"
-                                                name="kode_unit" placeholder="kode">
+                                            <input type="text" class="form-control" name="kode_unit"
+                                                placeholder="kode">
                                         </div>
 
                                         <!-- Pengaturan Temperatur Selesai -->
@@ -263,7 +267,8 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Pengawas Tomiquet</label>
-                                            <input type="text" class="form-control" name="pengawas_tomiquet" value="Anestesi">
+                                            <input type="text" class="form-control" name="pengawas_tomiquet"
+                                                value="Anestesi">
                                         </div>
 
                                         <!-- Lokasi Pemasangan Tomiquet -->
@@ -540,8 +545,7 @@
                                                         <td>
                                                             <div class="d-flex gap-2 align-items-center">
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    name="kassa5" id="kassa_tidak_perlu"
-                                                                    value="1">
+                                                                    name="kassa5" id="kassa_tidak_perlu" value="1">
                                                                 <label class="form-check-label"
                                                                     for="kassa_tidak_perlu">Tidak Perlu</label>
                                                             </div>
@@ -549,8 +553,7 @@
                                                         <td>
                                                             <div class="d-flex gap-2 align-items-center">
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    name="jarum5" id="jarum_tidak_perlu"
-                                                                    value="1">
+                                                                    name="jarum5" id="jarum_tidak_perlu" value="1">
                                                                 <label class="form-check-label"
                                                                     for="jarum_tidak_perlu">Tidak Perlu</label>
                                                             </div>
@@ -681,17 +684,38 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Pemakaian Cairan</label>
-                                            <select class="form-select me-3" name="pemakaian_cairan">
-                                                <option selected disabled>--Pilih--</option>
-                                                <option value="Sodium Chloride 0,9%">Sodium Chloride 0,9%</option>
-                                                <option value="Glysin">Glysin</option>
-                                                <option value="BSS Solution">BSS Solution</option>
-                                                <option value="Air Untuk Irigasi">Air Untuk Irigasi</option>
-                                            </select>
-                                            <input type="number" class="form-control" name="banyak_pemakaian_cairan"
-                                                placeholder="Liter">
-                                        </div>
+                                            <div class="w-100 d-flex flex-column">
+                                                <!-- Input Row -->
+                                                <div class="input-group mb-2">
+                                                    <select class="form-select" data-cairan-select style="flex: 2;">
+                                                        <option value="">--Pilih Jenis Cairan--</option>
+                                                        <option value="Sodium Chloride 0,9%">Sodium Chloride 0,9%</option>
+                                                        <option value="Glysin">Glysin</option>
+                                                        <option value="BSS Solution">BSS Solution</option>
+                                                        <option value="Air Untuk Irigasi">Air Untuk Irigasi</option>
+                                                        <option value="Lainnya">Lainnya</option>
+                                                    </select>
+                                                    <input type="number" class="form-control" data-cairan-jumlah
+                                                        placeholder="Liter" style="flex: 1;">
+                                                    <input type="text" class="form-control d-none" data-cairan-lainnya
+                                                        placeholder="Sebutkan jenis cairan lainnya" style="flex: 1;">
+                                                    <span class="input-group-text bg-white" id="add-pemakaian-cairan"
+                                                        style="cursor: pointer;">
+                                                        <i class="bi bi-plus-circle text-primary"></i>
+                                                    </span>
+                                                </div>
 
+                                                <!-- List Pemakaian Cairan -->
+                                                <div id="pemakaian-cairan-list" class="rounded w-100">
+                                                    <p class="text-danger text-small" id="no-pemakaian-cairan">Belum ada
+                                                        pemakaian cairan ditambahkan</p>
+                                                </div>
+
+                                                <!-- Hidden input untuk dikirim ke backend -->
+                                                <input type="hidden" name="pemakaian_cairan"
+                                                    id="pemakaian_cairan_hidden" value="[]">
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="section-separator">
@@ -796,7 +820,8 @@
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Jumlah Total Jaringan/Cairan
                                                 Pemeriksaan</label>
-                                            <input type="text" class="form-control" name="total_jaringan_cairan_pemeriksaan">
+                                            <input type="text" class="form-control"
+                                                name="total_jaringan_cairan_pemeriksaan">
                                         </div>
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Jenis dari Jaringan</label>
@@ -923,58 +948,4 @@
 
 @push('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Inisialisasi Select2 jika belum
-            $('.select2').select2();
-
-            // Pasang event listener untuk Perawat Instrumen
-            $('#perawat_instrumen').on('select2:select', function(e) {
-                var kodePerawat = $(this).val();
-                var namaPerawat = $(this).find('option:selected').data(
-                'nama'); // Ambil nama perawat dari data-nama
-                console.log("Kode perawat instrumen yang dipilih:", kodePerawat);
-                console.log("Nama perawat instrumen yang dipilih:", namaPerawat);
-
-                // Update nama perawat dan kode perawat
-                $('#nama_perawat_instrumen').text(namaPerawat || '');
-                $('#kode_perawat_instrumen').text(kodePerawat || '.........................');
-                generateQRCode('qrcode_perawat_instrumen', kodePerawat);
-            });
-
-            // Pasang event listener untuk Perawat Sirkuler
-            $('#perawat_sirkuler').on('select2:select', function(e) {
-                var kodePerawat = $(this).val();
-                var namaPerawat = $(this).find('option:selected').data(
-                'nama'); // Ambil nama perawat dari data-nama
-                console.log("Kode perawat sirkuler yang dipilih:", kodePerawat);
-                console.log("Nama perawat sirkuler yang dipilih:", namaPerawat);
-
-                // Update nama perawat dan kode perawat
-                $('#nama_perawat_sirkuler').text(namaPerawat || '');
-                $('#kode_perawat_sirkuler').text(kodePerawat || '.........................');
-                generateQRCode('qrcode_perawat_sirkuler', kodePerawat);
-            });
-
-            // Fungsi untuk membuat QR code
-            function generateQRCode(elementId, text) {
-                // Hapus QR code sebelumnya jika ada
-                $('#' + elementId).empty();
-
-                if (!text) return; // Hindari error jika text kosong
-
-                try {
-                    // Buat QR code baru
-                    var qr = qrcode(0, 'M');
-                    qr.addData(text);
-                    qr.make();
-
-                    // Tampilkan QR code
-                    $('#' + elementId).html(qr.createImgTag(5));
-                } catch (err) {
-                    console.error("Error generating QR code:", err);
-                }
-            }
-        });
-    </script>
 @endpush

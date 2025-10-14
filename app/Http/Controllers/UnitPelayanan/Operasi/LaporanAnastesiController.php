@@ -190,8 +190,6 @@ class LaporanAnastesiController extends Controller
             $lapAnastesiDtl->no_seri = $request->no_seri;
             $lapAnastesiDtl->save();
 
-
-
             $lapAnastesiDtlDua = new OkLaporanAnastesiDtl2();
             $lapAnastesiDtlDua->id_laporan_anastesi = $laporanAnastesi->id;
             $lapAnastesiDtlDua->kassa_satu = $request->kassa1;
@@ -242,8 +240,11 @@ class LaporanAnastesiController extends Controller
             $lapAnastesiDtlDua->penggunaan_cairan_drain = json_encode($filteredDrainData);
 
             $lapAnastesiDtlDua->irigasi_luka = $request->irigasi_luka;
-            $lapAnastesiDtlDua->pemakaian_cairan = $request->pemakaian_cairan;
-            $lapAnastesiDtlDua->banyak_pemakaian_cairan = $request->banyak_pemakaian_cairan;
+
+            // Pemakaian Cairan
+            $pemakaianCairan = json_decode($request->pemakaian_cairan, true) ?: [];
+            $lapAnastesiDtlDua->pemakaian_cairan = json_encode($pemakaianCairan);
+
             $lapAnastesiDtlDua->pemeriksaan_kondisi_kulit_pra_operasi = $request->pemeriksaan_kondisi_kulit_pra_operasi;
             $lapAnastesiDtlDua->pemeriksaan_kondisi_kulit_pasca_operasi = $request->pemeriksaan_kondisi_kulit_pasca_operasi;
             $lapAnastesiDtlDua->balutan_luka = $request->balutan_luka;
@@ -254,8 +255,6 @@ class LaporanAnastesiController extends Controller
             $lapAnastesiDtlDua->jumlah_jaringan = $request->jumlah_jaringan;
             $lapAnastesiDtlDua->keterangan = $request->keterangan;
             $lapAnastesiDtlDua->save();
-
-
 
             DB::commit();
             return to_route('operasi.pelayanan.laporan-anastesi.index', [$kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Laporan Anestesi berhasil di tambah !');
@@ -570,8 +569,10 @@ class LaporanAnastesiController extends Controller
             $laporanAnastesiDtl2->penggunaan_cairan_drain = json_encode($filteredDrainData);
 
             $laporanAnastesiDtl2->irigasi_luka = $request->irigasi_luka;
-            $laporanAnastesiDtl2->pemakaian_cairan = $request->pemakaian_cairan;
-            $laporanAnastesiDtl2->banyak_pemakaian_cairan = $request->banyak_pemakaian_cairan;
+
+            // Pemakaian Cairan
+            $pemakaianCairan = json_decode($request->pemakaian_cairan, true) ?: [];
+            $laporanAnastesiDtl2->pemakaian_cairan = json_encode($pemakaianCairan);
             $laporanAnastesiDtl2->pemeriksaan_kondisi_kulit_pra_operasi = $request->pemeriksaan_kondisi_kulit_pra_operasi;
             $laporanAnastesiDtl2->pemeriksaan_kondisi_kulit_pasca_operasi = $request->pemeriksaan_kondisi_kulit_pasca_operasi;
             $laporanAnastesiDtl2->balutan_luka = $request->balutan_luka;
