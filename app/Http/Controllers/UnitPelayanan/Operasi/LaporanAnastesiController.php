@@ -55,6 +55,7 @@ class LaporanAnastesiController extends Controller
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
+            ->orderBy('id', 'desc')
             ->get();
 
         $ceklistKesiapanAnesthesi = RmeCeklistKesiapanAnesthesi::with('userCreate')

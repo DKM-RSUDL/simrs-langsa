@@ -687,33 +687,33 @@
                                             <div class="w-100 d-flex flex-column">
                                                 <!-- Input Row -->
                                                 <div class="input-group mb-2">
-                                                    <select class="form-select" data-cairan-select style="flex: 2;">
+                                                    <select class="form-select" id="cairan-select" style="flex: 2;">
                                                         <option value="">--Pilih Jenis Cairan--</option>
                                                         <option value="Sodium Chloride 0,9%">Sodium Chloride 0,9%</option>
-                                                        <option value="Glysin">Glysin</option>
+                                                        <option value="Glyrin">Glyrin</option>
                                                         <option value="BSS Solution">BSS Solution</option>
                                                         <option value="Air Untuk Irigasi">Air Untuk Irigasi</option>
                                                         <option value="Lainnya">Lainnya</option>
                                                     </select>
-                                                    <input type="number" class="form-control" data-cairan-jumlah
+                                                    <input type="number" class="form-control" id="cairan-jumlah"
                                                         placeholder="Liter" style="flex: 1;">
-                                                    <input type="text" class="form-control d-none" data-cairan-lainnya
-                                                        placeholder="Sebutkan jenis cairan lainnya" style="flex: 1;">
-                                                    <span class="input-group-text bg-white" id="add-pemakaian-cairan"
+                                                    <input type="text" class="form-control d-none" id="cairan-lainnya"
+                                                        placeholder="Sebutkan jenis cairan" style="flex: 1;">
+                                                    <span class="input-group-text bg-white" id="btn-add-cairan"
                                                         style="cursor: pointer;">
                                                         <i class="bi bi-plus-circle text-primary"></i>
                                                     </span>
                                                 </div>
 
                                                 <!-- List Pemakaian Cairan -->
-                                                <div id="pemakaian-cairan-list" class="rounded w-100">
-                                                    <p class="text-danger text-small" id="no-pemakaian-cairan">Belum ada
+                                                <div id="list-pemakaian-cairan" class="w-100">
+                                                    <p class="text-danger text-small" id="empty-cairan">Belum ada
                                                         pemakaian cairan ditambahkan</p>
                                                 </div>
 
                                                 <!-- Hidden input untuk dikirim ke backend -->
                                                 <input type="hidden" name="pemakaian_cairan"
-                                                    id="pemakaian_cairan_hidden" value="[]">
+                                                    id="hidden-pemakaian-cairan" value="[]">
                                             </div>
                                         </div>
                                     </div>

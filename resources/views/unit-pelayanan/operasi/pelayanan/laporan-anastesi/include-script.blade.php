@@ -13,6 +13,12 @@
             const emptyMessage = document.getElementById('empty-cairan');
             const hiddenInput = document.getElementById('hidden-pemakaian-cairan');
 
+            // Check if elements exist
+            if (!selectCairan || !inputJumlah || !btnAdd || !listContainer || !hiddenInput) {
+                console.error('Pemakaian cairan elements not found');
+                return;
+            }
+
             // Toggle input lainnya
             selectCairan.addEventListener('change', function() {
                 if (this.value === 'Lainnya') {
@@ -109,7 +115,8 @@
 
                 // Add remove event listeners
                 document.querySelectorAll('.btn-remove-cairan').forEach(btn => {
-                    btn.addEventListener('click', function() {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
                         const idx = parseInt(this.getAttribute('data-index'));
                         removeCairan(idx);
                     });
@@ -128,7 +135,7 @@
                 return div.innerHTML;
             }
 
-            // Load existing data
+            // Load existing data (untuk edit)
             function loadData() {
                 try {
                     const data = hiddenInput.value;
@@ -142,12 +149,17 @@
                 }
             }
 
-            // Event listeners
-            btnAdd.addEventListener('click', addCairan);
+            // Event listeners dengan preventDefault
+            btnAdd.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                addCairan();
+            });
 
             inputJumlah.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
+                    e.stopPropagation();
                     addCairan();
                 }
             });
@@ -155,11 +167,19 @@
             inputLainnya.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
+                    e.stopPropagation();
                     addCairan();
                 }
             });
 
-            // Initialize - load existing data
+            selectCairan.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            });
+
+            // Initialize
             loadData();
 
         })();
