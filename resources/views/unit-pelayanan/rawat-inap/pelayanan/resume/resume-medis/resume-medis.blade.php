@@ -105,8 +105,8 @@
             $(document).on('click', '.btn-view-resume', function(e) {
                 e.preventDefault();
                 let resumeId = $(this).data('id');
-                // Add your view logic here
-                // console.log('View resume ID:', resumeId);
+                $('#post_id').val(resumeId);
+                $('#modal-view-resume').modal('show');
             });
 
             // Filter by period

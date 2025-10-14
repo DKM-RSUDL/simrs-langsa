@@ -395,9 +395,7 @@
                                                 class="form-check-input me-2" value="sembuh"
                                                 data-code="12"
                                                 {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '12' ? 'checked' : '' }}>
-                                            <label for="sembuh">Sembuh<span id="selected-date">
-                                                    {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '12' ? $dataResume->rmeResumeDet->tindak_lanjut_name : '' }}
-                                                </span></label>
+                                            <label for="sembuh">Sembuh</label>
                                         </a>
                                         <a href="javascript:void(0)" id="btn-berobat_jalan-ulang"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
@@ -405,9 +403,7 @@
                                                 class="form-check-input me-2" value="Dapat berobat jalan"
                                                 data-code="13"
                                                 {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '13' ? 'checked' : '' }}>
-                                            <label for="berobat_jalan">Dapat berobat jalan<span id="selected-date">
-                                                    {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '13' ? $dataResume->rmeResumeDet->tindak_lanjut_name : '' }}
-                                                </span></label>
+                                            <label for="berobat_jalan">Dapat berobat jalan</label>
                                         </a>
                                         <a href="javascript:void(0)" id="btn-paps-ulang"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
@@ -415,9 +411,7 @@
                                                 class="form-check-input me-2" value="PAPS"
                                                 data-code="14"
                                                 {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '14' ? 'checked' : '' }}>
-                                            <label for="paps">PAPS<span id="selected-date">
-                                                    {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '14' ? $dataResume->rmeResumeDet->tindak_lanjut_name : '' }}
-                                                </span></label>
+                                            <label for="paps">PAPS</label>
                                         </a>
                                     </div>
 
@@ -443,9 +437,7 @@
                                                 class="form-check-input me-2" value="Meninggal kurang dari 48 Jam"
                                                 data-code="15"
                                                 {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '15' ? 'checked' : '' }}>
-                                            <label for="meninggal_kurang48">Meninggal kurang dari 48 Jam<span id="selected-date">
-                                                    {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '15' ? $dataResume->rmeResumeDet->tindak_lanjut_name : '' }}
-                                                </span></label>
+                                            <label for="meninggal_kurang48">Meninggal kurang dari 48 Jam</label>
                                         </a>
                                         <a href="javascript:void(0)" id="btn-meninggal-lebih48"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
@@ -453,9 +445,7 @@
                                                 class="form-check-input me-2" value="Meninggal lebih dari 48 Jam"
                                                 data-code="16"
                                                 {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '16' ? 'checked' : '' }}>
-                                            <label for="meninggal_lebih48">Meninggal lebih dari 48 Jam<span id="selected-date">
-                                                    {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '16' ? $dataResume->rmeResumeDet->tindak_lanjut_name : '' }}
-                                                </span></label>
+                                            <label for="meninggal_lebih48">Meninggal lebih dari 48 Jam</label>
                                         </a>
 
                                         {{-- <a href="#"
@@ -669,7 +659,7 @@
             // Get control ulang tgl - only if "Kontrol ulang" is selected
             const tindakLanjutElement = $('input[name="tindak_lanjut_name"]:checked');
             let ControlUlangTgl = null;
-            
+
             if (tindakLanjutElement.length && tindakLanjutElement.data('code') == '2') {
                 // Only get date if "Kontrol ulang" option is selected
                 ControlUlangTgl = $('#selected-date').text().trim() || previousTglKontrolUlang;
@@ -678,7 +668,7 @@
                     ControlUlangTgl = null; // Don't send invalid date strings
                 }
             }
-            
+
             if (ControlUlangTgl) {
                 formData.append('tgl_kontrol_ulang', ControlUlangTgl);
             }
@@ -743,7 +733,7 @@
                         for (let pair of formData.entries()) {
                             console.log(pair[0] + ': ' + pair[1]);
                         }
-                        
+
                         $.ajax({
                                 url: url,
                                 type: "POST",
