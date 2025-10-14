@@ -131,7 +131,7 @@
 
                                         <!-- Pemasangan Kater Urin -->
                                         <div class="form-group">
-                                            <label style="min-width: 200px;">Pemasangan Kater Urin</label>
+                                            <label style="min-width: 200px;">Pemasangan Kateter Urin</label>
                                             <select class="form-select" name="pemasangan_kater_urin">
                                                 <option selected disabled>--Pilih--</option>
                                                 <option value="1">Ya</option>
@@ -141,7 +141,7 @@
 
                                         <!-- Bila Dilakukan Kater Urin -->
                                         <div class="form-group">
-                                            <label style="min-width: 200px;">Bila Dilakukan Kater Urin</label>
+                                            <label style="min-width: 200px;">Bila Dilakukan Kateter Urin</label>
                                             <select class="form-select" name="bila_kater_urin">
                                                 <option selected disabled>--Pilih--</option>
                                                 <option value="Kamar Operasi">Kamar Operasi</option>
@@ -263,7 +263,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Pengawas Tomiquet</label>
-                                            <input type="text" class="form-control" name="pengawas_tomiquet">
+                                            <input type="text" class="form-control" name="pengawas_tomiquet" value="Anestesi">
                                         </div>
 
                                         <!-- Lokasi Pemasangan Tomiquet -->
@@ -731,7 +731,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label style="min-width: 200px;">Penatara Anastesi</label>
+                                            <label style="min-width: 200px;">Penata Anastesi</label>
                                             <select class="form-select select2" name="penatara_anastesi">
                                                 <option selected disabled>--Pilih--</option>
                                                 @foreach ($perawat as $p)
