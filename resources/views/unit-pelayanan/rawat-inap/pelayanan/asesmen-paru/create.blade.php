@@ -50,7 +50,7 @@
 
                         <div class="form-group">
                             <label>Riwayat penyakit</label>
-                            <textarea class="form-control" name="riwayat_penyakit" rows="4" placeholder="Riwayat penyakit sekarang"></textarea>
+                            <textarea class="form-control" name="riwayat_penyakit" rows="4" placeholder="Riwayat penyakit sekarang">{{ $paruTerdahulu->riwayat_penyakit ?? '' }}</textarea>
                         </div>
                     </div>
 
@@ -163,7 +163,7 @@
                                     </button>
                                 </div>
                                 </div>
-                                
+
                             </div>
                             </div>
 
@@ -187,7 +187,7 @@
                                 <label class="form-check-label" for="merokok_berhenti">Berhenti</label>
                                 </div>
                             </div>
-                            
+
 
                             <!-- Detail untuk merokok jika Ya dipilih -->
                             <div class="merokok-detail" style="display: none;">
@@ -218,7 +218,7 @@
                                     </button>
                                 </div>
                                 </div>
-                               
+
                             </div>
                             </div>
 
@@ -252,7 +252,7 @@
                         </div>
                         </div>
 
-                                          
+
 
                     <!-- 5. Tanda-Tanda Vital -->
                     <div class="section-separator" id="tanda-vital">
@@ -1435,7 +1435,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <!-- Submit Button -->
                 <div class="text-end">
                     <x-button-submit />
@@ -1452,7 +1452,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Function to toggle input fields based on radio button selection
-            
+
 
             // Client-side validation on form submission
             document.querySelector('form').addEventListener('submit', function(event) {
