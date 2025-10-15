@@ -184,4 +184,181 @@
 
         })();
     </script>
+    <!-- Script Spesimen dengan Checkbox -->
+    <script>
+        (function() {
+            'use strict';
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initSpesimen);
+            } else {
+                initSpesimen();
+            }
+
+            function initSpesimen() {
+                let spesimenData = [];
+
+                const selectSpesimen = document.getElementById('spesimen-select');
+                const inputJenis = document.getElementById('spesimen-jenis');
+                const btnAdd = document.getElementById('btn-add-spesimen');
+                const listContainer = document.getElementById('list-spesimen');
+                const emptyMessage = document.getElementById('empty-spesimen');
+                const hiddenInput = document.getElementById('hidden-spesimen');
+                const checkboxWrapper = document.getElementById('spesimen-checkbox-wrapper');
+                const checkbox = document.getElementById('spesimen-checkbox');
+
+                if (!selectSpesimen || !inputJenis || !btnAdd || !listContainer || !hiddenInput) {
+                    console.log('Spesimen elements not found');
+                    return;
+                }
+
+                console.log('Spesimen initialized');
+
+                // Show/hide checkbox based on selection
+                selectSpesimen.addEventListener('change', function() {
+                    const value = this.value;
+
+                    if (value === 'Sitologi' || value === 'Lainnya') {
+                        checkboxWrapper.style.display = 'flex';
+                        checkbox.checked = false;
+                    } else {
+                        checkboxWrapper.style.display = 'none';
+                        checkbox.checked = false;
+                    }
+                });
+
+                function addSpesimen() {
+                    const kategori = selectSpesimen.value;
+                    const jenis = inputJenis.value.trim();
+                    const isChecked = (kategori === 'Sitologi' || kategori === 'Lainnya') ? checkbox.checked : null;
+
+                    if (!kategori) {
+                        alert('Pilih kategori spesimen!');
+                        selectSpesimen.focus();
+                        return;
+                    }
+
+                    if (!jenis) {
+                        alert('Masukkan jenis spesimen!');
+                        inputJenis.focus();
+                        return;
+                    }
+
+                    // Simpan data dengan info checkbox (hanya untuk Sitologi dan Lainnya)
+                    const data = {
+                        kategori: kategori,
+                        jenis: jenis
+                    };
+
+                    if (kategori === 'Sitologi' || kategori === 'Lainnya') {
+                        data.checked = isChecked;
+                    }
+
+                    spesimenData.push(data);
+                    updateHidden();
+                    renderList();
+
+                    // Reset form
+                    selectSpesimen.value = '';
+                    inputJenis.value = '';
+                    checkboxWrapper.style.display = 'none';
+                    checkbox.checked = false;
+                    selectSpesimen.focus();
+                }
+
+                function removeSpesimen(index) {
+                    spesimenData.splice(index, 1);
+                    updateHidden();
+                    renderList();
+                }
+
+                function renderList() {
+                    Array.from(listContainer.children).forEach(child => {
+                        if (child.id !== 'empty-spesimen') child.remove();
+                    });
+
+                    if (spesimenData.length === 0) {
+                        emptyMessage.style.display = 'block';
+                        return;
+                    }
+                    emptyMessage.style.display = 'none';
+
+                    spesimenData.forEach((item, index) => {
+                        const div = document.createElement('div');
+                        div.className = 'd-flex justify-content-between align-items-center mb-2 gap-2';
+
+                        // Tampilkan checkbox icon kalau ada
+                        let checkIcon = '';
+                        if (item.checked !== undefined) {
+                            checkIcon = item.checked ? ' ✓' : ' ✗';
+                        }
+
+                        div.innerHTML = `
+                    <span class="border rounded px-2 py-1 w-100 bg-white">
+                        <strong>${escapeHtml(item.kategori)}</strong>${checkIcon}: ${escapeHtml(item.jenis)}
+                    </span>
+                    <button type="button" class="btn btn-sm btn-danger btn-remove-spesimen" data-index="${index}">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                `;
+                        listContainer.appendChild(div);
+                    });
+
+                    document.querySelectorAll('.btn-remove-spesimen').forEach(btn => {
+                        btn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            removeSpesimen(parseInt(this.getAttribute('data-index')));
+                        });
+                    });
+                }
+
+                function updateHidden() {
+                    hiddenInput.value = JSON.stringify(spesimenData);
+                }
+
+                function escapeHtml(text) {
+                    const div = document.createElement('div');
+                    div.textContent = text;
+                    return div.innerHTML;
+                }
+
+                function loadData() {
+                    try {
+                        const data = hiddenInput.value;
+                        if (data && data !== '[]') {
+                            spesimenData = JSON.parse(data);
+                            renderList();
+                        }
+                    } catch (e) {
+                        console.error('Error loading spesimen:', e);
+                    }
+                }
+
+                btnAdd.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    addSpesimen();
+                });
+
+                inputJenis.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        addSpesimen();
+                    }
+                });
+
+                selectSpesimen.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                });
+
+                loadData();
+            }
+
+        })();
+    </script>
 @endpush

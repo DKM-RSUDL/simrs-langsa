@@ -254,7 +254,11 @@ class LaporanAnastesiController extends Controller
             $lapAnastesiDtlDua->pemeriksaan_kondisi_kulit_pra_operasi = $request->pemeriksaan_kondisi_kulit_pra_operasi;
             $lapAnastesiDtlDua->pemeriksaan_kondisi_kulit_pasca_operasi = $request->pemeriksaan_kondisi_kulit_pasca_operasi;
             $lapAnastesiDtlDua->balutan_luka = $request->balutan_luka;
-            $lapAnastesiDtlDua->spesimen = $request->spesimen;
+
+            // Spesimen
+            $spesimen = json_decode($request->spesimen, true) ?: [];
+            $lapAnastesiDtlDua->spesimen = json_encode($spesimen);
+
             $lapAnastesiDtlDua->jenis_spesimen = $request->jenis_spesimen;
             $lapAnastesiDtlDua->total_jaringan_cairan_pemeriksaan = $request->total_jaringan_cairan_pemeriksaan;
             $lapAnastesiDtlDua->jenis_jaringan = $request->jenis_jaringan;
@@ -586,7 +590,11 @@ class LaporanAnastesiController extends Controller
             $laporanAnastesiDtl2->pemeriksaan_kondisi_kulit_pra_operasi = $request->pemeriksaan_kondisi_kulit_pra_operasi;
             $laporanAnastesiDtl2->pemeriksaan_kondisi_kulit_pasca_operasi = $request->pemeriksaan_kondisi_kulit_pasca_operasi;
             $laporanAnastesiDtl2->balutan_luka = $request->balutan_luka;
-            $laporanAnastesiDtl2->spesimen = $request->spesimen;
+
+            // Spesimen
+            $spesimen = json_decode($request->spesimen, true) ?: [];
+            $laporanAnastesiDtl2->spesimen = json_encode($spesimen);
+            
             $laporanAnastesiDtl2->jenis_spesimen = $request->jenis_spesimen;
             $laporanAnastesiDtl2->total_jaringan_cairan_pemeriksaan = $request->total_jaringan_cairan_pemeriksaan;
             $laporanAnastesiDtl2->jenis_jaringan = $request->jenis_jaringan;
