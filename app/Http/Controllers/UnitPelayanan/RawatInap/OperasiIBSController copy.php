@@ -163,9 +163,9 @@ class OperasiIBSController extends Controller
                 'no_kamar' => $request->input('kamar_operasi'),
                 'kd_unit_kamar' => $nginap ? $nginap->kd_unit_kamar : null,
                 'kd_kamar_order' => $nginap ? $nginap->kd_unit_kamar : null,
-                'kd_sub_spc' => $product->kd_klas, // ✅ Dari database
-                'kd_spc' => $request->input('spesialisasi'), // User pilih manual
-                'kd_jenis_op' => $product->klas->parent, // ✅ Dari database
+                'kd_sub_spc' => $product->kd_klas,
+                'kd_spc' => $request->input('spesialisasi'),
+                'kd_jenis_op' => $product->klas->parent,
                 'status' => 0,
                 'kd_tindakan' => '',
                 'kd_produk' => $product->kd_produk, // ✅ Dari database
@@ -173,7 +173,7 @@ class OperasiIBSController extends Controller
                 'kd_kasir' => $dataMedis->kd_kasir,
                 'kd_pasien' => $kd_pasien,
                 'kd_dokter' => $request->input('dokter'),
-                'penjamin' => $dataMedis->customer->kd_customer,
+                'penjamin' => $dataMedis->customer,
                 'batal' => 0,
                 'user_create' => Auth::id(),
                 'diagnosis' => $request->input('diagnosa_medis'),
@@ -243,12 +243,12 @@ class OperasiIBSController extends Controller
         ));
     }
 
+
     public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op)
     {
         DB::beginTransaction();
         try {
             $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-            $nginap = $this->baseService->getNginapData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
             $request->validate([
                 'tanggal_registrasi' => 'required|date',
@@ -286,8 +286,7 @@ class OperasiIBSController extends Controller
                     'tgl_jadwal' => $request->input('tanggal_jadwal'),
                     'kd_unit' => $kd_unit,
                     'no_kamar' => $request->input('kamar_operasi'),
-                    'kd_unit_kamar' => $nginap ? $nginap->kd_unit_kamar : null,
-                    'kd_kamar_order' => $nginap ? $nginap->kd_unit_kamar : null,
+                    'kd_unit_kamar' => $request->input('kamar_operasi'),
                     'kd_sub_spc' => $product->kd_klas, // ✅ Dari database
                     'kd_spc' => $request->input('spesialisasi'), // User pilih manual
                     'kd_jenis_op' => $product->klas->parent, // ✅ Dari database
