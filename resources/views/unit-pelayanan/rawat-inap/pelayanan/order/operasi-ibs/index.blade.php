@@ -47,9 +47,9 @@
                                     <td>{{ optional($item->kamar)->nama_kamar ?? ($item->no_kamar ?? ($item->kd_unit_kamar ?? '-')) }}
                                     </td>
                                     <td>{{ optional($item->spesialisasi)->spesialisasi ?? ($item->kd_spc ?? '-') }}</td>
-                                    <td>{{ optional($item->subSpesialisasi)->sub_spesialisasi ?? ($item->kd_sub_spc ?? '-') }}
+                                    <td>{{ optional($item->subSpesialisasi)->klasifikasi ?? ($item->klasifikasi ?? '-') }}
                                     </td>
-                                    <td>{{ optional($item->jenisOperasi)->jenis_op ?? ($item->kd_jenis_op ?? '-') }}</td>
+                                    <td>{{ optional($item->jenisOperasi)->klasifikasi ?? ($item->klasifikasi ?? '-') }}</td>
                                     <td>
                                         @if ($item->status === 0 || $item->status === '0')
                                             <span class="badge bg-warning">Menunggu</span>
