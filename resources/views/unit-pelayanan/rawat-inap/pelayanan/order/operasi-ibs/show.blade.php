@@ -18,12 +18,15 @@
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label class="form-label fw-bold">Tgl. Registrasi</label>
-                        <div>{{ $operasi->tgl_op ? date('Y-m-d', strtotime($operasi->tgl_op)) : '-' }} {{ $operasi->jam_op ? date('H:i', strtotime($operasi->jam_op)) : '' }}</div>
+                        <div>
+                            {{ $operasi->tgl_op ? date('d-m-Y', strtotime($operasi->tgl_op)) : '-' }}
+                            {{ $operasi->jam_op ? date('H:i', strtotime($operasi->jam_op)) : '' }}
+                        </div>
                     </div>
 
                     <div class="col-md-4 mb-3">
                         <label class="form-label fw-bold">Tgl. Jadwal</label>
-                        <div>{{ $operasi->tgl_jadwal ? date('Y-m-d', strtotime($operasi->tgl_jadwal)) : '-' }}</div>
+                        <div>{{ $operasi->tgl_jadwal ? date('d-m-Y', strtotime($operasi->tgl_jadwal)) : '-' }}</div>
                     </div>
 
                     <div class="col-md-4 mb-3">
@@ -46,7 +49,10 @@
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Jenis Operasi</label>
-                        <div>{{ optional($operasi->jenisOperasi)->jenis_op ?? ($operasi->kd_jenis_op ?? '-') }}</div>
+                        <div>
+                            {{-- ✅ Ambil dari relasi jenisOperasi (KLAS_PRODUK) --}}
+                            {{ optional($operasi->jenisOperasi)->klasifikasi ?? ($operasi->kd_jenis_op ?? '-') }}
+                        </div>
                     </div>
 
                     <div class="col-md-6 mb-3">
@@ -56,7 +62,10 @@
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Sub Spesialisasi</label>
-                        <div>{{ optional($operasi->subSpesialisasi)->sub_spesialisasi ?? ($operasi->kd_sub_spc ?? '-') }}</div>
+                        <div>
+                            {{-- ✅ Ambil dari relasi subSpesialisasi (KLAS_PRODUK) --}}
+                            {{ optional($operasi->subSpesialisasi)->klasifikasi ?? ($operasi->kd_sub_spc ?? '-') }}
+                        </div>
                     </div>
 
                     <div class="col-md-6 mb-3">
