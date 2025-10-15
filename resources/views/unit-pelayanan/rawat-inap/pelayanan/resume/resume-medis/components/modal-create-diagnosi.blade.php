@@ -38,8 +38,10 @@
 
 @push('js')
     <script>
-        $('#btn-diagnosis').on('click', function() {
-            $('#modal-create-diagnosis').modal('show');
+        $(document).ready(function() {
+            $('#btn-diagnosis').on('click', function() {
+                $('#modal-create-diagnosis').modal('show');
+            });
         });
 
         // kode baru :
@@ -101,7 +103,7 @@
                                 let diagnosis = $(this).data('diagnosis');
                                 dataDiagnosis.push(diagnosis);
                             });
-                            console.log('Urutan diagnosis setelah drag:', dataDiagnosis);
+                            // console.log('Urutan diagnosis setelah drag:', dataDiagnosis);
                         }
                     });
                 }

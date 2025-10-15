@@ -72,11 +72,11 @@
                         <td>{{ $dataMedis->unit->nama_unit }}</td>
                         <td>
                             @if ($post->status == 0)
-                                <a href="javascript:void(0)" class="btn btn-sm btn-success mb-2"
-                                    data-id="{{ $post->id }}" id="btn-edit-resume">Validasi</a>
+                                <a href="javascript:void(0)" class="btn btn-sm btn-success mb-2 btn-edit-resume"
+                                    data-id="{{ $post->id }}">Validasi</a>
                             @elseif ($post->status == 1)
-                                <a href="javascript:void(0)" class="btn btn-sm btn-info mb-2"
-                                    data-id="{{ $post->id }}" id="btn-view-resume">Lihat</a>
+                                <a href="javascript:void(0)" class="btn btn-sm btn-info mb-2 btn-view-resume"
+                                    data-id="{{ $post->id }}">Lihat</a>
                             @endif
                         </td>
                     </tr>
@@ -93,6 +93,22 @@
 @push('js')
     <script type="text/javascript">
         $(document).ready(function() {
+            // Handle edit/validasi resume button clicks
+            $(document).on('click', '.btn-edit-resume', function(e) {
+                e.preventDefault();
+                let resumeId = $(this).data('id');
+                $('#post_id').val(resumeId);
+                $('#modal-edit-resume').modal('show');
+            });
+
+            // Handle view resume button clicks
+            $(document).on('click', '.btn-view-resume', function(e) {
+                e.preventDefault();
+                let resumeId = $(this).data('id');
+                $('#post_id').val(resumeId);
+                $('#modal-view-resume').modal('show');
+            });
+
             // Filter by period
             $('#SelectOption').change(function() {
                 var periode = $(this).val();
@@ -127,8 +143,6 @@
                 window.location.href = "/unit-pelayanan/rawat-inap/unit/" + kd_unit + "/pelayanan/" +
                     kd_pasien + "/" +
                     tgl_masuk + "/" + urut_masuk + "/rawat-inap-resume/" + queryString;
-
-
             });
         });
     </script>
