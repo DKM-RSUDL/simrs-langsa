@@ -5,18 +5,31 @@ namespace App\Http\Controllers\UnitPelayanan\Operasi;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Kunjungan;
+use App\Models\OkJenisAnastesi;
+use App\Models\Perawat;
 use App\Models\RmeCeklistKesiapanAnesthesi;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class CeklistAnasthesiController extends Controller
 {
+    protected $perawat;
+    protected $jenisAnastesi;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/operasi');
+
+        // Cache perawat aktif selama 60 menit
+        $this->perawat = Cache::remember('perawat_aktif', now()->addMinutes(60), function () {
+            return Perawat::select('kd_perawat', 'nama')->where('aktif', 1)->get();
+        });
+
+        $this->jenisAnastesi = OkJenisAnastesi::select('kd_jenis_anastesi', 'jenis_anastesi')->get();
     }
 
     public function index($kd_pasien, $tgl_masuk, $urut_masuk)
@@ -77,16 +90,19 @@ class CeklistAnasthesiController extends Controller
             abort(404, 'Data not found');
         }
 
+        // ganti query langsung dengan properti yang sudah di-cache
+        $perawat = $this->perawat;
+        $jenisAnastesi = $this->jenisAnastesi;
+
         return view('unit-pelayanan.operasi.pelayanan.ceklist-anasthesi.create', compact(
             'dataMedis',
+            'perawat',
+            'jenisAnastesi'
         ));
     }
 
     public function store($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
-
-        DB::beginTransaction();
-
         try {
             // data dalam bentuk json
             $mesin_anesthesia_listrik = null;
@@ -163,9 +179,14 @@ class CeklistAnasthesiController extends Controller
                 ->where('urut_masuk', $urut_masuk)
                 ->firstOrFail();
 
+            $perawat = $this->perawat;
+            $jenisAnastesi = $this->jenisAnastesi;
+
             return view('unit-pelayanan.operasi.pelayanan.ceklist-anasthesi.show', compact(
                 'ceklistKesiapanAnesthesi',
-                'dataMedis'
+                'dataMedis',
+                'perawat',
+                'jenisAnastesi'
             ));
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
@@ -186,9 +207,14 @@ class CeklistAnasthesiController extends Controller
                 ->where('urut_masuk', $urut_masuk)
                 ->firstOrFail();
 
+            $perawat = $this->perawat;
+            $jenisAnastesi = $this->jenisAnastesi;
+
             return view('unit-pelayanan.operasi.pelayanan.ceklist-anasthesi.edit', compact(
                 'ceklistKesiapanAnesthesi',
-                'dataMedis'
+                'dataMedis',
+                'perawat',
+                'jenisAnastesi'
             ));
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
@@ -259,9 +285,9 @@ class CeklistAnasthesiController extends Controller
 
             DB::commit();
             return to_route('operasi.pelayanan.laporan-anastesi.index', [$kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'ceklist anasthesi berhasil di update !');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 }

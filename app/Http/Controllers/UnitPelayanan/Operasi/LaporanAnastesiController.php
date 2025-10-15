@@ -15,6 +15,7 @@ use App\Models\RmeCeklistKesiapanAnesthesi;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class LaporanAnastesiController extends Controller
@@ -51,11 +52,14 @@ class LaporanAnastesiController extends Controller
         }
 
         // Fetch Laporan Anastesi records for this patient and visit
-        $laporanAnastesi = OkLaporanAnastesi::with('userCreate') // Assuming user_created relation exists
+        $laporanAnastesi = OkLaporanAnastesi::with(['userCreate', 'product:kd_produk,deskripsi'])
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
+            ->orderBy('id', 'desc')
             ->get();
+
+        // dd($laporanAnastesi);
 
         $ceklistKesiapanAnesthesi = RmeCeklistKesiapanAnesthesi::with('userCreate')
             ->where('kd_pasien', $kd_pasien)
@@ -87,13 +91,15 @@ class LaporanAnastesiController extends Controller
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->first();
 
+        $kd_unit = $dataMedis->kd_unit;
+        $products = $this->getProducts($kd_unit);
+
         $jenisAnastesi = OkJenisAnastesi::all();
         $dokterAnastesi = DokterAnastesi::all();
         $dokter = Dokter::where('status', 1)->get();
         $perawat = Perawat::where('aktif', 1)->get();
 
-
-        return view('unit-pelayanan.operasi.pelayanan.laporan-anastesi.create', compact('dataMedis', 'jenisAnastesi', 'dokterAnastesi', 'dokter', 'perawat'));
+        return view('unit-pelayanan.operasi.pelayanan.laporan-anastesi.create', compact('dataMedis', 'jenisAnastesi', 'dokterAnastesi', 'dokter', 'perawat', 'products'));
     }
 
 
@@ -190,8 +196,6 @@ class LaporanAnastesiController extends Controller
             $lapAnastesiDtl->no_seri = $request->no_seri;
             $lapAnastesiDtl->save();
 
-
-
             $lapAnastesiDtlDua = new OkLaporanAnastesiDtl2();
             $lapAnastesiDtlDua->id_laporan_anastesi = $laporanAnastesi->id;
             $lapAnastesiDtlDua->kassa_satu = $request->kassa1;
@@ -242,20 +246,25 @@ class LaporanAnastesiController extends Controller
             $lapAnastesiDtlDua->penggunaan_cairan_drain = json_encode($filteredDrainData);
 
             $lapAnastesiDtlDua->irigasi_luka = $request->irigasi_luka;
-            $lapAnastesiDtlDua->pemakaian_cairan = $request->pemakaian_cairan;
-            $lapAnastesiDtlDua->banyak_pemakaian_cairan = $request->banyak_pemakaian_cairan;
+
+            // Pemakaian Cairan
+            $pemakaianCairan = json_decode($request->pemakaian_cairan, true) ?: [];
+            $lapAnastesiDtlDua->pemakaian_cairan = json_encode($pemakaianCairan);
+
             $lapAnastesiDtlDua->pemeriksaan_kondisi_kulit_pra_operasi = $request->pemeriksaan_kondisi_kulit_pra_operasi;
             $lapAnastesiDtlDua->pemeriksaan_kondisi_kulit_pasca_operasi = $request->pemeriksaan_kondisi_kulit_pasca_operasi;
             $lapAnastesiDtlDua->balutan_luka = $request->balutan_luka;
-            $lapAnastesiDtlDua->spesimen = $request->spesimen;
+
+            // Spesimen
+            $spesimen = json_decode($request->spesimen, true) ?: [];
+            $lapAnastesiDtlDua->spesimen = json_encode($spesimen);
+
             $lapAnastesiDtlDua->jenis_spesimen = $request->jenis_spesimen;
             $lapAnastesiDtlDua->total_jaringan_cairan_pemeriksaan = $request->total_jaringan_cairan_pemeriksaan;
             $lapAnastesiDtlDua->jenis_jaringan = $request->jenis_jaringan;
             $lapAnastesiDtlDua->jumlah_jaringan = $request->jumlah_jaringan;
             $lapAnastesiDtlDua->keterangan = $request->keterangan;
             $lapAnastesiDtlDua->save();
-
-
 
             DB::commit();
             return to_route('operasi.pelayanan.laporan-anastesi.index', [$kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Laporan Anestesi berhasil di tambah !');
@@ -290,7 +299,7 @@ class LaporanAnastesiController extends Controller
         }
 
         // Retrieve the specific anesthesia report with its relationships
-        $laporanAnastesi = OkLaporanAnastesi::with('userCreate')
+        $laporanAnastesi = OkLaporanAnastesi::with(['userCreate', 'product:kd_produk,deskripsi']) // Assuming user_created relation exists
             ->where('id', $id)
             ->firstOrFail();
 
@@ -409,6 +418,9 @@ class LaporanAnastesiController extends Controller
             ];
         }
 
+        $kd_unit = $dataMedis->kd_unit;
+        $products = $this->getProducts($kd_unit);
+
         return view('unit-pelayanan.operasi.pelayanan.laporan-anastesi.edit', compact(
             'dataMedis',
             'laporanAnastesi',
@@ -426,7 +438,8 @@ class LaporanAnastesiController extends Controller
             'waktuSelesaiOperasi',
             'jamSelesaiOperasi',
             'tanggalPencatatan',
-            'jamPencatatan'
+            'jamPencatatan',
+            'products'
         ));
     }
 
@@ -570,12 +583,18 @@ class LaporanAnastesiController extends Controller
             $laporanAnastesiDtl2->penggunaan_cairan_drain = json_encode($filteredDrainData);
 
             $laporanAnastesiDtl2->irigasi_luka = $request->irigasi_luka;
-            $laporanAnastesiDtl2->pemakaian_cairan = $request->pemakaian_cairan;
-            $laporanAnastesiDtl2->banyak_pemakaian_cairan = $request->banyak_pemakaian_cairan;
+
+            // Pemakaian Cairan
+            $pemakaianCairan = json_decode($request->pemakaian_cairan, true) ?: [];
+            $laporanAnastesiDtl2->pemakaian_cairan = json_encode($pemakaianCairan);
             $laporanAnastesiDtl2->pemeriksaan_kondisi_kulit_pra_operasi = $request->pemeriksaan_kondisi_kulit_pra_operasi;
             $laporanAnastesiDtl2->pemeriksaan_kondisi_kulit_pasca_operasi = $request->pemeriksaan_kondisi_kulit_pasca_operasi;
             $laporanAnastesiDtl2->balutan_luka = $request->balutan_luka;
-            $laporanAnastesiDtl2->spesimen = $request->spesimen;
+
+            // Spesimen
+            $spesimen = json_decode($request->spesimen, true) ?: [];
+            $laporanAnastesiDtl2->spesimen = json_encode($spesimen);
+            
             $laporanAnastesiDtl2->jenis_spesimen = $request->jenis_spesimen;
             $laporanAnastesiDtl2->total_jaringan_cairan_pemeriksaan = $request->total_jaringan_cairan_pemeriksaan;
             $laporanAnastesiDtl2->jenis_jaringan = $request->jenis_jaringan;
@@ -590,5 +609,22 @@ class LaporanAnastesiController extends Controller
             DB::rollBack();
             return back()->with('error', $e->getMessage());
         }
+    }
+
+    /**
+     * Ambil produk untuk kd_unit tertentu (dengan cache)
+     */
+    protected function getProducts($kd_unit)
+    {
+        return Cache::remember("products:unit:{$kd_unit}:klas:61", 60, function () use ($kd_unit) {
+            return DB::table('produk')
+                ->join('tarif', 'produk.kd_produk', '=', 'tarif.kd_produk')
+                ->where('tarif.kd_unit', $kd_unit)
+                ->whereRaw('LEFT(produk.kd_klas, 2) = ?', ['61'])
+                ->select('produk.kd_produk', 'produk.deskripsi')
+                ->groupBy('produk.kd_produk', 'produk.deskripsi')
+                ->orderBy('produk.deskripsi')
+                ->get();
+        });
     }
 }

@@ -81,10 +81,11 @@
                             </li>
                             <li class="nav-item" role="presentation">
                                 <!-- Print Button -->
-                                @if ($hasSignIn && $hasTimeout && $hasSignout)
+                                @if ($signin && $timeout && $signout)
                                     <div class="d-flex justify-content-end mb-3">
                                         <a href="{{ route('operasi.pelayanan.ceklist-keselamatan.print', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
-                                            class="btn btn-success btn-sm d-flex align-items-center" target="_blank" type="button">
+                                            class="btn btn-success btn-sm d-flex align-items-center" target="_blank"
+                                            type="button">
                                             <i class="ti-printer me-1"></i> Print
                                         </a>
                                     </div>
@@ -100,7 +101,7 @@
                                 aria-labelledby="sign-tab">
                                 <div>
                                     <div class="d-flex justify-content-between align-items-center m-3">
-                                        @if (!$hasSignIn)
+                                        @if (!$signin)
                                             <div>
                                                 <h5 class="mb-0">Checklist Keselamatan Pasien (Sign In)</h5>
                                             </div>
@@ -115,124 +116,124 @@
 
                                     {{-- data --}}
                                     <div class="list-group" id="signInList">
-                                        @if ($signInList->count() > 0)
-                                            @foreach ($signInList as $signIn)
-                                                <div class="list-group-item">
-                                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                                        <h6 class="mb-0 fw-bold">
-                                                            <span class="badge bg-primary me-2">Sign In</span>
-                                                            Sebelum Induksi Anestesi
-                                                        </h6>
-                                                        <small
-                                                            class="text-muted">{{ \Carbon\Carbon::parse($signIn->waktu_signin)->format('d-m-Y H:i') }}</small>
+                                        @if ($signin)
+                                            <div class="list-group-item">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <h6 class="mb-0 fw-bold">
+                                                        <span class="badge bg-primary me-2">Sign In</span>
+                                                        Sebelum Induksi Anestesi
+                                                    </h6>
+                                                    <small class="text-muted">{{ $signin->waktu_signin }}</small>
+                                                </div>
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div>
+                                                        <p class="mb-1"><i class="ti-user me-2"></i>Pasien:
+                                                            {{ $dataMedis->pasien->nama_lengkap }}
+                                                            ({{ $dataMedis->kd_pasien }})
+                                                        </p>
+                                                        <p class="mb-1"><i class="ti-medall-alt me-2"></i>Dokter
+                                                            Anestesi:
+                                                            {{ $signin->dokterAnestesi->dokter->nama_lengkap ?? 'Tidak Tersedia' }}
+                                                        </p>
+                                                        <p class="mb-1"><i class="ti-heart-broken me-2"></i>Perawat:
+                                                            {{ $signin->perawatData->nama ?? 'Tidak Tersedia' }}
+                                                        </p>
                                                     </div>
-                                                    <div class="d-flex justify-content-between align-items-start">
-                                                        <div>
-                                                            <p class="mb-1"><i class="ti-user me-2"></i>Pasien:
-                                                                {{ $dataMedis->pasien->nama_lengkap }}
-                                                                ({{ $dataMedis->kd_pasien }})
+                                                    <div>
+                                                        <a href="{{ route('operasi.pelayanan.ceklist-keselamatan.edit-signin', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $signin->id]) }}"
+                                                            class="btn btn-sm btn-warning me-1">
+                                                            <i class="ti-pencil me-1"></i>
+                                                        </a>
+                                                        <form method="POST"
+                                                            action="{{ route('operasi.pelayanan.ceklist-keselamatan.destroy-signin', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $signin->id]) }}"
+                                                            style="display:inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm btn-danger"
+                                                                data-confirm data-confirm-title="Anda yakin?"
+                                                                data-confirm-text="Data yang dihapus tidak dapat dikembalikan"
+                                                                title="Hapus operasi" aria-label="Hapus operasi">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-3 bg-light p-3 rounded">
+                                                    <h6 class="mb-2">Checklist Keselamatan:</h6>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $signin->identifikasi ? 'text-success' : 'text-danger' }}"></i>
+                                                                Identifikasi dan gelang pasien:
+                                                                <strong>{{ $signin->identifikasi ? 'Ya' : 'Tidak' }}</strong>
                                                             </p>
-                                                            <p class="mb-1"><i class="ti-medall-alt me-2"></i>Dokter
-                                                                Anestesi:
-                                                                {{ $signIn->dokterAnestesi->dokter->nama_lengkap ?? 'Tidak Tersedia' }}
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $signin->lokasi ? 'text-success' : 'text-danger' }}"></i>
+                                                                Lokasi operasi:
+                                                                <strong>{{ $signin->lokasi ? 'Ya' : 'Tidak' }}</strong>
                                                             </p>
-                                                            <p class="mb-1"><i class="ti-heart-broken me-2"></i>Perawat:
-                                                                {{ $signIn->perawatData->nama ?? 'Tidak Tersedia' }}
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $signin->prosedur ? 'text-success' : 'text-danger' }}"></i>
+                                                                Prosedur operasi:
+                                                                <strong>{{ $signin->prosedur ? 'Ya' : 'Tidak' }}</strong>
+                                                            </p>
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $signin->informed_anestesi ? 'text-success' : 'text-danger' }}"></i>
+                                                                Informed consent anestesi:
+                                                                <strong>{{ $signin->informed_anestesi ? 'Ya' : 'Tidak' }}</strong>
+                                                            </p>
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $signin->informed_operasi ? 'text-success' : 'text-danger' }}"></i>
+                                                                Informed consent operasi:
+                                                                <strong>{{ $signin->informed_operasi ? 'Ya' : 'Tidak' }}</strong>
                                                             </p>
                                                         </div>
-                                                        <div>
-                                                            <a href="{{ route('operasi.pelayanan.ceklist-keselamatan.edit-signin', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $signIn->id]) }}" class="btn btn-sm btn-warning me-1">
-                                                                <i class="ti-pencil me-1"></i>
-                                                            </a>
-                                                            <form method="POST"
-                                                                action="{{ route('operasi.pelayanan.ceklist-keselamatan.destroy-signin', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $signIn->id]) }}"
-                                                                style="display:inline;">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="btn btn-sm btn-danger"
-                                                                    onclick="return confirm('Yakin ingin menghapus data ini?')">
-                                                                    <i class="ti-trash me-1"></i>
-                                                                </button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                    <div class="mt-3 bg-light p-3 rounded">
-                                                        <h6 class="mb-2">Checklist Keselamatan:</h6>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $signIn->identifikasi ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Identifikasi dan gelang pasien:
-                                                                    <strong>{{ $signIn->identifikasi ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $signIn->lokasi ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Lokasi operasi:
-                                                                    <strong>{{ $signIn->lokasi ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $signIn->prosedur ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Prosedur operasi:
-                                                                    <strong>{{ $signIn->prosedur ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $signIn->informed_anestesi ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Informed consent anestesi:
-                                                                    <strong>{{ $signIn->informed_anestesi ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $signIn->informed_operasi ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Informed consent operasi:
-                                                                    <strong>{{ $signIn->informed_operasi ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $signIn->tanda_lokasi ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Lokasi operasi sudah diberi tanda:
-                                                                    <strong>{{ $signIn->tanda_lokasi ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $signIn->mesin_obat ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Mesin dan obat anestesi sudah dicek:
-                                                                    <strong>{{ $signIn->mesin_obat ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $signIn->pulse_oximeter ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Pulse oximeter sudah terpasang:
-                                                                    <strong>{{ $signIn->pulse_oximeter ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $signIn->kesulitan_bernafas ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Kesulitan bernafas/resiko aspirasi:
-                                                                    <strong>{{ $signIn->kesulitan_bernafas ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $signIn->resiko_darah ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Resiko kehilangan darah >500ml:
-                                                                    <strong>{{ $signIn->resiko_darah ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $signIn->akses_intravena ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Akses intravena/rencana terapi cairan:
-                                                                    <strong>{{ $signIn->akses_intravena ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                            </div>
+                                                        <div class="col-md-6">
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $signin->tanda_lokasi ? 'text-success' : 'text-danger' }}"></i>
+                                                                Lokasi operasi sudah diberi tanda:
+                                                                <strong>{{ $signin->tanda_lokasi ? 'Ya' : 'Tidak' }}</strong>
+                                                            </p>
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $signin->mesin_obat ? 'text-success' : 'text-danger' }}"></i>
+                                                                Mesin dan obat anestesi sudah dicek:
+                                                                <strong>{{ $signin->mesin_obat ? 'Ya' : 'Tidak' }}</strong>
+                                                            </p>
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $signin->pulse_oximeter ? 'text-success' : 'text-danger' }}"></i>
+                                                                Pulse oximeter sudah terpasang:
+                                                                <strong>{{ $signin->pulse_oximeter ? 'Ya' : 'Tidak' }}</strong>
+                                                            </p>
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $signin->kesulitan_bernafas ? 'text-success' : 'text-danger' }}"></i>
+                                                                Kesulitan bernafas/resiko aspirasi:
+                                                                <strong>{{ $signin->kesulitan_bernafas ? 'Ya' : 'Tidak' }}</strong>
+                                                            </p>
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $signin->resiko_darah ? 'text-success' : 'text-danger' }}"></i>
+                                                                Resiko kehilangan darah >500ml:
+                                                                <strong>{{ $signin->resiko_darah ? 'Ya' : 'Tidak' }}</strong>
+                                                            </p>
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $signin->akses_intravena ? 'text-success' : 'text-danger' }}"></i>
+                                                                Akses intravena/rencana terapi cairan:
+                                                                <strong>{{ $signin->akses_intravena ? 'Ya' : 'Tidak' }}</strong>
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            @endforeach
+                                            </div>
                                         @else
                                             <div class="alert alert-info mt-3">
                                                 Belum ada data checklist Sign In. Silahkan tambahkan data baru.
@@ -245,7 +246,7 @@
                             <div class="tab-pane fade" id="timeout" role="tabpanel" aria-labelledby="timeout-tab">
                                 <div>
                                     <div class="d-flex justify-content-between align-items-center m-3">
-                                        @if (!$hasTimeout)
+                                        @if (!$timeout)
                                             <div>
                                                 <h5 class="mb-0">Checklist Keselamatan Pasien (Time Out)</h5>
                                             </div>
@@ -261,131 +262,132 @@
 
                                     {{-- data --}}
                                     <div class="list-group" id="timeoutList">
-                                        @if ($timeoutList->count() > 0)
-                                            @foreach ($timeoutList as $timeout)
-                                                <div class="list-group-item">
-                                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                                        <h6 class="mb-0 fw-bold">
-                                                            <span class="badge bg-info me-2">Time Out</span>
-                                                            Sebelum Insisi
-                                                        </h6>
-                                                        <small
-                                                            class="text-muted">{{ \Carbon\Carbon::parse($timeout->waktu_timeout)->format('d-m-Y H:i') }}</small>
+                                        @if ($timeout)
+                                            <div class="list-group-item">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <h6 class="mb-0 fw-bold">
+                                                        <span class="badge bg-info me-2">Time Out</span>
+                                                        Sebelum Insisi
+                                                    </h6>
+                                                    <small
+                                                        class="text-muted">{{ \Carbon\Carbon::parse($timeout->waktu_timeout)->format('d-m-Y H:i') }}</small>
+                                                </div>
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div>
+                                                        <p class="mb-1"><i class="ti-user me-2"></i>Pasien:
+                                                            {{ $dataMedis->pasien->nama_lengkap }}
+                                                            ({{ $dataMedis->kd_pasien }})
+                                                        </p>
+                                                        <p class="mb-1"><i class="ti-medall me-2"></i>Ahli Bedah:
+                                                            {{ $timeout->dokterBedah->nama_lengkap ?? 'Tidak Tersedia' }}
+                                                        </p>
+                                                        <p class="mb-1"><i class="ti-medall-alt me-2"></i>Dokter
+                                                            Anestesi:
+                                                            {{ $timeout->dokterAnastesi->dokter->nama_lengkap ?? 'Tidak Tersedia' }}
+                                                        </p>
+                                                        <p class="mb-1"><i class="ti-heart-broken me-2"></i>Perawat:
+                                                            {{ $timeout->perawatData->nama ?? 'Tidak Tersedia' }}
+                                                        </p>
                                                     </div>
-                                                    <div class="d-flex justify-content-between align-items-start">
-                                                        <div>
-                                                            <p class="mb-1"><i class="ti-user me-2"></i>Pasien:
-                                                                {{ $dataMedis->pasien->nama_lengkap }}
-                                                                ({{ $dataMedis->kd_pasien }})
+                                                    <div>
+                                                        <a href="{{ route('operasi.pelayanan.ceklist-keselamatan.edit-timeout', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $timeout->id]) }}"
+                                                            class="btn btn-sm btn-warning me-1">
+                                                            <i class="ti-pencil me-1"></i>
+                                                        </a>
+                                                        <form method="POST"
+                                                            action="{{ route('operasi.pelayanan.ceklist-keselamatan.destroy-timeout', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $timeout->id]) }}"
+                                                            style="display:inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm btn-danger"
+                                                                data-confirm data-confirm-title="Anda yakin?"
+                                                                data-confirm-text="Data yang dihapus tidak dapat dikembalikan"
+                                                                title="Hapus operasi" aria-label="Hapus operasi">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-3 bg-light p-3 rounded">
+                                                    <h6 class="mb-2">Checklist Keselamatan:</h6>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $timeout->konfirmasi_tim ? 'text-success' : 'text-danger' }}"></i>
+                                                                Konfirmasi tim memperkenalkan diri:
+                                                                <strong>{{ $timeout->konfirmasi_tim ? 'Ya' : 'Tidak' }}</strong>
                                                             </p>
-                                                            <p class="mb-1"><i class="ti-medall me-2"></i>Ahli Bedah:
-                                                                {{ $timeout->dokterBedah->nama ?? 'Tidak Tersedia' }}
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $timeout->konfirmasi_nama ? 'text-success' : 'text-danger' }}"></i>
+                                                                Konfirmasi nama pasien:
+                                                                <strong>{{ $timeout->konfirmasi_nama ? 'Ya' : 'Tidak' }}</strong>
                                                             </p>
-                                                            <p class="mb-1"><i class="ti-medall-alt me-2"></i>Dokter
-                                                                Anestesi:
-                                                                {{ $timeout->dokterAnastesi->dokter->nama_lengkap ?? 'Tidak Tersedia' }}
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $timeout->konfirmasi_prosedur ? 'text-success' : 'text-danger' }}"></i>
+                                                                Konfirmasi prosedur:
+                                                                <strong>{{ $timeout->konfirmasi_prosedur ? 'Ya' : 'Tidak' }}</strong>
                                                             </p>
-                                                            <p class="mb-1"><i class="ti-heart-broken me-2"></i>Perawat:
-                                                                {{ $timeout->perawatData->nama ?? 'Tidak Tersedia' }}
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $timeout->konfirmasi_lokasi ? 'text-success' : 'text-danger' }}"></i>
+                                                                Konfirmasi lokasi insisi:
+                                                                <strong>{{ $timeout->konfirmasi_lokasi ? 'Ya' : 'Tidak' }}</strong>
+                                                            </p>
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $timeout->antibiotik_profilaksis ? 'text-success' : 'text-danger' }}"></i>
+                                                                Antibiotik profilaksis diberikan:
+                                                                <strong>{{ $timeout->antibiotik_profilaksis ? 'Ya' : 'Tidak' }}</strong>
                                                             </p>
                                                         </div>
-                                                        <div>
-                                                            <a href="{{ route('operasi.pelayanan.ceklist-keselamatan.edit-timeout', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $timeout->id]) }}" class="btn btn-sm btn-warning me-1">
-                                                                <i class="ti-pencil me-1"></i>
-                                                            </a>
-                                                            <form method="POST"
-                                                                action="{{ route('operasi.pelayanan.ceklist-keselamatan.destroy-timeout', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $timeout->id]) }}"
-                                                                style="display:inline;">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="btn btn-sm btn-danger"
-                                                                    onclick="return confirm('Yakin ingin menghapus data ini?')">
-                                                                    <i class="ti-trash me-1"></i>
-                                                                </button>
-                                                            </form>
+                                                        <div class="col-md-6">
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $timeout->foto_rontgen ? 'text-success' : 'text-danger' }}"></i>
+                                                                Foto Rontgen/CT-Scan/MRI ditayangkan:
+                                                                <strong>{{ $timeout->foto_rontgen ? 'Ya' : 'Tidak' }}</strong>
+                                                            </p>
+                                                            @if ($timeout->antibiotik_profilaksis)
+                                                                <p class="mb-1 small">
+                                                                    <i class="ti-medall me-1 text-info"></i>
+                                                                    Nama antibiotik:
+                                                                    <strong>{{ $timeout->nama_antibiotik ?: 'Tidak tercatat' }}</strong>
+                                                                </p>
+                                                                <p class="mb-1 small">
+                                                                    <i class="ti-medall me-1 text-info"></i>
+                                                                    Dosis antibiotik:
+                                                                    <strong>{{ $timeout->dosis_antibiotik ?: 'Tidak tercatat' }}</strong>
+                                                                </p>
+                                                            @endif
                                                         </div>
                                                     </div>
-                                                    <div class="mt-3 bg-light p-3 rounded">
-                                                        <h6 class="mb-2">Checklist Keselamatan:</h6>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $timeout->konfirmasi_tim ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Konfirmasi tim memperkenalkan diri:
-                                                                    <strong>{{ $timeout->konfirmasi_tim ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $timeout->konfirmasi_nama ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Konfirmasi nama pasien:
-                                                                    <strong>{{ $timeout->konfirmasi_nama ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $timeout->konfirmasi_prosedur ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Konfirmasi prosedur:
-                                                                    <strong>{{ $timeout->konfirmasi_prosedur ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $timeout->konfirmasi_lokasi ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Konfirmasi lokasi insisi:
-                                                                    <strong>{{ $timeout->konfirmasi_lokasi ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $timeout->antibiotik_profilaksis ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Antibiotik profilaksis diberikan:
-                                                                    <strong>{{ $timeout->antibiotik_profilaksis ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $timeout->foto_rontgen ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Foto Rontgen/CT-Scan/MRI ditayangkan:
-                                                                    <strong>{{ $timeout->foto_rontgen ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                                @if ($timeout->antibiotik_profilaksis)
-                                                                    <p class="mb-1 small">
-                                                                        <i class="ti-medall me-1 text-info"></i>
-                                                                        Nama antibiotik:
-                                                                        <strong>{{ $timeout->nama_antibiotik ?: 'Tidak tercatat' }}</strong>
-                                                                    </p>
-                                                                    <p class="mb-1 small">
-                                                                        <i class="ti-medall me-1 text-info"></i>
-                                                                        Dosis antibiotik:
-                                                                        <strong>{{ $timeout->dosis_antibiotik ?: 'Tidak tercatat' }}</strong>
-                                                                    </p>
-                                                                @endif
-                                                            </div>
+                                                    <div class="row mt-3">
+                                                        <div class="col-12">
+                                                            <h6 class="mb-2">Antisipasi Kejadian Kritis:</h6>
                                                         </div>
-                                                        <div class="row mt-3">
-                                                            <div class="col-12">
-                                                                <h6 class="mb-2">Antisipasi Kejadian Kritis:</h6>
-                                                            </div>
-                                                            <div class="col-md-12">
-                                                                <p class="mb-1 small">
-                                                                    <i class="ti-clipboard me-1 text-primary"></i>
-                                                                    <strong>Review dokter bedah:</strong>
-                                                                    {{ $timeout->review_bedah ?: 'Tidak ada catatan' }}
-                                                                </p>
-                                                                <p class="mb-1 small">
-                                                                    <i class="ti-clipboard me-1 text-primary"></i>
-                                                                    <strong>Review tim anestesi:</strong>
-                                                                    {{ $timeout->review_anastesi ?: 'Tidak ada catatan' }}
-                                                                </p>
-                                                                <p class="mb-1 small">
-                                                                    <i class="ti-clipboard me-1 text-primary"></i>
-                                                                    <strong>Review tim perawat:</strong>
-                                                                    {{ $timeout->review_perawat ?: 'Tidak ada catatan' }}
-                                                                </p>
-                                                            </div>
+                                                        <div class="col-md-12">
+                                                            <p class="mb-1 small">
+                                                                <i class="ti-clipboard me-1 text-primary"></i>
+                                                                <strong>Review dokter bedah:</strong>
+                                                                {{ $timeout->review_bedah ?: 'Tidak ada catatan' }}
+                                                            </p>
+                                                            <p class="mb-1 small">
+                                                                <i class="ti-clipboard me-1 text-primary"></i>
+                                                                <strong>Review tim anestesi:</strong>
+                                                                {{ $timeout->review_anastesi ?: 'Tidak ada catatan' }}
+                                                            </p>
+                                                            <p class="mb-1 small">
+                                                                <i class="ti-clipboard me-1 text-primary"></i>
+                                                                <strong>Review tim perawat:</strong>
+                                                                {{ $timeout->review_perawat ?: 'Tidak ada catatan' }}
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            @endforeach
+                                            </div>
                                         @else
                                             <div class="alert alert-info mt-3">
                                                 Belum ada data checklist Time Out. Silahkan tambahkan data baru.
@@ -398,7 +400,7 @@
                             <div class="tab-pane fade" id="signout" role="tabpanel" aria-labelledby="signout-tab">
                                 <div>
                                     <div class="d-flex justify-content-between align-items-center m-3">
-                                        @if (!$hasSignout)
+                                        @if (!$signout)
                                             <div>
                                                 <h5 class="mb-0">Checklist Keselamatan Pasien (Sign Out)</h5>
                                             </div>
@@ -414,106 +416,107 @@
 
                                     {{-- data --}}
                                     <div class="list-group" id="signOutList">
-                                        @if ($signoutList->count() > 0)
-                                            @foreach ($signoutList as $signout)
-                                                <div class="list-group-item">
-                                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                                        <h6 class="mb-0 fw-bold">
-                                                            <span class="badge bg-success me-2">Sign Out</span>
-                                                            Sebelum Tutup Luka Operasi
-                                                        </h6>
-                                                        <small
-                                                            class="text-muted">{{ \Carbon\Carbon::parse($signout->waktu_signout)->format('d-m-Y H:i') }}</small>
+                                        @if ($signout)
+                                            <div class="list-group-item">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <h6 class="mb-0 fw-bold">
+                                                        <span class="badge bg-success me-2">Sign Out</span>
+                                                        Sebelum Tutup Luka Operasi
+                                                    </h6>
+                                                    <small class="text-muted">{{ $signout->waktu_signout }}</small>
+                                                </div>
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div>
+                                                        <p class="mb-1"><i class="ti-user me-2"></i>Pasien:
+                                                            {{ $dataMedis->pasien->nama_lengkap }}
+                                                            ({{ $dataMedis->kd_pasien }})
+                                                        </p>
+                                                        <p class="mb-1"><i class="ti-medall me-2"></i>Ahli Bedah:
+                                                            @if ($signout->ahli_bedah && $signout->dokterBedah)
+                                                                {{ $signout->dokterBedah->nama_lengkap }}
+                                                            @else
+                                                                Tidak Tersedia (ID:
+                                                                {{ $signout->ahli_bedah ?? 'Kosong' }})
+                                                            @endif
+                                                        </p>
+                                                        <p class="mb-1"><i class="ti-medall-alt me-2"></i>Dokter
+                                                            Anestesi:
+                                                            {{ $signout->dokterAnastesi->dokter->nama_lengkap ?? 'Tidak Tersedia' }}
+                                                        </p>
+                                                        <p class="mb-1"><i class="ti-heart-broken me-2"></i>Perawat:
+                                                            {{ $signout->perawatData->nama ?? 'Tidak Tersedia' }}
+                                                        </p>
                                                     </div>
-                                                    <div class="d-flex justify-content-between align-items-start">
-                                                        <div>
-                                                            <p class="mb-1"><i class="ti-user me-2"></i>Pasien:
-                                                                {{ $dataMedis->pasien->nama_lengkap }}
-                                                                ({{ $dataMedis->kd_pasien }})
-                                                            </p>
-                                                            <p class="mb-1"><i class="ti-medall me-2"></i>Ahli Bedah:
-                                                                @if($signout->ahli_bedah && $signout->dokterBedah)
-                                                                    {{ $signout->dokterBedah->nama_lengkap }}
-                                                                @else
-                                                                    Tidak Tersedia (ID: {{ $signout->ahli_bedah ?? 'Kosong' }})
-                                                                @endif
-                                                            </p>
-                                                            <p class="mb-1"><i class="ti-medall-alt me-2"></i>Dokter
-                                                                Anestesi:
-                                                                {{ $signout->dokterAnastesi->dokter->nama_lengkap ?? 'Tidak Tersedia' }}
-                                                            </p>
-                                                            <p class="mb-1"><i class="ti-heart-broken me-2"></i>Perawat:
-                                                                {{ $signout->perawatData->nama ?? 'Tidak Tersedia' }}
-                                                            </p>
-                                                        </div>
-                                                        <div>
-                                                            <a href="{{ route('operasi.pelayanan.ceklist-keselamatan.edit-signout', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $signout->id]) }}" class="btn btn-sm btn-warning me-1">
-                                                                <i class="ti-pencil me-1"></i>
-                                                            </a>
-                                                            <form method="POST"
-                                                                action="{{ route('operasi.pelayanan.ceklist-keselamatan.destroy-signout', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $signout->id]) }}"
-                                                                style="display:inline;">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="btn btn-sm btn-danger"
-                                                                    onclick="return confirm('Yakin ingin menghapus data ini?')">
-                                                                    <i class="ti-trash me-1"></i>
-                                                                </button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                    <div class="mt-3 bg-light p-3 rounded">
-                                                        <h6 class="mb-2">Checklist Keselamatan:</h6>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $signout->konfirmasi_prosedur ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Konfirmasi prosedur telah dilakukan:
-                                                                    <strong>{{ $signout->konfirmasi_prosedur ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $signout->konfirmasi_instrumen ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Konfirmasi instrumen lengkap:
-                                                                    <strong>{{ $signout->konfirmasi_instrumen ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $signout->konfirmasi_spesimen ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Konfirmasi spesimen (jika ada):
-                                                                    <strong>{{ $signout->konfirmasi_spesimen ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $signout->masalah_peralatan ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Tidak ada masalah peralatan:
-                                                                    <strong>{{ $signout->masalah_peralatan ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                                <p class="mb-1 small">
-                                                                    <i
-                                                                        class="ti-check me-1 {{ $signout->review_tim ? 'text-success' : 'text-danger' }}"></i>
-                                                                    Review tim selesai:
-                                                                    <strong>{{ $signout->review_tim ? 'Ya' : 'Tidak' }}</strong>
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        @if ($signout->catatan_penting)
-                                                            <div class="row mt-3">
-                                                                <div class="col-12">
-                                                                    <h6 class="mb-2">Catatan Penting:</h6>
-                                                                    <p class="mb-1 small">
-                                                                        <i class="ti-clipboard me-1 text-primary"></i>
-                                                                        <strong>{{ $signout->catatan_penting ?: 'Tidak ada catatan' }}</strong>
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        @endif
+                                                    <div>
+                                                        <a href="{{ route('operasi.pelayanan.ceklist-keselamatan.edit-signout', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $signout->id]) }}"
+                                                            class="btn btn-sm btn-warning me-1">
+                                                            <i class="ti-pencil me-1"></i>
+                                                        </a>
+                                                        <form method="POST"
+                                                            action="{{ route('operasi.pelayanan.ceklist-keselamatan.destroy-signout', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $signout->id]) }}"
+                                                            style="display:inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm btn-danger"
+                                                                data-confirm data-confirm-title="Anda yakin?"
+                                                                data-confirm-text="Data yang dihapus tidak dapat dikembalikan"
+                                                                title="Hapus operasi" aria-label="Hapus operasi">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </form>
                                                     </div>
                                                 </div>
-                                            @endforeach
+                                                <div class="mt-3 bg-light p-3 rounded">
+                                                    <h6 class="mb-2">Checklist Keselamatan:</h6>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $signout->konfirmasi_prosedur ? 'text-success' : 'text-danger' }}"></i>
+                                                                Konfirmasi prosedur telah dilakukan:
+                                                                <strong>{{ $signout->konfirmasi_prosedur ? 'Ya' : 'Tidak' }}</strong>
+                                                            </p>
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $signout->konfirmasi_instrumen ? 'text-success' : 'text-danger' }}"></i>
+                                                                Konfirmasi instrumen lengkap:
+                                                                <strong>{{ $signout->konfirmasi_instrumen ? 'Ya' : 'Tidak' }}</strong>
+                                                            </p>
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $signout->konfirmasi_spesimen ? 'text-success' : 'text-danger' }}"></i>
+                                                                Konfirmasi spesimen (jika ada):
+                                                                <strong>{{ $signout->konfirmasi_spesimen ? 'Ya' : 'Tidak' }}</strong>
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $signout->masalah_peralatan ? 'text-success' : 'text-danger' }}"></i>
+                                                                Tidak ada masalah peralatan:
+                                                                <strong>{{ $signout->masalah_peralatan ? 'Ya' : 'Tidak' }}</strong>
+                                                            </p>
+                                                            <p class="mb-1 small">
+                                                                <i
+                                                                    class="ti-check me-1 {{ $signout->review_tim ? 'text-success' : 'text-danger' }}"></i>
+                                                                Review tim selesai:
+                                                                <strong>{{ $signout->review_tim ? 'Ya' : 'Tidak' }}</strong>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    @if ($signout->catatan_penting)
+                                                        <div class="row mt-3">
+                                                            <div class="col-12">
+                                                                <h6 class="mb-2">Catatan Penting:</h6>
+                                                                <p class="mb-1 small">
+                                                                    <i class="ti-clipboard me-1 text-primary"></i>
+                                                                    <strong>{{ $signout->catatan_penting ?: 'Tidak ada catatan' }}</strong>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            </div>
                                         @else
                                             <div class="alert alert-info mt-3">
                                                 Belum ada data checklist Sign Out. Silahkan tambahkan data baru.
@@ -564,4 +567,6 @@
             });
         });
     </script>
+
+    <script src="{{ asset('js/helpers/confirm.js') }}"></script>
 @endpush

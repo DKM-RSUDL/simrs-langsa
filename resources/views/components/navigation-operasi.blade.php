@@ -49,26 +49,26 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
-        [
-            'icon' => 'agree.png',
-            'label' => 'Konsultasi',
-            'link' => '#',
-        ],
-        [
-            'icon' => 'test_tube.png',
-            'label' => 'Labor',
-            'link' => '#',
-        ],
-        [
-            'icon' => 'microbeam_radiation_therapy.png',
-            'label' => 'Radiologi',
-            'link' => '#',
-        ],
-        [
-            'icon' => 'pill.png',
-            'label' => 'Farmasi',
-            'link' => '#',
-        ],
+        // [
+        //     'icon' => 'agree.png',
+        //     'label' => 'Konsultasi',
+        //     'link' => '#',
+        // ],
+        // [
+        //     'icon' => 'test_tube.png',
+        //     'label' => 'Labor',
+        //     'link' => '#',
+        // ],
+        // [
+        //     'icon' => 'microbeam_radiation_therapy.png',
+        //     'label' => 'Radiologi',
+        //     'link' => '#',
+        // ],
+        // [
+        //     'icon' => 'pill.png',
+        //     'label' => 'Farmasi',
+        //     'link' => '#',
+        // ],
     ];
 @endphp
 
