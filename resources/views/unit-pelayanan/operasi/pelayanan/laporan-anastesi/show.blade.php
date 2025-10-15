@@ -6,7 +6,7 @@
 
     <div class="row g-4">
         <div class="col-md-3">
-            @include('unit-pelayanan.operasi.pelayanan.laporan-anastesi.patient-card')
+            @include('components.patient-card')
         </div>
 
         <div class="col-md-9">
@@ -15,13 +15,12 @@
 
                 @include('components.page-header', [
                     'title' => 'Asesmen Catatan Keperawatan Periopetif (Intra dan Pasca Operasi)',
-                    'description' =>
-                        'Rincian data Asesmen Catatan Perioperatif dalam formulir di bawah ini.',
+                    'description' => 'Rincian data Asesmen Catatan Perioperatif dalam formulir di bawah ini.',
                 ])
 
                 <!-- 1. Data Masuk -->
                 <div class="mb-5">
-                    <h5 class="text-primary mb-3 border-bottom pb-2">1. Data Masuk</h5>
+                    <h5 class="mb-3 border-bottom pb-2">1. Data Masuk</h5>
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="fw-bold text-muted">Tanggal dan Jam Masuk</label>
@@ -34,7 +33,7 @@
 
                 <!-- 2. Jenis dan Tipe Operasi -->
                 <div class="mb-5">
-                    <h5 class="text-primary mb-3 border-bottom pb-2">2. Jenis dan Tipe Operasi</h5>
+                    <h5 class="mb-3 border-bottom pb-2">2. Jenis dan Tipe Operasi</h5>
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="fw-bold text-muted">Jenis Operasi</label>
@@ -49,7 +48,7 @@
 
                 <!-- 3. Persiapan Pasien dan Peralatan -->
                 <div class="mb-5">
-                    <h5 class="text-primary mb-3 border-bottom pb-2">3. Persiapan Pasien dan Peralatan</h5>
+                    <h5 class="mb-3 border-bottom pb-2">3. Persiapan Pasien dan Peralatan</h5>
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="fw-bold text-muted">Time Out</label>
@@ -94,8 +93,8 @@
                 </div>
 
                 <!-- 4. Penggunaan Alat dan Teknologi Medis -->
-                <div class="mb-5">
-                    <h5 class="text-primary mb-3 border-bottom pb-2">4. Penggunaan Alat dan Teknologi Medis</h5>
+                <div>
+                    <h5 class="mb-3 border-bottom pb-2">4. Penggunaan Alat dan Teknologi Medis</h5>
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="fw-bold text-muted">Cek Instrumen</label>
@@ -226,7 +225,7 @@
 
                     <!-- 5. Penghitungan Alat dan Bahan Operasi -->
                     <div class="mb-5">
-                        <h5 class="text-primary mb-3 border-bottom pb-2">5. Penghitungan Alat dan Bahan Operasi</h5>
+                        <h5 class="mb-3 border-bottom pb-2">5. Penghitungan Alat dan Bahan Operasi</h5>
                         <div class="table-responsive">
                             <table class="table table-hover table-bordered">
                                 <thead class="bg-light">
@@ -283,7 +282,7 @@
 
                     <!-- 6. Penggunaan Cairan dan Drain -->
                     <div class="mb-5">
-                        <h5 class="text-primary mb-3 border-bottom pb-2">6. Penggunaan Cairan dan Drain</h5>
+                        <h5 class="mb-3 border-bottom pb-2">6. Penggunaan Cairan dan Drain</h5>
                         @if ($drainData && count($drainData) > 0)
                             <div class="table-responsive">
                                 <table class="table table-hover table-bordered">
@@ -347,7 +346,7 @@
 
                     <!-- 7. Waktu dan Tim Medis -->
                     <div class="mb-5">
-                        <h5 class="text-primary mb-3 border-bottom pb-2">7. Waktu dan Tim Medis</h5>
+                        <h5 class="mb-3 border-bottom pb-2">7. Waktu dan Tim Medis</h5>
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="fw-bold text-muted">Waktu Mulai Operasi</label>
@@ -399,7 +398,7 @@
 
                     <!-- 8. Evaluasi Pasca Operasi -->
                     <div class="mb-5">
-                        <h5 class="text-primary mb-3 border-bottom pb-2">8. Evaluasi Pasca Operasi</h5>
+                        <h5 class="mb-3 border-bottom pb-2">8. Evaluasi Pasca Operasi</h5>
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="fw-bold text-muted">Kondisi Kulit Pra Operasi</label>
@@ -470,8 +469,8 @@
                     </div>
 
                     <!-- 9. Dokumentasi dan Verifikasi -->
-                    <div class="mb-5">
-                        <h5 class="text-primary mb-3 border-bottom pb-2">9. Dokumentasi dan Verifikasi</h5>
+                    <div>
+                        <h5 class="mb-3 border-bottom pb-2">9. Dokumentasi dan Verifikasi</h5>
                         <div class="card shadow-sm border-0" style="background: #f8f9fa; border-radius: 10px;">
                             <div class="card-body p-4">
                                 <div class="row g-4 align-items-center">
@@ -547,52 +546,53 @@
                 </div>
             </x-content-card>
         </div>
-    @endsection
+    </div>
+@endsection
 
-    @push('css')
-        <style>
-            .card {
-                transition: transform 0.2s;
-            }
+@push('css')
+    <style>
+        .card {
+            transition: transform 0.2s;
+        }
 
-            .card:hover {
-                transform: translateY(-5px);
-            }
+        .card:hover {
+            transform: translateY(-5px);
+        }
 
-            .table th {
-                background-color: #ecf0f1;
-                color: #34495e;
-            }
+        .table th {
+            background-color: #ecf0f1;
+            color: #34495e;
+        }
 
-            .bg-light {
-                background-color: #f8f9fa !important;
-            }
-        </style>
-    @endpush
+        .bg-light {
+            background-color: #f8f9fa !important;
+        }
+    </style>
+@endpush
 
-    @push('js')
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
-        <script>
-            $(document).ready(function() {
-                @if ($laporanAnastesi->perawat_instrumen)
-                    generateQRCode('qrcode_perawat_instrumen', '{{ $laporanAnastesi->perawat_instrumen }}');
-                @endif
-                @if ($laporanAnastesi->perawat_sirkuler)
-                    generateQRCode('qrcode_perawat_sirkuler', '{{ $laporanAnastesi->perawat_sirkuler }}');
-                @endif
+@push('js')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            @if ($laporanAnastesi->perawat_instrumen)
+                generateQRCode('qrcode_perawat_instrumen', '{{ $laporanAnastesi->perawat_instrumen }}');
+            @endif
+            @if ($laporanAnastesi->perawat_sirkuler)
+                generateQRCode('qrcode_perawat_sirkuler', '{{ $laporanAnastesi->perawat_sirkuler }}');
+            @endif
 
-                function generateQRCode(elementId, text) {
-                    if (typeof qrcode === 'function') {
-                        try {
-                            var qr = qrcode(0, 'M');
-                            qr.addData(text);
-                            qr.make();
-                            $('#' + elementId).html(qr.createImgTag(5));
-                        } catch (err) {
-                            console.error("Error generating QR code:", err);
-                        }
+            function generateQRCode(elementId, text) {
+                if (typeof qrcode === 'function') {
+                    try {
+                        var qr = qrcode(0, 'M');
+                        qr.addData(text);
+                        qr.make();
+                        $('#' + elementId).html(qr.createImgTag(5));
+                    } catch (err) {
+                        console.error("Error generating QR code:", err);
                     }
                 }
-            });
-        </script>
-    @endpush
+            }
+        });
+    </script>
+@endpush

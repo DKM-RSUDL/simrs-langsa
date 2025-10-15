@@ -7,7 +7,7 @@
 
     <div class="row">
         <div class="col-md-3">
-            @include('unit-pelayanan.operasi.pelayanan.laporan-anastesi.patient-card')
+            @include('components.patient-card')
         </div>
 
         <div class="col-md-9">
@@ -780,7 +780,7 @@
                                 <option value="Pressure">Pressure</option>
                             </select>
                         </div>
-                        
+
                         <!-- Form Spesimen -->
                         <div class="form-group">
                             <label style="min-width: 300px;">Spesimen</label>
