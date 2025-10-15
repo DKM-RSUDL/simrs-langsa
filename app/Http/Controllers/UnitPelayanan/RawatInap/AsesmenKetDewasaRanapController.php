@@ -186,7 +186,7 @@ class AsesmenKetDewasaRanapController extends Controller
     public function create(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
             $dataMedis = $this->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-
+           
             if (!$dataMedis) {
                 abort(404, 'Data tidak ditemukan');
             }
@@ -265,7 +265,8 @@ class AsesmenKetDewasaRanapController extends Controller
                 'barang_berharga' => $request->barang_berharga,
                 'barang_berharga_lainnya' => $request->barang_berharga_lainnya,
                 'data_umum_alat_bantu' => $request->data_umum_alat_bantu ?? [],
-                'user_create' => Auth::id()
+                'user_create' => Auth::id(),
+                'tingkat_kesadaran' => $request->disability_kesadaran
             ]);
 
             // Simpan ke tabel RmeAsesmenKetDewasaRanapRiwayatPasien
@@ -329,7 +330,7 @@ class AsesmenKetDewasaRanapController extends Controller
                 'pemeriksaan_neurologi_normal' => $request->pemeriksaan_neurologi_normal,
                 'pemeriksaan_neurologi' => $request->pemeriksaan_neurologi ?? [],
                 'pemeriksaan_neurologi_catatan' => $request->pemeriksaan_neurologi_catatan,
-                'kesadaran' => $request->kesadaran ?? [],
+                'kesadaran' => $request->disability_kesadaran ?? [],
                 'vital_sign' => $this->formatJsonForDatabase($vitalSignData),
                 'pemeriksaan_kardiovaskular_catatan' => $request->pemeriksaan_kardiovaskular_catatan,
                 'user_create' => Auth::id()
@@ -753,7 +754,7 @@ class AsesmenKetDewasaRanapController extends Controller
                     'pemeriksaan_neurologi_normal' => $request->pemeriksaan_neurologi_normal,
                     'pemeriksaan_neurologi' => $request->pemeriksaan_neurologi ?? [],
                     'pemeriksaan_neurologi_catatan' => $request->pemeriksaan_neurologi_catatan,
-                    'kesadaran' => $request->kesadaran ?? [],
+                    'kesadaran' => $request->disability_kesadaran ?? [],
                     'vital_sign' => $this->formatJsonForDatabase($request->vital_sign),
                     'pemeriksaan_kardiovaskular_catatan' => $request->pemeriksaan_kardiovaskular_catatan,
                     'user_edit' => Auth::id(),

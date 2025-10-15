@@ -45,6 +45,7 @@ class AsesmenController extends Controller
 
     public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
+      
         $user = auth()->user();
 
         // Mengambil data kunjungan dan tanggal triase terkait

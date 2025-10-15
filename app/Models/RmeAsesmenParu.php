@@ -13,6 +13,11 @@ class RmeAsesmenParu extends Model
     public $timestamps = false;
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'alkohol_data'  => 'array',
+        'merokok_data'  => 'array',
+    ];
+
     public function userCreate()
     {
         return $this->belongsTo(User::class, 'user_create', 'id');

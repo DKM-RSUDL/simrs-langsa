@@ -290,6 +290,7 @@ class AsesmenObstetriMaternitas extends Controller
             $asesmenObstetriRiwayatKesehatan->kehamilan_diinginkan = $request->kehamilan_diinginkan;
             $asesmenObstetriRiwayatKesehatan->dukungan_sosial = $request->dukungan_sosial;
             $asesmenObstetriRiwayatKesehatan->eliminasi = $request->eliminasi;
+            $asesmenObstetriRiwayatKesehatan->defaksi = $request->defaksi;
             $asesmenObstetriRiwayatKesehatan->riwayat_rawat_inap = $request->riwayat_rawat_inap;
             $asesmenObstetriRiwayatKesehatan->tanggal_rawat = $request->tanggal_rawat;
             $asesmenObstetriRiwayatKesehatan->konsumsi_obat = $request->konsumsi_obat;

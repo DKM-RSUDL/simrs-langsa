@@ -14,20 +14,20 @@
                 <form id="obstetrikForm">
                     <input type="hidden" id="editIndex" value="-1">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="mb-3">
-                                <label class="form-label">Keadaan</label>
+                                <label class="form-label">Keadaan Kehamilan</label>
                                 <input type="text" class="form-control" id="keadaanInput"
                                     placeholder="Contoh: Normal, Komplikasi, dll">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">Kehamilan</label>
                                 <input type="text" class="form-control" id="kehamilanInput"
                                     placeholder="Contoh: Kehamilan ke-1, Primi, dll">
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
 
                     <div class="row">

@@ -180,9 +180,11 @@ class AsesmenMedisAnakController extends Controller
             if (!$transaksiData) {
                 throw new \Exception('Data transaksi tidak ditemukan');
             }
+         
 
             // 1. Buat record RmeAsesmen
             $asesmen = new RmeAsesmen();
+            $asesmen->anamnesis = $request->anamnesis;
             $asesmen->kd_pasien = $request->kd_pasien;
             $asesmen->kd_unit = $request->kd_unit;
             $asesmen->tgl_masuk = $request->tgl_masuk;
@@ -433,6 +435,7 @@ class AsesmenMedisAnakController extends Controller
         }
 
         $masterData = $this->getMasterData($kd_pasien);
+       
 
         return view(
             'unit-pelayanan.rawat-inap.pelayanan.asesmen-medis-anak.show',
