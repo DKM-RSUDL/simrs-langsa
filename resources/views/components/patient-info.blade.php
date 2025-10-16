@@ -110,14 +110,8 @@
                 case 3: // Rawat Darurat (IGD) - TIDAK PAKAI /unit/
                     $baseSegment = 'gawat-darurat';
                     break;
-                case 8: // Bedah Sentral (Operasi) - TIDAK PAKAI /unit/
-                    $baseSegment = 'operasi';
-                    break;
                 case 72: // Hemodialisa - TIDAK PAKAI /unit/
                     $baseSegment = 'hemodialisa';
-                    break;
-                case 74: // Rehab Medik - TIDAK PAKAI /unit/
-                    $baseSegment = 'rehab-medis';
                     break;
                 default:
                     $baseSegment = null;
@@ -145,56 +139,45 @@
                     <i class="bi bi-list-ul me-2"></i> Menu lainnya
                 </button>
             </div>
-
-            {{-- Offcanvas untuk Menu - PINDAH KE DALAM SCOPE --}}
-            <div class="offcanvas offcanvas-end" style="width: 280px; z-index: 99999;" tabindex="-1"
-                id="patientMenuOffcanvas" aria-labelledby="patientMenuOffcanvasLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="patientMenuOffcanvasLabel">
-                        <i class="bi bi-list-ul me-2"></i> Menu Pelayanan
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body p-0">
-                    {{-- Load menu component berdasarkan kd_bagian --}}
-                    @switch($kdBagian)
-                        @case(1)
-                            {{-- Rawat Inap --}}
-                            <x-patient-menus.rawat-inap :pelayananUrl="$pelayananUrl" />
-                        @break
-
-                        @case(2)
-                            {{-- Rawat Jalan --}}
-                            <x-patient-menus.rawat-jalan :pelayananUrl="$pelayananUrl" />
-                        @break
-
-                        @case(3)
-                            {{-- Gawat Darurat --}}
-                            <x-patient-menus.gawat-darurat :pelayananUrl="$pelayananUrl" />
-                        @break
-
-                        @case(8)
-                            {{-- Bedah Sentral / Operasi --}}
-                            <x-patient-menus.operasi :pelayananUrl="$pelayananUrl" />
-                        @break
-
-                        @case(72)
-                            {{-- Hemodialisa --}}
-                            <x-patient-menus.hemodialisa :pelayananUrl="$pelayananUrl" />
-                        @break
-
-                        @case(74)
-                            {{-- Rehab Medik --}}
-                            <x-patient-menus.rehab-medik :pelayananUrl="$pelayananUrl" />
-                        @break
-
-                        @default
-                            <div class="alert alert-warning m-3">
-                                Menu tidak tersedia untuk unit ini.
-                            </div>
-                    @endswitch
-                </div>
-            </div>
         @endif
     @endif
+</div>
+{{-- Offcanvas untuk Menu --}}
+<div class="offcanvas offcanvas-end" style="width: 280px; z-index: 99999;" tabindex="-1" id="patientMenuOffcanvas"
+    aria-labelledby="patientMenuOffcanvasLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title font-semibold" id="patientMenuOffcanvasLabel">
+            <i class="bi bi-list-ul me-2"></i> Menu Pelayanan
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+        {{-- Load menu component berdasarkan kd_bagian --}}
+        @switch($kdBagian)
+            @case(1)
+                {{-- Rawat Inap --}}
+                <x-patient-menus.rawat-inap :pelayananUrl="$pelayananUrl" />
+            @break
+
+            @case(2)
+                {{-- Rawat Jalan --}}
+                <x-patient-menus.rawat-jalan :pelayananUrl="$pelayananUrl" />
+            @break
+
+            @case(3)
+                {{-- Gawat Darurat --}}
+                <x-patient-menus.gawat-darurat :pelayananUrl="$pelayananUrl" />
+            @break
+
+            @case(72)
+                {{-- Hemodialisa --}}
+                <x-patient-menus.hemodialisa :pelayananUrl="$pelayananUrl" />
+            @break
+
+            @default
+                <div class="alert alert-warning m-3">
+                    Menu tidak tersedia untuk unit ini (kd_bagian: {{ $kdBagian }}).
+                </div>
+        @endswitch
+    </div>
 </div>

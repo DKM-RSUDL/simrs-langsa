@@ -168,7 +168,7 @@
                         searchable: false,
                         render: function(data, type, row) {
                             return `<div class="d-flex justify-content-center">
-                                        <a href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk}" class="edit btn btn-outline-primary btn-sm">
+                                        <a href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk}" class="edit btn btn-primary">
                                             <i class="ti-pencil-alt"></i>
                                         </a>
                                     </div>
