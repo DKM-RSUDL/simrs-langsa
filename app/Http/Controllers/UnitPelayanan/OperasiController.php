@@ -3,17 +3,23 @@
 namespace App\Http\Controllers\UnitPelayanan;
 
 use App\Http\Controllers\Controller;
+use App\Models\DokterAnastesi;
 use App\Models\DokterKlinik;
 use App\Models\DokterPenunjang;
 use App\Models\Kamar;
 use App\Models\KlasProduk;
 use App\Models\Kunjungan;
+use App\Models\Operasi\OkJadwal;
+use App\Models\Operasi\OkJadwalDr;
+use App\Models\Operasi\OkJadwalPs;
 use App\Models\OrderOK;
 use App\Models\Produk;
 use App\Models\Spesialisasi;
 use App\Services\BaseService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -211,28 +217,175 @@ class OperasiController extends Controller
         $products = $this->getProducts();
         $kamarOperasi = $this->getKamarOperasi();
         $dokters = $this->getDokters();
+        $dokterAnastesi = DokterAnastesi::with(['dokter:kd_dokter,nama_lengkap'])->where('aktif', 1)->get();
 
         $operasi = OrderOK::where('kd_kasir', $kd_kasir)->where('no_transaksi', $no_transaksi)
             ->whereDate('tgl_jadwal', $tanggal_op)
             ->where('jam_op', $jam_op)
+            ->where('status', 0)
             ->first();
 
-        return view('unit-pelayanan.operasi.pelayanan.order.terima.edit', compact('operasi', 'dataMedis', 'products', 'kamarOperasi', 'dokters'));
+        return view('unit-pelayanan.operasi.pelayanan.order.terima.edit', compact('operasi', 'dataMedis', 'products', 'kamarOperasi', 'dokters', 'dokterAnastesi'));
     }
 
     public function storeTerimaOrder(Request $request, $kd_kasir, $no_transaksi,  $tanggal_op, $jam_op)
     {
-        dd($request->all());
-        $order = OrderOK::where('kd_kasir', $kd_kasir)->where('no_transaksi', $no_transaksi)
-            ->whereDate('tgl_jadwal', $tanggal_op)
-            ->where('jam_op', $jam_op)
-            ->first();
-        if (!$order) {
-            return redirect()->back()->with('error', 'Order tidak ditemukan.');
+        DB::beginTransaction();
+        try {
+
+            $request->validate([
+                'tanggal_registrasi' => 'required|date',
+                'tanggal_jadwal' => 'required|date',
+                'jam_operasi' => 'required',
+                'jenis_tindakan' => 'required|string',
+                'spesialisasi' => 'required|string',
+                'kamar_operasi' => 'required|string',
+                'dokter' => 'required|string',
+                'dokter_anastesi' => 'required|string',
+                'durasi' => 'required|numeric',
+                'cito' => 'required|in:0,1',
+                'diagnosa_medis' => 'required|string|max:500',
+                'catatan' => 'nullable|string|max:1000',
+            ]);
+
+
+            $dataMedis = $this->baseService->getDataMedisbyTransaksi($kd_kasir, $no_transaksi);
+            if (!$dataMedis) throw new Exception('Data medis tidak ditemukan.');
+
+            $order = OrderOK::where('kd_kasir', $kd_kasir)->where('no_transaksi', $no_transaksi)
+                ->whereDate('tgl_jadwal', $tanggal_op)
+                ->where('jam_op', $jam_op)
+                ->first();
+
+            if ($order->status) throw new Exception('Order sudah diproses sebelumnya.');
+            if (!$order) throw new Exception('Order tidak ditemukan.');
+
+            // Get Produk
+            $product = Produk::with(['klas:kd_klas,klasifikasi,parent'])
+                ->where('kd_produk', $request->input('jenis_tindakan'))
+                ->first(['kd_produk', 'deskripsi', 'kd_klas']);
+
+            if (!$product) {
+                throw new \Exception('Produk tidak ditemukan atau tidak valid!');
+            }
+
+            // Validasi produk punya klas
+            if (!$product->klas) {
+                throw new \Exception('Klasifikasi produk tidak ditemukan!');
+            }
+
+            // CEK PASIEN AKTIF ATAU TIDAK
+            $inap = DB::table('pasien_inap as i')
+                ->join('transaksi as t', function ($join) {
+                    $join->on('i.kd_kasir', '=', 't.kd_kasir')
+                        ->on('i.no_transaksi', '=', 't.no_transaksi');
+                })
+                ->join('kunjungan as k', function ($join) {
+                    $join->on('t.kd_pasien', '=', 'k.kd_pasien')
+                        ->on('t.tgl_transaksi', '=', 'k.tgl_masuk')
+                        ->on('t.kd_unit', '=', 'k.kd_unit')
+                        ->on('t.urut_masuk', '=', 'k.urut_masuk');
+                })
+                ->join('customer as c', 'k.kd_customer', '=', 'c.kd_customer')
+                ->join('pasien as p', 't.kd_pasien', '=', 'p.kd_pasien')
+                ->join('unit as un', 'i.kd_unit', '=', 'un.kd_unit')
+                ->join('kamar as km', function ($join) {
+                    $join->on('i.no_kamar', '=', 'km.no_kamar')
+                        ->on('i.kd_unit', '=', 'km.kd_unit');
+                })
+                ->join('spesialisasi as sp', 'i.kd_spesial', '=', 'sp.kd_spesial')
+                ->where('t.kd_kasir', $kd_kasir)
+                ->where('t.no_transaksi', $no_transaksi)
+                ->where('un.kd_bagian', 1)
+                ->whereNull('t.tgl_co')
+                ->whereNull('k.tgl_keluar')
+                ->first();
+
+            if (empty($inap)) throw new Exception('Pasien tidak aktif di rawat inap atau tidak memenuhi syarat untuk menerima order.');
+
+
+            // CREATE OK_JADWAL
+            // GENERATE NO URUT OK_JADWAL (delegated to model)
+            $noUrutData = OkJadwal::generateNoUrut();
+
+            OkJadwal::create([
+                'tgl_op'     => Carbon::parse($request->tanggal_registrasi)->format('Y-m-d'),
+                'jam_op'     => Carbon::parse($request->jam_operasi)->format('H:i:s'),
+                'kd_unit'    => '71',
+                'no_kamar'   => $request->kamar_operasi,
+                'kd_sub_spc' => $request->sub_spesialisasi,
+                'kd_spc'     => $request->spesialisasi,
+                'kd_jenis_op' => $request->jenis_operasi,
+                'kd_tindakan' => $request->jenis_tindakan,
+                'durasi'     => $request->durasi,
+                'tgl_jadwal' => Carbon::parse($request->tanggal_jadwal)->format('Y-m-d'),
+                'status'     => 0,
+                'kd_produk'  => $request->jenis_tindakan,
+                'no_urut'    => $noUrutData,
+                'cyto'       => $request->cito ?? 0,
+            ]);
+
+            // CREATE OK_JADWAL_PS
+            OkJadwalPs::create([
+                'tgl_op'     => Carbon::parse($request->tanggal_registrasi)->format('Y-m-d'),
+                'jam_op'     => Carbon::parse($request->jam_operasi)->format('H:i:s'),
+                'kd_pasien' => $dataMedis->kd_pasien,
+                'kd_unit' => 71,
+                'no_kamar'   => $request->kamar_operasi,
+                'kd_asal_pasien' => 2,
+                'status_pasien' => 0
+            ]);
+
+            // CREATE OK_JADWAL_PS
+            OkJadwalDr::create([
+                'tgl_op'     => Carbon::parse($request->tanggal_registrasi)->format('Y-m-d'),
+                'jam_op'     => Carbon::parse($request->jam_operasi)->format('H:i:s'),
+                'kd_dokter' => $request->dokter,
+                'kd_unit' => 71,
+                'kd_dok_anas' => $request->dokter_anastesi,
+                'no_kamar'   => $request->kamar_operasi,
+            ]);
+
+            // Jaga-jaga
+            // UPDATE Ordr_Mng_OK
+            // SET tgl_op = '2025-10-06',
+            // Jam_op = '1900-01-01 07:00',
+            // kd_tindakan = '2846',
+            // kd_jenis_op = '6105',
+            // Kd_spesial = '4',
+            // Kd_sub_Spc = '610504',
+            // No_Kamar = '013',
+            // Dilayani = '1'
+            // WHERE
+            // 	kd_pasien = '0-75-43-42'
+            // 	AND dilayani = '0'
+
+            // Update Order OK
+            $updated = OrderOK::where('tgl_op', $tanggal_op)
+                ->where('jam_op', $jam_op)
+                ->where('kd_kasir', $order->kd_kasir)
+                ->where('no_transaksi', $order->no_transaksi)
+                ->update([
+                    'tgl_op' => $request->input('tanggal_registrasi'),
+                    'jam_op' => $request->input('jam_operasi'),
+                    'kd_tindakan' => $request->input('jenis_tindakan'),
+                    'kd_jenis_op' => $product->klas->parent, // ✅ Dari database
+                    'durasi'     => $request->durasi,
+                    'kd_sub_spc' => $product->kd_klas, // ✅ Dari database
+                    'no_kamar' => $request->input('kamar_operasi'),
+                    'status' => 1,
+                ]);
+
+            if (!$updated) {
+                throw new \Exception('Data Operasi (IBS) gagal diubah!');
+            }
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
         }
-        $order->status = 1; // Terima order
-        $order->catatan = $request->catatan;
-        $order->save();
+
         return redirect()->route('unit-pelayanan.operasi.pending-order')->with('success', 'Order berhasil diterima.');
     }
 
@@ -306,8 +459,8 @@ class OperasiController extends Controller
                     'kd_produk' => $product->kd_produk,
                     'deskripsi' => $product->deskripsi,
                     'kd_klas' => $product->kd_klas,
-                    'parent' => $product->klas->parent ?? null,
-                    'klas_nama' => $product->klas->klasifikasi ?? null,
+                    'parent' => $product->klas->parent,
+                    'klas_nama' => $product->klas->klasifikasi,
                 ],
                 'jenisOperasi' => $jenisOperasi,
                 'spesialisasi' => $spesialisasiList,

@@ -19,7 +19,6 @@
                     action="{{ route('operasi.terima-order.store', [$operasi->kd_kasir, $operasi->no_transaksi, $operasi->tgl_op, $operasi->jam_op]) }}"
                     method="POST">
                     @csrf
-                    @method('PUT')
                     <div class="row">
                         <div class="col-md-5">
                             <div class="mb-3">
@@ -101,7 +100,7 @@
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="kamar_operasi" class="form-label">Kamar Operasi</label>
                                 <select class="form-select select2" id="kamar_operasi" name="kamar_operasi" required>
@@ -115,6 +114,27 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="durasi" class="form-label">Durasi (Menit)</label>
+                                <input type="number" class="form-control" id="durasi" name="durasi"
+                                    value="{{ old('durasi', $operasi->durasi ?? '') }}" required
+                                    placeholder="Durasi (Menit)">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="cito" class="form-label">Cito</label>
+                                <select class="form-select" id="cito" name="cito">
+                                    <option value="0"
+                                        {{ old('cito', $operasi->cito ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
+                                    <option value="1"
+                                        {{ old('cito', $operasi->cito ?? '') == '1' ? 'selected' : '' }}>Ya</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="dokter" class="form-label">Dokter</label>
@@ -129,6 +149,22 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="dokter_anastesi" class="form-label">Dokter Anatesi</label>
+                                <select class="form-select select2" id="dokter_anastesi" name="dokter_anastesi" required>
+                                    <option value="">-- Pilih Dokter Anastesi --</option>
+                                    @foreach ($dokterAnastesi ?? [] as $d)
+                                        <option value="{{ $d->kd_dokter }}" @selected(old('dokter_anastesi') == $d->kd_dokter)>
+                                            {{ $d->dokter->nama_lengkap }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                     <hr>
+                    <div class="row">
                         <div class="col-md-12">
                             <div class="mb-3">
                                 <label for="diagnosa_medis" class="form-label">Diagnosis Medis</label>
