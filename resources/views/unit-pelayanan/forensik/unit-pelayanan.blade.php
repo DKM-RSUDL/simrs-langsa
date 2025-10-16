@@ -95,40 +95,41 @@
             }
         </style>
     @endpush
+    <x-content-card>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="emergency__container">
+                    <h4 class="fw-bold">{{ $nama_unit }}</h4>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="emergency__container">
-                <h4 class="fw-bold">{{ $nama_unit }}</h4>
-
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="row mt-3">
-        <div class="col-md-12">
-            <div class="table-responsive text-left">
-                <table class="table table-bordered dataTable" id="patientUnitDatatable">
-                    <thead>
-                        <tr>
-                            <th width="100px">No</th>
-                            <th width="100px">Aksi</th>
-                            <th>Pasien</th>
-                            <th>No RM / Reg</th>
-                            <th>Alamat</th>
-                            <th>Jaminan</th>
-                            <th>Status Pelayanan</th>
-                            <th>Keterangan</th>
-                            <th>Tindak Lanjut</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{-- Tabel diisi oleh DataTables --}}
-                    </tbody>
-                </table>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="table-responsive text-left">
+                    <table class="table table-bordered dataTable" id="patientUnitDatatable">
+                        <thead>
+                            <tr>
+                                <th width="100px">No</th>
+                                <th width="100px">Aksi</th>
+                                <th>Pasien</th>
+                                <th>No RM / Reg</th>
+                                <th>Alamat</th>
+                                <th>Jaminan</th>
+                                <th>Status Pelayanan</th>
+                                <th>Keterangan</th>
+                                <th>Tindak Lanjut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{-- Tabel diisi oleh DataTables --}}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+    </x-content-card>
 @endsection
 
 @push('js')

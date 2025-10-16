@@ -2,7 +2,7 @@
 
 @section('content')
     @push('css')
-    
+
         <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
         <style>
             .header-background {
