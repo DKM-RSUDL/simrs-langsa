@@ -129,12 +129,12 @@
 
     {{-- Menu Direct (tanpa submenu) --}}
     <div class="accordion-item bg-success">
-        <div class="list-group list-group-flush bg-danger">
+        <div class="list-group list-group-flush">
             <a href="{{ $pelayananUrl }}/asuhan-keperawatan" class="list-group-item list-group-item-action">
-                <i class="bi bi-heart-pulse me-2" style="margin-left: -4px;"></i> Asuhan Keperawatan
+                <i class="bi bi-heart-pulse me-2"></i> Asuhan Keperawatan
             </a>
             <a href="{{ $pelayananUrl }}/orientasi-pasien-baru" class="list-group-item list-group-item-action">
-                <i class="bi bi-info-circle me-2" style="margin-left: -4px;"></i> Orientasi Pasien Baru
+                <i class="bi bi-info-circle me-2"></i> Orientasi Pasien Baru
             </a>
         </div>
     </div>

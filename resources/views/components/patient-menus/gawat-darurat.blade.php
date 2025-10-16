@@ -5,11 +5,11 @@
     <div class="accordion-item">
         <div class="list-group list-group-flush">
             <a href="{{ $pelayananUrl }}/ubah-pasien" class="list-group-item list-group-item-action">
-                <i class="bi bi-person-fill-gear me-2" style="margin-left: -4px;"></i> Ubah Data Pasien
+                <i class="bi bi-person-fill-gear me-2"></i> Ubah Data Pasien
             </a>
             <a href="#" class="list-group-item list-group-item-action btn-foto-triase"
                 data-url="{{ $pelayananUrl }}">
-                <i class="bi bi-camera me-2" style="margin-left: -4px;"></i> Ubah Foto Triase
+                <i class="bi bi-camera me-2"></i> Ubah Foto Triase
             </a>
         </div>
     </div>
