@@ -275,7 +275,6 @@
                                         <thead class="table-light">
                                             <tr>
                                                 <th width="12%">Keadaan</th>
-                                                <th width="10%">Kehamilan</th>
                                                 <th width="15%">Cara Persalinan</th>
                                                 <th width="12%">Keadaan Nifas</th>
                                                 <th width="12%">Tanggal Lahir</th>

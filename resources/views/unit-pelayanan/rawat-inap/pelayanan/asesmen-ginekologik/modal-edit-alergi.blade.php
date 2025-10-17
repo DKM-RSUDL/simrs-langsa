@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="flex-grow-1">
                                 <h6 class="card-title mb-1">
                                     <span class="badge bg-primary me-2">${index + 1}</span>
-                                    ${item.kehamilan || 'Tidak diisi'}
+                                    ${item.keadaan || 'Tidak diisi'}
                                 </h6>
                                 <p class="card-text mb-1">
                                     <strong>Cara:</strong> ${item.caraPersalinan || 'Tidak diisi'} | 
@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const data = {
             keadaan: document.getElementById('keadaanInput').value.trim(),
-            kehamilan: document.getElementById('kehamilanInput').value.trim(),
+           
             caraPersalinan: document.getElementById('caraPersalinanInput').value.trim(),
             keadaanNifas: document.getElementById('keadaanNifasInput').value.trim(),
             tanggalLahir: document.getElementById('tanggalLahirInput').value || null,
