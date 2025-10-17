@@ -166,7 +166,7 @@
 
             @case(3)
                 {{-- Gawat Darurat --}}
-                <x-patient-menus.gawat-darurat :pelayananUrl="$pelayananUrl" />
+                <x-patient-menus.gawat-darurat :pelayananUrl="$pelayananUrl" :dataMedis="$dataMedis" />
             @break
 
             @case(72)
@@ -181,3 +181,145 @@
         @endswitch
     </div>
 </div>
+
+{{-- Modal Foto Triase --}}
+<div class="modal fade" id="fotoTriaseModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="fotoTriaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="fotoTriaseModalLabel">Foto Triase Pasien</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="#" method="post" enctype="multipart/form-data">
+                @csrf
+                @method('put')
+
+                <div class="modal-body">
+                    <input type="hidden" name="triase_id" id="triase_id">
+                    <div class="form-group mb-3">
+                        <label for="nama_pasien" class="form-label">Nama Pasien</label>
+                        <input type="text" class="form-control" id="nama_pasien_triase" disabled>
+                    </div>
+                    <div class="form-group mb-3">
+                        <img src="{{ asset('assets/images/avatar1.png') }}" alt="Foto Triase" class="img-fluid"
+                            style="max-height: 200px;">
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="foto_pasien" class="form-label">Foto Pasien</label>
+                        <input type="file" name="foto_pasien" class="form-control" id="foto_pasien">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@push('js')
+    <script>
+        $(document).ready(function() {
+            // Handler untuk tombol foto triase
+            $(document).on('click', '.btn-foto-triase', function(e) {
+                e.preventDefault();
+
+                let $this = $(this);
+                let kdKasir = $this.data('kasir');
+                let noTrx = $this.data('transaksi');
+
+                // Validasi data tersedia
+                if (!kdKasir || !noTrx || kdKasir === '' || noTrx === '') {
+                    Swal.fire({
+                        title: 'Perhatian!',
+                        html: 'Data kasir atau transaksi tidak tersedia.<br>Silakan refresh halaman atau hubungi administrator.',
+                        icon: 'warning'
+                    });
+                    console.error('Data tidak lengkap:', {
+                        kdKasir,
+                        noTrx
+                    });
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('gawat-darurat.get-triase-data') }}",
+                    data: {
+                        "kd_kasir": kdKasir,
+                        "no_transaksi": noTrx,
+                        "_token": "{{ csrf_token() }}"
+                    },
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Memuat...',
+                            text: 'Sedang mengambil data triase',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading()
+                            }
+                        });
+                    },
+                    success: function(res) {
+                        Swal.close();
+
+                        if (res.status === 'success' && res.data) {
+                            let data = res.data;
+                            let kunjungan = data.kunjungan;
+                            let triase = data.triase;
+
+                            // Set nama pasien
+                            $('#fotoTriaseModal #nama_pasien_triase').val(kunjungan.pasien
+                            .nama);
+                            $('#fotoTriaseModal #triase_id').val(kunjungan.triase_id);
+
+                            // Set action form
+                            let action =
+                                "{{ route('gawat-darurat.ubah-foto-triase', [':kdKasir', ':noTrx']) }}"
+                                .replace(':kdKasir', kunjungan.kd_kasir)
+                                .replace(':noTrx', kunjungan.no_transaksi);
+
+                            $('#fotoTriaseModal form').attr('action', action);
+
+                            // Set foto pasien
+                            let img = "{{ asset('assets/images/avatar1.png') }}";
+                            if (triase && triase.foto_pasien) {
+                                img = "{{ asset('storage/') }}/" + triase.foto_pasien;
+                            }
+
+                            $('#fotoTriaseModal img').attr('src', img);
+
+                            // Tampilkan modal
+                            $('#fotoTriaseModal').modal('show');
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Format data tidak valid',
+                                icon: 'error'
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        let errorMsg = 'Terjadi kesalahan pada server';
+
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        } else if (xhr.status === 404) {
+                            errorMsg = 'Data triase tidak ditemukan';
+                        } else if (xhr.status === 500) {
+                            errorMsg = 'Internal Server Error';
+                        }
+
+                        Swal.fire({
+                            title: 'Error!',
+                            text: errorMsg,
+                            icon: 'error'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+@endpush

@@ -1,38 +1,46 @@
-<div class="d-flex justify-content-start align-items-center m-3">
-    <div class="row g-3 w-100">
+<div class="d-flex flex-column">
+    <div class="d-flex align-items-center justify-content-between">
+        @include('components.page-header', [
+            'title' => 'Daftar Asesmemen Awal Medis',
+            'description' => 'Berikut daftar data asesmen awal medis.',
+        ])
+    </div>
+
+    <div class="row">
         <!-- Select Episode Option -->
-        <div class="col-md-2">
-            <select class="form-select" id="SelectEpisode" aria-label="Pilih...">
-                <option value="semua" selected>Semua Episode</option>
-                <option value="Episode1">Episode Sekarang</option>
-                <option value="Episode2">1 Bulan</option>
-                <option value="Episode3">3 Bulan</option>
-                <option value="Episode4">6 Bulan</option>
-                <option value="Episode5">9 Bulan</option>
-            </select>
-        </div>
+        <div class="col-md-8 d-flex flex-wrap flex-md-nowrap gap-2">
+            <div>
+                <select class="form-select" id="SelectEpisode" aria-label="Pilih...">
+                    <option value="semua" selected>Semua Episode</option>
+                    <option value="Episode1">Episode Sekarang</option>
+                    <option value="Episode2">1 Bulan</option>
+                    <option value="Episode3">3 Bulan</option>
+                    <option value="Episode4">6 Bulan</option>
+                    <option value="Episode5">9 Bulan</option>
+                </select>
+            </div>
 
-        <!-- Start Date -->
-        <div class="col-md-2">
-            <input type="date" name="start_date" id="start_date" class="form-control" placeholder="Dari Tanggal">
-        </div>
+            <!-- Start Date -->
+            <div>
+                <input type="date" name="start_date" id="start_date" class="form-control" placeholder="Dari Tanggal">
+            </div>
 
-        <!-- End Date -->
-        <div class="col-md-2">
-            <input type="date" name="end_date" id="end_date" class="form-control" placeholder="S.d Tanggal">
-        </div>
+            <!-- End Date -->
+            <div>
+                <input type="date" name="end_date" id="end_date" class="form-control" placeholder="S.d Tanggal">
+            </div>
 
-        <!-- Search Bar -->
-        <div class="col-md-2">
-            <div class="input-group">
-                <span class="input-group-text" id="basic-addon1">
-                    <i class="bi bi-search"></i>
-                </span>
-                <input type="text" class="form-control" placeholder="Cari" aria-label="Cari"
-                    aria-describedby="basic-addon1" id="searchInput">
+            <!-- Search Bar -->
+            <div>
+                <div class="input-group">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" class="form-control" placeholder="Cari" aria-label="Cari"
+                        aria-describedby="basic-addon1" id="searchInput">
+                </div>
             </div>
         </div>
-
         <!-- Button "Tambah" di sebelah kanan -->
         <div class="col-md-4 text-end ms-auto">
 
@@ -57,78 +65,80 @@
             @endcanany
         </div>
     </div>
+
+    <ul class="list-group d-flex flex-column gap-2" id="asesmenList">
+        @foreach ($asesmen as $item)
+            <li class="list-group-item d-flex justify-content-between align-items-center" data-id="{{ $item->id }}"
+                data-date="{{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('Y-m-d') }}"
+                data-name="{{ $item->user->name }}">
+
+                <div class="d-flex align-items-center gap-4">
+                    <!-- Tanggal -->
+                    <div class="text-center px-3">
+                        <div class="fw-bold fs-4 mb-0 text-primary">
+                            {{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('d') }}
+                        </div>
+                        <div class="text-muted" style="font-size: 0.85rem;">
+                            {{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('M-y') }}
+                        </div>
+                        <div class="text-muted" style="font-size: 0.85rem;">
+                            {{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('H:i') }}
+                        </div>
+                    </div>
+
+                    <!-- Avatar dan Info -->
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle border border-2"
+                            alt="Foto Pasien" width="60" height="60">
+                        <div>
+                            <div class="text-primary fw-bold mb-1">
+                                Asesmen {{ getKategoriAsesmen($item->kategori, $item->sub_kategori, 3) }}
+                            </div>
+                            <div class="text-muted">
+                                By: <span class="fw-semibold">{{ $item->user->name }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex gap-2">
+                    @if ($item->kategori == 1)
+                        <button type="button" onclick="showAsesmen('{{ $item->id }}')"
+                            data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/' . $item->id) }}"
+                            class="btn btn-info btn-sm px-3">
+                            <i class="fas fa-eye me-1"></i> Lihat
+                        </button>
+                        <a class="btn btn-secondary btn-sm px-3"
+                            href="{{ route('asesmen.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}">
+                            <i class="fas fa-edit me-1"></i> Edit
+                        </a>
+                    @elseif($item->kategori == 2)
+                        <a href="{{ route('asesmen-keperawatan.show', [
+                            'kd_pasien' => $dataMedis->kd_pasien,
+                            'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
+                            'id' => $item->id,
+                        ]) }}"
+                            class="btn btn-sm btn-info">
+                            <i class="fas fa-eye me-1"></i> Lihat
+                        </a>
+
+                        <a href="{{ route('asesmen-keperawatan.edit', [
+                            'kd_pasien' => $dataMedis->kd_pasien,
+                            'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
+                            'id' => $item->id,
+                        ]) }}"
+                            class="btn btn-sm btn-secondary">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    @endif
+                </div>
+            </li>
+        @endforeach
+    </ul>
+
 </div>
 
-<ul class="list-group" id="asesmenList">
-    @foreach ($asesmen as $item)
-        <li class="list-group-item d-flex justify-content-between align-items-center" data-id="{{ $item->id }}"
-            data-date="{{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('Y-m-d') }}"
-            data-name="{{ $item->user->name }}">
-
-            <div class="d-flex align-items-center gap-4">
-                <!-- Tanggal -->
-                <div class="text-center px-3">
-                    <div class="fw-bold fs-4 mb-0 text-primary">
-                        {{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('d') }}
-                    </div>
-                    <div class="text-muted" style="font-size: 0.85rem;">
-                        {{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('M-y') }}
-                    </div>
-                    <div class="text-muted" style="font-size: 0.85rem;">
-                        {{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('H:i') }}
-                    </div>
-                </div>
-
-                <!-- Avatar dan Info -->
-                <div class="d-flex align-items-center gap-3">
-                    <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle border border-2"
-                        alt="Foto Pasien" width="60" height="60">
-                    <div>
-                        <div class="text-primary fw-bold mb-1">
-                            Asesmen {{ getKategoriAsesmen($item->kategori, $item->sub_kategori, 3) }}
-                        </div>
-                        <div class="text-muted">
-                            By: <span class="fw-semibold">{{ $item->user->name }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="d-flex gap-2">
-                @if ($item->kategori == 1)
-                    <button type="button" onclick="showAsesmen('{{ $item->id }}')"
-                        data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/' . $item->id) }}"
-                        class="btn btn-info btn-sm px-3">
-                        <i class="fas fa-eye me-1"></i> Lihat
-                    </button>
-                    <a class="btn btn-secondary btn-sm px-3"
-                        href="{{ route('asesmen.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}">
-                        <i class="fas fa-edit me-1"></i> Edit
-                    </a>
-                @elseif($item->kategori == 2)
-                    <a href="{{ route('asesmen-keperawatan.show', [
-                        'kd_pasien' => $dataMedis->kd_pasien,
-                        'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
-                        'id' => $item->id,
-                    ]) }}"
-                        class="btn btn-sm btn-info">
-                        <i class="fas fa-eye me-1"></i> Lihat
-                    </a>
-
-                    <a href="{{ route('asesmen-keperawatan.edit', [
-                        'kd_pasien' => $dataMedis->kd_pasien,
-                        'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
-                        'id' => $item->id,
-                    ]) }}"
-                        class="btn btn-sm btn-secondary">
-                        <i class="fas fa-edit"></i> Edit
-                    </a>
-                @endif
-            </div>
-        </li>
-    @endforeach
-</ul>
 
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.show')
 {{-- @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show') --}}

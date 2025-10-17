@@ -1,4 +1,4 @@
-@props(['pelayananUrl'])
+@props(['pelayananUrl', 'dataMedis' => null])
 
 <div class="accordion accordion-flush" id="patientMenuAccordionIGD">
     {{-- Menu Khusus (Non-Accordion) --}}
@@ -8,7 +8,7 @@
                 <i class="bi bi-person-fill-gear me-2"></i> Ubah Data Pasien
             </a>
             <a href="#" class="list-group-item list-group-item-action btn-foto-triase"
-                data-url="{{ $pelayananUrl }}">
+                data-kasir="{{ $dataMedis?->kd_kasir ?? '' }}" data-transaksi="{{ $dataMedis?->no_transaksi ?? '' }}">
                 <i class="bi bi-camera me-2"></i> Ubah Foto Triase
             </a>
         </div>
