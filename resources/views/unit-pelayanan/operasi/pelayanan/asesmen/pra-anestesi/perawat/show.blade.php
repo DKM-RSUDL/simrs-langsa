@@ -19,6 +19,7 @@
         </div>
 
         <div class="col-md-9">
+
             <x-content-card>
                 <x-button-previous />
                 @include('components.page-header', [
@@ -39,7 +40,7 @@
                     </div>
                 </div>
 
-                <div class="section-separator" id="rencanaTindakan">
+                <div class="section-separator mt-0" id="rencanaTindakan">
                     <h5 class="section-title">2. Catatan Keperawatan Pra-Operasi</h5>
 
                     <div class="form-group align-items-center">
@@ -120,127 +121,77 @@
 
                     <div class="form-group">
                         <label for="penyakit_sekarang" style="min-width: 200px;">Riwayat Penyakit
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Persiapan Fisik Pasien</th>
-                                        <th>Perawat Bedah</th>
-                                        <th>Perawat Ruangan</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Puasa</td>
-                                        <td align="middle">
-                                            <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
-                                                id="" value="puasa" @checked(in_array('puasa', $asesmen->praOperatifPerawat->persiapan_fisik_pasien)) disabled>
-                                        </td>
-                                        <td align="middle">
-                                            <input type="checkbox" class="form-check-input"
-                                                name="persiapan_fisik_ruangan[]" id="" value="puasa_ruangan"
-                                                @checked(in_array('puasa_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? [])) disabled>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Prothese Luar</td>
-                                        <td align="middle">
-                                            <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
-                                                id="" value="prothese_luar" @checked(in_array('prothese_luar', $asesmen->praOperatifPerawat->persiapan_fisik_pasien))
-                                                disabled>
-                                        </td>
-                                        <td align="middle">
-                                            <input type="checkbox" class="form-check-input"
-                                                name="persiapan_fisik_ruangan[]" id=""
-                                                value="prothese_luar_ruangan" @checked(in_array('prothese_luar_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? [])) disabled>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Periksa area operasi bersih dan terbuka</td>
-                                        <td align="middle">
-                                            <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
-                                                id="" value="area_operasi_bersih" @checked(in_array('area_operasi_bersih', $asesmen->praOperatifPerawat->persiapan_fisik_pasien))
-                                                disabled>
-                                        </td>
-                                        <td align="middle">
-                                            <input type="checkbox" class="form-check-input"
-                                                name="persiapan_fisik_ruangan[]" id=""
-                                                value="area_operasi_bersih_ruangan" @checked(in_array('area_operasi_bersih_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? [])) disabled>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Periksa catatan perawatan luka</td>
-                                        <td align="middle">
-                                            <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
-                                                id="" value="catatan_perawatan_luka"
-                                                @checked(in_array('catatan_perawatan_luka', $asesmen->praOperatifPerawat->persiapan_fisik_pasien)) disabled>
-                                        </td>
-                                        <td align="middle">
-                                            <input type="checkbox" class="form-check-input"
-                                                name="persiapan_fisik_ruangan[]" id=""
-                                                value="catatan_perawatan_luka_ruangan" @checked(in_array('catatan_perawatan_luka_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))
-                                                disabled>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Alat bantu pernafasan</td>
-                                        <td align="middle">
-                                            <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
-                                                id="" value="alat_bantu_pernafasan" @checked(in_array('alat_bantu_pernafasan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien))
-                                                disabled>
-                                        </td>
-                                        <td align="middle">
-                                            <input type="checkbox" class="form-check-input"
-                                                name="persiapan_fisik_ruangan[]" id=""
-                                                value="alat_bantu_pernafasan_ruangan" @checked(in_array('alat_bantu_pernafasan_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))
-                                                disabled>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Penempatan NGT / PEG</td>
-                                        <td align="middle">
-                                            <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
-                                                id="" value="penempatan_ngt" @checked(in_array('penempatan_ngt', $asesmen->praOperatifPerawat->persiapan_fisik_pasien))
-                                                disabled>
-                                        </td>
-                                        <td align="middle">
-                                            <input type="checkbox" class="form-check-input"
-                                                name="persiapan_fisik_ruangan[]" id=""
-                                                value="penempatan_ngt_ruangan" @checked(in_array('penempatan_ngt_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? [])) disabled>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Periksa catatan transfusi darah</td>
-                                        <td align="middle">
-                                            <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
-                                                id="" value="catatan_transfusi" @checked(in_array('catatan_transfusi', $asesmen->praOperatifPerawat->persiapan_fisik_pasien))
-                                                disabled>
-                                        </td>
-                                        <td align="middle">
-                                            <input type="checkbox" class="form-check-input"
-                                                name="persiapan_fisik_ruangan[]" id=""
-                                                value="catatan_transfusi_ruangan" @checked(in_array('catatan_transfusi_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? [])) disabled>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Periksa tanda vital stabil</td>
-                                        <td align="middle">
-                                            <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
-                                                id="" value="tanda_vital_stabil" @checked(in_array('tanda_vital_stabil', $asesmen->praOperatifPerawat->persiapan_fisik_pasien))
-                                                disabled>
-                                        </td>
-                                        <td align="middle">
-                                            <input type="checkbox" class="form-check-input"
-                                                name="persiapan_fisik_ruangan[]" id=""
-                                                value="tanda_vital_stabil_ruangan" @checked(in_array('tanda_vital_stabil_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? [])) disabled>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            Sekarang</label>
 
-                            <input type="date" name="tgl_bedah" id="tgl_bedah" class="form-control me-3"
-                                value="{{ date('Y-m-d', strtotime($asesmen->praOperatifPerawat->tgl_bedah)) }}" disabled>
-                            <input type="text" name="tempat_bedah" id="tempat_bedah" placeholder="Jelaskan"
-                                class="form-control" value="{{ $asesmen->praOperatifPerawat->tempat_bedah }}" disabled>
+                        <div class="row w-100">
+                            <div class="col-12">
+                                <div class="bg-secondary-subtle rounded-2 p-3" id="penyakitsekarang-list">
+                                    @foreach ($asesmen->praOperatifPerawat->penyakit_sekarang ?? [] as $ps)
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <p class="fw-bold text-primary m-0 text-decoration-underline">
+                                                {{ $ps }}</p>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="penyakit_dahulu" style="min-width: 200px;">Riwayat Penyakit
+                            Dahulu</label>
+
+                        <div class="row w-100">
+                            <div class="col-12">
+                                <div class="bg-secondary-subtle rounded-2 p-3" id="penyakitdahulu-list">
+                                    @foreach ($asesmen->praOperatifPerawat->penyakit_dahulu ?? [] as $pd)
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <p class="fw-bold text-primary m-0 text-decoration-underline">
+                                                {{ $pd }}</p>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="alat_bantu" style="min-width: 200px;">Alat Bantu Yang
+                            Digunakan</label>
+                        <select name="alat_bantu" id="alat_bantu" class="form-select" disabled>
+                            <option value="">--Pilih--</option>
+                            <option value="1" @selected($asesmen->praOperatifPerawat->alat_bantu == '1')>Kacamata</option>
+                            <option value="2" @selected($asesmen->praOperatifPerawat->alat_bantu == '2')>Lensa Kontak</option>
+                            <option value="3" @selected($asesmen->praOperatifPerawat->alat_bantu == '3')>Gigi Palsu</option>
+                            <option value="4" @selected($asesmen->praOperatifPerawat->alat_bantu == '4')>Alat Bantu Dengar</option>
+                            <option value="5" @selected($asesmen->praOperatifPerawat->alat_bantu == '5')>Lainnya</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="jenis_operasi" style="min-width: 200px;">Jenis/Nama Operasi</label>
+
+                        <div class="row w-100">
+                            <div class="col-12">
+                                <div class="bg-secondary-subtle rounded-2 p-3" id="jenisoperasi-list">
+                                    @foreach ($asesmen->praOperatifPerawat->jenis_operasi ?? [] as $jo)
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <p class="fw-bold text-primary m-0 text-decoration-underline">
+                                                {{ $jo }}</p>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label style="min-width: 200px;">Tanggal dibedah dan dimana</label>
+
+                        <input type="date" name="tgl_bedah" id="tgl_bedah" class="form-control me-3"
+                            value="{{ date('Y-m-d', strtotime($asesmen->praOperatifPerawat->tgl_bedah)) }}" disabled>
+                        <input type="text" name="tempat_bedah" id="tempat_bedah" placeholder="Jelaskan"
+                            class="form-control" value="{{ $asesmen->praOperatifPerawat->tempat_bedah }}" disabled>
                     </div>
 
                     <div class="form-group">
@@ -641,7 +592,7 @@
 
                     <div class="form-group">
                         <label for="waktu_diperiksa" style="min-width: 200px;">Waktu Diperiksa</label>
-                        <input type="date" class="form-control" name="tgl_periksa" id="tgl_diperiksa"
+                        <input type="date" class="form-control me-3" name="tgl_periksa" id="tgl_diperiksa"
                             value="{{ date('Y-m-d', strtotime($asesmen->praOperatifPerawat->tgl_periksa)) }}" disabled>
                         <input type="time" class="form-control" name="jam_periksa" id="jam_diperiksa"
                             value="{{ date('H:i', strtotime($asesmen->praOperatifPerawat->jam_periksa)) }}" disabled>
@@ -674,6 +625,7 @@
                 </div>
             </x-content-card>
         </div>
+    </div>
     </div>
 @endsection
 
