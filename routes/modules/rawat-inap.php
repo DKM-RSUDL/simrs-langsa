@@ -570,7 +570,7 @@ Route::prefix('rawat-inap')->group(function () {
 
 
                                 Route::prefix('umum')->group(function () {
-                                    Route::name('.umum')->group(function () {
+                                    Route::name('.umum')->group(callback: function () {
                                         Route::controller(AsesmenKetDewasaRanapController::class)->group(function () {
                                             Route::get('/', 'create')->name('.create');
                                             Route::post('/', 'store')->name('.store');

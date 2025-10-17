@@ -210,6 +210,7 @@ class AsesmenPengkajianAwalMedis extends Controller
                 'respirasi' => $request->respirasi,
                 'suhu' => $request->suhu,
                 'nadi' => $request->nadi,
+                'tingkat_kesadaran' => $request->tingkat_kesadaran,
                 'skala_nyeri_nilai' => $request->skala_nyeri,
                 'paru_prognosis' => $request->paru_prognosis,
                 'diagnosis_banding' => $request->diagnosis_banding,
@@ -289,7 +290,7 @@ class AsesmenPengkajianAwalMedis extends Controller
         } catch (\Exception $e) {
             DB::rollback();
 
-            return back()->withInput()->withErrors(['error' => 'Gagal menyimpan data: '.$e->getMessage()]);
+            return back()->with('error', 'Gagal menyimpan data: '.$e->getMessage());
         }
     }
 
@@ -409,6 +410,7 @@ class AsesmenPengkajianAwalMedis extends Controller
                     'respirasi' => $request->respirasi,
                     'suhu' => $request->suhu,
                     'nadi' => $request->nadi,
+                    'tingkat_kesadaran' => $request->tingkat_kesadaran,
                     'skala_nyeri_nilai' => $request->skala_nyeri,
                     'paru_prognosis' => $request->paru_prognosis,
                     'diagnosis_banding' => $request->diagnosis_banding,

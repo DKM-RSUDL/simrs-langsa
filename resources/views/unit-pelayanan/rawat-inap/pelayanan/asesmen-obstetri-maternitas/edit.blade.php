@@ -232,10 +232,12 @@
                                                     <option value="" selected>pilih</option>
                                                     <option value="1"
                                                         {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->komprehensif_posisi_janin ?? '') == '1' ? 'selected' : '' }}>
-                                                        Ya</option>
+                                                        Ya
+                                                    </option>
                                                     <option value="0"
                                                         {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->komprehensif_posisi_janin ?? '') == '0' ? 'selected' : '' }}>
-                                                        Tidak</option>
+                                                        Tidak
+                                                    </option>
                                                 </select>
                                             </div>
 
@@ -276,54 +278,38 @@
                                             </div>
 
                                             <div class="form-group mb-3">
-                                                <label class="d-block mb-2" style="min-width: 200px;">Irama</label>
-                                                <select class="form-select" name="kontraksi_irama">
-                                                    <option value="">pilih</option>
-                                                    <option value="1"
-                                                        {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_irama ?? '') == '1' ? 'selected' : '' }}>
-                                                        Teratur</option>
-                                                    <option value="0"
-                                                        {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_irama ?? '') == '0' ? 'selected' : '' }}>
-                                                        Tidak Teratur</option>
+                                                <label class="d-block mb-2" style="min-width: 200px;">Irama</label>                
+                                                <select class="form-select" name="kontraksi_letak_janin">
+                                                    <option value="" >pilih</option>
+                                                    <option value="1"  {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_irama ?? '') == '1' ? 'selected' : '' }}>Memanjang</option>
+                                                    <option value="2"  {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_irama ?? '') == '2' ? 'selected' : '' }}>Lintang</option>
                                                 </select>
                                             </div>
 
                                             <div class="form-group mb-3">
                                                 <label class="d-block mb-2" style="min-width: 200px;">Letak Janin</label>
                                                 <select class="form-select" name="kontraksi_letak_janin">
-                                                    <option value="" selected>pilih</option>
-                                                    <option value="1"
-                                                        {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_letak_janin ?? '') == '1' ? 'selected' : '' }}>
-                                                        Ya</option>
-                                                    <option value="0"
-                                                        {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_letak_janin ?? '') == '0' ? 'selected' : '' }}>
-                                                        Tidak</option>
+                                                        <option value="">pilih</option>
+                                                        <option value="1"  {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_letak_janin ?? '') == '1' ? 'selected' : '' }}>
+                                                            Teratur
+                                                        </option>
+                                                        <option value="2"  {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_letak_janin ?? '') == '2' ? 'selected' : '' }}>
+                                                            Tidak Teratur
+                                                        </option>
                                                 </select>
                                             </div>
 
-                                            <div class="form-group mb-3">
-                                                <label class="d-block mb-2" style="min-width: 200px;">Presentasi Janin</label>
-                                                <select class="form-select" name="kontraksi_presentasi_janin">
-                                                    <option value="" selected>pilih</option>
-                                                    <option value="1"
-                                                        {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_presentasi_janin ?? '') == '1' ? 'selected' : '' }}>
-                                                        Ya</option>
-                                                    <option value="0"
-                                                        {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_presentasi_janin ?? '') == '0' ? 'selected' : '' }}>
-                                                        Tidak</option>
-                                                </select>
-                                            </div>
+                                           
 
                                             <div class="form-group mb-3">
                                                 <label class="d-block mb-2" style="min-width: 200px;">Sikap Janin</label>
+                                               
                                                 <select class="form-select" name="kontraksi_sikap_janin">
-                                                    <option value="" selected>pilih</option>
-                                                    <option value="1"
-                                                        {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_sikap_janin ?? '') == '1' ? 'selected' : '' }}>
-                                                        Ya</option>
-                                                    <option value="0"
-                                                        {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_sikap_janin ?? '') == '0' ? 'selected' : '' }}>
-                                                        Tidak</option>
+                                                    <option value= ""  >pilih</option>
+                                                    <option value="1" {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->fkontraksi_sikap_janin ?? '') == '1' ? 'selected' : '' }}>Fleksi</option>
+                                                    <option value="2" {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_sikap_janin ?? '') == '2' ? 'selected' : '' }}>Defleksi Ringan</option>
+                                                    <option value="3" {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_sikap_janin ?? '') == '3' ? 'selected' : '' }}>Refleksi Sedang</option>
+                                                    <option value="4" {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_sikap_janin ?? '') == '4' ? 'selected' : '' }}>Defleksi Maksimal</option>
                                                 </select>
                                             </div>
 
@@ -434,10 +420,13 @@
                                             </div>
 
                                             <div class="form-group mb-3">
-                                                <label class="d-block mb-2" style="min-width: 200px;">Pembukaan</label>
-                                                <input type="text" class="form-control" name="serviks_pembukaan"
-                                                    placeholder=""
-                                                    value="{{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_pembukaan ?? '' }}">
+                                               <label class="d-block mb-2 mr-2" style="min-width: 200px;">Pendataran</label>
+                                                <select class="form-select" name="panggul_simpulan">
+                                                    <option value="" >pilih</option>
+                                                    <option value ="1"  {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_pembukaan ?? '') == '1' ? 'selected' : '' }}>&lt; 50%</option>
+                                                    <option value ="2" {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_pembukaan ?? '') == '2' ? 'selected' : '' }}>&gt; 50%</option>
+                                                    <option value ="3" {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_pembukaan ?? '') == '3' ? 'selected' : '' }}>100%</option>
+                                                </select>
                                                 <label class="d-block mr-2">Jam</label>
                                                 @php
                                                     $jam_pembukaan =
@@ -488,6 +477,43 @@
                                                     <option value="0"
                                                         {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_irama ?? '') == '0' ? 'selected' : '' }}>
                                                         Tidak Teratur</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label class="d-block mb-2" style="min-width: 200px;">Selaput Ketuban</label>
+                                                <select class="form-select" name="panggul_selaput_ketuban">
+                                                    <option value="">pilih</option>
+                                                    <option value="Utuh"
+                                                        {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_selaput_ketuban ?? '') == 'Utuh' ? 'selected' : '' }}>
+                                                        Utuh</option>
+                                                    <option value="Pecah"
+                                                        {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_selaput_ketuban ?? '') == 'Pecah' ? 'selected' : '' }}>
+                                                        Pecah</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group mb-3">
+                                                <label class="d-block mb-2" style="min-width: 200px;">Air Ketuban</label>
+                                                <select class="form-select" name="panggul_air_ketuban">
+                                                    <option value="">pilih</option>
+                                                    <option value="Jernih"
+                                                        {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_air_ketuban ?? '') == 'Jernih' ? 'selected' : '' }}>
+                                                        Jernih</option>
+                                                    <option value="Keruh"
+                                                        {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_air_ketuban ?? '') == 'Keruh' ? 'selected' : '' }}>
+                                                        Keruh</option>
+                                                    <option value="Bau"
+                                                        {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_air_ketuban ?? '') == 'Bau' ? 'selected' : '' }}>
+                                                        Bau</option>
+                                                </select>
+                                            </div>
+                                             <div class="form-group mb-3">
+                                                <label class="d-block mb-2" style="min-width: 200px;">Presentasi Janin</label>
+                                                <select class="form-select" name="kontraksi_presentasi_janin">
+                                                        <option value="" >pilih</option>
+                                                        <option value="1" {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_presentasi_janin ?? '') == '1' ? 'selected' : '' }}>Kepala</option>
+                                                        <option value="2"  {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_presentasi_janin ?? '') == '2' ? 'selected' : '' }}>Bokong</option>
+                                                        <option value="3"  {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_presentasi_janin ?? '') == '3' ? 'selected' : '' }}>Bahu</option>
                                                 </select>
                                             </div>
 
@@ -610,34 +636,7 @@
                                                     value="{{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_pembukaan_cm ?? '' }}">
                                             </div>
 
-                                            <div class="form-group mb-3">
-                                                <label class="d-block mb-2" style="min-width: 200px;">Selaput Ketuban</label>
-                                                <select class="form-select" name="panggul_selaput_ketuban">
-                                                    <option value="">pilih</option>
-                                                    <option value="Utuh"
-                                                        {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_selaput_ketuban ?? '') == 'Utuh' ? 'selected' : '' }}>
-                                                        Utuh</option>
-                                                    <option value="Pecah"
-                                                        {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_selaput_ketuban ?? '') == 'Pecah' ? 'selected' : '' }}>
-                                                        Pecah</option>
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group mb-3">
-                                                <label class="d-block mb-2" style="min-width: 200px;">Air Ketuban</label>
-                                                <select class="form-select" name="panggul_air_ketuban">
-                                                    <option value="">pilih</option>
-                                                    <option value="Jernih"
-                                                        {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_air_ketuban ?? '') == 'Jernih' ? 'selected' : '' }}>
-                                                        Jernih</option>
-                                                    <option value="Keruh"
-                                                        {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_air_ketuban ?? '') == 'Keruh' ? 'selected' : '' }}>
-                                                        Keruh</option>
-                                                    <option value="Bau"
-                                                        {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_air_ketuban ?? '') == 'Bau' ? 'selected' : '' }}>
-                                                        Bau</option>
-                                                </select>
-                                            </div>
+                                            
 
                                             <div class="form-group mb-4">
                                                 <label class="d-block mb-2" style="min-width: 200px;">Presentasi</label>
@@ -645,15 +644,15 @@
                                                     <option value="">pilih</option>
                                                     <option value="Belakang Kepala"
                                                         {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_presentasi ?? '') == 'Belakang Kepala'
-        ? 'selected'
-        : '' }}>
+                                                            ? 'selected'
+                                                            : '' }}>
                                                         Belakang Kepala</option>
                                                     <option value="Puncak Kepala"
                                                         {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_presentasi ?? '') ==
-        'Puncak
-                                                                                                                                                                                                                                                                                                                        Kepala'
-        ? 'selected'
-        : '' }}>
+                                                            'Puncak
+                                                                                                                                                                                                                                                                                                                                                                            Kepala'
+                                                            ? 'selected'
+                                                            : '' }}>
                                                         Puncak Kepala</option>
                                                     <option value="Dahi"
                                                         {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_presentasi ?? '') == 'Dahi' ? 'selected' : '' }}>
@@ -1034,18 +1033,10 @@
 
                                             <div class="form-group mb-3">
                                                 <label class="d-block mb-2" style="min-width: 200px;">Siklus</label>
-                                                <select class="form-select" name="siklus">
-                                                    <option value="" selected>pilih</option>
-                                                    <option value="Nyeri Tumpul"
-                                                        {{ ($asesmen->rmeAsesmenObstetriRiwayatKesehatan->siklus ?? '') == 'Nyeri Tumpul' ? 'selected' : '' }}>
-                                                        Nyeri Tumpul</option>
-                                                    <option value="Nyeri Tajam"
-                                                        {{ ($asesmen->rmeAsesmenObstetriRiwayatKesehatan->siklus ?? '') == 'Nyeri Tajam' ? 'selected' : '' }}>
-                                                        Nyeri Tajam</option>
-                                                    <option value="Panas/ Terbakar"
-                                                        {{ ($asesmen->rmeAsesmenObstetriRiwayatKesehatan->siklus ?? '') == 'Panas/ Terbakar' ? 'selected' : '' }}>
-                                                        Panas/ Terbakar</option>
-                                                </select>
+                                                <input type="text" class="form-control" name="siklus"
+                                                    placeholder="Hari"
+                                                    value="{{ $asesmen->rmeAsesmenObstetriRiwayatKesehatan->siklus ?? '' }}">
+                            
                                             </div>
 
                                             <div class="form-group mb-3">
@@ -1218,13 +1209,17 @@
                                                 </div>
                                                 @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.edit-modal-pendamping')
                                             </div>
-
                                             <div class="form-group mb-3">
-                                                <label class="d-block mb-2" style="min-width: 200px;">Eliminasi
-                                                    (Defekasi)</label>
-                                                <input type="text" class="form-control" name="eliminasi"
-                                                    placeholder="Masukkan informasi terkait defekasi..."
-                                                    value="{{ $asesmen->rmeAsesmenObstetriRiwayatKesehatan->eliminasi ?? '' }}">
+                                                    <label class="d-block mb-2" style="min-width: 200px;">Eliminasi</label>
+                                                    <input type="text" class="form-control" name="eliminasi"
+                                                        placeholder="Masukkan informasi terkait eliminasi..."
+                                                        value="{{ $asesmen->rmeAsesmenObstetriRiwayatKesehatan->eliminasi ?? '' }}">
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                    <label class="d-block mb-2" style="min-width: 200px;">Defaksi </label>
+                                                    <input type="text" class="form-control" name="defaksi"
+                                                        placeholder="Masukkan informasi terkait defekasi..."
+                                                        value="{{ $asesmen->rmeAsesmenObstetriRiwayatKesehatan->defaksi ?? '' }}">
                                             </div>
 
                                             <div class="form-group mb-3">

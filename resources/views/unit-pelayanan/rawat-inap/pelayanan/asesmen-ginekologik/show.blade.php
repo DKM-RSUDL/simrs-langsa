@@ -248,8 +248,8 @@
                                         <table class="table table-bordered table-sm">
                                             <thead class="table-light">
                                                 <tr>
-                                                    <th>Keadaan</th>
-                                                    <th>Kehamilan</th>
+                                                    <th>Keadaan Kehamilan</th>
+                                                    {{-- <th>Kehamilan</th> --}}
                                                     <th>Cara Persalinan</th>
                                                     <th>Keadaan Nifas</th>
                                                     <th>Tanggal Lahir</th>
@@ -261,7 +261,6 @@
                                                 @foreach ($riwayatObstetrik as $index => $item)
                                                     <tr>
                                                         <td>{{ $item['keadaan'] ?? '-' }}</td>
-                                                        <td>{{ $item['kehamilan'] ?? '-' }}</td>
                                                         <td>{{ $item['caraPersalinan'] ?? '-' }}</td>
                                                         <td>{{ $item['keadaanNifas'] ?? '-' }}</td>
                                                         <td>

@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UnitAsal extends Model
+class UnitAsalInap extends Model
 {
     use HasFactory;
 
-    protected $table = 'unit_asal';
+    protected $table = 'unit_asalinap';
     public $timestamps = false;
     protected $guarded = [];
 }

@@ -161,6 +161,19 @@
 
                         <div class="section-separator" id="riwayat-pengobatan">
                             <h5 class="section-title">5. Status present</h5>
+                            <div class="form-group">
+                                <label for="tingkat_kesadaran" style="min-width: 200px;">Tingkat Kesadaran</label>
+                                <select class="form-select" name="tingkat_kesadaran" id="tingkat_kesadaran"{{ $readonly ?? false ? 'readonly' : '' }}>
+                                    <option value="" {{ empty($asesmen->asesmenMedisRanap->tingkat_kesadaran) ? 'selected' : '' }}>
+                                    Pilih tingkat kesadaran
+                                    </option>
+                                    <option value="1" {{ $asesmen->asesmenMedisRanap->tingkat_kesadaran == 1 ? 'selected' : '' }}>Compos Mentis</option>
+                                    <option value="2" {{ $asesmen->asesmenMedisRanap->tingkat_kesadaran == 2 ? 'selected' : '' }}>Apatis</option>
+                                    <option value="3" {{ $asesmen->asesmenMedisRanap->tingkat_kesadaran == 3 ? 'selected' : '' }}>Somnolen</option>
+                                    <option value="4" {{ $asesmen->asesmenMedisRanap->tingkat_kesadaran == 4 ? 'selected' : '' }}>Sopor</option>
+                                    <option value="5" {{ $asesmen->asesmenMedisRanap->tingkat_kesadaran == 5 ? 'selected' : '' }}>Koma</option>
+                                </select>
+                            </div>
 
                             <div class="form-group">
                                 <label style="min-width: 200px;">Tek. Darah (mmHg)</label>

@@ -14,7 +14,7 @@ class RmeAsesmenParu extends Model
     protected $guarded = ['id'];
 
     protected $casts = [
-        'alkohol_data'  => 'array',
+        'obat_data'  => 'array',
         'merokok_data'  => 'array',
     ];
 
