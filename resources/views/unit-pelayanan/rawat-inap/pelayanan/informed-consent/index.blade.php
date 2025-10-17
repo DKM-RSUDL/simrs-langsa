@@ -17,68 +17,71 @@
         </div>
 
         <div class="col-md-9">
-            <div class="d-flex justify-content-end">
-                <div class="col-md-2">
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addInformedConsentModal"
-                            type="button">
-                            <i class="ti-plus"></i> Tambah
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <x-content-card>
+                <x-button-previous />
 
-            <div class="table-responsive mt-3">
-                <table class="table table-bordered table-sm table-hover">
-                    <thead class="table-primary">
-                        <tr>
-                            <th>Tanggal dan Jam</th>
-                            <th>Petugas</th>
-                            <th>Penerima Informasi</th>
-                            <th>Saksi 1</th>
-                            <th>Saksi 2</th>
-                            <th>#</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($informedConsent as $item)
+                @include('components.page-header', [
+                    'title' => 'Daftar Informed Consent',
+                    'description' => 'Daftar data informed consent pasien rawat inap.',
+                ])
+
+                <button class="btn btn-primary w-min ms-auto" data-bs-toggle="modal" data-bs-target="#addInformedConsentModal"
+                    type="button">
+                    <i class="ti-plus"></i> Tambah
+                </button>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm table-hover">
+                        <thead class="table-primary">
                             <tr>
-                                <td>{{ date('d M Y', strtotime($item->tanggal)) . ' ' . date('H:i:s', strtotime($item->jam)) }}
-                                </td>
-                                <td>{{ $item->user->name ?? '' }}</td>
-                                <td>{{ $item->nama_penerima_info }}</td>
-                                <td>{{ $item->saksi1_nama }}</td>
-                                <td>{{ $item->saksi2_nama }}</td>
-                                <td>
-                                    <div class="d-flex gap-2">
-                                        <button class="btn btn-sm btn-primary btn-show-consent"
-                                            data-ic="{{ $item->id }}" data-bs-target="#showInformedConsentModal">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-
-                                        <a href="{{ route('rawat-inap.informed-consent.print', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                            class="btn btn-success btn-sm" title="Cetak" target="_blank">
-                                            <i class="ti-printer"></i>
-                                        </a>
-
-                                        <form
-                                            action="{{ route('rawat-inap.informed-consent.delete', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $item->id]) }}"
-                                            method="post">
-                                            @csrf
-                                            @method('delete')
-
-                                            <button type="submit" class="btn btn-sm btn-danger btn-del-consent">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-
-                                    </div>
-                                </td>
+                                <th>Tanggal dan Jam</th>
+                                <th>Petugas</th>
+                                <th>Penerima Informasi</th>
+                                <th>Saksi 1</th>
+                                <th>Saksi 2</th>
+                                <th width="100px">#</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            @foreach ($informedConsent as $item)
+                                <tr>
+                                    <td>{{ date('d M Y', strtotime($item->tanggal)) . ' ' . date('H:i:s', strtotime($item->jam)) }}
+                                    </td>
+                                    <td>{{ $item->user->name ?? '' }}</td>
+                                    <td>{{ $item->nama_penerima_info }}</td>
+                                    <td>{{ $item->saksi1_nama }}</td>
+                                    <td>{{ $item->saksi2_nama }}</td>
+                                    <td>
+                                        <div class="d-flex w-min gap-1">
+                                            <button class="btn btn-sm btn-primary btn-show-consent"
+                                                data-ic="{{ $item->id }}" data-bs-target="#showInformedConsentModal">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+
+                                            <a href="{{ route('rawat-inap.informed-consent.print', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                class="btn btn-success btn-sm" title="Cetak" target="_blank">
+                                                <i class="ti-printer"></i>
+                                            </a>
+
+                                            <form
+                                                action="{{ route('rawat-inap.informed-consent.delete', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $item->id]) }}"
+                                                method="post">
+                                                @csrf
+                                                @method('delete')
+
+                                                <button type="submit" class="btn btn-sm btn-danger btn-del-consent">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </x-content-card>
         </div>
     </div>
 
