@@ -17,6 +17,7 @@ use App\Models\OrderOK;
 use App\Models\Produk;
 use App\Models\Spesialisasi;
 use App\Models\Transaksi;
+use App\Models\UnitAsal;
 use App\Services\BaseService;
 use Carbon\Carbon;
 use Exception;
@@ -257,6 +258,25 @@ class OperasiController extends Controller
         ];
     }
 
+    private function mappingDataUnitAsal($kd_kasir)
+    {
+        $asal_pasien = null;
+
+        switch ($kd_kasir) {
+            case '01':
+                $asal_pasien = 0; // Rawat Jalan
+                break;
+            case '02':
+                $asal_pasien = 2; // Rawat Inap
+                break;
+            case '06':
+                $asal_pasien = 1; // IGD
+                break;
+        }
+
+        return $asal_pasien;
+    }
+
     private function getProductDetail($kd_produk)
     {
         $today = date('Y-m-d');
@@ -325,7 +345,7 @@ class OperasiController extends Controller
             $mappingData = $this->mappingDataByKdKasir($kd_kasir);
             $produkDetail = $this->getProductDetail($request->jenis_tindakan);
 
-            if(empty($produkDetail)) throw new Exception('Detail produk tidak ditemukan.');
+            if (empty($produkDetail)) throw new Exception('Detail produk tidak ditemukan.');
 
             // Get Produk
             $product = Produk::with(['klas:kd_klas,klasifikasi,parent'])
@@ -543,6 +563,20 @@ class OperasiController extends Controller
             ];
 
             DetailTransaksi::create($dataDetailTransaksi);
+
+
+            // SIMPAN DATA UNIT_ASAL
+            $mappingUnitAsal = $this->mappingDataUnitAsal($kd_kasir);
+
+            $dataUnitAsal = [
+                'kd_kasir'      => $mappingData['kd_kasir'],
+                'no_transaksi'  => $formattedTransactionNumber,
+                'no_transaksi_asal' => $no_transaksi,
+                'kd_kasir_asal'   => $kd_kasir,
+                'id_asal'        => $mappingUnitAsal,
+            ];
+
+            UnitAsal::create($dataUnitAsal);
 
             DB::commit();
         } catch (Exception $e) {
