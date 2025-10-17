@@ -148,53 +148,10 @@
                     </div>
 
                     <!-- 4. Kebiasaan -->
-                    <div class="section-separator mb-4">
+                   
+                    <div class="section-separator" id="kebiasaan">
                         <h5 class="section-title">4. Kebiasaan</h5>
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <tbody>
-                                            <tr>
-                                                <td class="label-col fw-bold">a. Merokok</td>
-                                                <td>
-                                                    @if ($asesmen->rmeAsesmenParu->merokok == 'ya')
-                                                        <span class="badge bg-warning">Ya</span>
-                                                        - Jumlah: {{ $asesmen->rmeAsesmenParu->merokok_jumlah ?? 0 }}
-                                                        batang/hari
-                                                        - Lama: {{ $asesmen->rmeAsesmenParu->merokok_lama ?? 0 }} tahun
-                                                    @else
-                                                        <span class="badge bg-success">Tidak</span>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="label-col fw-bold">b. Alkohol</td>
-                                                <td>
-                                                    @if ($asesmen->rmeAsesmenParu->alkohol == 'ya')
-                                                        <span class="badge bg-warning">Ya</span>
-                                                        - Jumlah: {{ $asesmen->rmeAsesmenParu->alkohol_jumlah ?? '-' }}
-                                                    @else
-                                                        <span class="badge bg-success">Tidak</span>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="label-col fw-bold">c. Obat-obatan</td>
-                                                <td>
-                                                    @if ($asesmen->rmeAsesmenParu->obat_obatan == 'ya')
-                                                        <span class="badge bg-warning">Ya</span>
-                                                        - Jenis: {{ $asesmen->rmeAsesmenParu->obat_jenis ?? '-' }}
-                                                    @else
-                                                        <span class="badge bg-success">Tidak</span>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+                         @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.KebiasaanForm.index',['KebiasaanData'=> !empty($KebiasaanData) ? $KebiasaanData : null,'viewMode' => true])
                     </div>
 
                     <!-- 5. Tanda-Tanda Vital -->

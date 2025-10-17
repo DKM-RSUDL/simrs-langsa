@@ -64,27 +64,15 @@ class AsesmenParuController extends Controller
             abort(404, 'Data not found');
         }
 
-       $idAsesmen = RmeAsesmen::select('id')
-        ->where('kd_pasien', $kd_pasien)
-        ->where('kategori', '1')
-        ->where('sub_kategori', '8')
-        ->first()->id;
+        $idAsesmen = $this->getIdAsesmen($kd_pasien);
 
-
-
-        if(!empty($idAsesmen)){
-             $paruTerdahulu = RmeAsesmenParu::select('riwayat_penyakit_terdahulu', 'riwayat_penggunaan_obat')
-            ->where('id_asesmen', $idAsesmen ?? null)
-            ->orderBy('id','desc')
-            ->first();
-            
+        $paruTerdahulu = null;
+        if (! empty($idAsesmen)) {
+            $paruTerdahulu = RmeAsesmenParu::select('riwayat_penyakit_terdahulu', 'riwayat_penggunaan_obat')
+                ->where('id_asesmen', $idAsesmen->id ?? null)
+                ->orderBy('id', 'desc')
+                ->first();
         }
-
-    
-
-   
-
-        
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
@@ -103,7 +91,7 @@ class AsesmenParuController extends Controller
             'rmeMasterImplementasi' => $rmeMasterImplementasi,
             'alergiPasien' => $alergiPasien,
             'satsetPrognosis' => $satsetPrognosis,
-            'paruTerdahulu' => $paruTerdahulu
+            'paruTerdahulu' => $paruTerdahulu,
         ]);
     }
 
@@ -112,33 +100,22 @@ class AsesmenParuController extends Controller
         DB::beginTransaction();
 
         try {
-           
-
-            $alkoholJenis = $request->alkohol_jenis;
-            $alkoholJumlah = $request->alkohol_jumlah;
-            $alkoholArr = [];
-
-            for($i=0; $i < count($alkoholJenis); $i++) {
-                $alkoholArr[] = [
-                    'jenis' => $alkoholJenis[$i],
-                    'jml' => $alkoholJumlah[$i],
-                ];
-            }
-
             $MerokokJenis = $request->merokok_jenis;
             $merokokLama = $request->merokok_lama;
             $MerokokJumlah = $request->merokok_jumlah;
             $merokokArr = [];
 
-            for($i=0; $i < count($MerokokJenis); $i++) {
-                $merokokArr[] = [
-                    'jenis' => $MerokokJenis[$i],
-                    'jml' => $MerokokJumlah[$i],
-                    'lama' => $merokokLama[$i],
-                ];
+            if (count($MerokokJenis) > 0) {
+                for ($i = 0; $i < count($MerokokJenis); $i++) {
+                    $merokokArr[] = [
+                        'jenis' => $MerokokJenis[$i],
+                        'jml' => $MerokokJumlah[$i],
+                        'lama' => $merokokLama[$i],
+                    ];
+                }
+
             }
 
-            
             $request->validate([
                 'gambar_radiologi_paru' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
             ]);
@@ -197,10 +174,12 @@ class AsesmenParuController extends Controller
             // $asesmenParu->merokok_jumlah = $request->merokok_jumlah;
             // $asesmenParu->merokok_lama = $request->merokok_lama;
             $asesmenParu->merokok_data = $merokokArr;
-            // $asesmenParu->alkohol = $request->alkohol;
-            $asesmenParu->alkohol_data = $alkoholArr;
-            $asesmenParu->obat_obatan = $request->obat_obatan;
-            $asesmenParu->obat_jenis = $request->obat_jenis;
+            $asesmenParu->alkohol = $request->alkohol;
+            $asesmenParu->alkohol_jenis = $request->alkohol_jenis;
+            $asesmenParu->obat = $request->obat;
+            $asesmenParu->obat_data = $request->obat_jenis;
+            // $asesmenParu->obat_obatan = $request->obat_obatan;
+            // $asesmenParu->obat_jenis = $request->obat_jenis;
             $asesmenParu->sensorium = $request->sensorium;
             $asesmenParu->keadaan_umum = $request->keadaan_umum;
             $asesmenParu->darah_sistole = $request->darah_sistole;
@@ -484,11 +463,17 @@ class AsesmenParuController extends Controller
             $itemFisik = MrItemFisik::orderBy('urut')->get();
             $satsetPrognosis = SatsetPrognosis::all();
 
+            $idAsesmen = $this->getIdAsesmen($kd_pasien);
+
+            $KebiasaanData = $this->getKebiasaan($idAsesmen);
+            
+           
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.show', compact(
                 'asesmen',
                 'dataMedis',
                 'itemFisik',
-                'satsetPrognosis'
+                'satsetPrognosis',
+                'KebiasaanData'
             ));
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data tidak ditemukan. Detail: '.$e->getMessage());
@@ -527,8 +512,13 @@ class AsesmenParuController extends Controller
             $satsetPrognosis = SatsetPrognosis::all();
             $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
+            $idAsesmen = $this->getIdAsesmen($kd_pasien);
+
+            $KebiasaanData = $this->getKebiasaan($idAsesmen);
+
             // **TAMBAHAN: Ambil data site marking paru**
             $siteMarkingParuData = '';
+
             if ($asesmen && $asesmen->rmeAsesmenParu && $asesmen->rmeAsesmenParu->site_marking_paru_data) {
                 $siteMarkingParuData = $asesmen->rmeAsesmenParu->site_marking_paru_data;
             }
@@ -536,6 +526,7 @@ class AsesmenParuController extends Controller
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.edit', compact(
                 'asesmen',
                 'dataMedis',
+                'KebiasaanData',
                 'itemFisik',
                 'rmeMasterDiagnosis',
                 'rmeMasterImplementasi',
@@ -558,6 +549,22 @@ class AsesmenParuController extends Controller
             $request->validate([
                 'gambar_radiologi_paru' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
             ]);
+
+            $MerokokJenis = $request->merokok_jenis;
+            $merokokLama = $request->merokok_lama;
+            $MerokokJumlah = $request->merokok_jumlah;
+            $merokokArr = [];
+
+            if (count($MerokokJenis) > 0) {
+                for ($i = 0; $i < count($MerokokJenis); $i++) {
+                    $merokokArr[] = [
+                        'jenis' => $MerokokJenis[$i],
+                        'jml' => $MerokokJumlah[$i],
+                        'lama' => $merokokLama[$i],
+                    ];
+                }
+
+            }
 
             // 1. Buat record RmeAsesmen
             $asesmen = RmeAsesmen::findOrFail($id);
@@ -582,12 +589,16 @@ class AsesmenParuController extends Controller
             $asesmenParu->riwayat_penyakit_terdahulu = $request->riwayat_penyakit_terdahulu;
             $asesmenParu->riwayat_penggunaan_obat = $request->riwayat_penggunaan_obat;
             $asesmenParu->merokok = $request->merokok;
-            $asesmenParu->merokok_jumlah = $request->merokok_jumlah;
-            $asesmenParu->merokok_lama = $request->merokok_lama;
+            // $asesmenParu->merokok_jenis = $request->merokok_jenis;
+            // $asesmenParu->merokok_jumlah = $request->merokok_jumlah;
+            // $asesmenParu->merokok_lama = $request->merokok_lama;
+            $asesmenParu->merokok_data = $merokokArr;
             $asesmenParu->alkohol = $request->alkohol;
-            $asesmenParu->alkohol_jumlah = $request->alkohol_jumlah;
-            $asesmenParu->obat_obatan = $request->obat_obatan;
-            $asesmenParu->obat_jenis = $request->obat_jenis;
+            $asesmenParu->alkohol_jenis = $request->alkohol_jenis;
+            $asesmenParu->obat = $request->obat;
+            $asesmenParu->obat_data = $request->obat_jenis;
+            // $asesmenParu->obat_obatan = $request->obat_obatan;
+            // $asesmenParu->obat_jenis = $request->obat_jenis;
             $asesmenParu->sensorium = $request->sensorium;
             $asesmenParu->keadaan_umum = $request->keadaan_umum;
             $asesmenParu->darah_sistole = $request->darah_sistole;
@@ -944,5 +955,69 @@ class AsesmenParuController extends Controller
                 $resumeDtl->save();
             }
         }
+    }
+
+    private function getIdAsesmen($kd_pasien)
+    {
+        $idAsesmen = RmeAsesmen::select('id')
+            ->where('kd_pasien', $kd_pasien)
+            ->where('kategori', '1')
+            ->where('sub_kategori', '8')
+            ->orderBy('id', 'desc')
+            ->first();
+
+        return $idAsesmen;
+    }
+
+    private function getKebiasaan($idAsesmen)
+    {
+        // Inisialisasi default KebiasaanData
+        $KebiasaanData = [
+            'alkohol' => [
+                'status' => 'tidak',
+                'jenis' => null,
+            ],
+            'merokok' => [
+                'status' => 'tidak',
+                'detail' => [],
+            ],
+            'obat' => [
+                'status' => 'tidak',
+                'detail' => [],
+            ],
+        ];
+
+        // Ambil data dari database jika idAsesmen ada
+        if (! empty($idAsesmen)) {
+
+            $kebiasaanPasien = RmeAsesmenParu::select('alkohol_jenis', 'merokok_data', 'obat_data')
+                ->where('id_asesmen', $idAsesmen->id ?? null)
+                ->orderBy('id', 'desc')
+                ->first();
+
+            if ($kebiasaanPasien) {
+                // Dekode JSON jika disimpan sebagai JSON
+                $alkoholData = $kebiasaanPasien->alkohol_jenis ?? null;
+                $merokokData = $kebiasaanPasien->merokok_data ?? null;
+                $obatData = $kebiasaanPasien->obat_data ?? null;
+
+                // Format ulang data untuk KebiasaanData
+                $KebiasaanData['alkohol'] = [
+                    'status' => $alkoholData ? 'ya' : 'tidak',
+                    'jenis' => $alkoholData,
+                ];
+                $KebiasaanData['merokok'] = [
+                    'status' => $merokokData ? 'ya' : 'tidak',
+                    'detail' => $merokokData,
+                ];
+                $KebiasaanData['obat'] = [
+                    'status' => $obatData ? 'ya' : 'tidak',
+                    'detail' => $obatData,
+                ];
+            }
+
+        }
+
+        return $KebiasaanData;    
     }
 }

@@ -184,7 +184,7 @@
             function populateForm(index) {
                 const item = riwayatObstetrik[index];
                 document.getElementById('keadaanInput').value = item.keadaan || '';
-                document.getElementById('kehamilanInput').value = item.kehamilan || '';
+              
                 document.getElementById('caraPersalinanInput').value = item.caraPersalinan || '';
                 document.getElementById('keadaanNifasInput').value = item.keadaanNifas || '';
                 document.getElementById('tanggalLahirInput').value = item.tanggalLahir || '';
@@ -246,7 +246,7 @@
 
                 const data = {
                     keadaan: document.getElementById('keadaanInput').value.trim(),
-                    kehamilan: document.getElementById('kehamilanInput').value.trim(),
+                    
                     caraPersalinan: document.getElementById('caraPersalinanInput').value.trim(),
                     keadaanNifas: document.getElementById('keadaanNifasInput').value.trim(),
                     tanggalLahir: document.getElementById('tanggalLahirInput').value || null,

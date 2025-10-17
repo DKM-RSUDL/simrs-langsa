@@ -18,22 +18,24 @@ use App\Models\RmeMasterImplementasi;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SatsetPrognosis;
+use App\Services\AsesmenService;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Exception;
 use Illuminate\Support\Facades\DB;
-use App\Services\AsesmenService;
+use Illuminate\Support\Facades\Storage;
+
 class AsesmenObstetriMaternitas extends Controller
 {
     protected $asesmenService;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
-        $this->asesmenService = new AsesmenService();
+        $this->asesmenService = new AsesmenService;
 
     }
 
@@ -60,7 +62,7 @@ class AsesmenObstetriMaternitas extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-        if (!$dataMedis) {
+        if (! $dataMedis) {
             abort(404, 'Data not found');
         }
 
@@ -79,7 +81,7 @@ class AsesmenObstetriMaternitas extends Controller
             $dataMedis->riwayat_alergi = [];
         }
 
-        $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
+        $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK.' '.$dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
         // Get latest vital signs data for the patient
         $vitalSignsData = $this->asesmenService->getLatestVitalSignsByPatient($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
@@ -103,7 +105,7 @@ class AsesmenObstetriMaternitas extends Controller
         DB::beginTransaction();
 
         try {
-            $asesmen = new RmeAsesmen();
+            $asesmen = new RmeAsesmen;
             $asesmen->kd_pasien = $request->kd_pasien;
             $asesmen->kd_unit = $request->kd_unit;
             $asesmen->tgl_masuk = $request->tgl_masuk;
@@ -118,21 +120,19 @@ class AsesmenObstetriMaternitas extends Controller
                 'hasil_pemeriksaan_penunjang_darah' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
                 'hasil_pemeriksaan_penunjang_urine' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
                 'hasil_pemeriksaan_penunjang_rontgent' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
-                'hasil_pemeriksaan_penunjang_histopatology' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048'
+                'hasil_pemeriksaan_penunjang_histopatology' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
             ]);
 
-
-
-        // 2. Data vital sign untuk disimpan
-        $vitalSignData = [
-            'sistole'       => $request->tekanan_darah_sistole ? (int)$request->tekanan_darah_sistole : null,
-            'diastole'      => $request->tekanan_darah_diastole ? (int)$request->tekanan_darah_diastole : null,
-            'nadi'          => $request->nadi ? (int)$request->nadi : null,
-            'respiration'   => $request->pernafasan ? (int)$request->pernafasan : null,
-            'suhu'          => $request->suhu ? (float)$request->suhu : null,
-            'tinggi_badan'  => $request->antropometri_tinggi_badan ? (int)$request->antropometri_tinggi_badan : null,
-            'berat_badan'   => $request->antropometr_berat_badan ? (int)$request->antropometr_berat_badan : null,
-        ];
+            // 2. Data vital sign untuk disimpan
+            $vitalSignData = [
+                'sistole' => $request->tekanan_darah_sistole ? (int) $request->tekanan_darah_sistole : null,
+                'diastole' => $request->tekanan_darah_diastole ? (int) $request->tekanan_darah_diastole : null,
+                'nadi' => $request->nadi ? (int) $request->nadi : null,
+                'respiration' => $request->pernafasan ? (int) $request->pernafasan : null,
+                'suhu' => $request->suhu ? (float) $request->suhu : null,
+                'tinggi_badan' => $request->antropometri_tinggi_badan ? (int) $request->antropometri_tinggi_badan : null,
+                'berat_badan' => $request->antropometr_berat_badan ? (int) $request->antropometr_berat_badan : null,
+            ];
 
             // 3. Ambil transaksi terakhir untuk pasien
             $lastTransaction = $this->asesmenService->getTransaksiData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
@@ -141,7 +141,7 @@ class AsesmenObstetriMaternitas extends Controller
             $this->asesmenService->store($vitalSignData, $kd_pasien, $lastTransaction->no_transaksi, $lastTransaction->kd_kasir);
 
             // 5. Simpan ke tabel obstetri (contoh)
-            $asesmenObstetri = new RmeAsesmenObstetri();
+            $asesmenObstetri = new RmeAsesmenObstetri;
             $asesmenObstetri->id_asesmen = $asesmen->id;
             $asesmenObstetri->tgl_masuk = "$request->tgl_masuk $request->jam_masuk";
             $asesmenObstetri->antenatal_rs = $request->antenatal_rs;
@@ -153,7 +153,7 @@ class AsesmenObstetriMaternitas extends Controller
             $asesmenObstetri->evaluasi_evaluasi = $request->evaluasi_evaluasi;
             $asesmenObstetri->save();
 
-            $asesmenObstetri = new RmeAsesmenObstetri();
+            $asesmenObstetri = new RmeAsesmenObstetri;
             $asesmenObstetri->id_asesmen = $asesmen->id;
             $asesmenObstetri->tgl_masuk = "$request->tgl_masuk $request->jam_masuk";
             $asesmenObstetri->antenatal_rs = $request->antenatal_rs;
@@ -183,6 +183,7 @@ class AsesmenObstetriMaternitas extends Controller
                         throw new \Exception("Gagal mengupload file {$fieldName}");
                     }
                 }
+
                 return null;
             };
 
@@ -193,7 +194,7 @@ class AsesmenObstetriMaternitas extends Controller
             $asesmenObstetri->hasil_pemeriksaan_penunjang_histopatology = $uploadFile('hasil_pemeriksaan_penunjang_histopatology');
             $asesmenObstetri->save();
 
-            $asesmenObstetriPemeriksaanFisik = new RmeAsesmenObstetriPemeriksaanFisik();
+            $asesmenObstetriPemeriksaanFisik = new RmeAsesmenObstetriPemeriksaanFisik;
             $asesmenObstetriPemeriksaanFisik->id_asesmen = $asesmen->id;
             $asesmenObstetriPemeriksaanFisik->keadaan_umum = $request->keadaan_umum;
             $asesmenObstetriPemeriksaanFisik->tekanan_darah_sistole = $request->tekanan_darah_sistole;
@@ -237,23 +238,25 @@ class AsesmenObstetriMaternitas extends Controller
             $asesmenObstetriPemeriksaanFisik->antropometri_lpt = $request->antropometri_lpt;
             $asesmenObstetriPemeriksaanFisik->save();
 
-            //Simpan ke table RmePemeriksaanFisik
+            // Simpan ke table RmePemeriksaanFisik
             $itemFisik = MrItemFisik::all();
             foreach ($itemFisik as $item) {
                 $itemName = strtolower($item->nama);
-                $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
-                $keterangan = $request->input($item->id . '_keterangan');
-                if ($isNormal) $keterangan = '';
+                $isNormal = $request->has($item->id.'-normal') ? 1 : 0;
+                $keterangan = $request->input($item->id.'_keterangan');
+                if ($isNormal) {
+                    $keterangan = '';
+                }
 
                 RmeAsesmenPemeriksaanFisik::create([
                     'id_asesmen' => $asesmen->id,
                     'id_item_fisik' => $item->id,
                     'is_normal' => $isNormal,
-                    'keterangan' => $keterangan
+                    'keterangan' => $keterangan,
                 ]);
             }
 
-            $asesmenObstetriStatusNyeri = new RmeAsesmenObstetriStatusNyeri();
+            $asesmenObstetriStatusNyeri = new RmeAsesmenObstetriStatusNyeri;
             $asesmenObstetriStatusNyeri->id_asesmen = $asesmen->id;
             $asesmenObstetriStatusNyeri->jenis_skala_nyeri = $request->jenis_skala_nyeri;
             $asesmenObstetriStatusNyeri->skala_nyeri = $request->skala_nyeri;
@@ -275,7 +278,7 @@ class AsesmenObstetriMaternitas extends Controller
             }
             $asesmenObstetriStatusNyeri->save();
 
-            $asesmenObstetriRiwayatKesehatan = new RmeAsesmenObstetriRiwayatKesehatan();
+            $asesmenObstetriRiwayatKesehatan = new RmeAsesmenObstetriRiwayatKesehatan;
             $asesmenObstetriRiwayatKesehatan->id_asesmen = $asesmen->id;
             $asesmenObstetriRiwayatKesehatan->gravid = $request->gravid;
             $asesmenObstetriRiwayatKesehatan->partus = $request->partus;
@@ -326,7 +329,7 @@ class AsesmenObstetriMaternitas extends Controller
 
             $asesmenObstetriRiwayatKesehatan->save();
 
-            $asesmenObstetriDischargePlanning = new RmeAsesmenObstetriDischargePlanning();
+            $asesmenObstetriDischargePlanning = new RmeAsesmenObstetriDischargePlanning;
             $asesmenObstetriDischargePlanning->id_asesmen = $asesmen->id;
             $asesmenObstetriDischargePlanning->dp_diagnosis_medis = $request->dp_diagnosis_medis;
             $asesmenObstetriDischargePlanning->dp_usia_lanjut = $request->dp_usia_lanjut;
@@ -338,7 +341,7 @@ class AsesmenObstetriMaternitas extends Controller
             $asesmenObstetriDischargePlanning->dp_kesimpulan = $request->dp_kesimpulan;
             $asesmenObstetriDischargePlanning->save();
 
-            $asesmenObstetriDiagnosisImplementasi = new RmeAsesmenObstetriDiagnosisImplementasi();
+            $asesmenObstetriDiagnosisImplementasi = new RmeAsesmenObstetriDiagnosisImplementasi;
             $asesmenObstetriDiagnosisImplementasi->id_asesmen = $asesmen->id;
             $asesmenObstetriDiagnosisImplementasi->diagnosis_banding = $request->diagnosis_banding;
             $asesmenObstetriDiagnosisImplementasi->diagnosis_kerja = $request->diagnosis_kerja;
@@ -349,14 +352,14 @@ class AsesmenObstetriMaternitas extends Controller
             $asesmenObstetriDiagnosisImplementasi->kolaborasi = $request->kolaborasi;
             $asesmenObstetriDiagnosisImplementasi->save();
 
-            //Simpan Diagnosa ke Master
+            // Simpan Diagnosa ke Master
             $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
             $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true);
             $allDiagnoses = array_merge($diagnosisBandingList, $diagnosisKerjaList);
             foreach ($allDiagnoses as $diagnosa) {
                 $existingDiagnosa = RmeMasterDiagnosis::where('nama_diagnosis', $diagnosa)->first();
-                if (!$existingDiagnosa) {
-                    $masterDiagnosa = new RmeMasterDiagnosis();
+                if (! $existingDiagnosa) {
+                    $masterDiagnosa = new RmeMasterDiagnosis;
                     $masterDiagnosa->nama_diagnosis = $diagnosa;
                     $masterDiagnosa->save();
                 }
@@ -375,9 +378,9 @@ class AsesmenObstetriMaternitas extends Controller
                     // Cek apakah sudah ada entri
                     $existingImplementasi = RmeMasterImplementasi::where($column, $item)->first();
 
-                    if (!$existingImplementasi) {
+                    if (! $existingImplementasi) {
                         // Jika tidak ada, buat record baru
-                        $masterImplementasi = new RmeMasterImplementasi();
+                        $masterImplementasi = new RmeMasterImplementasi;
                         $masterImplementasi->$column = $item;
                         $masterImplementasi->save();
                     }
@@ -392,37 +395,37 @@ class AsesmenObstetriMaternitas extends Controller
 
             // RESUME
             $resumeData = [
-                'anamnesis'             => $request->anamnesis_anamnesis,
-                'diagnosis'             => [],
-                'tindak_lanjut_code'    => null,
-                'tindak_lanjut_name'    => null,
-                'tgl_kontrol_ulang'     => null,
-                'unit_rujuk_internal'   => null,
-                'rs_rujuk'              => null,
-                'rs_rujuk_bagian'       => null,
-                'konpas'                => [
-                    'sistole'   => [
-                        'hasil' => $request->tekanan_darah_sistole
+                'anamnesis' => $request->anamnesis_anamnesis,
+                'diagnosis' => [],
+                'tindak_lanjut_code' => null,
+                'tindak_lanjut_name' => null,
+                'tgl_kontrol_ulang' => null,
+                'unit_rujuk_internal' => null,
+                'rs_rujuk' => null,
+                'rs_rujuk_bagian' => null,
+                'konpas' => [
+                    'sistole' => [
+                        'hasil' => $request->tekanan_darah_sistole,
                     ],
-                    'distole'   => [
-                        'hasil' => $request->tekanan_darah_diastole
+                    'distole' => [
+                        'hasil' => $request->tekanan_darah_diastole,
                     ],
-                    'respiration_rate'   => [
-                        'hasil' => ''
+                    'respiration_rate' => [
+                        'hasil' => '',
                     ],
-                    'suhu'   => [
-                        'hasil' => $request->suhu
+                    'suhu' => [
+                        'hasil' => $request->suhu,
                     ],
-                    'nadi'   => [
-                        'hasil' => ''
+                    'nadi' => [
+                        'hasil' => '',
                     ],
-                    'tinggi_badan'   => [
-                        'hasil' => $request->antropometri_tinggi_badan
+                    'tinggi_badan' => [
+                        'hasil' => $request->antropometri_tinggi_badan,
                     ],
-                    'berat_badan'   => [
-                        'hasil' => $request->antropometr_berat_badan
-                    ]
-                ]
+                    'berat_badan' => [
+                        'hasil' => $request->antropometr_berat_badan,
+                    ],
+                ],
             ];
 
             $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
@@ -437,6 +440,7 @@ class AsesmenObstetriMaternitas extends Controller
             ])->with(['success' => 'Berhasil menambah asesmen Obstetri!']);
         } catch (Exception $e) {
             DB::rollBack();
+
             return back()->with('error', $e->getMessage());
         }
 
@@ -476,9 +480,9 @@ class AsesmenObstetriMaternitas extends Controller
                 'itemFisik'
             ));
         } catch (ModelNotFoundException $e) {
-            return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
+            return back()->with('error', 'Data tidak ditemukan. Detail: '.$e->getMessage());
         } catch (\Exception $e) {
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
         }
     }
 
@@ -523,13 +527,14 @@ class AsesmenObstetriMaternitas extends Controller
         } catch (\Exception $e) {
             // Tangani error dan berikan pesan yang jelas
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat mengambil data asesmen: ' . $e->getMessage());
+                ->with('error', 'Terjadi kesalahan saat mengambil data asesmen: '.$e->getMessage());
         }
     }
 
     public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         DB::beginTransaction();
+      
 
         try {
             $asesmen = RmeAsesmen::findOrFail($id);
@@ -547,7 +552,7 @@ class AsesmenObstetriMaternitas extends Controller
                 'hasil_pemeriksaan_penunjang_darah' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
                 'hasil_pemeriksaan_penunjang_urine' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
                 'hasil_pemeriksaan_penunjang_rontgent' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
-                'hasil_pemeriksaan_penunjang_histopatology' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048'
+                'hasil_pemeriksaan_penunjang_histopatology' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
             ]);
 
             $asesmenObstetri = RmeAsesmenObstetri::firstOrNew(['id_asesmen' => $asesmen->id]);
@@ -563,13 +568,14 @@ class AsesmenObstetriMaternitas extends Controller
             $asesmenObstetri->paru_prognosis = $request->paru_prognosis;
             $asesmenObstetri->rencana_pengobatan = $request->rencana_pengobatan;
 
-            /// Fungsi helper untuk upload file
+            // / Fungsi helper untuk upload file
             $handleFile = function ($fieldName) use ($request, $asesmen, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk) {
                 if ($request->has("remove_{$fieldName}")) {
                     $oldFile = $asesmen->asesmenObstetri->{$fieldName} ?? null;
                     if ($oldFile && Storage::exists($oldFile)) {
                         Storage::delete($oldFile);
                     }
+
                     return null;
                 }
 
@@ -589,7 +595,7 @@ class AsesmenObstetriMaternitas extends Controller
                             return $path;
                         }
                     } catch (\Exception $e) {
-                        throw new \Exception("Gagal mengupload file {$fieldName}: " . $e->getMessage());
+                        throw new \Exception("Gagal mengupload file {$fieldName}: ".$e->getMessage());
                     }
                 }
 
@@ -668,18 +674,20 @@ class AsesmenObstetriMaternitas extends Controller
             $itemFisik = MrItemFisik::all();
             foreach ($itemFisik as $item) {
                 $itemName = strtolower($item->nama);
-                $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
-                $keterangan = $request->input($item->id . '_keterangan');
-                if ($isNormal) $keterangan = '';
+                $isNormal = $request->has($item->id.'-normal') ? 1 : 0;
+                $keterangan = $request->input($item->id.'_keterangan');
+                if ($isNormal) {
+                    $keterangan = '';
+                }
 
                 RmeAsesmenPemeriksaanFisik::updateOrCreate(
                     [
                         'id_asesmen' => $asesmen->id,
-                        'id_item_fisik' => $item->id
+                        'id_item_fisik' => $item->id,
                     ],
                     [
                         'is_normal' => $isNormal,
-                        'keterangan' => $keterangan
+                        'keterangan' => $keterangan,
                     ]
                 );
             }
@@ -715,11 +723,13 @@ class AsesmenObstetriMaternitas extends Controller
             $asesmenObstetriRiwayatKesehatan->kehamilan_diinginkan = $request->kehamilan_diinginkan;
             $asesmenObstetriRiwayatKesehatan->dukungan_sosial = $request->dukungan_sosial;
             $asesmenObstetriRiwayatKesehatan->eliminasi = $request->eliminasi;
+            $asesmenObstetriRiwayatKesehatan->defaksi = $request->defaksi;
             $asesmenObstetriRiwayatKesehatan->riwayat_rawat_inap = $request->riwayat_rawat_inap;
             $asesmenObstetriRiwayatKesehatan->tanggal_rawat = $request->tanggal_rawat;
             $asesmenObstetriRiwayatKesehatan->konsumsi_obat = $request->konsumsi_obat;
             $asesmenObstetriRiwayatKesehatan->antenatal_lain = $request->antenatal_lain;
             $asesmenObstetriRiwayatKesehatan->berapa_kali = $request->berapa_kali;
+            $asesmenObstetriRiwayatKesehatan->defaksi = $request->defaksi;
 
             $asesmenObstetriRiwayatKesehatan->riwayat_kehamilan_sekarang = $request->riwayat_kehamilan_sekarang;
             $asesmenObstetriRiwayatKesehatan->kebiasaan_ibu_hamil = $request->kebiasaan_ibu_hamil;
@@ -753,14 +763,14 @@ class AsesmenObstetriMaternitas extends Controller
             $asesmenObstetriDiagnosisImplementasi->kolaborasi = $request->kolaborasi;
             $asesmenObstetriDiagnosisImplementasi->save();
 
-            //Simpan Diagnosa ke Master
+            // Simpan Diagnosa ke Master
             $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
             $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true);
             $allDiagnoses = array_merge($diagnosisBandingList, $diagnosisKerjaList);
             foreach ($allDiagnoses as $diagnosa) {
                 $existingDiagnosa = RmeMasterDiagnosis::where('nama_diagnosis', $diagnosa)->first();
-                if (!$existingDiagnosa) {
-                    $masterDiagnosa = new RmeMasterDiagnosis();
+                if (! $existingDiagnosa) {
+                    $masterDiagnosa = new RmeMasterDiagnosis;
                     $masterDiagnosa->nama_diagnosis = $diagnosa;
                     $masterDiagnosa->save();
                 }
@@ -779,9 +789,9 @@ class AsesmenObstetriMaternitas extends Controller
                     // Cek apakah sudah ada entri
                     $existingImplementasi = RmeMasterImplementasi::where($column, $item)->first();
 
-                    if (!$existingImplementasi) {
+                    if (! $existingImplementasi) {
                         // Jika tidak ada, buat record baru
-                        $masterImplementasi = new RmeMasterImplementasi();
+                        $masterImplementasi = new RmeMasterImplementasi;
                         $masterImplementasi->$column = $item;
                         $masterImplementasi->save();
                     }
@@ -796,37 +806,37 @@ class AsesmenObstetriMaternitas extends Controller
 
             // RESUME
             $resumeData = [
-                'anamnesis'             => $request->anamnesis_anamnesis,
-                'diagnosis'             => [],
-                'tindak_lanjut_code'    => null,
-                'tindak_lanjut_name'    => null,
-                'tgl_kontrol_ulang'     => null,
-                'unit_rujuk_internal'   => null,
-                'rs_rujuk'              => null,
-                'rs_rujuk_bagian'       => null,
-                'konpas'                => [
-                    'sistole'   => [
-                        'hasil' => $request->tekanan_darah_sistole
+                'anamnesis' => $request->anamnesis_anamnesis,
+                'diagnosis' => [],
+                'tindak_lanjut_code' => null,
+                'tindak_lanjut_name' => null,
+                'tgl_kontrol_ulang' => null,
+                'unit_rujuk_internal' => null,
+                'rs_rujuk' => null,
+                'rs_rujuk_bagian' => null,
+                'konpas' => [
+                    'sistole' => [
+                        'hasil' => $request->tekanan_darah_sistole,
                     ],
-                    'distole'   => [
-                        'hasil' => $request->tekanan_darah_diastole
+                    'distole' => [
+                        'hasil' => $request->tekanan_darah_diastole,
                     ],
-                    'respiration_rate'   => [
-                        'hasil' => ''
+                    'respiration_rate' => [
+                        'hasil' => '',
                     ],
-                    'suhu'   => [
-                        'hasil' => $request->suhu
+                    'suhu' => [
+                        'hasil' => $request->suhu,
                     ],
-                    'nadi'   => [
-                        'hasil' => ''
+                    'nadi' => [
+                        'hasil' => '',
                     ],
-                    'tinggi_badan'   => [
-                        'hasil' => $request->antropometri_tinggi_badan
+                    'tinggi_badan' => [
+                        'hasil' => $request->antropometri_tinggi_badan,
                     ],
-                    'berat_badan'   => [
-                        'hasil' => $request->antropometr_berat_badan
-                    ]
-                ]
+                    'berat_badan' => [
+                        'hasil' => $request->antropometr_berat_badan,
+                    ],
+                ],
             ];
 
             $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
@@ -841,7 +851,8 @@ class AsesmenObstetriMaternitas extends Controller
             ])->with(['success' => 'Berhasil mengupdate asesmen THT!']);
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+
+            return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
         }
     }
 
@@ -860,10 +871,10 @@ class AsesmenObstetriMaternitas extends Controller
                 'rmeAsesmenObstetriDiagnosisImplementasi',
             ])->where('id', $id)->first();
 
-            if (!$asesmen) {
+            if (! $asesmen) {
                 return response()->json([
-                    'status'  => 'error',
-                    'message' => 'Data asesmen tidak ditemukan'
+                    'status' => 'error',
+                    'message' => 'Data asesmen tidak ditemukan',
                 ], 404);
             }
 
@@ -879,13 +890,13 @@ class AsesmenObstetriMaternitas extends Controller
 
             // If we can't find the data medis, try getting the patient directly
             $pasien = null;
-            if (!$dataMedis || !$dataMedis->pasien) {
+            if (! $dataMedis || ! $dataMedis->pasien) {
                 $pasien = DB::table('pasien')->where('kd_pasien', $kd_pasien)->first();
 
-                if (!$pasien) {
+                if (! $pasien) {
                     return response()->json([
-                        'status'  => 'error',
-                        'message' => 'Data pasien tidak ditemukan'
+                        'status' => 'error',
+                        'message' => 'Data pasien tidak ditemukan',
                     ], 404);
                 }
             } else {
@@ -902,7 +913,7 @@ class AsesmenObstetriMaternitas extends Controller
 
             // Load view and generate PDF
             $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.print', [
-                'asesmen'    => $asesmen,
+                'asesmen' => $asesmen,
                 'pasien' => $pasien,
                 'dataMedis' => $dataMedis,
                 'asesmenObstetri' => optional($asesmen)->asesmenObstetri,
@@ -918,16 +929,16 @@ class AsesmenObstetriMaternitas extends Controller
             $pdf->setPaper('a4', 'portrait');
             $pdf->setOptions([
                 'isHtml5ParserEnabled' => true,
-                'isRemoteEnabled'      => true,
-                'defaultFont'          => 'sans-serif'
+                'isRemoteEnabled' => true,
+                'defaultFont' => 'sans-serif',
             ]);
 
             return $pdf->stream("asesmen-obstetri-maternitas-{$id}-print-pdf.pdf");
         } catch (\Exception $e) {
 
             return response()->json([
-                'status'  => 'error',
-                'message' => 'Gagal generate PDF: ' . $e->getMessage()
+                'status' => 'error',
+                'message' => 'Gagal generate PDF: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -942,24 +953,24 @@ class AsesmenObstetriMaternitas extends Controller
             ->first();
 
         $resumeDtlData = [
-            'tindak_lanjut_code'    => $data['tindak_lanjut_code'],
-            'tindak_lanjut_name'    => $data['tindak_lanjut_name'],
-            'tgl_kontrol_ulang'     => $data['tgl_kontrol_ulang'],
-            'unit_rujuk_internal'   => $data['unit_rujuk_internal'],
-            'rs_rujuk'              => $data['rs_rujuk'],
-            'rs_rujuk_bagian'       => $data['rs_rujuk_bagian'],
+            'tindak_lanjut_code' => $data['tindak_lanjut_code'],
+            'tindak_lanjut_name' => $data['tindak_lanjut_name'],
+            'tgl_kontrol_ulang' => $data['tgl_kontrol_ulang'],
+            'unit_rujuk_internal' => $data['unit_rujuk_internal'],
+            'rs_rujuk' => $data['rs_rujuk'],
+            'rs_rujuk_bagian' => $data['rs_rujuk_bagian'],
         ];
 
         if (empty($resume)) {
             $resumeData = [
-                'kd_pasien'     => $kd_pasien,
-                'kd_unit'       => $kd_unit,
-                'tgl_masuk'     => $tgl_masuk,
-                'urut_masuk'    => $urut_masuk,
-                'anamnesis'     => $data['anamnesis'],
-                'konpas'        => $data['konpas'],
-                'diagnosis'     => $data['diagnosis'],
-                'status'        => 0
+                'kd_pasien' => $kd_pasien,
+                'kd_unit' => $kd_unit,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk,
+                'anamnesis' => $data['anamnesis'],
+                'konpas' => $data['konpas'],
+                'diagnosis' => $data['diagnosis'],
+                'status' => 0,
             ];
 
             $newResume = RMEResume::create($resumeData);
@@ -981,12 +992,12 @@ class AsesmenObstetriMaternitas extends Controller
             if (empty($resumeDtl)) {
                 RmeResumeDtl::create($resumeDtlData);
             } else {
-                $resumeDtl->tindak_lanjut_code  = $data['tindak_lanjut_code'];
-                $resumeDtl->tindak_lanjut_name  = $data['tindak_lanjut_name'];
-                $resumeDtl->tgl_kontrol_ulang   = $data['tgl_kontrol_ulang'];
+                $resumeDtl->tindak_lanjut_code = $data['tindak_lanjut_code'];
+                $resumeDtl->tindak_lanjut_name = $data['tindak_lanjut_name'];
+                $resumeDtl->tgl_kontrol_ulang = $data['tgl_kontrol_ulang'];
                 $resumeDtl->unit_rujuk_internal = $data['unit_rujuk_internal'];
-                $resumeDtl->rs_rujuk            = $data['rs_rujuk'];
-                $resumeDtl->rs_rujuk_bagian     = $data['rs_rujuk_bagian'];
+                $resumeDtl->rs_rujuk = $data['rs_rujuk'];
+                $resumeDtl->rs_rujuk_bagian = $data['rs_rujuk_bagian'];
                 $resumeDtl->save();
             }
         }

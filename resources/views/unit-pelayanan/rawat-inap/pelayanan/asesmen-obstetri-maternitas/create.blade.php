@@ -343,7 +343,7 @@
 
                             <div class="form-group mb-3">
                                 <label class="d-block mb-2 mr-2" style="min-width: 200px;">Pendataran</label>
-                                <select class="form-select" name="panggul_simpulan">
+                                <select class="form-select" name="serviks_pembukaan">
                                     <option value="" selected>pilih</option>
                                     <option value="1">&lt; 50%</option>
                                     <option value="2">&gt; 50%</option>
@@ -771,7 +771,7 @@
                                     <option value="Nyeri Tajam">Nyeri Tajam</option>
                                     <option value="Panas/ Terbakar">Panas/ Terbakar</option>
                                 </select> --}}
-                                <input type="number" class="form-control" name="siklus" placeholder="Hari">
+                                <input type="text" class="form-control" name="siklus" placeholder="Hari">
                             </div>
 
                             <div class="form-group mb-3">
