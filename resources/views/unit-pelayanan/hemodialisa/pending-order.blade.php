@@ -127,6 +127,7 @@
 @endpush
 
 @section('content')
+<x-content-card>
     <div class="row">
         <div class="col-md-12">
             <div class="emergency__container">
@@ -177,6 +178,7 @@
             </div>
         </div>
     </div>
+</x-content-card>
 @endsection
 
 @push('js')

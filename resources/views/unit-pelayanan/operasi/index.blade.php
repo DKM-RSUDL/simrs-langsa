@@ -96,57 +96,59 @@
 @endpush
 
 @section('content')
-    <div class="row">
-        <div class="col-md-12">
-            <div class="emergency__container">
-                <h4 class="fw-bold">Bedah Sentral</h4>
+    <x-content-card>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="emergency__container">
+                    <h4 class="fw-bold">Bedah Sentral</h4>
 
-                <a href="{{ route('operasi.index') }}">
-                    <div class="custom__card all__patients">
-                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
-                        <div class="text-center">
-                            <p class="m-0 p-0">Aktif</p>
-                            <p class="m-0 p-0 fs-4 fw-bold">3</p>
+                    <a href="{{ route('operasi.index') }}">
+                        <div class="custom__card all__patients">
+                            <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                            <div class="text-center">
+                                <p class="m-0 p-0">Aktif</p>
+                                <p class="m-0 p-0 fs-4 fw-bold">3</p>
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
 
-                <a href="{{ route('operasi.pending-order') }}">
-                    <div class="custom__card Pending">
-                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
-                        <div class="text-center">
-                            <p class="m-0 p-0">Pending Order Masuk</p>
-                            <p class="m-0 p-0 fs-4 fw-bold">33</p>
+                    <a href="{{ route('operasi.pending-order') }}">
+                        <div class="custom__card Pending">
+                            <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                            <div class="text-center">
+                                <p class="m-0 p-0">Pending Order Masuk</p>
+                                <p class="m-0 p-0 fs-4 fw-bold">33</p>
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="row mt-3">
-        <div class="col-md-12">
-            <div class="table-responsive text-left">
-                <table class="table table-bordered dataTable" id="patientUnitDatatable">
-                    <thead>
-                        <tr>
-                            <th width="100px">Aksi</th>
-                            <th>Pasien</th>
-                            <th>No RM / Reg</th>
-                            <th>Alamat</th>
-                            <th>Jaminan</th>
-                            <th>Status Pelayanan</th>
-                            <th>Keterangan</th>
-                            <th>Tindak Lanjut</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{-- Tabel diisi oleh DataTables --}}
-                    </tbody>
-                </table>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="table-responsive text-left">
+                    <table class="table table-bordered dataTable" id="patientUnitDatatable">
+                        <thead>
+                            <tr>
+                                <th width="100px">Aksi</th>
+                                <th>Pasien</th>
+                                <th>No RM / Reg</th>
+                                <th>Alamat</th>
+                                <th>Jaminan</th>
+                                <th>Status Pelayanan</th>
+                                <th>Keterangan</th>
+                                <th>Tindak Lanjut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{-- Tabel diisi oleh DataTables --}}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+    </x-content-card>
 @endsection
 
 @push('js')
@@ -165,52 +167,10 @@
                         searchable: false,
                         render: function(data, type, row) {
                             return `<div class="d-flex justify-content-center">
-                                        <a href="${pelayananUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk}" class="edit btn btn-outline-primary btn-sm">
+                                        <a href="${pelayananUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk}" class="edit btn btn-primary">
                                             <i class="ti-pencil-alt"></i>
                                         </a>
 
-                                        <div class="dropdown ms-1">
-                                                <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown" onclick="$(this).dropdown('toggle')">
-                                                    <i class="bi bi-three-dots"></i>
-                                                </button>
-
-                                                <ul class="dropdown-menu shadow-lg">
-                                                    <li><a class="dropdown-item m-1" href="#">Update Informasi Pasien</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Identitas Pasien</a></li>
-                                                    <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/informed-consent'}">Informed Concent</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Edukasi dan Informasi</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Jaminan/Asuransi</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Registrasi Rawat Inap</a></li>
-                                                    <li class="dropdown-submenu">
-                                                        <a class="dropdown-item m-1 dropdown-toggle" href="#">Mutasi Pasien</a>
-                                                        <ul class="dropdown-menu shadow-lg">
-                                                            <li><a class="dropdown-item m-1" href="#">Pindah Ruangan / Rawat Inap</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Pulangkan (Berobat Jalan)</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Pulangkan (APS)</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Rujuk Keluar RS</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Meninggal Dunia</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Batal Berobat</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="dropdown-submenu">
-                                                        <a class="dropdown-item m-1 dropdown-toggle" href="#">Order Pelayanan</a>
-                                                        <ul class="dropdown-menu shadow-lg">
-                                                            <li><a class="dropdown-item m-1" href="#">Operasi</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Rehabilitasi Medis</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Hemodialisa</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Forensik</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Cath Lab</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Rujukan/Ambulance</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Tindakan Klinik</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li><a class="dropdown-item m-1" href="#">Billing System</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Finalisasi</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Status Pasien</a></li>
-                                                    <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/asuran-keperawatan'}">Asuhan Keperawatan</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
                                     </div>
                                     `;
                         }

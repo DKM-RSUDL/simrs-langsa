@@ -127,6 +127,7 @@
 @endpush
 
 @section('content')
+<x-content-card>
     <div class="row">
         <div class="col-md-12">
             <div class="emergency__container">
@@ -192,6 +193,7 @@
             </div>
         </div>
     </div>
+</x-content-card>
 @endsection
 
 @push('js')
@@ -220,18 +222,9 @@
                             return `
                         <div class="d-flex justify-content-center">
                             <a href="${hdPelayananUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}"
-                                class="btn btn-outline-primary btn-sm me-1">
+                                class="btn btn-primary me-1">
                                 <i class="ti-pencil-alt"></i>
                             </a>
-                            <div class="dropdown">
-                                <button class="btn btn-outline-secondary btn-sm" type="button"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-three-dots"></i>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="${hdPelayananUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/persetujuan-transfusi-darah">Persetujuan Transfusi Darah</a></li>
-                                </ul>
-                            </div>
                         </div>`;
                         }
                     },

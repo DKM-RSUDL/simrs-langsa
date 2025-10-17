@@ -147,80 +147,82 @@
         </style>
     @endpush
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="emergency__container ">
-                <h4 class="fw-bold">{{ $unit->nama_unit }}</h4>
-                <a class="text-black" href="{{ route('rawat-jalan.unit', $unit->kd_unit) }}">
-                    <div class="custom__card all__patients">
-                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
-                        <div class="text-center">
-                            <p class="m-0 p-0">Semua Pasien</p>
-                            <p class="m-0 p-0 fs-4 fw-bold">{{ countActivePatientRajal($unit->kd_unit) }}</p>
-                        </div>
-                    </div>
-                </a>
-                <a class="text-black" href="{{ route('rawat-jalan.unit.belum-selesai', $unit->kd_unit) }}">
-                    <div class="custom__card Pending">
-                        <div class="d-flex align-items-center">
+    <x-content-card>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="emergency__container ">
+                    <h4 class="fw-bold">{{ $unit->nama_unit }}</h4>
+                    <a class="text-black" href="{{ route('rawat-jalan.unit', $unit->kd_unit) }}">
+                        <div class="custom__card all__patients">
                             <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="#d10404"
-                                class="bi bi-exclamation-diamond-fill custom__icon" viewBox="0 0 16 16">
-                                <path
-                                    d="M9.05.435c-.58-.58-1.52-.58-2.1 0L.436 6.95c-.58.58-.58 1.519 0 2.098l6.516 6.516c.58.58 1.519.58 2.098 0l6.516-6.516c.58-.58.58-1.519 0-2.098zM8 4c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995A.905.905 0 0 1 8 4m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
-                            </svg>
+                            <div class="text-center">
+                                <p class="m-0 p-0">Semua Pasien</p>
+                                <p class="m-0 p-0 fs-4 fw-bold">{{ countActivePatientRajal($unit->kd_unit) }}</p>
+                            </div>
                         </div>
-                        <div class="text-center">
-                            <p class="m-0 p-0">Belum Selesai</p>
-                            <p class="m-0 p-0 fs-4 fw-bold">{{ countUnfinishedPatientRajal($unit->kd_unit) }}</p>
+                    </a>
+                    <a class="text-black" href="{{ route('rawat-jalan.unit.belum-selesai', $unit->kd_unit) }}">
+                        <div class="custom__card Pending">
+                            <div class="d-flex align-items-center">
+                                <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="#d10404"
+                                    class="bi bi-exclamation-diamond-fill custom__icon" viewBox="0 0 16 16">
+                                    <path
+                                        d="M9.05.435c-.58-.58-1.52-.58-2.1 0L.436 6.95c-.58.58-.58 1.519 0 2.098l6.516 6.516c.58.58 1.519.58 2.098 0l6.516-6.516c.58-.58.58-1.519 0-2.098zM8 4c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995A.905.905 0 0 1 8 4m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                                </svg>
+                            </div>
+                            <div class="text-center">
+                                <p class="m-0 p-0">Belum Selesai</p>
+                                <p class="m-0 p-0 fs-4 fw-bold">{{ countUnfinishedPatientRajal($unit->kd_unit) }}</p>
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
 
-                <a class="text-black" href="{{ route('rawat-jalan.unit.selesai', $unit->kd_unit) }}">
-                    <div class="custom__card Completed">
-                        <div class="d-flex align-items-center">
-                            <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="green" class="bi bi-check-lg custom__icon"
-                                viewBox="0 0 16 16">
-                                <path
-                                    d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
-                            </svg>
+                    <a class="text-black" href="{{ route('rawat-jalan.unit.selesai', $unit->kd_unit) }}">
+                        <div class="custom__card Completed">
+                            <div class="d-flex align-items-center">
+                                <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="green" class="bi bi-check-lg custom__icon"
+                                    viewBox="0 0 16 16">
+                                    <path
+                                        d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
+                                </svg>
+                            </div>
+                            <div class="text-center">
+                                <p class="m-0 p-0">Selesai</p>
+                                <p class="m-0 p-0 fs-4 fw-bold">{{ countFinishedPatientRajal($unit->kd_unit) }}</p>
+                            </div>
                         </div>
-                        <div class="text-center">
-                            <p class="m-0 p-0">Selesai</p>
-                            <p class="m-0 p-0 fs-4 fw-bold">{{ countFinishedPatientRajal($unit->kd_unit) }}</p>
-                        </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="row mt-3">
-        <div class="col-md-12">
-            <div class="table-responsive text-left">
-                <table class="table table-bordered dataTable" id="patientUnitDatatable">
-                    <thead>
-                        <tr>
-                            <th width="100px">No</th>
-                            <th width="100px">Aksi</th>
-                            <th>Pasien</th>
-                            <th>No RM / Reg</th>
-                            <th>Alamat</th>
-                            <th>Jaminan</th>
-                            <th>Status Pelayanan</th>
-                            <th>Keterangan</th>
-                            <th>Tindak Lanjut</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{-- Tabel diisi oleh DataTables --}}
-                    </tbody>
-                </table>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="table-responsive text-left">
+                    <table class="table table-bordered dataTable" id="patientUnitDatatable">
+                        <thead>
+                            <tr>
+                                <th width="100px">No</th>
+                                <th width="100px">Aksi</th>
+                                <th>Pasien</th>
+                                <th>No RM / Reg</th>
+                                <th>Alamat</th>
+                                <th>Jaminan</th>
+                                <th>Status Pelayanan</th>
+                                <th>Keterangan</th>
+                                <th>Tindak Lanjut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{-- Tabel diisi oleh DataTables --}}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+    </x-content-card>
 @endsection
 
 @push('js')
@@ -268,59 +270,6 @@
                                     <a href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk}" class="edit btn btn-outline-primary btn-sm m-2">
                                         <i class="ti-pencil-alt"></i>
                                     </a>
-
-                                    <div class="dropdown ms-2">
-                                            <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown">
-                                                <i class="bi bi-three-dots"></i>
-                                            </button>
-
-                                            <ul class="dropdown-menu shadow-lg">
-                                                <li><a class="dropdown-item m-1" href="#">Update Informasi Pasien</a></li>
-                                                <li><a class="dropdown-item m-1" href="#">Identitas Pasien</a></li>
-                                                <li><a class="dropdown-item m-1" href="#">General Concent</a></li>
-                                                <li class="dropdown-submenu">
-                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Persetujuan</a>
-                                                    <ul class="dropdown-menu shadow-lg">
-                                                        <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/anestesi-sedasi' }">Anestesi dan Sedasi</a></li>
-                                                        <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/persetujuan-transfusi-darah' }">Persetujuan Transfusi Darah</a></li>
-                                                        <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/covid-19' }">Covid 19</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li><a class="dropdown-item m-1" href="#">Edukasi dan Informasi</a></li>
-                                                <li><a class="dropdown-item m-1" href="#">Jaminan/Asuransi</a></li>
-                                                <li><a class="dropdown-item m-1" href="#">Registrasi Rawat Inap</a></li>
-                                                <li class="dropdown-submenu">
-                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Mutasi Pasien</a>
-                                                    <ul class="dropdown-menu shadow-lg">
-                                                        <li><a class="dropdown-item m-1" href="#">Pindah Ruangan / Rawat Inap</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Pulangkan (Berobat Jalan)</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Pulangkan (APS)</a></li>
-                                                        <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/rujuk-antar-rs' }">Rujuk Keluar RS</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Meninggal Dunia</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Batal Berobat</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li class="dropdown-submenu">
-                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Transfusi Darah</a>
-                                                    <ul class="dropdown-menu shadow-lg">
-                                                        <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/permintaan-darah'}">Order</a></li>
-                                                        <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/pengawasan-darah'}">Pengawasan</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li class="dropdown-submenu">
-                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Surat-Surat</a>
-                                                    <ul class="dropdown-menu shadow-lg">
-                                                        <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/penundaan' }">Penundaan Pelayanan</a></li>
-                                                        <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/permintaan-second-opinion' }">Permintaan Second Opinion</a></li>
-                                                        <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/pernyataan-dpjp' }">Pernyataan DPJP</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li><a class="dropdown-item m-1" href="#">Billing System</a></li>
-                                                <li><a class="dropdown-item m-1" href="#">Finalisasi</a></li>
-                                                <li><a class="dropdown-item m-1" href="#">Status Pasien</a></li>
-                                                <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/permintaan-darah' }">Permintaan Darah</a></li>
-                                            </ul>
-                                        </div>
                                     `;
                         }
                     },
