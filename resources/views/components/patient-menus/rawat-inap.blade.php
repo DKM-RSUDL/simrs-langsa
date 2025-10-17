@@ -128,7 +128,7 @@
     </div>
 
     {{-- Menu Direct (tanpa submenu) --}}
-    <div class="accordion-item bg-success">
+    <div class="accordion-item">
         <div class="list-group list-group-flush">
             <a href="{{ $pelayananUrl }}/asuhan-keperawatan" class="list-group-item list-group-item-action">
                 <i class="bi bi-heart-pulse me-2"></i> Asuhan Keperawatan
