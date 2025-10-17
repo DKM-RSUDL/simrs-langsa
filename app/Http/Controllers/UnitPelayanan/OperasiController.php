@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UnitPelayanan;
 
 use App\Http\Controllers\Controller;
+use App\Models\DetailTransaksi;
 use App\Models\DokterAnastesi;
 use App\Models\DokterKlinik;
 use App\Models\DokterPenunjang;
@@ -15,6 +16,7 @@ use App\Models\Operasi\OkJadwalPs;
 use App\Models\OrderOK;
 use App\Models\Produk;
 use App\Models\Spesialisasi;
+use App\Models\Transaksi;
 use App\Services\BaseService;
 use Carbon\Carbon;
 use Exception;
@@ -28,11 +30,13 @@ use Yajra\DataTables\Facades\DataTables;
 class OperasiController extends Controller
 {
     private $baseService;
+    private $kdUnitDef_;
 
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/operasi');
         $this->baseService = new BaseService();
+        $this->kdUnitDef_ = 71;
     }
 
     /**
@@ -184,9 +188,8 @@ class OperasiController extends Controller
                 ->join('customer as c', 'order_ok.penjamin', '=', 'c.kd_customer')
                 ->join('pasien as p', 't.kd_pasien', '=', 'p.kd_pasien')
                 ->join('unit as u', 'order_ok.kd_kamar_order', '=', 'u.kd_unit')
-                ->where('status', 0);
-
-
+                ->where('status', 0)
+                ->where('batal', 0);
 
             return DataTables::of($data)
                 ->order(function ($query) {
@@ -228,8 +231,66 @@ class OperasiController extends Controller
         return view('unit-pelayanan.operasi.pelayanan.order.terima.edit', compact('operasi', 'dataMedis', 'products', 'kamarOperasi', 'dokters', 'dokterAnastesi'));
     }
 
+    private function mappingDataByKdKasir($kd_kasir)
+    {
+        $kd_kasir_ok = null;
+        $asal_pasien = null;
+
+        switch ($kd_kasir) {
+            case '01':
+                $kd_kasir_ok = '13';
+                $asal_pasien = 1; // Rawat Jalan
+                break;
+            case '02':
+                $kd_kasir_ok = '15';
+                $asal_pasien = 2; // Rawat Inap
+                break;
+            case '06':
+                $kd_kasir_ok = '14';
+                $asal_pasien = 3; // IGD
+                break;
+        }
+
+        return [
+            'kd_kasir' => $kd_kasir_ok,
+            'asal_pasien' => $asal_pasien
+        ];
+    }
+
+    private function getProductDetail($kd_produk)
+    {
+        $today = date('Y-m-d');
+
+        return DB::select("
+                SELECT
+                    p.kd_produk,
+                    p.deskripsi,
+                    t.tarif,
+                    t.tgl_berlaku
+                FROM produk p
+                INNER JOIN tarif t ON p.kd_produk = t.kd_produk
+                INNER JOIN KLAS_PRODUK kp ON p.kd_klas = kp.kd_klas
+                WHERE t.kd_unit = '10013'
+                AND p.kd_produk = ?
+                AND t.kd_tarif = 'TU'
+                AND LEFT(p.kd_klas, 2) = '61'
+                AND t.tgl_berlaku = (
+                    SELECT MAX(x.tgl_berlaku)
+                    FROM tarif x
+                    WHERE x.kd_unit = '10013'
+                    AND x.kd_tarif = 'TU'
+                    AND x.tgl_berlaku <= ?
+                    AND x.kd_produk = t.kd_produk
+                )
+                AND (t.tgl_berakhir >= ? OR t.tgl_berakhir IS NULL)
+                AND p.aktif = 1
+                ORDER BY p.deskripsi
+            ", [$kd_produk, $today, $today]);
+    }
+
     public function storeTerimaOrder(Request $request, $kd_kasir, $no_transaksi,  $tanggal_op, $jam_op)
     {
+
         DB::beginTransaction();
         try {
 
@@ -259,6 +320,12 @@ class OperasiController extends Controller
 
             if ($order->status) throw new Exception('Order sudah diproses sebelumnya.');
             if (!$order) throw new Exception('Order tidak ditemukan.');
+
+            // mapping data kd kasir
+            $mappingData = $this->mappingDataByKdKasir($kd_kasir);
+            $produkDetail = $this->getProductDetail($request->jenis_tindakan);
+
+            if(empty($produkDetail)) throw new Exception('Detail produk tidak ditemukan.');
 
             // Get Produk
             $product = Produk::with(['klas:kd_klas,klasifikasi,parent'])
@@ -361,7 +428,7 @@ class OperasiController extends Controller
             // 	AND dilayani = '0'
 
             // Update Order OK
-            $updated = OrderOK::where('tgl_op', $tanggal_op)
+            OrderOK::where('tgl_op', $tanggal_op)
                 ->where('jam_op', $jam_op)
                 ->where('kd_kasir', $order->kd_kasir)
                 ->where('no_transaksi', $order->no_transaksi)
@@ -376,9 +443,106 @@ class OperasiController extends Controller
                     'status' => 1,
                 ]);
 
-            if (!$updated) {
-                throw new \Exception('Data Operasi (IBS) gagal diubah!');
+
+            // Ambil urut masuk terakhir untuk pasien yang sudah ada
+            $getLastUrutMasukPatientToday = Kunjungan::select('urut_masuk')
+                ->where('kd_pasien', $dataMedis->kd_pasien)
+                ->whereDate('tgl_masuk', $request->tanggal_registrasi)
+                ->orderBy('urut_masuk', 'desc')
+                ->first();
+
+            $urut_masuk = !empty($getLastUrutMasukPatientToday) ? $getLastUrutMasukPatientToday->urut_masuk + 1 : 0;
+
+            // Simpan ke tabel kunjungan
+            $dataKunjungan = [
+                'kd_pasien' => $dataMedis->kd_pasien,
+                'kd_unit' => $this->kdUnitDef_,
+                'tgl_masuk' => $request->tanggal_registrasi,
+                'urut_masuk' => $urut_masuk,
+                'kd_dokter' => $request->dokter,
+                'kd_rujukan' => 1,
+                'kd_customer' => $dataMedis->kd_customer,
+                'jam_masuk' => $jam_op,
+                'keadaan_masuk' => 1,
+                'keadaan_pasien' => 1,
+                'cara_penerimaan' => 1,
+                'asal_pasien' => 2,
+                'cara_keluar' => 0,
+                'baru' => 1,
+                'shift' => 1,
+                'karyawan' => 0,
+                'kontrol' => 0,
+            ];
+
+            Kunjungan::create($dataKunjungan);
+
+
+            // Simpan transaksi
+            $lastTransaction = Transaksi::select('no_transaksi')
+                ->where('kd_unit', $this->kdUnitDef_)
+                ->where('kd_kasir', $mappingData['kd_kasir'])
+                ->orderBy('no_transaksi', 'desc')
+                ->first();
+
+            if ($lastTransaction) {
+                $lastTransactionNumber = (int) $lastTransaction->no_transaksi;
+                $newTransactionNumber = $lastTransactionNumber + 1;
+            } else {
+                $newTransactionNumber = 1;
             }
+
+            $formattedTransactionNumber = str_pad($newTransactionNumber, 7, '0', STR_PAD_LEFT);
+
+            $dataTransaksi = [
+                'kd_kasir' => $mappingData['kd_kasir'],
+                'no_transaksi' => $formattedTransactionNumber,
+                'kd_pasien' => $dataMedis->kd_pasien,
+                'kd_unit' => $this->kdUnitDef_,
+                'tgl_transaksi' => $request->tanggal_registrasi,
+                'urut_masuk' => $urut_masuk,
+                'co_status' => 0,
+                'ispay' => 0,
+                'app' => 0,
+                'lunas' => 0,
+                'acc_dr' => 0,
+                'jumlah_lama' => 0,
+                'dilayani' => 0,
+                'ordermng' => 0,
+                'verified' => 0,
+                'closeshift' => 0,
+                'paid' => 0,
+                'stats_dok' => 0
+            ];
+
+            Transaksi::create($dataTransaksi);
+
+            // Simpan detail_transaksi
+            $dataDetailTransaksi = [
+                'kd_kasir' => $mappingData['kd_kasir'],
+                'no_transaksi' => $formattedTransactionNumber,
+                'urut' => 1,
+                'tgl_transaksi' => $request->tanggal_registrasi,
+                'kd_tarif' => 'TU',
+                'kd_produk' => $produkDetail['kd_produk'],
+                'kd_unit' => '10013',
+                'tgl_berlaku' => $produkDetail['tgl_berlaku'],
+                // 'charge' => 0,
+                // 'adjust' => 0,
+                // 'folio' => 'A',
+                'qty' => 1,
+                'harga' => $produkDetail['tarif'],
+                'shift' => 1,
+                'kd_unit_tr' => $this->kdUnitDef_,
+                'cito' => $request->cito ?? 0,
+                // 'js' => 0,
+                // 'jp' => 0,
+                'flag' => 0,
+                // 'tag' => 0,
+                // 'hrg_asli' => 0,
+                // 'close_shift_status' => 0
+            ];
+
+            DetailTransaksi::create($dataDetailTransaksi);
 
             DB::commit();
         } catch (Exception $e) {
