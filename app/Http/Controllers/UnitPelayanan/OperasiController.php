@@ -18,6 +18,7 @@ use App\Models\Produk;
 use App\Models\Spesialisasi;
 use App\Models\Transaksi;
 use App\Models\UnitAsal;
+use App\Models\UnitAsalInap;
 use App\Services\BaseService;
 use Carbon\Carbon;
 use Exception;
@@ -333,6 +334,8 @@ class OperasiController extends Controller
             $dataMedis = $this->baseService->getDataMedisbyTransaksi($kd_kasir, $no_transaksi);
             if (!$dataMedis) throw new Exception('Data medis tidak ditemukan.');
 
+            $nginap = $this->baseService->getNginapData($dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk);
+
             $order = OrderOK::where('kd_kasir', $kd_kasir)->where('no_transaksi', $no_transaksi)
                 ->whereDate('tgl_jadwal', $tanggal_op)
                 ->where('jam_op', $jam_op)
@@ -343,7 +346,7 @@ class OperasiController extends Controller
 
             // mapping data kd kasir
             $mappingData = $this->mappingDataByKdKasir($kd_kasir);
-            $produkDetail = $this->getProductDetail($request->jenis_tindakan);
+            $produkDetail = $this->getProductDetail($request->jenis_tindakan)[0] ?? [];
 
             if (empty($produkDetail)) throw new Exception('Detail produk tidak ditemukan.');
 
@@ -351,6 +354,7 @@ class OperasiController extends Controller
             $product = Produk::with(['klas:kd_klas,klasifikasi,parent'])
                 ->where('kd_produk', $request->input('jenis_tindakan'))
                 ->first(['kd_produk', 'deskripsi', 'kd_klas']);
+
 
             if (!$product) {
                 throw new \Exception('Produk tidak ditemukan atau tidak valid!');
@@ -543,14 +547,14 @@ class OperasiController extends Controller
                 'urut' => 1,
                 'tgl_transaksi' => $request->tanggal_registrasi,
                 'kd_tarif' => 'TU',
-                'kd_produk' => $produkDetail['kd_produk'],
+                'kd_produk' => $produkDetail->kd_produk,
                 'kd_unit' => '10013',
-                'tgl_berlaku' => $produkDetail['tgl_berlaku'],
+                'tgl_berlaku' => $produkDetail->tgl_berlaku,
                 // 'charge' => 0,
                 // 'adjust' => 0,
                 // 'folio' => 'A',
                 'qty' => 1,
-                'harga' => $produkDetail['tarif'],
+                'harga' => $produkDetail->tarif,
                 'shift' => 1,
                 'kd_unit_tr' => $this->kdUnitDef_,
                 'cito' => $request->cito ?? 0,
@@ -578,13 +582,23 @@ class OperasiController extends Controller
 
             UnitAsal::create($dataUnitAsal);
 
+            // SIMPAN DATA UNIT_ASALINAP
+            $dataUnitAsalInap = [
+                'kd_kasir'      => $mappingData['kd_kasir'],
+                'no_transaksi'  => $formattedTransactionNumber,
+                'kd_unit'   => $nginap->kd_unit_kamar,
+                'no_kamar'  => $nginap->no_kamar,
+                'kd_spesial' => $nginap->kd_spesial,
+            ];
+
+            UnitAsalInap::create($dataUnitAsalInap);
+
             DB::commit();
+            return to_route('operasi.pelayanan', [$dataMedis->kd_pasien, $request->tanggal_registrasi, $urut_masuk])->with('success', 'Order operasi berhasil diterima dan diproses.');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
         }
-
-        return redirect()->route('unit-pelayanan.operasi.pending-order')->with('success', 'Order berhasil diterima.');
     }
 
     public function pelayanan($kd_pasien, $tgl_masuk, $urut_masuk)
