@@ -996,9 +996,9 @@
                                     {{-- Column 1 --}}
                                     <div class="col-md-12">
                                         <div class="card mb-3">
-                                            <div class="card-header bg-light">
+                                            {{-- <div class="card-header bg-light">
                                                 <h6 class="mb-0 fw-semibold">Status Umum</h6>
-                                            </div>
+                                            </div> --}}
                                             <div class="card-body">
                                                 <div class="mb-3">
                                                     <label class="form-label fw-semibold">Keadaan Umum</label>

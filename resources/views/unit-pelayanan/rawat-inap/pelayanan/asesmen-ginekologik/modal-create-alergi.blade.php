@@ -115,7 +115,6 @@
             ` : riwayatObstetrik.map((item, index) => `
                 <tr>
                     <td>${item.keadaan || '-'}</td>
-                    <td>${item.kehamilan || '-'}</td>
                     <td>${item.caraPersalinan || '-'}</td>
                     <td>${item.keadaanNifas || '-'}</td>
                     <td>${item.tanggalLahir ? new Date(item.tanggalLahir).toLocaleDateString('id-ID') : '-'}</td>

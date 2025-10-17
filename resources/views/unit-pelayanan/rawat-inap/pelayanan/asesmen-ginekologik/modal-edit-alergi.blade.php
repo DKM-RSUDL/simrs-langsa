@@ -143,7 +143,6 @@ document.addEventListener('DOMContentLoaded', function() {
             tableBody.innerHTML = riwayatObstetrik.map((item, index) => `
                 <tr>
                     <td>${item.keadaan || '-'}</td>
-                    <td>${item.kehamilan || '-'}</td>
                     <td>${item.caraPersalinan || '-'}</td>
                     <td>${item.keadaanNifas || '-'}</td>
                     <td>${item.tanggalLahir ? new Date(item.tanggalLahir).toLocaleDateString('id-ID') : '-'}</td>
@@ -240,7 +239,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function populateForm(index) {
         const item = riwayatObstetrik[index];
         document.getElementById('keadaanInput').value = item.keadaan || '';
-        document.getElementById('kehamilanInput').value = item.kehamilan || '';
         document.getElementById('caraPersalinanInput').value = item.caraPersalinan || '';
         document.getElementById('keadaanNifasInput').value = item.keadaanNifas || '';
         document.getElementById('tanggalLahirInput').value = item.tanggalLahir || '';
@@ -254,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check if form has data (at least one field filled)
     function hasFormData() {
         const inputs = [
-            'keadaanInput', 'kehamilanInput', 'caraPersalinanInput', 
+            'keadaanInput', 'caraPersalinanInput', 
             'keadaanNifasInput', 'tanggalLahirInput', 'keadaanAnakInput', 'tempatPenolongInput'
         ];
         
