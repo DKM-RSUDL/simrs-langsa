@@ -17,5 +17,9 @@
 }
 
 .h-auto {
-    height: auto;
+    height: auto !important;
+}
+
+.h-fit {
+    height: fit-content !important;
 }

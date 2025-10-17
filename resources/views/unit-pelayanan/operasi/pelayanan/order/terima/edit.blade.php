@@ -11,13 +11,12 @@
                 <x-button-previous />
 
                 @include('components.page-header', [
-                    'title' => 'Tambah Operasi (IBS)',
-                    'description' =>
-                        'Tambah data operasi (IBS) pasien rawat inap dengan mengisi formulir di bawah ini.',
+                    'title' => 'Terima Order Operasi (IBS)',
+                    'description' => 'Terima Order data operasi (IBS) pasien.',
                 ])
 
                 <form
-                    action="{{ route('rawat-inap.operasi-ibs.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                    action="{{ route('operasi.terima-order.store', [$operasi->kd_kasir, $operasi->no_transaksi, $operasi->tgl_op, $operasi->jam_op]) }}"
                     method="POST">
                     @csrf
                     <div class="row">
@@ -25,21 +24,24 @@
                             <div class="mb-3">
                                 <label for="tanggal_registrasi" class="form-label">Tgl. Registrasi</label>
                                 <input type="date" class="form-control" id="tanggal_registrasi" name="tanggal_registrasi"
-                                    value="{{ old('tanggal_registrasi', date('Y-m-d')) }}" required>
+                                    value="{{ old('tanggal_registrasi', $operasi->tgl_op ? date('Y-m-d', strtotime($operasi->tgl_op)) : date('Y-m-d')) }}"
+                                    required>
                             </div>
                         </div>
                         <div class="col-7 col-md-5">
                             <div class="mb-3">
                                 <label for="tanggal_jadwal" class="form-label">Tgl. Jadwal</label>
                                 <input type="date" class="form-control" id="tanggal_jadwal" name="tanggal_jadwal"
-                                    value="{{ old('tanggal_jadwal', date('Y-m-d')) }}" required>
+                                    value="{{ old('tanggal_jadwal', $operasi->tgl_jadwal ? date('Y-m-d', strtotime($operasi->tgl_jadwal)) : date('Y-m-d')) }}"
+                                    required>
                             </div>
                         </div>
                         <div class="col-5 col-md-2">
                             <div class="mb-3">
                                 <label for="jam_operasi" class="form-label">Jam Operasi</label>
                                 <input type="time" class="form-control" id="jam_operasi" name="jam_operasi"
-                                    value="{{ old('jam_operasi', date('H:i')) }}" required>
+                                    value="{{ old('jam_operasi', $operasi->jam_op ? date('H:i', strtotime($operasi->jam_op)) : date('H:i')) }}"
+                                    required>
                             </div>
                         </div>
                     </div>
@@ -52,7 +54,7 @@
                                     <option value="">-- Pilih Tindakan --</option>
                                     @foreach ($products ?? [] as $prod)
                                         <option value="{{ $prod->kd_produk }}"
-                                            {{ old('jenis_tindakan') == $prod->kd_produk ? 'selected' : '' }}>
+                                            {{ old('jenis_tindakan', $operasi->kd_produk) == $prod->kd_produk ? 'selected' : '' }}>
                                             {{ $prod->deskripsi }}
                                         </option>
                                     @endforeach
@@ -66,9 +68,11 @@
                                     <span class="text-muted">(Otomatis)</span>
                                 </label>
                                 <input type="text" class="form-control bg-light" id="jenis_operasi_display"
-                                    value="-- Otomatis terisi --" readonly>
+                                    value="{{ optional($operasi->jenisOperasi)->klasifikasi ?? '-- Otomatis terisi --' }}"
+                                    readonly>
                                 {{-- Hidden input untuk value sebenarnya --}}
-                                <input type="hidden" id="jenis_operasi" name="jenis_operasi">
+                                <input type="hidden" id="jenis_operasi" name="jenis_operasi"
+                                    value="{{ $operasi->kd_jenis_op ?? '' }}">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -86,28 +90,51 @@
                                     <span class="text-muted">(Otomatis)</span>
                                 </label>
                                 <input type="text" class="form-control bg-light" id="sub_spesialisasi_display"
-                                    value="-- Otomatis terisi --" readonly>
+                                    value="{{ optional($operasi->subSpesialisasi)->klasifikasi ?? '-- Otomatis terisi --' }}"
+                                    readonly>
                                 {{-- Hidden input untuk value sebenarnya --}}
-                                <input type="hidden" id="sub_spesialisasi" name="sub_spesialisasi">
+                                <input type="hidden" id="sub_spesialisasi" name="sub_spesialisasi"
+                                    value="{{ $operasi->kd_sub_spc ?? '' }}">
                             </div>
                         </div>
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="kamar_operasi" class="form-label">Kamar Operasi</label>
                                 <select class="form-select select2" id="kamar_operasi" name="kamar_operasi" required>
                                     <option value="">-- Pilih Kamar Operasi --</option>
                                     @foreach ($kamarOperasi ?? [] as $kr)
                                         <option value="{{ $kr->no_kamar }}"
-                                            {{ old('kamar_operasi') == $kr->no_kamar ? 'selected' : '' }}>
+                                            {{ old('kamar_operasi', $operasi->no_kamar ?? $operasi->kd_unit_kamar) == $kr->no_kamar ? 'selected' : '' }}>
                                             {{ $kr->nama_kamar }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="durasi" class="form-label">Durasi (Menit)</label>
+                                <input type="number" class="form-control" id="durasi" name="durasi"
+                                    value="{{ old('durasi', $operasi->durasi ?? '') }}" required
+                                    placeholder="Durasi (Menit)">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="cito" class="form-label">Cito</label>
+                                <select class="form-select" id="cito" name="cito">
+                                    <option value="0"
+                                        {{ old('cito', $operasi->cito ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
+                                    <option value="1"
+                                        {{ old('cito', $operasi->cito ?? '') == '1' ? 'selected' : '' }}>Ya</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="dokter" class="form-label">Dokter</label>
@@ -115,28 +142,45 @@
                                     <option value="">-- Pilih Dokter --</option>
                                     @foreach ($dokters ?? [] as $d)
                                         <option value="{{ $d->kd_dokter }}"
-                                            {{ old('dokter') == $d->kd_dokter ? 'selected' : '' }}>
+                                            {{ old('dokter', $operasi->kd_dokter) == $d->kd_dokter ? 'selected' : '' }}>
                                             {{ $d->nama }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="dokter_anastesi" class="form-label">Dokter Anatesi</label>
+                                <select class="form-select select2" id="dokter_anastesi" name="dokter_anastesi" required>
+                                    <option value="">-- Pilih Dokter Anastesi --</option>
+                                    @foreach ($dokterAnastesi ?? [] as $d)
+                                        <option value="{{ $d->kd_dokter }}" @selected(old('dokter_anastesi') == $d->kd_dokter)>
+                                            {{ $d->dokter->nama_lengkap }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                     <hr>
+                    <div class="row">
                         <div class="col-md-12">
                             <div class="mb-3">
                                 <label for="diagnosa_medis" class="form-label">Diagnosis Medis</label>
                                 <input type="text" class="form-control" id="diagnosa_medis" name="diagnosa_medis"
-                                    placeholder="Masukkan diagnosis medis..." value="{{ old('diagnosa_medis') }}" required>
+                                    placeholder="Masukkan diagnosis medis..."
+                                    value="{{ old('diagnosa_medis', $operasi->diagnosis ?? '') }}" required>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="mb-3">
                                 <label for="catatan" class="form-label">Catatan</label>
-                                <textarea class="form-control" id="catatan" name="catatan" rows="4" placeholder="Masukkan catatan...">{{ old('catatan') }}</textarea>
+                                <textarea class="form-control" id="catatan" name="catatan" rows="4" placeholder="Masukkan catatan...">{{ old('catatan', $operasi->catatan ?? '') }}</textarea>
                             </div>
                         </div>
                         <div class="text-end">
-                            <x-button-submit />
+                            <x-button-submit>Terima Order</x-button-submit>
                         </div>
                     </div>
                 </form>
@@ -148,8 +192,10 @@
 @push('js')
     <script>
         $(function() {
-            const url = "{{ route('rawat-inap.operasi-ibs.product-details', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}";
+            const url =
+                "{{ route('operasi.product-details') }}";
 
+            // Event ketika Jenis Tindakan berubah
             $('#jenis_tindakan').on('change', function() {
                 const kdProduk = $(this).val();
 
@@ -163,41 +209,11 @@
                 $.ajax({
                     url: url,
                     method: 'GET',
-                    data: { kd_produk: kdProduk },
+                    data: {
+                        kd_produk: kdProduk
+                    },
                     success: function(response) {
-
-                        // 1. JENIS OPERASI - Auto-select ✅ (READONLY)
-                        if (response.jenisOperasi && response.jenisOperasi.length > 0 && response.selected.jenis_operasi) {
-                            const jenisOp = response.jenisOperasi[0];
-                            $('#jenis_operasi').val(jenisOp.kd_klas);
-                            $('#jenis_operasi_display').val(jenisOp.klasifikasi);
-                        } else {
-                            $('#jenis_operasi').val('');
-                            $('#jenis_operasi_display').val('-- Tidak tersedia --');
-                        }
-
-                        // 2. SPESIALISASI - User pilih manual ❌
-                        let spSelect = $('#spesialisasi')
-                            .empty()
-                            .append('<option value="">-- Pilih Spesialisasi --</option>')
-                            .prop('disabled', false);
-
-                        if (response.spesialisasi && response.spesialisasi.length > 0) {
-                            response.spesialisasi.forEach(item => {
-                                spSelect.append(`<option value="${item.kd_spesial}">${item.spesialisasi}</option>`);
-                            });
-                        }
-                        spSelect.trigger('change.select2');
-
-                        // 3. SUB SPESIALISASI - Auto-select ✅ (READONLY)
-                        if (response.selected.sub_spesialisasi) {
-                            const subSpc = response.subSpesialisasi.find(x => x.kd_klas == response.selected.sub_spesialisasi);
-                            $('#sub_spesialisasi').val(response.selected.sub_spesialisasi);
-                            $('#sub_spesialisasi_display').val(subSpc ? subSpc.klasifikasi : response.selected.sub_spesialisasi);
-                        } else {
-                            $('#sub_spesialisasi').val('');
-                            $('#sub_spesialisasi_display').val('-- Tidak tersedia --');
-                        }
+                        populateFields(response);
                     },
                     error: function(xhr) {
                         resetAllFields();
@@ -211,19 +227,60 @@
                 });
             });
 
+            // Function untuk populate semua fields
+            function populateFields(response, savedValues = {}) {
+                // 1. JENIS OPERASI - Auto-select ✅ (READONLY)
+                if (response.jenisOperasi && response.jenisOperasi.length > 0) {
+                    const jenisOp = response.jenisOperasi[0];
+                    const jenisOpValue = savedValues.jenis_operasi || jenisOp.kd_klas;
+                    $('#jenis_operasi').val(jenisOpValue);
+                    $('#jenis_operasi_display').val(jenisOp.klasifikasi);
+                } else {
+                    $('#jenis_operasi').val('');
+                    $('#jenis_operasi_display').val('-- Tidak tersedia --');
+                }
+
+                // 2. SPESIALISASI - User pilih manual ❌
+                let spSelect = $('#spesialisasi')
+                    .empty()
+                    .append('<option value="">-- Pilih Spesialisasi --</option>')
+                    .prop('disabled', false);
+
+                if (response.spesialisasi && response.spesialisasi.length > 0) {
+                    response.spesialisasi.forEach(item => {
+                        spSelect.append(`<option value="${item.kd_spesial}">${item.spesialisasi}</option>`);
+                    });
+
+                    // Set saved value jika ada
+                    if (savedValues.spesialisasi) {
+                        spSelect.val(savedValues.spesialisasi);
+                    }
+                }
+                spSelect.trigger('change.select2');
+
+                // 3. SUB SPESIALISASI - Auto-select ✅ (READONLY)
+                if (response.selected.sub_spesialisasi) {
+                    const subSpc = response.subSpesialisasi.find(x => x.kd_klas == response.selected
+                        .sub_spesialisasi);
+                    const subSpcValue = savedValues.sub_spesialisasi || response.selected.sub_spesialisasi;
+                    $('#sub_spesialisasi').val(subSpcValue);
+                    $('#sub_spesialisasi_display').val(subSpc ? subSpc.klasifikasi : subSpcValue);
+                } else {
+                    $('#sub_spesialisasi').val('');
+                    $('#sub_spesialisasi_display').val('-- Tidak tersedia --');
+                }
+            }
+
             function resetAllFields() {
-                // Reset Jenis Operasi
                 $('#jenis_operasi').val('');
                 $('#jenis_operasi_display').val('-- Otomatis terisi --');
 
-                // Reset Spesialisasi
                 $('#spesialisasi')
                     .empty()
                     .append('<option value="">-- Pilih Spesialisasi --</option>')
                     .prop('disabled', false)
                     .trigger('change.select2');
 
-                // Reset Sub Spesialisasi
                 $('#sub_spesialisasi').val('');
                 $('#sub_spesialisasi_display').val('-- Otomatis terisi --');
             }
@@ -235,6 +292,36 @@
                     .append('<option value="">Memproses...</option>')
                     .prop('disabled', true);
                 $('#sub_spesialisasi_display').val('Memproses...');
+            }
+
+            // 🔥 AUTO-LOAD saat halaman edit dibuka
+            const initialProduct = '{{ $operasi->kd_produk ?? '' }}';
+
+            if (initialProduct) {
+                showLoadingState();
+
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    data: {
+                        kd_produk: initialProduct
+                    },
+                    success: function(response) {
+
+                        // Prepare saved values dari database
+                        const savedValues = {
+                            jenis_operasi: '{{ $operasi->kd_jenis_op ?? '' }}',
+                            spesialisasi: '{{ $operasi->kd_spc ?? '' }}',
+                            sub_spesialisasi: '{{ $operasi->kd_sub_spc ?? '' }}'
+                        };
+
+                        // Populate dengan saved values
+                        populateFields(response, savedValues);
+                    },
+                    error: function(xhr) {
+                        resetAllFields();
+                    }
+                });
             }
         });
     </script>

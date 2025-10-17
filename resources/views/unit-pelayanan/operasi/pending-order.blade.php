@@ -205,10 +205,13 @@
                                     <i class="bi bi-three-dots"></i>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Terima Order</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('operasi.terima-order', [':kd_kasir', ':no_transaksi', ':tgl_op', ':jam_op']) }}">Terima Order</a></li>
                                 </ul>
                             </div>
-                        </div>`;
+                        </div>`.replace(':kd_kasir', row.kd_kasir)
+                                .replace(':no_transaksi', row.no_transaksi)
+                                .replace(':tgl_op', row.tgl_op)
+                                .replace(':jam_op', row.jam_op);
                         }
                     },
                     {

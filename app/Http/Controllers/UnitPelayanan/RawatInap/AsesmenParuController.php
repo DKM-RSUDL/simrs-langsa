@@ -64,14 +64,20 @@ class AsesmenParuController extends Controller
             abort(404, 'Data not found');
         }
 
-        $idAsesmen = $this->getIdAsesmen($kd_pasien);
+       $idAsesmen = RmeAsesmen::select('id')
+        ->where('kd_pasien', $kd_pasien)
+        ->where('kategori', '1')
+        ->where('sub_kategori', '8')
+        ->first()->id;
 
-        $paruTerdahulu = null;
-        if (! empty($idAsesmen)) {
-            $paruTerdahulu = RmeAsesmenParu::select('riwayat_penyakit_terdahulu', 'riwayat_penggunaan_obat')
-                ->where('id_asesmen', $idAsesmen->id ?? null)
-                ->orderBy('id', 'desc')
-                ->first();
+
+
+        if(!empty($idAsesmen)){
+             $paruTerdahulu = RmeAsesmenParu::select('riwayat_penyakit_terdahulu', 'riwayat_penggunaan_obat')
+            ->where('id_asesmen', $idAsesmen ?? null)
+            ->orderBy('id','desc')
+            ->first();
+            
         }
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
@@ -141,8 +147,7 @@ class AsesmenParuController extends Controller
                 'diastole' => $request->darah_diastole ? (int) $request->darah_diastole : null,
                 'nadi' => $request->nadi ? (int) $request->nadi : null,
                 // beberapa form menggunakan pernafasan / frekuensi_pernafasan
-                'respiration' => $request->frekuensi_pernafasan ? (int) $request->frekuensi_pernafasan :
-                                    ($request->pernafasan ? (int) $request->pernafasan : null),
+                'respiration' => $request->frekuensi_pernafasan ? (int) $request->frekuensi_pernafasan : ($request->pernafasan ? (int) $request->pernafasan : null),
                 'suhu' => $request->temperatur ? (float) $request->temperatur : null,
                 'spo2_tanpa_o2' => $request->saturasi_oksigen ? (int) $request->saturasi_oksigen : null,
                 // optional jika form mengirim tb/bb
@@ -319,8 +324,8 @@ class AsesmenParuController extends Controller
             // 11. Simpan ke table RmePemeriksaanFisik (item fisik umum)
             $itemFisik = MrItemFisik::all();
             foreach ($itemFisik as $item) {
-                $isNormal = $request->has($item->id.'-normal') ? 1 : 0;
-                $keterangan = $request->input($item->id.'_keterangan');
+                $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
+                $keterangan = $request->input($item->id . '_keterangan');
 
                 // Jika normal, hapus keterangan
                 if ($isNormal) {
@@ -432,7 +437,7 @@ class AsesmenParuController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage())->withInput();
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage())->withInput();
         }
     }
 
@@ -476,9 +481,9 @@ class AsesmenParuController extends Controller
                 'KebiasaanData'
             ));
         } catch (ModelNotFoundException $e) {
-            return back()->with('error', 'Data tidak ditemukan. Detail: '.$e->getMessage());
+            return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
         } catch (\Exception $e) {
-            return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
@@ -535,9 +540,9 @@ class AsesmenParuController extends Controller
                 'siteMarkingParuData' // **TAMBAHAN: Kirim ke view**
             ));
         } catch (ModelNotFoundException $e) {
-            return back()->with('error', 'Data tidak ditemukan. Detail: '.$e->getMessage());
+            return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
         } catch (\Exception $e) {
-            return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
@@ -573,7 +578,7 @@ class AsesmenParuController extends Controller
             $asesmen->tgl_masuk = $request->tgl_masuk;
             $asesmen->urut_masuk = $request->urut_masuk;
             $asesmen->user_id = Auth::id();
-            $asesmen->waktu_asesmen = $request->tanggal.' '.$request->jam_masuk;
+            $asesmen->waktu_asesmen = $request->tanggal . ' ' . $request->jam_masuk;
             $asesmen->kategori = 1;
             $asesmen->sub_kategori = 8;
             $asesmen->save();
@@ -723,7 +728,7 @@ class AsesmenParuController extends Controller
                 if ($request->has("delete_$field")) {
                     if ($paruDiagnosisImplementasi->$field) {
                         Storage::disk('public')->delete(
-                            "uploads/ranap/asesmen-paru/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk/".$paruDiagnosisImplementasi->$field
+                            "uploads/ranap/asesmen-paru/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk/" . $paruDiagnosisImplementasi->$field
                         );
                         $paruDiagnosisImplementasi->$field = null;
                     }
@@ -731,7 +736,7 @@ class AsesmenParuController extends Controller
                     try {
                         if ($paruDiagnosisImplementasi->$field) {
                             Storage::disk('public')->delete(
-                                "uploads/ranap/asesmen-paru/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk/".$paruDiagnosisImplementasi->$field
+                                "uploads/ranap/asesmen-paru/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk/" . $paruDiagnosisImplementasi->$field
                             );
                         }
 
@@ -741,7 +746,7 @@ class AsesmenParuController extends Controller
                             $uploadedFiles[$field] = $path;
                         }
                     } catch (\Exception $e) {
-                        throw new \Exception("Gagal mengupload file $field: ".$e->getMessage());
+                        throw new \Exception("Gagal mengupload file $field: " . $e->getMessage());
                     }
                 }
             }
@@ -773,8 +778,8 @@ class AsesmenParuController extends Controller
             $itemFisik = MrItemFisik::all();
             foreach ($itemFisik as $item) {
                 $itemName = strtolower($item->nama);
-                $isNormal = $request->has($item->id.'-normal') ? 1 : 0;
-                $keterangan = $request->input($item->id.'_keterangan');
+                $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
+                $keterangan = $request->input($item->id . '_keterangan');
                 if ($isNormal) {
                     $keterangan = '';
                 }
@@ -843,7 +848,7 @@ class AsesmenParuController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
 
-            return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage())->withInput();
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage())->withInput();
         }
     }
 
@@ -892,7 +897,7 @@ class AsesmenParuController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Gagal generate PDF: '.$e->getMessage(),
+                'message' => 'Gagal generate PDF: ' . $e->getMessage(),
             ], 500);
         }
     }

@@ -30,7 +30,7 @@ class OrderOK extends Model
 
     public function jenisOperasi()
     {
-        return $this->belongsTo(OkJenisOP::class, 'kd_jenis_op', 'kd_jenis_op');
+        return $this->belongsTo(KlasProduk::class, 'kd_jenis_op', 'kd_klas');
     }
 
     public function spesialisasi()
@@ -40,7 +40,7 @@ class OrderOK extends Model
 
     public function subSpesialisasi()
     {
-        return $this->belongsTo(SubSpesialisasi::class, 'kd_sub_spc', 'kd_sub_spc');
+        return $this->belongsTo(KlasProduk::class, 'kd_sub_spc', 'kd_klas');
     }
 
     public function pasien()

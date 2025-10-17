@@ -20,6 +20,11 @@ Route::prefix('operasi')->group(function () {
     Route::name('operasi')->group(function () {
         Route::get('/', [OperasiController::class, 'index'])->name('.index');
         Route::get('/pending-order', [OperasiController::class, 'pendingOrder'])->name('.pending-order');
+        Route::get('/product-details', [OperasiController::class, 'productDetails'])->name('.product-details');
+        Route::prefix('/terima-order/{kd_kasir}/{no_transaksi}/{tgl_op}/{jam_op}')->group(function () {
+            Route::get('/', [OperasiController::class, 'terimaOrder'])->name('.terima-order');
+            Route::post('/', [OperasiController::class, 'storeTerimaOrder'])->name('.terima-order.store');
+        });
 
         Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
             Route::name('.pelayanan')->group(function () {

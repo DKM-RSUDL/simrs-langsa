@@ -132,9 +132,6 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::put('/verifikasi', 'verifikasiCppt')->name('.verifikasi');
                             Route::get('/gizi', 'cpptGizi')->name('.cppt-gizi');
                         });
-
-
-
                     });
                 });
 
@@ -1404,7 +1401,6 @@ Route::prefix('rawat-inap')->group(function () {
                         Route::controller(OperasiIBSController::class)->group(function () {
                             Route::get('/product-details', 'productDetails')
                                 ->name('.product-details');
-                            Route::get('/sub-spesialisasi', 'subSpesialisasi')->name('.sub-spesialisasi');
                             Route::get('/', 'index')->name('.index');
                             Route::get('/create', 'create')->name('.create');
                             Route::get('/{tgl_op}/{jam_op}/edit', 'edit')->name('.edit');

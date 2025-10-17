@@ -50,7 +50,7 @@
 
                         <div class="form-group">
                             <label>Riwayat penyakit</label>
-                            <textarea class="form-control" name="riwayat_penyakit" rows="4" placeholder="Riwayat penyakit sekarang"></textarea>
+                            <textarea class="form-control" name="riwayat_penyakit" rows="4" placeholder="Riwayat penyakit sekarang">{{ $paruTerdahulu->riwayat_penyakit ?? '' }}</textarea>
                         </div>
                     </div>
 
@@ -117,8 +117,143 @@
                    <!-- 4. Kebiasaan -->
                     <div class="section-separator" id="kebiasaan">
                         <h5 class="section-title">4. Kebiasaan</h5>
-                         @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.KebiasaanForm.index',['KebiasaanData'=> !empty($KebiasaanData) ? $KebiasaanData : null])
-                    </div>
+
+                        <div class="d-flex flex-column gap-4">
+                            <!-- Alkohol/Obat -->
+                            <div class="col-md-12">
+                            <label class="form-label fw-bold">Alkohol/Obat:</label>
+                            <div class="d-flex align-items-center justify-content-between gap-3">
+                                <div class="form-check">
+                                <input class="form-check-input" type="radio" name="alkohol_obat"
+                                    id="alkohol_obat_tidak" value="tidak">
+                                <label class="form-check-label" for="alkohol_obat_tidak">Tidak</label>
+                                </div>
+                                <div class="form-check">
+                                <input class="form-check-input" type="radio" name="alkohol_obat"
+                                    id="alkohol_obat_ya" value="ya">
+                                <label class="form-check-label" for="alkohol_obat_ya">Ya</label>
+                                </div>
+                                <div class="form-check">
+                                <input class="form-check-input" type="radio" name="alkohol_obat"
+                                    id="alkohol_obat_berhenti" value="berhenti" checked>
+                                <label class="form-check-label" for="alkohol_obat_berhenti">Berhenti</label>
+                                </div>
+                            </div>
+                            <!-- Detail untuk alkohol/obat jika Ya dipilih -->
+                            <div class="alkohol-detail gap-2" style="display: none;">
+                                <div class="mt-2 d-flex justify-content-end">
+                                <button type="button" class="btn btn-sm btn-primary ms-auto text-end add-alkohol">
+                                    Tambah
+                                </button>
+                                </div>
+                                <div class="d-flex gap-2 align-items-end mb-2 consumption-row">
+                                <div class="col">
+                                    <label class="form-label">Jenis:</label>
+                                    <input type="text" class="form-control form-control-sm" name="alkohol_jenis[]"
+                                    placeholder="Jenis alkohol/obat">
+                                </div>
+                                <div class="col">
+                                    <label class="form-label">Jumlah/hari:</label>
+                                    <input type="text" class="form-control form-control-sm"
+                                    name="alkohol_jumlah[]" placeholder="Jumlah per hari">
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-danger btn-sm remove-consumption">
+                                    <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                                </div>
+
+                            </div>
+                            </div>
+
+                            <!-- Merokok -->
+                            <div class="col-md-12">
+                            <label class="form-label fw-bold">Merokok:</label>
+                            <div class="d-flex align-items-center justify-content-between gap-3">
+                                <div class="form-check">
+                                <input class="form-check-input" type="radio" name="merokok"
+                                    id="merokok_tidak" value="tidak">
+                                <label class="form-check-label" for="merokok_tidak">Tidak</label>
+                                </div>
+                                <div class="form-check">
+                                <input class="form-check-input" type="radio" name="merokok"
+                                    id="merokok_ya" value="ya">
+                                <label class="form-check-label" for="merokok_ya">Ya</label>
+                                </div>
+                                <div class="form-check">
+                                <input class="form-check-input" type="radio" name="merokok"
+                                    id="merokok_berhenti" value="berhenti" checked>
+                                <label class="form-check-label" for="merokok_berhenti">Berhenti</label>
+                                </div>
+                            </div>
+
+
+                            <!-- Detail untuk merokok jika Ya dipilih -->
+                            <div class="merokok-detail" style="display: none;">
+                                 <div class="mt-2 d-flex justify-content-end">
+                                    <button type="button" class="btn btn-sm btn-primary ms-auto text-end add-merokok">
+                                        Tambah
+                                    </button>
+                                </div>
+                                <div class="d-flex gap-2 align-items-end mb-2 consumption-row">
+                                <div class="col">
+                                    <label class="form-label">Jenis:</label>
+                                    <input type="text" class="form-control form-control-sm"
+                                    name="merokok_jenis[]" placeholder="Jenis rokok">
+                                </div>
+                                <div class="col">
+                                    <label class="form-label">Jumlah/hari:</label>
+                                    <input type="text" class="form-control form-control-sm"
+                                    name="merokok_jumlah[]" placeholder="Batang per hari">
+                                </div>
+                                <div class="col">
+                                    <label class="form-label">Lama (tahun):</label>
+                                    <input type="text" class="form-control form-control-sm"
+                                    name="merokok_lama[]" placeholder="Lama merokok">
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-danger btn-sm remove-consumption">
+                                    <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                                </div>
+
+                            </div>
+                            </div>
+
+                            <!-- Obat-obatan -->
+                            <div class="col-md-12">
+                            <label class="form-label fw-bold">Obat-obatan:</label>
+                            <div class="d-flex align-items-center justify-content-between gap-3">
+                                <div class="form-check">
+                                <input class="form-check-input" type="radio" name="obat_obatan"
+                                    id="obat_tidak" value="tidak">
+                                <label class="form-check-label" for="obat_tidak">Tidak</label>
+                                </div>
+                                <div class="form-check">
+                                <input class="form-check-input" type="radio" name="obat_obatan"
+                                    id="obat_ya" value="ya">
+                                <label class="form-check-label" for="obat_ya">Ya</label>
+                                </div>
+                            </div>
+
+                            <!-- Detail untuk obat-obatan jika Ya dipilih -->
+                            <div class="obat-detail mt-2" style="display: none;">
+                                <div class="d-flex gap-2 align-items-end mb-2 consumption-row">
+                                    <div class="col">
+                                        <label class="form-label">Jenis obat:</label>
+                                        <input type="text" class="form-control form-control-sm"
+                                        name="obat_jenis" placeholder="Jenis obat">
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+
+
+
                     <!-- 5. Tanda-Tanda Vital -->
                     <div class="section-separator" id="tanda-vital">
                         <h5 class="section-title">5. Tanda-Tanda Vital</h5>
@@ -1300,7 +1435,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <!-- Submit Button -->
                 <div class="text-end">
                     <x-button-submit />

@@ -127,58 +127,60 @@
 @endpush
 
 @section('content')
-    <div class="row">
-        <div class="col-md-12">
-            <div class="emergency__container">
-                <h4 class="fw-bold">{{ $unit->nama_unit }}</h4>
+    <x-content-card>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="emergency__container">
+                    <h4 class="fw-bold">{{ $unit->nama_unit }}</h4>
 
-                <a href="{{ route('rawat-inap.unit.aktif', $unit->kd_unit) }}">
-                    <div class="custom__card all__patients">
-                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
-                        <div class="text-center">
-                            <p class="m-0 p-0">Aktif</p>
-                            <p class="m-0 p-0 fs-4 fw-bold">{{ countAktivePatientRanap($unit->kd_unit) }}</p>
+                    <a href="{{ route('rawat-inap.unit.aktif', $unit->kd_unit) }}">
+                        <div class="custom__card all__patients">
+                            <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                            <div class="text-center">
+                                <p class="m-0 p-0">Aktif</p>
+                                <p class="m-0 p-0 fs-4 fw-bold">{{ countAktivePatientRanap($unit->kd_unit) }}</p>
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
 
-                <a href="{{ route('rawat-inap.unit.pending', $unit->kd_unit) }}">
-                    <div class="custom__card Pending">
-                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
-                        <div class="text-center">
-                            <p class="m-0 p-0">Pending Order Masuk</p>
-                            <p class="m-0 p-0 fs-4 fw-bold">{{ countPendingPatientRanap($unit->kd_unit) }}</p>
+                    <a href="{{ route('rawat-inap.unit.pending', $unit->kd_unit) }}">
+                        <div class="custom__card Pending">
+                            <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                            <div class="text-center">
+                                <p class="m-0 p-0">Pending Order Masuk</p>
+                                <p class="m-0 p-0 fs-4 fw-bold">{{ countPendingPatientRanap($unit->kd_unit) }}</p>
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
 
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="row mt-3">
-        <div class="col-md-12">
-            <div class="table-responsive text-left">
-                <table class="table table-bordered dataTable" id="patientUnitDatatable">
-                    <thead>
-                        <tr>
-                            <th width="100px">Aksi</th>
-                            <th>Pasien</th>
-                            <th>No RM / Reg</th>
-                            <th>Alamat</th>
-                            <th>Jaminan</th>
-                            <th>Status Pelayanan</th>
-                            <th>Keterangan</th>
-                            <th>Tindak Lanjut</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{-- Tabel diisi oleh DataTables --}}
-                    </tbody>
-                </table>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="table-responsive text-left">
+                    <table class="table table-bordered dataTable" id="patientUnitDatatable">
+                        <thead>
+                            <tr>
+                                <th width="100px">Aksi</th>
+                                <th>Pasien</th>
+                                <th>No RM / Reg</th>
+                                <th>Alamat</th>
+                                <th>Jaminan</th>
+                                <th>Status Pelayanan</th>
+                                <th>Keterangan</th>
+                                <th>Tindak Lanjut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{-- Tabel diisi oleh DataTables --}}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+    </x-content-card>
 @endsection
 
 @push('js')
