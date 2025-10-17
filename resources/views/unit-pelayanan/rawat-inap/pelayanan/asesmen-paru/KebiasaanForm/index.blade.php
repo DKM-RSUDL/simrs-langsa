@@ -2,7 +2,7 @@
 
     {{-- === Alkohol === --}}
     <div class="col-md-12 {{ !empty($viewMode) ? 'p-3 rounded' : '' }}">
-        <label class="form-label fw-bold">Alkohol/Obat:</label>
+        <label class="form-label fw-bold">Alkohol:</label>
         <div class="d-flex align-items-center justify-content-between gap-3">
             @foreach (['tidak' => 'Tidak', 'ya' => 'Ya', 'berhenti' => 'Berhenti'] as $val => $label)
                 <div class="form-check">
