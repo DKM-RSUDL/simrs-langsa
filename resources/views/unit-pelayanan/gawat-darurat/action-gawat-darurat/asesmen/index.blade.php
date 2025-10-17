@@ -183,36 +183,30 @@
         <div class="col-md-9">
             @include('components.navigation')
 
-            <div class="d-flex justify-content-center">
-                <div class="card w-100 h-100">
-                    <div class="card-body">
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="asesmen-tab" data-bs-toggle="tab"
-                                    data-bs-target="#asesmen" type="button" role="tab" aria-controls="asesmen"
-                                    aria-selected="true">Asesmen Awal
-                                    Medis</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="skrining-tab" data-bs-toggle="tab" data-bs-target="#skrining"
-                                    type="button" role="tab" aria-controls="skrining" aria-selected="false">Skrining
-                                    Khusus</button>
-                            </li>
-                        </ul>
+            <x-content-card>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="asesmen-tab" data-bs-toggle="tab" data-bs-target="#asesmen"
+                            type="button" role="tab" aria-controls="asesmen" aria-selected="true">Asesmen Awal
+                            Medis</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="skrining-tab" data-bs-toggle="tab" data-bs-target="#skrining"
+                            type="button" role="tab" aria-controls="skrining" aria-selected="false">Skrining
+                            Khusus</button>
+                    </li>
+                </ul>
 
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="asesmen" role="tabpanel"
-                                aria-labelledby="asesmen-tab">
-                                {{-- TAB 1. buatlah list disini --}}
-                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.index-asesmenawal')
-                            </div>
-                            <div class="tab-pane fade" id="skrining" role="tabpanel" aria-labelledby="skrining-tab">
-                                {{-- TAB 2. buatlah list disini --}}
-                            </div>
-                        </div>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="asesmen" role="tabpanel" aria-labelledby="asesmen-tab">
+                        {{-- TAB 1. buatlah list disini --}}
+                        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.index-asesmenawal')
+                    </div>
+                    <div class="tab-pane fade" id="skrining" role="tabpanel" aria-labelledby="skrining-tab">
+                        {{-- TAB 2. buatlah list disini --}}
                     </div>
                 </div>
-            </div>
+            </x-content-card>
         </div>
     </div>
 @endsection
@@ -302,13 +296,13 @@
                     'formRawatInap',
                     'formKamarOperasi'
                 ];
-                
+
                 allFields.forEach(field => {
                     document.getElementById(field).style.display = 'none';
                 });
 
                 // Show relevant fields based on selection
-                switch(selectedOption) {
+                switch (selectedOption) {
                     case 'rawatInap':
                         document.getElementById('formRawatInap').style.display = 'block';
                         updateRawatInapDiagnosis();
@@ -418,11 +412,11 @@
             function fillVitalSignFromTriase() {
                 const vitalSignContainer = document.querySelector('[data-triase-vital-sign]');
                 const vitalSignData = vitalSignContainer?.dataset.triaseVitalSign;
-                
+
                 if (vitalSignData) {
                     try {
                         const vitalSign = JSON.parse(vitalSignData);
-                        
+
                         // Mapping untuk vital sign
                         const vitalSignMapping = {
                             'sistole': 'td_sistole',
@@ -492,8 +486,10 @@
                 formData.append('riwayat_alergi', window.getAlergiData ? window.getAlergiData() : '');
                 formData.append('retriage_data', window.getReTriageData ? window.getReTriageData() : '');
                 formData.append('diagnosa_data', window.getDiagnosaData ? window.getDiagnosaData() : '');
-                formData.append('alat_terpasang_data', window.getAlatTerpasangData ? window.getAlatTerpasangData() : '');
-                formData.append('tindak_lanjut_data', window.getTindakLanjutData ? window.getTindakLanjutData() : '');
+                formData.append('alat_terpasang_data', window.getAlatTerpasangData ? window
+                    .getAlatTerpasangData() : '');
+                formData.append('tindak_lanjut_data', window.getTindakLanjutData ? window
+                    .getTindakLanjutData() : '');
 
                 var pemeriksaanFisik = [];
                 document.querySelectorAll('.pemeriksaan-item').forEach(function(item) {

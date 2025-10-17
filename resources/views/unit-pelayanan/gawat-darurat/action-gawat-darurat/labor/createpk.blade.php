@@ -7,12 +7,6 @@
     </style>
 @endpush
 
-<div class="d-grid gap-2">
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addLaborModal" type="button">
-        <i class="ti-plus"></i> Tambah
-    </button>
-</div>
-
 <div class="modal fade" id="addLaborModal" tabindex="-1" aria-labelledby="addLaborModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">

@@ -87,65 +87,65 @@
         <div class="col-md-9">
             @include('components.navigation')
 
-            <div class="row">
-                <div class="d-flex justify-content-between align-items-center m-3">
-                    <div class="row">
+            <x-content-card>
+                <div class="row">
+                    <div class="col-md-10">
                         <!-- Select Option -->
-                        <div class="col-md-2">
-                            <select class="form-select" id="SelectOption" aria-label="Pilih...">
-                                <option value="semua" selected>Semua Episode</option>
-                                <option value="option1">Episode Sekarang</option>
-                                <option value="option2">1 Bulan</option>
-                                <option value="option3">3 Bulan</option>
-                                <option value="option4">6 Bulan</option>
-                                <option value="option5">9 Bulan</option>
-                            </select>
-                        </div>
+                        <div class="d-flex gap-2 flex-wrap flex-md-row justify-content-center flex-md-nowrap">
+                            <div>
+                                <select class="form-select" id="SelectOption" aria-label="Pilih...">
+                                    <option value="semua" selected>Semua Episode</option>
+                                    <option value="option1">Episode Sekarang</option>
+                                    <option value="option2">1 Bulan</option>
+                                    <option value="option3">3 Bulan</option>
+                                    <option value="option4">6 Bulan</option>
+                                    <option value="option5">9 Bulan</option>
+                                </select>
+                            </div>
 
-                        <!-- Start Date -->
-                        <div class="col-md-2">
-                            <input type="date" name="start_date" id="start_date" class="form-control"
-                                placeholder="Dari Tanggal">
-                        </div>
+                            <!-- Start Date -->
+                            <div>
+                                <input type="date" name="start_date" id="start_date" class="form-control"
+                                    placeholder="Dari Tanggal">
+                            </div>
 
-                        <!-- End Date -->
-                        <div class="col-md-2">
-                            <input type="date" name="end_date" id="end_date" class="form-control"
-                                placeholder="S.d Tanggal">
-                        </div>
+                            <!-- End Date -->
+                            <div>
+                                <input type="date" name="end_date" id="end_date" class="form-control"
+                                    placeholder="S.d Tanggal">
+                            </div>
 
-                        <!-- Button Filter -->
-                        <div class="col-md-1">
-                            <button id="filterButton" class="btn btn-secondary rounded-3"><i
-                                    class="bi bi-funnel-fill"></i></button>
-                        </div>
+                            <!-- Button Filter -->
+                            <div>
+                                <button id="filterButton" class="btn btn-secondary rounded-3"><i
+                                        class="bi bi-funnel-fill"></i></button>
+                            </div>
 
-                        <!-- Search Bar -->
-                        <div class="col-md-3">
-                            <form method="GET"
-                                action="{{ route('tindakan.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}">
+                            <!-- Search Bar -->
+                            <div>
+                                <form method="GET"
+                                    action="{{ route('tindakan.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}">
 
-                                <div class="input-group">
-                                    <input type="text" name="search" class="form-control"
-                                        placeholder="Dokter & Tindakan" aria-label="Cari" value="{{ request('search') }}"
-                                        aria-describedby="basic-addon1">
-                                    <button type="submit" class="btn btn-primary">Cari</button>
-                                </div>
-                            </form>
-                        </div>
-
-                        <!-- Add Button -->
-                        <!-- Include the modal file -->
-                        <div class="col-md-2">
-                            <div class="d-grid gap-2">
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTindakanModal"
-                                    type="button">
-                                    <i class="ti-plus"></i> Tambah
-                                </button>
+                                    <div class="input-group">
+                                        <input type="text" name="search" class="form-control"
+                                            placeholder="Dokter & Tindakan" aria-label="Cari"
+                                            value="{{ request('search') }}" aria-describedby="basic-addon1">
+                                        <button type="submit" class="btn btn-primary">Cari</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-
                     </div>
+
+                    <!-- Add Button -->
+                    <!-- Include the modal file -->
+                    <div class="col-md-2 text-end">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTindakanModal"
+                            type="button">
+                            <i class="ti-plus"></i> Tambah
+                        </button>
+                    </div>
+
                 </div>
 
                 <div class="table-responsive">
@@ -177,23 +177,23 @@
                                     <td>
                                         <img src="{{ asset("storage/$tdk->gambar") }}" alt="" width="50">
                                     </td>
-                                    <td>
+                                    <td class="d-flex flex-wrap gap-1">
                                         <button class="btn btn-sm btn-success btn-show-tindakan"
                                             data-bs-target="#showTindakanModal" data-produk="{{ $tdk->kd_produk }}"
                                             data-urut="{{ $tdk->urut_list }}"><i class="bi bi-eye"></i></button>
                                         <button class="btn btn-sm btn-warning btn-edit-tindakan"
                                             data-bs-target="#editTindakanModal" data-produk="{{ $tdk->kd_produk }}"
                                             data-urut="{{ $tdk->urut_list }}"><i class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-delete-tindakan" data-produk="{{ $tdk->kd_produk }}"
+                                        <button class="btn btn-sm btn-danger btn-delete-tindakan" data-produk="{{ $tdk->kd_produk }}"
                                             data-urut="{{ $tdk->urut_list }}"><i
-                                                class="bi bi-x-circle-fill text-danger"></i></button>
+                                                class="bi bi-x-circle-fill"></i></button>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </x-content-card>
         </div>
 
         @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.tindakan.modal')

@@ -88,34 +88,28 @@
         <div class="col-md-9">
             @include('components.navigation')
 
-            <div class="d-flex justify-content-center">
-                <div class="card w-100 h-100">
-                    <div class="card-body">
-                        {{-- Tabs --}}
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active fw-bold" id="resep-tab" data-bs-toggle="tab"
-                                    data-bs-target="#resep" type="button" role="tab" aria-controls="resep"
-                                    aria-selected="true">
-                                    Konsultasi/Rujuk Inten
-                                </button>
-                            </li>
-                        </ul>
+            <x-content-card>
+                {{-- Tabs --}}
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active fw-bold" id="resep-tab" data-bs-toggle="tab" data-bs-target="#resep"
+                            type="button" role="tab" aria-controls="resep" aria-selected="true">
+                            Konsultasi/Rujuk Inten
+                        </button>
+                    </li>
+                </ul>
 
-                        {{-- Tab Content --}}
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="resep" role="tabpanel"
-                                aria-labelledby="resep-tab">
-                                {{-- TAB 1. buatlah list disini --}}
-                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.konsultasi.include.konsultasi')
-                            </div>
-                            <div class="tab-pane fade" id="riwayat" role="tabpanel" aria-labelledby="riwayat-tab">
-                                {{-- TAB 2. buatlah list disini --}}
-                            </div>
-                        </div>
+                {{-- Tab Content --}}
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="resep" role="tabpanel" aria-labelledby="resep-tab">
+                        {{-- TAB 1. buatlah list disini --}}
+                        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.konsultasi.include.konsultasi')
+                    </div>
+                    <div class="tab-pane fade" id="riwayat" role="tabpanel" aria-labelledby="riwayat-tab">
+                        {{-- TAB 2. buatlah list disini --}}
                     </div>
                 </div>
-            </div>
+            </x-content-card>
         </div>
     </div>
 @endsection
