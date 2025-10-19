@@ -77,8 +77,10 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\EchocardiographyController as R
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenPengkajianAwalMedis as RawatInapAsesmenPengkajianAwalMedis;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenMedisAnakController as RawatInapAsesmenMedisAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenMedisNeonatologiController as RawatInapAsesmenMedisNeonatologiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenPraOperatifPerawatController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\OperasiIBSController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\OrderHemodialisaController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\OrderOKController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PneumoniaCurb65Controller;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PneumoniaPsiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SurveilansA1Controller;
@@ -1408,6 +1410,27 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::post('/', 'store')->name('.store');
                             Route::put('/{tgl_op}/{jam_op}', 'update')->name('.update');
                             Route::delete('/{tgl_op}/{jam_op}', 'delete')->name('.delete');
+                        });
+                    });
+                });
+
+                Route::prefix('operasi/{tgl_op}/{jam_op}')->group(function () {
+                    Route::name('.operasi')->group(function () {
+                        Route::controller(OrderOKController::class)->group(function () {
+                            Route::get('/show', 'show')->name('.show');
+                        });
+                        Route::prefix('pra-operatif-perawat')->group(function () {
+                            Route::name('.asesmen.pra-operatif-perawat')->group(function () {
+                                Route::controller(AsesmenPraOperatifPerawatController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
+                                });
+                            });
                         });
                     });
                 });

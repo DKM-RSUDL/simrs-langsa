@@ -14,13 +14,16 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
+use App\Services\BaseService;
 
 class RawatInapController extends Controller
 {
+    private $baseService;
 
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->baseService = new BaseService();
     }
 
     public function index()
@@ -118,12 +121,8 @@ class RawatInapController extends Controller
 
     public function pelayanan($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->where('kd_unit', $kd_unit)
-            ->where('kd_pasien', $kd_pasien)
-            ->where('urut_masuk', $urut_masuk)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->first();
+        // Use BaseService to include transaksi join so kd_kasir and no_transaksi are available
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         // Menghitung umur berdasarkan tgl_lahir jika ada
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
