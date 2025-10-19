@@ -20,10 +20,14 @@
         [
             'icon' => 'rrrr.png',
             'label' => 'Site Marking',
-            'link' => route('operasi.pelayanan.site-marking.index', [
+            'link' => route('rawat-inap.operasi.site-marking.index', [
+                $dataMedis->kd_unit,
                 $dataMedis->kd_pasien,
-                $tglMasukData,
+                date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
                 $dataMedis->urut_masuk,
+                $operasi->tgl_op,
+                $operasi->jam_op,
+                $tglMasukData,
             ]),
         ],
     ];

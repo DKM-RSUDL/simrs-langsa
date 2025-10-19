@@ -83,6 +83,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\OrderHemodialisaController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\OrderOKController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PneumoniaCurb65Controller;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PneumoniaPsiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\SiteMarkingController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SurveilansA1Controller;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SurveilansA2Controller;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
@@ -1422,6 +1423,19 @@ Route::prefix('rawat-inap')->group(function () {
                         Route::prefix('pra-operatif-perawat')->group(function () {
                             Route::name('.asesmen.pra-operatif-perawat')->group(function () {
                                 Route::controller(AsesmenPraOperatifPerawatController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
+                                });
+                            });
+                        });
+                        Route::prefix('site-marking')->group(function () {
+                            Route::name('.site-marking')->group(function () {
+                                Route::controller(SiteMarkingController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::get('/create', 'create')->name('.create');
                                     Route::post('/', 'store')->name('.store');
