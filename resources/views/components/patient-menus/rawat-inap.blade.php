@@ -1,4 +1,4 @@
-@props(['pelayananUrl'])
+@props(['pelayananUrl', 'dataMedis' => null])
 
 <div class="accordion accordion-flush" id="patientMenuAccordion">
     {{-- Persetujuan --}}
@@ -136,6 +136,78 @@
             <a href="{{ $pelayananUrl }}/orientasi-pasien-baru" class="list-group-item list-group-item-action">
                 <i class="bi bi-info-circle me-2"></i> Orientasi Pasien Baru
             </a>
+        </div>
+    </div>
+
+    {{-- Daftar Operasi --}}
+    @php
+        // Safe: hanya query jika $dataMedis ada di scope
+        $operasiCount = 0;
+        $operasis = collect();
+
+        if (isset($dataMedis)) {
+            try {
+                $cacheKey =
+                    'operasi:list:' .
+                    ($dataMedis->kd_kasir ?? 'none') .
+                    ':' .
+                    ($dataMedis->no_transaksi ?? 'none') .
+                    ':' .
+                    date('Y-m-d');
+
+                $operasis = \Illuminate\Support\Facades\Cache::remember($cacheKey, 60, function () use ($dataMedis) {
+                    return \App\Models\OrderOK::where('kd_kasir', $dataMedis->kd_kasir)
+                        ->where('no_transaksi', $dataMedis->no_transaksi)
+                        ->whereIn('status', [1, 2])
+                        ->orderBy('tgl_op')
+                        ->orderBy('jam_op')
+                        ->get(['tgl_op', 'jam_op']);
+                });
+
+                $operasiCount = $operasis->count();
+            } catch (\Exception $e) {
+                // jika query gagal, tetap jangan break tampilan menu
+                $operasiCount = 0;
+                $operasis = collect();
+            }
+        }
+    @endphp
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#daftarOperasiMenu">
+                <i class="bi bi-droplet me-2"></i> Daftar Operasi
+                <span class="badge bg-primary rounded-pill ms-2">{{ $operasiCount }}</span>
+            </button>
+        </h2>
+        <div id="daftarOperasiMenu" class="accordion-collapse collapse" data-bs-parent="#patientMenuAccordion">
+            <div class="accordion-body p-0">
+                <div class="list-group list-group-flush">
+                    @if ($operasiCount > 0)
+                        @foreach ($operasis as $idx => $op)
+                            @php
+                                $number = $idx + 1;
+                                // Build show route if possible; expect routes named 'rawat-inap.operasi-ibs.show'
+                                $showUrl = isset($dataMedis)
+                                    ? route('rawat-inap.operasi.show', [
+                                        $dataMedis->kd_unit,
+                                        $dataMedis->kd_pasien,
+                                        date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
+                                        $dataMedis->urut_masuk,
+                                        $op->tgl_op,
+                                        $op->jam_op,
+                                    ])
+                                    : '#';
+                            @endphp
+                            <a href="{{ $showUrl }}" class="list-group-item list-group-item-action">Operasi
+                                {{ $number }}</a>
+                        @endforeach
+                    @else
+                        <div class="list-group-item">Tidak ada data operasi.</div>
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -156,7 +156,7 @@
         @switch($kdBagian)
             @case(1)
                 {{-- Rawat Inap --}}
-                <x-patient-menus.rawat-inap :pelayananUrl="$pelayananUrl" />
+                <x-patient-menus.rawat-inap :pelayananUrl="$pelayananUrl" :dataMedis="$dataMedis" />
             @break
 
             @case(2)
@@ -272,7 +272,7 @@
 
                             // Set nama pasien
                             $('#fotoTriaseModal #nama_pasien_triase').val(kunjungan.pasien
-                            .nama);
+                                .nama);
                             $('#fotoTriaseModal #triase_id').val(kunjungan.triase_id);
 
                             // Set action form
