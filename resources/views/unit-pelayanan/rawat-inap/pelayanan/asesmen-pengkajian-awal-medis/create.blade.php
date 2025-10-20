@@ -128,7 +128,7 @@
                                 <h5 class="section-title">5. Status present</h5>
                                 <div class="form-group mb-3">
                                     <label for="tingkat_kesadaran" class="min-width: 200px;">Tingkat Kesadaran</label>
-                                    <select class="form-select" name="tingkat_kesadaran" id="tingkat_kesadaran" required>
+                                    <select class="form-select" name="tingkat_kesadaran" id="tingkat_kesadaran" >
                                         <option value="" selected disabled>Pilih tingkat kesadaran</option>
                                         <option value="1">Compos Mentis</option>
                                         <option value="2">Apatis</option>
