@@ -143,7 +143,6 @@ document.addEventListener('DOMContentLoaded', function() {
             tableBody.innerHTML = riwayatObstetrik.map((item, index) => `
                 <tr>
                     <td>${item.keadaan || '-'}</td>
-                    <td>${item.kehamilan || '-'}</td>
                     <td>${item.caraPersalinan || '-'}</td>
                     <td>${item.keadaanNifas || '-'}</td>
                     <td>${item.tanggalLahir ? new Date(item.tanggalLahir).toLocaleDateString('id-ID') : '-'}</td>
@@ -195,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="flex-grow-1">
                                 <h6 class="card-title mb-1">
                                     <span class="badge bg-primary me-2">${index + 1}</span>
-                                    ${item.kehamilan || 'Tidak diisi'}
+                                    ${item.keadaan || 'Tidak diisi'}
                                 </h6>
                                 <p class="card-text mb-1">
                                     <strong>Cara:</strong> ${item.caraPersalinan || 'Tidak diisi'} | 
@@ -240,7 +239,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function populateForm(index) {
         const item = riwayatObstetrik[index];
         document.getElementById('keadaanInput').value = item.keadaan || '';
-        document.getElementById('kehamilanInput').value = item.kehamilan || '';
         document.getElementById('caraPersalinanInput').value = item.caraPersalinan || '';
         document.getElementById('keadaanNifasInput').value = item.keadaanNifas || '';
         document.getElementById('tanggalLahirInput').value = item.tanggalLahir || '';
@@ -254,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check if form has data (at least one field filled)
     function hasFormData() {
         const inputs = [
-            'keadaanInput', 'kehamilanInput', 'caraPersalinanInput', 
+            'keadaanInput', 'caraPersalinanInput', 
             'keadaanNifasInput', 'tanggalLahirInput', 'keadaanAnakInput', 'tempatPenolongInput'
         ];
         
@@ -325,7 +323,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const data = {
             keadaan: document.getElementById('keadaanInput').value.trim(),
-            kehamilan: document.getElementById('kehamilanInput').value.trim(),
+           
             caraPersalinan: document.getElementById('caraPersalinanInput').value.trim(),
             keadaanNifas: document.getElementById('keadaanNifasInput').value.trim(),
             tanggalLahir: document.getElementById('tanggalLahirInput').value || null,

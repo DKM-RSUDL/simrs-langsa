@@ -138,13 +138,9 @@
                                 </div>
 
                             <div class="form-group mb-3">
-                                <label class="d-block mb-2 mr-2" style="min-width: 200px;">Pendataran</label>
-                                <select class="form-select" name="serviks_pembukaan">
-                                    <option value="" selected>pilih</option>
-                                    <option value="1">&lt; 50%</option>
-                                    <option value="2">&gt; 50%</option>
-                                    <option value="3">100%</option>
-                                </select>
+                                <label class="d-block mb-2" style="min-width: 200px;">Pernafasan (Per Menit)</label>
+                                <input type="number" class="form-control" name="pernafasan" placeholder="frekuensi nafas per menit"
+                                value="{{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->pernafasan ?? '' }}">
                                 <label class="d-block ml-2">Jam</label>
                                 <input type="time" class="form-control" name="serviks_jam_pembukaan">
                             </div>
@@ -189,7 +185,7 @@
                                     <select class="form-select" name="komprehensif_posisi_janin">
                                         <option value="" selected>pilih</option>
                                         <option value="1">PUKI</option>
-                                        <option value="0">PUKA</option>
+                                        <option value="2">PUKA</option>
                                     </select>
                                 </div>
 
@@ -292,7 +288,7 @@
                                     <select class="form-select" name="serviks_konsistensi">
                                         <option value="" selected>pilih</option>
                                         <option value="1">Lunak</option>
-                                        <option value="0">Kaku</option>
+                                        <option value="2">Kaku</option>
                                     </select>
                                 </div>
 

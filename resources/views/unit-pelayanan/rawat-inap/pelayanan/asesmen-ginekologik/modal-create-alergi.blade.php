@@ -115,7 +115,6 @@
             ` : riwayatObstetrik.map((item, index) => `
                 <tr>
                     <td>${item.keadaan || '-'}</td>
-                    <td>${item.kehamilan || '-'}</td>
                     <td>${item.caraPersalinan || '-'}</td>
                     <td>${item.keadaanNifas || '-'}</td>
                     <td>${item.tanggalLahir ? new Date(item.tanggalLahir).toLocaleDateString('id-ID') : '-'}</td>
@@ -143,7 +142,7 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="flex-grow-1">
                                 <h6 class="mb-1">
-                                    <strong>Kehamilan:</strong> ${item.kehamilan || 'Tidak diisi'} | 
+                                    <strong>Kehamilan:</strong> ${item.keadaan || 'Tidak diisi'} | 
                                     <strong>Persalinan:</strong> ${item.caraPersalinan || 'Tidak diisi'}
                                 </h6>
                                 <div class="row">
@@ -184,7 +183,6 @@
             function populateForm(index) {
                 const item = riwayatObstetrik[index];
                 document.getElementById('keadaanInput').value = item.keadaan || '';
-              
                 document.getElementById('caraPersalinanInput').value = item.caraPersalinan || '';
                 document.getElementById('keadaanNifasInput').value = item.keadaanNifas || '';
                 document.getElementById('tanggalLahirInput').value = item.tanggalLahir || '';
@@ -246,7 +244,6 @@
 
                 const data = {
                     keadaan: document.getElementById('keadaanInput').value.trim(),
-                    
                     caraPersalinan: document.getElementById('caraPersalinanInput').value.trim(),
                     keadaanNifas: document.getElementById('keadaanNifasInput').value.trim(),
                     tanggalLahir: document.getElementById('tanggalLahirInput').value || null,
