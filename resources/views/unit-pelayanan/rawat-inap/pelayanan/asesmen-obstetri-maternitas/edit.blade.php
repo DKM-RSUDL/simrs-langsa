@@ -291,10 +291,10 @@
                                                 <select class="form-select" name="kontraksi_letak_janin">
                                                         <option value="">pilih</option>
                                                         <option value="1"  {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_letak_janin ?? '') == '1' ? 'selected' : '' }}>
-                                                            Teratur
+                                                            Memanjang
                                                         </option>
                                                         <option value="2"  {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_letak_janin ?? '') == '2' ? 'selected' : '' }}>
-                                                            Tidak Teratur
+                                                            Lintang
                                                         </option>
                                                 </select>
                                             </div>
