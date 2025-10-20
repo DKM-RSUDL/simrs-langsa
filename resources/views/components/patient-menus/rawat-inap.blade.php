@@ -158,7 +158,7 @@
                 $operasis = \Illuminate\Support\Facades\Cache::remember($cacheKey, 60, function () use ($dataMedis) {
                     return \App\Models\OrderOK::where('kd_kasir', $dataMedis->kd_kasir)
                         ->where('no_transaksi', $dataMedis->no_transaksi)
-                        ->whereIn('status', [1, 2])
+                        ->where('status', 1)
                         ->orderBy('tgl_op')
                         ->orderBy('jam_op')
                         ->get(['tgl_op', 'jam_op']);
@@ -195,9 +195,9 @@
                                         $dataMedis->kd_pasien,
                                         date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
                                         $dataMedis->urut_masuk,
-                                        $op->tgl_op,
-                                        $op->jam_op,
-                                    ])
+                                        date('Y-m-d', strtotime($op->tgl_op)),
+                                        date('H:i:s', strtotime($op->jam_op))
+                ])
                                     : '#';
                             @endphp
                             <a href="{{ $showUrl }}" class="list-group-item list-group-item-action">Operasi
