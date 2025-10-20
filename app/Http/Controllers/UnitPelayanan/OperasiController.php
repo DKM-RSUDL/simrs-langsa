@@ -451,22 +451,6 @@ class OperasiController extends Controller
             // 	kd_pasien = '0-75-43-42'
             // 	AND dilayani = '0'
 
-            // Update Order OK
-            OrderOK::where('tgl_op', $tanggal_op)
-                ->where('jam_op', $jam_op)
-                ->where('kd_kasir', $order->kd_kasir)
-                ->where('no_transaksi', $order->no_transaksi)
-                ->update([
-                    'tgl_op' => $request->input('tanggal_registrasi'),
-                    'jam_op' => $request->input('jam_operasi'),
-                    'kd_tindakan' => $request->input('jenis_tindakan'),
-                    'kd_jenis_op' => $product->klas->parent, // ✅ Dari database
-                    'durasi'     => $request->durasi,
-                    'kd_sub_spc' => $product->kd_klas, // ✅ Dari database
-                    'no_kamar' => $request->input('kamar_operasi'),
-                    'status' => 1,
-                ]);
-
 
             // Ambil urut masuk terakhir untuk pasien yang sudah ada
             $getLastUrutMasukPatientToday = Kunjungan::select('urut_masuk')
@@ -592,6 +576,26 @@ class OperasiController extends Controller
             ];
 
             UnitAsalInap::create($dataUnitAsalInap);
+
+
+
+            // Update Order OK
+            OrderOK::where('tgl_op', $tanggal_op)
+                ->where('jam_op', $jam_op)
+                ->where('kd_kasir', $order->kd_kasir)
+                ->where('no_transaksi', $order->no_transaksi)
+                ->update([
+                    'tgl_op' => $request->input('tanggal_registrasi'),
+                    'jam_op' => $request->input('jam_operasi'),
+                    'kd_tindakan' => $request->input('jenis_tindakan'),
+                    'kd_jenis_op' => $product->klas->parent, // ✅ Dari database
+                    'durasi'     => $request->durasi,
+                    'kd_sub_spc' => $product->kd_klas, // ✅ Dari database
+                    'no_kamar' => $request->input('kamar_operasi'),
+                    'status' => 1,
+                    'kd_kasir_ok' => $mappingData['kd_kasir'],
+                    'no_transaksi_ok' => $formattedTransactionNumber,
+                ]);
 
             DB::commit();
             return to_route('operasi.pelayanan', [$dataMedis->kd_pasien, $request->tanggal_registrasi, $urut_masuk])->with('success', 'Order operasi berhasil diterima dan diproses.');
