@@ -64,17 +64,12 @@ class AsesmenParuController extends Controller
             abort(404, 'Data not found');
         }
 
-       $idAsesmen = RmeAsesmen::select('id')
-        ->where('kd_pasien', $kd_pasien)
-        ->where('kategori', '1')
-        ->where('sub_kategori', '8')
-        ->first()->id;
-
+       $idAsesmen = $this->getIdAsesmen($kd_pasien);
 
 
         if(!empty($idAsesmen)){
              $paruTerdahulu = RmeAsesmenParu::select('riwayat_penyakit_terdahulu', 'riwayat_penggunaan_obat')
-            ->where('id_asesmen', $idAsesmen ?? null)
+            ->where('id_asesmen', $idAsesmen->id ?? null)
             ->orderBy('id','desc')
             ->first();
             
