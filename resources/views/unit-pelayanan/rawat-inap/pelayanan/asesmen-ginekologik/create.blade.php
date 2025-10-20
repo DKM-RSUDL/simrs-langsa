@@ -289,7 +289,6 @@
                                     <thead>
                                         <tr>
                                             <th>Keadaan</th>
-                                        
                                             <th>Cara Persalinan</th>
                                             <th>Keadaan Nifas</th>
                                             <th>Tanggal Lahir</th>
