@@ -10031,10 +10031,6 @@
     "platform": {
         "php": "^8.1"
     },
-<<<<<<< HEAD
     "platform-dev": [],
-=======
-    "platform-dev": {},
->>>>>>> 03ce7b49dfbb7abe8987576fde7dabe8402ce309
     "plugin-api-version": "2.6.0"
 }
