@@ -3,19 +3,6 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
-        .patient-card .nav-link.active {
-            background-color: #0056b3;
-            color: #fff;
-        }
-
-        .patient-card .nav-link.active small {
-            color: white !important;
-        }
-
-        .patient-card img.rounded-circle {
-            object-fit: cover;
-        }
-
         .tab-content {
             flex-grow: 1;
             width: 350px;
