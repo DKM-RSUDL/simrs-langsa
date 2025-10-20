@@ -9,10 +9,7 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ route('rawat-inap.resiko-jatuh.morse.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
-                class="btn btn-outline-primary resiko_jatuh__btn-outline-primary mb-3">
-                <i class="ti-arrow-left"></i> Kembali
-            </a>
+            <x-button-previous />
 
             <form id="resikoJatuh_form" method="POST"
                 action="{{ route('rawat-inap.resiko-jatuh.morse.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}">
@@ -506,9 +503,7 @@
                     </div>
 
                     <div class="text-end">
-                        <button type="submit" class="btn btn-primary" id="resikoJatuh_simpan">
-                            <i class="ti-save me-1"></i> <span>Simpan</span>
-                        </button>
+                        <x-button-submit />
                     </div>
                 </div>
             </form>
