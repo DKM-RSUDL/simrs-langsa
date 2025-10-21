@@ -46,6 +46,16 @@
             ]),
         ],
         [
+            'icon' => 'agree.png',
+            'label' => 'Konsultasi Spesialis',
+            'link' => route('rawat-inap.konsultasi-spesialis.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
+        [
             'icon' => 'test_tube.png',
             'label' => 'Labor',
             'link' => route('rawat-inap.lab-patologi-klinik.index', [
