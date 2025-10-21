@@ -39,7 +39,9 @@ class OkPraOperasiPerawat extends Model
         'batuk',
         'haid',
         'verifikasi_pasien',
+        'verifikasi_pasien_ruangan',
         'persiapan_fisik_pasien',
+        'persiapan_fisik_pasien_ruangan',
         'id_perawat_penerima',
         'tgl_periksa',
         'jam_periksa',
@@ -54,6 +56,8 @@ class OkPraOperasiPerawat extends Model
         'alergi' => 'array',
         'hasil_lab' => 'array',
         'verifikasi_pasien' => 'array',
+        'verifikasi_pasien_ruangan' => 'array',
         'persiapan_fisik_pasien' => 'array',
+        'persiapan_fisik_pasien_ruangan' => 'array',
     ];
 }

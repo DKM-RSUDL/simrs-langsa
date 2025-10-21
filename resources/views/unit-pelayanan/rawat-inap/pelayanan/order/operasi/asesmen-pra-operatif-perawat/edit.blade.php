@@ -28,7 +28,15 @@
                         'Perbarui data asesmen pra operatif perawat dengan mengisi formulir di bawah ini.',
                 ])
                 <form method="POST"
-                    action="{{ route('operasi.pelayanan.asesmen.pra-anestesi.perawat.update', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($asesmen->praOperatifPerawat->id)]) }}">
+                    action="{{ route('rawat-inap.operasi.asesmen.pra-operatif-perawat.update', [
+                        $dataMedis->kd_unit,
+                        $dataMedis->kd_pasien,
+                        date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
+                        $dataMedis->urut_masuk,
+                        $operasi->tgl_op,
+                        $operasi->jam_op,
+                        encrypt($asesmen->id),
+                    ]) }}">
                     @csrf
                     @method('put')
                     <div class="section-separator mt-0" id="dataMasuk">
@@ -342,7 +350,7 @@
                                 <tr>
                                     <td>Periksa identitas pasien</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="identitas_pasien" @checked(in_array('identitas_pasien', $asesmen->praOperatifPerawat->verifikasi_pasien))>
                                     </td>
                                     <td align="middle">
@@ -353,7 +361,7 @@
                                 <tr>
                                     <td>Periksa gelang identitas / gelang operasi / gelang alergi</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="periksa_gelang" @checked(in_array('periksa_gelang', $asesmen->praOperatifPerawat->verifikasi_pasien))>
                                     </td>
                                     <td align="middle">
@@ -364,7 +372,7 @@
                                 <tr>
                                     <td>IPRI dan surat pengantar rawat</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="ipri" @checked(in_array('ipri', $asesmen->praOperatifPerawat->verifikasi_pasien))>
                                     </td>
                                     <td align="middle">
@@ -375,7 +383,7 @@
                                 <tr>
                                     <td>Jenis dan lokasi pembedahan dipastikan bersama pasien</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="lokasi_pembedahan" @checked(in_array('lokasi_pembedahan', $asesmen->praOperatifPerawat->verifikasi_pasien))>
                                     </td>
                                     <td align="middle">
@@ -387,7 +395,7 @@
                                 <tr>
                                     <td>Periksa kelengkapan persetujuan pembedahan surat ijin operasi</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="persetujuan_operasi" @checked(in_array('persetujuan_operasi', $asesmen->praOperatifPerawat->verifikasi_pasien))>
                                     </td>
                                     <td align="middle">
@@ -399,7 +407,7 @@
                                 <tr>
                                     <td>Periksa kelengkapan persetujuan anestesi</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="persetujuan_anestesi" @checked(in_array('persetujuan_anestesi', $asesmen->praOperatifPerawat->verifikasi_pasien))>
                                     </td>
                                     <td align="middle">
@@ -416,7 +424,7 @@
                                 <tr>
                                     <td>1. Cardiologi</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="cardiologi" @checked(in_array('cardiologi', $asesmen->praOperatifPerawat->verifikasi_pasien))>
                                     </td>
                                     <td align="middle">
@@ -427,7 +435,7 @@
                                 <tr>
                                     <td>2. Pulmonology</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="pulmonology" @checked(in_array('pulmonology', $asesmen->praOperatifPerawat->verifikasi_pasien))>
                                     </td>
                                     <td align="middle">
@@ -438,7 +446,7 @@
                                 <tr>
                                     <td>3. Rehab Medik</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="rehab_medik" @checked(in_array('rehab_medik', $asesmen->praOperatifPerawat->verifikasi_pasien))>
                                     </td>
                                     <td align="middle">
@@ -449,7 +457,7 @@
                                 <tr>
                                     <td>4. Dietation</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="dietation" @checked(in_array('dietation', $asesmen->praOperatifPerawat->verifikasi_pasien))>
                                     </td>
                                     <td align="middle">
@@ -460,7 +468,7 @@
                                 <tr>
                                     <td>Surat ketersediaan ICU bila dibutuhkan</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="surat_icu" @checked(in_array('surat_icu', $asesmen->praOperatifPerawat->verifikasi_pasien))>
                                     </td>
                                     <td align="middle">
@@ -471,7 +479,7 @@
                                 <tr>
                                     <td>Periksa kelengkapan status rawat inap / rawat jalan</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="kelengkapan_ranap" @checked(in_array('kelengkapan_ranap', $asesmen->praOperatifPerawat->verifikasi_pasien))>
                                     </td>
                                     <td align="middle">
@@ -484,7 +492,7 @@
                                     <td>Periksa kelengkapan X-ray / CT-Scan / MRI / EKG / Angiografi / Echo
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="kelengkapan_xray" @checked(in_array('kelengkapan_xray', $asesmen->praOperatifPerawat->verifikasi_pasien))>
                                     </td>
                                     <td align="middle">
@@ -509,7 +517,7 @@
                                 <tr>
                                     <td>Puasa / makan dan minum terakhir</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="puasa" @checked(in_array('puasa', $asesmen->praOperatifPerawat->persiapan_fisik_pasien))>
                                     </td>
                                     <td align="middle">
@@ -520,7 +528,7 @@
                                 <tr>
                                     <td>Prothese luar dilepaskan (gigi palsu, lensa kontak)</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="prothese_luar" @checked(in_array('prothese_luar', $asesmen->praOperatifPerawat->persiapan_fisik_pasien))>
                                     </td>
                                     <td align="middle">
@@ -532,7 +540,7 @@
                                     <td>Menggunakan prothese dalam (pacemaker, implant, prothese, panggul,
                                         VP shunt)</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="prothese_dalam" @checked(in_array('prothese_dalam', $asesmen->praOperatifPerawat->persiapan_fisik_pasien))>
                                     </td>
                                     <td align="middle">
@@ -543,7 +551,7 @@
                                 <tr>
                                     <td>Penjepit rambut / cat kuku / perhiasan dilepaskan</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="perhiasan" @checked(in_array('perhiasan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien))>
                                     </td>
                                     <td align="middle">
@@ -554,7 +562,7 @@
                                 <tr>
                                     <td>Persiapan kulit / cukur</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="kulit_cukur" @checked(in_array('kulit_cukur', $asesmen->praOperatifPerawat->persiapan_fisik_pasien))>
                                     </td>
                                     <td align="middle">
@@ -565,7 +573,7 @@
                                 <tr>
                                     <td>Pengosongan kandung kemih / clysma</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="clysma" @checked(in_array('clysma', $asesmen->praOperatifPerawat->persiapan_fisik_pasien))>
                                     </td>
                                     <td align="middle">
@@ -576,7 +584,7 @@
                                 <tr>
                                     <td>Memastikan persediaan darah</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="persediaan_darah" @checked(in_array('persediaan_darah', $asesmen->praOperatifPerawat->persiapan_fisik_pasien))>
                                     </td>
                                     <td align="middle">
@@ -587,7 +595,7 @@
                                 <tr>
                                     <td>Alat bantu (kacamata, alat bantu dengar) disimpan</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="alat_bantu_disimpan" @checked(in_array('alat_bantu_disimpan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien))>
                                     </td>
                                     <td align="middle">
@@ -599,7 +607,7 @@
                                 <tr>
                                     <td>Obat yang disertakan</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="obat_disertakan" @checked(in_array('obat_disertakan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien))>
                                     </td>
                                     <td align="middle">
@@ -610,7 +618,7 @@
                                 <tr>
                                     <td>Obat terakhir yang diberikan</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="obat_terakhir" @checked(in_array('obat_terakhir', $asesmen->praOperatifPerawat->persiapan_fisik_pasien))>
                                     </td>
                                     <td align="middle">
@@ -621,7 +629,7 @@
                                 <tr>
                                     <td>Vaskulerakses (cimino), dll</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="vaskulerakses" @checked(in_array('vaskulerakses', $asesmen->praOperatifPerawat->persiapan_fisik_pasien))>
                                     </td>
                                     <td align="middle">

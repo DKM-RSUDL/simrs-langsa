@@ -226,11 +226,11 @@ class PraAnestesiPerawatController extends Controller
 
         try {
             $id = decrypt($idEncrypt);
-            $PraOperatif = OkPraOperasiPerawat::find($id);
-
-            $asesmen = OkAsesmen::find($PraOperatif->id_asesmen);
+            $asesmen = OkAsesmen::find($id);
             $asesmen->user_edit = Auth::id();
             $asesmen->save();
+
+            $PraOperatif = OkPraOperasiPerawat::where('id_asesmen', $asesmen->id)->first();
 
             $PraOperatif->tgl_op     = $request->tgl_masuk;
             $PraOperatif->jam_op     = $request->jam_masuk;

@@ -28,7 +28,14 @@
                         'Tambah data asesmen pra operatif perawat dengan mengisi formulir di bawah ini.',
                 ])
                 <form method="POST"
-                    action="{{ route('rawat-inap.operasi.asesmen.pra-operatif-perawat.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $operasi->tgl_op, $operasi->jam_op]) }}">
+                    action="{{ route('rawat-inap.operasi.asesmen.pra-operatif-perawat.store', [
+                        $dataMedis->kd_unit,
+                        $dataMedis->kd_pasien,
+                        date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
+                        $dataMedis->urut_masuk,
+                        $operasi->tgl_op,
+                        $operasi->jam_op
+                    ]) }}">
                     @csrf
 
                     <div class="section-separator mt-0" id="dataMasuk">
@@ -279,7 +286,7 @@
                                 <tr>
                                     <td>Periksa identitas pasien</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="identitas_pasien">
                                     </td>
                                     <td align="middle">
@@ -290,7 +297,7 @@
                                 <tr>
                                     <td>Periksa gelang identitas / gelang operasi / gelang alergi</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="periksa_gelang">
                                     </td>
                                     <td align="middle">
@@ -301,7 +308,7 @@
                                 <tr>
                                     <td>IPRI dan surat pengantar rawat</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="ipri">
                                     </td>
                                     <td align="middle">
@@ -312,7 +319,7 @@
                                 <tr>
                                     <td>Jenis dan lokasi pembedahan dipastikan bersama pasien</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="lokasi_pembedahan">
                                     </td>
                                     <td align="middle">
@@ -323,7 +330,7 @@
                                 <tr>
                                     <td>Periksa kelengkapan persetujuan pembedahan surat ijin operasi</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="persetujuan_operasi">
                                     </td>
                                     <td align="middle">
@@ -334,7 +341,7 @@
                                 <tr>
                                     <td>Periksa kelengkapan persetujuan anestesi</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="persetujuan_anestesi">
                                     </td>
                                     <td align="middle">
@@ -350,7 +357,7 @@
                                 <tr>
                                     <td>1. Cardiologi</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="cardiologi">
                                     </td>
                                     <td align="middle">
@@ -361,7 +368,7 @@
                                 <tr>
                                     <td>2. Pulmonology</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="pulmonology">
                                     </td>
                                     <td align="middle">
@@ -372,7 +379,7 @@
                                 <tr>
                                     <td>3. Rehab Medik</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="rehab_medik">
                                     </td>
                                     <td align="middle">
@@ -383,7 +390,7 @@
                                 <tr>
                                     <td>4. Dietation</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="dietation">
                                     </td>
                                     <td align="middle">
@@ -394,7 +401,7 @@
                                 <tr>
                                     <td>Surat ketersediaan ICU bila dibutuhkan</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="surat_icu">
                                     </td>
                                     <td align="middle">
@@ -405,7 +412,7 @@
                                 <tr>
                                     <td>Periksa kelengkapan status rawat inap / rawat jalan</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="kelengkapan_ranap">
                                     </td>
                                     <td align="middle">
@@ -417,7 +424,7 @@
                                     <td>Periksa kelengkapan X-ray / CT-Scan / MRI / EKG / Angiografi / Echo
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi[]" disabled
                                             id="" value="kelengkapan_xray">
                                     </td>
                                     <td align="middle">
@@ -442,7 +449,7 @@
                                 <tr>
                                     <td>Puasa / makan dan minum terakhir</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="puasa">
                                     </td>
                                     <td align="middle">
@@ -453,7 +460,7 @@
                                 <tr>
                                     <td>Prothese luar dilepaskan (gigi palsu, lensa kontak)</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="prothese_luar">
                                     </td>
                                     <td align="middle">
@@ -465,7 +472,7 @@
                                     <td>Menggunakan prothese dalam (pacemaker, implant, prothese, panggul,
                                         VP shunt)</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="prothese_dalam">
                                     </td>
                                     <td align="middle">
@@ -476,7 +483,7 @@
                                 <tr>
                                     <td>Penjepit rambut / cat kuku / perhiasan dilepaskan</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="perhiasan">
                                     </td>
                                     <td align="middle">
@@ -487,7 +494,7 @@
                                 <tr>
                                     <td>Persiapan kulit / cukur</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="kulit_cukur">
                                     </td>
                                     <td align="middle">
@@ -498,7 +505,7 @@
                                 <tr>
                                     <td>Pengosongan kandung kemih / clysma</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="clysma">
                                     </td>
                                     <td align="middle">
@@ -509,7 +516,7 @@
                                 <tr>
                                     <td>Memastikan persediaan darah</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="persediaan_darah">
                                     </td>
                                     <td align="middle">
@@ -520,7 +527,7 @@
                                 <tr>
                                     <td>Alat bantu (kacamata, alat bantu dengar) disimpan</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="alat_bantu_disimpan">
                                     </td>
                                     <td align="middle">
@@ -531,7 +538,7 @@
                                 <tr>
                                     <td>Obat yang disertakan</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="obat_disertakan">
                                     </td>
                                     <td align="middle">
@@ -542,7 +549,7 @@
                                 <tr>
                                     <td>Obat terakhir yang diberikan</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="obat_terakhir">
                                     </td>
                                     <td align="middle">
@@ -553,7 +560,7 @@
                                 <tr>
                                     <td>Vaskulerakses (cimino), dll</td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik[]" disabled
                                             id="" value="vaskulerakses">
                                     </td>
                                     <td align="middle">
