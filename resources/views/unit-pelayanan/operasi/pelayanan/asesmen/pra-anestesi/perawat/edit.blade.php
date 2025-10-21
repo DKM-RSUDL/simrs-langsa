@@ -28,7 +28,7 @@
                         'Perbarui data asesmen pra operatif perawat dengan mengisi formulir di bawah ini.',
                 ])
                 <form method="POST"
-                    action="{{ route('operasi.pelayanan.asesmen.pra-anestesi.perawat.update', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($asesmen->praOperatifPerawat->id)]) }}">
+                    action="{{ route('operasi.pelayanan.asesmen.pra-anestesi.perawat.update', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($asesmen->id)]) }}">
                     @csrf
                     @method('put')
                     <div class="section-separator mt-0" id="dataMasuk">
@@ -347,7 +347,8 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
-                                            id="" value="identitas_pasien_ruangan" @checked(in_array('identitas_pasien_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
+                                            disabled id="" value="identitas_pasien_ruangan"
+                                            @checked(in_array('identitas_pasien_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
                                 <tr>
@@ -358,7 +359,8 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
-                                            id="" value="periksa_gelang_ruangan" @checked(in_array('periksa_gelang_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
+                                            disabled id="" value="periksa_gelang_ruangan"
+                                            @checked(in_array('periksa_gelang_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
                                 <tr>
@@ -369,7 +371,7 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
-                                            id="" value="ipri_ruangan" @checked(in_array('ipri_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
+                                            disabled id="" value="ipri_ruangan" @checked(in_array('ipri_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
                                 <tr>
@@ -380,7 +382,7 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
-                                            id="" value="lokasi_pembedahan_ruangan"
+                                            disabled id="" value="lokasi_pembedahan_ruangan"
                                             @checked(in_array('lokasi_pembedahan_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
@@ -392,7 +394,7 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
-                                            id="" value="persetujuan_operasi_ruangan"
+                                            disabled id="" value="persetujuan_operasi_ruangan"
                                             @checked(in_array('persetujuan_operasi_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
@@ -404,7 +406,7 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
-                                            id="" value="persetujuan_anestesi_ruangan"
+                                            disabled id="" value="persetujuan_anestesi_ruangan"
                                             @checked(in_array('persetujuan_anestesi_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
@@ -421,7 +423,8 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
-                                            id="" value="cardiologi_ruangan" @checked(in_array('cardiologi_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
+                                            disabled id="" value="cardiologi_ruangan"
+                                            @checked(in_array('cardiologi_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
                                 <tr>
@@ -432,7 +435,8 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
-                                            id="" value="pulmonology_ruangan" @checked(in_array('pulmonology_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
+                                            disabled id="" value="pulmonology_ruangan"
+                                            @checked(in_array('pulmonology_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
                                 <tr>
@@ -443,7 +447,8 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
-                                            id="" value="rehab_medik_ruangan" @checked(in_array('rehab_medik_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
+                                            disabled id="" value="rehab_medik_ruangan"
+                                            @checked(in_array('rehab_medik_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
                                 <tr>
@@ -454,7 +459,8 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
-                                            id="" value="dietation_ruangan" @checked(in_array('dietation_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
+                                            disabled id="" value="dietation_ruangan"
+                                            @checked(in_array('dietation_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
                                 <tr>
@@ -465,7 +471,8 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
-                                            id="" value="surat_icu_ruangan" @checked(in_array('surat_icu_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
+                                            disabled id="" value="surat_icu_ruangan"
+                                            @checked(in_array('surat_icu_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
                                 <tr>
@@ -476,7 +483,7 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
-                                            id="" value="kelengkapan_ranap_ruangan"
+                                            disabled id="" value="kelengkapan_ranap_ruangan"
                                             @checked(in_array('kelengkapan_ranap_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
@@ -489,7 +496,8 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
-                                            id="" value="kelengkapan_xray_ruangan" @checked(in_array('kelengkapan_xray_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
+                                            disabled id="" value="kelengkapan_xray_ruangan"
+                                            @checked(in_array('kelengkapan_xray_ruangan', $asesmen->praOperatifPerawat->verifikasi_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
                             </tbody>
@@ -514,7 +522,7 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
-                                            id="" value="puasa_ruangan" @checked(in_array('puasa_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
+                                            disabled id="" value="puasa_ruangan" @checked(in_array('puasa_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
                                 <tr>
@@ -525,7 +533,8 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
-                                            id="" value="prothese_luar_ruangan" @checked(in_array('prothese_luar_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
+                                            disabled id="" value="prothese_luar_ruangan"
+                                            @checked(in_array('prothese_luar_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
                                 <tr>
@@ -537,7 +546,8 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
-                                            id="" value="prothese_dalam_ruangan" @checked(in_array('prothese_dalam_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
+                                            disabled id="" value="prothese_dalam_ruangan"
+                                            @checked(in_array('prothese_dalam_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
                                 <tr>
@@ -548,7 +558,8 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
-                                            id="" value="perhiasan_ruangan" @checked(in_array('perhiasan_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
+                                            disabled id="" value="perhiasan_ruangan"
+                                            @checked(in_array('perhiasan_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
                                 <tr>
@@ -559,7 +570,8 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
-                                            id="" value="kulit_cukur_ruangan" @checked(in_array('kulit_cukur_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
+                                            disabled id="" value="kulit_cukur_ruangan"
+                                            @checked(in_array('kulit_cukur_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
                                 <tr>
@@ -570,7 +582,7 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
-                                            id="" value="clysma_ruangan" @checked(in_array('clysma_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
+                                            disabled id="" value="clysma_ruangan" @checked(in_array('clysma_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
                                 <tr>
@@ -581,7 +593,8 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
-                                            id="" value="persediaan_darah_ruangan" @checked(in_array('persediaan_darah_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
+                                            disabled id="" value="persediaan_darah_ruangan"
+                                            @checked(in_array('persediaan_darah_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
                                 <tr>
@@ -592,7 +605,7 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
-                                            id="" value="alat_bantu_disimpan_ruangan"
+                                            disabled id="" value="alat_bantu_disimpan_ruangan"
                                             @checked(in_array('alat_bantu_disimpan_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
@@ -604,7 +617,8 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
-                                            id="" value="obat_disertakan_ruangan" @checked(in_array('obat_disertakan_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
+                                            disabled id="" value="obat_disertakan_ruangan"
+                                            @checked(in_array('obat_disertakan_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
                                 <tr>
@@ -615,7 +629,8 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
-                                            id="" value="obat_terakhir_ruangan" @checked(in_array('obat_terakhir_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
+                                            disabled id="" value="obat_terakhir_ruangan"
+                                            @checked(in_array('obat_terakhir_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
                                 <tr>
@@ -626,7 +641,8 @@
                                     </td>
                                     <td align="middle">
                                         <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
-                                            id="" value="vaskulerakses_ruangan" @checked(in_array('vaskulerakses_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
+                                            disabled id="" value="vaskulerakses_ruangan"
+                                            @checked(in_array('vaskulerakses_ruangan', $asesmen->praOperatifPerawat->persiapan_fisik_pasien_ruangan ?? []))>
                                     </td>
                                 </tr>
                             </tbody>

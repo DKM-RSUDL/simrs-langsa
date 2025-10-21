@@ -133,7 +133,9 @@ class PraAnestesiPerawatController extends Controller
                 'batuk'   => $request->batuk,
                 'haid'   => $request->haid,
                 'verifikasi_pasien'   => $request->verifikasi ?? [],
+                'verifikasi_pasien_ruangan'   => $request->verifikasi_ruangan ?? [],
                 'persiapan_fisik_pasien'   => $request->persiapan_fisik ?? [],
+                'persiapan_fisik_pasien_ruangan'   => $request->persiapan_fisik_ruangan ?? [],
                 'id_perawat_penerima'   => $request->perawat_penerima,
                 'tgl_periksa'   => $request->tgl_periksa,
                 'jam_periksa'   => $request->jam_periksa,
@@ -257,7 +259,9 @@ class PraAnestesiPerawatController extends Controller
             $PraOperatif->batuk   = $request->batuk;
             $PraOperatif->haid   = $request->haid;
             $PraOperatif->verifikasi_pasien   = $request->verifikasi ?? [];
+            $PraOperatif->verifikasi_pasien_ruangan   = $request->verifikasi_ruangan ?? [];
             $PraOperatif->persiapan_fisik_pasien   = $request->persiapan_fisik ?? [];
+            $PraOperatif->persiapan_fisik_pasien_ruangan   = $request->persiapan_fisik_ruangan ?? [];
             $PraOperatif->id_perawat_penerima   = $request->perawat_penerima;
             $PraOperatif->tgl_periksa   = $request->tgl_periksa;
             $PraOperatif->jam_periksa   = $request->jam_periksa;

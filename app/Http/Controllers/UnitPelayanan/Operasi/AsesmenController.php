@@ -47,6 +47,7 @@ class AsesmenController extends Controller
             ->where('kd_unit', 71)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
+            ->orderBy('id', 'desc')
             ->get();
 
         $okPraInduksi = OkPraInduksi::where('kd_pasien', $kd_pasien)

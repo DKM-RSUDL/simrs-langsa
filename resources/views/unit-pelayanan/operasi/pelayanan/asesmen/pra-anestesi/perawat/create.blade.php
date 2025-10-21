@@ -283,7 +283,7 @@
                                             id="" value="identitas_pasien">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]" disabled
                                             id="" value="identitas_pasien_ruangan">
                                     </td>
                                 </tr>
@@ -294,7 +294,7 @@
                                             id="" value="periksa_gelang">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]" disabled
                                             id="" value="periksa_gelang_ruangan">
                                     </td>
                                 </tr>
@@ -305,7 +305,7 @@
                                             id="" value="ipri">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]" disabled
                                             id="" value="ipri_ruangan">
                                     </td>
                                 </tr>
@@ -316,7 +316,7 @@
                                             id="" value="lokasi_pembedahan">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]" disabled
                                             id="" value="lokasi_pembedahan_ruangan">
                                     </td>
                                 </tr>
@@ -327,7 +327,7 @@
                                             id="" value="persetujuan_operasi">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]" disabled
                                             id="" value="persetujuan_operasi_ruangan">
                                     </td>
                                 </tr>
@@ -338,7 +338,7 @@
                                             id="" value="persetujuan_anestesi">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]" disabled
                                             id="" value="persetujuan_anestesi_ruangan">
                                     </td>
                                 </tr>
@@ -354,7 +354,7 @@
                                             id="" value="cardiologi">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]" disabled
                                             id="" value="cardiologi_ruangan">
                                     </td>
                                 </tr>
@@ -365,7 +365,7 @@
                                             id="" value="pulmonology">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]" disabled
                                             id="" value="pulmonology_ruangan">
                                     </td>
                                 </tr>
@@ -376,7 +376,7 @@
                                             id="" value="rehab_medik">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]" disabled
                                             id="" value="rehab_medik_ruangan">
                                     </td>
                                 </tr>
@@ -387,7 +387,7 @@
                                             id="" value="dietation">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]" disabled
                                             id="" value="dietation_ruangan">
                                     </td>
                                 </tr>
@@ -398,7 +398,7 @@
                                             id="" value="surat_icu">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]" disabled
                                             id="" value="surat_icu_ruangan">
                                     </td>
                                 </tr>
@@ -409,7 +409,7 @@
                                             id="" value="kelengkapan_ranap">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]" disabled
                                             id="" value="kelengkapan_ranap_ruangan">
                                     </td>
                                 </tr>
@@ -421,7 +421,7 @@
                                             id="" value="kelengkapan_xray">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="verifikasi_ruangan[]" disabled
                                             id="" value="kelengkapan_xray_ruangan">
                                     </td>
                                 </tr>
@@ -446,7 +446,7 @@
                                             id="" value="puasa">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]" disabled
                                             id="" value="puasa_ruangan">
                                     </td>
                                 </tr>
@@ -457,7 +457,7 @@
                                             id="" value="prothese_luar">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]" disabled
                                             id="" value="prothese_luar_ruangan">
                                     </td>
                                 </tr>
@@ -469,7 +469,7 @@
                                             id="" value="prothese_dalam">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]" disabled
                                             id="" value="prothese_dalam_ruangan">
                                     </td>
                                 </tr>
@@ -480,7 +480,7 @@
                                             id="" value="perhiasan">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]" disabled
                                             id="" value="perhiasan_ruangan">
                                     </td>
                                 </tr>
@@ -491,7 +491,7 @@
                                             id="" value="kulit_cukur">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]" disabled
                                             id="" value="kulit_cukur_ruangan">
                                     </td>
                                 </tr>
@@ -502,7 +502,7 @@
                                             id="" value="clysma">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]" disabled
                                             id="" value="clysma_ruangan">
                                     </td>
                                 </tr>
@@ -513,7 +513,7 @@
                                             id="" value="persediaan_darah">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]" disabled
                                             id="" value="persediaan_darah_ruangan">
                                     </td>
                                 </tr>
@@ -524,7 +524,7 @@
                                             id="" value="alat_bantu_disimpan">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]" disabled
                                             id="" value="alat_bantu_disimpan_ruangan">
                                     </td>
                                 </tr>
@@ -535,7 +535,7 @@
                                             id="" value="obat_disertakan">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]" disabled
                                             id="" value="obat_disertakan_ruangan">
                                     </td>
                                 </tr>
@@ -546,7 +546,7 @@
                                             id="" value="obat_terakhir">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]" disabled
                                             id="" value="obat_terakhir_ruangan">
                                     </td>
                                 </tr>
@@ -557,7 +557,7 @@
                                             id="" value="vaskulerakses">
                                     </td>
                                     <td align="middle">
-                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]"
+                                        <input type="checkbox" class="form-check-input" name="persiapan_fisik_ruangan[]" disabled
                                             id="" value="vaskulerakses_ruangan">
                                     </td>
                                 </tr>
