@@ -49,7 +49,7 @@
             min-width: 120px;
             margin-bottom: 5px;
         }
-        
+
         .template-selector .btn-group .btn.active {
             background-color: #4e73df;
             color: white !important;
@@ -141,177 +141,190 @@
 
         <div class="col-md-9">
             @include('components.navigation-operasi')
-            <div class="card-body">
-                <div class="card">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h5 class="card-title mb-0"><i class="fas fa-map-marker-alt me-2"></i>Detail Penandaan Daerah Operasi</h5>
-                                <div>
-                                    <a href="{{ route('operasi.pelayanan.site-marking.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-sm btn-back">
-                                        <i class="fas fa-arrow-left me-1"></i> Kembali
-                                    </a>
-                                    <a target="_blank" href="{{ route('operasi.pelayanan.site-marking.print', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $siteMarking->id]) }}" class="btn btn-sm btn-print">
-                                        <i class="fas fa-print me-1"></i> Cetak
-                                    </a>
-                                    <a href="{{ route('operasi.pelayanan.site-marking.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $siteMarking->id]) }}" class="btn btn-sm btn-edit">
-                                        <i class="fas fa-edit me-1"></i> Edit
-                                    </a>
+            <x-content-card>
+                <div class="d-flex gap-2">
+                    <x-button-previous />
+                    <a target="_blank"
+                        href="{{ route('rawat-inap.operasi.site-marking.print', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $operasi->tgl_op, $operasi->jam_op, $siteMarking->id]) }}"
+                        class="btn btn-info">
+                        <i class="fas fa-print me-1"></i> Cetak
+                    </a>
+                    <a href="{{ route('rawat-inap.operasi.site-marking.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $operasi->tgl_op, $operasi->jam_op, $siteMarking->id]) }}"
+                        class="btn btn-warning">
+                        <i class="fas fa-edit me-1"></i> Edit
+                    </a>
+                </div>
+
+                @include('components.page-header', [
+                    'title' => 'Rincian Penandaan Daerah Operasi',
+                    'description' =>
+                        'Rincian data penandaan daerah operasi pasien rawat inap dengan mengisi formulir di bawah ini.',
+                ])
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="template-selector mb-3">
+                            <label class="d-block mb-2">Template Anatomi:</label>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-primary template-btn"
+                                    data-template="full-body">Seluruh Tubuh</button>
+                                <button type="button" class="btn btn-outline-primary template-btn"
+                                    data-template="head-front-back">Muka Depan/Belakang</button>
+                                <button type="button" class="btn btn-outline-primary template-btn"
+                                    data-template="head-side">Muka Samping Kiri/Kanan</button>
+                                <button type="button" class="btn btn-outline-primary template-btn"
+                                    data-template="hand-dorsal">Tangan Dorsal Kiri/Kanan</button>
+                                <button type="button" class="btn btn-outline-primary template-btn"
+                                    data-template="hand-palmar">Tangan Palmar Kiri/Kanan</button>
+                                <button type="button" class="btn btn-outline-primary template-btn"
+                                    data-template="foot">Kaki</button>
+                            </div>
+                        </div>
+
+                        <div class="body-diagram-container">
+                            <div class="drawing-container">
+                                <!-- Gambar-gambar anatomi (hidden, used as canvas background) -->
+                                <div class="image-templates">
+                                    @if ($dataMedis->pasien->jenis_kelamin == 1)
+                                        <!-- Gambar untuk laki-laki -->
+                                        <img src="{{ asset('assets/images/sitemarking/7.png') }}" class="body-image"
+                                            id="template-full-body" alt="Seluruh Tubuh">
+                                        <img src="{{ asset('assets/images/sitemarking/9.png') }}" class="body-image"
+                                            id="template-head-front-back" alt="Muka Depan/Belakang">
+                                        <img src="{{ asset('assets/images/sitemarking/8.png') }}" class="body-image"
+                                            id="template-head-side" alt="Muka Samping Kiri/Kanan">
+                                        <img src="{{ asset('assets/images/sitemarking/11.png') }}" class="body-image"
+                                            id="template-hand-dorsal" alt="Tangan Dorsal Kiri/Kanan">
+                                        <img src="{{ asset('assets/images/sitemarking/10.png') }}" class="body-image"
+                                            id="template-hand-palmar" alt="Tangan Palmar Kiri/Kanan">
+                                        <img src="{{ asset('assets/images/sitemarking/12.png') }}" class="body-image"
+                                            id="template-foot" alt="Kaki">
+                                    @else
+                                        <!-- Gambar untuk perempuan -->
+                                        <img src="{{ asset('assets/images/sitemarking/1.png') }}" class="body-image"
+                                            id="template-full-body" alt="Seluruh Tubuh">
+                                        <img src="{{ asset('assets/images/sitemarking/3.png') }}" class="body-image"
+                                            id="template-head-front-back" alt="Muka Depan/Belakang">
+                                        <img src="{{ asset('assets/images/sitemarking/2.png') }}" class="body-image"
+                                            id="template-head-side" alt="Muka Samping Kiri/Kanan">
+                                        <img src="{{ asset('assets/images/sitemarking/6.png') }}" class="body-image"
+                                            id="template-hand-dorsal" alt="Tangan Dorsal Kiri/Kanan">
+                                        <img src="{{ asset('assets/images/sitemarking/4.png') }}" class="body-image"
+                                            id="template-hand-palmar" alt="Tangan Palmar Kiri/Kanan">
+                                        <img src="{{ asset('assets/images/sitemarking/5.png') }}" class="body-image"
+                                            id="template-foot" alt="Kaki">
+                                    @endif
+                                </div>
+
+                                <!-- Canvas untuk drawing -->
+                                <div class="canvas-container">
+                                    <canvas id="drawingCanvas"></canvas>
                                 </div>
                             </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="template-selector mb-3">
-                                            <label class="d-block mb-2">Template Anatomi:</label>
-                                            <div class="btn-group" role="group">
-                                                <button type="button" class="btn btn-outline-primary template-btn" data-template="full-body">Seluruh Tubuh</button>
-                                                <button type="button" class="btn btn-outline-primary template-btn" data-template="head-front-back">Muka Depan/Belakang</button>
-                                                <button type="button" class="btn btn-outline-primary template-btn" data-template="head-side">Muka Samping Kiri/Kanan</button>
-                                                <button type="button" class="btn btn-outline-primary template-btn" data-template="hand-dorsal">Tangan Dorsal Kiri/Kanan</button>
-                                                <button type="button" class="btn btn-outline-primary template-btn" data-template="hand-palmar">Tangan Palmar Kiri/Kanan</button>
-                                                <button type="button" class="btn btn-outline-primary template-btn" data-template="foot">Kaki</button>
-                                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="detail-section">
+                            <h5><i class="fas fa-clipboard-list me-2"></i>Detail Prosedur Operasi</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="detail-item">
+                                        <div class="detail-label">Ahli Bedah</div>
+                                        <div>
+                                            {{ $siteMarking->dokter ? $siteMarking->dokter->nama_lengkap : 'Tidak tersedia' }}
                                         </div>
-
-                                        <div class="body-diagram-container">
-                                            <div class="drawing-container">
-                                                <!-- Gambar-gambar anatomi (hidden, used as canvas background) -->
-                                                <div class="image-templates">
-                                                    @if ($dataMedis->pasien->jenis_kelamin == 1)
-                                                        <!-- Gambar untuk laki-laki -->
-                                                        <img src="{{ asset('assets/images/sitemarking/7.png') }}" class="body-image"
-                                                            id="template-full-body" alt="Seluruh Tubuh">
-                                                        <img src="{{ asset('assets/images/sitemarking/9.png') }}" class="body-image"
-                                                            id="template-head-front-back" alt="Muka Depan/Belakang">
-                                                        <img src="{{ asset('assets/images/sitemarking/8.png') }}" class="body-image"
-                                                            id="template-head-side" alt="Muka Samping Kiri/Kanan">
-                                                        <img src="{{ asset('assets/images/sitemarking/11.png') }}" class="body-image"
-                                                            id="template-hand-dorsal" alt="Tangan Dorsal Kiri/Kanan">
-                                                        <img src="{{ asset('assets/images/sitemarking/10.png') }}" class="body-image"
-                                                            id="template-hand-palmar" alt="Tangan Palmar Kiri/Kanan">
-                                                        <img src="{{ asset('assets/images/sitemarking/12.png') }}" class="body-image"
-                                                            id="template-foot" alt="Kaki">
-                                                    @else
-                                                        <!-- Gambar untuk perempuan -->
-                                                        <img src="{{ asset('assets/images/sitemarking/1.png') }}" class="body-image"
-                                                        id="template-full-body" alt="Seluruh Tubuh">
-                                                        <img src="{{ asset('assets/images/sitemarking/3.png') }}" class="body-image"
-                                                            id="template-head-front-back" alt="Muka Depan/Belakang">
-                                                        <img src="{{ asset('assets/images/sitemarking/2.png') }}" class="body-image"
-                                                            id="template-head-side" alt="Muka Samping Kiri/Kanan">
-                                                        <img src="{{ asset('assets/images/sitemarking/6.png') }}" class="body-image"
-                                                            id="template-hand-dorsal" alt="Tangan Dorsal Kiri/Kanan">
-                                                        <img src="{{ asset('assets/images/sitemarking/4.png') }}" class="body-image"
-                                                            id="template-hand-palmar" alt="Tangan Palmar Kiri/Kanan">
-                                                        <img src="{{ asset('assets/images/sitemarking/5.png') }}" class="body-image"
-                                                            id="template-foot" alt="Kaki">
-                                                    @endif
-                                                </div>
-
-                                                <!-- Canvas untuk drawing -->
-                                                <div class="canvas-container">
-                                                    <canvas id="drawingCanvas"></canvas>
-                                                </div>
-                                            </div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Tanggal Prosedur</div>
+                                        <div>
+                                            {{ \Carbon\Carbon::parse($siteMarking->waktu_prosedure)->format('d/m/Y H:i') }}
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="detail-item">
+                                        <div class="detail-label">Prosedur Operasi</div>
+                                        <div>{{ $siteMarking->prosedure }}</div>
+                                    </div>
 
-                                <div class="row mt-4">
-                                    <div class="col-12">
-                                        <div class="detail-section">
-                                            <h5><i class="fas fa-clipboard-list me-2"></i>Detail Prosedur Operasi</h5>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="detail-item">
-                                                        <div class="detail-label">Ahli Bedah</div>
-                                                        <div>{{ $siteMarking->dokter ? $siteMarking->dokter->nama_lengkap : 'Tidak tersedia' }}</div>
-                                                    </div>
-                                                    <div class="detail-item">
-                                                        <div class="detail-label">Tanggal Prosedur</div>
-                                                        <div>{{ \Carbon\Carbon::parse($siteMarking->waktu_prosedure)->format('d/m/Y H:i') }}</div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="detail-item">
-                                                        <div class="detail-label">Prosedur Operasi</div>
-                                                        <div>{{ $siteMarking->prosedure }}</div>
-                                                    </div>
-                                                    
-                                                    <div class="detail-item">
-                                                        <div class="detail-label">Catatan Site Marking</div>
-                                                        <div>{{ $siteMarking->notes ?: 'Tidak ada catatan' }}</div>
-                                                    </div>
-                                                </div>
-                                            </div> 
-                                        </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Catatan Site Marking</div>
+                                        <div>{{ $siteMarking->notes ?: 'Tidak ada catatan' }}</div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                                <div class="row mt-3">
-                                    <div class="col-12">
-                                        <div class="responsible-section">
-                                            <h6><i class="fas fa-user-check me-2"></i>Yang Bertanggung Jawab</h6>
-                                            <div class="responsible-info">
-                                                @if($siteMarking->responsible_person === 'pasien')
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="detail-item">
-                                                                <div class="detail-label">Jenis Penanggung Jawab</div>
-                                                                <div><span class="badge bg-primary">Pasien</span></div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="detail-item">
-                                                                <div class="detail-label">Nama</div>
-                                                                <div>{{ $siteMarking->patient_name ?: $dataMedis->pasien->nama }}</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                @elseif($siteMarking->responsible_person === 'keluarga')
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="detail-item">
-                                                                <div class="detail-label">Jenis Penanggung Jawab</div>
-                                                                <div><span class="badge bg-success">Keluarga</span></div>
-                                                            </div>
-                                                            <div class="detail-item">
-                                                                <div class="detail-label">Nama Keluarga</div>
-                                                                <div>{{ $siteMarking->family_name ?: 'Tidak tersedia' }}</div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="detail-item">
-                                                                <div class="detail-label">Hubungan dengan Pasien</div>
-                                                                <div>{{ $siteMarking->family_relationship ?: 'Tidak tersedia' }}</div>
-                                                            </div>
-                                                            <div class="detail-item">
-                                                                <div class="detail-label">Alamat Keluarga</div>
-                                                                <div>{{ $siteMarking->family_address ?: 'Tidak tersedia' }}</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                @else
-                                                    <div class="text-muted">Data penanggung jawab tidak tersedia</div>
-                                                @endif
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="responsible-section">
+                            <h6><i class="fas fa-user-check me-2"></i>Yang Bertanggung Jawab</h6>
+                            <div class="responsible-info">
+                                @if ($siteMarking->responsible_person === 'pasien')
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="detail-item">
+                                                <div class="detail-label">Jenis Penanggung Jawab</div>
+                                                <div><span class="badge bg-primary">Pasien</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="detail-item">
+                                                <div class="detail-label">Nama</div>
+                                                <div>{{ $siteMarking->patient_name ?: $dataMedis->pasien->nama }}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                @if($siteMarking->confirmation)
-                                <div class="row mt-3">
-                                    <div class="col-12">
-                                        <div class="alert alert-success">
-                                            <i class="fas fa-check-circle me-2"></i>
-                                            <strong>Konfirmasi:</strong> Lokasi operasi yang telah ditetapkan pada diagram di atas telah dikonfirmasi sebagai benar.
+                                @elseif($siteMarking->responsible_person === 'keluarga')
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="detail-item">
+                                                <div class="detail-label">Jenis Penanggung Jawab</div>
+                                                <div><span class="badge bg-success">Keluarga</span></div>
+                                            </div>
+                                            <div class="detail-item">
+                                                <div class="detail-label">Nama Keluarga</div>
+                                                <div>{{ $siteMarking->family_name ?: 'Tidak tersedia' }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="detail-item">
+                                                <div class="detail-label">Hubungan dengan Pasien</div>
+                                                <div>{{ $siteMarking->family_relationship ?: 'Tidak tersedia' }}
+                                                </div>
+                                            </div>
+                                            <div class="detail-item">
+                                                <div class="detail-label">Alamat Keluarga</div>
+                                                <div>{{ $siteMarking->family_address ?: 'Tidak tersedia' }}</div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                @else
+                                    <div class="text-muted">Data penanggung jawab tidak tersedia</div>
                                 @endif
                             </div>
                         </div>
-            </div>
-            
+                    </div>
+                </div>
+
+                @if ($siteMarking->confirmation)
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="alert alert-success">
+                                <i class="fas fa-check-circle me-2"></i>
+                                <strong>Konfirmasi:</strong> Lokasi operasi yang telah ditetapkan pada diagram di
+                                atas telah dikonfirmasi sebagai benar.
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            </x-content-card>
         </div>
     </div>
 @endsection
