@@ -68,23 +68,25 @@
                                                 class="btn btn-sm btn-info">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="{{ route('rawat-inap.operasi-ibs.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->tgl_op, $item->jam_op]) }}"
-                                                class="btn btn-sm btn-warning">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <form
-                                                action="{{ route('rawat-inap.operasi-ibs.delete', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $item->tgl_op, $item->jam_op]) }}"
-                                                method="post">
-                                                @csrf
-                                                @method('delete')
+                                            @if (!in_array($item->status, [1, '1', 2, '2']))
+                                                <a href="{{ route('rawat-inap.operasi-ibs.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->tgl_op, $item->jam_op]) }}"
+                                                    class="btn btn-sm btn-warning">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <form
+                                                    action="{{ route('rawat-inap.operasi-ibs.delete', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $item->tgl_op, $item->jam_op]) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('delete')
 
-                                                <button type="submit" class="btn btn-sm btn-danger" data-confirm
-                                                    data-confirm-title="Anda yakin?"
-                                                    data-confirm-text="Data yang dihapus tidak dapat dikembalikan"
-                                                    title="Hapus operasi" aria-label="Hapus operasi">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
+                                                    <button type="submit" class="btn btn-sm btn-danger" data-confirm
+                                                        data-confirm-title="Anda yakin?"
+                                                        data-confirm-text="Data yang dihapus tidak dapat dikembalikan"
+                                                        title="Hapus operasi" aria-label="Hapus operasi">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
