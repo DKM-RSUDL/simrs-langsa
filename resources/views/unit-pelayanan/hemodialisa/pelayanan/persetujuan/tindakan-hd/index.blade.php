@@ -234,7 +234,7 @@
                                                             <div class="btn-group" role="group">
                                                                 <a href="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-hd.print-pdf', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                     class="btn btn-info btn-sm me-2" target="_blank"
-                                                                    title="Lihat Detail">
+                                                                    title="Cetak">
                                                                     <i class="fas fa-print"></i>
                                                                 </a>
                                                                 <a href="{{ route('hemodialisa.pelayanan.persetujuan.tindakan-hd.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
