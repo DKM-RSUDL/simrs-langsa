@@ -1,6 +1,6 @@
 <div class="d-flex flex-column gap-2">
     <div class="row">
-        <div class="col-md-10 d-flex flex-md-row flex-wrap flex-md-nowrap gap-2">
+        <div class="col-12 d-flex flex-md-row flex-wrap flex-md-nowrap gap-2">
             <!-- Select Option -->
             <div>
                 <select class="form-select" id="SelectOptionPAA" aria-label="Pilih...">
@@ -53,13 +53,6 @@
                 </form>
             </div>
         </div>
-
-        <!-- Add Button -->
-        <div class="col-md-2 text-end">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addKonsulModal">
-                <i class="bi bi-plus"></i>Tambah
-            </button>
-        </div>
     </div>
 
     <div class="table-responsive">
@@ -108,30 +101,30 @@
                             <p class="m-0 p-0" id="konsulDimintaLabel">{{ $konsul->konsul }}</p>
                         </td>
                         <td>
-                            <p class="text-primary fw-bold m-0 p-0" id="konsulenStatusLabel">Dikirim</p>
-                            {{-- <p class="m-0 p-0" id="konsulenKetLabel">Saran untuk dilakukan pemeriksaan</p> --}}
+                            <p class="text-primary fw-bold m-0 p-0" id="konsulenStatusLabel">
+                                {{ $konsul->status == 1 ? 'Diterima' : 'Dikirim' }}</p>
                         </td>
                         <td class="d-flex gap-1">
-                            <button class="btn btn-sm btn-warning btn-edit-konsultasi" data-bs-target="#editKonsulModal"
-                                data-unittujuan="{{ $konsul->kd_unit_tujuan }}"
-                                data-tglkonsul="{{ $konsul->tgl_masuk_tujuan }}"
-                                data-jamkonsul="{{ $konsul->jam_masuk_tujuan }}"
-                                data-urutkonsul="{{ $konsul->urut_konsul }}">
-                                <i class="bi bi-pencil-square"></i>
-                            </button>
-                            <form
-                                action="{{ route('rawat-jalan.konsultasi.delete', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $konsul->kd_unit_tujuan, $konsul->tgl_masuk_tujuan, $konsul->jam_masuk_tujuan, $konsul->urut_konsul]) }}"
-                                method="post">
-                                @csrf
-                                @method('delete')
-
-                                <button type="submit" class="btn btn-sm btn-danger" data-confirm
-                                    data-confirm-title="Anda yakin?"
-                                    data-confirm-text="Data yang dihapus tidak dapat dikembalikan" title="Hapus operasi"
-                                    aria-label="Hapus operasi">
-                                    <i class="fas fa-trash"></i>
+                            @if (isset($konsul) && $konsul->status == 1)
+                                <button type="button" class="btn btn-success btn-sm" disabled aria-disabled="true"
+                                    title="Sudah diterima">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    <span class="visually-hidden">Diterima</span>
                                 </button>
-                            </form>
+                            @else
+                                <form method="POST"
+                                    action="{{ route('rawat-jalan.konsultasi.terimaKonsultasi', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}">
+                                    @csrf
+                                    @method('PUT')
+
+                                    <x-button-submit-confirm class="btn btn-success btn-sm" label=""
+                                        title="Terima konsultasi" confirmTitle="Terima konsultasi?"
+                                        confirmText="Yakin ingin menerima konsultasi ini?" confirmOk="Terima"
+                                        confirmCancel="Batal" :spinner="true" loadingLabel="Menerima...">
+                                        <i class="bi bi-check-circle"></i>
+                                    </x-button-submit-confirm>
+                                </form>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
@@ -139,5 +132,3 @@
         </table>
     </div>
 </div>
-
-@include('unit-pelayanan.rawat-jalan.pelayanan.konsultasi.include.modal')

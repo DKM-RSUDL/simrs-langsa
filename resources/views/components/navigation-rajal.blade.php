@@ -44,6 +44,8 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            // mark active for any konsultasi.* route (index, terima, etc.)
+            'active' => 'rawat-jalan.konsultasi.*',
         ],
         [
             'icon' => 'test_tube.png',
