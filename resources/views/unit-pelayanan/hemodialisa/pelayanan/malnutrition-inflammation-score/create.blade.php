@@ -83,9 +83,9 @@
                 <x-button-previous />
 
                 @include('components.page-header', [
-                    'title' => 'Tambah Data Berat Data Kering Hemodialisa',
+                    'title' => 'Tambah Data Malnutrition Inflammation Score Pasien Hemodialisa',
                     'description' =>
-                        'Tambah data berat badan kering Hemodialisa dengan mengisi formulir di bawah ini.',
+                        'Tambah data Malnutrition Inflammation Score Pasien Hemodialisa dengan mengisi formulir di bawah ini.',
                 ])
 
                 <hr>

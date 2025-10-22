@@ -83,9 +83,9 @@
                 <x-button-previous />
 
                 @include('components.page-header', [
-                    'title' => 'Perbarui Data Berat Badan Kering Pasien Hemodialisa',
+                    'title' => 'Perbarui  Data Malnutrition Inflammation Score Pasien Hemodialisa',
                     'description' =>
-                        ' Perbarui data Asesmen medis Hemodialisa dengan mengisi formulir di bawah ini.',
+                        ' Perbarui  Data Malnutrition Inflammation Score Pasien Hemodialisa dengan mengisi formulir di bawah ini.',
                 ])
                 <div class="form-section">
                     <form id="beratBadanForm" method="POST"
