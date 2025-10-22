@@ -133,8 +133,12 @@ Route::prefix('rawat-jalan')->group(function () {
                             Route::post('/get-dokter-unit', 'getDokterbyUnit')->name('.get-dokter-unit');
                             Route::post('/', 'storeKonsultasi')->name('.store');
                             Route::put('/', 'updateKonsultasi')->name('.update');
-                            Route::delete('/', 'deleteKonsultasi')->name('.delete');
+                            Route::delete('/{kd_unit_tujuan}/{tgl_masuk_tujuan}/{jam_masuk_tujuan}/{urut_konsul}', 'deleteKonsultasi')->name('.delete');
                             Route::post('/get-konsul-ajax', 'getKonsulAjax')->name('.get-konsul-ajax');
+
+                            // Terima konsultasi
+                            Route::get('/terima', 'terima')->name('.terima');
+                            Route::put('/terima-konsultasi', 'terimaKonsultasi')->name('.terimaKonsultasi');
                         });
                     });
                 });

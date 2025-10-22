@@ -10,6 +10,7 @@ class Konsultasi extends Model
     use HasFactory;
 
     protected $table = 'konsultasi';
+    public $incrementing = false;
     public $timestamps = false;
 
     protected $fillable = [

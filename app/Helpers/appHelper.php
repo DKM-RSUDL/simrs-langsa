@@ -4,6 +4,7 @@ use App\Models\Kunjungan;
 use App\Models\Navigation;
 use App\Models\OrderHD;
 use App\Models\Role;
+use Carbon\Carbon;
 
 if (!function_exists('getMenus')) {
     function getMenus()
@@ -502,5 +503,40 @@ if (!function_exists('hitungUmur')) {
 
         // Mengembalikan umur dalam tahun
         return $selisih->y;
+    }
+}
+
+if (!function_exists('carbon_parse')) {
+    /**
+     * Parse a date/time into a Carbon instance or formatted string.
+     *
+     * Usage:
+     *  - carbon_parse('2025-10-22') -> Carbon instance
+     *  - carbon_parse(null) -> Carbon::now()
+     *  - carbon_parse('2025-10-22', 'Asia/Jakarta', 'd-m-Y') -> formatted string
+     *
+     * @param mixed $value
+     * @param string|null $tz
+     * @param string|null $format
+     * @return \Carbon\Carbon|string|null
+     */
+    function carbon_parse($value = null, $tz = null, $format = null)
+    {
+        try {
+            if (is_null($value)) {
+                $dt = Carbon::now($tz ?? config('app.timezone'));
+            } else {
+                $dt = Carbon::parse($value, $tz ?? config('app.timezone'));
+            }
+
+            if ($format) {
+                return $dt->format($format);
+            }
+
+            return $dt;
+        } catch (\Throwable $e) {
+            // Return null on parse failure to avoid breaking callers; caller can handle null.
+            return null;
+        }
     }
 }

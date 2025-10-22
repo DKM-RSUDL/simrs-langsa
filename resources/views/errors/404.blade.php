@@ -8,9 +8,10 @@
             <div class="fs-big text-center text-danger fw-bold">404</div>
             <div class="fs-3 text-center fw-bold mb-4">Oops! You are stuck at 404</div>
             <div class="fs-6 text-center mb-3">
-                Unfortunately the page you were looking for could not be found.
+
+                {{ $exception->getMessage() ?: "Unfortunately the page you were looking for could not be found.
                 It may be temporarily unavailable, moved or no longer exist.
-                Check the URL you entered for any mistakes and try again.
+                Check the URL you entered for any mistakes and try again.." }}
             </div>
             <div class="text-center">
                 <a href="{{ url()->previous() }}">Back</a>
