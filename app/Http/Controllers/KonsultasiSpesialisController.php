@@ -23,22 +23,44 @@ class KonsultasiSpesialisController extends Controller
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        $dataMedis = $this->dataMedis->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-
-        $dataKonsul = KonsultasiSpesialis::with(['dokterPengirim','dokterTujuan','spesialis'])->get();
+    {   
         
+        $category = "Minta";
+        if(!empty($request->category)){
+            $category = $request->category;
+        }
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.konsultasi-spesialis.konsultasi-terima',
+        $columnnValue = $category == "Minta" ? 'dokter_pengirim' : 'dokter_tujuan';
+        $acuan = Dokter::select('kd_dokter')->where('kd_karyawan', Auth::user()->kd_karyawan)->first();
+        if(empty($acuan)){
+            $columnnValue = 'user_create';
+            $acuan = Auth::user()->kd_karyawan;
+        }
+
+        $dataMedis = $this->dataMedis->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        $dataKonsul = KonsultasiSpesialis::with(['dokterPengirim' ,'dokterTujuan','spesialis'])
+                     ->where($columnnValue  ,$acuan)
+                     ->get();
+                    
+
+        $targetRout = 'unit-pelayanan.rawat-inap.pelayanan.konsultasi-spesialis.konsultasi-minta';
+        if($category!="Minta"){
+            $targetRout = 'unit-pelayanan.rawat-inap.pelayanan.konsultasi-spesialis.konsultasi-terima';
+        }
+
+    
+        return view($targetRout,
             compact('dataMedis', 'kd_unit', 'kd_pasien', 'tgl_masuk', 'urut_masuk','dataKonsul'));
     }
 
     public function create(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $dataMedis = $this->dataMedis->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-        $dokterPengirim = $this->getDokter();
+        
 
-        $spesialisasi = Spesialisasi::orderBy('spesialisasi')->get();
+        $baseData = $this->getBaseData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        $dataMedis = $baseData['dataMedis'];
+        $dokterPengirim = $baseData['dokterPengirim'];
+        $spesialisasi = $baseData['spesialisasi'];
 
         return view('unit-pelayanan.rawat-inap.pelayanan.konsultasi-spesialis.konsultasi-minta-form.form',
             compact('dataMedis', 
@@ -53,15 +75,19 @@ class KonsultasiSpesialisController extends Controller
 
     public function edit(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk){
         $id = $request->id;
-        $dataMedis = $this->dataMedis->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
         $Data = KonsultasiSpesialis::with(['dokterPengirim','dokterTujuan','spesialis'])
             ->where('id',$id)
             ->first();
+        if(!$Data){
+                throw new Exception('Tidak Ditemukan');
+            }
 
-        $dokterPengirim = $this->getDokter();
-        $spesialisasi = Spesialisasi::orderBy('spesialisasi')->get();
-            
+        $baseData = $this->getBaseData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        $dataMedis = $baseData['dataMedis'];
+        $dokterPengirim = $baseData['dokterPengirim'];
+        $spesialisasi = $baseData['spesialisasi'];
+
         $Listdokter =  $this->getDokterSpesialis($Data->kd_spesial);
 
         return view('unit-pelayanan.rawat-inap.pelayanan.konsultasi-spesialis.konsultasi-minta-form.form',
@@ -114,7 +140,35 @@ class KonsultasiSpesialisController extends Controller
         }
     }
 
-   public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk){
+    public function delete(Request $request, $kd_unit, $kd_pasien, $tgl_masuk,$urut_masuk){
+        try{
+            DB::beginTransaction();
+            $id= $request->id;
+
+            $konsultasi = KonsultasiSpesialis::findOrFail($id);
+
+            if(!$konsultasi){
+                throw new Exception('Tidak Ditemukan');
+            }
+            $konsultasi->delete();
+
+            DB::commit();
+            return redirect()
+                    ->route('rawat-inap.konsultasi-spesialis.index', [
+                        $kd_unit,
+                        $kd_pasien,
+                        $tgl_masuk,
+                        $urut_masuk
+                    ])
+                    ->with('success', 'Konsultasi spesialis berhasil di hapus.');
+                    
+            }catch(Exception $e){
+                DB::rollBack();
+                return back()->with('error', $e->getMessage());
+            }
+    }
+
+    public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk){
         try {
             DB::beginTransaction();
            
@@ -147,6 +201,19 @@ class KonsultasiSpesialisController extends Controller
             DB::rollBack();
             return back()->with('error', $e->getMessage());
         }
+    }
+
+    private function getBaseData($kd_unit,$kd_pasien,$tgl_masuk,$urut_masuk){
+        $dataMedis = $this->dataMedis->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        $dokterPengirim = $this->getDokter();
+
+        $spesialisasi = Spesialisasi::orderBy('spesialisasi')->get();
+
+        return [
+            'dataMedis' => $dataMedis,
+            'dokterPengirim' => $dokterPengirim,
+            'spesialisasi' => $spesialisasi
+        ];
     }
 
 

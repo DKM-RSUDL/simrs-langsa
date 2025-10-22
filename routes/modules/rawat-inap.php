@@ -239,6 +239,7 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::put('/','update')->name('.update');
                             Route::get('/create','create')->name('.create');
                             Route::get('/edit/{id}','edit')->name('.edit');
+                            Route::delete('/','delete')->name('.delete');
                             Route::get('/getDokterBySpesial','getDokterBySpesial')->name('.getDokterBySpesial');
                             
                         });
