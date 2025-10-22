@@ -108,37 +108,41 @@
         </div>
 
         <div class="col-md-9">
-            <div class="no-print mb-3">
-                <a href="{{ route('hemodialisa.pelayanan.traveling-dialysis.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" 
-                   class="btn btn-outline-primary">
-                    <i class="ti-arrow-left"></i> Kembali
-                </a>
-                <a href="{{ route('hemodialisa.pelayanan.traveling-dialysis.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $dataTraveling->id]) }}" 
-                   class="btn btn-warning">
-                    <i class="ti-pencil"></i> Edit
-                </a>
-                <a href="{{ route('hemodialisa.pelayanan.traveling-dialysis.print-pdf', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $dataTraveling->id]) }}" 
-                   class="btn btn-secondary" target="_blank">
-                    <i class="ti-printer"></i> Print PDF
-                </a>
-            </div>
+            <x-content-card>
+                <div class="d-flex gap-2">
+                    <x-button-previous />
+                    <a target="_blank"
+                        href="{{ route('hemodialisa.pelayanan.traveling-dialysis.print-pdf', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $dataTraveling->id]) }}"
+                        class="btn btn-info">
+                        <i class="fas fa-print me-1"></i> Cetak
+                    </a>
+                    <a href="{{ route('hemodialisa.pelayanan.traveling-dialysis.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $dataTraveling->id]) }}"
+                        class="btn btn-warning">
+                        <i class="fas fa-edit me-1"></i> Edit
+                    </a>
+                </div>
 
-            <div class="card shadow-sm">
+                @include('components.page-header', [
+                    'title' => 'Detail Traveling Hemodialisa',
+                    'description' => 'Detail data Traveling Hemodialisa dengan mengisi formulir di bawah ini.',
+                ])
+
                 <div class="card-body">
                     <h4 class="header-asesmen">Data Traveling Hemodialisis</h4>
 
                     <!-- Basic Information Section -->
                     <div class="form-section">
                         <h5 class="section-title">Informasi Dasar</h5>
-                        
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="data-item">
                                     <div class="data-label">Date of First Dialysis</div>
                                     <div class="data-value">
                                         {{ $dataTraveling->date_first_dialysis ? \Carbon\Carbon::parse($dataTraveling->date_first_dialysis)->format('d/m/Y') : '-' }}
-                                        @if($dataTraveling->time_first_dialysis)
-                                            | {{ \Carbon\Carbon::parse($dataTraveling->time_first_dialysis)->format('H:i') }}
+                                        @if ($dataTraveling->time_first_dialysis)
+                                            |
+                                            {{ \Carbon\Carbon::parse($dataTraveling->time_first_dialysis)->format('H:i') }}
                                         @endif
                                     </div>
                                 </div>
@@ -160,7 +164,7 @@
                     <!-- Blood Pressure Section -->
                     <div class="form-section">
                         <h5 class="section-title">Recent Blood Pressure Status</h5>
-                        
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="data-item">
@@ -180,12 +184,12 @@
                     <!-- Access & Equipment Section -->
                     <div class="form-section">
                         <h5 class="section-title">Akses Vaskular & Peralatan</h5>
-                        
+
                         <div class="data-item">
                             <div class="data-label">Vascular Access</div>
                             <div class="data-value">
-                                @if($dataTraveling->vascular_access)
-                                    @foreach(json_decode($dataTraveling->vascular_access) as $access)
+                                @if ($dataTraveling->vascular_access)
+                                    @foreach (json_decode($dataTraveling->vascular_access) as $access)
                                         <span class="checkbox-display">{{ ucwords(str_replace('_', ' ', $access)) }}</span>
                                     @endforeach
                                 @else
@@ -197,9 +201,10 @@
                         <div class="data-item">
                             <div class="data-label">Type Dialyzer</div>
                             <div class="data-value">
-                                @if($dataTraveling->type_dialyzer)
-                                    @foreach(json_decode($dataTraveling->type_dialyzer) as $dialyzer)
-                                        <span class="checkbox-display">{{ strtoupper(str_replace('_', ' ', $dialyzer)) }}</span>
+                                @if ($dataTraveling->type_dialyzer)
+                                    @foreach (json_decode($dataTraveling->type_dialyzer) as $dialyzer)
+                                        <span
+                                            class="checkbox-display">{{ strtoupper(str_replace('_', ' ', $dialyzer)) }}</span>
                                     @endforeach
                                 @else
                                     -
@@ -211,7 +216,7 @@
                     <!-- Flow Rates & Settings Section -->
                     <div class="form-section">
                         <h5 class="section-title">Flow Rates & Pengaturan</h5>
-                        
+
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="data-item">
@@ -222,7 +227,8 @@
                             <div class="col-md-4">
                                 <div class="data-item">
                                     <div class="data-label">Dialysate Flow Rate</div>
-                                    <div class="data-value">{{ $dataTraveling->dialysate_flow_rate ?? '-' }} ml/minute</div>
+                                    <div class="data-value">{{ $dataTraveling->dialysate_flow_rate ?? '-' }} ml/minute
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -237,7 +243,7 @@
                     <!-- Anticoagulation Section -->
                     <div class="form-section">
                         <h5 class="section-title">Anticoagulation</h5>
-                        
+
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="data-item">
@@ -263,7 +269,7 @@
                     <!-- Patient Information Section -->
                     <div class="form-section">
                         <h5 class="section-title">Patient Information</h5>
-                        
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="data-item">
@@ -304,7 +310,7 @@
                     <!-- Complications & Tests Section -->
                     <div class="form-section">
                         <h5 class="section-title">Complications & Serologic Tests</h5>
-                        
+
                         <div class="data-item">
                             <div class="data-label">Complication During Dialysis</div>
                             <div class="data-value">{{ $dataTraveling->complication_dialysis ?? '-' }}</div>
@@ -313,7 +319,7 @@
                         <div class="data-item">
                             <div class="data-label">Alergi</div>
                             <div class="data-value">
-                                @if($alergiPasien->count() > 0)
+                                @if ($alergiPasien->count() > 0)
                                     <div class="table-responsive">
                                         <table class="table table-sm table-bordered">
                                             <thead>
@@ -325,7 +331,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($alergiPasien as $alergi)
+                                                @foreach ($alergiPasien as $alergi)
                                                     <tr>
                                                         <td>{{ $alergi->jenis_alergi }}</td>
                                                         <td>{{ $alergi->nama_alergi }}</td>
@@ -345,34 +351,37 @@
                         <div class="data-item">
                             <div class="data-label">Serologic Test</div>
                             <div class="data-value">
-                                @if($dataTraveling->hbsag_result)
-                                    <span class="badge badge-test {{ $dataTraveling->hbsag_result == 'Reactive (+)' ? 'badge-danger' : 'badge-success' }}">
+                                @if ($dataTraveling->hbsag_result)
+                                    <span
+                                        class="badge badge-test {{ $dataTraveling->hbsag_result == 'Reactive (+)' ? 'badge-danger' : 'badge-success' }}">
                                         HbsAg: {{ $dataTraveling->hbsag_result }}
-                                        @if($dataTraveling->hbsag_date)
+                                        @if ($dataTraveling->hbsag_date)
                                             ({{ \Carbon\Carbon::parse($dataTraveling->hbsag_date)->format('d/m/Y') }})
                                         @endif
                                     </span>
                                 @endif
-                                
-                                @if($dataTraveling->anti_hcv_result)
-                                    <span class="badge badge-test {{ $dataTraveling->anti_hcv_result == 'Reactive (+)' ? 'badge-danger' : 'badge-success' }}">
+
+                                @if ($dataTraveling->anti_hcv_result)
+                                    <span
+                                        class="badge badge-test {{ $dataTraveling->anti_hcv_result == 'Reactive (+)' ? 'badge-danger' : 'badge-success' }}">
                                         Anti HCV: {{ $dataTraveling->anti_hcv_result }}
-                                        @if($dataTraveling->anti_hcv_date)
+                                        @if ($dataTraveling->anti_hcv_date)
                                             ({{ \Carbon\Carbon::parse($dataTraveling->anti_hcv_date)->format('d/m/Y') }})
                                         @endif
                                     </span>
                                 @endif
-                                
-                                @if($dataTraveling->anti_hiv_result)
-                                    <span class="badge badge-test {{ $dataTraveling->anti_hiv_result == 'Reactive (+)' ? 'badge-danger' : 'badge-success' }}">
+
+                                @if ($dataTraveling->anti_hiv_result)
+                                    <span
+                                        class="badge badge-test {{ $dataTraveling->anti_hiv_result == 'Reactive (+)' ? 'badge-danger' : 'badge-success' }}">
                                         Anti HIV: {{ $dataTraveling->anti_hiv_result }}
-                                        @if($dataTraveling->anti_hiv_date)
+                                        @if ($dataTraveling->anti_hiv_date)
                                             ({{ \Carbon\Carbon::parse($dataTraveling->anti_hiv_date)->format('d/m/Y') }})
                                         @endif
                                     </span>
                                 @endif
-                                
-                                @if(!$dataTraveling->hbsag_result && !$dataTraveling->anti_hcv_result && !$dataTraveling->anti_hiv_result)
+
+                                @if (!$dataTraveling->hbsag_result && !$dataTraveling->anti_hcv_result && !$dataTraveling->anti_hiv_result)
                                     -
                                 @endif
                             </div>
@@ -382,7 +391,7 @@
                     <!-- Medication Section -->
                     <div class="form-section">
                         <h5 class="section-title">Current Medication & Clinical History</h5>
-                        
+
                         <div class="data-item">
                             <div class="data-label">Current Medication</div>
                             <div class="data-value">{{ $dataTraveling->current_medication ?? '-' }}</div>
@@ -391,16 +400,16 @@
                         <div class="data-item">
                             <div class="data-label">Relevant Clinical History</div>
                             <div class="data-value">
-                                @if($dataTraveling->relevant_clinical_history)
+                                @if ($dataTraveling->relevant_clinical_history)
                                     @php
                                         $medications = json_decode($dataTraveling->relevant_clinical_history, true);
                                     @endphp
-                                    @if($medications && count($medications) > 0)
+                                    @if ($medications && count($medications) > 0)
                                         <div class="medication-list">
-                                            @foreach($medications as $medication)
+                                            @foreach ($medications as $medication)
                                                 <div class="medication-item">
                                                     <strong>{{ $medication['name'] ?? '-' }}</strong>
-                                                    @if(isset($medication['frequency']) && $medication['frequency'])
+                                                    @if (isset($medication['frequency']) && $medication['frequency'])
                                                         - {{ $medication['frequency'] }}
                                                     @endif
                                                 </div>
@@ -419,7 +428,7 @@
                     <!-- Footer Info -->
                     <div class="form-section">
                         <h5 class="section-title">Informasi Sistem</h5>
-                        
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="data-item">
@@ -430,13 +439,16 @@
                             <div class="col-md-6">
                                 <div class="data-item">
                                     <div class="data-label">Dibuat pada</div>
-                                    <div class="data-value">{{ $dataTraveling->created_at ? $dataTraveling->created_at->format('d/m/Y H:i') : '-' }}</div>
+                                    <div class="data-value">
+                                        {{ $dataTraveling->created_at ? $dataTraveling->created_at->format('d/m/Y H:i') : '-' }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+
+            </x-content-card>>
         </div>
     </div>
 @endsection

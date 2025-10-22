@@ -190,19 +190,17 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ route('hemodialisa.pelayanan.edukasi.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
-                class="btn">
-                <i class="ti-arrow-left"></i> Kembali
-            </a>
-            <form action="" method="">
+            <x-content-card>
+                <x-button-previous />
 
-                <div class="d-flex justify-content-center">
-                    <div class="card w-100 h-100">
-                        <div class="card-body">
+                @include('components.page-header', [
+                    'title' => 'Detail Edukasi Pasien Pasien Hemodialisa',
+                ])
+                <form action="" method="">
+
+                    <div class="d-flex justify-content-center">
+                        <div class="card w-100 h-100">
                             <div class="px-3">
-
-                                <h4 class="header-asesmen">Edit Formulir Edukasi Pasien dan Keluarga Pasien HD</h4>
-
                                 <div class="section-separator">
                                     <h5 class="section-title">1. Data Pasien</h5>
 
@@ -465,7 +463,8 @@
                                                         {{ in_array('kebutuhan_prosedur_pemeriksaan_penunjang', $selectedKebutuhanEdukasi) ? 'checked' : '' }}
                                                         disabled>
                                                     <label class="form-check-label"
-                                                        for="kebutuhan_prosedur_pemeriksaan_penunjang">Prosedur pemeriksaan
+                                                        for="kebutuhan_prosedur_pemeriksaan_penunjang">Prosedur
+                                                        pemeriksaan
                                                         penunjang</label>
                                                 </div>
 
@@ -491,7 +490,8 @@
                                                         {{ in_array('kebutuhan_proses_pemberian_informed_concent', $selectedKebutuhanEdukasi) ? 'checked' : '' }}
                                                         disabled>
                                                     <label class="form-check-label"
-                                                        for="kebutuhan_proses_pemberian_informed_concent">Proses pemberian
+                                                        for="kebutuhan_proses_pemberian_informed_concent">Proses
+                                                        pemberian
                                                         informed
                                                         consent</label>
                                                 </div>
@@ -624,7 +624,8 @@
                                                         {{ in_array('kebutuhan_kepatuhan_minum_obat', $selectedKebutuhanEdukasi) ? 'checked' : '' }}
                                                         disabled>
                                                     <label class="form-check-label"
-                                                        for="kebutuhan_kepatuhan_minum_obat">Kepatuhan minum obat</label>
+                                                        for="kebutuhan_kepatuhan_minum_obat">Kepatuhan minum
+                                                        obat</label>
                                                 </div>
 
                                                 <div class="form-check mb-3">
@@ -635,7 +636,8 @@
                                                         {{ in_array('kebutuhan_perawatan_luka_akses_femoralis', $selectedKebutuhanEdukasi) ? 'checked' : '' }}
                                                         disabled>
                                                     <label class="form-check-label"
-                                                        for="kebutuhan_perawatan_luka_akses_femoralis">Perawatan luka akses
+                                                        for="kebutuhan_perawatan_luka_akses_femoralis">Perawatan luka
+                                                        akses
                                                         femoralis</label>
                                                 </div>
                                             </div>
@@ -846,9 +848,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </form>
         </div>
+        </form>
+        </x-content-card>
+    </div>
     </div>
 @endsection
 

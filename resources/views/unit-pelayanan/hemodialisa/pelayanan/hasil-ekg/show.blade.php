@@ -8,21 +8,14 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ route('hemodialisa.pelayanan.hasil-ekg.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
-                class="btn btn-outline-primary mb-3">
-                <i class="ti-arrow-left"></i> Kembali
-            </a>
+            <x-content-card>
+                <x-button-previous />
+                @include('components.page-header', [
+                    'title' => 'Detail Hasil Pemeriksaan Elektrokardiografi (EKG)',
+                ])
 
-            <form action="" method="">
-                @csrf
-                <div class="card shadow-sm">
-                    <div class="card-header bg-info">
-                        <h4 class="text-center text-dark mb-0">
-                            <i class="fas fa-heartbeat me-2"></i>
-                            Detail Hasil Pemeriksaan Elektrokardiografi (EKG)
-                        </h4>
-                    </div>
-
+                <form action="" method="">
+                    @csrf
                     <div class="card-body">
                         <!-- Lead EKG Section -->
                         <div class="card mb-4 border-success mt-4">
@@ -252,9 +245,10 @@
                         </div>
 
                     </div>
-                </div>
-            </form>
         </div>
+        </form>
+        </x-content-card>
+    </div>
     </div>
 @endsection
 
