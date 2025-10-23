@@ -519,7 +519,7 @@ class KonsultasiController extends Controller
         }
     }
 
-    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $kd_unit_tujuan, $kd_pasien_tujuan, $tgl_masuk_tujuan, $jam_masuk_tujuan, $urut_konsul)
+    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $urut_konsul)
     {
         $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
         if (!$dataMedis) {
@@ -530,19 +530,12 @@ class KonsultasiController extends Controller
             ->where('kd_unit', $kd_unit)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
-            ->where('kd_unit_tujuan', $kd_unit_tujuan)
-            ->where('tgl_masuk_tujuan', $tgl_masuk_tujuan)
-            ->where('jam_masuk_tujuan', $jam_masuk_tujuan)
             ->where('urut_konsul', $urut_konsul)
             ->first();
 
         return view('unit-pelayanan.rawat-inap.pelayanan.konsultasi.show', compact(
             'konsultasi',
             'dataMedis',
-            'kd_unit_tujuan',
-            'kd_pasien_tujuan',
-            'tgl_masuk_tujuan',
-            'jam_masuk_tujuan',
             'urut_konsul'
         ));
     }
