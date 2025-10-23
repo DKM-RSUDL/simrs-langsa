@@ -347,6 +347,7 @@
                     <!-- Information Content Section -->
                     <div class="form-section">
                         <h5 class="section-title">Informasi Tindakan Hemodialisa</h5>
+                        <p class="text-secondary">Mohon minimal ceklis salah satu Informasi dibawah ini!</h5>
 
                         <table class="information-table">
                             <thead>
@@ -541,7 +542,10 @@
                     </div>
 
                     <div class="text-end">
-                        <x-button-submit />
+                        <x-button-submit-confirm label="Simpan" confirmTitle="Sudah Yakin?"
+                            confirmText="Pastikan semua data sudah lengkap sebelum disimpan. Lanjutkan menyimpan?"
+                            confirmOk="Simpan" confirmCancel="Batal" :spinner="true" loadingLabel="Menyimpan..."
+                            loadingOverlay="#loadingOverlay" />
                     </div>
         </div>
     </div>
@@ -552,6 +556,7 @@
 @endsection
 
 @push('js')
+    <script src="{{ asset('js/helpers/confirm-form.js') }}"></script>
     <script>
         $(document).ready(function() {
 
@@ -705,45 +710,6 @@
                 function() {
                     updatePenandatangan();
                 });
-
-            // Form validation (optional, tidak required lagi)
-            $('#consentForm').on('submit', function(e) {
-                // Validasi minimal satu checkbox informasi harus dicentang
-                const infoCheckboxes = [
-                    'info_diagnosis',
-                    'info_dasar_diagnosis',
-                    'info_tindakan',
-                    'info_indikasi',
-                    'info_tata_cara',
-                    'info_tujuan',
-                    'info_resiko',
-                    'info_prognosis',
-                    'info_alternatif'
-                ];
-
-                let hasCheckedInfo = false;
-                infoCheckboxes.forEach(function(checkboxName) {
-                    if ($('#' + checkboxName).is(':checked')) {
-                        hasCheckedInfo = true;
-                    }
-                });
-
-                // Check jika ada isi di lain-lain dan checkbox lain-lain dicentang
-                const lainLainText = $('#info_lain_lain').val();
-                const lainLainCheck = $('#info_lain_lain_check').is(':checked');
-
-                if (lainLainText && lainLainText.trim() !== '' && lainLainCheck) {
-                    hasCheckedInfo = true;
-                }
-
-                if (!hasCheckedInfo) {
-                    alert(
-                        'Mohon centang minimal satu informasi yang telah dijelaskan kepada pasien/keluarga.'
-                    );
-                    e.preventDefault();
-                    return false;
-                }
-            });
 
             // Handle checkbox lain-lain
             $('#info_lain_lain').on('input', function() {
