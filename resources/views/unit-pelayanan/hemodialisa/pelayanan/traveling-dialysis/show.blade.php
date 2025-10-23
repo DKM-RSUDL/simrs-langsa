@@ -123,12 +123,11 @@
                 </div>
 
                 @include('components.page-header', [
-                    'title' => 'Detail Traveling Hemodialisa',
-                    'description' => 'Detail data Traveling Hemodialisa dengan mengisi formulir di bawah ini.',
+                    'title' => 'Detail Traveling Dialysis Hemodialisa',
                 ])
 
                 <div class="card-body">
-                    <h4 class="header-asesmen">Data Traveling Hemodialisis</h4>
+
 
                     <!-- Basic Information Section -->
                     <div class="form-section">

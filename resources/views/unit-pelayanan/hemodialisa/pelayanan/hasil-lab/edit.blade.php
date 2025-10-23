@@ -168,8 +168,8 @@
                 <x-button-previous />
 
                 @include('components.page-header', [
-                    'title' => 'Edit Hasil Lab',
-                    'description' => 'Edit Hasil Lab Pasien Hemodialisa dengan mengisi formulir di bawah ini.',
+                    'title' => 'Perbarui Hasil Lab Pasien Hemodialisa',
+                    'description' => 'Perbarui Hasil Lab Pasien Hemodialisa dengan mengisi formulir di bawah ini.',
                 ])
 
                 <!-- Alert Messages -->

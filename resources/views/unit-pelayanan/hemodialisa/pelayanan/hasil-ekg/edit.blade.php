@@ -23,7 +23,7 @@
                     @csrf
                     @method('PUT')
                     <!-- Lead EKG Section -->
-                    <div class="card mb-4 border-success mt-4">
+                    <div class="card">
                         <div class="card-header bg-success text-white">
                             <h6 class="mb-0"><i class="fas fa-chart-line me-2"></i>Hasil Lead EKG</h6>
                         </div>
@@ -242,19 +242,17 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
+                                <!-- Submit Buttons -->
                             </div>
                         </div>
                     </div>
 
-                    <!-- Submit Buttons -->
                     <div class="text-end">
                         <x-button-submit>Perbarui</x-button-submit>
                     </div>
+                </form>
+            </x-content-card>
         </div>
-    </div>
-    </form>
-    </x-content-card>
-    </div>
     </div>
 @endsection
 

@@ -194,7 +194,8 @@
 
                 @include('components.page-header', [
                     'title' => 'Tambah Edukasi Pasien Hemodialisa',
-                    'description' => 'Tambah data Edukasi Pasien Hemodialisa dengan mengisi formulir di bawah ini.',
+                    'description' =>
+                        'Tambah data Edukasi Pasien Hemodialisa dengan mengisi formulir di bawah ini.',
                 ])
 
                 <form
