@@ -3,10 +3,11 @@
     [
         'active' => 1,
         'dataMedis' => $dataMedis,
-        'kd_unit' => $kd_unit,
-        'kd_pasien' => $kd_pasien,
-        'tgl_masuk' => $tgl_masuk,
-        'urut_masuk' => $urut_masuk,
+        'kd_unit' => $dataMedis->kd_unit,
+        'kd_pasien' => $dataMedis->kd_pasien,
+        'tgl_masuk' => $dataMedis->tgl_masuk,
+        'urut_masuk' => $dataMedis->urut_masuk,
+        'isTerima' => $isTerima,
         'firstFrame' => true
     ]
 )
@@ -19,6 +20,9 @@
         <td>{{ $item->spesialis->spesialisasi }}</td>
         <td>
             <p class="m-0">{{$item->catatan}}</p>
+        </td>
+        <td>
+            <p class="m-0">{{$item->respon_konsul}}</p>
         </td>
         <td class="d-flex justify-content-center align-items-center" colspan="{{ $item->status == 1 ? 3 : 0 }}">
             @php
@@ -54,10 +58,10 @@
                     </button>
 
                     <form action="{{ route('rawat-inap.konsultasi-spesialis.delete', [
-                    $kd_unit,
-                    $kd_pasien,
-                    $tgl_masuk,
-                    $urut_masuk,
+                    $dataMedis->kd_unit,
+                    $dataMedis->kd_pasien,
+                    $dataMedis->tgl_masuk,
+                    $dataMedis->urut_masuk,
                     'id' => $item->id,
                 ]) }}" method="post">
                         @csrf
@@ -88,7 +92,7 @@
         $(document).on('click', '.btn-edit-konsultasi', function () {
             const id = $(this).data('id');
             console.log(id);
-            baseUrl = "{{ route('rawat-inap.konsultasi-spesialis.edit', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, 'id' => 'ID']) }}";
+            baseUrl = "{{ route('rawat-inap.konsultasi-spesialis.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, 'id' => 'ID']) }}";
             baseUrl = baseUrl.replace('ID', id)
             location.href = baseUrl;
         })
@@ -96,7 +100,7 @@
         $(document).on('click', '.btn-delete-konsultasi', function () {
             const id = $(this).data('id');
             console.log(id);
-            baseUrl = "{{ route('rawat-inap.konsultasi-spesialis.edit', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, 'id' => 'ID']) }}";
+            baseUrl = "{{ route('rawat-inap.konsultasi-spesialis.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, 'id' => 'ID']) }}";
             $.ajax({
                 url: baseUrl,
                 type: 'DELETE',
