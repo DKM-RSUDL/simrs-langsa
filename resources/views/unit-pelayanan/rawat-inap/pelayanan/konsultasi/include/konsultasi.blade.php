@@ -117,10 +117,6 @@
                                 $dataMedis->kd_pasien,
                                 $dataMedis->tgl_masuk,
                                 $dataMedis->urut_masuk,
-                                $konsul->kd_unit_tujuan,
-                                $konsul->kd_pasien_tujuan,
-                                $konsul->tgl_masuk_tujuan,
-                                $konsul->jam_masuk_tujuan,
                                 $konsul->urut_konsul,
                             ]) }}"
                                 class="btn btn-sm btn-info">
