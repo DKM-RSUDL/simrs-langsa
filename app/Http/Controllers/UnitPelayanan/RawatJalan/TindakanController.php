@@ -165,9 +165,9 @@ class TindakanController extends Controller
             'jam_tindakan.required'     => 'Jam harus dipilih!',
             'laporan.required'          => 'Laporan tindakan harus diisi!',
             'kesimpulan.required'       => 'Kesimpulan tindakan harus diisi!',
-            'gambar_tindakan.required'  => 'Gambar harus dipilih!',
-            'gambar_tindakan.image'     => 'Format file gambar tindakan tidak sesuai!',
-            'gambar_tindakan.max'       => 'Gambar tindakan maksimak 5 mb!'
+            // 'gambar_tindakan.required'  => 'Gambar harus dipilih!',
+            // 'gambar_tindakan.image'     => 'Format file gambar tindakan tidak sesuai!',
+            // 'gambar_tindakan.max'       => 'Gambar tindakan maksimak 5 mb!'
         ];
 
         $request->validate([
@@ -177,7 +177,7 @@ class TindakanController extends Controller
             'jam_tindakan'      => 'required',
             'laporan'           => 'required',
             'kesimpulan'        => 'required',
-            'gambar_tindakan'   => 'required|image|file|max:5120',
+            // 'gambar_tindakan'   => 'required|image|file|max:5120',
         ], $messageErr);
 
 

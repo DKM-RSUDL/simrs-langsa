@@ -84,6 +84,8 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\OrderHemodialisaController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\OrderOKController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PneumoniaCurb65Controller;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PneumoniaPsiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\RincianEchocardiographyController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\RincianKonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SiteMarkingController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SurveilansA1Controller;
 use App\Http\Controllers\UnitPelayanan\RawatInap\SurveilansA2Controller;
@@ -227,20 +229,46 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::delete('/', 'deleteKonsultasi')->name('.delete');
                             Route::post('/get-konsul-ajax', 'getKonsulAjax')->name('.get-konsul-ajax');
                         });
+
+                        Route::prefix('rincian/{kd_unit_tujuan}/{kd_pasien_tujuan}/{tgl_masuk_tujuan}/{jam_masuk_tujuan}/{urut_konsul}')->group(function () {
+                            Route::name('.rincian')->group(function () {
+                                Route::controller(RawatInapKonsultasiController::class)->group(function () {
+                                    Route::get('/', 'show')->name('.show');
+                                });
+
+                                // Rincian Konsultasi Rajal
+                                Route::prefix('tindakan')->group(function () {
+                                    Route::name('.tindakan')->group(function () {
+                                        Route::controller(RincianKonsultasiController::class)->group(function () {
+                                            Route::get('/', 'indexTindakan')->name('.indexTindakan');
+                                        });
+                                    });
+                                });
+
+                                Route::prefix('echocardiography')->group(function () {
+                                    Route::name('.echocardiography')->group(function () {
+                                        Route::controller(RincianEchocardiographyController::class)->group(function () {
+                                            Route::get('/', 'indexEchocardiography')->name('.indexEchocardiography');
+                                            Route::post('/get-echocardiography-ajax', 'getTindakanAjax')->name('.get-echocardiography-ajax');
+                                        });
+                                    });
+                                });
+                            });
+                        });
                     });
                 });
 
                 //Konsultasi-Spesialis
-                Route::prefix('konsultasi-spesialis')->group(function(){
-                    Route::name('.konsultasi-spesialis')->group(function(){
-                        Route::controller(KonsultasiSpesialisController::class)->group(function(){
-                            Route::get('/','index')->name('.index');
-                            Route::post('/','store')->name('.store');
-                            Route::put('/','update')->name('.update');
-                            Route::get('/create','create')->name('.create');
-                            Route::get('/edit/{id}','edit')->name('.edit');
-                            Route::get('/getDokterBySpesial','getDokterBySpesial')->name('.getDokterBySpesial');
-                            
+                Route::prefix('konsultasi-spesialis')->group(function () {
+                    Route::name('.konsultasi-spesialis')->group(function () {
+                        Route::controller(KonsultasiSpesialisController::class)->group(function () {
+                            Route::get('/', 'index')->name('.index');
+                            Route::post('/', 'store')->name('.store');
+                            Route::put('/', 'update')->name('.update');
+                            Route::delete('/', 'delete')->name('.delete');
+                            Route::get('/create', 'create')->name('.create');
+                            Route::get('/edit/{id}', 'edit')->name('.edit');
+                            Route::get('/getDokterBySpesial', 'getDokterBySpesial')->name('.getDokterBySpesial');
                         });
                     });
                 });

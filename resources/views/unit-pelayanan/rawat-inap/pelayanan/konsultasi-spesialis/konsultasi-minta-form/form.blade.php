@@ -8,9 +8,17 @@
         <div class="col-md-9">
             <x-content-card>
                 <x-button-previous />
-
-              @include('components.page-header', [
-                    'title' => (!empty($Data) ? 'Edit' : 'Tambah') . ' Konsultasi Minta',
+                @php
+                    if (!empty($readonly) && !empty($Data)) {
+                        $title = 'Respon Konsultasi Minta';
+                    } elseif (!empty($Data)) {
+                        $title = 'Edit Konsultasi Minta';
+                    } else {
+                        $title = 'Tambah Konsultasi Minta';
+                    }
+                @endphp
+                @include('components.page-header', [
+                    'title' => $title,
                     'description' => 'Isi formulir dibawah ini.',
                 ])
 
@@ -19,7 +27,7 @@
                         !empty($Data) 
                             ? 'rawat-inap.konsultasi-spesialis.update' 
                             : 'rawat-inap.konsultasi-spesialis.store', 
-                        [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk]
+                        [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]
                     ) }}" 
                     method="POST"
                 >
@@ -38,6 +46,7 @@
                                 id="dokter_pengirim" 
                                 name="dokter_pengirim"
                                 class="form-select select2 @error('dokter_pengirim') is-invalid @enderror" 
+                                {{ !empty($readonly) ? 'disabled' : '' }}
                                 required
                             >
                                 <option value="">--Pilih Dokter--</option>
@@ -68,6 +77,7 @@
                                             name="tgl_konsul"
                                             value="{{ old('tgl_konsul', $Data->tanggal_konsul ?? '') }}"
                                             class="form-control @error('tgl_konsul') is-invalid @enderror" 
+                                            {{ !empty($readonly) ? 'disabled' : '' }}
                                             required
                                         >
                                     </div>
@@ -79,6 +89,7 @@
                                             name="jam_konsul"
                                             value="{{ !empty($Data->jam_konsul) ? date('H:i', strtotime($Data->jam_konsul)) : '' }}"
                                             class="form-control @error('jam_konsul') is-invalid @enderror" 
+                                            {{ !empty($readonly) ? 'disabled' : '' }}
                                             required
                                         >
                                     </div>
@@ -94,6 +105,7 @@
                                     id="spesialisasi" 
                                     name="spesialisasi"
                                     class="form-select select2 @error('spesialisasi') is-invalid @enderror" 
+                                    {{ !empty($readonly) ? 'disabled' : '' }}
                                     required
                                 >
                                     <option value="">--Pilih Unit Pelayanan--</option>
@@ -118,6 +130,7 @@
                                     id="dokter_unit_tujuan" 
                                     name="dokter_unit_tujuan"
                                     class="form-select select2 @error('dokter_unit_tujuan') is-invalid @enderror" 
+                                    {{ !empty($readonly) ? 'disabled' : '' }}
                                     required
                                 >
                                     <option value="">--Pilih Dokter--</option>
@@ -146,6 +159,7 @@
                                 name="catatan" 
                                 id="catatan" 
                                 rows="3" 
+                                {{ !empty($readonly) ? 'disabled' : '' }}
                                 required
                             >{{ old('catatan', $Data->catatan ?? '') }}</textarea>
                             @error('catatan') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -157,10 +171,25 @@
                                     name="konsul" 
                                     id="konsul" 
                                     rows="5" 
+                                    {{ !empty($readonly) ? 'disabled' : '' }}
                                     required
                                 >{{ old('konsul', $Data->konsul ?? '') }}</textarea>
                                 @error('konsul') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
+                            <input type="hidden" name="category" value="{{ !empty($readonly) ? 'terima' : 'minta' }}">
+                            @if(!empty($readonly))
+                                <div class="mt-3">
+                                    <strong class="fw-bold">Jawaban</strong>
+                                    <textarea 
+                                        class="form-control @error('respon_konsul') is-invalid @enderror" 
+                                        name="respon_konsul" 
+                                        id="respon_konsul" 
+                                        rows="5" 
+                                        required
+                                    >{{ old('respon_konsul', $Data->respon_konsul ?? '') }}</textarea>
+                                    @error('respon_konsul') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
+                            @endif
                         </div>
                     </div>
 
@@ -193,7 +222,7 @@ $(document).ready(() => {
             .html('<option value="">Memproses data kelas...</option>');
 
         // buat URL dinamis
-        const baseUrl = "{{ route('rawat-inap.konsultasi-spesialis.getDokterBySpesial', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, 'kd_spesial'=> 'KD_SPESIAL']) }}";
+        const baseUrl = "{{ route('rawat-inap.konsultasi-spesialis.getDokterBySpesial', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, 'kd_spesial'=> 'KD_SPESIAL']) }}";
         const url = baseUrl.replace('KD_SPESIAL', value);
 
         // simulasi delay pakai setTimeout

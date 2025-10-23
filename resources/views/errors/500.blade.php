@@ -9,9 +9,11 @@
             <div class="fs-big text-center text-danger fw-bold">500</div>
             <div class="fs-3 text-center fw-bold mb-4">Oops! You are stuck at 500</div>
             <div class="fs-6 text-center mb-3">
-                Something's wrong!
+
+                {{ $exception->getMessage() ?: "Something's wrong!
                 It looks as though we've broken something on our system.
-                Don't panic, we are fixing it! Please come back in a while.
+                Don't panic, we are fixing it! Please come back in a while." }}
+
             </div>
             <div class="text-center">
                 <a href="{{ url()->previous() }}">Back</a>
