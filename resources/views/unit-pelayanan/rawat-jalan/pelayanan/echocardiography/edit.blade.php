@@ -13,9 +13,9 @@
                 <x-button-previous />
 
                 @include('components.page-header', [
-                    'title' => 'Tambah Echocardiography',
+                    'title' => 'Perbarui Echocardiography',
                     'description' =>
-                        'Tambah data echocardiography pasien rawat jalan dengan mengisi formulir di bawah ini.',
+                        'Perbarui data echocardiography pasien rawat jalan dengan mengisi formulir di bawah ini.',
                 ])
 
                 <form id="echocardiography_form" method="POST"
