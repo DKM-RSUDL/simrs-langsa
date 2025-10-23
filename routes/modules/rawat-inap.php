@@ -230,7 +230,7 @@ Route::prefix('rawat-inap')->group(function () {
                             Route::post('/get-konsul-ajax', 'getKonsulAjax')->name('.get-konsul-ajax');
                         });
 
-                        Route::prefix('rincian/{kd_unit_tujuan}/{kd_pasien_tujuan}/{tgl_masuk_tujuan}/{jam_masuk_tujuan}/{urut_konsul}')->group(function () {
+                        Route::prefix('rincian/{urut_konsul}')->group(function () {
                             Route::name('.rincian')->group(function () {
                                 Route::controller(RawatInapKonsultasiController::class)->group(function () {
                                     Route::get('/', 'show')->name('.show');
@@ -247,9 +247,9 @@ Route::prefix('rawat-inap')->group(function () {
 
                                 Route::prefix('echocardiography')->group(function () {
                                     Route::name('.echocardiography')->group(function () {
-                                        Route::controller(RincianEchocardiographyController::class)->group(function () {
+                                        Route::controller(RincianKonsultasiController::class)->group(function () {
                                             Route::get('/', 'indexEchocardiography')->name('.indexEchocardiography');
-                                            Route::post('/get-echocardiography-ajax', 'getTindakanAjax')->name('.get-echocardiography-ajax');
+                                            Route::get('/{id}', 'showEchocardiography')->name('.showEchocardiography');
                                         });
                                     });
                                 });

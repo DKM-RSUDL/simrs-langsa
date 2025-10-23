@@ -13,21 +13,18 @@
                 $dataMedis->kd_pasien,
                 $tglMasukData,
                 $dataMedis->urut_masuk,
-                $kd_unit_tujuan,
-                $kd_pasien_tujuan,
-                $tgl_masuk_tujuan,
-                $jam_masuk_tujuan,
                 $urut_konsul,
             ]),
         ],
         [
             'icon' => 'verified_badge.png',
             'label' => 'Echocardiography Rajal',
-            'link' => route('rawat-inap.echocardiography.index', [
+            'link' => route('rawat-inap.konsultasi.rincian.echocardiography.indexEchocardiography', [
                 $dataMedis->kd_unit,
                 $dataMedis->kd_pasien,
                 $tglMasukData,
                 $dataMedis->urut_masuk,
+                $urut_konsul,
             ]),
         ],
     ];

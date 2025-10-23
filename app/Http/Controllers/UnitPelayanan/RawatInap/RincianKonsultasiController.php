@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dokter;
 use App\Models\DokterKlinik;
 use App\Models\Konsultasi;
 use App\Models\ListTindakanPasien;
 use App\Models\Produk;
+use App\Models\RmeEchocardiography;
 use App\Services\BaseService;
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Http\Request;
 
 class RincianKonsultasiController extends Controller
@@ -136,7 +137,7 @@ class RincianKonsultasiController extends Controller
         return $code;
     }
 
-    public function indexTindakan(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $kd_unit_tujuan, $kd_pasien_tujuan, $tgl_masuk_tujuan, $jam_masuk_tujuan, $urut_konsul)
+    public function indexTindakan(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $urut_konsul)
     {
         $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
         if (!$dataMedis) {
@@ -145,12 +146,8 @@ class RincianKonsultasiController extends Controller
 
         $konsultasi = Konsultasi::where('kd_pasien', $kd_pasien)
             ->where('kd_unit', $kd_unit)
-            ->where('tgl_masuk', $tgl_masuk)
+            ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
-            ->where('kd_pasien_tujuan', $kd_pasien_tujuan)
-            ->where('kd_unit_tujuan', $kd_unit_tujuan)
-            ->where('tgl_masuk_tujuan', $tgl_masuk_tujuan)
-            ->where('jam_masuk_tujuan', $jam_masuk_tujuan)
             ->where('urut_konsul', $urut_konsul)
             ->first();
 
@@ -263,10 +260,87 @@ class RincianKonsultasiController extends Controller
             'dokter',
             'produk',
             'tindakan',
-            'kd_unit_tujuan',
-            'kd_pasien_tujuan',
-            'tgl_masuk_tujuan',
-            'jam_masuk_tujuan',
+            'urut_konsul'
+        ));
+    }
+
+    public function indexEchocardiography(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $urut_konsul)
+    {
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        if (!$dataMedis) {
+            abort(404, 'Data medis tidak ditemukan.');
+        }
+
+        $konsultasi = Konsultasi::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->where('urut_konsul', $urut_konsul)
+            ->first();
+
+        $dataMedisRajal = $this->baseService->getDataMedis($konsultasi->kd_unit_tujuan, $konsultasi->kd_pasien_tujuan, $konsultasi->tgl_masuk_tujuan, $konsultasi->urut_masuk_tujuan);
+        if (!$dataMedisRajal) {
+            abort(404, 'Data medis rajal tidak ditemukan.');
+        }
+
+        if (!$konsultasi) {
+            $echocardiographyData = collect();
+        } else {
+            $query = RmeEchocardiography::with(['dokter', 'userCreate'])
+                ->where('no_transaksi', $dataMedisRajal->no_transaksi)
+                ->where('kd_kasir', $dataMedisRajal->kd_kasir);
+
+            // Filter berdasarkan tanggal
+            if ($request->filled('start_date')) {
+                $query->whereDate('tanggal', '>=', $request->start_date);
+            }
+
+            if ($request->filled('end_date')) {
+                $query->whereDate('tanggal', '<=', $request->end_date);
+            }
+
+            // Search functionality
+            if ($request->filled('search')) {
+                $search = $request->search;
+                $query->where(function ($q) use ($search) {
+                    $q->where('diagnosa_klinik', 'like', "%{$search}%")
+                        ->orWhere('deskripsi', 'like', "%{$search}%")
+                        ->orWhere('kesimpulan', 'like', "%{$search}%")
+                        ->orWhereHas('dokter', function ($dq) use ($search) {
+                            $dq->where('nama_lengkap', 'like', "%{$search}%");
+                        });
+                });
+            }
+
+            $echocardiographyData = $query->orderBy('tanggal', 'desc')
+                ->where('kd_kasir', $dataMedisRajal->kd_kasir)
+                ->where('no_transaksi', $dataMedisRajal->no_transaksi)
+                ->orderBy('jam', 'desc')
+                ->paginate(10)
+                ->withQueryString();
+        }
+
+        return view('unit-pelayanan.rawat-inap.pelayanan.konsultasi.rincian.echocardiography.index', compact(
+            'dataMedis',
+            'echocardiographyData',
+            'urut_konsul'
+        ));
+    }
+
+    public function showEchocardiography(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $urut_konsul, $id)
+    {
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        if (!$dataMedis) {
+            abort(404, 'Data medis tidak ditemukan.');
+        }
+
+        $dokter = Dokter::where('status', 1)->orderBy('nama_lengkap', 'asc')->get();
+        $echocardiography = RmeEchocardiography::with(['dokter', 'userCreate'])->findOrFail($id);
+
+        return view('unit-pelayanan.rawat-inap.pelayanan.konsultasi.rincian.echocardiography.show', compact(
+            'dataMedis',
+            'echocardiography',
+            'dokter',
             'urut_konsul'
         ));
     }
