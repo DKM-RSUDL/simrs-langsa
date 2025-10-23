@@ -187,11 +187,11 @@
             <x-content-card>
                 <div class="d-flex gap-2">
                     <x-button-previous />
-                    <a target="_blank"
-                        href="{{ route('hemodialisa.pelayanan.hasil-lab.print-pdf', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $dataHasilLab->id]) }}"
-                        class="btn btn-info">
-                        <i class="fas fa-print me-1"></i> Cetak
-                    </a>
+                    <!--  <a target="_blank"
+                            href="{{ route('hemodialisa.pelayanan.hasil-lab.print-pdf', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $dataHasilLab->id]) }}"
+                            class="btn btn-info">
+                            <i class="fas fa-print me-1"></i> Cetak
+                        </a> -->
                     <a href="{{ route('hemodialisa.pelayanan.hasil-lab.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $dataHasilLab->id]) }}"
                         class="btn btn-warning">
                         <i class="fas fa-edit me-1"></i> Edit
