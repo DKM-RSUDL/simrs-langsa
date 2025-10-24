@@ -17,65 +17,70 @@
         </div>
 
         <div class="col-md-9">
-            <div class="d-flex justify-content-end">
-                <div class="col-md-2">
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addGeneralConsentModal"
-                            type="button">
-                            <i class="ti-plus"></i> Tambah
-                        </button>
-                    </div>
+            <x-content-card>
+                <x-button-previous />
+
+                @include('components.page-header', [
+                    'title' => 'Daftar General Consent',
+                    'description' => 'Daftar data general consent pasien rawat gawat darurat.',
+                ])
+                <div class="text-end">
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addGeneralConsentModal"
+                        type="button">
+                        <i class="ti-plus"></i> Tambah
+                    </button>
                 </div>
-            </div>
 
-            <div class="table-responsive mt-3">
-                <table class="table table-bordered table-sm table-hover">
-                    <thead class="table-primary">
-                        <tr>
-                            <th>Tanggal dan Jam</th>
-                            <th>Petugas</th>
-                            <th>Penanggung Jawab</th>
-                            <th>Saksi</th>
-                            <th>#</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($generalConsent as $item)
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm table-hover">
+                        <thead class="table-primary">
                             <tr>
-                                <td>{{ date('d M Y', strtotime($item->tanggal)) . ' ' . date('H:i', strtotime($item->jam)) }}
-                                </td>
-                                <td>{{ $item->user->name }}</td>
-                                <td>{{ $item->pj_nama }}</td>
-                                <td>{{ $item->saksi_nama }}</td>
-                                <td>
-                                    <div class="d-flex gap-2">
-                                        <button class="btn btn-sm btn-primary btn-show-consent"
-                                            data-gc="{{ $item->id }}" data-bs-target="#showGeneralConsentModal">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-
-                                        <a href="{{ route('general-consent.print', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-primary btn-sm" title="Cetak" target="_blank">
-                                            <i class="ti-printer"></i>
-                                        </a>
-
-                                        <form
-                                            action="{{ route('general-consent.delete', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $item->id]) }}"
-                                            method="post">
-                                            @csrf
-                                            @method('delete')
-
-                                            <button type="submit" class="btn btn-sm btn-danger btn-del-consent">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-
-                                    </div>
-                                </td>
+                                <th>Tanggal dan Jam</th>
+                                <th>Petugas</th>
+                                <th>Penanggung Jawab</th>
+                                <th>Saksi</th>
+                                <th>#</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            @foreach ($generalConsent as $item)
+                                <tr>
+                                    <td>{{ date('d M Y', strtotime($item->tanggal)) . ' ' . date('H:i', strtotime($item->jam)) }}
+                                    </td>
+                                    <td>{{ $item->user->name }}</td>
+                                    <td>{{ $item->pj_nama }}</td>
+                                    <td>{{ $item->saksi_nama }}</td>
+                                    <td>
+                                        <x-table-action>
+                                            <button class="btn btn-sm btn-info btn-show-consent"
+                                                data-gc="{{ $item->id }}" data-bs-target="#showGeneralConsentModal">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+
+                                            <a href="{{ route('general-consent.print', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                class="btn btn-success btn-sm" title="Cetak" target="_blank">
+                                                <i class="ti-printer"></i>
+                                            </a>
+
+                                            <form
+                                                action="{{ route('general-consent.delete', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $item->id]) }}"
+                                                method="post">
+                                                @csrf
+                                                @method('delete')
+
+                                                <button type="submit" class="btn btn-sm btn-danger btn-del-consent">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+
+                                        </x-table-action>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </x-content-card>
         </div>
     </div>
 

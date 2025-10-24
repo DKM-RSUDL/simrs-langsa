@@ -17,13 +17,8 @@
         </div>
 
         <div class="col-md-9">
-            <div class="text-center mt-1 mb-2">
-                <h5 class="text-secondary fw-bold">Transfer Pasien Ke Rawat Inap</h5>
-            </div>
-
-            <hr>
-
-            <div class="form-section">
+            <x-content-card>
+                <x-button-previous />
 
                 <form
                     action="{{ route('transfer-rwi.store', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
@@ -31,6 +26,11 @@
                     @csrf
 
                     {{-- START : TRANSFER --}}
+                    @include('components.page-header', [
+                        'title' => 'Transfer Pasien Ke Rawat Inap',
+                        'description' => 'Lengkapi data transfer pasien ke rawat inap.',
+                    ])
+
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -38,7 +38,8 @@
                                 <select name="kd_spesial" id="kd_spesial" class="form-select select2" required>
                                     <option value="">--Pilih Spesialisasi--</option>
                                     @foreach ($spesialisasi as $spesialis)
-                                        <option value="{{ $spesialis->kd_spesial }}">{{ $spesialis->spesialisasi }}</option>
+                                        <option value="{{ $spesialis->kd_spesial }}">{{ $spesialis->spesialisasi }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -80,15 +81,8 @@
                             </div>
                         </div>
                     </div>
+                    <hr>
                     {{-- END : TRANSFER --}}
-
-                    <div class="row my-5">
-                        <div class="col-12">
-                            <div class="w-100 p-3 bg-light text-center border border-4">
-                                <p class="m-0 fw-bold fs-4">Serah Terima</p>
-                            </div>
-                        </div>
-                    </div>
 
                     {{-- START : HANDOVER --}}
                     <div class="row">
@@ -200,14 +194,14 @@
                     </div>
                     {{-- END : HANDOVER --}}
 
-                    <div class="row mt-3">
-                        <div class="col-12 text-end">
-                            <button type="submit" class="btn btn-primary">Transfer</button>
-                        </div>
+                    <div class="text-end">
+                        <x-button-submit>
+                            Transfer
+                        </x-button-submit>
                     </div>
                 </form>
 
-            </div>
+            </x-content-card>
         </div>
     </div>
 @endsection
