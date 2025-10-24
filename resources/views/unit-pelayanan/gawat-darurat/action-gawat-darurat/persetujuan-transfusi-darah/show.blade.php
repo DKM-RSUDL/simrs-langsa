@@ -247,340 +247,329 @@
         </div>
 
         <div class="col-md-9">
-            <!-- Action Buttons -->
-            <div class="d-flex justify-content-between mb-3">
-                <a href="{{ route('persetujuan-transfusi-darah.index', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
-                    class="btn btn-outline-primary btn-action">
-                    <i class="ti-arrow-left"></i> Kembali
-                </a>
-                <div class="d-flex gap-2">
-                    <a href="{{ route('persetujuan-transfusi-darah.edit', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $persetujuan->id]) }}"
-                        class="btn btn-warning btn-action">
-                        <i class="ti-pencil"></i> Edit
-                    </a>
-                    <a href="{{ route('persetujuan-transfusi-darah.print-pdf', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $persetujuan->id]) }}"
-                        class="btn print-button btn-action" target="_blank">
-                        <i class="ti-printer"></i> Print
-                    </a>
-                    <a href="{{ asset('assets/file/F.3_persetujuan_transfusi_darah.pdf') }}" class="btn btn-info btn-action"
+            <x-content-card>
+                <div class="d-flex justify-content-between">
+                    <x-button-previous />
+                    <a href="{{ asset('assets/file/F.3_persetujuan_transfusi_darah.pdf') }}" class="btn btn-info"
                         target="_blank" rel="noopener noreferrer">
                         <i class="ti-file-text"></i> Form Edukasi
                     </a>
                 </div>
-            </div>
 
-            <!-- Header -->
-            <div class="header-card">
-                <h5 class="mb-3">
-                    <i class="ti-clipboard"></i> PERSETUJUAN TRANSFUSI DARAH/PRODUK DARAH
-                </h5>
-            </div>
+                @include('components.page-header', [
+                    'title' => 'Rincian Persetujuan Transfusi Darah/Produk Darah',
+                    'description' =>
+                        'Rincian data persetujuan transfusi darah/produk darah pasien rawat inap dengan mengisi formulir di bawah ini.',
+                ])
 
-            <!-- Data Dasar -->
-            <div class="detail-card">
-                <div class="detail-title">
-                    <i class="ti-calendar"></i> Data Dasar
-                </div>
-                <div class="data-grid">
-                    <div class="data-item">
-                        <div class="data-item-label">Tanggal</div>
-                        <div class="data-item-value">
-                            {{ $persetujuan->tanggal ? $persetujuan->tanggal->format('d/m/Y') : '-' }}</div>
-                    </div>
-                    <div class="data-item">
-                        <div class="data-item-label">Jam</div>
-                        <div class="data-item-value">
-                            {{ $persetujuan->jam ? date('H:i', strtotime($persetujuan->jam)) : '-' }}</div>
-                    </div>
-                    <div class="data-item">
-                        <div class="data-item-label">Persetujuan Untuk</div>
-                        <div class="data-item-value">
-                            @if($persetujuan->persetujuan_untuk === 'diri_sendiri')
-                                <span class="badge bg-info">Diri Sendiri</span>
-                            @else
-                                <span class="badge bg-warning">Keluarga/Wali</span>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="data-item">
-                        <div class="data-item-label">Diagnosa</div>
-                        <div class="data-item-value">{{ $persetujuan->diagnosa ?: '-' }}</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Data Keluarga jika ada -->
-            @if($persetujuan->persetujuan_untuk === 'keluarga')
+                <!-- Data Dasar -->
                 <div class="detail-card">
                     <div class="detail-title">
-                        <i class="fas fa-user-check"></i> Data Keluarga/Wali
+                        <i class="ti-calendar"></i> Data Dasar
+                    </div>
+                    <div class="data-grid">
+                        <div class="data-item">
+                            <div class="data-item-label">Tanggal</div>
+                            <div class="data-item-value">
+                                {{ $persetujuan->tanggal ? $persetujuan->tanggal->format('d/m/Y') : '-' }}</div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-item-label">Jam</div>
+                            <div class="data-item-value">
+                                {{ $persetujuan->jam ? date('H:i', strtotime($persetujuan->jam)) : '-' }}</div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-item-label">Persetujuan Untuk</div>
+                            <div class="data-item-value">
+                                @if ($persetujuan->persetujuan_untuk === 'diri_sendiri')
+                                    <span class="badge bg-info">Diri Sendiri</span>
+                                @else
+                                    <span class="badge bg-warning">Keluarga/Wali</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-item-label">Diagnosa</div>
+                            <div class="data-item-value">{{ $persetujuan->diagnosa ?: '-' }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Keluarga jika ada -->
+                @if ($persetujuan->persetujuan_untuk === 'keluarga')
+                    <div class="detail-card">
+                        <div class="detail-title">
+                            <i class="fas fa-user-check"></i> Data Keluarga/Wali
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="detail-row">
+                                    <div class="detail-label">Nama Lengkap:</div>
+                                    <div class="detail-value">{{ $persetujuan->nama_keluarga ?: '-' }}</div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-label">Tanggal Lahir:</div>
+                                    <div class="detail-value">
+                                        {{ $persetujuan->tgl_lahir_keluarga ? $persetujuan->tgl_lahir_keluarga->format('d/m/Y') : '-' }}
+                                    </div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-label">Jenis Kelamin:</div>
+                                    <div class="detail-value">
+                                        @if ($persetujuan->jk_keluarga !== null)
+                                            {{ $persetujuan->jk_keluarga == 1 ? 'Laki-laki' : 'Perempuan' }}
+                                        @else
+                                            -
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="detail-row">
+                                    <div class="detail-label">No. Telepon:</div>
+                                    <div class="detail-value">{{ $persetujuan->no_telp_keluarga ?: '-' }}</div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-label">No. KTP/SIM:</div>
+                                    <div class="detail-value">{{ $persetujuan->no_ktp_keluarga ?: '-' }}</div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-label">Hubungan:</div>
+                                    <div class="detail-value">{{ $persetujuan->hubungan_keluarga ?: '-' }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Alamat:</div>
+                            <div class="detail-value">{{ $persetujuan->alamat_keluarga ?: '-' }}</div>
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Informasi Edukasi -->
+                <div class="info-card">
+                    <div class="info-title">
+                        <i class="ti-info-alt"></i> Informasi Edukasi
+                    </div>
+                    <p class="mb-3">Telah membaca atau dibacakan keterangan pada <strong>form edukasi transfusi
+                            darah</strong>
+                        (di halaman belakang) dan telah
+                        dijelaskan hal-hal terkait mengenai prosedur transfusi darah yang akan dilakukan terhadap diri saya
+                        sendiri /
+                        pihak yang saya wakili *), sehingga saya :
+                    </p>
+                    <ul class="info-list">
+                        <li>Memahami alasan saya / pihak yang saya wakili memerlukan darah dan produk darah</li>
+                        <li>Memahami risiko yang mungkin terjadi saat atau sesudah pelaksanaan pemberian darah dan produk
+                            darah
+                        </li>
+                        <li>Memahami alternatif pemberian darah dan produk darah</li>
+                    </ul>
+                </div>
+
+                <!-- Data Dokter -->
+                <div class="detail-card">
+                    <div class="detail-title">
+                        <i class="ti-user"></i> Data Dokter
+                    </div>
+                    <div class="data-grid">
+                        <div class="data-item">
+                            <div class="data-item-label">Nama Dokter</div>
+                            <div class="data-item-value">
+                                {{ $persetujuan->dokter ? $dokter->where('kd_dokter', $persetujuan->dokter)->first()->nama_lengkap ?? 'Tidak ada dokter dipilih' : 'Tidak ada dokter dipilih' }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Saksi -->
+                <div class="detail-card">
+                    <div class="detail-title">
+                        <i class="ti-users"></i> Data Saksi
                     </div>
                     <div class="row">
                         <div class="col-md-6">
+                            <h6 class="text-primary mb-3"><i class="ti-user-check"></i> Saksi 1</h6>
                             <div class="detail-row">
-                                <div class="detail-label">Nama Lengkap:</div>
-                                <div class="detail-value">{{ $persetujuan->nama_keluarga ?: '-' }}</div>
+                                <div class="detail-label">Nama:</div>
+                                <div class="detail-value">{{ $persetujuan->nama_saksi1 ?: '-' }}</div>
                             </div>
                             <div class="detail-row">
                                 <div class="detail-label">Tanggal Lahir:</div>
                                 <div class="detail-value">
-                                    {{ $persetujuan->tgl_lahir_keluarga ? $persetujuan->tgl_lahir_keluarga->format('d/m/Y') : '-' }}
+                                    {{ $persetujuan->tgl_lahir_saksi1 ? $persetujuan->tgl_lahir_saksi1->format('d/m/Y') : '-' }}
                                 </div>
                             </div>
                             <div class="detail-row">
                                 <div class="detail-label">Jenis Kelamin:</div>
                                 <div class="detail-value">
-                                    @if($persetujuan->jk_keluarga !== null)
-                                        {{ $persetujuan->jk_keluarga == 1 ? 'Laki-laki' : 'Perempuan' }}
+                                    @if ($persetujuan->jk_saksi1 !== null)
+                                        {{ $persetujuan->jk_saksi1 == 1 ? 'Laki-laki' : 'Perempuan' }}
                                     @else
                                         -
                                     @endif
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class="detail-row">
                                 <div class="detail-label">No. Telepon:</div>
-                                <div class="detail-value">{{ $persetujuan->no_telp_keluarga ?: '-' }}</div>
+                                <div class="detail-value">{{ $persetujuan->no_telp_saksi1 ?: '-' }}</div>
                             </div>
                             <div class="detail-row">
                                 <div class="detail-label">No. KTP/SIM:</div>
-                                <div class="detail-value">{{ $persetujuan->no_ktp_keluarga ?: '-' }}</div>
+                                <div class="detail-value">{{ $persetujuan->no_ktp_saksi1 ?: '-' }}</div>
                             </div>
                             <div class="detail-row">
-                                <div class="detail-label">Hubungan:</div>
-                                <div class="detail-value">{{ $persetujuan->hubungan_keluarga ?: '-' }}</div>
+                                <div class="detail-label">Alamat:</div>
+                                <div class="detail-value">{{ $persetujuan->alamat_saksi1 ?: '-' }}</div>
                             </div>
                         </div>
-                    </div>
-                    <div class="detail-row">
-                        <div class="detail-label">Alamat:</div>
-                        <div class="detail-value">{{ $persetujuan->alamat_keluarga ?: '-' }}</div>
-                    </div>
-                </div>
-            @endif
-
-            <!-- Informasi Edukasi -->
-            <div class="info-card">
-                <div class="info-title">
-                    <i class="ti-info-alt"></i> Informasi Edukasi
-                </div>
-                <p class="mb-3">Telah membaca atau dibacakan keterangan pada <strong>form edukasi transfusi darah</strong>
-                    (di halaman belakang) dan telah
-                    dijelaskan hal-hal terkait mengenai prosedur transfusi darah yang akan dilakukan terhadap diri saya
-                    sendiri /
-                    pihak yang saya wakili *), sehingga saya :
-                </p>
-                <ul class="info-list">
-                    <li>Memahami alasan saya / pihak yang saya wakili memerlukan darah dan produk darah</li>
-                    <li>Memahami risiko yang mungkin terjadi saat atau sesudah pelaksanaan pemberian darah dan produk darah</li>
-                    <li>Memahami alternatif pemberian darah dan produk darah</li>
-                </ul>
-            </div>
-
-            <!-- Data Dokter -->
-            <div class="detail-card">
-                <div class="detail-title">
-                    <i class="ti-user"></i> Data Dokter
-                </div>
-                <div class="data-grid">
-                    <div class="data-item">
-                        <div class="data-item-label">Nama Dokter</div>
-                        <div class="data-item-value">
-                            {{ $persetujuan->dokter ? $dokter->where('kd_dokter', $persetujuan->dokter)->first()->nama_lengkap ?? 'Tidak ada dokter dipilih' : 'Tidak ada dokter dipilih' }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Data Saksi -->
-            <div class="detail-card">
-                <div class="detail-title">
-                    <i class="ti-users"></i> Data Saksi
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h6 class="text-primary mb-3"><i class="ti-user-check"></i> Saksi 1</h6>
-                        <div class="detail-row">
-                            <div class="detail-label">Nama:</div>
-                            <div class="detail-value">{{ $persetujuan->nama_saksi1 ?: '-' }}</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Tanggal Lahir:</div>
-                            <div class="detail-value">
-                                {{ $persetujuan->tgl_lahir_saksi1 ? $persetujuan->tgl_lahir_saksi1->format('d/m/Y') : '-' }}
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3"><i class="ti-user-check"></i> Saksi 2</h6>
+                            <div class="detail-row">
+                                <div class="detail-label">Nama:</div>
+                                <div class="detail-value">{{ $persetujuan->nama_saksi2 ?: '-' }}</div>
                             </div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Jenis Kelamin:</div>
-                            <div class="detail-value">
-                                @if($persetujuan->jk_saksi1 !== null)
-                                    {{ $persetujuan->jk_saksi1 == 1 ? 'Laki-laki' : 'Perempuan' }}
-                                @else
-                                    -
-                                @endif
-                            </div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">No. Telepon:</div>
-                            <div class="detail-value">{{ $persetujuan->no_telp_saksi1 ?: '-' }}</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">No. KTP/SIM:</div>
-                            <div class="detail-value">{{ $persetujuan->no_ktp_saksi1 ?: '-' }}</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Alamat:</div>
-                            <div class="detail-value">{{ $persetujuan->alamat_saksi1 ?: '-' }}</div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <h6 class="text-primary mb-3"><i class="ti-user-check"></i> Saksi 2</h6>
-                        <div class="detail-row">
-                            <div class="detail-label">Nama:</div>
-                            <div class="detail-value">{{ $persetujuan->nama_saksi2 ?: '-' }}</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Tanggal Lahir:</div>
-                            <div class="detail-value">
-                                {{ $persetujuan->tgl_lahir_saksi2 ? $persetujuan->tgl_lahir_saksi2->format('d/m/Y') : '-' }}
-                            </div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Jenis Kelamin:</div>
-                            <div class="detail-value">
-                                @if($persetujuan->jk_saksi2 !== null)
-                                    {{ $persetujuan->jk_saksi2 == 1 ? 'Laki-laki' : 'Perempuan' }}
-                                @else
-                                    -
-                                @endif
-                            </div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">No. Telepon:</div>
-                            <div class="detail-value">{{ $persetujuan->no_telp_saksi2 ?: '-' }}</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">No. KTP/SIM:</div>
-                            <div class="detail-value">{{ $persetujuan->no_ktp_saksi2 ?: '-' }}</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Alamat:</div>
-                            <div class="detail-value">{{ $persetujuan->alamat_saksi2 ?: '-' }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Persetujuan -->
-            <div class="consent-card">
-                <div class="consent-title">
-                    <i class="ti-help"></i> Persetujuan Transfusi Darah
-                </div>
-                <h5 class="mb-3">Apakah Anda menyetujui pemberian darah dan produk darah?</h5>
-                <div class="mt-3">
-                    @if($persetujuan->persetujuan === 'setuju')
-                        <span class="badge bg-success fs-6 px-4 py-2">
-                            <i class="ti-check"></i> YA, SETUJU
-                        </span>
-                    @else
-                        <span class="badge bg-danger fs-6 px-4 py-2">
-                            <i class="ti-close"></i> TIDAK SETUJU
-                        </span>
-                    @endif
-                </div>
-            </div>
-
-            <!-- Tanda Tangan -->
-            <div class="detail-card">
-                <div class="detail-title">
-                    <i class="ti-pencil"></i> Tanda Tangan
-                </div>
-                <p><strong>Atas pemberian darah dan produk darah terhadap diri saya sendiri / pihak yang saya
-                        wakili.</strong></p>
-                <p class="mb-4">Yang bertanda tangan di bawah ini:</p>
-
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="signature-box">
-                            <strong><i class="ti-user"></i> Yang Menyatakan</strong>
-                            <div class="signature-name">{{ $persetujuan->yang_menyatakan ?: '-' }}</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="signature-box">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <i class="ti-user"></i> Dokter
-                                </h5>
-                                <div class="signature-name">
-                                    {{ $persetujuan->dokter ? $dokter->where('kd_dokter', $persetujuan->dokter)->first()->nama_lengkap ?? 'Tidak ada dokter dipilih' : 'Tidak ada dokter dipilih' }}
+                            <div class="detail-row">
+                                <div class="detail-label">Tanggal Lahir:</div>
+                                <div class="detail-value">
+                                    {{ $persetujuan->tgl_lahir_saksi2 ? $persetujuan->tgl_lahir_saksi2->format('d/m/Y') : '-' }}
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="signature-box">
-                            <strong><i class="ti-user-check"></i> Saksi 1</strong>
-                            <div class="signature-name">{{ $persetujuan->nama_saksi1 ?: '-' }}</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="signature-box">
-                            <strong><i class="ti-user-check"></i> Saksi 2</strong>
-                            <div class="signature-name">{{ $persetujuan->nama_saksi2 ?: '-' }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Info Petugas -->
-            <div class="detail-card">
-                <div class="detail-title">
-                    <i class="ti-info"></i> Informasi Petugas
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="timestamp-info">
-                            <div class="timestamp-label">
-                                <i class="ti-user-plus"></i> Dibuat Oleh
-                            </div>
-                            <div class="timestamp-value">
-                                <strong>{{ $persetujuan->userCreate->name ?? 'Tidak Diketahui' }}</strong><br>
-                                @if($persetujuan->created_at)
-                                    {{ $persetujuan->created_at->format('d/m/Y H:i:s') }}
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        @if($persetujuan->userEdit)
-                            <div class="timestamp-info" style="background: #fff3cd; border-color: #ffc107;">
-                                <div class="timestamp-label" style="color: #856404;">
-                                    <i class="ti-edit"></i> Terakhir Diubah
-                                </div>
-                                <div class="timestamp-value" style="color: #856404;">
-                                    <strong>{{ $persetujuan->userEdit->name ?? 'Tidak Diketahui' }}</strong><br>
-                                    @if($persetujuan->updated_at)
-                                        {{ $persetujuan->updated_at->format('d/m/Y H:i:s') }}
+                            <div class="detail-row">
+                                <div class="detail-label">Jenis Kelamin:</div>
+                                <div class="detail-value">
+                                    @if ($persetujuan->jk_saksi2 !== null)
+                                        {{ $persetujuan->jk_saksi2 == 1 ? 'Laki-laki' : 'Perempuan' }}
+                                    @else
+                                        -
                                     @endif
                                 </div>
                             </div>
-                        @else
-                            <div class="timestamp-info" style="background: #f0f0f0; border-color: #ccc;">
-                                <div class="timestamp-label" style="color: #666;">
-                                    <i class="ti-info"></i> Status
-                                </div>
-                                <div class="timestamp-value" style="color: #666;">
-                                    Belum pernah diubah
-                                </div>
+                            <div class="detail-row">
+                                <div class="detail-label">No. Telepon:</div>
+                                <div class="detail-value">{{ $persetujuan->no_telp_saksi2 ?: '-' }}</div>
                             </div>
+                            <div class="detail-row">
+                                <div class="detail-label">No. KTP/SIM:</div>
+                                <div class="detail-value">{{ $persetujuan->no_ktp_saksi2 ?: '-' }}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Alamat:</div>
+                                <div class="detail-value">{{ $persetujuan->alamat_saksi2 ?: '-' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Persetujuan -->
+                <div class="consent-card">
+                    <div class="consent-title">
+                        <i class="ti-help"></i> Persetujuan Transfusi Darah
+                    </div>
+                    <h5 class="mb-3">Apakah Anda menyetujui pemberian darah dan produk darah?</h5>
+                    <div class="mt-3">
+                        @if ($persetujuan->persetujuan === 'setuju')
+                            <span class="badge bg-success fs-6 px-4 py-2">
+                                <i class="ti-check"></i> YA, SETUJU
+                            </span>
+                        @else
+                            <span class="badge bg-danger fs-6 px-4 py-2">
+                                <i class="ti-close"></i> TIDAK SETUJU
+                            </span>
                         @endif
                     </div>
                 </div>
 
-            </div>
+                <!-- Tanda Tangan -->
+                <div class="detail-card">
+                    <div class="detail-title">
+                        <i class="ti-pencil"></i> Tanda Tangan
+                    </div>
+                    <p><strong>Atas pemberian darah dan produk darah terhadap diri saya sendiri / pihak yang saya
+                            wakili.</strong></p>
+                    <p class="mb-4">Yang bertanda tangan di bawah ini:</p>
 
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="signature-box">
+                                <strong><i class="ti-user"></i> Yang Menyatakan</strong>
+                                <div class="signature-name">{{ $persetujuan->yang_menyatakan ?: '-' }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="signature-box">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="ti-user"></i> Dokter
+                                    </h5>
+                                    <div class="signature-name">
+                                        {{ $persetujuan->dokter ? $dokter->where('kd_dokter', $persetujuan->dokter)->first()->nama_lengkap ?? 'Tidak ada dokter dipilih' : 'Tidak ada dokter dipilih' }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="signature-box">
+                                <strong><i class="ti-user-check"></i> Saksi 1</strong>
+                                <div class="signature-name">{{ $persetujuan->nama_saksi1 ?: '-' }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="signature-box">
+                                <strong><i class="ti-user-check"></i> Saksi 2</strong>
+                                <div class="signature-name">{{ $persetujuan->nama_saksi2 ?: '-' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Petugas -->
+                <div class="detail-card">
+                    <div class="detail-title">
+                        <i class="ti-info"></i> Informasi Petugas
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="timestamp-info">
+                                <div class="timestamp-label">
+                                    <i class="ti-user-plus"></i> Dibuat Oleh
+                                </div>
+                                <div class="timestamp-value">
+                                    <strong>{{ $persetujuan->userCreate->name ?? 'Tidak Diketahui' }}</strong><br>
+                                    @if ($persetujuan->created_at)
+                                        {{ $persetujuan->created_at->format('d/m/Y H:i:s') }}
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            @if ($persetujuan->userEdit)
+                                <div class="timestamp-info" style="background: #fff3cd; border-color: #ffc107;">
+                                    <div class="timestamp-label" style="color: #856404;">
+                                        <i class="ti-edit"></i> Terakhir Diubah
+                                    </div>
+                                    <div class="timestamp-value" style="color: #856404;">
+                                        <strong>{{ $persetujuan->userEdit->name ?? 'Tidak Diketahui' }}</strong><br>
+                                        @if ($persetujuan->updated_at)
+                                            {{ $persetujuan->updated_at->format('d/m/Y H:i:s') }}
+                                        @endif
+                                    </div>
+                                </div>
+                            @else
+                                <div class="timestamp-info" style="background: #f0f0f0; border-color: #ccc;">
+                                    <div class="timestamp-label" style="color: #666;">
+                                        <i class="ti-info"></i> Status
+                                    </div>
+                                    <div class="timestamp-value" style="color: #666;">
+                                        Belum pernah diubah
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                </div>
+            </x-content-card>
         </div>
     </div>
 
@@ -594,14 +583,14 @@
         }
 
         // Auto-hide alerts after 5 seconds (if any)
-        setTimeout(function () {
+        setTimeout(function() {
             $('.alert').fadeOut('slow');
         }, 5000);
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Add smooth scrolling for better UX
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
+                anchor.addEventListener('click', function(e) {
                     e.preventDefault();
                     document.querySelector(this.getAttribute('href')).scrollIntoView({
                         behavior: 'smooth'
@@ -612,12 +601,12 @@
             // Enhance signature boxes with hover effects
             const signatureBoxes = document.querySelectorAll('.signature-box');
             signatureBoxes.forEach(box => {
-                box.addEventListener('mouseenter', function () {
+                box.addEventListener('mouseenter', function() {
                     this.style.borderColor = '#667eea';
                     this.style.borderWidth = '3px';
                 });
 
-                box.addEventListener('mouseleave', function () {
+                box.addEventListener('mouseleave', function() {
                     this.style.borderColor = '#667eea';
                     this.style.borderWidth = '2px';
                 });

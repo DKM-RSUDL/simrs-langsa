@@ -105,16 +105,6 @@
             padding-top: 0;
         }
 
-        .btn-outline-primary {
-            color: #097dd6;
-            border-color: #097dd6;
-        }
-
-        .btn-outline-primary:hover {
-            background-color: #097dd6;
-            color: white;
-        }
-
         .pain-scale-container {
             background-color: #fff;
             padding: 20px;
@@ -233,26 +223,26 @@
             // Filter button functionality
             document.getElementById('filterButton').addEventListener('click', function(e) {
                 e.preventDefault();
-                
+
                 const startDate = document.getElementById('start_date').value;
                 const endDate = document.getElementById('end_date').value;
                 const currentUrl = new URL(window.location);
-                
+
                 if (startDate) {
                     currentUrl.searchParams.set('start_date', startDate);
                 } else {
                     currentUrl.searchParams.delete('start_date');
                 }
-                
+
                 if (endDate) {
                     currentUrl.searchParams.set('end_date', endDate);
                 } else {
                     currentUrl.searchParams.delete('end_date');
                 }
-                
+
                 // Reset pagination
                 currentUrl.searchParams.delete('page');
-                
+
                 window.location.href = currentUrl.toString();
             });
 
