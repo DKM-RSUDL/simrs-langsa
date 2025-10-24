@@ -16,7 +16,6 @@
 
         .section-separator {
             border-top: 2px solid #097dd6;
-            margin: 2rem 0;
             padding-top: 1rem;
         }
 
@@ -111,189 +110,174 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ url()->previous() }}" class="btn btn-outline-primary mb-3">
-                <i class="ti-arrow-left"></i> Kembali
-            </a>
-
-            <div class="d-flex justify-content-center">
-                <div class="card w-100 h-100 shadow-sm">
-                    <div class="card-body">
-                        <div class="px-3">
-                            <h4 class="header-asesmen">Persetujuan Anestesi dan Sedasi</h4>
+            <x-content-card>
+                <x-button-previous />
+                @include('components.page-header', [
+                    'title' => 'Rincian Persetujuan Anestesi dan Sedasi',
+                    'description' => 'Rincian data persetujuan anestesi dan sedasi pasien gawat darurat.',
+                ])
+                {{-- Info Umum --}}
+                <div class="section-separator">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="tanggal">Tanggal</label>
+                                <input type="text" name="tanggal" id="tanggal" class="form-control date"
+                                    value="{{ date('Y-m-d', strtotime($anestesi->tanggal)) }}" disabled>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="jam">Jam</label>
+                                <input type="time" name="jam" id="jam" class="form-control"
+                                    value="{{ date('H:i', strtotime($anestesi->jam)) }}" disabled>
+                            </div>
                         </div>
 
-                        <div class="px-3">
-                            {{-- Info Umum --}}
-                            <div class="section-separator">
-                                <div class="form-group">
-                                    <label for="tanggal">Tanggal</label>
-                                    <input type="text" name="tanggal" id="tanggal" class="form-control date"
-                                        value="{{ date('Y-m-d', strtotime($anestesi->tanggal)) }}" disabled>
-                                </div>
+                        <div class="form-group">
+                            <label for="kd_dokter">Dokter</label>
+                            <select name="kd_dokter" id="kd_dokter" class="form-select" disabled>
+                                <option value="">--Pilih--</option>
+                                @foreach ($dokter as $dok)
+                                    <option value="{{ $dok->kd_dokter }}" @selected($dok->kd_dokter == $anestesi->kd_dokter)>
+                                        {{ $dok->nama_lengkap }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                                <div class="form-group">
-                                    <label for="jam">Jam</label>
-                                    <input type="time" name="jam" id="jam" class="form-control"
-                                        value="{{ date('H:i', strtotime($anestesi->jam)) }}" disabled>
-                                </div>
+                        <div class="form-group">
+                            <label for="nama_saksi_keluarga">Nama Saksi Keluarga</label>
+                            <input type="text" class="form-control" id="nama_saksi_keluarga" name="nama_saksi_keluarga"
+                                value="{{ $anestesi->nama_saksi_keluarga }}" disabled>
+                        </div>
 
-                                <div class="form-group">
-                                    <label for="kd_dokter">Dokter</label>
-                                    <select name="kd_dokter" id="kd_dokter" class="form-select" disabled>
-                                        <option value="">--Pilih--</option>
-                                        @foreach ($dokter as $dok)
-                                            <option value="{{ $dok->kd_dokter }}" @selected($dok->kd_dokter == $anestesi->kd_dokter)>
-                                                {{ $dok->nama_lengkap }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                        <div class="form-group">
+                            <label for="nama_saksi">Nama Saksi</label>
+                            <input type="text" class="form-control" id="nama_saksi" name="nama_saksi"
+                                value="{{ $anestesi->nama_saksi }}" disabled>
+                        </div>
 
-                                <div class="form-group">
-                                    <label for="nama_saksi_keluarga">Nama Saksi Keluarga</label>
-                                    <input type="text" class="form-control" id="nama_saksi_keluarga"
-                                        name="nama_saksi_keluarga" value="{{ $anestesi->nama_saksi_keluarga }}" disabled>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="nama_saksi">Nama Saksi</label>
-                                    <input type="text" class="form-control" id="nama_saksi" name="nama_saksi"
-                                        value="{{ $anestesi->nama_saksi }}" disabled>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="status_keluarga" style="min-width: 200px;">Status Pasien dgn
-                                        Keluarga</label>
-                                    <select name="status_keluarga" id="status_keluarga" class="form-select">
-                                        <option value="">--Pilih--</option>
-                                        <option value="1" @selected($anestesi->status_keluarga == 1)>Diri sendiri</option>
-                                        <option value="2" @selected($anestesi->status_keluarga == 2)>Istri</option>
-                                        <option value="3" @selected($anestesi->status_keluarga == 3)>Suami</option>
-                                        <option value="4" @selected($anestesi->status_keluarga == 4)>Anak</option>
-                                        <option value="5" @selected($anestesi->status_keluarga == 5)>Ayah</option>
-                                        <option value="6" @selected($anestesi->status_keluarga == 6)>Ibu</option>
-                                        <option value="7" @selected($anestesi->status_keluarga == 7)>Lain-lain</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            {{-- IDENTITAS KELUARGA --}}
-                            <div class="section-separator" id="identitas-keluarga">
-                                <h4 class="fw-semibold">IDENTITAS KELUARGA</h4>
-
-                                <div class="form-group">
-                                    <label for="keluarga_nama" style="min-width: 200px;">Nama</label>
-                                    <input type="text" name="keluarga_nama" id="keluarga_nama" class="form-control"
-                                        value="{{ $anestesi->keluarga_nama }}" disabled>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="keluarga_usia" style="min-width: 200px;">Usia (tahun)</label>
-                                    <input type="number" name="keluarga_usia" id="keluarga_usia" class="form-control"
-                                        value="{{ $anestesi->keluarga_usia }}" disabled>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="keluarga_jenis_kelamin" style="min-width: 200px;">Jenis
-                                        Kelamin</label>
-                                    <select name="keluarga_jenis_kelamin" id="keluarga_jenis_kelamin" class="form-select"
-                                        disabled>
-                                        <option value="">--Pilih--</option>
-                                        <option value="0" @selected($anestesi->keluarga_jenis_kelamin == 0)>Perempuan</option>
-                                        <option value="1" @selected($anestesi->keluarga_jenis_kelamin == 1)>Laki-Laki</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="keluarga_alamat" style="min-width: 200px;">Alamat</label>
-                                    <textarea name="keluarga_alamat" id="keluarga_alamat" class="form-control" disabled>{{ $anestesi->keluarga_alamat }}</textarea>
-                                </div>
-                            </div>
-
-                            {{-- TINDAKAN --}}
-                            <div class="section-separator"">
-                                <h4 class="fw-semibold">TINDAKAN ANESTESI</h4>
-
-                                <div class="form-group">
-                                    <div class="d-flex">
-                                        <label style="min-width: 200px;">Tindakan</label>
-                                        <div class="">
-                                            <div class="">
-                                                <input type="checkbox" name="tindakan[]" id="umum"
-                                                    class="form-check-input" value="Anestesi Umum"
-                                                    @checked(in_array('Anestesi Umum', $anestesi->tindakan)) disabled>
-                                                <label for="umum">Anestesi Umum</label>
-                                            </div>
-                                            <div class="">
-                                                <input type="checkbox" name="tindakan[]" id="kombinasi"
-                                                    class="form-check-input" value="Kombinasi Spinal-Epidural"
-                                                    @checked(in_array('Kombinasi Spinal-Epidural', $anestesi->tindakan)) disabled>
-                                                <label for="kombinasi">Kombinasi Spinal-Epidural</label>
-                                            </div>
-                                            <div class="">
-                                                <input type="checkbox" name="tindakan[]" id="sedasi"
-                                                    class="form-check-input" value="Sedasi" @checked(in_array('Sedasi', $anestesi->tindakan))
-                                                    disabled>
-                                                <label for="sedasi">Sedasi</label>
-                                            </div>
-                                            <div class="">
-                                                <input type="checkbox" name="tindakan[]" id="kaudal"
-                                                    class="form-check-input" value="Anestesi Kaudal"
-                                                    @checked(in_array('Anestesi Kaudal', $anestesi->tindakan)) disabled>
-                                                <label for="kaudal">Anestesi Kaudal</label>
-                                            </div>
-                                            <div class="">
-                                                <input type="checkbox" name="tindakan[]" id="spinal"
-                                                    class="form-check-input" value="Anestesi Spinal"
-                                                    @checked(in_array('Anestesi Spinal', $anestesi->tindakan)) disabled>
-                                                <label for="spinal">Anestesi Spinal</label>
-                                            </div>
-                                            <div class="">
-                                                <input type="checkbox" name="tindakan[]" id="saraf"
-                                                    class="form-check-input" value="Blok Saraf Perifer"
-                                                    @checked(in_array('Blok Saraf Perifer', $anestesi->tindakan)) disabled>
-                                                <label for="saraf">Blok Saraf Perifer</label>
-                                            </div>
-                                            <div class="">
-                                                <input type="checkbox" name="tindakan[]" id="epidural"
-                                                    class="form-check-input" value="Anestesi Epidural"
-                                                    @checked(in_array('Anestesi Epidural', $anestesi->tindakan)) disabled>
-                                                <label for="epidural">Anestesi Epidural</label>
-                                            </div>
-                                            <div class="">
-                                                <input type="checkbox" name="tindakan[]" id="lainnya"
-                                                    class="form-check-input" value="Lain-lain"
-                                                    @checked(in_array('Lain-lain', $anestesi->tindakan)) disabled>
-                                                <label for="lainnya">Lain-lain</label>
-                                                <input type="text" class="form-control" name="tindakan_lainnya"
-                                                    id="tindakan_lainnya"
-                                                    value="{{ in_array('Lain-lain', $anestesi->tindakan) ? $anestesi->tindakan_lainnya : '' }}"
-                                                    disabled>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
+                        <div class="form-group">
+                            <label for="status_keluarga" style="min-width: 200px;">Status Pasien dgn
+                                Keluarga</label>
+                            <select name="status_keluarga" id="status_keluarga" class="form-select">
+                                <option value="">--Pilih--</option>
+                                <option value="1" @selected($anestesi->status_keluarga == 1)>Diri sendiri</option>
+                                <option value="2" @selected($anestesi->status_keluarga == 2)>Istri</option>
+                                <option value="3" @selected($anestesi->status_keluarga == 3)>Suami</option>
+                                <option value="4" @selected($anestesi->status_keluarga == 4)>Anak</option>
+                                <option value="5" @selected($anestesi->status_keluarga == 5)>Ayah</option>
+                                <option value="6" @selected($anestesi->status_keluarga == 6)>Ibu</option>
+                                <option value="7" @selected($anestesi->status_keluarga == 7)>Lain-lain</option>
+                            </select>
                         </div>
                     </div>
-                </div>
-            </div>
+
+                    {{-- IDENTITAS KELUARGA --}}
+                    <div class="section-separator" id="identitas-keluarga">
+                        <h4 class="fw-semibold">IDENTITAS KELUARGA</h4>
+
+                        <div class="form-group">
+                            <label for="keluarga_nama" style="min-width: 200px;">Nama</label>
+                            <input type="text" name="keluarga_nama" id="keluarga_nama" class="form-control"
+                                value="{{ $anestesi->keluarga_nama }}" disabled>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="keluarga_usia" style="min-width: 200px;">Usia (tahun)</label>
+                            <input type="number" name="keluarga_usia" id="keluarga_usia" class="form-control"
+                                value="{{ $anestesi->keluarga_usia }}" disabled>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="keluarga_jenis_kelamin" style="min-width: 200px;">Jenis
+                                Kelamin</label>
+                            <select name="keluarga_jenis_kelamin" id="keluarga_jenis_kelamin" class="form-select" disabled>
+                                <option value="">--Pilih--</option>
+                                <option value="0" @selected($anestesi->keluarga_jenis_kelamin == 0)>Perempuan</option>
+                                <option value="1" @selected($anestesi->keluarga_jenis_kelamin == 1)>Laki-Laki</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="keluarga_alamat" style="min-width: 200px;">Alamat</label>
+                            <textarea name="keluarga_alamat" id="keluarga_alamat" class="form-control" disabled>{{ $anestesi->keluarga_alamat }}</textarea>
+                        </div>
+                    </div>
+
+                    {{-- TINDAKAN --}}
+                    <div class="section-separator"">
+                        <h4 class="fw-semibold">TINDAKAN ANESTESI</h4>
+
+                        <div class="form-group">
+                            <div class="d-flex">
+                                <label style="min-width: 200px;">Tindakan</label>
+                                <div class="">
+                                    <div class="">
+                                        <input type="checkbox" name="tindakan[]" id="umum" class="form-check-input"
+                                            value="Anestesi Umum" @checked(in_array('Anestesi Umum', $anestesi->tindakan)) disabled>
+                                        <label for="umum">Anestesi Umum</label>
+                                    </div>
+                                    <div class="">
+                                        <input type="checkbox" name="tindakan[]" id="kombinasi" class="form-check-input"
+                                            value="Kombinasi Spinal-Epidural" @checked(in_array('Kombinasi Spinal-Epidural', $anestesi->tindakan)) disabled>
+                                        <label for="kombinasi">Kombinasi Spinal-Epidural</label>
+                                    </div>
+                                    <div class="">
+                                        <input type="checkbox" name="tindakan[]" id="sedasi" class="form-check-input"
+                                            value="Sedasi" @checked(in_array('Sedasi', $anestesi->tindakan)) disabled>
+                                        <label for="sedasi">Sedasi</label>
+                                    </div>
+                                    <div class="">
+                                        <input type="checkbox" name="tindakan[]" id="kaudal" class="form-check-input"
+                                            value="Anestesi Kaudal" @checked(in_array('Anestesi Kaudal', $anestesi->tindakan)) disabled>
+                                        <label for="kaudal">Anestesi Kaudal</label>
+                                    </div>
+                                    <div class="">
+                                        <input type="checkbox" name="tindakan[]" id="spinal" class="form-check-input"
+                                            value="Anestesi Spinal" @checked(in_array('Anestesi Spinal', $anestesi->tindakan)) disabled>
+                                        <label for="spinal">Anestesi Spinal</label>
+                                    </div>
+                                    <div class="">
+                                        <input type="checkbox" name="tindakan[]" id="saraf" class="form-check-input"
+                                            value="Blok Saraf Perifer" @checked(in_array('Blok Saraf Perifer', $anestesi->tindakan)) disabled>
+                                        <label for="saraf">Blok Saraf Perifer</label>
+                                    </div>
+                                    <div class="">
+                                        <input type="checkbox" name="tindakan[]" id="epidural" class="form-check-input"
+                                            value="Anestesi Epidural" @checked(in_array('Anestesi Epidural', $anestesi->tindakan)) disabled>
+                                        <label for="epidural">Anestesi Epidural</label>
+                                    </div>
+                                    <div class="">
+                                        <input type="checkbox" name="tindakan[]" id="lainnya" class="form-check-input"
+                                            value="Lain-lain" @checked(in_array('Lain-lain', $anestesi->tindakan)) disabled>
+                                        <label for="lainnya">Lain-lain</label>
+                                        <input type="text" class="form-control" name="tindakan_lainnya"
+                                            id="tindakan_lainnya"
+                                            value="{{ in_array('Lain-lain', $anestesi->tindakan) ? $anestesi->tindakan_lainnya : '' }}"
+                                            disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+            </x-content-card>
         </div>
-    </div>
-@endsection
+    @endsection
 
-@push('js')
-    <script>
-        $(document).ready(function() {
+    @push('js')
+        <script>
+            $(document).ready(function() {
 
-            let statusKlg = {{ $anestesi->status_keluarga }}
+                let statusKlg = {{ $anestesi->status_keluarga }}
 
-            if (statusKlg == 1) {
-                $('#identitas-keluarga').hide();
-                $('#identitas-keluarga input,select,textarea').prop('disabled', false);
-            }
+                if (statusKlg == 1) {
+                    $('#identitas-keluarga').hide();
+                    $('#identitas-keluarga input,select,textarea').prop('disabled', false);
+                }
 
-            $('input,select,textarea').prop('disabled', true);
-        });
-    </script>
-@endpush
+                $('input,select,textarea').prop('disabled', true);
+            });
+        </script>
+    @endpush
