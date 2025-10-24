@@ -3,12 +3,6 @@
 @section('content')
     @push('css')
         <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
-        <style>
-            .header-background {
-                height: 100%;
-                background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-            }
-        </style>
     @endpush
 
     <div class="row">
@@ -17,153 +11,159 @@
         </div>
 
         <div class="col-md-9">
-            <div class="form-section">
-                <form id="ProsesUbah"
-                    action="{{ route('ubah-pasien.ubah-pasien', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
-                    method="post">
-                    @csrf
+            <x-content-card>
+                <x-button-previous />
 
-                    {{-- START: DATA UPDATE --}}
-                    <div class="text-center mt-1 mb-2">
-                        <h5 class="text-secondary fw-bold">Cari dan Update Data Pasien</h5>
-                    </div>
-                    <div class="row g-3 mb-3">
-                        <div class="col-12">
-                            <div class="form-group -mb-1">
-                                <label for="nik_pasien" class="form-label">NIK/No. RM Pasien</label>
-                                <div class="input-group" style="margin-bottom: 0px">
-                                    <input type="text" name="nik_pasien" id="nik_pasien" class="form-control"
-                                        placeholder="NIK/No RM Pasien (Cth: 0-00-00-00)" aria-label="Nik Pasien"
-                                        aria-describedby="button-nik-pasien" value="{{ old('nik_pasien') }}">
-                                    <button class="btn btn-outline-secondary" type="button" id="button-nik-pasien">
-                                        <i class="ti ti-search"></i>
-                                    </button>
+                <div class="form-section">
+                    <form id="ProsesUbah"
+                        action="{{ route('ubah-pasien.ubah-pasien', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                        method="post">
+                        @csrf
+
+                        @include('components.page-header', [
+                            'title' => 'Data Pasien Aktual',
+                            'description' => 'Cari dan perbarui data menjadi data aktual.',
+                        ])
+                        <div class="row g-3 mb-3">
+                            <div class="col-12">
+                                <div class="form-group -mb-1">
+                                    <label for="nik_pasien" class="form-label">NIK/No. RM Pasien</label>
+                                    <div class="input-group" style="margin-bottom: 0px">
+                                        <input type="text" name="nik_pasien" id="nik_pasien" class="form-control"
+                                            placeholder="NIK/No RM Pasien (Cth: 0-00-00-00)" aria-label="Nik Pasien"
+                                            aria-describedby="button-nik-pasien" value="{{ old('nik_pasien') }}">
+                                        <button class="btn btn-outline-secondary" type="button" id="button-nik-pasien">
+                                            <i class="ti ti-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="nama" class="form-label">Nama Pasien</label>
+                                    <input class="form-control" name="nama" type="text" id="nama" value=""
+                                        disabled>
+
+                                    <input type="hidden" name="kd_pasien_asli" id="kd_pasien_asli" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
+                                    <select name="jenis_kelamin" id="jenis_kelamin" class="form-select" disabled>
+                                        <option value="">--Pilih Jenis Kelamin--</option>
+                                        <option value="1">Laki-laki</option>
+                                        <option value="0">Perempuan</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
+                                    <input class="form-control" name="tanggal_lahir" type="text" id="tanggal_lahir"
+                                        placeholder="yyyy-mm-dd" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="usia" class="form-label">Usia</label>
+                                    <input class="form-control" name="usia" id="usia" value="0" disabled>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="nama" class="form-label">Nama Pasien</label>
-                                <input class="form-control" name="nama" type="text" id="nama" value=""
-                                    disabled>
 
-                                <input type="hidden" name="kd_pasien_asli" id="kd_pasien_asli" readonly>
+                        <div class="row g-3 mb-4">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="alamat" class="form-label">Alamat</label>
+                                    <textarea class="form-control" name="alamat" id="alamat" placeholder="Masukkan alamat asli pasien" disabled></textarea>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                                <select name="jenis_kelamin" id="jenis_kelamin" class="form-select" disabled>
-                                    <option value="">--Pilih Jenis Kelamin--</option>
-                                    <option value="1">Laki-laki</option>
-                                    <option value="0">Perempuan</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
-                                <input class="form-control" name="tanggal_lahir" type="text" id="tanggal_lahir"
-                                    placeholder="yyyy-mm-dd" disabled>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="usia" class="form-label">Usia</label>
-                                <input class="form-control" name="usia" id="usia" value="0" disabled>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row g-3 mb-4">
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="alamat" class="form-label">Alamat</label>
-                                <textarea class="form-control" name="alamat" id="alamat" placeholder="Masukkan alamat asli pasien" disabled></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    {{-- END: DATA UPDATE --}}
+                        {{-- END: DATA UPDATE --}}
 
-                    <hr style="border: none; height: 3px; background-color: blue;">
+                        <hr style="border: none; height: 3px; background-color: blue;">
 
-                    {{-- START: DATA ASLI --}}
-                    <div class="text-center mt-1 mb-2 mt-4">
-                        <h5 class="text-secondary fw-bold">Identitas Pasien Sebelumnya</h5>
-                    </div>
-                    <div class="d-flex gap-4 mb-1">
-                        <div style="width: auto; height:150px">
-                            <div style="border: 1px solid #ced4da; padding: 5px; border-radius: 5px;"
-                                class="p-2 text-center">
-                                <img src="{{ asset('assets/images/avatar1.png') }}" width="150" height="150"
-                                    alt="Foto Pasien" class="img-fluid">
+                        {{-- START: DATA ASLI --}}
+                        @include('components.page-header', [
+                            'title' => 'Identitas Pasien Sebelumnya',
+                            'description' => 'Identitas pasien sebelum diubah menjadi data aktual.',
+                        ])
+                        <div class="d-flex gap-4 mb-1">
+                            <div style="width: auto; height:150px">
+                                <div style="border: 1px solid #ced4da; padding: 5px; border-radius: 5px;"
+                                    class="p-2 text-center">
+                                    <img src="{{ asset('assets/images/avatar1.png') }}" width="150" height="150"
+                                        alt="Foto Pasien" class="img-fluid">
+                                </div>
+                            </div>
+                            <div class="w-100">
+                                <div class="form-group">
+                                    <label for="kd_transaksi" class="form-label">No. Transaksi</label>
+                                    <input readonly class="form-control" name="kd_transaksi" type="text"
+                                        id="kd_transaksi" value="{{ $dataMedis->no_transaksi ?? '0' }}">
+                                </div>
                             </div>
                         </div>
-                        <div class="w-100">
-                            <div class="form-group">
-                                <label for="kd_transaksi" class="form-label">No. Transaksi</label>
-                                <input readonly class="form-control" name="kd_transaksi" type="text" id="kd_transaksi"
-                                    value="{{ $dataMedis->no_transaksi ?? '0' }}">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="nama_sebelumnya" class="form-label">Nama Pasien</label>
+                                    <input readonly class="form-control" name="nama_sebelumnya" type="text"
+                                        id="nama_sebelumnya" value="{{ $dataMedis->pasien->nama ?? 'OKOK' }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="jenis_kelamin_sebelumnya" class="form-label">Jenis Kelamin</label>
+                                    <select readonly name="jenis_kelamin_sebelumnya" id="jenis_kelamin_sebelumnya"
+                                        class="form-select" disabled>
+                                        <option value="" disabled>--Pilih Jenis Kelamin--</option>
+                                        <option value="1"
+                                            {{ ($dataMedis->pasien->jenis_kelamin ?? '1') == '1' ? 'selected' : '' }}>
+                                            Laki-laki</option>
+                                        <option value="0"
+                                            {{ ($dataMedis->pasien->jenis_kelamin ?? '1') == '0' ? 'selected' : '' }}>
+                                            Perempuan</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="tanggal_lahir_sebelumnya" class="form-label">Tanggal Lahir</label>
+                                    <input readonly class="form-control" name="tanggal_lahir_sebelumnya" type="date"
+                                        id="tanggal_lahir_sebelumnya"
+                                        value="{{ date('Y-m-d', strtotime($dataMedis->pasien->tgl_lahir)) }}" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="usia_sebelumnya" class="form-label">Usia</label>
+                                    <input readonly class="form-control" name="usia_sebelumnya" id="usia_sebelumnya"
+                                        value="{{ $dataMedis->pasien->usia ?? \Carbon\Carbon::parse('2007-04-27')->age }}">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row g-3 mb-3">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="nama_sebelumnya" class="form-label">Nama Pasien</label>
-                                <input readonly class="form-control" name="nama_sebelumnya" type="text"
-                                    id="nama_sebelumnya" value="{{ $dataMedis->pasien->nama ?? 'OKOK' }}">
+                        <div class="row g-3 mb-4">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="alamat_sebelumnya" class="form-label">Alamat</label>
+                                    <textarea readonly class="form-control" name="alamat_sebelumnya" id="alamat_sebelumnya">{{ $dataMedis->pasien->alamat ?? '' }}</textarea>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="jenis_kelamin_sebelumnya" class="form-label">Jenis Kelamin</label>
-                                <select readonly name="jenis_kelamin_sebelumnya" id="jenis_kelamin_sebelumnya"
-                                    class="form-select" disabled>
-                                    <option value="" disabled>--Pilih Jenis Kelamin--</option>
-                                    <option value="1"
-                                        {{ ($dataMedis->pasien->jenis_kelamin ?? '1') == '1' ? 'selected' : '' }}>
-                                        Laki-laki</option>
-                                    <option value="0"
-                                        {{ ($dataMedis->pasien->jenis_kelamin ?? '1') == '0' ? 'selected' : '' }}>
-                                        Perempuan</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="tanggal_lahir_sebelumnya" class="form-label">Tanggal Lahir</label>
-                                <input readonly class="form-control" name="tanggal_lahir_sebelumnya" type="date"
-                                    id="tanggal_lahir_sebelumnya"
-                                    value="{{ date('Y-m-d', strtotime($dataMedis->pasien->tgl_lahir)) }}" disabled>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="usia_sebelumnya" class="form-label">Usia</label>
-                                <input readonly class="form-control" name="usia_sebelumnya" id="usia_sebelumnya"
-                                    value="{{ $dataMedis->pasien->usia ?? \Carbon\Carbon::parse('2007-04-27')->age }}">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row g-3 mb-4">
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="alamat_sebelumnya" class="form-label">Alamat</label>
-                                <textarea readonly class="form-control" name="alamat_sebelumnya" id="alamat_sebelumnya">{{ $dataMedis->pasien->alamat ?? '' }}</textarea>
-                            </div>
-                        </div>
-                    </div>
-                    {{-- END: DATA ASLI --}}
+                        {{-- END: DATA ASLI --}}
 
-                    <div class="row mt-3">
-                        <div class="col-12 text-end">
-                            <button type="submit" class="btn btn-primary" id="submit-button" disabled>Mulai
-                                Ubah</button>
+                        <div class="text-end">
+                            <x-button-submit id="submit-button">
+                                Mulai Ubah
+                            </x-button-submit>
                         </div>
-                    </div>
-                </form>
-            </div>
+                    </form>
+                </div>
+            </x-content-card>
         </div>
     </div>
 @endsection
