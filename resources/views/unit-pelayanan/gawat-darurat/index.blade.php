@@ -206,8 +206,8 @@
                         data-bs-target="#addPatientTriage">
                         <i class="ti-plus"></i> Tambah Data
                     </button> --}}
-                        <a href="{{ route('gawat-darurat.triase') }}" class="btn btn-primary btn-sm">
-                            <i class="ti-plus"></i> Tambah Data
+                        <a href="{{ route('gawat-darurat.triase') }}" class="btn btn-primary">
+                            <i class="ti-plus"></i> Tambah
                         </a>
                     @endcanany
                 </div>
