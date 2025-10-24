@@ -87,7 +87,17 @@ class UpdatePasienController extends Controller
 
             if (empty($kunjungan)) throw new Exception('Data kunjungan tidak ditemukan di data pasien lama.');
 
+            //get new urut masuk==============
+            $new_urut_masuk = 0;
+            if (!empty($pasien_asli)) {
+                $getLastUrutMasukPatientToday = Kunjungan::select('urut_masuk')
+                    ->where('kd_pasien', $pasien_asli->kd_pasien)
+                    ->whereDate('tgl_masuk', $tgl_masuk)
+                    ->orderBy('urut_masuk', 'desc')
+                    ->first();
 
+                $new_urut_masuk = ! empty($getLastUrutMasukPatientToday) ? $getLastUrutMasukPatientToday->urut_masuk + 1 : $urut_masuk;
+            }
 
             // 1. Update Kunjungan table (specific to kd_pasien_lama, tgl_masuk, urut_masuk)
             Kunjungan::where('kd_pasien', $kd_pasien_lama)
@@ -96,7 +106,9 @@ class UpdatePasienController extends Controller
                 ->where('urut_masuk', $urut_masuk)
                 ->update([
                     'kd_pasien' => $kd_pasien_baru,
-                    'triase_proses' => 0
+                    'urut_masuk' => $new_urut_masuk,
+                    'triase_proses' => 0,
+                    
                 ]);
 
             // 2. Update Transaksi table
@@ -104,7 +116,10 @@ class UpdatePasienController extends Controller
                 ->where('kd_unit', 3)
                 ->where('tgl_transaksi', $tgl_masuk)
                 ->where('urut_masuk', $urut_masuk)
-                ->update(['kd_pasien' => $kd_pasien_baru]);
+                ->update([
+                    'kd_pasien' => $kd_pasien_baru,
+                    'urut_masuk' => $new_urut_masuk,
+                ]);
 
             // 3. Update DataTriase table (kd_pasien and kd_pasien_triase)
             DataTriase::where('id', $kunjungan->triase_id)
@@ -133,7 +148,11 @@ class UpdatePasienController extends Controller
                     ->where('kd_unit', 3)
                     ->where('tgl_masuk', $tgl_masuk)
                     ->where('urut_masuk', $urut_masuk)
-                    ->update(['kd_pasien' => $kd_pasien_baru]);
+                    ->update(
+                        [
+                            'kd_pasien' => $kd_pasien_baru,
+                            'urut_masuk' => $new_urut_masuk,
+                        ]);
             }
 
             DB::commit();
