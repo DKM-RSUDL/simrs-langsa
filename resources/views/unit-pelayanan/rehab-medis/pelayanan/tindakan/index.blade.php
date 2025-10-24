@@ -140,7 +140,8 @@
                         <div class="col-md-2">
                             @if (count($tindakan) < 1)
                                 <div class="d-grid gap-2">
-                                    <a href="{{ route('rehab-medis.pelayanan.tindakan.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-primary">
+                                    <a href="{{ route('rehab-medis.pelayanan.tindakan.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                        class="btn btn-primary">
                                         <i class="ti-plus"></i> Tambah
                                     </a>
                                 </div>
@@ -163,14 +164,18 @@
                             @foreach ($tindakan as $tdk)
                                 <tr>
                                     <td>
-                                        {{ date('d M Y', strtotime($tdk->tgl_tindakan)) .' '. date('H:i', strtotime($tdk->jam_tindakan)) }}
+                                        {{ date('d M Y', strtotime($tdk->tgl_tindakan)) . ' ' . date('H:i', strtotime($tdk->jam_tindakan)) }}
                                         WIB
                                     </td>
-                                    <td>{{ $tdk->karyawan->gelar_depan .' '. str()->title($tdk->karyawan->nama) .' '. $tdk->karyawan->gelar_belakang }}</td>
+                                    <td>{{ $tdk->karyawan->gelar_depan . ' ' . str()->title($tdk->karyawan->nama) . ' ' . $tdk->karyawan->gelar_belakang }}
+                                    </td>
                                     <td>
-                                        <a href="{{ route('rehab-medis.pelayanan.tindakan.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $tdk->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
-                                        <a href="{{ route('rehab-medis.pelayanan.tindakan.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $tdk->id]) }}" class="btn btn-warning btn-sm"><i class="fas fa-pencil"></i></a>
-                                        <button class="btn btn-sm btn-danger btn-delete-tindakan" data-tindakan="{{ encrypt($tdk->id) }}">
+                                        <a href="{{ route('rehab-medis.pelayanan.tindakan.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $tdk->id]) }}"
+                                            class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
+                                        <a href="{{ route('rehab-medis.pelayanan.tindakan.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $tdk->id]) }}"
+                                            class="btn btn-warning btn-sm"><i class="fas fa-pencil"></i></a>
+                                        <button class="btn btn-sm btn-danger btn-delete-tindakan"
+                                            data-tindakan="{{ encrypt($tdk->id) }}">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
@@ -223,12 +228,12 @@
                                 }
                             });
                         },
-                        success: function (res) {
+                        success: function(res) {
                             let status = res.status;
                             let msg = res.message;
                             let data = res.data;
 
-                            if(status == 'error') {
+                            if (status == 'error') {
                                 Swal.fire({
                                     title: "Gagal!",
                                     text: msg,
