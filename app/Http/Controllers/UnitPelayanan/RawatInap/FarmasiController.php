@@ -313,7 +313,7 @@ class FarmasiController extends Controller
                 $q->where('APT_OBAT.NAMA_OBAT', 'like', $term . '%')
                     ->orWhere('APT_OBAT.NAMA_OBAT', 'like', '% ' . $term . '%');
             })
-            ->orderBy('APT_OBAT.NAMA_OBAT')
+            ->orderBy(DB::raw('COALESCE(stok_depo.total_stok, 0)'), 'desc')
             ->limit($limit)
             ->get([
                 // Select2 shape
@@ -792,7 +792,6 @@ class FarmasiController extends Controller
                 'message' => 'Rekonsiliasi obat transfer berhasil disimpan',
                 'data' => $rekonsiliasi
             ], 201);
-
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json([
@@ -869,7 +868,6 @@ class FarmasiController extends Controller
                 'message' => 'Rekonsiliasi obat transfer berhasil diperbarui',
                 'data' => $rekonsiliasiObat
             ]);
-
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json([
@@ -907,7 +905,6 @@ class FarmasiController extends Controller
                 'success' => true,
                 'message' => 'Rekonsiliasi obat transfer berhasil dihapus'
             ], 200);
-
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json([
