@@ -145,265 +145,259 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ route('hemodialisa.pelayanan.berat-badan-kering.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-outline-primary mb-3">
-                <i class="ti-arrow-left"></i> Kembali
-            </a>
+            <x-content-card>
+                <x-button-previous />
 
-            <form id="beratBadanForm" method="POST"
-                action="{{ route('hemodialisa.pelayanan.berat-badan-kering.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
-                @csrf
+                @include('components.page-header', [
+                    'title' => 'Tambah Data Berat Data Kering Hemodialisa',
+                    'description' =>
+                        'Tambah data berat badan kering Hemodialisa dengan mengisi formulir di bawah ini.',
+                ])
 
-                <div class="d-flex justify-content-center">
-                    <div class="card w-100 h-100 shadow-sm">
-                        <div class="card-body">
-                            <div class="px-3">
-                                <h4 class="header-asesmen">Form Tambah Data Berat Badan Kering Pasien Hemodialisis</h4>
+                <form id="beratBadanForm" method="POST"
+                    action="{{ route('hemodialisa.pelayanan.berat-badan-kering.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                    @csrf
+
+
+                    <div class="section-separator mt-0">
+                        <div class="section-header">DATA AWAL</div>
+
+                        @php
+                            $existingHdData = App\Models\RmeHdBeratBadanKering::where(
+                                'kd_pasien',
+                                $dataMedis->kd_pasien,
+                            )->first();
+                            $mulaiHd = $existingHdData ? $existingHdData->mulai_hd : null;
+
+                            // Ambil data pengisian terakhir
+                            $pengisianTerakhir = App\Models\RmeHdBeratBadanKering::where(
+                                'kd_pasien',
+                                $dataMedis->kd_pasien,
+                            )
+                                ->orderBy('tahun', 'desc')
+                                ->orderBy('bulan', 'desc')
+                                ->first();
+                        @endphp
+
+                        @if ($mulaiHd)
+                            <small class="text-danger mb-3 d-block">
+                                <i class="ti-info-circle"></i> Tanggal mulai HD sudah ditetapkan sebelumnya dan
+                                tidak dapat diubah
+                            </small>
+                            <div class="form-row">
+                                <label class="form-label">Mulai HD:</label>
+                                <input type="text" class="form-control" value="{{ $mulaiHd->format('d/m/Y') }}" readonly
+                                    style="background-color: #f8f9fa;">
+                                <input type="hidden" name="mulai_hd" value="{{ $mulaiHd->format('Y-m-d') }}">
                             </div>
-
-                            <div class="px-3">
-                                <div class="section-separator">
-                                    <div class="section-header">DATA AWAL</div>
-
-                                    @php
-                                        $existingHdData = App\Models\RmeHdBeratBadanKering::where(
-                                            'kd_pasien',
-                                            $dataMedis->kd_pasien,
-                                        )->first();
-                                        $mulaiHd = $existingHdData ? $existingHdData->mulai_hd : null;
-                                        
-                                        // Ambil data pengisian terakhir
-                                        $pengisianTerakhir = App\Models\RmeHdBeratBadanKering::where(
-                                            'kd_pasien',
-                                            $dataMedis->kd_pasien,
-                                        )->orderBy('tahun', 'desc')->orderBy('bulan', 'desc')->first();
-                                    @endphp
-
-                                    @if ($mulaiHd)
-                                        <small class="text-danger mb-3 d-block">
-                                            <i class="ti-info-circle"></i> Tanggal mulai HD sudah ditetapkan sebelumnya dan
-                                            tidak dapat diubah
-                                        </small>
-                                        <div class="form-row">
-                                            <label class="form-label">Mulai HD:</label>
-                                            <input type="text" class="form-control"
-                                                value="{{ $mulaiHd->format('d/m/Y') }}" readonly
-                                                style="background-color: #f8f9fa;">
-                                            <input type="hidden" name="mulai_hd" value="{{ $mulaiHd->format('Y-m-d') }}">
-                                        </div>
-                                    @else
-                                        <div class="form-row">
-                                            <label for="mulai_hd" class="form-label">Mulai HD:</label>
-                                            <input type="date" id="mulai_hd" name="mulai_hd" class="form-control"
-                                                value="{{ old('mulai_hd') }}" required>
-                                        </div>
-                                        <small class="text-warning mb-3 d-block">
-                                            <i class="ti-alert-triangle"></i> <strong>Penting:</strong> Tanggal ini akan
-                                            digunakan untuk semua periode data selanjutnya dan tidak dapat diubah lagi
-                                        </small>
-                                    @endif
-
-                                    <div class="mt-3 mb-3">
-                                        @if($pengisianTerakhir)
-                                            <label class="col-form-label">
-                                                Silahkan pilih periode 
-                                                <span class="text-primary">(*Pengisian terakhir: {{ $pengisianTerakhir->nama_bulan }} {{ $pengisianTerakhir->tahun }})</span>
-                                            </label>
-                                        @else
-                                            <label class="col-form-label">
-                                                Silahkan pilih periode 
-                                                <span class="text-muted">(Belum ada data sebelumnya)</span>
-                                            </label>
-                                        @endif
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-row">
-                                                <label for="tahun" class="form-label">Tahun:</label>
-                                                <select id="tahun" name="periode_tahun" class="form-control" required>
-                                                    <option value="">-- Pilih Tahun --</option>
-                                                    @for ($year = date('Y') - 2; $year <= date('Y') + 5; $year++)
-                                                        <option value="{{ $year }}"
-                                                            {{ $year == date('Y') ? 'selected' : '' }}>
-                                                            {{ $year }}
-                                                        </option>
-                                                    @endfor
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-row">
-                                            <label for="bulan" class="form-label">Bulan:</label>
-                                            <select id="bulan" name="periode_bulan" class="form-control" required>
-                                                <option value="">-- Pilih Bulan --</option>
-                                                <option value="1">Januari</option>
-                                                <option value="2">Februari</option>
-                                                <option value="3">Maret</option>
-                                                <option value="4">April</option>
-                                                <option value="5">Mei</option>
-                                                <option value="6">Juni</option>
-                                                <option value="7">Juli</option>
-                                                <option value="8">Agustus</option>
-                                                <option value="9">September</option>
-                                                <option value="10">Oktober</option>
-                                                <option value="11">November</option>
-                                                <option value="12">Desember</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- INPUT DATA -->
-                                <div class="section-separator">
-                                    <div class="section-header">INPUT DATA</div>
-
-                                    <div class="form-row">
-                                        <label for="bbk">Berat Badan Kering (BBK):</label>
-                                        <div class="input-group">
-                                            <input type="number" id="bbk" name="bbk" class="form-control"
-                                                step="0.1" min="0" max="200" placeholder="0.0" required>
-                                            <div class="input-group-text">Kg</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-row">
-                                        <label for="berat_badan">Berat Badan:</label>
-                                        <div class="input-group">
-                                            <input type="number" id="berat_badan" name="berat_badan" class="form-control"
-                                                step="0.1" min="0" max="200" placeholder="0.0" required>
-                                            <div class="input-group-text">Kg</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-row">
-                                        <label for="tinggi_badan">Tinggi Badan:</label>
-                                        <div class="input-group">
-                                            <input type="number" id="tinggi_badan" name="tinggi_badan"
-                                                class="form-control" step="0.1" min="50" max="250"
-                                                placeholder="0.0" required>
-                                            <div class="input-group-text">cm</div>
-                                        </div>
-                                    </div>
-
-                                    <!-- HASIL IMT -->
-                                    <div class="calculation-display">
-                                        <div class="calculation-result" id="imtResult">
-                                            Masukkan berat dan tinggi badan
-                                        </div>
-                                        <div class="calculation-formula" id="imtFormula">
-                                            IMT = Berat Badan (kg) ÷ (Tinggi Badan (m))²
-                                        </div>
-                                        <div id="imtStatus"></div>
-                                    </div>
-
-                                    <input type="hidden" id="imt_calculated" name="imt">
-                                </div>
-
-                                <!-- CATATAN -->
-                                <div class="section-separator">
-                                    <div class="section-header">CATATAN</div>
-
-                                    <div class="form-group">
-                                        <label for="catatan" class="form-label">Catatan:</label>
-                                        <textarea id="catatan" name="catatan" class="form-control" rows="3"
-                                            placeholder="Catatan kondisi pasien atau informasi penting lainnya..."></textarea>
-                                    </div>
-                                </div>
+                        @else
+                            <div class="form-row">
+                                <label for="mulai_hd" class="form-label">Mulai HD:</label>
+                                <input type="date" id="mulai_hd" name="mulai_hd" class="form-control"
+                                    value="{{ old('mulai_hd') }}" required>
                             </div>
+                            <small class="text-warning mb-3 d-block">
+                                <i class="ti-alert-triangle"></i> <strong>Penting:</strong> Tanggal ini akan
+                                digunakan untuk semua periode data selanjutnya dan tidak dapat diubah lagi
+                            </small>
+                        @endif
 
-                            <div class="d-flex justify-content-end mt-4">
-                                <button type="submit" class="btn btn-primary" id="simpan">Simpan</button>
+                        <div class="mt-3 mb-3">
+                            @if ($pengisianTerakhir)
+                                <label class="col-form-label">
+                                    Silahkan pilih periode
+                                    <span class="text-primary">(*Pengisian terakhir:
+                                        {{ $pengisianTerakhir->nama_bulan }} {{ $pengisianTerakhir->tahun }})</span>
+                                </label>
+                            @else
+                                <label class="col-form-label">
+                                    Silahkan pilih periode
+                                    <span class="text-muted">(Belum ada data sebelumnya)</span>
+                                </label>
+                            @endif
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-row">
+                                    <label for="tahun" class="form-label">Tahun:</label>
+                                    <select id="tahun" name="periode_tahun" class="form-control" required>
+                                        <option value="">-- Pilih Tahun --</option>
+                                        @for ($year = date('Y') - 2; $year <= date('Y') + 5; $year++)
+                                            <option value="{{ $year }}" {{ $year == date('Y') ? 'selected' : '' }}>
+                                                {{ $year }}
+                                            </option>
+                                        @endfor
+                                    </select>
+                                </div>
                             </div>
                         </div>
+
+                        <div class="col-md-6">
+                            <div class="form-row">
+                                <label for="bulan" class="form-label">Bulan:</label>
+                                <select id="bulan" name="periode_bulan" class="form-control" required>
+                                    <option value="">-- Pilih Bulan --</option>
+                                    <option value="1">Januari</option>
+                                    <option value="2">Februari</option>
+                                    <option value="3">Maret</option>
+                                    <option value="4">April</option>
+                                    <option value="5">Mei</option>
+                                    <option value="6">Juni</option>
+                                    <option value="7">Juli</option>
+                                    <option value="8">Agustus</option>
+                                    <option value="9">September</option>
+                                    <option value="10">Oktober</option>
+                                    <option value="11">November</option>
+                                    <option value="12">Desember</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div> //
+
+                    <!-- INPUT DATA -->
+                    <div class="section-separator">
+                        <div class="section-header">INPUT DATA</div>
+
+                        <div class="form-row">
+                            <label for="bbk">Berat Badan Kering (BBK):</label>
+                            <div class="input-group">
+                                <input type="number" id="bbk" name="bbk" class="form-control" step="0.1"
+                                    min="0" max="200" placeholder="0.0" required>
+                                <div class="input-group-text">Kg</div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="berat_badan">Berat Badan:</label>
+                            <div class="input-group">
+                                <input type="number" id="berat_badan" name="berat_badan" class="form-control"
+                                    step="0.1" min="0" max="200" placeholder="0.0" required>
+                                <div class="input-group-text">Kg</div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="tinggi_badan">Tinggi Badan:</label>
+                            <div class="input-group">
+                                <input type="number" id="tinggi_badan" name="tinggi_badan" class="form-control"
+                                    step="0.1" min="50" max="250" placeholder="0.0" required>
+                                <div class="input-group-text">cm</div>
+                            </div>
+                        </div>
+
+                        <!-- HASIL IMT -->
+                        <div class="calculation-display">
+                            <div class="calculation-result" id="imtResult">
+                                Masukkan berat dan tinggi badan
+                            </div>
+                            <div class="calculation-formula" id="imtFormula">
+                                IMT = Berat Badan (kg) ÷ (Tinggi Badan (m))²
+                            </div>
+                            <div id="imtStatus"></div>
+                        </div>
+
+                        <input type="hidden" id="imt_calculated" name="imt">
                     </div>
-                </div>
-            </form>
+
+                    <!-- CATATAN -->
+                    <div class="section-separator">
+                        <div class="section-header">CATATAN</div>
+
+                        <div class="form-group">
+                            <label for="catatan" class="form-label">Catatan:</label>
+                            <textarea id="catatan" name="catatan" class="form-control" rows="3"
+                                placeholder="Catatan kondisi pasien atau informasi penting lainnya..."></textarea>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <x-button-submit />
+                    </div>
+                </form>
+            </x-content-card>
         </div>
-    </div>
-@endsection
+    @endsection
 
-@push('js')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const beratBadanInput = document.getElementById('berat_badan');
-            const tinggiBadanInput = document.getElementById('tinggi_badan');
-            const imtResult = document.getElementById('imtResult');
-            const imtFormula = document.getElementById('imtFormula');
-            const imtStatus = document.getElementById('imtStatus');
-            const imtCalculated = document.getElementById('imt_calculated');
+    @push('js')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const beratBadanInput = document.getElementById('berat_badan');
+                const tinggiBadanInput = document.getElementById('tinggi_badan');
+                const imtResult = document.getElementById('imtResult');
+                const imtFormula = document.getElementById('imtFormula');
+                const imtStatus = document.getElementById('imtStatus');
+                const imtCalculated = document.getElementById('imt_calculated');
 
-            function calculateIMT() {
-                const beratBadan = parseFloat(beratBadanInput.value) || 0;
-                const tinggiBadan = parseFloat(tinggiBadanInput.value) || 0;
+                function calculateIMT() {
+                    const beratBadan = parseFloat(beratBadanInput.value) || 0;
+                    const tinggiBadan = parseFloat(tinggiBadanInput.value) || 0;
 
-                if (beratBadan > 0 && tinggiBadan > 0) {
-                    const tinggiMeter = tinggiBadan / 100;
-                    const imt = beratBadan / (tinggiMeter * tinggiMeter);
+                    if (beratBadan > 0 && tinggiBadan > 0) {
+                        const tinggiMeter = tinggiBadan / 100;
+                        const imt = beratBadan / (tinggiMeter * tinggiMeter);
 
-                    imtResult.textContent = imt.toFixed(1);
-                    imtFormula.textContent = `${beratBadan} ÷ (${tinggiMeter.toFixed(2)})² = ${imt.toFixed(1)}`;
-                    imtCalculated.value = imt.toFixed(1);
+                        imtResult.textContent = imt.toFixed(1);
+                        imtFormula.textContent = `${beratBadan} ÷ (${tinggiMeter.toFixed(2)})² = ${imt.toFixed(1)}`;
+                        imtCalculated.value = imt.toFixed(1);
 
-                    let status = '';
-                    let className = '';
+                        let status = '';
+                        let className = '';
 
-                    if (imt < 18.5) {
-                        status = 'Kurus';
-                        className = 'imt-underweight';
-                    } else if (imt >= 18.5 && imt < 25) {
-                        status = 'Normal';
-                        className = 'imt-normal';
-                    } else if (imt >= 25 && imt < 30) {
-                        status = 'Overweight';
-                        className = 'imt-overweight';
+                        if (imt < 18.5) {
+                            status = 'Kurus';
+                            className = 'imt-underweight';
+                        } else if (imt >= 18.5 && imt < 25) {
+                            status = 'Normal';
+                            className = 'imt-normal';
+                        } else if (imt >= 25 && imt < 30) {
+                            status = 'Overweight';
+                            className = 'imt-overweight';
+                        } else {
+                            status = 'Obesitas';
+                            className = 'imt-obese';
+                        }
+
+                        imtStatus.innerHTML = `<span class="imt-status ${className}">${status}</span>`;
                     } else {
-                        status = 'Obesitas';
-                        className = 'imt-obese';
+                        imtResult.textContent = 'Masukkan berat dan tinggi badan';
+                        imtFormula.textContent = 'IMT = Berat Badan (kg) ÷ (Tinggi Badan (m))²';
+                        imtStatus.innerHTML = '';
+                        imtCalculated.value = '';
+                    }
+                }
+
+                beratBadanInput.addEventListener('input', calculateIMT);
+                tinggiBadanInput.addEventListener('input', calculateIMT);
+
+                document.getElementById('beratBadanForm').addEventListener('submit', function(e) {
+                    const bbk = parseFloat(document.getElementById('bbk').value);
+                    const beratBadan = parseFloat(beratBadanInput.value);
+                    const tinggiBadan = parseFloat(tinggiBadanInput.value);
+                    const imt = parseFloat(imtCalculated.value);
+
+                    if (!bbk || !beratBadan || !tinggiBadan) {
+                        e.preventDefault();
+                        alert('BBK, Berat Badan, dan Tinggi Badan harus diisi!');
+                        return;
                     }
 
-                    imtStatus.innerHTML = `<span class="imt-status ${className}">${status}</span>`;
-                } else {
-                    imtResult.textContent = 'Masukkan berat dan tinggi badan';
-                    imtFormula.textContent = 'IMT = Berat Badan (kg) ÷ (Tinggi Badan (m))²';
-                    imtStatus.innerHTML = '';
-                    imtCalculated.value = '';
-                }
-            }
+                    if (bbk <= 0 || beratBadan <= 0 || tinggiBadan <= 0) {
+                        e.preventDefault();
+                        alert('BBK, Berat Badan, dan Tinggi Badan harus lebih dari 0!');
+                        return;
+                    }
 
-            beratBadanInput.addEventListener('input', calculateIMT);
-            tinggiBadanInput.addEventListener('input', calculateIMT);
+                    if (!imt) {
+                        e.preventDefault();
+                        alert('IMT tidak berhasil dihitung!');
+                        return;
+                    }
+                });
 
-            document.getElementById('beratBadanForm').addEventListener('submit', function(e) {
-                const bbk = parseFloat(document.getElementById('bbk').value);
-                const beratBadan = parseFloat(beratBadanInput.value);
-                const tinggiBadan = parseFloat(tinggiBadanInput.value);
-                const imt = parseFloat(imtCalculated.value);
-
-                if (!bbk || !beratBadan || !tinggiBadan) {
-                    e.preventDefault();
-                    alert('BBK, Berat Badan, dan Tinggi Badan harus diisi!');
-                    return;
-                }
-
-                if (bbk <= 0 || beratBadan <= 0 || tinggiBadan <= 0) {
-                    e.preventDefault();
-                    alert('BBK, Berat Badan, dan Tinggi Badan harus lebih dari 0!');
-                    return;
-                }
-
-                if (!imt) {
-                    e.preventDefault();
-                    alert('IMT tidak berhasil dihitung!');
-                    return;
-                }
-            });
-
-            document.querySelectorAll('input[type="number"]').forEach(input => {
-                input.addEventListener('focus', function() {
-                    this.select();
+                document.querySelectorAll('input[type="number"]').forEach(input => {
+                    input.addEventListener('focus', function() {
+                        this.select();
+                    });
                 });
             });
-        });
-    </script>
-@endpush
+        </script>
+    @endpush

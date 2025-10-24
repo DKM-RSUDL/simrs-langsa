@@ -247,11 +247,11 @@
             .modal-lg {
                 max-width: 95%;
             }
-            
+
             .table-responsive {
                 font-size: 0.8rem;
             }
-            
+
             .table th,
             .table td {
                 padding: 8px 4px;
@@ -261,20 +261,21 @@
         .remove-medication {
             height: 38px;
         }
+
         @media (max-width: 768px) {
             .checkbox-group {
                 flex-direction: column;
                 gap: 0.75rem;
             }
-            
+
             .blood-pressure-container {
                 grid-template-columns: 1fr;
             }
-            
+
             .datetime-group {
                 grid-template-columns: 1fr;
             }
-            
+
             .form-section {
                 padding: 1rem;
             }
@@ -289,366 +290,388 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ route('hemodialisa.pelayanan.traveling-dialysis.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-outline-primary mb-3">
-                <i class="ti-arrow-left"></i> Kembali
-            </a>
+            <x-content-card>
+                <x-button-previous />
 
-            <form id="beratBadanForm" method="POST"
-                action="{{ route('hemodialisa.pelayanan.traveling-dialysis.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
-                @csrf
+                @include('components.page-header', [
+                    'title' => 'Tambah Data Traveling Dialysis Pasien Hemodialisa',
+                    'description' =>
+                        'Tambah Data Traveling Dialysis Pasien Hemodialisa dengan mengisi formulir di bawah ini.',
+                ])
 
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h4 class="header-asesmen">Form Tambah Data Traveling Hemodialisis</h4>
+                <form id="beratBadanForm" method="POST"
+                    action="{{ route('hemodialisa.pelayanan.traveling-dialysis.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                    @csrf
+                    <!-- Basic Information Section -->
+                    <div class="form-section">
+                        <h5 class="section-title">Informasi Dasar</h5>
 
-                        <!-- Basic Information Section -->
-                        <div class="form-section">
-                            <h5 class="section-title">Informasi Dasar</h5>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Date of First Dialysis</label>
-                                <div class="datetime-group">
-                                    <div class="datetime-item">
-                                        <label>Tanggal</label>
-                                        <input type="date" class="form-control" name="date_first_dialysis" required>
-                                    </div>
-                                    <div class="datetime-item">
-                                        <label>Waktu</label>
-                                        <input type="time" class="form-control" name="time_first_dialysis" required>
-                                    </div>
+                        <div class="form-group">
+                            <label class="form-label">Date of First Dialysis</label>
+                            <div class="datetime-group">
+                                <div class="datetime-item">
+                                    <label>Tanggal</label>
+                                    <input type="date" class="form-control" name="date_first_dialysis" required>
                                 </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="diagnosis" class="form-label">Diagnosis</label>
-                                <input type="text" class="form-control" id="diagnosis" name="diagnosis" placeholder="Masukkan diagnosis pasien" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="dialysis_location" class="form-label">Home Dialyzed or Center Dialyzed</label>
-                                <input type="text" class="form-control" id="dialysis_location" name="dialysis_location" placeholder="Contoh: Home Dialyzed" required>
+                                <div class="datetime-item">
+                                    <label>Waktu</label>
+                                    <input type="time" class="form-control" name="time_first_dialysis" required>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Blood Pressure Section -->
-                        <div class="form-section">
-                            <h5 class="section-title">Recent Blood Pressure Status</h5>
-                            
-                            <div class="blood-pressure-container">
-                                <div class="blood-pressure-item">
-                                    <label>Pre-Dialysis</label>
+                        <div class="form-group">
+                            <label for="diagnosis" class="form-label">Diagnosis</label>
+                            <input type="text" class="form-control" id="diagnosis" name="diagnosis"
+                                placeholder="Masukkan diagnosis pasien" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dialysis_location" class="form-label">Home Dialyzed or Center
+                                Dialyzed</label>
+                            <input type="text" class="form-control" id="dialysis_location" name="dialysis_location"
+                                placeholder="Contoh: Home Dialyzed" required>
+                        </div>
+                    </div>
+
+                    <!-- Blood Pressure Section -->
+                    <div class="form-section">
+                        <h5 class="section-title">Recent Blood Pressure Status</h5>
+
+                        <div class="blood-pressure-container">
+                            <div class="blood-pressure-item">
+                                <label>Pre-Dialysis</label>
+                                <div class="input-with-unit">
+                                    <input type="text" class="form-control" name="pre_dialysis_bp" placeholder="120/80"
+                                        required>
+                                    <span class="unit-label">mmHg</span>
+                                </div>
+                            </div>
+                            <div class="blood-pressure-item">
+                                <label>Post-Dialysis</label>
+                                <div class="input-with-unit">
+                                    <input type="text" class="form-control" name="post_dialysis_bp" placeholder="110/70"
+                                        required>
+                                    <span class="unit-label">mmHg</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Access & Equipment Section -->
+                    <div class="form-section">
+                        <h5 class="section-title">Akses Vaskular & Peralatan</h5>
+
+                        <div class="form-group">
+                            <label class="form-label">Vascular Access</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="av_shunt" name="vascular_access[]" value="av_shunt">
+                                    <label>AV Shunt</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="cdl" name="vascular_access[]" value="cdl">
+                                    <label>CDL</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="femoral" name="vascular_access[]" value="femoral">
+                                    <label>Femoral</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Type Dialyzer</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="f7_hps" name="type_dialyzer[]" value="f7_hps">
+                                    <label>F7 HPS</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="f8_hps" name="type_dialyzer[]" value="f8_hps">
+                                    <label>F8 HPS</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="elisio" name="type_dialyzer[]" value="elisio">
+                                    <label>Elisio</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Flow Rates & Settings Section -->
+                    <div class="form-section">
+                        <h5 class="section-title">Flow Rates & Pengaturan</h5>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="blood_flow_rate" class="form-label">Blood Flow Rate (QB)</label>
                                     <div class="input-with-unit">
-                                        <input type="text" class="form-control" name="pre_dialysis_bp" placeholder="120/80" required>
-                                        <span class="unit-label">mmHg</span>
+                                        <input type="number" class="form-control" id="blood_flow_rate"
+                                            name="blood_flow_rate" placeholder="250" required>
+                                        <span class="unit-label">ml/minute</span>
                                     </div>
                                 </div>
-                                <div class="blood-pressure-item">
-                                    <label>Post-Dialysis</label>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="dialysate_flow_rate" class="form-label">Dialysate Flow
+                                        Rate</label>
                                     <div class="input-with-unit">
-                                        <input type="text" class="form-control" name="post_dialysis_bp" placeholder="110/70" required>
-                                        <span class="unit-label">mmHg</span>
+                                        <input type="number" class="form-control" id="dialysate_flow_rate"
+                                            name="dialysate_flow_rate" placeholder="500" required>
+                                        <span class="unit-label">ml/minute</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Access & Equipment Section -->
-                        <div class="form-section">
-                            <h5 class="section-title">Akses Vaskular & Peralatan</h5>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Vascular Access</label>
-                                <div class="checkbox-group">
-                                    <div class="checkbox-item">
-                                        <input type="checkbox" id="av_shunt" name="vascular_access[]" value="av_shunt">
-                                        <label>AV Shunt</label>
-                                    </div>
-                                    <div class="checkbox-item">
-                                        <input type="checkbox" id="cdl" name="vascular_access[]" value="cdl">
-                                        <label>CDL</label>
-                                    </div>
-                                    <div class="checkbox-item">
-                                        <input type="checkbox" id="femoral" name="vascular_access[]" value="femoral">
-                                        <label>Femoral</label>
+                        <div class="form-group">
+                            <label for="type_dialysate" class="form-label">Type Dialysate</label>
+                            <input type="text" class="form-control" id="type_dialysate" name="type_dialysate"
+                                placeholder="Masukkan jenis dialysate" required>
+                        </div>
+                    </div>
+
+                    <!-- Anticoagulation Section -->
+                    <div class="form-section">
+                        <h5 class="section-title">Anticoagulation</h5>
+
+                        <div class="form-group">
+                            <label for="anticoagulant" class="form-label">Anticoagulant</label>
+                            <input type="text" class="form-control" id="anticoagulant" name="anticoagulant"
+                                placeholder="Contoh: Heparin" required>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="loading_dose" class="form-label">Loading Dose</label>
+                                    <div class="input-with-unit">
+                                        <input type="number" class="form-control" id="loading_dose" name="loading_dose"
+                                            placeholder="Contoh :1000" required>
+                                        <span class="unit-label">UI</span>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="maintenance" class="form-label">Maintenance</label>
+                                    <div class="input-with-unit">
+                                        <input type="number" class="form-control" id="maintenance" name="maintenance"
+                                            placeholder="Contoh : 500" required>
+                                        <span class="unit-label">UI</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                            <div class="form-group">
-                                <label class="form-label">Type Dialyzer</label>
-                                <div class="checkbox-group">
-                                    <div class="checkbox-item">
-                                        <input type="checkbox" id="f7_hps" name="type_dialyzer[]" value="f7_hps">
-                                        <label>F7 HPS</label>
+                    <!-- Patient Information Section -->
+                    <div class="form-section">
+                        <h5 class="section-title">Patient Information</h5>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="patient_dry_weight" class="form-label">Patient's Dry
+                                        Weight</label>
+                                    <div class="input-with-unit">
+                                        <input type="number" class="form-control" id="patient_dry_weight"
+                                            name="patient_dry_weight">
+                                        <span class="unit-label">kg</span>
                                     </div>
-                                    <div class="checkbox-item">
-                                        <input type="checkbox" id="f8_hps" name="type_dialyzer[]" value="f8_hps">
-                                        <label>F8 HPS</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="uf_goal" class="form-label">UF Goal</label>
+                                    <div class="input-with-unit">
+                                        <input type="number" class="form-control" id="uf_goal" name="uf_goal">
+                                        <span class="unit-label">ml</span>
                                     </div>
-                                    <div class="checkbox-item">
-                                        <input type="checkbox" id="elisio" name="type_dialyzer[]" value="elisio">
-                                        <label>Elisio</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="uf_rate" class="form-label">UF Rate</label>
+                                    <div class="input-with-unit">
+                                        <input type="number" class="form-control" id="uf_rate" name="uf_rate">
+                                        <span class="unit-label">mL/kg/jam</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Flow Rates & Settings Section -->
-                        <div class="form-section">
-                            <h5 class="section-title">Flow Rates & Pengaturan</h5>
-                            
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="blood_flow_rate" class="form-label">Blood Flow Rate (QB)</label>
-                                        <div class="input-with-unit">
-                                            <input type="number" class="form-control" id="blood_flow_rate" name="blood_flow_rate" placeholder="250" required>
-                                            <span class="unit-label">ml/minute</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="dialysate_flow_rate" class="form-label">Dialysate Flow Rate</label>
-                                        <div class="input-with-unit">
-                                            <input type="number" class="form-control" id="dialysate_flow_rate" name="dialysate_flow_rate" placeholder="500" required>
-                                            <span class="unit-label">ml/minute</span>
-                                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="number_run_per_week" class="form-label">Number of Run Per
+                                        Week</label>
+                                    <div class="input-with-unit">
+                                        <input type="number" class="form-control" id="number_run_per_week"
+                                            name="number_run_per_week">
+                                        <span class="unit-label">week</span>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <label for="type_dialysate" class="form-label">Type Dialysate</label>
-                                <input type="text" class="form-control" id="type_dialysate" name="type_dialysate" placeholder="Masukkan jenis dialysate" required>
-                            </div>
-                        </div>
-
-                        <!-- Anticoagulation Section -->
-                        <div class="form-section">
-                            <h5 class="section-title">Anticoagulation</h5>
-                            
-                            <div class="form-group">
-                                <label for="anticoagulant" class="form-label">Anticoagulant</label>
-                                <input type="text" class="form-control" id="anticoagulant" name="anticoagulant" placeholder="Contoh: Heparin" required>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="loading_dose" class="form-label">Loading Dose</label>
-                                        <div class="input-with-unit">
-                                            <input type="number" class="form-control" id="loading_dose" name="loading_dose" placeholder="Contoh :1000" required>
-                                            <span class="unit-label">UI</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="maintenance" class="form-label">Maintenance</label>
-                                        <div class="input-with-unit">
-                                            <input type="number" class="form-control" id="maintenance" name="maintenance" placeholder="Contoh : 500" required>
-                                            <span class="unit-label">UI</span>
-                                        </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="length_dialysis" class="form-label">Length of Dialysis</label>
+                                    <div class="input-with-unit">
+                                        <input type="number" class="form-control" id="length_dialysis"
+                                            name="length_dialysis">
+                                        <span class="unit-label">hours</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Patient Information Section -->
-                        <div class="form-section">
-                            <h5 class="section-title">Patient Information</h5>
-                            
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="patient_dry_weight" class="form-label">Patient's Dry Weight</label>
-                                        <div class="input-with-unit">
-                                            <input type="number" class="form-control" id="patient_dry_weight" name="patient_dry_weight">
-                                            <span class="unit-label">kg</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="uf_goal" class="form-label">UF Goal</label>
-                                        <div class="input-with-unit">
-                                            <input type="number" class="form-control" id="uf_goal" name="uf_goal">
-                                            <span class="unit-label">ml</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="uf_rate" class="form-label">UF Rate</label>
-                                        <div class="input-with-unit">
-                                            <input type="number" class="form-control" id="uf_rate" name="uf_rate">
-                                            <span class="unit-label">mL/kg/jam</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <!-- Complications & Tests Section -->
+                    <div class="form-section">
+                        <h5 class="section-title">Complications & Serologic Tests</h5>
 
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="number_run_per_week" class="form-label">Number of Run Per Week</label>
-                                        <div class="input-with-unit">
-                                            <input type="number" class="form-control" id="number_run_per_week" name="number_run_per_week">
-                                            <span class="unit-label">week</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="length_dialysis" class="form-label">Length of Dialysis</label>
-                                        <div class="input-with-unit">
-                                            <input type="number" class="form-control" id="length_dialysis" name="length_dialysis">
-                                            <span class="unit-label">hours</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <label for="complication_dialysis" class="form-label">Complication During
+                                Dialysis</label>
+                            <textarea class="form-control" id="complication_dialysis" name="complication_dialysis" rows="3"
+                                placeholder="Masukkan komplikasi jika ada"></textarea>
                         </div>
 
-                        <!-- Complications & Tests Section -->
-                        <div class="form-section">
-                            <h5 class="section-title">Complications & Serologic Tests</h5>
-                            
-                            <div class="form-group">
-                                <label for="complication_dialysis" class="form-label">Complication During Dialysis</label>
-                                <textarea class="form-control" id="complication_dialysis" name="complication_dialysis" rows="3" placeholder="Masukkan komplikasi jika ada"></textarea>
-                            </div>
-
-                            <!-- Updated Allergic Section -->
-                            <div class="form-group">
-                                <label class="form-label">Alergi</label>
-                                <div class="w-100">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                        id="openAlergiModal" data-bs-toggle="modal" data-bs-target="#alergiModal">
-                                        <i class="ti-plus"></i> Tambah Alergi
-                                    </button>
-                                    <input type="hidden" name="alergis" id="alergisInput" value="[]">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered" id="createAlergiTable">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th width="20%">Jenis Alergi</th>
-                                                    <th width="25%">Alergen</th>
-                                                    <th width="25%">Reaksi</th>
-                                                    <th width="20%">Tingkat Keparahan</th>
-                                                    <th width="10%">Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr id="no-alergi-row">
-                                                    <td colspan="5" class="text-center text-muted">Tidak ada data alergi</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Serologic Test</label>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="blood-pressure-item">
-                                            <label>HbsAg</label>
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <select class="form-control" name="hbsag_result" required>
-                                                        <option value="">Pilih Hasil</option>
-                                                        <option value="Non Reactive (-)">Non Reactive (-)</option>
-                                                        <option value="Reactive (+)">Reactive (+)</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-6">
-                                                    <input type="date" class="form-control" name="hbsag_date" required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="blood-pressure-item">
-                                            <label>Anti HCV</label>
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <select class="form-control" name="anti_hcv_result" required>
-                                                        <option value="">Pilih Hasil</option>
-                                                        <option value="Non Reactive (-)">Non Reactive (-)</option>
-                                                        <option value="Reactive (+)">Reactive (+)</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-6">
-                                                    <input type="date" class="form-control" name="anti_hcv_date" required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="blood-pressure-item">
-                                            <label>Anti HIV</label>
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <select class="form-control" name="anti_hiv_result" required>
-                                                        <option value="">Pilih Hasil</option>
-                                                        <option value="Non Reactive (-)">Non Reactive (-)</option>
-                                                        <option value="Reactive (+)">Reactive (+)</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-6">
-                                                    <input type="date" class="form-control" name="anti_hiv_date" required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Medication Section -->
-                        <div class="form-section">
-                            <h5 class="section-title">Current Medication & Clinical History</h5>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Current Medication</label>
-                                <textarea class="form-control" name="current_medication" rows="3" placeholder="Masukkan obat-obatan saat ini"></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Relevant Clinical History</label>
-                                <div id="medication-container">
-                                    <div class="medication-item row mb-2">
-                                        <div class="col-md-6">
-                                            <input type="text" class="form-control" name="medication_name[]" placeholder="Nama obat (contoh: Candesartan 8mg)">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <input type="text" class="form-control" name="medication_frequency[]" placeholder="Frekuensi (contoh: 1 x 1)">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <button type="button" class="btn btn-danger btn-sm remove-medication" style="display: none;">
-                                                <i class="ti-trash"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="add-medication">
-                                    <i class="ti-plus"></i> Tambah Obat
+                        <!-- Updated Allergic Section -->
+                        <div class="form-group">
+                            <label class="form-label">Alergi</label>
+                            <div class="w-100">
+                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openAlergiModal"
+                                    data-bs-toggle="modal" data-bs-target="#alergiModal">
+                                    <i class="ti-plus"></i> Tambah Alergi
                                 </button>
+                                <input type="hidden" name="alergis" id="alergisInput" value="[]">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="createAlergiTable">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th width="20%">Jenis Alergi</th>
+                                                <th width="25%">Alergen</th>
+                                                <th width="25%">Reaksi</th>
+                                                <th width="20%">Tingkat Keparahan</th>
+                                                <th width="10%">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr id="no-alergi-row">
+                                                <td colspan="5" class="text-center text-muted">Tidak ada data
+                                                    alergi</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary btn-lg px-4" id="simpan">
-                                <i class="ti-save mr-2"></i> Simpan Data
+                        <div class="form-group">
+                            <label class="form-label">Serologic Test</label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="blood-pressure-item">
+                                        <label>HbsAg</label>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <select class="form-control" name="hbsag_result" required>
+                                                    <option value="">Pilih Hasil</option>
+                                                    <option value="Non Reactive (-)">Non Reactive (-)</option>
+                                                    <option value="Reactive (+)">Reactive (+)</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <input type="date" class="form-control" name="hbsag_date" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="blood-pressure-item">
+                                        <label>Anti HCV</label>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <select class="form-control" name="anti_hcv_result" required>
+                                                    <option value="">Pilih Hasil</option>
+                                                    <option value="Non Reactive (-)">Non Reactive (-)</option>
+                                                    <option value="Reactive (+)">Reactive (+)</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <input type="date" class="form-control" name="anti_hcv_date" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="blood-pressure-item">
+                                        <label>Anti HIV</label>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <select class="form-control" name="anti_hiv_result" required>
+                                                    <option value="">Pilih Hasil</option>
+                                                    <option value="Non Reactive (-)">Non Reactive (-)</option>
+                                                    <option value="Reactive (+)">Reactive (+)</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <input type="date" class="form-control" name="anti_hiv_date" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Medication Section -->
+                    <div class="form-section">
+                        <h5 class="section-title">Current Medication & Clinical History</h5>
+
+                        <div class="form-group">
+                            <label class="form-label">Current Medication</label>
+                            <textarea class="form-control" name="current_medication" rows="3" placeholder="Masukkan obat-obatan saat ini"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Relevant Clinical History</label>
+                            <div id="medication-container">
+                                <div class="medication-item row mb-2">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="medication_name[]"
+                                            placeholder="Nama obat (contoh: Candesartan 8mg)">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" name="medication_frequency[]"
+                                            placeholder="Frekuensi (contoh: 1 x 1)">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-danger btn-sm remove-medication"
+                                            style="display: none;">
+                                            <i class="ti-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="add-medication">
+                                <i class="ti-plus"></i> Tambah Obat
                             </button>
                         </div>
                     </div>
-                </div>
-            </form>
+
+                    <div class="text-end">
+                        <x-button-submit />
+                    </div>
         </div>
+    </div>
+    </form>
+    </x-content-card>
+    </div>
     </div>
     @include('unit-pelayanan.hemodialisa.pelayanan.traveling-dialysis.modal-create-alergi')
 @endsection
@@ -668,7 +691,7 @@
 
             // Add medication functionality
             let medicationCount = 1;
-            
+
             document.getElementById('add-medication').addEventListener('click', function() {
                 medicationCount++;
                 const container = document.getElementById('medication-container');
@@ -688,7 +711,7 @@
                     </div>
                 `;
                 container.appendChild(newMedicationItem);
-                
+
                 // Show remove button for all items if more than 1
                 if (medicationCount > 1) {
                     document.querySelectorAll('.remove-medication').forEach(btn => {
@@ -699,11 +722,12 @@
 
             // Remove medication functionality
             document.addEventListener('click', function(e) {
-                if (e.target.classList.contains('remove-medication') || e.target.closest('.remove-medication')) {
+                if (e.target.classList.contains('remove-medication') || e.target.closest(
+                        '.remove-medication')) {
                     const medicationItem = e.target.closest('.medication-item');
                     medicationItem.remove();
                     medicationCount--;
-                    
+
                     // Hide remove button if only 1 item left
                     if (medicationCount <= 1) {
                         document.querySelectorAll('.remove-medication').forEach(btn => {

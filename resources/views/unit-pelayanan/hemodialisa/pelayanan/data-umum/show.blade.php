@@ -102,190 +102,182 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ url()->previous() }}" class="btn btn-outline-primary mb-3">
-                <i class="ti-arrow-left"></i> Kembali
-            </a>
+            <x-content-card>
+                <x-button-previous />
+                @include('components.page-header', [
+                    'title' => 'Detail Data Umum Pasien Hemodialisa',
+                ])
+                <!-- DATA PASIEN -->
+                <div class="px-3">
+                    <div class="section-separator">
+                        <div class="section-header">DATA PASIEN</div>
 
-            <div class="d-flex justify-content-center">
-                <div class="card w-100 h-100 shadow-sm">
-                    <div class="card-body">
-                        <div class="px-3">
-                            <h4 class="header-asesmen">Form Edit Data Umum Pasien Hemodialisis</h4>
+                        <div class="form-row">
+                            <label for="agama"><strong>Agama</strong></label>
+                            <label for="">{{ str()->title($dataMedis->pasien->agama->agama) }}</label>
                         </div>
 
-                        <!-- DATA PASIEN -->
-                        <div class="px-3">
-                            <div class="section-separator">
-                                <div class="section-header">DATA PASIEN</div>
-
-                                <div class="form-row">
-                                    <label for="agama"><strong>Agama</strong></label>
-                                    <label for="">{{ str()->title($dataMedis->pasien->agama->agama) }}</label>
-                                </div>
-
-                                <div class="form-row">
-                                    <label for="pendidikan"><strong>Pendidikan</strong></label>
-                                    <label
-                                        for="">{{ str()->title($dataMedis->pasien->pendidikan->pendidikan) }}</label>
-                                </div>
-
-                                <div class="form-row">
-                                    <label for="status_pernikahan"><strong>Status Pernikahan</strong></label>
-                                    <label for="">{{ $dataMedis->pasien->marital->jenis }}</label>
-                                </div>
-
-                                <div class="form-row">
-                                    <label for="pekerjaan"><strong>Pekerjaan</strong></label>
-                                    <label
-                                        for="">{{ str()->title($dataMedis->pasien->pekerjaan->pekerjaan) }}</label>
-                                </div>
-
-                                <div class="form-row">
-                                    <label for="alamat_lengkap"><strong>Alamat lengkap</strong></label>
-                                    <label for="">
-                                        {{ str()->title($dataMedis->pasien->alamat) . ', ' . str()->title($dataMedis->pasien->kelurahan->kelurahan) . ', ' . str()->title($dataMedis->pasien->kelurahan->kecamatan->kecamatan) . ', ' . str()->title($dataMedis->pasien->kelurahan->kecamatan->kabupaten->kabupaten) . ', ' . str()->title($dataMedis->pasien->kelurahan->kecamatan->kabupaten->propinsi->propinsi) }}
-                                    </label>
-                                </div>
-
-                                <div class="form-row">
-                                    <label for="no_identitas"><strong>No Identitas</strong></label>
-                                    <label for="">{{ $dataMedis->pasien->no_pengenal }}</label>
-                                </div>
-
-                                <div class="form-row">
-                                    <label for="no_kartu_bpjs"><strong>No Kartu BPJS</strong></label>
-                                    <label for="">{{ $dataMedis->pasien->no_asuransi }}</label>
-                                </div>
-
-                                <div class="form-row">
-                                    <label for="pasien_no_telpon"><strong>No Telpon/ HP</strong></label>
-                                    <label for="">{{ $dataUmum->pasien_no_telpon }}</label>
-                                </div>
-                            </div>
+                        <div class="form-row">
+                            <label for="pendidikan"><strong>Pendidikan</strong></label>
+                            <label for="">{{ str()->title($dataMedis->pasien->pendidikan->pendidikan) }}</label>
                         </div>
 
-                        <!-- DATA ALERGI -->
-                        <div class="px-3">
-                            <div class="section-separator">
-                                <div class="section-header">RIWAYAT ALERGI</div>
-
-                                <div class="table-responsive">
-                                    <table class="table table-bordered" id="createAlergiTable">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th width="20%">Jenis Alergi</th>
-                                                <th width="25%">Alergen</th>
-                                                <th width="25%">Reaksi</th>
-                                                <th width="20%">Tingkat Keparahan</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr id="no-alergi-row">
-                                                <td colspan="5" class="text-center text-muted">Tidak ada data alergi
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                        <div class="form-row">
+                            <label for="status_pernikahan"><strong>Status Pernikahan</strong></label>
+                            <label for="">{{ $dataMedis->pasien->marital->jenis }}</label>
                         </div>
 
-                        <!-- IDENTITAS PENANGGUNG JAWAB PASIEN -->
-                        <div class="px-3">
-                            <div class="section-separator">
-                                <div class="section-header">IDENTITAS PENANGGUNG JAWAB PASIEN</div>
-
-                                <div class="form-row">
-                                    <label for="pj_nama">Nama</label>
-                                    <input type="text" name="pj_nama" id="pj_nama" value="{{ $dataUmum->pj_nama }}"
-                                        class="form-control" disabled>
-                                </div>
-
-                                <div class="form-row">
-                                    <label for="pj_hubungan_keluarga">Hubungan keluarga</label>
-                                    <input type="text" name="pj_hubungan_keluarga" id="pj_hubungan_keluarga"
-                                        value="{{ $dataUmum->pj_hubungan_keluarga }}" class="form-control" disabled>
-                                </div>
-
-                                <div class="form-row">
-                                    <label for="pj_alamat">Alamat</label>
-                                    <input type="text" name="pj_alamat" id="pj_alamat"
-                                        value="{{ $dataUmum->pj_alamat }}" class="form-control" disabled>
-                                </div>
-
-                                <div class="form-row">
-                                    <label for="pj_pekerjaan">Pekerjaan</label>
-                                    <input type="text" name="pj_pekerjaan" id="pj_pekerjaan"
-                                        value="{{ $dataUmum->pj_pekerjaan }}" class="form-control" disabled>
-                                </div>
-                            </div>
+                        <div class="form-row">
+                            <label for="pekerjaan"><strong>Pekerjaan</strong></label>
+                            <label for="">{{ str()->title($dataMedis->pasien->pekerjaan->pekerjaan) }}</label>
                         </div>
 
-                        <!-- DATA HEMODIALISIS -->
-                        <div class="px-3">
-                            <div class="section-separator">
-                                <div class="section-header">DATA HEMODIALISIS (Diisi petugas HD)</div>
+                        <div class="form-row">
+                            <label for="alamat_lengkap"><strong>Alamat lengkap</strong></label>
+                            <label for="">
+                                {{ str()->title($dataMedis->pasien->alamat) . ', ' . str()->title($dataMedis->pasien->kelurahan->kelurahan) . ', ' . str()->title($dataMedis->pasien->kelurahan->kecamatan->kecamatan) . ', ' . str()->title($dataMedis->pasien->kelurahan->kecamatan->kabupaten->kabupaten) . ', ' . str()->title($dataMedis->pasien->kelurahan->kecamatan->kabupaten->propinsi->propinsi) }}
+                            </label>
+                        </div>
 
-                                <div class="form-row">
-                                    <label for="hd_pertama_kali">HD pertama kali tanggal</label>
-                                    <input type="text" name="hd_pertama_kali" id="hd_pertama_kali"
-                                        value="{{ $dataUmum->hd_pertama_kali }}" class="form-control" disabled>
-                                </div>
+                        <div class="form-row">
+                            <label for="no_identitas"><strong>No Identitas</strong></label>
+                            <label for="">{{ $dataMedis->pasien->no_pengenal }}</label>
+                        </div>
 
-                                <div class="form-row">
-                                    <label for="mulai_hd_rutin">Mulai HD rutin tanggal</label>
-                                    <input type="text" name="mulai_hd_rutin" id="mulai_hd_rutin"
-                                        value="{{ $dataUmum->mulai_hd_rutin }}" class="form-control" disabled>
-                                </div>
+                        <div class="form-row">
+                            <label for="no_kartu_bpjs"><strong>No Kartu BPJS</strong></label>
+                            <label for="">{{ $dataMedis->pasien->no_asuransi }}</label>
+                        </div>
 
-                                <div class="form-row">
-                                    <label for="frekuensi_hd">Frekuensi HD</label>
-                                    <input type="text" name="frekuensi_hd" id="frekuensi_hd"
-                                        value="{{ $dataUmum->frekuensi_hd }}" class="form-control" disabled>
-                                </div>
-
-                                <div class="form-row">
-                                    <label for="status_pembayaran">Status pembayaran</label>
-                                    <input type="text" name="status_pembayaran" id="status_pembayaran"
-                                        value="{{ $dataUmum->status_pembayaran }}" class="form-control" disabled>
-                                </div>
-
-                                <div class="form-row">
-                                    <label for="dokter_pengirim">Dokter pengirim</label>
-                                    <input type="text" name="dokter_pengirim" id="dokter_pengirim"
-                                        value="{{ $dataUmum->dokter_pengirim }}" class="form-control" disabled>
-                                </div>
-
-                                <div class="form-row">
-                                    <label for="asal_rujukan">Asal rujukan</label>
-                                    <input type="text" name="asal_rujukan" id="asal_rujukan"
-                                        value="{{ $dataUmum->asal_rujukan }}" class="form-control" disabled>
-                                </div>
-
-                                <div class="form-row">
-                                    <label for="diagnosis">Diagnosis</label>
-                                    <input type="text" name="diagnosis" id="diagnosis"
-                                        value="{{ $dataUmum->diagnosis }}" class="form-control" disabled>
-                                </div>
-
-                                <div class="form-row">
-                                    <label for="etiologi">Etiologi</label>
-                                    <input type="text" name="etiologi" id="etiologi"
-                                        value="{{ $dataUmum->etiologi }}" class="form-control" disabled>
-                                </div>
-
-                                <div class="form-row">
-                                    <label for="penyakit_penyerta">Penyakit penyerta</label>
-                                    <input type="text" name="penyakit_penyerta"
-                                        value="{{ $dataUmum->penyakit_penyerta }}" id="penyakit_penyerta"
-                                        class="form-control" disabled>
-                                </div>
-                            </div>
+                        <div class="form-row">
+                            <label for="pasien_no_telpon"><strong>No Telpon/ HP</strong></label>
+                            <label for="">{{ $dataUmum->pasien_no_telpon }}</label>
                         </div>
                     </div>
                 </div>
-            </div>
+
+                <!-- DATA ALERGI -->
+                <div class="px-3">
+                    <div class="section-separator">
+                        <div class="section-header">RIWAYAT ALERGI</div>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="createAlergiTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th width="20%">Jenis Alergi</th>
+                                        <th width="25%">Alergen</th>
+                                        <th width="25%">Reaksi</th>
+                                        <th width="20%">Tingkat Keparahan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr id="no-alergi-row">
+                                        <td colspan="5" class="text-center text-muted">Tidak ada data alergi
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- IDENTITAS PENANGGUNG JAWAB PASIEN -->
+                <div class="px-3">
+                    <div class="section-separator">
+                        <div class="section-header">IDENTITAS PENANGGUNG JAWAB PASIEN</div>
+
+                        <div class="form-row">
+                            <label for="pj_nama">Nama</label>
+                            <input type="text" name="pj_nama" id="pj_nama" value="{{ $dataUmum->pj_nama }}"
+                                class="form-control" disabled>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="pj_hubungan_keluarga">Hubungan keluarga</label>
+                            <input type="text" name="pj_hubungan_keluarga" id="pj_hubungan_keluarga"
+                                value="{{ $dataUmum->pj_hubungan_keluarga }}" class="form-control" disabled>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="pj_alamat">Alamat</label>
+                            <input type="text" name="pj_alamat" id="pj_alamat" value="{{ $dataUmum->pj_alamat }}"
+                                class="form-control" disabled>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="pj_pekerjaan">Pekerjaan</label>
+                            <input type="text" name="pj_pekerjaan" id="pj_pekerjaan"
+                                value="{{ $dataUmum->pj_pekerjaan }}" class="form-control" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DATA HEMODIALISIS -->
+                <div class="px-3">
+                    <div class="section-separator">
+                        <div class="section-header">DATA HEMODIALISIS (Diisi petugas HD)</div>
+
+                        <div class="form-row">
+                            <label for="hd_pertama_kali">HD pertama kali tanggal</label>
+                            <input type="text" name="hd_pertama_kali" id="hd_pertama_kali"
+                                value="{{ $dataUmum->hd_pertama_kali }}" class="form-control" disabled>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="mulai_hd_rutin">Mulai HD rutin tanggal</label>
+                            <input type="text" name="mulai_hd_rutin" id="mulai_hd_rutin"
+                                value="{{ $dataUmum->mulai_hd_rutin }}" class="form-control" disabled>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="frekuensi_hd">Frekuensi HD</label>
+                            <input type="text" name="frekuensi_hd" id="frekuensi_hd"
+                                value="{{ $dataUmum->frekuensi_hd }}" class="form-control" disabled>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="status_pembayaran">Status pembayaran</label>
+                            <input type="text" name="status_pembayaran" id="status_pembayaran"
+                                value="{{ $dataUmum->status_pembayaran }}" class="form-control" disabled>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="dokter_pengirim">Dokter pengirim</label>
+                            <input type="text" name="dokter_pengirim" id="dokter_pengirim"
+                                value="{{ $dataUmum->dokter_pengirim }}" class="form-control" disabled>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="asal_rujukan">Asal rujukan</label>
+                            <input type="text" name="asal_rujukan" id="asal_rujukan"
+                                value="{{ $dataUmum->asal_rujukan }}" class="form-control" disabled>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="diagnosis">Diagnosis</label>
+                            <input type="text" name="diagnosis" id="diagnosis" value="{{ $dataUmum->diagnosis }}"
+                                class="form-control" disabled>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="etiologi">Etiologi</label>
+                            <input type="text" name="etiologi" id="etiologi" value="{{ $dataUmum->etiologi }}"
+                                class="form-control" disabled>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="penyakit_penyerta">Penyakit penyerta</label>
+                            <input type="text" name="penyakit_penyerta" value="{{ $dataUmum->penyakit_penyerta }}"
+                                id="penyakit_penyerta" class="form-control" disabled>
+                        </div>
+                    </div>
+                </div>
         </div>
+    </div>
+    </x-content-card>
+    </div>
+    </div>
     </div>
 
 

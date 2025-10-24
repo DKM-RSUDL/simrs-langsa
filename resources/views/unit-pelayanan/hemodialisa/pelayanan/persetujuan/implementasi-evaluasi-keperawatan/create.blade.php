@@ -88,7 +88,7 @@
             margin-right: -0.5rem;
         }
 
-        .row > [class*="col-"] {
+        .row>[class*="col-"] {
             padding-left: 0.5rem;
             padding-right: 0.5rem;
         }
@@ -144,7 +144,7 @@
             .datetime-group {
                 grid-template-columns: 1fr;
             }
-            
+
             .form-section {
                 padding: 0.8rem;
             }
@@ -169,64 +169,75 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ route('hemodialisa.pelayanan.persetujuan.implementasi-evaluasi-keperawatan.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-outline-primary mb-2">
-                <i class="ti-arrow-left"></i> Kembali
-            </a>
+            <x-content-card>
+                <x-button-previous />
 
-            <form id="consentForm" method="POST"
-                action="{{ route('hemodialisa.pelayanan.persetujuan.implementasi-evaluasi-keperawatan.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
-                @csrf
+                @include('components.page-header', [
+                    'title' => 'Perbarui Data Tindakan HD Pasien Hemodialisa',
+                    'description' =>
+                        ' Perbarui data Tindakan HD Pasien Hemodialisa dengan mengisi formulir di bawah ini.',
+                ])
 
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h4 class="header-asesmen">Form Persetujuan Implementasi Evaluasi Keperawatan</h4>
 
-                        <div class="form-group">
-                            <label class="form-label">Tanggal dan Jam Implementasi</label>
-                            <div class="datetime-group">
-                                <div class="datetime-item">
-                                    <label>Tanggal</label>
-                                    <input type="date" class="form-control" name="tanggal_implementasi" id="tanggal_implementasi">
+                <form id="consentForm" method="POST"
+                    action="{{ route('hemodialisa.pelayanan.persetujuan.implementasi-evaluasi-keperawatan.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                    @csrf
+
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h4 class="header-asesmen">Form Persetujuan Implementasi Evaluasi Keperawatan</h4>
+
+                            <div class="form-group">
+                                <label class="form-label">Tanggal dan Jam Implementasi</label>
+                                <div class="datetime-group">
+                                    <div class="datetime-item">
+                                        <label>Tanggal</label>
+                                        <input type="date" class="form-control" name="tanggal_implementasi"
+                                            id="tanggal_implementasi">
+                                    </div>
+                                    <div class="datetime-item">
+                                        <label>Jam</label>
+                                        <input type="time" class="form-control" name="jam_implementasi"
+                                            id="jam_implementasi">
+                                    </div>
                                 </div>
-                                <div class="datetime-item">
-                                    <label>Jam</label>
-                                    <input type="time" class="form-control" name="jam_implementasi" id="jam_implementasi">
+                            </div>
+
+                            <!-- Diagnosis Keperawatan Section -->
+                            <div class="form-section">
+                                <h5 class="section-title">Diagnosis Keperawatan</h5>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="diagnosis_keperawatan"
+                                        placeholder="Masukkan diagnosis keperawatan" required>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Diagnosis Keperawatan Section -->
-                        <div class="form-section">
-                            <h5 class="section-title">Diagnosis Keperawatan</h5>
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="diagnosis_keperawatan" placeholder="Masukkan diagnosis keperawatan" required>
+                            <!-- Implementasi Keperawatan Section -->
+                            <div class="form-section">
+                                <h5 class="section-title">Implementasi Keperawatan</h5>
+                                <div class="form-group">
+                                    <textarea rows="4" name="implementasi_keperawatan" id="implementasi_keperawatan" class="form-control"></textarea>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Implementasi Keperawatan Section -->
-                        <div class="form-section">
-                            <h5 class="section-title">Implementasi Keperawatan</h5>
-                            <div class="form-group">
-                                <textarea rows="4" name="implementasi_keperawatan" id="implementasi_keperawatan" class="form-control"></textarea>
+                            <!-- Evaluasi Keperawatan Section -->
+                            <div class="form-section">
+                                <h5 class="section-title">Evaluasi Keperawatann</h5>
+                                <div class="form-group">
+                                    <textarea rows="4" name="evaluasi_keperawatan" id="evaluasi_keperawatan" class="form-control mt-2"></textarea>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Evaluasi Keperawatan Section -->
-                        <div class="form-section">
-                            <h5 class="section-title">Evaluasi Keperawatan</h5>
-                            <div class="form-group">
-                                <textarea rows="4" name="evaluasi_keperawatan" id="evaluasi_keperawatan" class="form-control mt-2"></textarea>
+                            <div class="text-end">
+                                <x-button-submit-confirm label="Simpan" confirmTitle="Sudah Yakin?"
+                                    confirmText="Pastikan semua data sudah lengkap sebelum disimpan. Lanjutkan menyimpan?"
+                                    confirmOk="Simpan" confirmCancel="Batal" :spinner="true" loadingLabel="Menyimpan..."
+                                    loadingOverlay="#loadingOverlay" />
                             </div>
-                        </div>
-
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary btn-l px-2" id="simpan">
-                                <i class="ti-save mr-2"></i> Simpan Data
-                            </button>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </x-content-card>
         </div>
     </div>
 @endsection

@@ -509,7 +509,7 @@
                     success: function(data) {
                         $('#edit_id').val(id);
                         $('#editForm').attr('action', editUrl.replace('/edit',
-                        '')); // Set form action to update route
+                            '')); // Set form action to update route
                         $('#edit_tanggal_implementasi').val(data.tanggal_implementasi);
                         $('#edit_jam_implementasi').val(data.jam_implementasi);
                         $('#edit_diagnosis_keperawatan').val(data.diagnosis_keperawatan);

@@ -8,259 +8,250 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ route('hemodialisa.pelayanan.hasil-ekg.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
-                class="btn btn-outline-primary mb-3">
-                <i class="ti-arrow-left"></i> Kembali
-            </a>
+            <x-content-card>
+                <x-button-previous />
 
-            <form
-                action="{{ route('hemodialisa.pelayanan.hasil-ekg.update', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $hasilEkg->id]) }}"
-                method="post">
-                @csrf
-                @method('PUT')
+                @include('components.page-header', [
+                    'title' => 'Perbarui Hasil Pemeriksaan Elektrokardiografi (EKG)',
+                    'description' =>
+                        'Perbarui Hasil Pemeriksaan Elektrokardiografi (EKG) dengan mengisi formulir di bawah ini.',
+                ])
 
-                <div class="card shadow-sm">
-                    <div class="card-header bg-warning">
-                        <h4 class="text-center text-dark mb-0">
-                            <i class="fas fa-edit me-2"></i>
-                            Edit Hasil Pemeriksaan Elektrokardiografi (EKG)
-                        </h4>
-                    </div>
-
-                    <div class="card-body">
-                        <!-- Lead EKG Section -->
-                        <div class="card mb-4 border-success mt-4">
-                            <div class="card-header bg-success text-white">
-                                <h6 class="mb-0"><i class="fas fa-chart-line me-2"></i>Hasil Lead EKG</h6>
-                            </div>
-                            <div class="card-body">
-                                <!-- Lead Standar -->
-                                <h6 class="text-muted mb-3 mt-2">Lead Standar</h6>
-
-                                <div class="mb-3">
-                                    <label class="form-label fw-semibold">LEAD I</label>
-                                    <textarea class="form-control @error('lead_i') is-invalid @enderror" name="lead_i" rows="4"
-                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead I...">{{ old('lead_i', $hasilEkg->lead_i) }}</textarea>
-                                    @error('lead_i')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label fw-semibold">LEAD II</label>
-                                    <textarea class="form-control @error('lead_ii') is-invalid @enderror" name="lead_ii" rows="4"
-                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead II...">{{ old('lead_ii', $hasilEkg->lead_ii) }}</textarea>
-                                    @error('lead_ii')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-4">
-                                    <label class="form-label fw-semibold">LEAD III</label>
-                                    <textarea class="form-control @error('lead_iii') is-invalid @enderror" name="lead_iii" rows="4"
-                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead III...">{{ old('lead_iii', $hasilEkg->lead_iii) }}</textarea>
-                                    @error('lead_iii')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <!-- Lead Augmented -->
-                                <h6 class="text-muted mb-3">Lead Augmented</h6>
-
-                                <div class="mb-3">
-                                    <label class="form-label fw-semibold">LEAD AVR</label>
-                                    <textarea class="form-control @error('lead_avr') is-invalid @enderror" name="lead_avr" rows="4"
-                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead AVR...">{{ old('lead_avr', $hasilEkg->lead_avr) }}</textarea>
-                                    @error('lead_avr')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label fw-semibold">LEAD AVL</label>
-                                    <textarea class="form-control @error('lead_avl') is-invalid @enderror" name="lead_avl" rows="4"
-                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead AVL...">{{ old('lead_avl', $hasilEkg->lead_avl) }}</textarea>
-                                    @error('lead_avl')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-4">
-                                    <label class="form-label fw-semibold">LEAD AVF</label>
-                                    <textarea class="form-control @error('lead_avf') is-invalid @enderror" name="lead_avf" rows="4"
-                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead AVF...">{{ old('lead_avf', $hasilEkg->lead_avf) }}</textarea>
-                                    @error('lead_avf')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <!-- Lead Precordial V1-V3 -->
-                                <h6 class="text-muted mb-3">Lead Precordial V1-V3</h6>
-
-                                <div class="mb-3">
-                                    <label class="form-label fw-semibold">LEAD V1</label>
-                                    <textarea class="form-control @error('lead_v1') is-invalid @enderror" name="lead_v1" rows="4"
-                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead V1...">{{ old('lead_v1', $hasilEkg->lead_v1) }}</textarea>
-                                    @error('lead_v1')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label fw-semibold">LEAD V2</label>
-                                    <textarea class="form-control @error('lead_v2') is-invalid @enderror" name="lead_v2" rows="4"
-                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead V2...">{{ old('lead_v2', $hasilEkg->lead_v2) }}</textarea>
-                                    @error('lead_v2')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-4">
-                                    <label class="form-label fw-semibold">LEAD V3</label>
-                                    <textarea class="form-control @error('lead_v3') is-invalid @enderror" name="lead_v3" rows="4"
-                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead V3...">{{ old('lead_v3', $hasilEkg->lead_v3) }}</textarea>
-                                    @error('lead_v3')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <!-- Lead Precordial V4-V6 -->
-                                <h6 class="text-muted mb-3">Lead Precordial V4-V6</h6>
-
-                                <div class="mb-3">
-                                    <label class="form-label fw-semibold">LEAD V4</label>
-                                    <textarea class="form-control @error('lead_v4') is-invalid @enderror" name="lead_v4" rows="4"
-                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead V4...">{{ old('lead_v4', $hasilEkg->lead_v4) }}</textarea>
-                                    @error('lead_v4')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label fw-semibold">LEAD V5</label>
-                                    <textarea class="form-control @error('lead_v5') is-invalid @enderror" name="lead_v5" rows="4"
-                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead V5...">{{ old('lead_v5', $hasilEkg->lead_v5) }}</textarea>
-                                    @error('lead_v5')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label fw-semibold">LEAD V6</label>
-                                    <textarea class="form-control @error('lead_v6') is-invalid @enderror" name="lead_v6" rows="4"
-                                        style="min-height: 100px;" placeholder="Hasil pembacaan Lead V6...">{{ old('lead_v6', $hasilEkg->lead_v6) }}</textarea>
-                                    @error('lead_v6')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
+                <form
+                    action="{{ route('hemodialisa.pelayanan.hasil-ekg.update', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $hasilEkg->id]) }}"
+                    method="post">
+                    @csrf
+                    @method('PUT')
+                    <!-- Lead EKG Section -->
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h6 class="mb-0"><i class="fas fa-chart-line me-2"></i>Hasil Lead EKG</h6>
                         </div>
+                        <div class="card-body">
+                            <!-- Lead Standar -->
+                            <h6 class="text-muted mb-3 mt-2">Lead Standar</h6>
 
-                        <!-- Diagnosis dan Hasil -->
-                        <div class="card mb-4 border-warning">
-                            <div class="card-header bg-warning text-dark">
-                                <h6 class="mb-0"><i class="fas fa-stethoscope me-2"></i>Diagnosis dan Hasil</h6>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">LEAD I</label>
+                                <textarea class="form-control @error('lead_i') is-invalid @enderror" name="lead_i" rows="4"
+                                    style="min-height: 100px;" placeholder="Hasil pembacaan Lead I...">{{ old('lead_i', $hasilEkg->lead_i) }}</textarea>
+                                @error('lead_i')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
-                            <div class="card-body">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <label class="form-label fw-semibold">
-                                            <i class="fas fa-clipboard-check me-1"></i>Diagnosis
-                                        </label>
-                                        <textarea class="form-control diagnosis-textarea @error('diagnosis') is-invalid @enderror" name="diagnosis"
-                                            rows="10" style="min-height: 250px; resize: vertical;"
-                                            placeholder="Masukkan diagnosis berdasarkan hasil EKG...">{{ old('diagnosis', $hasilEkg->diagnosis) }}</textarea>
-                                        @error('diagnosis')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
 
-                                <div class="row g-3 mt-3">
-                                    <!-- Tanggal -->
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold">
-                                            <i class="fas fa-calendar me-1"></i>Tanggal <span class="text-danger">*</span>
-                                        </label>
-                                        <input type="date" class="form-control @error('tanggal') is-invalid @enderror"
-                                            name="tanggal" value="{{ old('tanggal', $hasilEkg->tanggal) }}" required>
-                                        @error('tanggal')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <!-- Jam -->
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold">
-                                            <i class="fas fa-clock me-1"></i>Jam <span class="text-danger">*</span>
-                                        </label>
-                                        <input type="time" class="form-control @error('jam') is-invalid @enderror"
-                                            name="jam"
-                                            value="{{ old('jam', $hasilEkg->jam ? date('H:i', strtotime($hasilEkg->jam)) : '') }}"
-                                            required>
-                                        @error('jam')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">LEAD II</label>
+                                <textarea class="form-control @error('lead_ii') is-invalid @enderror" name="lead_ii" rows="4"
+                                    style="min-height: 100px;" placeholder="Hasil pembacaan Lead II...">{{ old('lead_ii', $hasilEkg->lead_ii) }}</textarea>
+                                @error('lead_ii')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
-                        </div>
 
-                        <!-- Petugas Section -->
-                        <div class="card mb-4 border-secondary">
-                            <div class="card-header bg-secondary text-white">
-                                <h6 class="mb-0"><i class="fas fa-user-md me-2"></i>Informasi Petugas</h6>
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">LEAD III</label>
+                                <textarea class="form-control @error('lead_iii') is-invalid @enderror" name="lead_iii" rows="4"
+                                    style="min-height: 100px;" placeholder="Hasil pembacaan Lead III...">{{ old('lead_iii', $hasilEkg->lead_iii) }}</textarea>
+                                @error('lead_iii')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
-                            <div class="card-body">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold">
-                                            <i class="fas fa-user-nurse me-1"></i>Nama Perawat
-                                        </label>
-                                        <select class="form-control select2" style="width: 100%" name="kd_perawat">
-                                            <option value="">Pilih Perawat</option>
-                                            @foreach ($perawat as $staff)
-                                                <option value="{{ $staff->kd_karyawan }}"
-                                                    {{ old('kd_perawat', $hasilEkg->kd_perawat) == $staff->kd_karyawan ? 'selected' : '' }}>
-                                                    {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
-                                                    ({{ $staff->profesi ?? 'Perawat' }})
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('kd_perawat')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold">
-                                            <i class="fas fa-user-md me-1"></i>Nama Dokter
-                                        </label>
-                                        <select name="kd_dokter" id="dokter_pelaksana" class="form-select select2">
-                                            <option value="">--Pilih--</option>
-                                            @foreach ($dokter as $item)
-                                                <option value="{{ $item->kd_dokter }}"
-                                                    {{ old('kd_dokter', $hasilEkg->kd_dokter) == $item->kd_dokter ? 'selected' : '' }}>
-                                                    {{ $item->nama_lengkap }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('kd_dokter')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Submit Buttons -->
-                        <div class="text-end mt-4">
-                            <button type="submit" class="btn btn-warning btn-lg shadow-sm">
-                                <i class="fas fa-save me-2"></i>Update Hasil EKG
-                            </button>
+                            <!-- Lead Augmented -->
+                            <h6 class="text-muted mb-3">Lead Augmented</h6>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">LEAD AVR</label>
+                                <textarea class="form-control @error('lead_avr') is-invalid @enderror" name="lead_avr" rows="4"
+                                    style="min-height: 100px;" placeholder="Hasil pembacaan Lead AVR...">{{ old('lead_avr', $hasilEkg->lead_avr) }}</textarea>
+                                @error('lead_avr')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">LEAD AVL</label>
+                                <textarea class="form-control @error('lead_avl') is-invalid @enderror" name="lead_avl" rows="4"
+                                    style="min-height: 100px;" placeholder="Hasil pembacaan Lead AVL...">{{ old('lead_avl', $hasilEkg->lead_avl) }}</textarea>
+                                @error('lead_avl')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">LEAD AVF</label>
+                                <textarea class="form-control @error('lead_avf') is-invalid @enderror" name="lead_avf" rows="4"
+                                    style="min-height: 100px;" placeholder="Hasil pembacaan Lead AVF...">{{ old('lead_avf', $hasilEkg->lead_avf) }}</textarea>
+                                @error('lead_avf')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Lead Precordial V1-V3 -->
+                            <h6 class="text-muted mb-3">Lead Precordial V1-V3</h6>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">LEAD V1</label>
+                                <textarea class="form-control @error('lead_v1') is-invalid @enderror" name="lead_v1" rows="4"
+                                    style="min-height: 100px;" placeholder="Hasil pembacaan Lead V1...">{{ old('lead_v1', $hasilEkg->lead_v1) }}</textarea>
+                                @error('lead_v1')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">LEAD V2</label>
+                                <textarea class="form-control @error('lead_v2') is-invalid @enderror" name="lead_v2" rows="4"
+                                    style="min-height: 100px;" placeholder="Hasil pembacaan Lead V2...">{{ old('lead_v2', $hasilEkg->lead_v2) }}</textarea>
+                                @error('lead_v2')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">LEAD V3</label>
+                                <textarea class="form-control @error('lead_v3') is-invalid @enderror" name="lead_v3" rows="4"
+                                    style="min-height: 100px;" placeholder="Hasil pembacaan Lead V3...">{{ old('lead_v3', $hasilEkg->lead_v3) }}</textarea>
+                                @error('lead_v3')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Lead Precordial V4-V6 -->
+                            <h6 class="text-muted mb-3">Lead Precordial V4-V6</h6>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">LEAD V4</label>
+                                <textarea class="form-control @error('lead_v4') is-invalid @enderror" name="lead_v4" rows="4"
+                                    style="min-height: 100px;" placeholder="Hasil pembacaan Lead V4...">{{ old('lead_v4', $hasilEkg->lead_v4) }}</textarea>
+                                @error('lead_v4')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">LEAD V5</label>
+                                <textarea class="form-control @error('lead_v5') is-invalid @enderror" name="lead_v5" rows="4"
+                                    style="min-height: 100px;" placeholder="Hasil pembacaan Lead V5...">{{ old('lead_v5', $hasilEkg->lead_v5) }}</textarea>
+                                @error('lead_v5')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">LEAD V6</label>
+                                <textarea class="form-control @error('lead_v6') is-invalid @enderror" name="lead_v6" rows="4"
+                                    style="min-height: 100px;" placeholder="Hasil pembacaan Lead V6...">{{ old('lead_v6', $hasilEkg->lead_v6) }}</textarea>
+                                @error('lead_v6')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                     </div>
-                </div>
-            </form>
+
+                    <!-- Diagnosis dan Hasil -->
+                    <div class="card mb-4 border-warning">
+                        <div class="card-header bg-warning text-dark">
+                            <h6 class="mb-0"><i class="fas fa-stethoscope me-2"></i>Diagnosis dan Hasil</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">
+                                        <i class="fas fa-clipboard-check me-1"></i>Diagnosis
+                                    </label>
+                                    <textarea class="form-control diagnosis-textarea @error('diagnosis') is-invalid @enderror" name="diagnosis"
+                                        rows="10" style="min-height: 250px; resize: vertical;"
+                                        placeholder="Masukkan diagnosis berdasarkan hasil EKG...">{{ old('diagnosis', $hasilEkg->diagnosis) }}</textarea>
+                                    @error('diagnosis')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mt-3">
+                                <!-- Tanggal -->
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">
+                                        <i class="fas fa-calendar me-1"></i>Tanggal <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="date" class="form-control @error('tanggal') is-invalid @enderror"
+                                        name="tanggal" value="{{ old('tanggal', $hasilEkg->tanggal) }}" required>
+                                    @error('tanggal')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <!-- Jam -->
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">
+                                        <i class="fas fa-clock me-1"></i>Jam <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="time" class="form-control @error('jam') is-invalid @enderror"
+                                        name="jam"
+                                        value="{{ old('jam', $hasilEkg->jam ? date('H:i', strtotime($hasilEkg->jam)) : '') }}"
+                                        required>
+                                    @error('jam')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Petugas Section -->
+                    <div class="card mb-4 border-secondary">
+                        <div class="card-header bg-secondary text-white">
+                            <h6 class="mb-0"><i class="fas fa-user-md me-2"></i>Informasi Petugas</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">
+                                        <i class="fas fa-user-nurse me-1"></i>Nama Perawat
+                                    </label>
+                                    <select class="form-control select2" style="width: 100%" name="kd_perawat">
+                                        <option value="">Pilih Perawat</option>
+                                        @foreach ($perawat as $staff)
+                                            <option value="{{ $staff->kd_karyawan }}"
+                                                {{ old('kd_perawat', $hasilEkg->kd_perawat) == $staff->kd_karyawan ? 'selected' : '' }}>
+                                                {{ trim(($staff->gelar_depan ?? '') . ' ' . $staff->nama . ' ' . ($staff->gelar_belakang ?? '')) }}
+                                                ({{ $staff->profesi ?? 'Perawat' }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('kd_perawat')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">
+                                        <i class="fas fa-user-md me-1"></i>Nama Dokter
+                                    </label>
+                                    <select name="kd_dokter" id="dokter_pelaksana" class="form-select select2">
+                                        <option value="">--Pilih--</option>
+                                        @foreach ($dokter as $item)
+                                            <option value="{{ $item->kd_dokter }}"
+                                                {{ old('kd_dokter', $hasilEkg->kd_dokter) == $item->kd_dokter ? 'selected' : '' }}>
+                                                {{ $item->nama_lengkap }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('kd_dokter')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <!-- Submit Buttons -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-end">
+                        <x-button-submit>Perbarui</x-button-submit>
+                    </div>
+                </form>
+            </x-content-card>
         </div>
     </div>
 @endsection

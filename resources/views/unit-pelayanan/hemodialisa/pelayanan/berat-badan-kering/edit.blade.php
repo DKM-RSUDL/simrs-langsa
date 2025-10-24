@@ -150,154 +150,155 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ route('hemodialisa.pelayanan.berat-badan-kering.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-outline-primary mb-3">
-                <i class="ti-arrow-left"></i> Kembali
-            </a>
+            <x-content-card>
+                <x-button-previous />
 
-            <form id="beratBadanForm" method="POST"
-                action="{{ route('hemodialisa.pelayanan.berat-badan-kering.update', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $beratBadanKering->id]) }}">
-                @csrf
-                @method('PUT')
+                @include('components.page-header', [
+                    'title' => 'Perbarui Data Berat Badan Kering Pasien Hemodialisa',
+                    'description' =>
+                        ' Perbarui data Asesmen medis Hemodialisa dengan mengisi formulir di bawah ini.',
+                ])
 
-                <div class="d-flex justify-content-center">
-                    <div class="card w-100 h-100 shadow-sm">
-                        <div class="card-body">
-                            <div class="px-3">
-                                <h4 class="header-asesmen">Form Edit Data Berat Badan Kering Pasien Hemodialisis</h4>
-                            </div>
+                <form id="beratBadanForm" method="POST"
+                    action="{{ route('hemodialisa.pelayanan.berat-badan-kering.update', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $beratBadanKering->id]) }}">
+                    @csrf
+                    @method('PUT')
+                    @if (session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{ session('error') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    @endif
 
-                            @if(session('error'))
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    {{ session('error') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                </div>
-                            @endif
+                    @if ($errors->any())
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    @endif
 
-                            @if($errors->any())
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <ul class="mb-0">
-                                        @foreach($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                </div>
-                            @endif
 
-                            <div class="px-3">
-                                <div class="section-separator">
-                                    <div class="section-header">DATA AWAL</div>
+                    <div class="section-separator mt-0">
+                        <div class="section-header">DATA AWAL</div>
 
-                                    <div class="form-row">
-                                        <label class="form-label">Mulai HD:</label>
-                                        <input type="text" class="form-control readonly-field"
-                                            value="{{ $beratBadanKering->mulai_hd ? $beratBadanKering->mulai_hd->format('d/m/Y') : '-' }}" readonly>
-                                        <input type="hidden" name="mulai_hd" value="{{ $beratBadanKering->mulai_hd ? $beratBadanKering->mulai_hd->format('Y-m-d') : '' }}">
-                                    </div>
+                        <div class="form-row">
+                            <label class="form-label">Mulai HD:</label>
+                            <input type="text" class="form-control readonly-field"
+                                value="{{ $beratBadanKering->mulai_hd ? $beratBadanKering->mulai_hd->format('d/m/Y') : '-' }}"
+                                readonly>
+                            <input type="hidden" name="mulai_hd"
+                                value="{{ $beratBadanKering->mulai_hd ? $beratBadanKering->mulai_hd->format('Y-m-d') : '' }}">
+                        </div>
 
-                                    <div class="mt-3 mb-3">
-                                        <label class="col-form-label">
-                                            Periode yang akan diedit:
-                                            <span class="text-primary">{{ $beratBadanKering->nama_bulan }} {{ $beratBadanKering->tahun }}</span>
-                                        </label>
-                                    </div>
+                        <div class="mt-3 mb-3">
+                            <label class="col-form-label">
+                                Periode yang akan diedit:
+                                <span class="text-primary">{{ $beratBadanKering->nama_bulan }}
+                                    {{ $beratBadanKering->tahun }}</span>
+                            </label>
+                        </div>
 
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-row">
-                                                <label for="tahun" class="form-label">Tahun:</label>
-                                                <input type="text" class="form-control readonly-field" 
-                                                    value="{{ $beratBadanKering->tahun }}" readonly>
-                                                <input type="hidden" name="periode_tahun" value="{{ $beratBadanKering->tahun }}">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-row">
-                                                <label for="bulan" class="form-label">Bulan:</label>
-                                                <input type="text" class="form-control readonly-field" 
-                                                    value="{{ $beratBadanKering->nama_bulan }}" readonly>
-                                                <input type="hidden" name="periode_bulan" value="{{ $beratBadanKering->bulan }}">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <small class="text-info d-block">
-                                        <i class="ti-info-circle"></i> Periode tidak dapat diubah saat edit. Untuk mengubah periode, hapus data ini dan buat data baru.
-                                    </small>
-                                </div>
-
-                                <!-- INPUT DATA -->
-                                <div class="section-separator">
-                                    <div class="section-header">INPUT DATA</div>
-
-                                    <div class="form-row">
-                                        <label for="bbk">Berat Badan Kering (BBK):</label>
-                                        <div class="input-group">
-                                            <input type="number" id="bbk" name="bbk" class="form-control"
-                                                step="0.1" min="0" max="200" placeholder="0.0" 
-                                                value="{{ old('bbk', $beratBadanKering->bbk) }}" required>
-                                            <div class="input-group-text">Kg</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-row">
-                                        <label for="berat_badan">Berat Badan:</label>
-                                        <div class="input-group">
-                                            <input type="number" id="berat_badan" name="berat_badan" class="form-control"
-                                                step="0.1" min="0" max="200" placeholder="0.0" 
-                                                value="{{ old('berat_badan', $beratBadanKering->berat_badan) }}" required>
-                                            <div class="input-group-text">Kg</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-row">
-                                        <label for="tinggi_badan">Tinggi Badan:</label>
-                                        <div class="input-group">
-                                            <input type="number" id="tinggi_badan" name="tinggi_badan"
-                                                class="form-control" step="0.1" min="50" max="250"
-                                                placeholder="0.0" value="{{ old('tinggi_badan', $beratBadanKering->tinggi_badan) }}" required>
-                                            <div class="input-group-text">cm</div>
-                                        </div>
-                                    </div>
-
-                                    <!-- HASIL IMT -->
-                                    <div class="calculation-display">
-                                        <div class="calculation-result" id="imtResult">
-                                            {{ $beratBadanKering->imt }}
-                                        </div>
-                                        <div class="calculation-formula" id="imtFormula">
-                                            IMT = Berat Badan (kg) ÷ (Tinggi Badan (m))²
-                                        </div>
-                                        <div id="imtStatus">
-                                            <span class="imt-status imt-{{ strtolower($beratBadanKering->status_imt) }}">{{ $beratBadanKering->status_imt }}</span>
-                                        </div>
-                                    </div>
-
-                                    <input type="hidden" id="imt_calculated" name="imt" value="{{ old('imt', $beratBadanKering->imt) }}">
-                                </div>
-
-                                <!-- CATATAN -->
-                                <div class="section-separator">
-                                    <div class="section-header">CATATAN</div>
-
-                                    <div class="form-group">
-                                        <label for="catatan" class="form-label">Catatan:</label>
-                                        <textarea id="catatan" name="catatan" class="form-control" rows="3"
-                                            placeholder="Catatan kondisi pasien atau informasi penting lainnya...">{{ old('catatan', $beratBadanKering->catatan) }}</textarea>
-                                    </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-row">
+                                    <label for="tahun" class="form-label">Tahun:</label>
+                                    <input type="text" class="form-control readonly-field"
+                                        value="{{ $beratBadanKering->tahun }}" readonly>
+                                    <input type="hidden" name="periode_tahun" value="{{ $beratBadanKering->tahun }}">
                                 </div>
                             </div>
-
-                            <div class="d-flex justify-content-end mt-4">
-                                <button type="submit" class="btn btn-primary" id="simpan">
-                                    <i class="ti-check"></i> Update Data
-                                </button>
+                            <div class="col-md-6">
+                                <div class="form-row">
+                                    <label for="bulan" class="form-label">Bulan:</label>
+                                    <input type="text" class="form-control readonly-field"
+                                        value="{{ $beratBadanKering->nama_bulan }}" readonly>
+                                    <input type="hidden" name="periode_bulan" value="{{ $beratBadanKering->bulan }}">
+                                </div>
                             </div>
                         </div>
+
+                        <small class="text-info d-block">
+                            <i class="ti-info-circle"></i> Periode tidak dapat diubah saat edit. Untuk
+                            mengubah periode, hapus data ini dan buat data baru.
+                        </small>
                     </div>
-                </div>
-            </form>
+
+                    <!-- INPUT DATA -->
+                    <div class="section-separator">
+                        <div class="section-header">INPUT DATA</div>
+
+                        <div class="form-row">
+                            <label for="bbk">Berat Badan Kering (BBK):</label>
+                            <div class="input-group">
+                                <input type="number" id="bbk" name="bbk" class="form-control" step="0.1"
+                                    min="0" max="200" placeholder="0.0"
+                                    value="{{ old('bbk', $beratBadanKering->bbk) }}" required>
+                                <div class="input-group-text">Kg</div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="berat_badan">Berat Badan:</label>
+                            <div class="input-group">
+                                <input type="number" id="berat_badan" name="berat_badan" class="form-control"
+                                    step="0.1" min="0" max="200" placeholder="0.0"
+                                    value="{{ old('berat_badan', $beratBadanKering->berat_badan) }}" required>
+                                <div class="input-group-text">Kg</div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="tinggi_badan">Tinggi Badan:</label>
+                            <div class="input-group">
+                                <input type="number" id="tinggi_badan" name="tinggi_badan" class="form-control"
+                                    step="0.1" min="50" max="250" placeholder="0.0"
+                                    value="{{ old('tinggi_badan', $beratBadanKering->tinggi_badan) }}" required>
+                                <div class="input-group-text">cm</div>
+                            </div>
+                        </div>
+
+                        <!-- HASIL IMT -->
+                        <div class="calculation-display">
+                            <div class="calculation-result" id="imtResult">
+                                {{ $beratBadanKering->imt }}
+                            </div>
+                            <div class="calculation-formula" id="imtFormula">
+                                IMT = Berat Badan (kg) ÷ (Tinggi Badan (m))²
+                            </div>
+                            <div id="imtStatus">
+                                <span
+                                    class="imt-status imt-{{ strtolower($beratBadanKering->status_imt) }}">{{ $beratBadanKering->status_imt }}</span>
+                            </div>
+                        </div>
+
+                        <input type="hidden" id="imt_calculated" name="imt"
+                            value="{{ old('imt', $beratBadanKering->imt) }}">
+                    </div>
+
+                    <!-- CATATAN -->
+                    <div class="section-separator">
+                        <div class="section-header">CATATAN</div>
+
+                        <div class="form-group">
+                            <label for="catatan" class="form-label">Catatan:</label>
+                            <textarea id="catatan" name="catatan" class="form-control" rows="3"
+                                placeholder="Catatan kondisi pasien atau informasi penting lainnya...">{{ old('catatan', $beratBadanKering->catatan) }}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="text-end">
+                        <x-button-submit>Perbarui</x-button-submit>
+                    </div>
         </div>
+    </div>
+    </div>
+    </form>
+    </x-content-card>
+    </div>
     </div>
 @endsection
 

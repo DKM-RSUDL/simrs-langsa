@@ -8,44 +8,45 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ route('hemodialisa.pelayanan.tindakan-khusus.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
-                class="btn btn-outline-primary mb-3">
-                <i class="ti-arrow-left"></i> Kembali
-            </a>
+            <x-content-card>
+                <x-button-previous />
 
-            {{-- Display Success/Error Messages --}}
-            @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
+                @include('components.page-header', [
+                    'title' => 'Tambah Data Tindakan Khusus Hemodialisis',
+                    'description' => 'Tambah Data Umum Pasien Hemodialisis dengan mengisi formulir di bawah ini.',
+                ])
 
-            @if (session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="fas fa-exclamation-triangle me-2"></i>{{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
+                {{-- Display Success/Error Messages --}}
+                @if (session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
 
-            @if ($errors->any())
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <h6><i class="fas fa-exclamation-triangle me-2"></i>Terjadi kesalahan validasi:</h6>
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
+                @if (session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>{{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
 
-            <form
-                action="{{ route('hemodialisa.pelayanan.tindakan-khusus.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
-                method="post">
-                @csrf
+                @if ($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <h6><i class="fas fa-exclamation-triangle me-2"></i>Terjadi kesalahan validasi:</h6>
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
 
-                <div class="card shadow-sm">
+                <form
+                    action="{{ route('hemodialisa.pelayanan.tindakan-khusus.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                    method="post">
+                    @csrf
                     <div class="card-header bg-primary">
                         <h4 class="text-center text-white mb-0">
                             <i class="fas fa-pills me-2"></i>
@@ -155,15 +156,14 @@
                         </div>
 
                         <!-- Submit Button -->
-                        <div class="text-end mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg shadow-sm">
-                                <i class="fas fa-save me-2"></i>Simpan Data
-                            </button>
+                        <div class="text-end">
+                            <x-button-submit />
                         </div>
                     </div>
-                </div>
-            </form>
         </div>
+        </form>
+        </x-content-card>
+    </div>
     </div>
 @endsection
 

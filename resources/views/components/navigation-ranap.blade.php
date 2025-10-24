@@ -44,7 +44,9 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+             'active' => 'rawat-inap.konsultasi.*',
         ],
+
         [
             'icon' => 'agree.png',
             'label' => 'Konsultasi Spesialis',
@@ -54,6 +56,7 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+            'active' => 'rawat-inap.konsultasi-spesialis.*',
         ],
         [
             'icon' => 'test_tube.png',
