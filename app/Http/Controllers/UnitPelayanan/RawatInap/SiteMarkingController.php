@@ -29,7 +29,7 @@ class SiteMarkingController extends Controller
         return date('Y-m-d', strtotime($date));
     }
 
-    public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op)
+    private function getCommonData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op)
     {
         // Ambil data kunjungan
         $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
@@ -37,48 +37,43 @@ class SiteMarkingController extends Controller
             abort(404, 'Data medis tidak ditemukan.');
         }
 
-
-        // Hitung umur pasien
-        if ($dataMedis && $dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
-        // Cek apakah data kunjungan ditemukan
-        if (!$dataMedis) {
-            abort(404, 'Data kunjungan tidak ditemukan');
-        }
-
-        // Ambil riwayat site marking untuk pasien dan kunjungan spesifik
-        $siteMarkings = OkSiteMarking::with(['creator', 'dokter'])
-            ->where('kd_pasien', $kd_pasien)
-            ->where('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->orderBy('waktu_prosedure', 'desc')
-            ->get();
-
         $operasi = OrderOK::where('kd_kasir', $dataMedis->kd_kasir)
             ->where('no_transaksi', $dataMedis->no_transaksi)
-            ->whereIn('status', [1, 2])
             ->where('tgl_op', $tgl_op)
             ->where('jam_op', $jam_op)
-            ->first(['tgl_op', 'jam_op']);
-
+            ->first();
         if (!$operasi) {
             abort(404, 'Data operasi tidak ditemukan');
         }
+
+        // get kunjungan ok
+        $kunjunganOK = $this->baseService->getDataMedisbyTransaksi($operasi->kd_kasir_ok, $operasi->no_transaksi_ok);
+        if (!$kunjunganOK) {
+            abort(404, 'Data kunjungan OK tidak ditemukan');
+        }
+
+        return compact('dataMedis', 'operasi', 'kunjunganOK');
+    }
+
+    public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op)
+    {
+        extract($this->getCommonData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op));
+
+        // Ambil riwayat site marking untuk pasien dan kunjungan spesifik
+        $siteMarkings = OkSiteMarking::with(['creator', 'dokter'])
+            ->where('kd_pasien', $kunjunganOK->kd_pasien)
+            ->where('tgl_masuk', $kunjunganOK->tgl_masuk)
+            ->where('urut_masuk', $kunjunganOK->urut_masuk)
+            ->orderBy('waktu_prosedure', 'desc')
+            ->get();
+
 
         return view('unit-pelayanan.rawat-inap.pelayanan.order.operasi.sitemarking.index', compact('dataMedis', 'siteMarkings', 'operasi'));
     }
 
     public function create($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op)
     {
-        // Ambil data kunjungan
-        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-        if (!$dataMedis) {
-            abort(404, 'Data medis tidak ditemukan.');
-        }
+        extract($this->getCommonData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op));
 
         $dokter = Dokter::where('status', 1)->get();
 
@@ -90,24 +85,26 @@ class SiteMarkingController extends Controller
         }
 
         // Cek jenis kelamin pasien dan arahkan ke view yang sesuai
-        return view('unit-pelayanan.operasi.pelayanan.sitemarking.create', compact('dataMedis', 'kd_pasien', 'tgl_masuk', 'urut_masuk', 'dokter'));
+        return view('unit-pelayanan.rawat-inap.pelayanan.order.operasi.sitemarking.create', compact('dataMedis', 'kd_pasien', 'tgl_masuk', 'urut_masuk', 'dokter', 'operasi'));
     }
 
 
-    public function store(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op)
     {
         DB::beginTransaction();
 
         try {
+            extract($this->getCommonData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op));
+
             // Format tanggal
-            $formatTglMasuk = date('Y-m-d', strtotime($tgl_masuk));
+            $formatTglMasuk = date('Y-m-d', strtotime($kunjunganOK->tgl_masuk));
             $waktuProsedure = date('Y-m-d H:i:s', strtotime($request->waktu));
 
             // Persiapkan data untuk disimpan
             $data = [
-                'kd_pasien' => $kd_pasien,
+                'kd_pasien' => $kunjunganOK->kd_pasien,
                 'tgl_masuk' => $formatTglMasuk,
-                'urut_masuk' => $urut_masuk,
+                'urut_masuk' => $kunjunganOK->urut_masuk,
                 'active_template' => $request->active_template,
                 'marking_data' => $request->marking_data,
                 'kd_dokter' => $request->ahli_bedah,
@@ -177,10 +174,13 @@ class SiteMarkingController extends Controller
 
             DB::commit();
 
-            return redirect()->route('operasi.pelayanan.site-marking.index', [
+            return redirect()->route('rawat-inap.operasi.site-marking.index', [
+                $kd_unit,
                 $kd_pasien,
-                $formattedDate,
-                $urut_masuk
+                date('Y-m-d', strtotime($tgl_masuk)),
+                $urut_masuk,
+                $tgl_op,
+                $jam_op,
             ])->with('success', 'Site Marking berhasil disimpan! Siap operasi!');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -191,18 +191,7 @@ class SiteMarkingController extends Controller
 
     public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op, $id)
     {
-        // Ambil data kunjungan
-        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-        if (!$dataMedis) {
-            abort(404, 'Data medis tidak ditemukan.');
-        }
-
-        // Menghitung umur berdasarkan tgl_lahir jika ada
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
+        extract($this->getCommonData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op));
 
         // Ambil data site marking
         $siteMarking = OkSiteMarking::with('dokter', 'creator')
@@ -219,24 +208,13 @@ class SiteMarkingController extends Controller
         // Parsedkan data marking ke JSON
         $markingData = json_decode($siteMarking->marking_data, true);
 
-        return view('unit-pelayanan.operasi.pelayanan.sitemarking.show', compact('dataMedis', 'siteMarking', 'dokter', 'markingData'));
+        return view('unit-pelayanan.rawat-inap.pelayanan.order.operasi.sitemarking.show', compact('dataMedis', 'siteMarking', 'dokter', 'markingData', 'operasi'));
     }
 
 
-    public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $jam_op, $tgl_op, $id)
+    public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op, $id)
     {
-        // Ambil data kunjungan
-        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-        if (!$dataMedis) {
-            abort(404, 'Data medis tidak ditemukan.');
-        }
-
-        // Menghitung umur berdasarkan tgl_lahir jika ada
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
+        extract($this->getCommonData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op));
 
         // Ambil data site marking yang akan diedit
         $siteMarking = OkSiteMarking::with('dokter', 'creator')
@@ -250,16 +228,18 @@ class SiteMarkingController extends Controller
         // Ambil data dokter untuk dropdown
         $dokter = Dokter::where('status', 1)->get();
 
-        return view('unit-pelayanan.operasi.pelayanan.sitemarking.edit', compact('dataMedis', 'siteMarking', 'kd_pasien', 'tgl_masuk', 'urut_masuk', 'dokter'));
+        return view('unit-pelayanan.rawat-inap.pelayanan.order.operasi.sitemarking.edit', compact('dataMedis', 'siteMarking', 'kd_pasien', 'tgl_masuk', 'urut_masuk', 'dokter', 'tgl_op', 'jam_op', 'operasi'));
     }
 
-    public function update(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op, $id)
     {
         DB::beginTransaction();
 
         try {
+            extract($this->getCommonData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op));
+
             // Format tanggal
-            $formatTglMasuk = date('Y-m-d', strtotime($tgl_masuk));
+            $formatTglMasuk = date('Y-m-d', strtotime($kunjunganOK->tgl_masuk));
             $waktuProsedure = date('Y-m-d H:i:s', strtotime($request->waktu));
 
             // Cari data site marking yang akan diupdate
@@ -353,10 +333,13 @@ class SiteMarkingController extends Controller
 
             DB::commit();
 
-            return redirect()->route('operasi.pelayanan.site-marking.index', [
+            return redirect()->route('rawat-inap.operasi.site-marking.index', [
+                $kd_unit,
                 $kd_pasien,
-                $tgl_masuk,
-                $urut_masuk
+                date('Y-m-d', strtotime($tgl_masuk)),
+                $urut_masuk,
+                $tgl_op,
+                $jam_op,
             ])->with('success', 'Site Marking berhasil diperbarui!');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -365,7 +348,7 @@ class SiteMarkingController extends Controller
         }
     }
 
-    public function destroy($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function destroy($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op, $id)
     {
         DB::beginTransaction();
 
@@ -388,10 +371,13 @@ class SiteMarkingController extends Controller
 
             DB::commit();
 
-            return redirect()->route('operasi.pelayanan.site-marking.index', [
+            return redirect()->route('rawat-inap.operasi.site-marking.index', [
+                $kd_unit,
                 $kd_pasien,
-                $tgl_masuk,
-                $urut_masuk
+                date('Y-m-d', strtotime($tgl_masuk)),
+                $urut_masuk,
+                $tgl_op,
+                $jam_op,
             ])->with('success', 'Site Marking berhasil dihapus!');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -400,20 +386,9 @@ class SiteMarkingController extends Controller
         }
     }
 
-    public function print($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $jam_op, $tgl_op, $id)
+    public function print($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op, $id)
     {
-        // Ambil data kunjungan
-        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-        if (!$dataMedis) {
-            abort(404, 'Data medis tidak ditemukan.');
-        }
-
-        // Menghitung umur berdasarkan tgl_lahir jika ada
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
+        extract($this->getCommonData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op));
 
         // Ambil data site marking
         $siteMarking = OkSiteMarking::with('dokter', 'creator')
@@ -427,6 +402,6 @@ class SiteMarkingController extends Controller
         // Parse data marking_images ke JSON
         $markingImages = json_decode($siteMarking->marking_images, true) ?? [];
 
-        return view('unit-pelayanan.operasi.pelayanan.sitemarking.print', compact('dataMedis', 'siteMarking', 'markingImages'));
+        return view('unit-pelayanan.rawat-inap.pelayanan.order.operasi.sitemarking.print', compact('dataMedis', 'siteMarking', 'markingImages', 'operasi'));
     }
 }

@@ -70,21 +70,21 @@
         </a>
     </div>
 
-    @if (isset($reportOperations) && $reportOperations->isNotEmpty())
+    @if (isset($asesmen) && $asesmen->isNotEmpty())
         <ul class="list-group d-flex flex-column gap-2" id="laporan-oprasi-list">
-            @foreach ($reportOperations as $laporan)
+            @foreach ($asesmen as $item)
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center gap-4">
                         <!-- Tanggal -->
                         <div class="text-center px-3">
                             <div class="fw-bold fs-4 mb-0 text-primary">
-                                {{ date('d', strtotime($laporan->created_at)) }}
+                                {{ date('d', strtotime($item->created_at)) }}
                             </div>
                             <div class="text-muted" style="font-size: 0.85rem;">
-                                {{ date('M-y', strtotime($laporan->created_at)) }}
+                                {{ date('M-y', strtotime($item->created_at)) }}
                             </div>
                             <div class="text-muted" style="font-size: 0.85rem;">
-                                {{ date('H:i', strtotime($laporan->created_at)) }}
+                                {{ date('H:i', strtotime($item->created_at)) }}
                             </div>
                         </div>
 
@@ -94,11 +94,11 @@
                                 alt="Foto Pasien" width="60" height="60">
                             <div>
                                 <div class="text-primary fw-bold mb-1">
-                                    Laporan Operasi
+                                    Asesmen {{ kategoriAsesmenOKlabel($item->kategori) }}
                                 </div>
                                 <div class="text-muted">
                                     By:
-                                    {{ optional($laporan->userCreate)->karyawan ? optional($laporan->userCreate->karyawan)->gelar_depan . ' ' . str()->title(optional($laporan->userCreate->karyawan)->nama) . ' ' . optional($laporan->userCreate->karyawan)->gelar_belakang : '-' }}
+                                    {{ optional($item->userCreate)->karyawan ? optional($item->userCreate->karyawan)->gelar_depan . ' ' . str()->title(optional($item->userCreate->karyawan)->nama) . ' ' . optional($item->userCreate->karyawan)->gelar_belakang : '-' }}
                                 </div>
                             </div>
                         </div>
@@ -106,13 +106,13 @@
 
                     <!-- Action Buttons -->
                     <div class="d-flex gap-2">
-                        <a href="{{ route('operasi.pelayanan.laporan-operasi.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $laporan->id]) }}"
+                        <a href="{{ route('rawat-inap.operasi.asesmen.pra-operatif-perawat.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $operasi->tgl_op, $operasi->jam_op, $item->id]) }}"
                             class="btn btn-info btn-sm px-3">
                             <i class="fas fa-eye me-1"></i>
                             Lihat
                         </a>
 
-                        <a href="{{ route('operasi.pelayanan.laporan-operasi.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $laporan->id]) }}"
+                        <a href="{{ route('rawat-inap.operasi.asesmen.pra-operatif-perawat.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $operasi->tgl_op, $operasi->jam_op,  $item->id]) }}"
                             class="btn btn-sm btn-secondary">
                             <i class="fas fa-edit"></i>
                             Edit

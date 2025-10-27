@@ -16,6 +16,7 @@ use App\Models\RujukanKunjungan;
 use App\Models\SjpKunjungan;
 use App\Models\Transaksi;
 use App\Models\Unit;
+use App\Services\BaseService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -23,9 +24,11 @@ use Illuminate\Support\Facades\DB;
 
 class KonsultasiController extends Controller
 {
+    private $baseService;
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/rawat-inap');
+        $this->baseService = new BaseService();
     }
 
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -514,6 +517,27 @@ class KonsultasiController extends Controller
             DB::rollBack();
             return back()->with('error', $e->getMessage());
         }
+    }
+
+    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $urut_konsul)
+    {
+        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+        if (!$dataMedis) {
+            abort(404, 'Data medis tidak ditemukan.');
+        }
+
+        $konsultasi = Konsultasi::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->where('urut_konsul', $urut_konsul)
+            ->first();
+
+        return view('unit-pelayanan.rawat-inap.pelayanan.konsultasi.show', compact(
+            'konsultasi',
+            'dataMedis',
+            'urut_konsul'
+        ));
     }
 
     public function deleteKonsultasi($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)

@@ -4,13 +4,10 @@ namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
 use App\Models\HrdKaryawan;
-use App\Models\Kunjungan;
 use App\Models\OkAsesmen;
-use App\Models\OkPraInduksi;
+use App\Models\OkLaporanOperasi;
 use App\Models\OkPraOperasiPerawat;
 use App\Models\OrderOK;
-use App\Models\Produk;
-use App\Models\User;
 use App\Services\BaseService;
 use Carbon\Carbon;
 use Exception;
@@ -27,50 +24,44 @@ class AsesmenPraOperatifPerawatController extends Controller
         $this->baseService = new BaseService();
     }
 
-    public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op)
+    private function getCommonData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op)
     {
+        // Ambil data kunjungan
         $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
         if (!$dataMedis) {
             abort(404, 'Data medis tidak ditemukan.');
         }
 
-        // Menghitung umur berdasarkan tgl_lahir jika ada
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
-        if (!$dataMedis) {
-            abort(404, 'Data not found');
-        }
-
-        $asesmen = OkAsesmen::with(['praOperatifMedis', 'userCreate'])
-            ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', 71)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->get();
-
-        $okPraInduksi = OkPraInduksi::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', 71)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->latest('id')
-            ->paginate(10);
-
         $operasi = OrderOK::where('kd_kasir', $dataMedis->kd_kasir)
             ->where('no_transaksi', $dataMedis->no_transaksi)
-            ->whereIn('status', [1, 2])
             ->where('tgl_op', $tgl_op)
             ->where('jam_op', $jam_op)
-            ->first(['tgl_op', 'jam_op']);
-
+            ->first();
         if (!$operasi) {
             abort(404, 'Data operasi tidak ditemukan');
         }
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.order.operasi.asesmen-pra-operatif-perawat.index', compact('dataMedis', 'asesmen', 'okPraInduksi', 'operasi'));
+        // get kunjungan ok
+        $kunjunganOK = $this->baseService->getDataMedisbyTransaksi($operasi->kd_kasir_ok, $operasi->no_transaksi_ok);
+        if (!$kunjunganOK) {
+            abort(404, 'Data kunjungan OK tidak ditemukan');
+        }
+
+        return compact('dataMedis', 'operasi', 'kunjunganOK');
+    }
+
+    public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op)
+    {
+        extract($this->getCommonData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op));
+
+        $asesmen = OkAsesmen::with(['praOperatifMedis', 'userCreate'])
+            ->where('kd_pasien', $kunjunganOK->kd_pasien)
+            ->where('kd_unit', 71)
+            ->whereDate('tgl_masuk', $kunjunganOK->tgl_masuk)
+            ->where('urut_masuk', $kunjunganOK->urut_masuk)
+            ->get();
+
+        return view('unit-pelayanan.rawat-inap.pelayanan.order.operasi.asesmen-pra-operatif-perawat.index', compact('dataMedis', 'asesmen', 'operasi'));
     }
 
     public function create($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op)
@@ -144,12 +135,16 @@ class AsesmenPraOperatifPerawatController extends Controller
         DB::beginTransaction();
 
         try {
+            extract($this->getCommonData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op));
+
+            $formatTglMasuk = date('Y-m-d', strtotime($kunjunganOK->tgl_masuk));
+
             // create asesmen
             $asesmen = new OkAsesmen();
-            $asesmen->kd_pasien = $kd_pasien;
+            $asesmen->kd_pasien = $kunjunganOK->kd_pasien;
             $asesmen->kd_unit = 71;
-            $asesmen->tgl_masuk = $tgl_masuk;
-            $asesmen->urut_masuk = $urut_masuk;
+            $asesmen->tgl_masuk = $formatTglMasuk;
+            $asesmen->urut_masuk = $kunjunganOK->urut_masuk;
             $asesmen->kategori = 2;
             $asesmen->waktu_asesmen = date('Y-m-d H:i:s');
             $asesmen->user_create = Auth::id();
@@ -183,7 +178,9 @@ class AsesmenPraOperatifPerawatController extends Controller
                 'batuk'   => $request->batuk,
                 'haid'   => $request->haid,
                 'verifikasi_pasien'   => $request->verifikasi ?? [],
+                'verifikasi_pasien_ruangan'   => $request->verifikasi_ruangan ?? [],
                 'persiapan_fisik_pasien'   => $request->persiapan_fisik ?? [],
+                'persiapan_fisik_pasien_ruangan'   => $request->persiapan_fisik_ruangan ?? [],
                 'id_perawat_penerima'   => $request->perawat_penerima,
                 'tgl_periksa'   => $request->tgl_periksa,
                 'jam_periksa'   => $request->jam_periksa,
@@ -194,7 +191,7 @@ class AsesmenPraOperatifPerawatController extends Controller
             OkPraOperasiPerawat::create($data);
 
             DB::commit();
-            return to_route('operasi.pelayanan.asesmen.index', [$kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Asesmen Pra Operatif Perawat berhasil di tambah !');
+            return to_route('rawat-inap.operasi.asesmen.pra-operatif-perawat.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op])->with('success', 'Asesmen Pra Operatif Perawat berhasil di tambah !');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
@@ -203,17 +200,7 @@ class AsesmenPraOperatifPerawatController extends Controller
 
     public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op, $id)
     {
-        $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-        if (!$dataMedis) {
-            abort(404, 'Data medis tidak ditemukan.');
-        }
-
-        // Menghitung umur berdasarkan tgl_lahir jika ada
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
+        extract($this->getCommonData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op));
 
         $perawat = HrdKaryawan::where('status_peg', 1)
             ->where('kd_ruangan', 4)
@@ -255,7 +242,7 @@ class AsesmenPraOperatifPerawatController extends Controller
 
         $asesmen = OkAsesmen::find($id);
 
-        return view('unit-pelayanan.operasi.pelayanan.asesmen.pra-anestesi.perawat.edit', compact('dataMedis', 'asesmen', 'perawat', 'jenisOperasi'));
+        return view('unit-pelayanan.rawat-inap.pelayanan.order.operasi.asesmen-pra-operatif-perawat.edit', compact('dataMedis', 'asesmen', 'perawat', 'jenisOperasi', 'operasi'));
     }
 
     public function update($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op, $idEncrypt, Request $request)
@@ -263,17 +250,15 @@ class AsesmenPraOperatifPerawatController extends Controller
         DB::beginTransaction();
 
         try {
-            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-            if (!$dataMedis) {
-                abort(404, 'Data medis tidak ditemukan.');
-            }
+            extract($this->getCommonData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op));
 
             $id = decrypt($idEncrypt);
-            $PraOperatif = OkPraOperasiPerawat::find($id);
 
-            $asesmen = OkAsesmen::find($PraOperatif->id_asesmen);
+            $asesmen = OkAsesmen::find($id);
             $asesmen->user_edit = Auth::id();
             $asesmen->save();
+
+            $PraOperatif = OkPraOperasiPerawat::where('id_asesmen', $asesmen->id)->first();
 
             $PraOperatif->tgl_op     = $request->tgl_masuk;
             $PraOperatif->jam_op     = $request->jam_masuk;
@@ -300,7 +285,8 @@ class AsesmenPraOperatifPerawatController extends Controller
             $PraOperatif->batuk   = $request->batuk;
             $PraOperatif->haid   = $request->haid;
             $PraOperatif->verifikasi_pasien   = $request->verifikasi ?? [];
-            $PraOperatif->persiapan_fisik_pasien   = $request->persiapan_fisik ?? [];
+            $PraOperatif->verifikasi_pasien_ruangan   = $request->verifikasi_ruangan ?? [];
+            $PraOperatif->persiapan_fisik_pasien_ruangan   = $request->persiapan_fisik_ruangan ?? [];
             $PraOperatif->id_perawat_penerima   = $request->perawat_penerima;
             $PraOperatif->tgl_periksa   = $request->tgl_periksa;
             $PraOperatif->jam_periksa   = $request->jam_periksa;
@@ -309,7 +295,7 @@ class AsesmenPraOperatifPerawatController extends Controller
             $PraOperatif->save();
 
             DB::commit();
-            return to_route('operasi.pelayanan.asesmen.index', [$kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Asesmen Pra Operatif Perawat berhasil di ubah !');
+            return to_route('rawat-inap.operasi.asesmen.pra-operatif-perawat.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op])->with('success', 'Asesmen Pra Operatif Perawat berhasil di ubah !');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
@@ -317,23 +303,8 @@ class AsesmenPraOperatifPerawatController extends Controller
     }
     public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op, $id)
     {
-
         try {
-            $dataMedis = $this->baseService->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-            if (!$dataMedis) {
-                abort(404, 'Data medis tidak ditemukan.');
-            }
-
-            // Menghitung umur berdasarkan tgl_lahir jika ada
-            if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-                $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-            } else {
-                $dataMedis->pasien->umur = 'Tidak Diketahui';
-            }
-
-            if (!$dataMedis) {
-                abort(404, 'Data not found');
-            }
+            extract($this->getCommonData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $tgl_op, $jam_op));
 
             $perawat = HrdKaryawan::where('status_peg', 1)
                 ->where('kd_ruangan', 4)

@@ -11,85 +11,68 @@
 
         <div class="col-md-9">
             @include('components.navigation')
+            <x-content-card>
+                @include('components.page-header', [
+                    'title' => 'Daftar Persetujuan Anestesi dan Sedasi',
+                    'description' => 'Daftar data persetujuan anestesi dan sedasi pasien gawat darurat.',
+                ])
 
-            <div class="d-flex justify-content-center">
-                <div class="card w-100 h-100">
-                    <div class="card-body">
-                        {{-- Tabs --}}
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <a href="#" class="nav-link active" aria-selected="true">Persetujuan Anestesi dan
-                                    Sedasi</a>
-                            </li>
-                        </ul>
+                <div class="text-end">
+                    <a href="{{ route('anestesi-sedasi.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                        class="btn btn-primary">
+                        <i class="ti-plus"></i> Tambah
+                    </a>
+                </div>
 
-                        {{-- Tab Content --}}
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active">
-                                {{-- TAB 1. buatlah list disini --}}
-
-                                <div class="text-end mb-3">
-                                    <a href="{{ route('anestesi-sedasi.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
-                                        class="btn btn-primary">
-                                        <i class="ti-plus"></i> Tambah
-                                    </a>
-                                </div>
-
-                                <div class="row">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-sm table-hover">
-                                            <thead class="table-primary">
-                                                <tr align="middle">
-                                                    <th width="100px">NO</th>
-                                                    <th>WAKTU</th>
-                                                    <th>YANG MENYATAKAN</th>
-                                                    <th>DOKTER</th>
-                                                    <th>AKSI</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($anestesi as $item)
-                                                    <tr>
-                                                        <td align="middle">{{ $loop->iteration }}</td>
-                                                        <td>
-                                                            {{ date('d M Y', strtotime($item->tanggal)) . ' ' . date('H:i', strtotime($item->jam)) }}
-                                                            WIB
-                                                        </td>
-                                                        <td>{{ $item->keluarga_nama }}</td>
-                                                        <td>{{ $item->dokter->nama_lengkap }}</td>
-                                                        <td align="middle">
-                                                            <a href="{{ route('anestesi-sedasi.pdf', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($item->id)]) }}"
-                                                                class="btn btn-sm btn-primary" target="_blank">
-                                                                <i class="fa fa-print"></i>
-                                                            </a>
-                                                            <a href="{{ route('anestesi-sedasi.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($item->id)]) }}"
-                                                                class="btn btn-sm btn-success ms-1">
-                                                                <i class="fa fa-eye"></i>
-                                                            </a>
-                                                            <a href="{{ route('anestesi-sedasi.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($item->id)]) }}"
-                                                                class="btn btn-sm btn-warning mx-1">
-                                                                <i class="fa fa-edit"></i>
-                                                            </a>
-                                                            <button class="btn btn-sm btn-danger btn-delete"
-                                                                data-bs-target="#deleteModal"
-                                                                data-anestesi="{{ encrypt($item->id) }}">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm table-hover">
+                            <thead class="table-primary">
+                                <tr align="middle">
+                                    <th width="100px">NO</th>
+                                    <th>WAKTU</th>
+                                    <th>YANG MENYATAKAN</th>
+                                    <th>DOKTER</th>
+                                    <th>AKSI</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($anestesi as $item)
+                                    <tr>
+                                        <td align="middle">{{ $loop->iteration }}</td>
+                                        <td>
+                                            {{ date('d M Y', strtotime($item->tanggal)) . ' ' . date('H:i', strtotime($item->jam)) }}
+                                            WIB
+                                        </td>
+                                        <td>{{ $item->keluarga_nama }}</td>
+                                        <td>{{ $item->dokter->nama_lengkap }}</td>
+                                        <td>
+                                            <x-table-action>
+                                                <a href="{{ route('anestesi-sedasi.pdf', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($item->id)]) }}"
+                                                    class="btn btn-sm btn-primary" target="_blank">
+                                                    <i class="fa fa-print"></i>
+                                                </a>
+                                                <a href="{{ route('anestesi-sedasi.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($item->id)]) }}"
+                                                    class="btn btn-sm btn-success">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                                <a href="{{ route('anestesi-sedasi.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($item->id)]) }}"
+                                                    class="btn btn-sm btn-warning">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                                <button class="btn btn-sm btn-danger btn-delete"
+                                                    data-bs-target="#deleteModal" data-anestesi="{{ encrypt($item->id) }}">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </x-table-action>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            </div>
-
-
+            </x-content-card>
         </div>
     </div>
 

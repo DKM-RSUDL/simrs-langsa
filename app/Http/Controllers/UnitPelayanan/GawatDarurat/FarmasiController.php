@@ -208,7 +208,7 @@ class FarmasiController extends Controller
                 $q->where('APT_OBAT.NAMA_OBAT', 'like', $term . '%')
                   ->orWhere('APT_OBAT.NAMA_OBAT', 'like', '% ' . $term . '%');
             })
-            ->orderBy('APT_OBAT.NAMA_OBAT')
+            ->orderBy(DB::raw('COALESCE(stok_depo.total_stok, 0)'), 'desc')
             ->limit($limit)
             ->get([
                 'APT_OBAT.KD_PRD as id',

@@ -87,12 +87,16 @@
         <div class="col-md-9">
             @include('components.navigation-ranap')
 
-            <div class="row">
-                <div class="d-flex justify-content-between align-items-center m-3">
 
-                    <div class="row">
+            <x-content-card>
+                @include('components.page-header', [
+                    'title' => 'Daftar Tindakan',
+                    'description' => 'Daftar tindakan rawat inap.',
+                ])
+                <div class="row">
+                    <div class="col-md-10 d-flex flex-md-row flex-wrap flex-md-nowrap gap-2">
                         <!-- Select Option -->
-                        <div class="col-md-2">
+                        <div>
                             <select class="form-select" id="SelectOption" aria-label="Pilih...">
                                 <option value="semua" selected>Semua Episode</option>
                                 <option value="option1">Episode Sekarang</option>
@@ -104,25 +108,24 @@
                         </div>
 
                         <!-- Start Date -->
-                        <div class="col-md-2">
+                        <div>
                             <input type="date" name="start_date" id="start_date" class="form-control"
                                 placeholder="Dari Tanggal">
                         </div>
 
                         <!-- End Date -->
-                        <div class="col-md-2">
+                        <div>
                             <input type="date" name="end_date" id="end_date" class="form-control"
                                 placeholder="S.d Tanggal">
                         </div>
 
                         <!-- Button Filter -->
-                        <div class="col-md-1">
-                            <button id="filterButton" class="btn btn-secondary rounded-3"><i
-                                    class="bi bi-funnel-fill"></i></button>
+                        <div>
+                            <button id="filterButton" class="btn btn-secondary"><i class="bi bi-funnel-fill"></i></button>
                         </div>
 
                         <!-- Search Bar -->
-                        <div class="col-md-3">
+                        <div>
                             <form method="GET"
                                 action="{{ route('rawat-inap.tindakan.index', ['kd_unit' => $dataMedis->kd_unit, 'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), 'urut_masuk' => $dataMedis->urut_masuk]) }}">
 
@@ -134,19 +137,18 @@
                                 </div>
                             </form>
                         </div>
-                        <!-- Add Button -->
-                        <!-- Include the modal file -->
-                        <div class="col-md-2">
-                            <div class="d-grid gap-2">
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTindakanModal"
-                                    type="button">
-                                    <i class="ti-plus"></i> Tambah
-                                </button>
-                            </div>
+                    </div>
+                    <!-- Add Button -->
+                    <!-- Include the modal file -->
+                    <div class="col-md-2">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTindakanModal"
+                                type="button">
+                                <i class="ti-plus"></i> Tambah
+                            </button>
                         </div>
                     </div>
                 </div>
-
                 <div class="table-responsive">
                     <table class="table table-bordered table-sm table-hover">
                         <thead class="table-primary">
@@ -192,11 +194,13 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </x-content-card>
         </div>
 
-        @include('unit-pelayanan.rawat-inap.pelayanan.tindakan.modal')
+
     </div>
+
+    @include('unit-pelayanan.rawat-inap.pelayanan.tindakan.modal')
 @endsection
 
 @push('js')

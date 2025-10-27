@@ -119,7 +119,7 @@ class EchocardiographyController extends Controller
         $dataMedis = $this->getDataMedis($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
         $dokter = Dokter::where('status', 1)->orderBy('nama_lengkap', 'asc')->get();
 
-        return view('unit-pelayanan.rawat-jalan.pelayanan.echocardiography.create', compact(
+        return view('unit-pelayanan.rawat-inap.pelayanan.echocardiography.create', compact(
             'dataMedis',
             'dokter'
         ));
@@ -253,7 +253,7 @@ class EchocardiographyController extends Controller
 
             DB::commit();
 
-            return redirect()->route('rawat-jalan.echocardiography.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])
+            return redirect()->route('rawat-inap.echocardiography.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])
                 ->with('success', 'Data echocardiography berhasil disimpan');
         } catch (\Exception $e) {
             DB::rollback();
@@ -272,7 +272,7 @@ class EchocardiographyController extends Controller
         $dokter = Dokter::where('status', 1)->orderBy('nama_lengkap', 'asc')->get();
         $echocardiography = RmeEchocardiography::with(['dokter', 'userCreate'])->findOrFail($id);
 
-        return view('unit-pelayanan.rawat-jalan.pelayanan.echocardiography.show', compact(
+        return view('unit-pelayanan.rawat-inap.pelayanan.echocardiography.show', compact(
             'dataMedis',
             'echocardiography',
             'dokter'
@@ -288,7 +288,7 @@ class EchocardiographyController extends Controller
         $echocardiography = RmeEchocardiography::findOrFail($id);
         $dokter = Dokter::where('status', 1)->orderBy('nama_lengkap', 'asc')->get();
 
-        return view('unit-pelayanan.rawat-jalan.pelayanan.echocardiography.edit', compact(
+        return view('unit-pelayanan.rawat-inap.pelayanan.echocardiography.edit', compact(
             'dataMedis',
             'echocardiography',
             'dokter'
@@ -416,7 +416,7 @@ class EchocardiographyController extends Controller
 
             DB::commit();
 
-            return redirect()->route('rawat-jalan.echocardiography.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])
+            return redirect()->route('rawat-inap.echocardiography.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])
                 ->with('success', 'Data echocardiography berhasil diperbarui');
         } catch (\Exception $e) {
             DB::rollback();
@@ -439,7 +439,7 @@ class EchocardiographyController extends Controller
 
             DB::commit();
 
-            return redirect()->route('rawat-jalan.echocardiography.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])
+            return redirect()->route('rawat-inap.echocardiography.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])
                 ->with('success', 'Data echocardiography berhasil dihapus');
         } catch (\Exception $e) {
             DB::rollback();

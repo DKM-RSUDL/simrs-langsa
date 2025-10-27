@@ -48,7 +48,7 @@
                                     <p class="m-0 p-0 text-primary fw-bold">PPA</p>
                                 </label>
                                 <select name="ppa" id="ppa"
-                                    class="form-control @error('ppa') is-invalid @enderror" required>
+                                    class="form-control select2 @error('ppa') is-invalid @enderror" required>
                                     <option value="">--Pilih PPA--</option>
                                     @foreach ($dokter as $dok)
                                         <option value="{{ $dok->dokter->kd_dokter }}" @selected($dok->dokter->kd_karyawan == auth()->user()->kd_karyawan)>

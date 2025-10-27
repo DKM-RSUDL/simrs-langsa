@@ -111,22 +111,32 @@
                         @foreach ($siteMarkings as $marking)
                             <div class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
-                                    <div class="fw-bold">Site Marking - {{ $marking->waktu_prosedure }}</div>
+                                    <div class="fw-bold">Site Marking - {{ date('Y-m-d H:i:s', strtotime($marking->waktu_prosedure)) }} </div>
                                     <div class="text-muted">PPA Oleh:
                                         {{ $marking->creator ? $marking->creator->name : 'Tidak tersedia' }}</div>
                                     <div class="text-muted">Prosedur: {{ $marking->prosedure }}</div>
                                 </div>
                                 <div class="d-flex gap-2">
-                                    <a href="{{ route('operasi.pelayanan.site-marking.show', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => date('Y-m-d', strtotime($dataMedis->tgl_masuk)), 'urut_masuk' => $dataMedis->urut_masuk, 'id' => $marking->id]) }}"
+                                    <a href="{{ route('rawat-inap.operasi.site-marking.show', ['kd_unit' => $dataMedis->kd_unit, 'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => date('Y-m-d', strtotime($dataMedis->tgl_masuk)), 'urut_masuk' => $dataMedis->urut_masuk, 'tgl_op' => $operasi->tgl_op, 'jam_op' => $operasi->jam_op, 'id' => $marking->id]) }}"
                                         class="btn btn-sm btn-info">
                                         <i class="fas fa-eye"></i> Lihat
                                     </a>
-                                    <button type="button" class="btn btn-sm btn-danger btn-delete"
-                                        data-id="{{ $marking->id }}" data-kd-pasien="{{ $dataMedis->kd_pasien }}"
-                                        data-tgl-masuk="{{ date('Y-m-d', strtotime($dataMedis->tgl_masuk)) }}"
-                                        data-urut-masuk="{{ $dataMedis->urut_masuk }}">
-                                        <i class="fas fa-trash"></i> Hapus
-                                    </button>
+
+                                    <form
+                                        action="{{ route('rawat-inap.operasi.site-marking.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $operasi->tgl_op, $operasi->jam_op, $marking->id]) }}"
+                                        method="post">
+                                        @csrf
+                                        @method('delete')
+
+                                        <button type="submit" class="btn btn-sm btn-danger" data-confirm
+                                            data-confirm-title="Anda yakin?"
+                                            data-confirm-text="Data yang dihapus tidak dapat dikembalikan"
+                                            title="Hapus operasi" aria-label="Hapus operasi">
+                                            <i class="fas fa-trash"></i>
+                                            Hapus
+                                        </button>
+                                    </form>
+
                                 </div>
                             </div>
                         @endforeach
@@ -153,39 +163,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Implementasi SweetAlert untuk konfirmasi delete
-            const deleteButtons = document.querySelectorAll('.btn-delete');
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const id = this.getAttribute('data-id');
-                    const kdPasien = this.getAttribute('data-kd-pasien');
-                    const tglMasuk = this.getAttribute('data-tgl-masuk');
-                    const urutMasuk = this.getAttribute('data-urut-masuk');
-
-                    Swal.fire({
-                        title: 'Konfirmasi Hapus',
-                        text: 'Apakah Anda yakin ingin menghapus Site Marking ini?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Ya, Hapus!',
-                        cancelButtonText: 'Batal'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            const form = document.getElementById('delete-form');
-                            form.action =
-                                "{{ route('operasi.pelayanan.site-marking.destroy', ['kd_pasien' => ':kd_pasien', 'tgl_masuk' => ':tgl_masuk', 'urut_masuk' => ':urut_masuk', 'id' => ':id']) }}"
-                                .replace(':kd_pasien', kdPasien)
-                                .replace(':tgl_masuk', tglMasuk)
-                                .replace(':urut_masuk', urutMasuk)
-                                .replace(':id', id);
-                            form.submit();
-                        }
-                    });
-                });
-            });
-
             // Get the stored active tab from localStorage
             const activeTab = localStorage.getItem('activeTab');
 
@@ -215,26 +192,8 @@
                     localStorage.setItem('activeTab', tabId);
                 });
             });
-
-            // Show success message with SweetAlert if available in session
-            @if (session('success'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: '{{ session('success') }}',
-                    timer: 3000,
-                    showConfirmButton: false
-                });
-            @endif
-
-            // Show error message with SweetAlert if available in session
-            @if (session('error'))
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: '{{ session('error') }}'
-                });
-            @endif
         });
     </script>
+
+    <script src="{{ asset('js/helpers/confirm.js') }}"></script>
 @endpush

@@ -64,15 +64,15 @@ class AsesmenParuController extends Controller
             abort(404, 'Data not found');
         }
 
-       $idAsesmen = $this->getIdAsesmen($kd_pasien);
+        $idAsesmen = $this->getIdAsesmen($kd_pasien);
 
+        $paruTerdahulu = null;
 
-        if(!empty($idAsesmen)){
-             $paruTerdahulu = RmeAsesmenParu::select('riwayat_penyakit_terdahulu', 'riwayat_penggunaan_obat')
-            ->where('id_asesmen', $idAsesmen->id ?? null)
-            ->orderBy('id','desc')
-            ->first();
-            
+        if (!empty($idAsesmen)) {
+            $paruTerdahulu = RmeAsesmenParu::select(['riwayat_penyakit_terdahulu', 'riwayat_penggunaan_obat', 'riwayat_penyakit'])
+                ->where('id_asesmen', $idAsesmen->id ?? null)
+                ->orderBy('id', 'desc')
+                ->first();
         }
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
@@ -114,7 +114,6 @@ class AsesmenParuController extends Controller
                         'lama' => $merokokLama[$i],
                     ];
                 }
-
             }
 
             $request->validate([
@@ -466,8 +465,8 @@ class AsesmenParuController extends Controller
             $idAsesmen = $this->getIdAsesmen($kd_pasien);
 
             $KebiasaanData = $this->getKebiasaan($idAsesmen);
-            
-           
+
+
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.show', compact(
                 'asesmen',
                 'dataMedis',
@@ -563,7 +562,6 @@ class AsesmenParuController extends Controller
                         'lama' => $merokokLama[$i],
                     ];
                 }
-
             }
 
             // 1. Buat record RmeAsesmen
@@ -1015,9 +1013,8 @@ class AsesmenParuController extends Controller
                     'detail' => $obatData,
                 ];
             }
-
         }
 
-        return $KebiasaanData;    
+        return $KebiasaanData;
     }
 }
