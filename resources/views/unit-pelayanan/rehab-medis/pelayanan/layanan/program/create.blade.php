@@ -19,7 +19,6 @@
         <div class="col-md-9">
             <x-content-card>
                 <x-button-previous />
-
                 <form
                     action="{{ route('rehab-medis.pelayanan.layanan.program.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                     method="post">
@@ -54,20 +53,15 @@
                     </div>
 
                     <div class="w-50 mt-3 rounded-2 p-2" id="program-container">
-
                     </div>
 
                     <!-- Form Actions -->
                     <div class="text-end">
                         <x-button-submit />
                     </div>
+                </form>
+            </x-content-card>
         </div>
-    </div>
-    </div>
-
-    </form>
-    </x-content-card>
-    </div>
     </div>
 @endsection
 

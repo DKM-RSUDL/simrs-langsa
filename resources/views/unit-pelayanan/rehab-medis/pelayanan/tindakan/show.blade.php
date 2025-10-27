@@ -146,11 +146,9 @@
                         </div>
                     </div>
                 </div>
+
+            </x-content-card>
         </div>
-    </div>
-    </div>
-    </x-content-card>
-    </div>
     </div>
 @endsection
 
