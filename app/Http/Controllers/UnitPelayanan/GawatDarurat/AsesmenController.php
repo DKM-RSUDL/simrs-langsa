@@ -1312,10 +1312,8 @@ class AsesmenController extends Controller
         }
     }
 
-    public function print($kd_pasien, $tgl_masuk, $id)
+    public function print($kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-
-        // dd($tgl_masuk);
 
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -1329,6 +1327,7 @@ class AsesmenController extends Controller
             ->where('kunjungan.kd_unit', 3)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
             ->first();
 
         // Ambil data asesmen

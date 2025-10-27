@@ -786,7 +786,7 @@
                         // Set URL print button
                         let btnPrint = document.getElementById('btnPrintAsesmen');
                         btnPrint.href =
-                            `/unit-pelayanan/gawat-darurat/pelayanan/${response.data.dataMedis.kd_pasien}/${response.data.dataMedis.tgl_masuk.split(' ')[0]}/asesmen/${id}/print`;
+                            `/unit-pelayanan/gawat-darurat/pelayanan/${response.data.dataMedis.kd_pasien}/${response.data.dataMedis.tgl_masuk.split(' ')[0]}/${response.data.dataMedis.urut_masuk}/asesmen/${id}/print`;
 
                         modal.show();
                     } else {
@@ -1340,17 +1340,17 @@
                             <div class="d-flex align-items-center gap-1">
                                 <span class="badge badge-sm ${isNormal === '1' ? 'bg-success' : 'bg-danger'}">${statusText}</span>
                                 ${keterangan ? `<button class="btn btn-sm btn-link p-0 text-muted" type="button" data-bs-toggle="collapse" data-bs-target="#show_keterangan_${itemFisik.id}" title="Lihat keterangan">
-                                                        <i class="bi bi-info-circle" style="font-size: 0.875rem;"></i>
-                                                    </button>` : ''}
+                                                            <i class="bi bi-info-circle" style="font-size: 0.875rem;"></i>
+                                                        </button>` : ''}
                             </div>
                         </div>
                         ${keterangan ? `
-                                                <div id="show_keterangan_${itemFisik.id}" class="collapse mt-1">
-                                                    <div class="alert alert-warning py-2 px-3 mb-0 small">
-                                                        <strong>Keterangan:</strong> ${keterangan}
+                                                    <div id="show_keterangan_${itemFisik.id}" class="collapse mt-1">
+                                                        <div class="alert alert-warning py-2 px-3 mb-0 small">
+                                                            <strong>Keterangan:</strong> ${keterangan}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ` : ''}
+                                                ` : ''}
                     </div>
                 `;
                 container.append(itemHtml);
