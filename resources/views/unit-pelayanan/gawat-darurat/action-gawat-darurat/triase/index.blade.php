@@ -276,7 +276,7 @@
 
                                         <div class="input-group mb-3">
                                             <input type="text" name="nama_pasien" id="nama_pasien" class="form-control"
-                                                placeholder="Nama Pasien" value="{{ old('nama_pasien') }}">
+                                                placeholder="Nama Pasien" value="{{ old('nama_pasien') }}" required>
                                             <button class="btn btn-outline-secondary" type="button"
                                                 id="button-nama-pasien">
                                                 <i class="ti ti-search"></i>

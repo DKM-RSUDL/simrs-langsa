@@ -135,186 +135,183 @@
             </div>
 
             <div class="col-xl-9 col-lg-8 col-md-12">
-                <div class="mb-3">
-                    <a href="{{ route('forensik.unit.pelayanan.visum-otopsi.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
-                        class="btn btn-outline-primary">
-                        <i class="ti-arrow-left"></i> <span class="d-none d-sm-inline">Kembali</span>
-                    </a>
-                    <a href="{{ route('forensik.unit.pelayanan.visum-otopsi.print', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $visumOtopsi->id]) }}"
-                        class="btn btn-primary" target="_blank">
-                        <i class="ti-printer"></i> <span class="d-none d-sm-inline">Cetak</span>
-                    </a>
-                </div>
+                <x-content-card>
+                    <div class="d-flex gap-2">
+                        <x-button-previous />
+                        <a target="_blank"
+                            href="{{ route('forensik.unit.pelayanan.visum-otopsi.print', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $visumOtopsi->id]) }}"
+                            class="btn btn-info">
+                            <i class="fas fa-print me-1"></i> Cetak
+                        </a>
+                    </div>
 
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <!-- Header Section -->
-                        <div class="text-center mb-4">
-                            <div class="header-asesmen">
-                                <h3 class="font-weight-bold mb-2">VISUM ET REPERTUM OTOPSI</h3>
-                                <p class="mb-1 text-muted">INSTALASI KEDOKTERAN FORENSIK</p>
-                                <p class="mb-0 text-muted">RUMAH SAKIT UMUM DAERAH LANGSA</p>
-                            </div>
+                    <!-- Header Section -->
+                    <div class="text-center mb-4">
+                        <div class="header-asesmen">
+                            <h3 class="font-weight-bold mb-2">VISUM ET REPERTUM OTOPSI</h3>
+                            <p class="mb-1 text-muted">INSTALASI KEDOKTERAN FORENSIK</p>
+                            <p class="mb-0 text-muted">RUMAH SAKIT UMUM DAERAH LANGSA</p>
                         </div>
+                    </div>
 
-                        <!-- Basic Information Section -->
-                        <div class=" mb-4">
-                            <div class="card-header">
-                                <i class="ti-calendar"></i> Informasi Dasar Pemeriksaan
-                            </div>
-                            <div class="card-body">
-                                <table class="table table-bordered info-table">
-                                    <tr>
-                                        <th>Tanggal Pengisian</th>
-                                        <td>{{ $visumOtopsi->tanggal ? date('d/m/Y', strtotime($visumOtopsi->tanggal)) : '-' }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>Jam Pengisian</th>
-                                        <td>{{ $visumOtopsi->jam ? date('H:i', strtotime($visumOtopsi->jam)) : '-' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Nomor</th>
-                                        <td>{{ $visumOtopsi->nomor ?? '-' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Perihal</th>
-                                        <td>{{ $visumOtopsi->perihal ?? '-' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Lampiran</th>
-                                        <td>{{ $visumOtopsi->lampiran ?? '-' }}</td>
-                                    </tr>
-                                </table>
-                            </div>
+                    <!-- Basic Information Section -->
+                    <div class=" mb-4">
+                        <div class="card-header">
+                            <i class="ti-calendar"></i> Informasi Dasar Pemeriksaan
                         </div>
+                        <div class="card-body">
+                            <table class="table table-bordered info-table">
+                                <tr>
+                                    <th>Tanggal Pengisian</th>
+                                    <td>{{ $visumOtopsi->tanggal ? date('d/m/Y', strtotime($visumOtopsi->tanggal)) : '-' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Jam Pengisian</th>
+                                    <td>{{ $visumOtopsi->jam ? date('H:i', strtotime($visumOtopsi->jam)) : '-' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Nomor</th>
+                                    <td>{{ $visumOtopsi->nomor ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Perihal</th>
+                                    <td>{{ $visumOtopsi->perihal ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Lampiran</th>
+                                    <td>{{ $visumOtopsi->lampiran ?? '-' }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
 
-                        <!-- Patient Information Section -->
-                        <div class=" mb-4">
-                            <div class="card-header">
-                                <i class="ti-user"></i> Data Pasien/Korban
-                            </div>
-                            <div class="card-body">
-                                <div class="patient-info-card">
-                                    <div class="patient-info-item">
-                                        <span class="patient-info-label">Nama:</span>
-                                        <span class="patient-info-value">{{ $dataMedis->pasien->nama ?? '-' }}</span>
-                                    </div>
-                                    <div class="patient-info-item">
-                                        <span class="patient-info-label">Tempat/Tanggal Lahir:</span>
-                                        <span class="patient-info-value">{{ $dataMedis->pasien->umur ?? 'Tidak Diketahui' }}
-                                            Thn
-                                            ({{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') : 'Tidak Diketahui' }})</span>
-                                    </div>
-                                    <div class="patient-info-item">
-                                        <span class="patient-info-label">Jenis Kelamin:</span>
-                                        <span
-                                            class="patient-info-value">{{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Tidak Diketahui') }}</span>
-                                    </div>
-                                    <div class="patient-info-item">
-                                        <span class="patient-info-label">Agama:</span>
-                                        <span
-                                            class="patient-info-value">{{ $dataMedis->pasien->agama->agama ?? '-' }}</span>
-                                    </div>
-                                    <div class="patient-info-item">
-                                        <span class="patient-info-label">Alamat:</span>
-                                        <span class="patient-info-value">{{ $dataMedis->pasien->alamat ?? '-' }}</span>
-                                    </div>
+                    <!-- Patient Information Section -->
+                    <div class=" mb-4">
+                        <div class="card-header">
+                            <i class="ti-user"></i> Data Pasien/Korban
+                        </div>
+                        <div class="card-body">
+                            <div class="patient-info-card">
+                                <div class="patient-info-item">
+                                    <span class="patient-info-label">Nama:</span>
+                                    <span class="patient-info-value">{{ $dataMedis->pasien->nama ?? '-' }}</span>
                                 </div>
-                            </div>
-                        </div>
-
-                        <!-- Visum et Repertum Section -->
-                        <div class=" mb-4">
-                            <div class="card-header">
-                                <i class="ti-file-text"></i> VISUM ET REPERTUM
-                            </div>
-                            <div class="card-body">
-                                <div class="content-box">
-                                    {!! $visumOtopsi->visum_et_repertum ?? '<em>Tidak ada data</em>' !!}
+                                <div class="patient-info-item">
+                                    <span class="patient-info-label">Tempat/Tanggal Lahir:</span>
+                                    <span class="patient-info-value">{{ $dataMedis->pasien->umur ?? 'Tidak Diketahui' }}
+                                        Thn
+                                        ({{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') : 'Tidak Diketahui' }})</span>
                                 </div>
-                            </div>
-                        </div>
-
-                        <!-- Interview Section -->
-                        <div class=" mb-4">
-                            <div class="card-header">
-                                <i class="ti-comment"></i> WAWANCARA
-                            </div>
-                            <div class="card-body">
-                                <div class="content-box">
-                                    {!! $visumOtopsi->wawancara ?? '<em>Tidak ada data</em>' !!}
+                                <div class="patient-info-item">
+                                    <span class="patient-info-label">Jenis Kelamin:</span>
+                                    <span
+                                        class="patient-info-value">{{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Tidak Diketahui') }}</span>
                                 </div>
-                            </div>
-                        </div>
-
-                        <!-- External Examination Section -->
-                        <div class=" mb-4">
-                            <div class="card-header">
-                                <i class="ti-search"></i> PEMERIKSAAN LUAR
-                            </div>
-                            <div class="card-body">
-                                <table class="table table-bordered info-table">
-                                    <tr>
-                                        <th>Penutup Mayat</th>
-                                        <td>
-                                            <div class="content-box">
-                                                {!! $visumOtopsi->penutup_mayat ?? '<em>Tidak ada data</em>' !!}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>Label Mayat</th>
-                                        <td>
-                                            <div class="content-box">
-                                                {!! $visumOtopsi->label_mayat ?? '<em>Tidak ada data</em>' !!}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>Pakaian Mayat</th>
-                                        <td>
-                                            <div class="content-box">
-                                                {!! $visumOtopsi->pakaian_mayat ?? '<em>Tidak ada data</em>' !!}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>Benda di Samping Mayat</th>
-                                        <td>{{ $visumOtopsi->benda_disamping ?? '-' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Aksesoris</th>
-                                        <td>{{ $visumOtopsi->aksesoris ?? '-' }}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-
-                        <!-- Continue with other sections using similar table format -->
-                        <!-- Identifikasi, Hasil Pemeriksaan, etc. -->
-
-                        <!-- Dibuat oleh -->
-                        <div class=" mb-4">
-                            <div class="card-header">
-                                <i class="ti-user"></i> Informasi Pembuat
-                            </div>
-                            <div class="card-body">
-                                <table class="table table-bordered info-table">
-                                    <tr>
-                                        <th>Dibuat oleh</th>
-                                        <td>{{ $visumOtopsi->userCreated->name ?? 'System' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Tanggal Dibuat</th>
-                                        <td>{{ $visumOtopsi->created_at ? $visumOtopsi->created_at->format('d/m/Y H:i:s') : '-' }}
-                                        </td>
-                                    </tr>
-                                </table>
+                                <div class="patient-info-item">
+                                    <span class="patient-info-label">Agama:</span>
+                                    <span class="patient-info-value">{{ $dataMedis->pasien->agama->agama ?? '-' }}</span>
+                                </div>
+                                <div class="patient-info-item">
+                                    <span class="patient-info-label">Alamat:</span>
+                                    <span class="patient-info-value">{{ $dataMedis->pasien->alamat ?? '-' }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+
+                    <!-- Visum et Repertum Section -->
+                    <div class=" mb-4">
+                        <div class="card-header">
+                            <i class="ti-file-text"></i> VISUM ET REPERTUM
+                        </div>
+                        <div class="card-body">
+                            <div class="content-box">
+                                {!! $visumOtopsi->visum_et_repertum ?? '<em>Tidak ada data</em>' !!}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interview Section -->
+                    <div class=" mb-4">
+                        <div class="card-header">
+                            <i class="ti-comment"></i> WAWANCARA
+                        </div>
+                        <div class="card-body">
+                            <div class="content-box">
+                                {!! $visumOtopsi->wawancara ?? '<em>Tidak ada data</em>' !!}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- External Examination Section -->
+                    <div class=" mb-4">
+                        <div class="card-header">
+                            <i class="ti-search"></i> PEMERIKSAAN LUAR
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-bordered info-table">
+                                <tr>
+                                    <th>Penutup Mayat</th>
+                                    <td>
+                                        <div class="content-box">
+                                            {!! $visumOtopsi->penutup_mayat ?? '<em>Tidak ada data</em>' !!}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Label Mayat</th>
+                                    <td>
+                                        <div class="content-box">
+                                            {!! $visumOtopsi->label_mayat ?? '<em>Tidak ada data</em>' !!}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Pakaian Mayat</th>
+                                    <td>
+                                        <div class="content-box">
+                                            {!! $visumOtopsi->pakaian_mayat ?? '<em>Tidak ada data</em>' !!}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Benda di Samping Mayat</th>
+                                    <td>{{ $visumOtopsi->benda_disamping ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Aksesoris</th>
+                                    <td>{{ $visumOtopsi->aksesoris ?? '-' }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Continue with other sections using similar table format -->
+                    <!-- Identifikasi, Hasil Pemeriksaan, etc. -->
+
+                    <!-- Dibuat oleh -->
+                    <div class=" mb-4">
+                        <div class="card-header">
+                            <i class="ti-user"></i> Informasi Pembuat
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-bordered info-table">
+                                <tr>
+                                    <th>Dibuat oleh</th>
+                                    <td>{{ $visumOtopsi->userCreated->name ?? 'System' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Tanggal Dibuat</th>
+                                    <td>{{ $visumOtopsi->created_at ? $visumOtopsi->created_at->format('d/m/Y H:i:s') : '-' }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                </x-content-card>
             </div>
         </div>
     </div>

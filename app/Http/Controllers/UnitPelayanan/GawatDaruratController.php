@@ -241,7 +241,6 @@ class GawatDaruratController extends Controller
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.triase.index', compact('dokter'));
     }
-
     public function storeTriase(Request $request)
     {
         DB::beginTransaction();

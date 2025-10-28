@@ -89,6 +89,18 @@
                 </div>
             </div>
         </div>
+
+        {{-- CHECK BUTTON I-CARE --}}
+
+        @if (($dataMedis->unit->kd_bagian ?? null) == 2)
+            <div class="px-3 pt-3">
+                <form action="{{ route('rawat-jalan.pelayanan.icare', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="get">
+                    <button class="btn btn-warning w-100" type="submit">
+                        <i class="bi bi-info-circle me-2"></i> I-Care
+                    </button>
+                </form>
+            </div>
+        @endif
     </div>
 
     {{-- Card Footer - Tombol Menu & Offcanvas --}}

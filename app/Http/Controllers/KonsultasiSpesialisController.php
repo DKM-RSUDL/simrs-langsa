@@ -7,6 +7,7 @@ use App\Models\DokterInap;
 use App\Models\KonsultasiSpesialis;
 use App\Models\SpcKelas;
 use App\Models\Spesialisasi;
+use App\Models\Transaksi;
 use Exception;
 use App\Services\BaseService;
 use Illuminate\Http\Request;
@@ -41,6 +42,8 @@ class KonsultasiSpesialisController extends Controller
         $dataMedis = $this->dataMedis->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
         $dataKonsul = KonsultasiSpesialis::with(['dokterPengirim' ,'dokterTujuan','spesialis'])
                      ->where($columnnValue  ,$acuan)
+                     ->where('kd_kasir', $dataMedis->kd_kasir)
+                     ->where('no_transaksi', $dataMedis->no_transaksi)
                      ->get();
                     
 
@@ -109,8 +112,9 @@ class KonsultasiSpesialisController extends Controller
      {
         try {
             DB::beginTransaction();
-            $konsultasi = new KonsultasiSpesialis();
 
+            $dataMedis = $this->dataMedis->getDataMedis($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+            $konsultasi = new KonsultasiSpesialis();
             $konsultasi->dokter_pengirim  = $request->dokter_pengirim;
             $konsultasi->tanggal_konsul   = $request->tgl_konsul;
             $konsultasi->jam_konsul       = $request->jam_konsul;
@@ -118,6 +122,8 @@ class KonsultasiSpesialisController extends Controller
             $konsultasi->dokter_tujuan    = $request->dokter_unit_tujuan;
             $konsultasi->catatan          = $request->catatan;
             $konsultasi->konsul           = $request->konsul;
+            $konsultasi->kd_kasir         = $dataMedis->kd_kasir;
+            $konsultasi->no_transaksi     = $dataMedis->no_transaksi;
             $konsultasi->user_create      = Auth::user()->kd_karyawan;
             $konsultasi->user_edit        = null;
 

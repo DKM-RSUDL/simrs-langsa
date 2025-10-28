@@ -17,60 +17,50 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ url()->previous() }}" class="btn">
-                <i class="ti-arrow-left"></i> Kembali
-            </a>
+            <x-content-card>
+                <x-button-previous />
+                <form
+                    action="{{ route('rehab-medis.pelayanan.layanan.program.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                    method="post">
+                    @csrf
 
-            <form
-                action="{{ route('rehab-medis.pelayanan.layanan.program.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
-                method="post">
-                @csrf
 
-                <div class="d-flex justify-content-center">
-                    <div class="card w-100 h-100">
-                        <div class="card-header text-center border-bottom">
-                            <h5 class="text-secondary fw-bold">Program Terapi</h5>
-                        </div>
+                    <div class="card-header text-center border-bottom">
+                        <h5 class="text-secondary fw-bold">Program Terapi</h5>
+                    </div>
 
-                        <div class="card-body mt-3">
 
-                            <div class="form-group">
-                                <label style="max-width: 200px;">Waktu pelayanan</label>
-                                <div class="d-flex">
-                                    <input type="date" name="tgl_pelayanan" class="form-control me-3"
-                                        value="{{ date('Y-m-d') }}">
-                                    <input type="time" name="jam_pelayanan" class="form-control"
-                                        value="{{ date('H:i') }}">
-                                </div>
-                            </div>
 
-                            <div class="form-group mt-3">
-                                <label for="program">Program</label>
-                                <select id="program" class="form-select select2">
-                                    <option value="">--Pilih Tindakan--</option>
-                                    @foreach ($produk as $item)
-                                        <option
-                                            value='{"kd_produk" : "{{ $item->kd_produk }}", "tarif" : "{{ $item->tarif }}", "tgl_berlaku" : "{{ date('Y-m-d', strtotime($item->tgl_berlaku)) }}"}'>
-                                            {{ $item->deskripsi }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="w-50 mt-3 rounded-2 p-2" id="program-container">
-
-                            </div>
-
-                            <!-- Form Actions -->
-                            <div class="d-flex justify-content-end gap-2 mt-4">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save me-1"></i>Simpan
-                                </button>
-                            </div>
+                    <div class="form-group">
+                        <label style="max-width: 200px;">Waktu pelayanan</label>
+                        <div class="d-flex">
+                            <input type="date" name="tgl_pelayanan" class="form-control me-3"
+                                value="{{ date('Y-m-d') }}">
+                            <input type="time" name="jam_pelayanan" class="form-control" value="{{ date('H:i') }}">
                         </div>
                     </div>
-                </div>
 
-            </form>
+                    <div class="form-group mt-3">
+                        <label for="program">Program</label>
+                        <select id="program" class="form-select select2">
+                            <option value="">--Pilih Tindakan--</option>
+                            @foreach ($produk as $item)
+                                <option
+                                    value='{"kd_produk" : "{{ $item->kd_produk }}", "tarif" : "{{ $item->tarif }}", "tgl_berlaku" : "{{ date('Y-m-d', strtotime($item->tgl_berlaku)) }}"}'>
+                                    {{ $item->deskripsi }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="w-50 mt-3 rounded-2 p-2" id="program-container">
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="text-end">
+                        <x-button-submit />
+                    </div>
+                </form>
+            </x-content-card>
         </div>
     </div>
 @endsection

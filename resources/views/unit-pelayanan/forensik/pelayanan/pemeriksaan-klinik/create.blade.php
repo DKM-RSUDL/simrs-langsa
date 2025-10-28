@@ -18,14 +18,20 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ url()->previous() }}" class="btn">
-                <i class="ti-arrow-left"></i> Kembali
-            </a>
-            <form action="{{ route('forensik.unit.pelayanan.pemeriksaan-klinik.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" method="post">
-                @csrf
+            <x-content-card>
+                <x-button-previous />
 
-                <div class="d-flex justify-content-center">
-                    <div class="card w-100 h-100">
+                @include('components.page-header', [
+                    'title' => 'Tambah Pemeriksaan Forensik Klinik',
+                    'description' =>
+                        'Tambah data Pemeriksaan Forensik Klinik dengan mengisi formulir di bawah ini.',
+                ])
+                <form
+                    action="{{ route('forensik.unit.pelayanan.pemeriksaan-klinik.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                    method="post">
+                    @csrf
+
+                    <div class="d-flex justify-content-center">
                         <div class="card-body">
                             <div class="px-3">
                                 <div class="row g-3">
@@ -43,7 +49,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <h4 class="header-asesmen">Pemeriksaan Forensik Klinik</h4>
                             </div>
 
                             {{-- FORM ASESMEN AWAL KEPERATAWAN --}}
@@ -93,7 +98,8 @@
                                         <!-- Asal Rujukan -->
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Asal Rujukan</label>
-                                            <input type="text" name="asal_rujukan" id="asal_rujukan" class="form-control">
+                                            <input type="text" name="asal_rujukan" id="asal_rujukan"
+                                                class="form-control">
                                         </div>
 
 
@@ -105,7 +111,8 @@
                                                     <div class="form-check">
                                                         <input type="radio" class="form-check-input" id="laka_lantas"
                                                             name="jenis_kasus" value="1">
-                                                        <label class="form-check-label" for="laka_lantas">Laka lantas</label>
+                                                        <label class="form-check-label" for="laka_lantas">Laka
+                                                            lantas</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input type="radio" class="form-check-input" id="pemukulan"
@@ -115,7 +122,8 @@
                                                     <div class="form-check">
                                                         <input type="radio" class="form-check-input" id="kesusilaan"
                                                             name="jenis_kasus" value="3">
-                                                        <label class="form-check-label" for="kesusilaan">Kesusilaan</label>
+                                                        <label class="form-check-label"
+                                                            for="kesusilaan">Kesusilaan</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input type="radio" class="form-check-input" id="kdrt"
@@ -128,8 +136,8 @@
                                                         <label class="form-check-label" for="keracunan">Keracunan</label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input type="radio" class="form-check-input"
-                                                            id="kasus_lainnya" name="jenis_kasus" value="99">
+                                                        <input type="radio" class="form-check-input" id="kasus_lainnya"
+                                                            name="jenis_kasus" value="99">
                                                         <label class="form-check-label"
                                                             for="kasus_lainnya">Lainnya</label>
                                                     </div>
@@ -179,18 +187,21 @@
                                                 <div class="form-check">
                                                     <input type="checkbox" class="form-check-input" id="pemeriksaan_umum"
                                                         name="pemeriksaan[]" value="pemeriksaan_umum">
-                                                    <label class="form-check-label" for="pemeriksaan_umum">Pemeriksaan</label>
+                                                    <label class="form-check-label"
+                                                        for="pemeriksaan_umum">Pemeriksaan</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input type="checkbox" class="form-check-input" id="sampel_darah"
                                                         name="pemeriksaan[]" value="sampel_darah">
-                                                    <label class="form-check-label" for="sampel_darah">Pemeriksaan sampel
+                                                    <label class="form-check-label" for="sampel_darah">Pemeriksaan
+                                                        sampel
                                                         darah</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input type="checkbox" class="form-check-input" id="barang_bukti"
                                                         name="pemeriksaan[]" value="barang_bukti">
-                                                    <label class="form-check-label" for="barang_bukti">Pemeriksaan/Pemaketan
+                                                    <label class="form-check-label"
+                                                        for="barang_bukti">Pemeriksaan/Pemaketan
                                                         Barang Bukti</label>
                                                 </div>
                                                 <div class="form-check">
@@ -208,17 +219,20 @@
                                                 <div class="form-check">
                                                     <input type="checkbox" class="form-check-input" id="foto_rontgen"
                                                         name="pemeriksaan[]" value="foto_rontgen">
-                                                    <label class="form-check-label" for="foto_rontgen">Foto rontgent</label>
+                                                    <label class="form-check-label" for="foto_rontgen">Foto
+                                                        rontgent</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input type="checkbox" class="form-check-input" id="ct_scan"
                                                         name="pemeriksaan[]" value="ct_scan">
-                                                    <label class="form-check-label" for="ct_scan">Pemeriksaan CT-Scan</label>
+                                                    <label class="form-check-label" for="ct_scan">Pemeriksaan
+                                                        CT-Scan</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="pemeriksaan_lainnya"
-                                                        name="pemeriksaan[]" value="lainnya">
-                                                    <label class="form-check-label" for="pemeriksaan_lainnya">Lainnya</label>
+                                                    <input type="checkbox" class="form-check-input"
+                                                        id="pemeriksaan_lainnya" name="pemeriksaan[]" value="lainnya">
+                                                    <label class="form-check-label"
+                                                        for="pemeriksaan_lainnya">Lainnya</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -249,11 +263,13 @@
                                             <div class="d-flex align-items-center">
                                                 <div class="me-3">
                                                     <label for="sistole" class="form-label">Sistole</label>
-                                                    <input type="number" class="form-control" name="sistole" id="sistole">
+                                                    <input type="number" class="form-control" name="sistole"
+                                                        id="sistole">
                                                 </div>
                                                 <div class="">
                                                     <label for="diastole" class="form-label">Diastole</label>
-                                                    <input type="number" class="form-control" name="diastole" id="diastole">
+                                                    <input type="number" class="form-control" name="diastole"
+                                                        id="diastole">
                                                 </div>
                                             </div>
                                         </div>
@@ -275,7 +291,8 @@
                                         <div class="alert alert-info mb-3">
                                             <p class="mb-0 small">
                                                 <i class="bi bi-info-circle me-2"></i>
-                                                Centang normal jika fisik yang dinilai normal, pilih tanda tambah untuk menambah
+                                                Centang normal jika fisik yang dinilai normal, pilih tanda tambah untuk
+                                                menambah
                                                 keterangan fisik yang ditemukan tidak normal.
                                                 Jika tidak dipilih salah satunya, maka pemeriksaan tidak dilakukan.
                                             </p>
@@ -287,8 +304,7 @@
                                                     <div class="d-flex flex-column gap-3">
                                                         @foreach ($chunk as $item)
                                                             <div class="pemeriksaan-item">
-                                                                <div
-                                                                    class="d-flex align-items-center border-bottom pb-2">
+                                                                <div class="d-flex align-items-center border-bottom pb-2">
                                                                     <div class="flex-grow-1">{{ $item->nama }}
                                                                     </div>
                                                                     <div class="form-check me-3">
@@ -341,12 +357,14 @@
                                                 <div class="form-check">
                                                     <input type="checkbox" class="form-check-input" id="surat_asuransi"
                                                         name="penatalaksanaan[]" value="surat_asuransi">
-                                                    <label class="form-check-label" for="surat_asuransi">Pembuatan surat
+                                                    <label class="form-check-label" for="surat_asuransi">Pembuatan
+                                                        surat
                                                         keterangan asuransi</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="toksikologi_penata"
-                                                        name="penatalaksanaan[]" value="toksikologi">
+                                                    <input type="checkbox" class="form-check-input"
+                                                        id="toksikologi_penata" name="penatalaksanaan[]"
+                                                        value="toksikologi">
                                                     <label class="form-check-label" for="toksikologi_penata">Pemeriksaan
                                                         Toksikologi</label>
                                                 </div>
@@ -385,12 +403,13 @@
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input" id="dibawa_kepolisian"
                                                         name="dibawa_oleh" value="2">
-                                                    <label class="form-check-label" for="dibawa_kepolisian">Kepolisian</label>
+                                                    <label class="form-check-label"
+                                                        for="dibawa_kepolisian">Kepolisian</label>
                                                 </div>
                                                 <div class="d-flex align-items-center gap-2">
                                                     <div class="form-check">
-                                                        <input type="radio" class="form-check-input" id="dibawa_lainnya"
-                                                            name="dibawa_oleh" value="99">
+                                                        <input type="radio" class="form-check-input"
+                                                            id="dibawa_lainnya" name="dibawa_oleh" value="99">
                                                         <label class="form-check-label"
                                                             for="dibawa_lainnya">Lain-lain:</label>
                                                     </div>
@@ -405,16 +424,16 @@
 
                                     </div>
 
-                                    <div class="text-end mt-5">
-                                        <button type="submit" class="btn btn-primary">Simpan</button>
+                                    <div class="text-end">
+                                        <x-button-submit />
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-            </form>
+                </form>
+            </x-content-card>
         </div>
     </div>
 @endsection
