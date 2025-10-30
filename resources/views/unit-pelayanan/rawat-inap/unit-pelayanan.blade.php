@@ -2,24 +2,6 @@
 
 @push('css')
     <style>
-        .badge {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-        }
-
-        .badge-triage-yellow {
-            background-color: #ffeb3b;
-        }
-
-        .badge-triage-red {
-            background-color: #f44336;
-        }
-
-        .badge-triage-green {
-            background-color: #4caf50;
-        }
-
         /* Custom CSS for profile */
         .profile {
             display: flex;
@@ -138,8 +120,8 @@
                                 <th>Alamat</th>
                                 <th>Jaminan</th>
                                 <th>Status Pelayanan</th>
-                                <th>Keterangan</th>
-                                <th>Tindak Lanjut</th>
+                                {{-- <th>Keterangan</th>
+                                <th>Tindak Lanjut</th> --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -223,9 +205,17 @@
                     {
                         data: 'status_pelayanan',
                         name: 'status_pelayanan',
+                        render: function(data, type, row) {
+                            // Assuming row.kd_pasien is the "RM" and row.reg_number is the "Reg" value
+                            let bgBadge = 'secondary';
+
+                            if (row.status_inap == 1) bgBadge = 'success';
+
+                            return `<span class="d-block badge w-auto text-bg-${bgBadge}">${row.keterangan_kunjungan ?? '-'}</span>`;
+                        },
                         defaultContent: ''
                     },
-                    {
+                    /*{
                         data: 'keterangan',
                         name: 'keterangan',
                         defaultContent: ''
@@ -234,7 +224,7 @@
                         data: 'tindak_lanjut',
                         name: 'tindak_lanjut',
                         defaultContent: ''
-                    },
+                    }, */
                 ],
                 paging: true,
                 lengthChange: true,

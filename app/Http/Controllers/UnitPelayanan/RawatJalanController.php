@@ -265,7 +265,7 @@ class RawatJalanController extends Controller
             if (!$dataMedis) throw new Exception('Data medis tidak ditemukan.');
 
             $icare = $this->bpjsService->icare($dataMedis->pasien->no_asuransi ?? null, $dataMedis->dokter->kd_user ?? null);
-            dd($icare);
+            // dd($icare);
 
         } catch (Exception $e) {
             return back()->with('error', $e->getMessage());

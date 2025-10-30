@@ -87,11 +87,11 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
-        [
-            'icon' => 'goal.png',
-            'label' => 'Care Plan',
-            'link' => '#',
-        ],
+        // [
+        //     'icon' => 'goal.png',
+        //     'label' => 'Care Plan',
+        //     'link' => '#',
+        // ],
         [
             'icon' => 'cv.png',
             'label' => 'Resume',
