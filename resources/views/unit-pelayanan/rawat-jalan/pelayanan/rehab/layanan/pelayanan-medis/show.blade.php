@@ -28,8 +28,11 @@
                         <div class="row mb-4 mt-2">
                             <label class="col-sm-3 col-form-label">Waktu Pelayanan</label>
                             <div class="col-sm-9 d-flex">
-                                <input type="date" name="tgl_pelayanan" class="form-control" style="max-width: 200px;" value="{{ date('Y-m-d', strtotime($layanan->tgl_pelayanan)) }}" disabled>
-                                <input type="time" name="jam_pelayanan" class="form-control ms-3" style="max-width: 200px;" value="{{ date('H:i', strtotime($layanan->jam_pelayanan)) }}" disabled>
+                                <input type="date" name="tgl_pelayanan" class="form-control" style="max-width: 200px;"
+                                    value="{{ date('Y-m-d', strtotime($layanan->tgl_pelayanan)) }}" disabled>
+                                <input type="time" name="jam_pelayanan" class="form-control ms-3"
+                                    style="max-width: 200px;" value="{{ date('H:i', strtotime($layanan->jam_pelayanan)) }}"
+                                    disabled>
                             </div>
                         </div>
 
@@ -47,7 +50,8 @@
                             <div class="col-12">
                                 <div class="form-floating">
                                     <textarea class="form-control" name="pemeriksaan_fisik" id="pemeriksaan_fisik" style="height: 100px" disabled>{{ $layanan->pemeriksaan_fisik }}</textarea>
-                                    <label class="fw-bold text-dark" for="pemeriksaan_fisik">Pemeriksaan Fisik dan Uji Fungsi</label>
+                                    <label class="fw-bold text-dark" for="pemeriksaan_fisik">Pemeriksaan Fisik dan Uji
+                                        Fungsi</label>
                                 </div>
                             </div>
 
@@ -81,7 +85,8 @@
                             <div class="col-12">
                                 <div class="form-floating">
                                     <textarea class="form-control" name="pemeriksaan_penunjang" id="pemeriksaan_penunjang" style="height: 100px" disabled>{{ $layanan->pemeriksaan_penunjang }}</textarea>
-                                    <label class="fw-bold text-dark" for="pemeriksaan_penunjang">Pemeriksaan Penunjang</label>
+                                    <label class="fw-bold text-dark" for="pemeriksaan_penunjang">Pemeriksaan
+                                        Penunjang</label>
                                 </div>
                             </div>
 
@@ -91,7 +96,8 @@
                                         Tatalaksana KFR (ICD-9 CM)
                                     </strong>
                                     <div class="bg-light p-1 border rounded">
-                                        <div style="max-height: 150px; overflow-y: auto;" id="diagnoseDisplaytatalaksanakfr"></div>
+                                        <div style="max-height: 150px; overflow-y: auto;"
+                                            id="diagnoseDisplaytatalaksanakfr"></div>
                                     </div>
                                 </div>
                             </div>
@@ -103,22 +109,24 @@
                                         <label class="form-label fw-bold">Suspek penyakit akibat kerja</label>
                                         <div class="d-flex gap-4 mb-3">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio"
-                                                    name="suspek_penyakit" id="suspekYa" value="1"
-                                                    onclick="toggleSuspekDetails(true)" @checked($layanan->suspek_penyakit == 1) disabled>
+                                                <input class="form-check-input" type="radio" name="suspek_penyakit"
+                                                    id="suspekYa" value="1" onclick="toggleSuspekDetails(true)"
+                                                    @checked($layanan->suspek_penyakit == 1) disabled>
                                                 <label class="form-check-label" for="suspekYa">Ya</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio"
-                                                    name="suspek_penyakit" id="suspekTidak" value="0"
-                                                    onclick="toggleSuspekDetails(false)" @checked($layanan->suspek_penyakit == 0) disabled>
+                                                <input class="form-check-input" type="radio" name="suspek_penyakit"
+                                                    id="suspekTidak" value="0" onclick="toggleSuspekDetails(false)"
+                                                    @checked($layanan->suspek_penyakit == 0) disabled>
                                                 <label class="form-check-label" for="suspekTidak">Tidak</label>
                                             </div>
                                         </div>
-                                        <div id="suspekDetails" style="display: {{ $layanan->suspek_penyakit == 1 ? 'block' : 'none' }};">
+                                        <div id="suspekDetails"
+                                            style="display: {{ $layanan->suspek_penyakit == 1 ? 'block' : 'none' }};">
                                             <div class="form-floating">
                                                 <textarea class="form-control" name="suspek_penyakit_ket" id="suspek_penyakit_ket" style="height: 100px" disabled>{{ $layanan->suspek_penyakit_ket }}</textarea>
-                                                <label class="fw-bold text-dark" for="suspek_penyakit_ket">Keterangan Detail</label>
+                                                <label class="fw-bold text-dark" for="suspek_penyakit_ket">Keterangan
+                                                    Detail</label>
                                             </div>
                                         </div>
 
@@ -143,7 +151,8 @@
                                         <div class="col-12 mt-2">
                                             <div class="form-floating">
                                                 <textarea class="form-control" name="permintaan_terapi" id="permintaan_terapi" style="height: 100px" disabled>{{ $layanan->permintaan_terapi }}</textarea>
-                                                <label class="fw-bold text-dark" for="permintaan_terapi">Permintaan terapi</label>
+                                                <label class="fw-bold text-dark" for="permintaan_terapi">Permintaan
+                                                    terapi</label>
                                             </div>
                                         </div>
                                     </div>
@@ -156,9 +165,9 @@
         </div>
     </div>
 
-    @include('unit-pelayanan.rehab-medis.pelayanan.layanan.pelayanan-medis.modal-show-diagnosismedisicd10')
-    @include('unit-pelayanan.rehab-medis.pelayanan.layanan.pelayanan-medis.modal-show-diagnosisfungsicd10')
-    @include('unit-pelayanan.rehab-medis.pelayanan.layanan.pelayanan-medis.modal-show-tatalaksana-kfricd9')
+    @include('unit-pelayanan.rehab-medis.pelayanan.terapi.pelayanan-medis.modal-show-diagnosismedisicd10')
+    @include('unit-pelayanan.rehab-medis.pelayanan.terapi.pelayanan-medis.modal-show-diagnosisfungsicd10')
+    @include('unit-pelayanan.rehab-medis.pelayanan.terapi.pelayanan-medis.modal-show-tatalaksana-kfricd9')
 @endsection
 
 

@@ -20,7 +20,9 @@
             <a href="{{ url()->previous() }}" class="btn">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
-            <form action="{{ route('rawat-jalan.layanan-rehab-medik.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($layanan->id)]) }}" method="post">
+            <form
+                action="{{ route('rawat-jalan.layanan-rehab-medik.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($layanan->id)]) }}"
+                method="post">
                 @csrf
                 @method('put')
 
@@ -31,8 +33,12 @@
                             <div class="row mb-4 mt-2">
                                 <label class="col-sm-3 col-form-label">Waktu Pelayanan</label>
                                 <div class="col-sm-9 d-flex">
-                                    <input type="date" name="tgl_pelayanan" class="form-control" style="max-width: 200px;" value="{{ date('Y-m-d', strtotime($layanan->tgl_pelayanan)) }}">
-                                    <input type="time" name="jam_pelayanan" class="form-control ms-3" style="max-width: 200px;" value="{{ date('H:i', strtotime($layanan->jam_pelayanan)) }}">
+                                    <input type="date" name="tgl_pelayanan" class="form-control"
+                                        style="max-width: 200px;"
+                                        value="{{ date('Y-m-d', strtotime($layanan->tgl_pelayanan)) }}">
+                                    <input type="time" name="jam_pelayanan" class="form-control ms-3"
+                                        style="max-width: 200px;"
+                                        value="{{ date('H:i', strtotime($layanan->jam_pelayanan)) }}">
                                 </div>
                             </div>
 
@@ -76,12 +82,15 @@
                                     <div class="form-floating">
                                         <strong class="fw-bold">
                                             Diagnosis Fungsi (ICD-10)
-                                            <a href="javascript:void(0)" class="text-secondary text-decoration-none fw-bold ms-3" id="btn-diagnosis-fungsi-icd10">
+                                            <a href="javascript:void(0)"
+                                                class="text-secondary text-decoration-none fw-bold ms-3"
+                                                id="btn-diagnosis-fungsi-icd10">
                                                 <i class="bi bi-plus-square"></i> Tambah
                                             </a>
                                         </strong>
                                         <div class="bg-light p-1 border rounded">
-                                            <div style="max-height: 150px; overflow-y: auto;" id="diagnoseDisplayFungsi"></div>
+                                            <div style="max-height: 150px; overflow-y: auto;" id="diagnoseDisplayFungsi">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -98,12 +107,15 @@
                                     <div class="form-floating">
                                         <strong class="fw-bold">
                                             Tatalaksana KFR (ICD-9 CM)
-                                            <a href="javascript:void(0)" class="text-secondary text-decoration-none fw-bold ms-3" id="btn-tatalaksana-kfricd9">
+                                            <a href="javascript:void(0)"
+                                                class="text-secondary text-decoration-none fw-bold ms-3"
+                                                id="btn-tatalaksana-kfricd9">
                                                 <i class="bi bi-plus-square"></i> Tambah
                                             </a>
                                         </strong>
                                         <div class="bg-light p-1 border rounded">
-                                            <div style="max-height: 150px; overflow-y: auto;" id="diagnoseDisplaytatalaksanakfr"></div>
+                                            <div style="max-height: 150px; overflow-y: auto;"
+                                                id="diagnoseDisplaytatalaksanakfr"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -115,19 +127,20 @@
                                             <label class="form-label fw-bold">Suspek penyakit akibat kerja</label>
                                             <div class="d-flex gap-4 mb-3">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="suspek_penyakit" id="suspekYa" value="1"
-                                                        onclick="toggleSuspekDetails(true)" @checked($layanan->suspek_penyakit == 1)>
+                                                    <input class="form-check-input" type="radio" name="suspek_penyakit"
+                                                        id="suspekYa" value="1" onclick="toggleSuspekDetails(true)"
+                                                        @checked($layanan->suspek_penyakit == 1)>
                                                     <label class="form-check-label" for="suspekYa">Ya</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="suspek_penyakit" id="suspekTidak" value="0"
-                                                        onclick="toggleSuspekDetails(false)" @checked($layanan->suspek_penyakit == 0)>
+                                                    <input class="form-check-input" type="radio" name="suspek_penyakit"
+                                                        id="suspekTidak" value="0" onclick="toggleSuspekDetails(false)"
+                                                        @checked($layanan->suspek_penyakit == 0)>
                                                     <label class="form-check-label" for="suspekTidak">Tidak</label>
                                                 </div>
                                             </div>
-                                            <div id="suspekDetails" style="display: {{ $layanan->suspek_penyakit == 1 ? 'block' : 'none' }};">
+                                            <div id="suspekDetails"
+                                                style="display: {{ $layanan->suspek_penyakit == 1 ? 'block' : 'none' }};">
                                                 <div class="form-floating">
                                                     <textarea class="form-control" name="suspek_penyakit_ket" id="suspek_penyakit_ket" style="height: 100px">{{ $layanan->suspek_penyakit_ket }}</textarea>
                                                     <label for="suspek_penyakit_ket">Keterangan Detail</label>
@@ -142,7 +155,7 @@
                                             </div>
                                             <div class="col-12 mt-2">
                                                 <div class="form-floating">
-                                                    <textarea class="form-control" name="evaluasi" id="evaluasi" style="height: 100px">{{   $layanan->evaluasi }}</textarea>
+                                                    <textarea class="form-control" name="evaluasi" id="evaluasi" style="height: 100px">{{ $layanan->evaluasi }}</textarea>
                                                     <label for="evaluasi">Evaluasi</label>
                                                 </div>
                                             </div>
@@ -177,9 +190,9 @@
         </div>
     </div>
 
-    @include('unit-pelayanan.rehab-medis.pelayanan.layanan.pelayanan-medis.modal-create-diagnosismedisicd10')
-    @include('unit-pelayanan.rehab-medis.pelayanan.layanan.pelayanan-medis.modal-create-diagnosisfungsicd10')
-    @include('unit-pelayanan.rehab-medis.pelayanan.layanan.pelayanan-medis.modal-create-tatalaksana-kfricd9')
+    @include('unit-pelayanan.rehab-medis.pelayanan.terapi.pelayanan-medis.modal-create-diagnosismedisicd10')
+    @include('unit-pelayanan.rehab-medis.pelayanan.terapi.pelayanan-medis.modal-create-diagnosisfungsicd10')
+    @include('unit-pelayanan.rehab-medis.pelayanan.terapi.pelayanan-medis.modal-create-tatalaksana-kfricd9')
 @endsection
 
 
