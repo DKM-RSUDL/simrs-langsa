@@ -148,6 +148,16 @@
                             <p class="fw-medium">{{ $laporanAnastesiDtl->temperatur_selesai }}</p>
 
                         </div>
+                        <div class="col-md-6">
+                            <label class="fw-bold text-muted">Pemakaian Tourniquet</label>
+                            <p class="fw-medium">
+                                {{ isset($laporanAnastesiDtl->pemakaian_tomiquet) ? ($laporanAnastesiDtl->pemakaian_tomiquet == 1 ? 'Ya' : 'Tidak') : 'Tidak ada data' }}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="fw-bold text-muted">Pengawas Tourniquet</label>
+                            <p class="fw-medium">{{ $laporanAnastesiDtl->pengawas_tomiquet ?? 'Tidak ada data' }}</p>
+                        </div>
                         <!-- Tabel Tomiquet -->
                         <div class="table-responsive mt-4">
                             <table class="table table-hover table-bordered">
