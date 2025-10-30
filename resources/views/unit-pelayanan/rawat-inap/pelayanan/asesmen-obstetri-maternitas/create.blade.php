@@ -137,13 +137,14 @@
                                         value="{{ isset($vitalSignsData) && $vitalSignsData ? $vitalSignsData->nadi : '' }}">
                                 </div>
 
-                            <div class="form-group mb-3">
-                                <label class="d-block mb-2" style="min-width: 200px;">Pernafasan (Per Menit)</label>
-                                <input type="number" class="form-control" name="pernafasan" placeholder="frekuensi nafas per menit"
-                                value="{{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->pernafasan ?? '' }}">
-                                <label class="d-block ml-2">Jam</label>
-                                <input type="time" class="form-control" name="serviks_jam_pembukaan">
-                            </div>
+                                <div class="form-group mb-3">
+                                    <label class="d-block mb-2" style="min-width: 200px;">Pernafasan (Per Menit)</label>
+                                    <input type="number" class="form-control" name="pernafasan"
+                                        placeholder="frekuensi nafas per menit"
+                                        value="{{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->pernafasan ?? '' }}">
+                                    <label class="d-block ml-2">Jam</label>
+                                    <input type="time" class="form-control" name="serviks_jam_pembukaan">
+                                </div>
 
                                 <div class="form-group mb-3">
                                     <label class="d-block mb-2" style="min-width: 200px;">Suhu (C)</label>
@@ -352,8 +353,21 @@
                                         <option value="2">&gt; 50%</option>
                                         <option value="3">100%</option>
                                     </select>
-                                    <label class="d-block ml-2">Jam</label>
-                                    <input type="time" class="form-control" name="serviks_jam_pembukaan">
+                                    <select class="form-select ms-3" name="serviks_jam_pembukaan">
+                                        <option value="" selected>Penunjuk Pukul</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
                                 </div>
 
                                 <div class="form-group mb-3">
