@@ -1562,19 +1562,6 @@
                                 </div> --}}
 
                                 <div class="mb-4">
-                                    <label class="form-label">Usia lanjut (>60 th)</label>
-                                    <select class="form-select" name="usia_lanjut" disabled>
-                                        <option value="" disabled>--Pilih--</option>
-                                        <option value="1"
-                                            {{ old('usia_lanjut', $asesmen->asesmenMedisAnakDtl->usia_lanjut ?? '') == '1' ? 'selected' : '' }}>
-                                            Ya</option>
-                                        <option value="0"
-                                            {{ old('usia_lanjut', $asesmen->asesmenMedisAnakDtl->usia_lanjut ?? '') == '0' ? 'selected' : '' }}>
-                                            Tidak</option>
-                                    </select>
-                                </div>
-
-                                <div class="mb-4">
                                     <label class="form-label">Hambatan mobilitas</label>
                                     <select class="form-select" name="hambatan_mobilisasi" disabled>
                                         <option value="" disabled>--Pilih--</option>

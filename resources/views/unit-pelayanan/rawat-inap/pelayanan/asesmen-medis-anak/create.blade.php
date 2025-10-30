@@ -1370,15 +1370,6 @@
                             </div> --}}
 
                             <div class="mb-4">
-                                <label class="form-label">Usia lanjut (>60 th)</label>
-                                <select class="form-select" name="usia_lanjut">
-                                    <option value="" selected disabled>--Pilih--</option>
-                                    <option value="0">Ya</option>
-                                    <option value="1">Tidak</option>
-                                </select>
-                            </div>
-
-                            <div class="mb-4">
                                 <label class="form-label">Hambatan mobilitas</label>
                                 <select class="form-select" name="hambatan_mobilisasi">
                                     <option value="" selected disabled>--Pilih--</option>

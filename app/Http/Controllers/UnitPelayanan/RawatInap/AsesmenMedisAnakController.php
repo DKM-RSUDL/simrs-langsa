@@ -180,7 +180,7 @@ class AsesmenMedisAnakController extends Controller
             if (!$transaksiData) {
                 throw new \Exception('Data transaksi tidak ditemukan');
             }
-         
+
 
             // 1. Buat record RmeAsesmen
             $asesmen = new RmeAsesmen();
@@ -345,7 +345,6 @@ class AsesmenMedisAnakController extends Controller
                 'diagnosis_kerja' => $this->formatJsonForDatabase($diagnosisKerja),
                 'diagnosis_medis' => $request->diagnosis_medis,
                 'rencana_pengobatan' => $request->rencana_pengobatan,
-                'usia_lanjut' => $request->usia_lanjut,
                 'hambatan_mobilisasi' => $request->hambatan_mobilisasi,
                 'penggunaan_media_berkelanjutan' => $request->penggunaan_media_berkelanjutan,
                 'ketergantungan_aktivitas' => $request->ketergantungan_aktivitas,
@@ -435,7 +434,7 @@ class AsesmenMedisAnakController extends Controller
         }
 
         $masterData = $this->getMasterData($kd_pasien);
-       
+
 
         return view(
             'unit-pelayanan.rawat-inap.pelayanan.asesmen-medis-anak.show',
@@ -679,7 +678,6 @@ class AsesmenMedisAnakController extends Controller
                     'rencana_pengobatan' => $request->rencana_pengobatan, // TAMBAHKAN FIELD YANG HILANG
 
                     // Discharge Planning
-                    'usia_lanjut' => $request->usia_lanjut,
                     'hambatan_mobilisasi' => $request->hambatan_mobilisasi,
                     'penggunaan_media_berkelanjutan' => $request->penggunaan_media_berkelanjutan,
                     'ketergantungan_aktivitas' => $request->ketergantungan_aktivitas,
