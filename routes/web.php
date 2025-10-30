@@ -8,6 +8,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UnitPelayanan\GawatDaruratController;
 
 // unit pelanayan
 use App\Http\Controllers\TransfusiDarah\PermintaanController;
@@ -25,6 +26,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', [SsoController::class, 'redirectToSso'])->name('login');
     Route::get('/callback', [SsoController::class, 'handleCallback'])->name('callback');
 });
+
 
 // Keep session alive
 Route::get('/keep-alive', function () {

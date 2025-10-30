@@ -194,6 +194,7 @@ class AsesmenParuController extends Controller
             $asesmenParu->icterus = $request->icterus;
             $asesmenParu->anemia = $request->anemia;
             $asesmenParu->paru_prognosis = $request->paru_prognosis;
+            $asesmenParu->rencana_pengobatan = $request->rencana_pengobatan;
             $asesmenParu->site_marking_paru_data = $request->input('site_marking_paru_data');
             $asesmenParu->save();
 
@@ -613,6 +614,7 @@ class AsesmenParuController extends Controller
             $asesmenParu->anemia = $request->anemia;
             $asesmenParu->site_marking_paru_data = $request->input('site_marking_paru_data');
             $asesmenParu->paru_prognosis = $request->paru_prognosis;
+            $asesmenParu->rencana_pengobatan = $request->rencana_pengobatan;
             $asesmenParu->save();
 
             // 3-5. Records lainnya tetap sama...
