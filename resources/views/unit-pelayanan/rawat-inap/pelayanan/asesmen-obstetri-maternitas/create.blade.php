@@ -253,7 +253,7 @@
                                         <option value="" selected>pilih</option>
                                         <option value="1">Fleksi</option>
                                         <option value="2">Defleksi Ringan</option>
-                                        <option value="3">Refleksi Sedang</option>
+                                        <option value="3">Defleksi Sedang</option>
                                         <option value="4">Defleksi Maksimal</option>
                                     </select>
                                 </div>

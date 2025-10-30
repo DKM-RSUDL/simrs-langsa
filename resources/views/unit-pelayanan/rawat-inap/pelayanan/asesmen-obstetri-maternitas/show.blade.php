@@ -212,7 +212,7 @@
                                             </p>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
 
                                 <div class="row">
@@ -253,7 +253,7 @@
                                                 {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_air_ketuban ?? '-' }}
                                             </p>
                                         </div>
-                                        
+
                                     </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
@@ -301,7 +301,7 @@
                                             @elseif($sikap == 2)
                                                 Defleksi Ringan
                                             @elseif($sikap == 3)
-                                                Refleksi Sedang
+                                                Defleksi Sedang
                                             @elseif($sikap == 4)
                                                 Defleksi Maksimal
                                             @else
@@ -407,9 +407,9 @@
                                                 @endif
                                             </p>
                                         </div>
-                                        
+
                                     </div>
-                                    
+
                                 </div>
 
                                 <div class="row">
@@ -451,7 +451,7 @@
                                                 {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_simpulan ?? '-' }}
                                             </p>
                                         </div>
-                                        
+
 
                                     </div>
                                     <div class="col-md-6">
@@ -485,7 +485,7 @@
                                                 {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_pembukaan_cm ?? '-' }}
                                             </p>
                                         </div>
-                                       
+
 
                                     </div>
                                 </div>
@@ -914,7 +914,7 @@
                                             @endif
                                             <p class="form-control-plaintext border-bottom"></p>
                                         </div>
-                                
+
                                         <div class="form-group mb-3">
                                             <label class="d-block mb-2" style="min-width: 200px;">Eliminasi</label>
                                             <p class="form-control-plaintext border-bottom">
@@ -927,8 +927,8 @@
                                                 {{ $asesmen->rmeAsesmenObstetriRiwayatKesehatan->defaksi ?? '-' }}
                                             </p>
                                          </div>
-                                
-                                         
+
+
                                         <div class="mb-3">
                                             <label class="form-label fw-bold">Konsumsi Obat-Obatan (Jika Ada) :</label>
                                             <p class="form-control-plaintext border-bottom">

@@ -278,7 +278,7 @@
                                             </div>
 
                                             <div class="form-group mb-3">
-                                                <label class="d-block mb-2" style="min-width: 200px;">Irama</label>                
+                                                <label class="d-block mb-2" style="min-width: 200px;">Irama</label>
                                                 <select class="form-select" name="kontraksi_letak_janin">
                                                     <option value="" >pilih</option>
                                                     <option value="1"  {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_irama ?? '') == '1' ? 'selected' : '' }}>Memanjang</option>
@@ -311,12 +311,12 @@
 
                                             <div class="form-group mb-3">
                                                 <label class="d-block mb-2" style="min-width: 200px;">Sikap Janin</label>
-                                               
+
                                                 <select class="form-select" name="kontraksi_sikap_janin">
                                                     <option value= ""  >pilih</option>
                                                     <option value="1" {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->fkontraksi_sikap_janin ?? '') == '1' ? 'selected' : '' }}>Fleksi</option>
                                                     <option value="2" {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_sikap_janin ?? '') == '2' ? 'selected' : '' }}>Defleksi Ringan</option>
-                                                    <option value="3" {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_sikap_janin ?? '') == '3' ? 'selected' : '' }}>Refleksi Sedang</option>
+                                                    <option value="3" {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_sikap_janin ?? '') == '3' ? 'selected' : '' }}>Defleksi Sedang</option>
                                                     <option value="4" {{ ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_sikap_janin ?? '') == '4' ? 'selected' : '' }}>Defleksi Maksimal</option>
                                                 </select>
                                             </div>
@@ -540,7 +540,7 @@
                                                         Muka</option>
                                                 </select>
                                             </div>
-                                           
+
 
                                             <div class="form-group mb-3">
                                                 <label class="d-block mb-2 fw-bold" style="min-width: 200px;">Panggul</label>
@@ -661,9 +661,9 @@
                                                     value="{{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_pembukaan_cm ?? '' }}">
                                             </div>
 
-                                            
 
-                                            
+
+
 
                                             <!-- Antropometri -->
                                             <div class="mt-4 mb-3">
@@ -1038,7 +1038,7 @@
                                                 <input type="text" class="form-control" name="siklus"
                                                     placeholder="Hari"
                                                     value="{{ $asesmen->rmeAsesmenObstetriRiwayatKesehatan->siklus ?? '' }}">
-                            
+
                                             </div>
 
                                             <div class="form-group mb-3">
