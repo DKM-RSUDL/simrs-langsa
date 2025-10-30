@@ -222,7 +222,7 @@
                         <thead>
                             <tr>
                                 <th width="100px">Aksi</th>
-                                <th>Pasien</th>
+                                <th>Pasienn</th>
                                 <th>Triase</th>
                                 <th>Bed</th>
                                 <th>No RM / Reg</th>
@@ -285,6 +285,7 @@
     <script>
         var gawatDaruratIndexUrl = "{{ route('gawat-darurat.index') }}";
         var medisGawatDaruratIndexUrl = "{{ url('unit-pelayanan/gawat-darurat/pelayanan/') }}/";
+        var printTriaseUrl = "{{ url('unit-pelayanan/gawat-darurat/triase') }}";
 
         $(document).ready(function() {
             $('#rawatDaruratTable').DataTable({
@@ -303,14 +304,27 @@
                         searchable: false,
                         render: function(data, type, row) {
                             let hiddenAttr = row.triase_proses == 1 ? 'hidden' : '';
+
+                            // Membuat URL unik untuk print berdasarkan data baris
+                            let printUrl =
+                                `${printTriaseUrl}/${row.kd_pasien}/${row.tgl_masuk}/print-pdf`;
+
                             return `
-                                <div class="d-flex justify-content-center">
-                                    <a href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}"
-                                    class="edit btn btn-primary">
-                                        <i class="ti-pencil-alt"></i>
-                                    </a>
-                                </div>
-                            `;
+                                    <div class="d-flex justify-content-center gap-1">
+                                        <a href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}"
+                                           class="edit btn btn-primary btn-sm"
+                                           title="Layani Pasien">
+                                            <i class="ti-pencil-alt"></i>
+                                        </a>
+
+                                        <a href="${printUrl}"
+                                           class="btn btn-info btn-sm"
+                                           target="_blank"
+                                           title="Cetak Triase">
+                                            <i class="bi bi-printer"></i>
+                                        </a>
+                                    </div>
+                                `;
                         }
                     },
                     {
