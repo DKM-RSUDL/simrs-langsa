@@ -70,8 +70,8 @@
                         <td align="middle">{{ $loop->iteration }}</td>
                         <td>{{ date('Y-m-d', strtotime($item->tgl_pelayanan)) }}
                             {{ date('H:i', strtotime($item->jam_pelayanan)) }}</td>
-                        <td>{{ str()->title($item->userCreate->name) }}</td>
                         <td>{{ str()->title($item->dokter->nama_lengkap) }}</td>
+                        <td>{{ str()->title($item->userCreate->name) }}</td>
                         <td min-width="50px">
                             <x-table-action>
                                 <a href="{{ route('rehab-medis.pelayanan.terapi.print', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"

@@ -545,7 +545,7 @@
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">c. Venekasi:</label>
+                                        <label class="form-label">c. Venektasi:</label>
                                         <div class="d-flex flex-wrap gap-3">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio"
