@@ -5,83 +5,15 @@
     <meta charset="utf-8">
     <title>Asesmen Keperawatan & Medis</title>
     <style>
+        /* ===== Base ===== */
+        @page {
+            margin: 0.5cm;
+        }
+
         body {
             font-family: Arial, sans-serif;
             font-size: 12px;
             line-height: 1.4;
-        }
-
-        header {
-            width: 100%;
-            display: table;
-            padding-bottom: 30px;
-            border-bottom: 2px solid black
-        }
-
-        header .left-column {
-            display: table-cell;
-            width: 20%;
-            vertical-align: top;
-            text-align: center;
-        }
-
-        header .left-column p {
-            margin: 5px;
-        }
-
-        header .center-column {
-            display: table-cell;
-            width: auto;
-            vertical-align: middle;
-            text-align: center;
-        }
-
-        header .center-column p {
-            font-size: 25px;
-            font-weight: 700;
-        }
-
-        header .right-column {
-            display: table-cell;
-            width: 40%;
-            vertical-align: top;
-            text-align: right;
-        }
-
-        header .header-logo {
-            width: 80px;
-        }
-
-        header .title {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        header .info-table {
-            width: 100%;
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-
-        header .info-table td {
-            padding: 8px;
-            border: 1px solid black;
-        }
-
-        .logo {
-            width: 70px;
-            height: auto;
-        }
-
-        .title {
-            font-size: 16px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        .subtitle {
-            font-size: 14px;
-            margin: 5px 0;
         }
 
         table {
@@ -90,12 +22,81 @@
             margin-bottom: 10px;
         }
 
-        table.bordered td,
-        table.bordered th {
+        .bordered td,
+        .bordered th {
             border: 1px solid #000;
             padding: 5px;
         }
 
+        /* ===== Header (cleaned & centralized) ===== */
+        header {
+            width: 100%;
+            border-bottom: 2px solid #000;
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+        }
+
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .td-left {
+            width: 33%;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .td-center {
+            width: 33%;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .td-right {
+            width: 33%;
+            text-align: right;
+            vertical-align: middle;
+        }
+
+        .brand-table {
+            border-collapse: collapse;
+        }
+
+        .va-middle {
+            vertical-align: middle;
+        }
+
+        .brand-logo {
+            width: 70px;
+            height: auto;
+            margin-right: 2px;
+        }
+
+        .brand-name {
+            font-weight: 700;
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .brand-info {
+            margin: 0;
+            font-size: 8px;
+        }
+
+        .form-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .igd-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        /* ===== Sections ===== */
         .section {
             margin-bottom: 15px;
         }
@@ -107,83 +108,173 @@
             margin-bottom: 5px;
         }
 
+        .section-subtitle {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
         .col-header {
             font-weight: bold;
             width: 200px;
         }
 
-        .signature-section {
-            margin-top: 50px;
+        /* ===== Utilities ===== */
+        .w-30 {
+            width: 30%;
         }
 
-        .signature-box {
-            float: left;
-            width: 45%;
+        .w-33 {
+            width: 33%;
+        }
+
+        .w-40 {
+            width: 40%;
+        }
+
+        .w-50 {
+            width: 50%;
+        }
+
+        .w-60 {
+            width: 60%;
+        }
+
+        .w-15 {
+            width: 15%;
+        }
+
+        .w-25 {
+            width: 25%;
+        }
+
+        .w-35 {
+            width: 35%;
+        }
+
+        .w-10 {
+            width: 10%;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
             text-align: center;
         }
 
-        .clear {
-            clear: both;
+        /* Pemeriksaan fisik (spasi antar baris) */
+        .fisik-table {
+            border-collapse: separate;
+            border-spacing: 0 2px;
         }
 
-        @page {
-            margin: 0.5cm;
+        /* ===== Signature block ===== */
+        .signature-wrap {
+            width: 100%;
+            text-align: right;
         }
 
-        .section table.bordered ul {
-            margin: 5px 0;
+        .signature-table {
+            display: inline-table;
+            text-align: right;
         }
 
-        .section table.bordered ul li {
-            margin: 3px 0;
+        .signature-body {
+            display: inline-table;
+            text-align: center;
         }
+
+        .signature-gap {
+            height: 20px;
+        }
+
+        /* ===== Image in Nyeri ===== */
+        .nyeri-image {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        /* ===== Removed (UNUSED) selectors =====
+           - header .left-column / .center-column / .right-column
+           - header .header-logo
+           - header .title
+           - header .info-table / header .info-table td
+           - .logo, .title (generic), .subtitle
+           - .signature-section, .signature-box, .clear
+           - .section table.bordered ul / li
+        */
     </style>
 </head>
 
 <body>
     <header>
-        <div class="left-column">
-            <img src="{{ public_path('assets/img/Logo-RSUD-Langsa-1.png') }}" class="header-logo" alt="Logo">
-            <p>RSUD Langsa</p>
-            <p>Jl. Jend. A. Yani No.1 Kota Langsa</p>
-        </div>
-        <div class="center-column">
-            <p>ASESMEN MEDIS<br>IGD</p>
-        </div>
-        <div class="right-column">
-            <table class="info-table">
-                <tr>
-                    <td><strong>No RM</strong></td>
-                    <td>{{ $asesmen->kd_pasien }}</td>
-                </tr>
-                <tr>
-                    <td><strong>Nama</strong></td>
-                    <td>{{ str()->title($asesmen->pasien->nama) }}</td>
-                </tr>
-                <tr>
-                    <td><strong>Jenis Kelamin</strong></td>
-                    <td>
-                        @php
-                            $gender = '-';
+        <table class="header-table">
+            <tr>
+                <!-- Kolom 1: Logo + Keterangan -->
+                <td class="td-left">
+                    <table class="brand-table">
+                        <tr>
+                            <td class="va-middle">
+                                <img src="{{ public_path('assets/img/Logo-RSUD-Langsa-1.png') }}" alt="Logo RSUD Langsa"
+                                    class="brand-logo">
+                            </td>
+                            <td class="va-middle">
+                                <p class="brand-name">RSUD Langsa</p>
+                                <p class="brand-info">Jl. Jend. A. Yani No.1 Kota Langsa</p>
+                                <p class="brand-info">Telp. 0641-22051, email: rsulangsa@gmail.com</p>
+                                <p class="brand-info">www.rsud.langsakota.go.id</p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
 
-                            if ($asesmen->pasien->jenis_kelamin == 1) {
-                                $gender = 'Laki-Laki';
-                            }
-                            if ($asesmen->pasien->jenis_kelamin == 0) {
-                                $gender = 'Perempuan';
-                            }
+                <!-- Kolom 2: ASESMEN MEDIS -->
+                <td class="td-center">
+                    <p class="form-title">FORM GAWAT DARURAT MEDIS</p>
+                </td>
 
-                            echo $gender;
-                        @endphp
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>Tanggal Lahir</strong></td>
-                    <td>{{ date('d/m/Y', strtotime($asesmen->pasien->tgl_lahir)) }}</td>
-                </tr>
-            </table>
-        </div>
+                <!-- Kolom 3: IGD -->
+                <td class="td-right">
+                    <p class="igd-title">IGD</p>
+                </td>
+            </tr>
+        </table>
     </header>
+
+    <div>
+        <table>
+            <tr>
+                <td align="left" class="w-30">No. RM</td>
+                <td class="section-subtitle" style="width:2px;">:</td>
+                <td>{{ $asesmen->kd_pasien }}</td>
+            </tr>
+            <tr>
+                <td align="left" class="w-30">Nama</td>
+                <td class="section-subtitle" style="width:2px;">:</td>
+                <td>{{ str()->title($asesmen->pasien->nama) }}</td>
+            </tr>
+            <tr>
+                <td align="left" class="w-30">Jenis Kelamin</td>
+                <td class="section-subtitle" style="width:2px;">:</td>
+                <td>@php
+                    $gender = '-';
+                    if ($asesmen->pasien->jenis_kelamin == 1) {
+                        $gender = 'Laki-Laki';
+                    }
+                    if ($asesmen->pasien->jenis_kelamin == 0) {
+                        $gender = 'Perempuan';
+                    }
+                    echo $gender;
+                @endphp</td>
+            </tr>
+            <tr>
+                <td align="left" class="w-30">Tanggal Lahir</td>
+                <td class="section-subtitle" style="width:2px;">:</td>
+                <td>{{ date('d/m/Y', strtotime($asesmen->pasien->tgl_lahir)) }}</td>
+            </tr>
+        </table>
+    </div>
 
     <!-- Triase Section -->
     <div class="section">
@@ -204,8 +295,8 @@
 
     <!-- Tindakan Resusitasi -->
     <div class="section">
-        <div class="section-title">TINDAKAN RESUSITASI</div>
-        <div style="padding: 5px;">
+        <div class="section-subtitle">TINDAKAN RESUSITASI:</div>
+        <div>
             @php
                 $tindakanResusitasi = is_string($asesmen->tindakan_resusitasi)
                     ? json_decode($asesmen->tindakan_resusitasi, true)
@@ -213,36 +304,35 @@
                         ? $asesmen->tindakan_resusitasi
                         : []);
             @endphp
-            <table class="bordered">
+            <table>
                 <tr>
-                    <th>Air Way</th>
-                    <th>Breathing</th>
-                    <th>Circulation</th>
-                </tr>
-                <tr>
+                    <td align="left" class="w-30">Air Way</td>
+                    <td class="section-subtitle" style="width:2px;">:</td>
                     <td>
                         @if (!empty($tindakanResusitasi['air_way']))
-                            @foreach ($tindakanResusitasi['air_way'] as $item)
-                                • {{ $item }}<br>
-                            @endforeach
+                            {{ implode(', ', $tindakanResusitasi['air_way']) }}
                         @else
                             -
                         @endif
                     </td>
+                </tr>
+                <tr>
+                    <td align="left" class="w-30">Breathing</td>
+                    <td class="section-subtitle" style="width:2px;">:</td>
                     <td>
                         @if (!empty($tindakanResusitasi['breathing']))
-                            @foreach ($tindakanResusitasi['breathing'] as $item)
-                                • {{ $item }}<br>
-                            @endforeach
+                            {{ implode(', ', $tindakanResusitasi['breathing']) }}
                         @else
                             -
                         @endif
                     </td>
+                </tr>
+                <tr>
+                    <td align="left" class="w-30">Circulation</td>
+                    <td class="section-subtitle" style="width:2px;">:</td>
                     <td>
                         @if (!empty($tindakanResusitasi['circulation']))
-                            @foreach ($tindakanResusitasi['circulation'] as $item)
-                                • {{ $item }}<br>
-                            @endforeach
+                            {{ implode(', ', $tindakanResusitasi['circulation']) }}
                         @else
                             -
                         @endif
@@ -255,45 +345,50 @@
     <!-- Anamnesis -->
     <div class="section">
         <div class="section-title">ANAMNESIS</div>
-        <div style="padding: 5px;">{{ $asesmen->anamnesis ?? '-' }}</div>
-    </div>
-
-    <!-- Riwayat -->
-    <div class="section">
-        <div class="section-title">RIWAYAT</div>
         <table>
             <tr>
-                <td class="col-header">Riwayat Penyakit</td>
-                <td>: {{ $asesmen->riwayat_penyakit ?? '-' }}</td>
+                <td align="left" class="w-30 section-subtitle">KELUHAN UTAMA</td>
+                <td class="section-subtitle" style="width:2px;">:</td>
+                <td>
+                    @if (!empty($tindakanResusitasi['air_way']))
+                        {{ implode(', ', $tindakanResusitasi['air_way']) }}
+                    @else
+                        -
+                    @endif
+                </td>
             </tr>
             <tr>
-                <td>Riwayat Penyakit Keluarga</td>
-                <td>: {{ $asesmen->riwayat_penyakit_keluarga ?? '-' }}</td>
+                <td align="left" class="w-30 section-subtitle">RIWAYAT PENYAKIT</td>
+                <td class="section-subtitle" style="width:2px;">:</td>
+                <td>{{ $asesmen->riwayat_penyakit ?? '-' }}</td>
             </tr>
             <tr>
-                <td>Riwayat Pengobatan</td>
-                <td>: {{ $asesmen->riwayat_pengobatan ?? '-' }}</td>
+                <td align="left" class="w-30 section-subtitle">RIWAYAT PENYAKIT KELUARGA</td>
+                <td class="section-subtitle" style="width:2px;">:</td>
+                <td>{{ $asesmen->riwayat_penyakit ?? '-' }}</td>
             </tr>
-            <td>Riwayat Alergi</td>
-            <td>:
-                @php
-                    $riwayatAlergi = is_string($asesmen->riwayat_alergi)
-                        ? json_decode($asesmen->riwayat_alergi, true)
-                        : $asesmen->riwayat_alergi;
-                @endphp
-                @if (!empty($riwayatAlergi))
-                    @foreach ($riwayatAlergi as $alergi)
-                        {{ $alergi['jenis'] }}: {{ $alergi['alergen'] }}
-                        (Reaksi: {{ $alergi['reaksi'] }},
-                        Keparahan: {{ $alergi['keparahan'] }})
-                        @if (!$loop->last)
-                            <br>
-                        @endif
-                    @endforeach
-                @else
-                    -
-                @endif
-            </td>
+            <tr>
+                <td align="left" class="w-30 section-subtitle">RIWAYAT ALERGI</td>
+                <td class="section-subtitle" style="width:2px;">:</td>
+                <td>
+                    @php
+                        $riwayatAlergi = is_string($asesmen->riwayat_alergi)
+                            ? json_decode($asesmen->riwayat_alergi, true)
+                            : $asesmen->riwayat_alergi;
+                    @endphp
+                    @if (!empty($riwayatAlergi))
+                        @foreach ($riwayatAlergi as $alergi)
+                            {{ $alergi['jenis'] }}: {{ $alergi['alergen'] }}
+                            (Reaksi: {{ $alergi['reaksi'] }}, Keparahan: {{ $alergi['keparahan'] }})
+                            @if (!$loop->last)
+                                <br>
+                            @endif
+                        @endforeach
+                    @else
+                        -
+                    @endif
+                </td>
+            </tr>
         </table>
     </div>
 
@@ -305,67 +400,39 @@
                 ? json_decode($asesmen->vital_sign, true)
                 : $asesmen->vital_sign;
         @endphp
-        <table class="bordered">
+        <table>
             <tr>
-                <td>Tekanan Darah</td>
-                <td>: {{ $vitalSign['td_sistole'] ?? '-' }}/{{ $vitalSign['td_diastole'] ?? '-' }} mmHg</td>
-                <td>Nadi</td>
-                <td>: {{ $vitalSign['nadi'] ?? '-' }} x/menit</td>
+                <td class="w-15">Tekanan Darah</td>
+                <td class="w-35">: {{ $vitalSign['td_sistole'] ?? '-' }}/{{ $vitalSign['td_diastole'] ?? '-' }} mmHg
+                </td>
+                <td class="w-15">Nadi</td>
+                <td class="w-35">: {{ $vitalSign['nadi'] ?? '-' }} x/menit</td>
             </tr>
             <tr>
-                <td>Suhu</td>
-                <td>: {{ $vitalSign['suhu'] ?? '-' }} °C</td>
-                <td>Respirasi</td>
-                <td>: {{ $vitalSign['resp'] ?? '-' }} x/menit</td>
+                <td class="w-15">Suhu</td>
+                <td class="w-35">: {{ $vitalSign['suhu'] ?? '-' }} °C</td>
+                <td class="w-15">Respirasi</td>
+                <td class="w-35">: {{ $vitalSign['resp'] ?? '-' }} x/menit</td>
             </tr>
         </table>
     </div>
 
-    <!-- Antropometri Section -->
-    {{-- <div class="section">
-        <div class="section-title">ANTROPOMETRI</div>
-        @php
-            $antropometri = is_string($asesmen->antropometri)
-                ? json_decode($asesmen->antropometri, true)
-                : $asesmen->antropometri;
-        @endphp
-        <table class="bordered">
-            <tr>
-                <td width="25%">Tinggi Badan</td>
-                <td width="25%">: {{ $antropometri['tb'] ?? '-' }} meter</td>
-                <td width="25%">Berat Badan</td>
-                <td width="25%">: {{ $antropometri['bb'] ?? '-' }} kg</td>
-            </tr>
-            <tr>
-                <td>Lingkar Kepala</td>
-                <td>: {{ $antropometri['ling_kepala'] ?? '-' }} cm</td>
-                <td>LPT</td>
-                <td>: {{ $antropometri['lpt'] ?? '-' }} cm</td>
-            </tr>
-            <tr>
-                <td>IMT</td>
-                <td colspan="3">: {{ $antropometri['imt'] ?? '-' }}</td>
-            </tr>
-        </table>
-    </div> --}}
-
     <!-- Skala Nyeri Section -->
     <div class="section">
-        <div class="section-title">SKALA NYERI</div>
+        <div class="section-subtitle">SKALA NYERI</div>
         <table class="bordered" style="margin-bottom: 10px;">
             <tr>
                 <!-- Kolom kiri untuk gambar -->
-                <td width="40%" style="vertical-align: top; padding: 10px;">
-                    <!-- Gunakan placeholder image atau base64 encoded image -->
+                <td class="w-50" style="vertical-align: top; padding: 10px;">
                     <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/img/asesmen/asesmen.jpeg'))) }}"
-                        style="width: 100%; max-width: 300px;">
+                        class="nyeri-image">
                 </td>
                 <!-- Kolom kanan untuk informasi nyeri -->
-                <td width="60%" style="vertical-align: top; padding: 10px;">
+                <td class="w-50" style="vertical-align: top; padding: 10px;">
                     <table style="width: 100%;">
                         <tr>
-                            <td width="40%" style="padding: 3px; border: none;">Skala Nyeri</td>
-                            <td width="60%" style="padding: 3px; border: none;">: {{ $asesmen->skala_nyeri ?? '-' }}
+                            <td class="w-40" style="padding: 3px; border: none;">Skala Nyeri</td>
+                            <td class="w-60" style="padding: 3px; border: none;">: {{ $asesmen->skala_nyeri ?? '-' }}
                             </td>
                         </tr>
                         <tr>
@@ -406,47 +473,42 @@
         </table>
     </div>
 
+    <!-- Pemeriksaan Fisik -->
     <div class="section">
         <div class="section-title">PEMERIKSAAN FISIK</div>
-        <table style="border-collapse: separate; border-spacing: 0 2px;">
-            @php
-                $totalItems = count($asesmen->pemeriksaanFisik);
-                $rows = ceil($totalItems / 2);
-            @endphp
-
+        @php
+            $totalItems = count($asesmen->pemeriksaanFisik);
+            $rows = ceil($totalItems / 2);
+        @endphp
+        <table class="fisik-table">
             @for ($i = 0; $i < $rows; $i++)
                 <tr>
-                    <!-- Kolom Kiri -->
                     @if (isset($asesmen->pemeriksaanFisik[$i]))
                         @php
                             $pemeriksaanKiri = $asesmen->pemeriksaanFisik[$i];
-                            $isNormalKiri = (int) $pemeriksaanKiri->is_normal === 1; // Pastikan integer
+                            $isNormalKiri = (int) $pemeriksaanKiri->is_normal === 1;
                         @endphp
-                        <td width="20%" style="border: none;">{{ $pemeriksaanKiri->itemFisik->nama ?? '-' }}</td>
-                        <td width="25%" style="border: none;">
-                            : {{ $isNormalKiri ? 'Normal' : $pemeriksaanKiri->keterangan ?? '-' }}
-                        </td>
+                        <td class="w-20" style="border: none;">{{ $pemeriksaanKiri->itemFisik->nama ?? '-' }}</td>
+                        <td class="w-25" style="border: none;">:
+                            {{ $isNormalKiri ? 'Normal' : $pemeriksaanKiri->keterangan ?? '-' }}</td>
                     @else
-                        <td width="20%" style="border: none;"></td>
-                        <td width="25%" style="border: none;"></td>
+                        <td class="w-20" style="border: none;"></td>
+                        <td class="w-25" style="border: none;"></td>
                     @endif
 
-                    <!-- Spasi/Jarak -->
-                    <td width="10%" style="border: none;"></td>
+                    <td class="w-10" style="border: none;"></td>
 
-                    <!-- Kolom Kanan -->
                     @if (isset($asesmen->pemeriksaanFisik[$i + $rows]))
                         @php
                             $pemeriksaanKanan = $asesmen->pemeriksaanFisik[$i + $rows];
-                            $isNormalKanan = (int) $pemeriksaanKanan->is_normal === 1; // Pastikan integer
+                            $isNormalKanan = (int) $pemeriksaanKanan->is_normal === 1;
                         @endphp
-                        <td width="20%" style="border: none;">{{ $pemeriksaanKanan->itemFisik->nama ?? '-' }}</td>
-                        <td width="25%" style="border: none;">
-                            : {{ $isNormalKanan ? 'Normal' : $pemeriksaanKanan->keterangan ?? '-' }}
-                        </td>
+                        <td class="w-20" style="border: none;">{{ $pemeriksaanKanan->itemFisik->nama ?? '-' }}</td>
+                        <td class="w-25" style="border: none;">:
+                            {{ $isNormalKanan ? 'Normal' : $pemeriksaanKanan->keterangan ?? '-' }}</td>
                     @else
-                        <td width="20%" style="border: none;"></td>
-                        <td width="25%" style="border: none;"></td>
+                        <td class="w-20" style="border: none;"></td>
+                        <td class="w-25" style="border: none;"></td>
                     @endif
                 </tr>
             @endfor
@@ -468,14 +530,12 @@
             @if (!empty($alatTerpasang))
                 <table class="bordered">
                     <tr>
-                        <th>No</th>
-                        <th>Nama Alat</th>
+                        <th>Jenis</th>
                         <th>Lokasi</th>
                         <th>Keterangan</th>
                     </tr>
-                    @foreach ($alatTerpasang as $index => $alat)
+                    @foreach ($alatTerpasang as $alat)
                         <tr>
-                            <td>{{ $index + 1 }}</td>
                             <td>{{ $alat['nama'] ?? '-' }}</td>
                             <td>{{ $alat['lokasi'] ?? '-' }}</td>
                             <td>{{ $alat['keterangan'] ?? '-' }}</td>
@@ -487,8 +547,6 @@
             @endif
         </div>
     </div>
-
-
 
     <!-- Diagnosa -->
     <div class="section">
@@ -521,7 +579,7 @@
 
     <!-- Tindak Lanjut -->
     <div class="section">
-        <div class="section-title">TINDAK LANJUT</div>
+        <div class="section-title">RENCANA TINDAK LANJUT PELAYANAN</div>
         <div class="info">
             @if ($asesmen->tindaklanjut[0] ?? false)
                 <table>
@@ -531,28 +589,31 @@
                     </tr>
 
                     @switch($asesmen->tindaklanjut[0]['tindak_lanjut_code'])
-                        @case('1') {{-- Rawat Inap --}}
+                        @case('1')
+                            {{-- Rawat Inap --}}
                             <tr>
                                 <td class="col-header">Keterangan</td>
                                 <td>: {{ $asesmen->tindaklanjut[0]['keterangan'] ?? '-' }}</td>
                             </tr>
                         @break
 
-                        @case('7') {{-- Kamar Operasi --}}
+                        @case('7')
+                            {{-- Kamar Operasi --}}
                             <tr>
                                 <td class="col-header">Kamar Operasi</td>
                                 <td>: {{ $asesmen->tindaklanjut[0]['keterangan'] ?? '-' }}</td>
                             </tr>
                         @break
 
-                        @case('5') {{-- Rujuk RS Lain --}}
+                        @case('5')
+                            {{-- Rujuk RS Lain --}}
                             <tr>
                                 <td class="col-header">Tujuan Rujuk</td>
                                 <td>: {{ $asesmen->tindaklanjut[0]['tujuan_rujuk'] ?? '-' }}</td>
                             </tr>
                             <tr>
                                 <td class="col-header">Alasan Rujuk</td>
-                                <td>: {{ ($asesmen->tindaklanjut[0]['alasan_rujuk']) ?? '-' }}</td>
+                                <td>: {{ $asesmen->tindaklanjut[0]['alasan_rujuk'] ?? '-' }}</td>
                             </tr>
                             <tr>
                                 <td class="col-header">Transportasi</td>
@@ -560,7 +621,8 @@
                             </tr>
                         @break
 
-                        @case('6') {{-- Pulang Sembuh --}}
+                        @case('6')
+                            {{-- Pulang Sembuh --}}
                             <tr>
                                 <td class="col-header">Tanggal Pulang</td>
                                 <td>: {{ date('d-m-Y', strtotime($asesmen->tindaklanjut[0]['tanggal_pulang'])) ?? '-' }}</td>
@@ -579,7 +641,8 @@
                             </tr>
                         @break
 
-                        @case('8') {{-- Berobat Jalan --}}
+                        @case('8')
+                            {{-- Berobat Jalan --}}
                             <tr>
                                 <td class="col-header">Tanggal Berobat</td>
                                 <td>: {{ date('d-m-Y', strtotime($asesmen->tindaklanjut[0]['tanggal_rajal'])) ?? '-' }}</td>
@@ -590,17 +653,20 @@
                             </tr>
                         @break
 
-                        @case('9') {{-- Menolak Rawat Inap --}}
+                        @case('9')
+                            {{-- Menolak Rawat Inap --}}
                             <tr>
                                 <td class="col-header">Alasan Menolak</td>
                                 <td>: {{ $asesmen->tindaklanjut[0]['keterangan'] ?? '-' }}</td>
                             </tr>
                         @break
 
-                        @case('10') {{-- Meninggal Dunia --}}
+                        @case('10')
+                            {{-- Meninggal Dunia --}}
                             <tr>
                                 <td class="col-header">Tanggal Meninggal</td>
-                                <td>: {{ date('d-m-Y', strtotime($asesmen->tindaklanjut[0]['tanggal_meninggal'])) ?? '-' }}</td>
+                                <td>: {{ date('d-m-Y', strtotime($asesmen->tindaklanjut[0]['tanggal_meninggal'])) ?? '-' }}
+                                </td>
                             </tr>
                             <tr>
                                 <td class="col-header">Jam Meninggal</td>
@@ -608,10 +674,12 @@
                             </tr>
                         @break
 
-                        @case('11') {{-- DOA --}}
+                        @case('11')
+                            {{-- DOA --}}
                             <tr>
                                 <td class="col-header">Tanggal DOA</td>
-                                <td>: {{ date('d-m-Y', strtotime($asesmen->tindaklanjut[0]['tanggal_meninggal'])) ?? '-' }}</td>
+                                <td>: {{ date('d-m-Y', strtotime($asesmen->tindaklanjut[0]['tanggal_meninggal'])) ?? '-' }}
+                                </td>
                             </tr>
                             <tr>
                                 <td class="col-header">Jam DOA</td>
@@ -627,15 +695,28 @@
     </div>
 
     <!-- Tanda Tangan -->
-    <div class="signature-section">
-        <div class="signature-box">
-            <p>Dokter</p>
-            <br><br><br>
-            <p>( {{ $asesmen->user->name ?? '_________________' }} )</p>
-            <p>Tanggal: {{ date('d-m-Y H:i', strtotime($asesmen->waktu_asesmen)) }}</p>
-        </div>
-        <div class="clear"></div>
+    <div class="signature-wrap">
+        <table class="signature-table">
+            <tbody class="signature-body">
+                <tr>
+                    <td>Dokter Jaga IGD</td>
+                </tr>
+                <tr>
+                    <td class="signature-gap"></td>
+                </tr>
+                <tr>
+                    <td class="signature-gap"></td>
+                </tr>
+                <tr>
+                    <td>{{ $asesmen->user->name ?? '_________________' }}</td>
+                </tr>
+                <tr>
+                    <td>Tanggal: {{ date('d-m-Y H:i', strtotime($asesmen->waktu_asesmen)) }}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+
 </body>
 
 </html>

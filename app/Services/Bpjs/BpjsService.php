@@ -93,7 +93,7 @@ class BpjsService
             $response = Http::withHeaders($headers)->post($kredensial->url_icare, $data);
             $result = $response->json();
 
-            if(empty($result)) throw new Exception()
+            if (empty($result)) throw new Exception();
         } catch (Exception $e) {
             return [
                 'status'    => 'error',

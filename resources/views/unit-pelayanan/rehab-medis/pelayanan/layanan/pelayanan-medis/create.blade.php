@@ -157,11 +157,10 @@
                         <x-button-submit />
                     </div>
 
-        </div>
 
-        </form>
-        </x-content-card>
-    </div>
+                </form>
+            </x-content-card>
+        </div>
     </div>
 
     @include('unit-pelayanan.rehab-medis.pelayanan.layanan.pelayanan-medis.modal-create-diagnosismedisicd10')

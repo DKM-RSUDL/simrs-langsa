@@ -158,14 +158,15 @@
                 </form>
             </x-content-card>
         </div>
-    @endsection
+    </div>
+@endsection
 
-    @push('js')
-        <script>
-            @cannot('is-admin')
-                $('#ppa').on('mousedown focusin touchstart', function(e) {
-                    e.preventDefault();
-                });
-            @endcannot
-        </script>
-    @endpush
+@push('js')
+    <script>
+        @cannot('is-admin')
+            $('#ppa').on('mousedown focusin touchstart', function(e) {
+                e.preventDefault();
+            });
+        @endcannot
+    </script>
+@endpush

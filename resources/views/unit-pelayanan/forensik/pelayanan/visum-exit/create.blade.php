@@ -392,12 +392,10 @@
                         <div class="text-end">
                             <x-button-submit />
                         </div>
+                    </form>
+                </x-content-card>
             </div>
-
-            </form>
-            </x-content-card>
         </div>
-    </div>
     </div>
 @endsection
 
