@@ -197,7 +197,7 @@
         <tr>
             <td class="title-table" style="width:30%; vertical-align:top; font-weight:bold; padding:6px 8px;">Objective
             </td>
-            <td class="width:5px;">:</td>
+            <td class="width:5px;" style="vertical-align:top;">:</td>
             <td style="width:70%; padding:6px 8px;">
                 {!! nl2br(e($layanan->objective ?? '-')) !!}
             </td>
@@ -205,7 +205,7 @@
         <tr>
             <td class="title-table" style="width:30%; vertical-align:top; font-weight:bold; padding:6px 8px;">Asesmen
             </td>
-            <td class="width:5px;">:</td>
+            <td class="width:5px;" style="vertical-align:top;">:</td>
             <td style="width:70%; padding:6px 8px;">
                 {!! nl2br(e($layanan->assessment ?? '-')) !!}
             </td>
