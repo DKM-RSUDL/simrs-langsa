@@ -300,7 +300,8 @@
         </tr>
         <tr>
             <td>Jenis Kelamin</td>
-            <td>: {{ $pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($pasien->jenis_kelamin == 0 ? 'Perempuan' : '-') }}</td>
+            <td>: {{ $pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($pasien->jenis_kelamin == 0 ? 'Perempuan' : '-') }}
+            </td>
         </tr>
         <tr>
             <td>Tanggal Lahir</td>
@@ -429,7 +430,6 @@
         <div class="ttd-wrapper">
             <p class="label">Petugas Dokter Triase</p>
             <div class="space"></div>
-            <p class="line">( _____________________ )</p>
             <p class="nama">( {{ $dokterNama ?? '_____________________' }} )</p>
         </div>
     </div>
