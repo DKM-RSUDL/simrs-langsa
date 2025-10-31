@@ -1,11 +1,6 @@
 @extends('layouts.administrator.master')
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
-    <style>
-        /* .header-background {
-                            background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                        } */
-    </style>
 @endpush
 
 @section('content')
@@ -33,14 +28,11 @@
                         {{-- Tab Content --}}
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active">
-                                {{-- TAB 1. buatlah list disini --}}
-
-                                <div class="row">
-                                    <div class="d-flex justify-content-between align-items-center m-3">
-
-                                        <div class="row">
+                                <div class="d-flex flex-column gap-2">
+                                    <div class="row">
+                                        <div class="col-10 d-flex flex-md-row flex-wrap flex-md-nowrap gap-2">
                                             <!-- Select PPA Option -->
-                                            <div class="col-md-2">
+                                            <div>
                                                 <select class="form-select" id="SelectOption" aria-label="Pilih...">
                                                     <option value="semua" selected>Semua Episode</option>
                                                     <option value="option1">Episode Sekarang</option>
@@ -52,25 +44,25 @@
                                             </div>
 
                                             <!-- Start Date -->
-                                            <div class="col-md-2">
+                                            <div>
                                                 <input type="date" name="start_date" id="start_date" class="form-control"
                                                     placeholder="Dari Tanggal">
                                             </div>
 
                                             <!-- End Date -->
-                                            <div class="col-md-2">
+                                            <div>
                                                 <input type="date" name="end_date" id="end_date" class="form-control"
                                                     placeholder="S.d Tanggal">
                                             </div>
 
                                             <!-- Button Filter -->
-                                            <div class="col-md-1">
-                                                <button id="filterButton" class="btn btn-secondary rounded-3"><i
+                                            <div>
+                                                <button id="filterButton" class="btn btn-secondary"><i
                                                         class="bi bi-funnel-fill"></i></button>
                                             </div>
 
                                             <!-- Search Bar -->
-                                            <div class="col-md-3">
+                                            <div>
                                                 <form method="GET"
                                                     action="{{ route('rawat-inap.radiologi.index', ['kd_unit' => $dataMedis->kd_unit, 'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), 'urut_masuk' => $dataMedis->urut_masuk]) }}">
 
@@ -82,13 +74,9 @@
                                                     </div>
                                                 </form>
                                             </div>
-
-                                            <!-- Add Button -->
-                                            <!-- Include the modal file -->
-                                            <div class="col-md-2">
-                                                @include('unit-pelayanan.rawat-jalan.pelayanan.radiologi.modal')
-                                            </div>
-
+                                        </div>
+                                        <div class="col-md-2 text-end">
+                                            @include('unit-pelayanan.rawat-jalan.pelayanan.radiologi.modal')
                                         </div>
                                     </div>
 
@@ -153,21 +141,27 @@
                                                         </td>
 
                                                         <td>
-                                                            @if ($rad->status_order == 1)
-                                                                <button class="btn btn-sm btn-secondary btn-edit-rad"
-                                                                    data-kode="{{ intval($rad->kd_order) }}"
-                                                                    data-bs-target="#editRadiologiModal"><i
-                                                                        class="ti-pencil"></i></button>
-                                                            @else
-                                                                <button class="btn btn-sm btn-primary btn-show-rad"
-                                                                    data-kode="{{ intval($rad->kd_order) }}"
-                                                                    data-bs-target="#showRadiologiModal"><i
-                                                                        class="ti-eye"></i></button>
-                                                            @endif
-                                                            <button
-                                                                class="btn btn-sm {{ $rad->status_order == 1 ? 'btn-delete-rad' : '' }}"
-                                                                data-kode="{{ intval($rad->kd_order) }}"><i
-                                                                    class="bi bi-x-circle {{ $rad->status_order == 1 ? 'text-danger' : 'text-secondary' }}"></i></button>
+                                                            <x-table-action>
+                                                                @if ($rad->status_order == 1)
+                                                                    <button class="btn btn-sm btn-warning btn-edit-rad"
+                                                                        data-kode="{{ intval($rad->kd_order) }}"
+                                                                        data-bs-target="#editRadiologiModal"><i
+                                                                            class="ti-pencil"></i></button>
+                                                                @else
+                                                                    <button class="btn btn-sm btn-info btn-show-rad"
+                                                                        data-kode="{{ intval($rad->kd_order) }}"
+                                                                        data-bs-target="#showRadiologiModal"><i
+                                                                            class="ti-eye"></i></button>
+                                                                @endif
+                                                                @if ($rad->status_order == 1)
+                                                                    <button class="btn btn-sm btn-danger btn-delete-rad"
+                                                                        data-kode="{{ intval($rad->kd_order) }}"><i
+                                                                            class="ti-trash"></i></button>
+                                                                @else
+                                                                    <button class="btn btn-sm btn-secondary" disabled><i
+                                                                            class="ti-trash"></i></button>
+                                                                @endif
+                                                            </x-table-action>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -176,7 +170,6 @@
                                         </table>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -224,7 +217,7 @@
         let debounceTime = 500;
 
         // Edit
-        $('.btn-edit-rad').click(function(e) {
+        $(document).on('click', '.btn-edit-rad', function(e) {
             e.preventDefault()
             let $this = $(this);
             let target = $this.attr('data-bs-target');
@@ -267,35 +260,35 @@
 
                         $modal.find('#kd_order').val(Math.floor(orderData.kd_order));
                         $modal.find('#urut_masuk').val(orderData.urut_masuk);
-                        $modal.find('#kd_dokter').val(orderData.kd_dokter);
+                        $modal.find('#edit_kd_dokter').val(orderData.kd_dokter);
                         if (tglOrder) {
-                            $modal.find('#tgl_order').val(tglOrder.split('T')[0]);
-                            $modal.find('#jam_order').val(jamOrder);
+                            $modal.find('#edit_tgl_order').val(tglOrder.split('T')[0]);
+                            $modal.find('#edit_jam_order').val(jamOrder);
                         }
                         $modal.find(`input[name="cyto"][value="${orderData.cyto}"]`).attr('checked',
                             'checked');
                         $modal.find(`input[name="puasa"][value="${orderData.puasa}"]`).attr('checked',
                             'checked');
                         if (tglPemeriksaan) {
-                            $modal.find('#tgl_pemeriksaan').val(tglPemeriksaan.split('T')[0]);
-                            $modal.find('#jam_pemeriksaan').val(jamPemeriksaan);
+                            $modal.find('#edit_tgl_pemeriksaan').val(tglPemeriksaan.split('T')[0]);
+                            $modal.find('#edit_jam_pemeriksaan').val(jamPemeriksaan);
                         }
-                        $modal.find('#diagnosis').val(orderData.diagnosis);
+                        $modal.find('#edit_diagnosis').val(orderData.diagnosis);
 
                         let listProduk = '';
 
                         orderDetailData.forEach(dtl => {
-                            listProduk += `<li class="list-group-item">
-                                                    ${dtl.produk.deskripsi}
+                            listProduk += `<li class="list-group-item" style="display: flex; align-items: center; text-align: left;">
+                                                    <span style="flex: 1; text-align: left;">${dtl.produk.deskripsi}</span>
                                                     <input type="hidden" name="kd_produk[]" value="${dtl.kd_produk}">
-                                                    <span class="remove-item" style="color: red; cursor: pointer;">
+                                                    <span class="remove-item" style="color: red; cursor: pointer; margin-left: auto;">
                                                         <i class="bi bi-x-circle"></i>
                                                     </span>
                                                 </li>`
 
                         });
 
-                        $modal.find('#orderList').html(listProduk);
+                        $modal.find('#editOrderList').html(listProduk);
                         $modal.modal('show');
                     } else {
                         showToast(response.status, response.message);
@@ -325,7 +318,7 @@
             $('#editRadiologiModal #dataList').show();
         }
 
-        $('#editRadiologiModal #searchInput').on('focus', function() {
+        $('#editRadiologiModal #editSearchInput').on('focus', function() {
             dataPemeriksaanItemEdit();
         });
 
@@ -337,7 +330,7 @@
             });
         }
 
-        $('#editRadiologiModal #searchInput').keyup(function() {
+        $('#editRadiologiModal #editSearchInput').keyup(function() {
             let $this = $(this);
             let search = $this.val();
 
@@ -352,42 +345,42 @@
                         `<a class="dropdown-item" href="#" data-kd-produk="${item.kp_produk}">${item.deskripsi}</a>`;
                 });
 
-                $('#editRadiologiModal #dataList').html(listHtml);
-                $('#editRadiologiModal #dataList').show();
+                $('#editRadiologiModal #editDataList').html(listHtml);
+                $('#editRadiologiModal #editDataList').show();
             }, debounceTime)
         });
 
-        $(document).on('click', '#editRadiologiModal #dataList .dropdown-item', function(e) {
+        $(document).on('click', '#editRadiologiModal #editDataList .dropdown-item', function(e) {
             e.preventDefault();
 
             const selectedItemText = $(this).text();
             const kdProduk = $(this).attr('data-kd-produk');
 
             if (kdProduk) {
-                let listItem = `<li class="list-group-item">
-                                        ${selectedItemText}
+                let listItem = `<li class="list-group-item" style="display: flex; align-items: center; text-align: left;">
+                                        <span style="flex: 1; text-align: left;">${selectedItemText}</span>
                                         <input type="hidden" name="kd_produk[]" value="${kdProduk}">
-                                        <span class="remove-item" style="color: red; cursor: pointer;">
+                                        <span class="remove-item" style="color: red; cursor: pointer; margin-left: auto;">
                                             <i class="bi bi-x-circle"></i>
                                         </span>
                                     </li>`;
 
-                $('#editRadiologiModal #orderList').append(listItem);
+                $('#editRadiologiModal #editOrderList').append(listItem);
 
-                $('#editRadiologiModal #searchInput').val('');
-                $('#editRadiologiModal #dataList').hide();
+                $('#editRadiologiModal #editSearchInput').val('');
+                $('#editRadiologiModal #editDataList').hide();
             } else {
                 console.error('Error: kd_produk is undefined');
             }
         });
 
-        $(document).on('click', '#editRadiologiModal #orderList .list-group-item .remove-item', function(e) {
+        $(document).on('click', '#editRadiologiModal #editOrderList .list-group-item .remove-item', function(e) {
             e.preventDefault();
             $(this).parent().remove();
         });
 
         // show
-        $('.btn-show-rad').click(function(e) {
+        $(document).on('click', '.btn-show-rad', function(e) {
             e.preventDefault()
             let $this = $(this);
             let target = $this.attr('data-bs-target');
@@ -488,7 +481,8 @@
         })
 
         // delete
-        $('.btn-delete-rad').click(function(e) {
+        $(document).on('click', '.btn-delete-rad', function(e) {
+            e.preventDefault();
             let $this = $(this);
             let kdOrder = $this.attr('data-kode');
 
@@ -499,10 +493,16 @@
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Ya",
+                confirmButtonText: "Ya, hapus!",
                 cancelButtonText: "Batal"
             }).then((result) => {
                 if (result.isConfirmed) {
+                    // Ubah tombol menjadi loading
+                    $this.html(
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
+                    );
+                    $this.prop('disabled', true);
+
                     $.ajax({
                         type: "post",
                         url: "{{ route('rawat-jalan.radiologi.delete', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
@@ -513,13 +513,36 @@
                         },
                         dataType: "json",
                         success: function(res) {
-                            showToast(res.status, res.message);
-
                             if (res.status == 'success') {
-                                setTimeout(function() {
+                                Swal.fire({
+                                    title: 'Berhasil!',
+                                    text: res.message,
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
                                     location.reload();
-                                }, 3000);
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: res.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
                             }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Terjadi kesalahan saat menghapus data',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        },
+                        complete: function() {
+                            // Kembalikan tombol ke kondisi semula
+                            $this.html('<i class="ti-trash"></i>');
+                            $this.prop('disabled', false);
                         }
                     });
                 }
