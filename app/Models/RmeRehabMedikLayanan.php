@@ -19,31 +19,25 @@ class RmeRehabMedikLayanan extends Model
         'urut_masuk',
         'tgl_pelayanan',
         'jam_pelayanan',
-        'anamnesa',
-        'pemeriksaan_fisik',
-        'diagnosis_medis',
-        'diagnosis_fungsi',
-        'pemeriksaan_penunjang',
-        'tatalaksana',
-        'suspek_penyakit',
-        'suspek_penyakit_ket',
-        'anjuran',
-        'evaluasi',
-        'diagnosa',
-        'permintaan_terapi',
+        'subjective',
+        'objective',
+        'assessment',
         'user_create',
         'user_edit',
     ];
 
-    protected $casts = [
-        'diagnosis_medis' => 'array',
-        'diagnosis_fungsi' => 'array',
-        'tatalaksana' => 'array',
-    ];
-
-
     public function userCreate()
     {
         return $this->belongsTo(User::class, 'user_create', 'id');
+    }
+
+    public function detail()
+    {
+        return $this->hasMany(RmeRehabMedikProgramDetail::class, 'id_layanan', 'id');
+    }
+
+    public function dokter()
+    {
+        return $this->belongsTo(Dokter::class, 'kd_dokter', 'kd_dokter');
     }
 }

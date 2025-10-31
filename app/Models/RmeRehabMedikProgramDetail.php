@@ -13,7 +13,7 @@ class RmeRehabMedikProgramDetail extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'id_program',
+        'id_layanan',
         'kd_produk',
         'tarif',
         'tgl_berlaku',
@@ -24,8 +24,8 @@ class RmeRehabMedikProgramDetail extends Model
         return $this->belongsTo(Produk::class, 'kd_produk', 'kd_produk');
     }
 
-    public function program()
+    public function layanan()
     {
-        return $this->belongsTo(RmeRehabMedikProgram::class, 'id_program', 'id');
+        return $this->belongsTo(RmeRehabMedikLayanan::class, 'id_layanan', 'id');
     }
 }

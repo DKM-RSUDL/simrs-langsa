@@ -41,7 +41,7 @@
 
                 <!-- 2. Pengkajian Keperawatan -->
                 <div class="section-separator" id="pengkajian-keperawatan">
-                    <h5 class="section-title">2. Pengkajian Keperawatan</h5>
+                    <h5 class="section-title">2. Pengkajian Medis</h5>
 
                     <div class="row mb-3">
                         <div class="col-md-12">

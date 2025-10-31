@@ -124,7 +124,7 @@
                                 'kd_pasien' => request()->route('kd_pasien'),
                                 'tgl_masuk' => request()->route('tgl_masuk'),
                                 'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">Obstetrik</a>
+                            ]) }}">Obstetri</a>
                     </li>
                     <li><a class="custom__dropdown__item"
                             href="{{ route('rawat-inap.asesmen.medis.tht.index', [

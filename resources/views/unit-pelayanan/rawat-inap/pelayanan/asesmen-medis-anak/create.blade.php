@@ -545,7 +545,7 @@
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">c. Venekasi:</label>
+                                        <label class="form-label">c. Venektasi:</label>
                                         <div class="d-flex flex-wrap gap-3">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio"
@@ -1368,15 +1368,6 @@
                                 <label class="form-label">Diagnosis medis</label>
                                 <input type="text" class="form-control" name="diagnosis_medis" placeholder="Diagnosis">
                             </div> --}}
-
-                            <div class="mb-4">
-                                <label class="form-label">Usia lanjut (>60 th)</label>
-                                <select class="form-select" name="usia_lanjut">
-                                    <option value="" selected disabled>--Pilih--</option>
-                                    <option value="0">Ya</option>
-                                    <option value="1">Tidak</option>
-                                </select>
-                            </div>
 
                             <div class="mb-4">
                                 <label class="form-label">Hambatan mobilitas</label>

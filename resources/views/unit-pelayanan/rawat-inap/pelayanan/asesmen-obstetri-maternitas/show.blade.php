@@ -13,7 +13,7 @@
                 @include('components.page-header', [
                     'title' => 'Detail Asesmen Awal Medis Obstetri',
                     'description' => 'Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan',
-                    ])
+                ])
 
 
                 <!-- Informasi Dasar -->
@@ -212,7 +212,7 @@
                                             </p>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
 
                                 <div class="row">
@@ -229,7 +229,9 @@
                                             <label class="form-label fw-bold">Irama :</label>
                                             <p class="form-control-plaintext border-bottom">
                                                 @php
-                                                    $irama = $asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_irama ?? null;
+                                                    $irama =
+                                                        $asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_irama ??
+                                                        null;
                                                 @endphp
                                                 @if ($irama == 1)
                                                     Memanjang
@@ -247,76 +249,82 @@
                                                 {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_selaput_ketuban ?? '-' }}
                                             </p>
                                         </div>
-                                         <div class="mb-3">
+                                        <div class="mb-3">
                                             <label class="form-label fw-bold">Air Ketuban :</label>
                                             <p class="form-control-plaintext border-bottom">
                                                 {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_air_ketuban ?? '-' }}
                                             </p>
                                         </div>
-                                        
-                                    </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Letak Janin :</label>
-                                        <p class="form-control-plaintext border-bottom">
-                                            @php
-                                                $letak = $asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_letak_janin ?? null;
-                                            @endphp
-                                            @if ($letak == 1)
-                                                Teratur
-                                            @elseif($letak == 2)
-                                                Tidak Teratur
-                                            @else
-                                                -
-                                            @endif
-                                        </p>
-                                    </div>
 
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Presentasi Janin :</label>
-                                        <p class="form-control-plaintext border-bottom">
-                                            @php
-                                                $presentasi = $asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_presentasi_janin ?? null;
-                                            @endphp
-                                            @if ($presentasi == 1)
-                                                Kepala
-                                            @elseif($presentasi == 2)
-                                                Bokong
-                                            @elseif($presentasi == 3)
-                                                Bahu
-                                            @else
-                                                -
-                                            @endif
-                                        </p>
                                     </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Letak Janin :</label>
+                                            <p class="form-control-plaintext border-bottom">
+                                                @php
+                                                    $letak =
+                                                        $asesmen->rmeAsesmenObstetriPemeriksaanFisik
+                                                            ->kontraksi_letak_janin ?? null;
+                                                @endphp
+                                                @if ($letak == 1)
+                                                    Teratur
+                                                @elseif($letak == 2)
+                                                    Tidak Teratur
+                                                @else
+                                                    -
+                                                @endif
+                                            </p>
+                                        </div>
 
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Sikap Janin :</label>
-                                        <p class="form-control-plaintext border-bottom">
-                                            @php
-                                                $sikap = $asesmen->rmeAsesmenObstetriPemeriksaanFisik->kontraksi_sikap_janin ?? null;
-                                            @endphp
-                                            @if ($sikap == 1)
-                                                Fleksi
-                                            @elseif($sikap == 2)
-                                                Defleksi Ringan
-                                            @elseif($sikap == 3)
-                                                Refleksi Sedang
-                                            @elseif($sikap == 4)
-                                                Defleksi Maksimal
-                                            @else
-                                                -
-                                            @endif
-                                        </p>
-                                    </div>
-                                    <div class="mb-3">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Presentasi Janin :</label>
+                                            <p class="form-control-plaintext border-bottom">
+                                                @php
+                                                    $presentasi =
+                                                        $asesmen->rmeAsesmenObstetriPemeriksaanFisik
+                                                            ->kontraksi_presentasi_janin ?? null;
+                                                @endphp
+                                                @if ($presentasi == 1)
+                                                    Kepala
+                                                @elseif($presentasi == 2)
+                                                    Bokong
+                                                @elseif($presentasi == 3)
+                                                    Bahu
+                                                @else
+                                                    -
+                                                @endif
+                                            </p>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Sikap Janin :</label>
+                                            <p class="form-control-plaintext border-bottom">
+                                                @php
+                                                    $sikap =
+                                                        $asesmen->rmeAsesmenObstetriPemeriksaanFisik
+                                                            ->kontraksi_sikap_janin ?? null;
+                                                @endphp
+                                                @if ($sikap == 1)
+                                                    Fleksi
+                                                @elseif($sikap == 2)
+                                                    Defleksi Ringan
+                                                @elseif($sikap == 3)
+                                                    Defleksi Sedang
+                                                @elseif($sikap == 4)
+                                                    Defleksi Maksimal
+                                                @else
+                                                    -
+                                                @endif
+                                            </p>
+                                        </div>
+                                        <div class="mb-3">
                                             <label class="form-label fw-bold">Presentasi :</label>
                                             <p class="form-control-plaintext border-bottom">
                                                 {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_presentasi ?? '-' }}
                                             </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                                 <div class="row">
                                     <h6>Denyut Jantung Janin (DJJ)</h6>
                                     <div class="col-md-6">
@@ -383,7 +391,7 @@
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label fw-bold">Pendataran :</label>
-                                             <p class="form-control-plaintext border-bottom">
+                                            <p class="form-control-plaintext border-bottom">
                                                 @if ($asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_pembukaan == 1)
                                                     &lt; 50%
                                                 @elseif($asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_pembukaan == 2)
@@ -393,6 +401,10 @@
                                                 @else
                                                     {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_pembukaan ?? '-' }}
                                                 @endif
+                                                
+                                                Pukul
+                                                {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_jam_pembukaan ?? '-' }}
+
                                             </p>
                                         </div>
                                         <div class="mb-3">
@@ -407,9 +419,9 @@
                                                 @endif
                                             </p>
                                         </div>
-                                        
+
                                     </div>
-                                    
+
                                 </div>
 
                                 <div class="row">
@@ -451,7 +463,7 @@
                                                 {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_simpulan ?? '-' }}
                                             </p>
                                         </div>
-                                        
+
 
                                     </div>
                                     <div class="col-md-6">
@@ -485,7 +497,7 @@
                                                 {{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->panggul_pembukaan_cm ?? '-' }}
                                             </p>
                                         </div>
-                                       
+
 
                                     </div>
                                 </div>
@@ -914,7 +926,7 @@
                                             @endif
                                             <p class="form-control-plaintext border-bottom"></p>
                                         </div>
-                                
+
                                         <div class="form-group mb-3">
                                             <label class="d-block mb-2" style="min-width: 200px;">Eliminasi</label>
                                             <p class="form-control-plaintext border-bottom">
@@ -926,9 +938,9 @@
                                             <p class="form-control-plaintext border-bottom">
                                                 {{ $asesmen->rmeAsesmenObstetriRiwayatKesehatan->defaksi ?? '-' }}
                                             </p>
-                                         </div>
-                                
-                                         
+                                        </div>
+
+
                                         <div class="mb-3">
                                             <label class="form-label fw-bold">Konsumsi Obat-Obatan (Jika Ada) :</label>
                                             <p class="form-control-plaintext border-bottom">
@@ -1017,8 +1029,7 @@
                                                             <div class="d-flex align-items-center">
                                                                 <div class="action-buttons mt-2">
                                                                     <a href="{{ asset('storage/' . $asesmen->asesmenObstetri->hasil_pemeriksaan_penunjang_rontgent) }}"
-                                                                        class="btn btn-sm btn-primary"
-                                                                        target="_blank">
+                                                                        class="btn btn-sm btn-primary" target="_blank">
                                                                         <i class="bi bi-eye-fill me-1"></i> Lihat
                                                                         Lengkap
                                                                     </a>
@@ -1038,8 +1049,7 @@
                                                             <div class="d-flex align-items-center">
                                                                 <div class="action-buttons mt-2">
                                                                     <a href="{{ asset('storage/' . $asesmen->asesmenObstetri->hasil_pemeriksaan_penunjang_histopatology) }}"
-                                                                        class="btn btn-sm btn-primary"
-                                                                        target="_blank">
+                                                                        class="btn btn-sm btn-primary" target="_blank">
                                                                         <i class="bi bi-eye-fill me-1"></i> Lihat
                                                                         Lengkap
                                                                     </a>

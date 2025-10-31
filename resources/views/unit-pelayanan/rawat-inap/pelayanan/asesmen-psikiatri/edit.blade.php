@@ -70,7 +70,7 @@
                             </div>
 
                             <div class="section-separator" id="pengkajian-keperawatan">
-                                <h5 class="section-title">2. Pengkajian Keperawatan</h5>
+                                 <h5 class="section-title">2. Pengkajian Medis</h5>
 
                                 <div class="form-group">
                                     <label style="min-width: 220px;">Anamnesis</label>

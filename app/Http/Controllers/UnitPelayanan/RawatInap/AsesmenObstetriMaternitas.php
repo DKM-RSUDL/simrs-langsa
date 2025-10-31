@@ -534,7 +534,7 @@ class AsesmenObstetriMaternitas extends Controller
     public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         DB::beginTransaction();
-      
+
 
         try {
             $asesmen = RmeAsesmen::findOrFail($id);
@@ -729,7 +729,6 @@ class AsesmenObstetriMaternitas extends Controller
             $asesmenObstetriRiwayatKesehatan->konsumsi_obat = $request->konsumsi_obat;
             $asesmenObstetriRiwayatKesehatan->antenatal_lain = $request->antenatal_lain;
             $asesmenObstetriRiwayatKesehatan->berapa_kali = $request->berapa_kali;
-            $asesmenObstetriRiwayatKesehatan->defaksi = $request->defaksi;
 
             $asesmenObstetriRiwayatKesehatan->riwayat_kehamilan_sekarang = $request->riwayat_kehamilan_sekarang;
             $asesmenObstetriRiwayatKesehatan->kebiasaan_ibu_hamil = $request->kebiasaan_ibu_hamil;

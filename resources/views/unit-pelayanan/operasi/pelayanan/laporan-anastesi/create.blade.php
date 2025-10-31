@@ -249,7 +249,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label style="min-width: 300px;">Pemakaian Tomiquet</label>
+                            <label style="min-width: 300px;">Pemakaian Tourniquet</label>
                             <select class="form-select" name="pemakaian_tomiquet">
                                 <option selected disabled>--Pilih--</option>
                                 <option value="1">Ya</option>
@@ -258,7 +258,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label style="min-width: 300px;">Pengawas Tomiquet</label>
+                            <label style="min-width: 300px;">Pengawas Tourniquet</label>
                             <input type="text" class="form-control" name="pengawas_tomiquet" value="Anestesi">
                         </div>
 
@@ -267,7 +267,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Lokasi Pemasangan Tomiquet</th>
+                                        <th scope="col">Lokasi Pemasangan Tourniquet</th>
                                         <th scope="col">Waktu Mulai</th>
                                         <th scope="col">Waktu Selesai</th>
                                         <th scope="col">Tekanan</th>
