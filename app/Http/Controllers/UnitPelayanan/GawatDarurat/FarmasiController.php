@@ -5,6 +5,7 @@ namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 use App\Http\Controllers\Controller;
 use App\Models\AptObat;
 use App\Models\Dokter;
+use App\Models\DokterKlinik;
 use App\Models\Kunjungan;
 use App\Models\MrResep;
 use App\Models\MrResepDtl;
@@ -55,7 +56,10 @@ class FarmasiController extends Controller
         // Ambil data rekonsiliasi obat
         $rekonsiliasiObat = $this->getRekonsiliasi($kd_pasien, $tgl_masuk, $dataMedis->urut_masuk);
 
-        $dokters = Dokter::where('status', 1)->get();
+        $dokters = DokterKlinik::with(['dokter', 'unit'])
+            ->where('kd_unit', 3)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
 
         return view(
             'unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.index',
@@ -206,7 +210,7 @@ class FarmasiController extends Controller
             ->where('APT_PRODUK.TAG_BERLAKU', 1)
             ->where(function ($q) use ($term) {
                 $q->where('APT_OBAT.NAMA_OBAT', 'like', $term . '%')
-                  ->orWhere('APT_OBAT.NAMA_OBAT', 'like', '% ' . $term . '%');
+                    ->orWhere('APT_OBAT.NAMA_OBAT', 'like', '% ' . $term . '%');
             })
             ->orderBy(DB::raw('COALESCE(stok_depo.total_stok, 0)'), 'desc')
             ->limit($limit)

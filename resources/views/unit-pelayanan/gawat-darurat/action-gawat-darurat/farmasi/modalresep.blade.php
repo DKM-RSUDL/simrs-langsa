@@ -55,10 +55,10 @@
                                                 <div class="mb-3">
                                                     <label for="dokterPengirim" class="form-label">Dokter Pengirim</label>
                                                     <select class="form-select" id="dokterPengirim" name="kd_dokter" @cannot('is-admin') disabled @endcannot>
-                                                        @foreach ($dokters as $dokter)
-                                                            <option value="{{ $dokter->kd_dokter }}"
-                                                                @selected($dokter->kd_karyawan == auth()->user()->kd_karyawan)>
-                                                                {{ $dokter->nama }}
+                                                        @foreach ($dokters as $dok)
+                                                            <option value="{{ $dok->dokter->kd_dokter }}"
+                                                                @selected($dok->dokter->kd_karyawan == auth()->user()->kd_karyawan)>
+                                                                {{ $dok->dokter->nama_lengkap }}
                                                             </option>
                                                         @endforeach
                                                     </select>
