@@ -18,7 +18,6 @@
         <div class="col-md-9">
             @include('components.navigation-rahab-medis')
             <x-content-card>
-                <x-button-previous />
 
                 @include('components.page-header', [
                     'title' => 'Program Terapi',

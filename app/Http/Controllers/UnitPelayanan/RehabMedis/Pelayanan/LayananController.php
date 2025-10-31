@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan;
 
 use App\Http\Controllers\Controller;
+use App\Models\DetailTransaksi;
 use App\Models\Dokter;
 use App\Models\Produk;
 use App\Models\RmeRehabMedikLayanan;
@@ -74,8 +75,45 @@ class LayananController extends Controller
             $layanan->user_create   = Auth::id();
             $layanan->save();
 
+            // Simpan detail program dari request
             $programs = $this->parseProgramsFromRequest($request);
             $this->createProgramDetails($layanan->id, $programs);
+
+            // ===================== STORE DETAIL TRANSAKSI =====================
+            // Ambil program berdasarkan id_layanan yang baru dibuat
+            $programsForTransaction = RmeRehabMedikProgramDetail::where('id_layanan', $layanan->id)->get();
+
+            // Normalisasi tanggal untuk kolom tgl_transaksi
+            $tglTransaksi = Carbon::parse($tgl_masuk)->toDateString();
+
+            // Hitung urut terakhir per no_transaksi + kd_kasir (lebih aman)
+            $lastUrut = DetailTransaksi::where('no_transaksi', $dataMedis->no_transaksi)
+                ->where('kd_kasir', $dataMedis->kd_kasir)
+                ->max('urut');
+
+            $urut = is_null($lastUrut) ? 1 : ($lastUrut + 1);
+
+            foreach ($programsForTransaction as $program) {
+                DetailTransaksi::create([
+                    'no_transaksi'  => $dataMedis->no_transaksi,
+                    'kd_kasir'      => $dataMedis->kd_kasir,
+                    'tgl_transaksi' => $tglTransaksi,
+                    'urut'          => $urut,
+                    'kd_tarif'      => 'TU',
+                    'kd_produk'     => $program->kd_produk,
+                    'kd_unit'       => 74, // unit billing rehab medis
+                    'kd_unit_tr'    => $this->kdUnitDef_, // unit asal layanan
+                    'tgl_berlaku'   => $program->tgl_berlaku,
+                    'shift'         => 0,
+                    'harga'         => (int) $program->tarif,
+                    'qty'           => 1,
+                    'flag'          => 0,
+                    'jns_trans'     => 0,
+                ]);
+
+                $urut++;
+            }
+            // =================================================================
 
             DB::commit();
             return to_route('rehab-medis.pelayanan.terapi', [$kd_pasien, $tgl_masuk, $urut_masuk])
@@ -123,6 +161,7 @@ class LayananController extends Controller
             $layanan->user_edit     = Auth::id();
             $layanan->save();
 
+            // replace program detail
             $programs = $this->parseProgramsFromRequest($request);
             $this->replaceProgramDetails($id, $programs);
 
@@ -150,7 +189,6 @@ class LayananController extends Controller
     {
         DB::beginTransaction();
         try {
-
             $dataMedis = $this->baseService->getDataMedis($this->kdUnitDef_, $kd_pasien, $tgl_masuk, $urut_masuk);
             if (!$dataMedis) abort(404, 'Data medis tidak ditemukan');
 
@@ -164,11 +202,27 @@ class LayananController extends Controller
                 ]);
             }
 
+            // ===== Hapus detail transaksi untuk setiap program pada layanan ini =====
+            $programs = RmeRehabMedikProgramDetail::where('id_layanan', $pelayanan->id)->get();
+            $tglTransaksi = Carbon::parse($tgl_masuk)->toDateString();
+
+            foreach ($programs as $program) {
+                DetailTransaksi::where('no_transaksi', $dataMedis->no_transaksi)
+                    ->where('kd_kasir', $dataMedis->kd_kasir)
+                    ->where('kd_unit', 74) // unit billing rehab medis
+                    ->where('kd_unit_tr', $this->kdUnitDef_) // unit asal layanan
+                    ->where('kd_produk', $program->kd_produk)
+                    ->whereDate('tgl_transaksi', $tglTransaksi)
+                    ->delete();
+            }
+            // =======================================================================
+
+            // Hapus program detail & layanan
             RmeRehabMedikProgramDetail::where('id_layanan', $pelayanan->id)->delete();
             RmeRehabMedikLayanan::where('id', $pelayanan->id)->delete();
 
             DB::commit();
-            return back()->with('success', 'Data pelayanan beserta program berhasil dihapus!');
+            return back()->with('success', 'Data pelayanan beserta program & transaksi berhasil dihapus!');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());

@@ -191,7 +191,7 @@
             </td>
             <td class="width:5px;">:</td>
             <td style="width:70%; padding:6px 8px; vertical-align:top;">
-                {!! nl2br(e($layanan->subjective ?? '-')) !!}
+                {!! nl2br(e($tindakan->subjective ?? '-')) !!}
             </td>
         </tr>
         <tr>
@@ -199,7 +199,7 @@
             </td>
             <td class="width:5px;" style="vertical-align:top;">:</td>
             <td style="width:70%; padding:6px 8px; vertical-align:top;">
-                {!! nl2br(e($layanan->objective ?? '-')) !!}
+                {!! nl2br(e($tindakan->objective ?? '-')) !!}
             </td>
         </tr>
         <tr>
@@ -207,57 +207,55 @@
             </td>
             <td class="width:5px;" style="vertical-align:top;">:</td>
             <td style="width:70%; padding:6px 8px; vertical-align:top;">
-                {!! nl2br(e($layanan->assessment ?? '-')) !!}
+                {!! nl2br(e($tindakan->assessment ?? '-')) !!}
             </td>
         </tr>
         <tr>
-            <td class="title-table" style="width:30%; vertical-align:top; font-weight:bold; padding:6px 8px;">Procedure
+            <td class="title-table" style="width:30%; vertical-align:top; font-weight:bold; padding:6px 8px;">Planning
             </td>
             <td class="width:5px;" style="vertical-align:top;">:</td>
-            <td style="width:70%; padding:6px 8px;">
-                @if ($layanan && count($layanan->detail) > 0)
-                    <ul style="margin: 0; padding-left: 20px;">
-                        @foreach ($layanan->detail as $item)
-                            <li style="margin-bottom: 6px;">
-                                {{ $item->produk->deskripsi }}
-                            </li>
-                        @endforeach
-                    </ul>
-                @else
-                    <em>Belum ada tindakan dipilih.</em>
-                @endif
-
+            <td style="width:70%; padding:6px 8px; vertical-align:top;">
+                <ul style="margin:0; padding-left:18px;">
+                    <li><strong>a. Goal Of Treatment</strong><br>{!! nl2br(e($tindakan->planning_goal ?? '-')) !!}</li>
+                    <li><strong>b. Tindakan/Program Rehabilitasi Medik</strong><br>{!! nl2br(e($tindakan->planning_tindakan ?? '-')) !!}</li>
+                    <li><strong>c. Edukasi</strong><br>{!! nl2br(e($tindakan->planning_edukasi ?? '-')) !!}</li>
+                    <li><strong>d. Frekuensi Kunjungan</strong><br>{!! nl2br(e($tindakan->planning_frekuensi ?? '-')) !!}</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-table" style="width:30%; vertical-align:top; padding:6px 8px;">Rencana
+                Tindak Lanjut(Evaluasi/Rujuk/Selesai)
+            </td>
+            <td class="width:5px;" style="vertical-align:top;">:</td>
+            <td style="width:70%; padding:6px 8px; vertical-align:top;">
+                {!! nl2br(e($tindakan->rencana_tindak_lanjut ?? '-')) !!}
             </td>
         </tr>
     </table>
 
     <table style="width:100%; margin-top:40px;">
         <tr>
+            <td class="signature-sub-cell" style="width:50%; text-align:center; vertical-align:top;" />
+
             <td style="width:50%; text-align:center; vertical-align:top;">
                 <p>
                     Langsa,
-                    {{ $layanan->tgl_pelayanan ? date('d-M-Y', strtotime($layanan->tgl_pelayanan)) : '................' }}
-                    {{ $layanan->jam_pelayanan ? date('H:i', strtotime($layanan->jam_pelayanan)) : '........' }}
+                    {{ $tindakan->tgl_tindakan ? date('d-M-Y', strtotime($tindakan->tgl_tindakan)) : '................' }}
+                    {{ $tindakan->jam_tindakan ? date('H:i', strtotime($tindakan->jam_tindakan)) : '........' }}
                 </p>
             </td>
         </tr>
         <tr>
-            <!-- Kiri: Dokter -->
-            <td class="signature-sub-cell" style="width:50%; text-align:center; vertical-align:top;">
+            <!-- Kiri -->
+            <td class="signature-sub-cell" style="width:50%; text-align:center; vertical-align:top;" />
 
+            <!-- Kanan: Dokter -->
+            <td class="signature-sub-cell" style="width:50%; text-align:center; vertical-align:top; margin-top:20px;">
                 <div class="signature-name-space">Dokter Penanggung Jawab Pelayanan,</div>
                 <div class="signature-line" style="height:60px;"></div>
                 <div class="signature-caption">
-                    {{ $layanan->dokter->nama_lengkap ?? '(...........................)' }}
-                </div>
-            </td>
-
-            <!-- Kanan: Petugas -->
-            <td class="signature-sub-cell" style="width:50%; text-align:center; vertical-align:top; margin-top:20px;">
-                <div class="signature-name-space">Petugas,</div>
-                <div class="signature-line" style="height:60px;"></div>
-                <div class="signature-caption">
-                    {{ $layanan->userCreate->name ?? '(...........................)' }}
+                    {{ $tindakan->dokter->nama_lengkap ?? '(...........................)' }}
                 </div>
             </td>
         </tr>
