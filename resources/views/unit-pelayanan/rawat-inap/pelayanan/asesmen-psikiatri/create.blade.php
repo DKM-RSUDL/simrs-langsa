@@ -10,7 +10,7 @@
             <x-content-card>
             <x-button-previous />
                 @include('components.page-header', [
-                    'title' => 'Asesmen Medis Psiakitri',
+                    'title' => 'Asesmen Medis Psikiatri',
                     'description' => 'Isikan Asesmen medis dalam 24 jam sejak pasien masuk ke unit pelayanan',
                 ])
 
