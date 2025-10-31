@@ -126,8 +126,6 @@
         }
 
         .signature-caption {
-            font-style: italic;
-            font-size: 9pt;
             margin-top: 5px;
         }
 

@@ -90,7 +90,7 @@
                 @include('components.page-header', [
                     'title' => 'KFR/Asesmen/RE-Asesmen/Protokol Terapi',
                     'description' =>
-                        'Kelola data KFR/Asesmen/RE-Asesmen/Protokol Terapi rehabilitasi medis di sini.',
+                        'Kelola data KFR/Asesmen/RE-Asesmen/Protokol rehabilitasi medis di sini.',
                 ])
                 <div class="d-flex flex-column gap-2">
                     <div class="row">

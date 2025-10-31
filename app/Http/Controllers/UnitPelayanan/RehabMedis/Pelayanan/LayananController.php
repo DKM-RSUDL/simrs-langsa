@@ -93,6 +93,7 @@ class LayananController extends Controller
 
             $urut = is_null($lastUrut) ? 1 : ($lastUrut + 1);
 
+
             foreach ($programsForTransaction as $program) {
                 DetailTransaksi::create([
                     'no_transaksi'  => $dataMedis->no_transaksi,
@@ -113,7 +114,6 @@ class LayananController extends Controller
 
                 $urut++;
             }
-            // =================================================================
 
             DB::commit();
             return to_route('rehab-medis.pelayanan.terapi', [$kd_pasien, $tgl_masuk, $urut_masuk])
@@ -163,7 +163,56 @@ class LayananController extends Controller
 
             // replace program detail
             $programs = $this->parseProgramsFromRequest($request);
+
+            // ===== HAPUS DETAIL TRANSAKSI LAMA untuk program yang terkait layanan ini =====
+            // Ambil program lama (sebelum replace) untuk mengetahui kd_produk yang perlu dihapus dari DetailTransaksi
+            $oldPrograms = RmeRehabMedikProgramDetail::where('id_layanan', $layanan->id)->get();
+            $tglTransaksi = Carbon::parse($tgl_masuk)->toDateString();
+
+            foreach ($oldPrograms as $prog) {
+                DetailTransaksi::where('no_transaksi', $dataMedis->no_transaksi)
+                    ->where('kd_kasir', $dataMedis->kd_kasir)
+                    ->where('kd_unit', 74) // unit billing rehab medis
+                    ->where('kd_unit_tr', $this->kdUnitDef_) // unit asal layanan
+                    ->where('kd_produk', $prog->kd_produk)
+                    ->whereDate('tgl_transaksi', $tglTransaksi)
+                    ->delete();
+            }
+
+            // Hapus dan buat ulang program detail
             $this->replaceProgramDetails($id, $programs);
+
+            // ===================== TAMBAH DETAIL TRANSAKSI BARU =====================
+            // Ambil program berdasarkan id_layanan yang baru dibuat
+            $programsForTransaction = RmeRehabMedikProgramDetail::where('id_layanan', $layanan->id)->get();
+
+            // Hitung urut terakhir per no_transaksi + kd_kasir (lebih aman)
+            $lastUrut = DetailTransaksi::where('no_transaksi', $dataMedis->no_transaksi)
+                ->where('kd_kasir', $dataMedis->kd_kasir)
+                ->max('urut');
+
+            $urut = is_null($lastUrut) ? 1 : ($lastUrut + 1);
+
+            foreach ($programsForTransaction as $program) {
+                DetailTransaksi::create([
+                    'no_transaksi'  => $dataMedis->no_transaksi,
+                    'kd_kasir'      => $dataMedis->kd_kasir,
+                    'tgl_transaksi' => $tglTransaksi,
+                    'urut'          => $urut,
+                    'kd_tarif'      => 'TU',
+                    'kd_produk'     => $program->kd_produk,
+                    'kd_unit'       => 74, // unit billing rehab medis
+                    'kd_unit_tr'    => $this->kdUnitDef_, // unit asal layanan
+                    'tgl_berlaku'   => $program->tgl_berlaku,
+                    'shift'         => 0,
+                    'harga'         => (int) $program->tarif,
+                    'qty'           => 1,
+                    'flag'          => 0,
+                    'jns_trans'     => 0,
+                ]);
+
+                $urut++;
+            }
 
             DB::commit();
             return to_route('rehab-medis.pelayanan.terapi', [$kd_pasien, $tgl_masuk, $urut_masuk])

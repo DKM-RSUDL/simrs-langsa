@@ -126,8 +126,6 @@
         }
 
         .signature-caption {
-            font-style: italic;
-            font-size: 9pt;
             margin-top: 5px;
         }
 
@@ -255,7 +253,7 @@
                 <div class="signature-name-space">Dokter Penanggung Jawab Pelayanan,</div>
                 <div class="signature-line" style="height:60px;"></div>
                 <div class="signature-caption">
-                    {{ $tindakan->dokter->nama_lengkap ?? '(...........................)' }}
+                    {{ $tindakan->karyawan?->gelar_depan . ' ' . str()->title($tindakan->karyawan?->nama) . ' ' . $tindakan->karyawan?->gelar_belakang ?? '(...........................)' }}
                 </div>
             </td>
         </tr>
