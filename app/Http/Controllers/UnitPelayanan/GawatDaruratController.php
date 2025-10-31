@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 use App\Services\AsesmenService;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class GawatDaruratController extends Controller
 {
@@ -58,9 +58,7 @@ class GawatDaruratController extends Controller
                 ->where('t.co_status', 0)
                 ->whereNull('kunjungan.tgl_keluar')
                 ->whereNull('kunjungan.jam_keluar');
-            // ->whereDate('tgl_masuk', '>=', $tglBatasData);
 
-            // Filte dokter
             if (! empty($dokterFilter)) {
                 $data->where('kd_dokter', $dokterFilter);
             }
@@ -91,7 +89,6 @@ class GawatDaruratController extends Controller
                         });
                     }
                 })
-
                 ->order(function ($query) {
                     $query->orderBy('kunjungan.tgl_masuk', 'desc')
                         ->orderBy('kunjungan.antrian', 'desc')
@@ -106,20 +103,17 @@ class GawatDaruratController extends Controller
                 ->addColumn('instruksi', fn($row) => '' ?: '-')
                 ->addColumn('kd_dokter', fn($row) => $row->dokter->nama ?: '-')
                 ->addColumn('waktu_masuk', function ($row) {
-
                     $tglMasuk = Carbon::parse($row->tgl_masuk)->format('d M Y');
                     $jamMasuk = date('H:i', strtotime($row->jam_masuk));
-
                     return "$tglMasuk $jamMasuk";
                 })
-                // Hitung umur dari tabel pasien
                 ->addColumn('umur', function ($row) {
                     return $row->pasien && $row->pasien->tgl_lahir
                         ? Carbon::parse($row->pasien->tgl_lahir)->age . ''
                         : 'Tidak diketahui';
                 })
-                ->addColumn('action', fn($row) => $row->kd_pasien)  // Return raw data, no HTML
-                ->addColumn('del', fn($row) => $row->kd_pasien)     // Return raw data
+                ->addColumn('action', fn($row) => $row->kd_pasien)
+                ->addColumn('del', fn($row) => $row->kd_pasien)
                 ->addColumn('profile', fn($row) => $row)
                 ->rawColumns(['action', 'del', 'profile'])
                 ->make(true);
@@ -241,6 +235,7 @@ class GawatDaruratController extends Controller
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.triase.index', compact('dokter'));
     }
+
     public function storeTriase(Request $request)
     {
         DB::beginTransaction();
@@ -572,18 +567,17 @@ class GawatDaruratController extends Controller
                 'status' => 'error',
                 'message' => $e->getMessage(),
                 'data' => [],
-            ] . 500);
+            ], 500);
         }
     }
 
     public function getPatientByNamaAjax(Request $request)
     {
-
         try {
             $pasien = Pasien::where('nama', 'LIKE', "%$request->nama%")
                 ->get();
 
-            if (empty($pasien)) {
+            if ($pasien->isEmpty()) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Data tidak ditemukan',
@@ -601,18 +595,17 @@ class GawatDaruratController extends Controller
                 'status' => 'error',
                 'message' => $e->getMessage(),
                 'data' => [],
-            ] . 500);
+            ], 500);
         }
     }
 
     public function getPatientByAlamatAjax(Request $request)
     {
-
         try {
             $pasien = Pasien::where('alamat', 'LIKE', "%$request->alamat%")
                 ->get();
 
-            if (empty($pasien)) {
+            if ($pasien->isEmpty()) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Data tidak ditemukan',
@@ -630,13 +623,12 @@ class GawatDaruratController extends Controller
                 'status' => 'error',
                 'message' => $e->getMessage(),
                 'data' => [],
-            ] . 500);
+            ], 500);
         }
     }
 
     public function serahTerimaPasien($kd_pasien, $tgl_masuk, $urut_masuk)
     {
-
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
@@ -654,7 +646,6 @@ class GawatDaruratController extends Controller
             abort(404, 'Data not found');
         }
 
-        // Menghitung umur berdasarkan tgl_lahir jika ada
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
         } else {
@@ -686,7 +677,6 @@ class GawatDaruratController extends Controller
 
     public function getPetugasByUnit(Request $request)
     {
-        // dd($request);
         $kdUnit = $request->kd_unit;
 
         if (! $kdUnit) {
@@ -702,14 +692,6 @@ class GawatDaruratController extends Controller
             ->select('rme_users.id', 'rme_users.name')
             ->where('hrd_ruangan.kd_unit', $kdUnit)
             ->get();
-
-        // if ($users->isEmpty()) {
-        //     return response()->json([
-        //         'status' => 'error',
-        //         'message' => 'Tidak ada petugas di unit ini!',
-        //         'data' => []
-        //     ]);
-        // }
 
         $petugasOptions = '<option value="">--pilih petugas--</option>';
         foreach ($users as $user) {
@@ -730,8 +712,6 @@ class GawatDaruratController extends Controller
         DB::beginTransaction();
 
         try {
-
-            // validasi
             $request->validate([
                 'subjective' => 'required',
                 'background' => 'required',
@@ -742,7 +722,6 @@ class GawatDaruratController extends Controller
                 'jam_menyerahkan' => 'required|date_format:H:i',
             ]);
 
-            // data
             $data = [
                 'subjective' => $request->subjective,
                 'background' => $request->background,
@@ -764,6 +743,56 @@ class GawatDaruratController extends Controller
             DB::rollBack();
 
             return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function generatePDF($kd_pasien, $tgl_masuk)
+    {
+        try {
+            $dataMedis = Kunjungan::with(['pasien', 'customer', 'unit'])
+                ->where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', 3)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->firstOrFail();
+
+            $triase = DataTriase::find($dataMedis->triase_id);
+
+            if (! $triase) {
+                return "Data triase tidak ditemukan untuk pasien ini.";
+            }
+
+            $data = [
+                'pasien' => $dataMedis->pasien,
+                'kunjungan' => $dataMedis,
+                'triase' => $triase,
+            ];
+
+
+            // dd($data['triase']);
+
+            // load view
+            $pdf = Pdf::loadView('unit-pelayanan.gawat-darurat.print', $data);
+
+            // set paper
+            $pdf->setPaper('a5', 'portrait');
+
+            // set default font in a way compatible with different versions of dompdf package
+            try {
+                // method safe for many versions
+                $pdf->getDomPDF()->getOptions()->set('defaultFont', 'Arial');
+            } catch (\Throwable $ex) {
+                // fallback: if set fails, try facade option (some versions support setOption)
+                try {
+                    $pdf->setOption(['defaultFont' => 'Arial']);
+                } catch (\Throwable $ex2) {
+                    // silent fallback; PDF will use default font
+                }
+            }
+
+            return $pdf->stream('triase-' . ($dataMedis->pasien->nama ?? 'triase') . '.pdf');
+        } catch (\Exception $e) {
+            // returning message is fine during development; you can log instead in production
+            return "Error: " . $e->getMessage();
         }
     }
 }

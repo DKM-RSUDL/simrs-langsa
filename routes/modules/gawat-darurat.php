@@ -56,6 +56,8 @@ Route::prefix('gawat-darurat')->group(function () {
     Route::post('/get-patient-byalamat-ajax', [GawatDaruratController::class, 'getPatientByAlamatAjax'])->name('gawat-darurat.get-patient-byalamat-ajax');
     Route::post('/get-triase-data', [GawatDaruratController::class, 'getTriaseData'])->name('gawat-darurat.get-triase-data');
     Route::put('/ubah-foto-triase/{kdKasir}/{noTrx}', [GawatDaruratController::class, 'updateFotoTriase'])->name('gawat-darurat.ubah-foto-triase');
+    Route::get('/triase/{kd_pasien}/{tgl_masuk}/print-pdf', [GawatDaruratController::class, 'generatePDF'])
+     ->name('gawat-darurat.triase.printPDF');
 
     Route::prefix('pelayanan')->group(function () {
         Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {

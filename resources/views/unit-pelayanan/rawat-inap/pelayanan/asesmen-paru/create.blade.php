@@ -10,809 +10,371 @@
 
         <div class="col-md-9">
             <x-content-card>
-            <x-button-previous />
+                <x-button-previous />
                 @include('components.page-header', [
                     'title' => 'Asesmen Awal Medis Paru',
                     'description' => 'Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan',
                 ])
 
-            <form method="POST" enctype="multipart/form-data">
-                @csrf
-                <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
-                <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
-                <input type="hidden" name="tgl_masuk" value="{{ $dataMedis->tgl_masuk }}">
-                <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
+                <form method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
+                    <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
+                    <input type="hidden" name="tgl_masuk" value="{{ $dataMedis->tgl_masuk }}">
+                    <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
 
 
-                <!-- FORM ASESMEN -->
-                <div class="px-3">
-                    <div class="section-separator" id="data-masuk">
-                        <h5 class="section-title">1. Data masuk</h5>
+                    <!-- FORM ASESMEN -->
+                    <div class="px-3">
+                        <div class="section-separator" id="data-masuk">
+                            <h5 class="section-title">1. Data masuk</h5>
 
-                        <div class="form-group">
-                            <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
-                            <div class="d-flex gap-3" style="width: 100%;">
-                                <input type="date" class="form-control" name="tanggal"
-                                    value="{{ date('Y-m-d') }}">
-                                <input type="time" class="form-control" name="jam_masuk"
-                                    value="{{ date('H:i') }}">
+                            <div class="form-group">
+                                <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
+                                <div class="d-flex gap-3" style="width: 100%;">
+                                    <input type="date" class="form-control" name="tanggal" value="{{ date('Y-m-d') }}">
+                                    <input type="time" class="form-control" name="jam_masuk" value="{{ date('H:i') }}">
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="section-separator" id="alergi">
-                        <h5 class="section-title">2. Anamnesis</h5>
+                        <div class="section-separator" id="alergi">
+                            <h5 class="section-title">2. Anamnesis</h5>
 
-                        <div class="form-group">
-                            <label>Anamnesa</label>
-                            <textarea class="form-control" name="anamnesa" rows="3" placeholder="Keluhan utama pasien"></textarea>
+                            <div class="form-group">
+                                <label>Anamnesa</label>
+                                <textarea class="form-control" name="anamnesa" rows="3" placeholder="Keluhan utama pasien"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Riwayat penyakit</label>
+                                <textarea class="form-control" name="riwayat_penyakit" rows="4" placeholder="Riwayat penyakit sekarang">{{ $paruTerdahulu->riwayat_penyakit ?? '' }}</textarea>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label>Riwayat penyakit</label>
-                            <textarea class="form-control" name="riwayat_penyakit" rows="4" placeholder="Riwayat penyakit sekarang">{{ $paruTerdahulu->riwayat_penyakit ?? '' }}</textarea>
-                        </div>
-                    </div>
+                        <div class="section-separator" id="alergi">
 
-                    <div class="section-separator" id="alergi">
-
-                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openAlergiModal"
-                            data-bs-toggle="modal" data-bs-target="#alergiModal">
-                            <i class="ti-plus"></i> Tambah Alergi
-                        </button>
-                        <input type="hidden" name="alergis" id="alergisInput" value="[]">
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="createAlergiTable">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th width="20%">Jenis Alergi</th>
-                                        <th width="25%">Alergen</th>
-                                        <th width="25%">Reaksi</th>
-                                        <th width="20%">Tingkat Keparahan</th>
-                                        <th width="10%">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr id="no-alergi-row">
-                                        <td colspan="5" class="text-center text-muted">Tidak ada data alergi</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-
-                    <!-- 3. Riwayat Penyakit Terdahulu Dan Riwayat Pengobatan -->
-                    <div class="section-separator" id="riwayat-pengobatan">
-                        <h5 class="section-title">3. Riwayat Penyakit Terdahulu Dan Riwayat Pengobatan</h5>
-
-                        <div class="table-responsive">
-                            <table class="table table-asesmen">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center" style="width: 50%;">Riwayat Penyakit Terdahulu (RPT)
-                                        </th>
-                                        <th class="text-center" style="width: 50%;">Riwayat Penggunaan Obat (RPO)
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                       <td class="p-0">
-                                            <textarea class="form-control border-0 rounded-0" name="riwayat_penyakit_terdahulu" rows="5"
-                                                placeholder="Tuliskan riwayat penyakit terdahulu..."
-                                                style="resize: none; min-height: 120px;">{{ $paruTerdahulu->riwayat_penyakit_terdahulu ?? '' }}</textarea>
-                                        </td>
-                                        <td class="p-0">
-                                            <textarea class="form-control border-0 rounded-0" name="riwayat_penggunaan_obat" rows="5"
-                                                placeholder="Tuliskan riwayat penggunaan obat..."
-                                                style="resize: none; min-height: 120px;">{{ $paruTerdahulu->riwayat_penggunaan_obat ?? '' }}</textarea>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                   <!-- 4. Kebiasaan -->
-                     <div class="section-separator" id="kebiasaan">
-                        <h5 class="section-title">4. Kebiasaan</h5>
-                         @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.KebiasaanForm.index',['KebiasaanData'=> !empty($KebiasaanData) ? $KebiasaanData : null])
-                    </div>
-                    
-                    <!-- 5. Tanda-Tanda Vital -->
-                    <div class="section-separator" id="tanda-vital">
-                        <h5 class="section-title">5. Tanda-Tanda Vital</h5>
-
-                        <div class="table-responsive">
-                            <table class="table table-asesmen">
-                                <tbody>
-                                    <tr>
-                                        <td class="label-col">a. Sensorium</td>
-                                        <td>
-                                            <div class="form-check-group">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="sensorium" value="cm" id="sensorium_cm">
-                                                    <label class="form-check-label" for="sensorium_cm">CM</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="sensorium" value="cm_lemah"
-                                                        id="sensorium_cm_lemah">
-                                                    <label class="form-check-label" for="sensorium_cm_lemah">CM
-                                                        lemah</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="sensorium" value="somnolen"
-                                                        id="sensorium_somnolen">
-                                                    <label class="form-check-label"
-                                                        for="sensorium_somnolen">Somnolen</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="sensorium" value="soporus" id="sensorium_soporus">
-                                                    <label class="form-check-label"
-                                                        for="sensorium_soporus">Soporus</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="sensorium" value="coma" id="sensorium_coma">
-                                                    <label class="form-check-label"
-                                                        for="sensorium_coma">Coma</label>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label-col">b. Keadaan umum</td>
-                                        <td>
-                                            <div class="form-check-group">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="keadaan_umum" value="baik" id="keadaan_baik">
-                                                    <label class="form-check-label"
-                                                        for="keadaan_baik">Baik</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="keadaan_umum" value="sedang" id="keadaan_sedang">
-                                                    <label class="form-check-label"
-                                                        for="keadaan_sedang">Sedang</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="keadaan_umum" value="jelek" id="keadaan_jelek">
-                                                    <label class="form-check-label"
-                                                        for="keadaan_jelek">Jelek</label>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label-col">c. Tekanan darah</td>
-                                        <td>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div class="form-group">
-                                                    <div class="d-flex gap-3" style="width: 100%;">
-                                                        <div class="flex-grow-1">
-                                                            <input type="number" class="form-control"
-                                                                name="darah_sistole" placeholder="Sistole">
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <input type="number" class="form-control"
-                                                                name="darah_diastole" placeholder="Diastole">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label-col">d. Nadi/pulse</td>
-                                        <td>
-                                            <div class="row">
-                                                <div class="col-lg-6">
-                                                    <div class="d-flex align-items-center gap-2">
-                                                        <input type="number"
-                                                            class="form-control input-inline input-sm"
-                                                            name="nadi">
-                                                        <span>x/menit</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label-col">e. Frekuensi Pernafasan</td>
-                                        <td>
-                                            <div class="row">
-                                                <div class="col-lg-6">
-                                                    <div class="d-flex align-items-center gap-2">
-                                                        <input type="number"
-                                                            class="form-control input-inline input-sm"
-                                                            name="frekuensi_pernafasan">
-                                                        <span>x/menit</span>
-                                                        <select class="form-select input-inline input-md"
-                                                            name="pernafasan_tipe">
-                                                            <option value="">Pilih</option>
-                                                            <option value="reguler">Reguler</option>
-                                                            <option value="irreguler">Irreguler</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label-col">f. Temperatur</td>
-                                        <td>
-                                            <div class="row">
-                                                <div class="col-lg-6">
-                                                    <div class="d-flex align-items-center gap-2">
-                                                        <input type="number"
-                                                            class="form-control input-inline input-sm"
-                                                            name="temperatur">
-                                                        <span>°C</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label-col">g. Saturasi Oksigen</td>
-                                        <td>
-                                            <div class="row">
-                                                <div class="col-lg-4">
-                                                    <div class="d-flex align-items-center gap-2">
-                                                        <input type="number"
-                                                            class="form-control input-inline input-sm"
-                                                            name="saturasi_oksigen" min="0"
-                                                            max="100">
-                                                        <span>%</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label-col">Cyanosis</td>
-                                        <td>
-                                            <div class="row">
-                                                <div class="col-lg-6">
-                                                    <div class="form-check-group">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="cyanose" value="tidak" id="cyanose_tidak">
-                                                            <label class="form-check-label"
-                                                                for="cyanose_tidak">Tidak</label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="cyanose" value="ya" id="cyanose_ya">
-                                                            <label class="form-check-label"
-                                                                for="cyanose_ya">Ya</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label-col">Dyspnea</td>
-                                        <td>
-                                            <div class="row">
-                                                <div class="col-lg-6">
-                                                    <div class="form-check-group">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="dyspnoe" value="tidak" id="dyspnoe_tidak">
-                                                            <label class="form-check-label"
-                                                                for="dyspnoe_tidak">Tidak</label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="dyspnoe" value="ya" id="dyspnoe_ya">
-                                                            <label class="form-check-label"
-                                                                for="dyspnoe_ya">Ya</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label-col">Oedema</td>
-                                        <td>
-                                            <div class="row">
-                                                <div class="col-lg-6">
-                                                    <div class="form-check-group">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="oedema" value="tidak" id="oedema_tidak">
-                                                            <label class="form-check-label"
-                                                                for="oedema_tidak">Tidak</label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="oedema" value="ya" id="oedema_ya">
-                                                            <label class="form-check-label"
-                                                                for="oedema_ya">Ya</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label-col">Icterus</td>
-                                        <td>
-                                            <div class="row">
-                                                <div class="col-lg-6">
-                                                    <div class="form-check-group">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="icterus" value="tidak" id="icterus_tidak">
-                                                            <label class="form-check-label"
-                                                                for="icterus_tidak">Tidak</label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="icterus" value="ya" id="icterus_ya">
-                                                            <label class="form-check-label"
-                                                                for="icterus_ya">Ya</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label-col">Anemia</td>
-                                        <td>
-                                            <div class="row">
-                                                <div class="col-lg-6">
-                                                    <div class="form-check-group">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="anemia" value="tidak" id="anemia_tidak">
-                                                            <label class="form-check-label"
-                                                                for="anemia_tidak">Tidak</label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="anemia" value="ya" id="anemia_ya">
-                                                            <label class="form-check-label"
-                                                                for="anemia_ya">Ya</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- 6. Pemeriksaan Fisik -->
-                    <div class="section-separator" id="pemeriksaan-fisik">
-                        <h5 class="section-title">6. Pemeriksaan Fisik</h5>
-                        {{-- baru --}}
-                        <div class="" id="pemeriksaan-fisik-paru">
+                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openAlergiModal"
+                                data-bs-toggle="modal" data-bs-target="#alergiModal">
+                                <i class="ti-plus"></i> Tambah Alergi
+                            </button>
+                            <input type="hidden" name="alergis" id="alergisInput" value="[]">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-asesmen">
+                                <table class="table table-bordered" id="createAlergiTable">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th width="20%">Jenis Alergi</th>
+                                            <th width="25%">Alergen</th>
+                                            <th width="25%">Reaksi</th>
+                                            <th width="20%">Tingkat Keparahan</th>
+                                            <th width="10%">Aksi</th>
+                                        </tr>
+                                    </thead>
                                     <tbody>
-                                        <!-- Kepala -->
+                                        <tr id="no-alergi-row">
+                                            <td colspan="5" class="text-center text-muted">Tidak ada data alergi</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                        <!-- 3. Riwayat Penyakit Terdahulu Dan Riwayat Pengobatan -->
+                        <div class="section-separator" id="riwayat-pengobatan">
+                            <h5 class="section-title">3. Riwayat Penyakit Terdahulu Dan Riwayat Pengobatan</h5>
+
+                            <div class="table-responsive">
+                                <table class="table table-asesmen">
+                                    <thead>
                                         <tr>
+                                            <th class="text-center" style="width: 50%;">Riwayat Penyakit Terdahulu (RPT)
+                                            </th>
+                                            <th class="text-center" style="width: 50%;">Riwayat Penggunaan Obat (RPO)
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="p-0">
+                                                <textarea class="form-control border-0 rounded-0" name="riwayat_penyakit_terdahulu" rows="5"
+                                                    placeholder="Tuliskan riwayat penyakit terdahulu..." style="resize: none; min-height: 120px;">{{ $paruTerdahulu->riwayat_penyakit_terdahulu ?? '' }}</textarea>
+                                            </td>
+                                            <td class="p-0">
+                                                <textarea class="form-control border-0 rounded-0" name="riwayat_penggunaan_obat" rows="5"
+                                                    placeholder="Tuliskan riwayat penggunaan obat..." style="resize: none; min-height: 120px;">{{ $paruTerdahulu->riwayat_penggunaan_obat ?? '' }}</textarea>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- 4. Kebiasaan -->
+                        <div class="section-separator" id="kebiasaan">
+                            <h5 class="section-title">4. Kebiasaan</h5>
+                            @include(
+                                'unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.KebiasaanForm.index',
+                                ['KebiasaanData' => !empty($KebiasaanData) ? $KebiasaanData : null]
+                            )
+                        </div>
+
+                        <!-- 5. Tanda-Tanda Vital -->
+                        <div class="section-separator" id="tanda-vital">
+                            <h5 class="section-title">5. Tanda-Tanda Vital</h5>
+
+                            <div class="table-responsive">
+                                <table class="table table-asesmen">
+                                    <tbody>
+                                        <tr>
+                                            <td class="label-col">a. Sensorium</td>
                                             <td>
-                                                <div class="row">
-                                                    <div class="col-md-2">
-                                                        <label class="fw-semibold">a. Kepala:</label>
+                                                <div class="form-check-group">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="sensorium"
+                                                            value="cm" id="sensorium_cm">
+                                                        <label class="form-check-label" for="sensorium_cm">CM</label>
                                                     </div>
-                                                    <div class="col-md-10">
-                                                        <div class="d-flex align-items-center gap-3">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="radio"
-                                                                    name="paru_kepala" value="1"
-                                                                    id="paru_kepala_normal" checked>
-                                                                <label class="form-check-label"
-                                                                    for="paru_kepala_normal">Normal</label>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="sensorium"
+                                                            value="cm_lemah" id="sensorium_cm_lemah">
+                                                        <label class="form-check-label" for="sensorium_cm_lemah">CM
+                                                            lemah</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="sensorium"
+                                                            value="somnolen" id="sensorium_somnolen">
+                                                        <label class="form-check-label"
+                                                            for="sensorium_somnolen">Somnolen</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="sensorium"
+                                                            value="soporus" id="sensorium_soporus">
+                                                        <label class="form-check-label"
+                                                            for="sensorium_soporus">Soporus</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="sensorium"
+                                                            value="coma" id="sensorium_coma">
+                                                        <label class="form-check-label" for="sensorium_coma">Coma</label>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label-col">b. Keadaan umum</td>
+                                            <td>
+                                                <div class="form-check-group">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="keadaan_umum" value="baik" id="keadaan_baik">
+                                                        <label class="form-check-label" for="keadaan_baik">Baik</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="keadaan_umum" value="sedang" id="keadaan_sedang">
+                                                        <label class="form-check-label"
+                                                            for="keadaan_sedang">Sedang</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="keadaan_umum" value="jelek" id="keadaan_jelek">
+                                                        <label class="form-check-label" for="keadaan_jelek">Jelek</label>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label-col">c. Tekanan darah</td>
+                                            <td>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="form-group">
+                                                        <div class="d-flex gap-3" style="width: 100%;">
+                                                            <div class="flex-grow-1">
+                                                                <input type="number" class="form-control"
+                                                                    name="darah_sistole" placeholder="Sistole">
                                                             </div>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="radio"
-                                                                    name="paru_kepala" value="0"
-                                                                    id="paru_kepala_tidak_normal">
-                                                                <label class="form-check-label"
-                                                                    for="paru_kepala_tidak_normal">Tidak
-                                                                    Normal</label>
+                                                            <div class="flex-grow-1">
+                                                                <input type="number" class="form-control"
+                                                                    name="darah_diastole" placeholder="Diastole">
                                                             </div>
-                                                            <input type="text" class="form-control"
-                                                                name="paru_kepala_keterangan"
-                                                                id="paru_kepala_keterangan"
-                                                                placeholder="Keterangan jika tidak normal..."
-                                                                disabled>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </td>
                                         </tr>
-
-                                        <!-- Mata -->
                                         <tr>
+                                            <td class="label-col">d. Nadi/pulse</td>
                                             <td>
                                                 <div class="row">
-                                                    <div class="col-md-2">
-                                                        <label class="fw-semibold">b. Mata:</label>
-                                                    </div>
-                                                    <div class="col-md-10">
-                                                        <div class="d-flex align-items-center gap-3">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="radio"
-                                                                    name="paru_mata" value="1"
-                                                                    id="paru_mata_normal" checked>
-                                                                <label class="form-check-label"
-                                                                    for="paru_mata_normal">Normal</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="radio"
-                                                                    name="paru_mata" value="0"
-                                                                    id="paru_mata_tidak_normal">
-                                                                <label class="form-check-label"
-                                                                    for="paru_mata_tidak_normal">Tidak
-                                                                    Normal</label>
-                                                            </div>
-                                                            <input type="text" class="form-control"
-                                                                name="paru_mata_keterangan"
-                                                                id="paru_mata_keterangan"
-                                                                placeholder="Keterangan jika tidak normal..."
-                                                                disabled>
+                                                    <div class="col-lg-6">
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <input type="number"
+                                                                class="form-control input-inline input-sm" name="nadi">
+                                                            <span>x/menit</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </td>
                                         </tr>
-
-                                        <!-- THT -->
                                         <tr>
+                                            <td class="label-col">e. Frekuensi Pernafasan</td>
                                             <td>
                                                 <div class="row">
-                                                    <div class="col-md-2">
-                                                        <label class="fw-semibold">c. THT:</label>
-                                                    </div>
-                                                    <div class="col-md-10">
-                                                        <div class="d-flex align-items-center gap-3">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="radio"
-                                                                    name="paru_tht" value="1"
-                                                                    id="paru_tht_normal" checked>
-                                                                <label class="form-check-label"
-                                                                    for="paru_tht_normal">Normal</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="radio"
-                                                                    name="paru_tht" value="0"
-                                                                    id="paru_tht_tidak_normal">
-                                                                <label class="form-check-label"
-                                                                    for="paru_tht_tidak_normal">Tidak
-                                                                    Normal</label>
-                                                            </div>
-                                                            <input type="text" class="form-control"
-                                                                name="paru_tht_keterangan"
-                                                                id="paru_tht_keterangan"
-                                                                placeholder="Keterangan jika tidak normal..."
-                                                                disabled>
+                                                    <div class="col-lg-6">
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <input type="number"
+                                                                class="form-control input-inline input-sm"
+                                                                name="frekuensi_pernafasan">
+                                                            <span>x/menit</span>
+                                                            <select class="form-select input-inline input-md"
+                                                                name="pernafasan_tipe">
+                                                                <option value="">Pilih</option>
+                                                                <option value="reguler">Reguler</option>
+                                                                <option value="irreguler">Irreguler</option>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </td>
                                         </tr>
-
-                                        <!-- Leher -->
                                         <tr>
+                                            <td class="label-col">f. Temperatur</td>
                                             <td>
                                                 <div class="row">
-                                                    <div class="col-md-2">
-                                                        <label class="fw-semibold">d. Leher:</label>
-                                                    </div>
-                                                    <div class="col-md-10">
-                                                        <div class="d-flex align-items-center gap-3">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="radio"
-                                                                    name="paru_leher" value="1"
-                                                                    id="paru_leher_normal" checked>
-                                                                <label class="form-check-label"
-                                                                    for="paru_leher_normal">Normal</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="radio"
-                                                                    name="paru_leher" value="0"
-                                                                    id="paru_leher_tidak_normal">
-                                                                <label class="form-check-label"
-                                                                    for="paru_leher_tidak_normal">Tidak
-                                                                    Normal</label>
-                                                            </div>
-                                                            <input type="text" class="form-control"
-                                                                name="paru_leher_keterangan"
-                                                                id="paru_leher_keterangan"
-                                                                placeholder="Keterangan jika tidak normal..."
-                                                                disabled>
+                                                    <div class="col-lg-6">
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <input type="number"
+                                                                class="form-control input-inline input-sm"
+                                                                name="temperatur">
+                                                            <span>°C</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </td>
                                         </tr>
-
-                                        <!-- Thoraks -->
                                         <tr>
+                                            <td class="label-col">g. Saturasi Oksigen</td>
                                             <td>
                                                 <div class="row">
-                                                    <div class="col-md-2">
-                                                        <label class="fw-semibold">e. Thoraks</label>
+                                                    <div class="col-lg-4">
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <input type="number"
+                                                                class="form-control input-inline input-sm"
+                                                                name="saturasi_oksigen" min="0" max="100">
+                                                            <span>%</span>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-md-10">
-                                                        <!-- Jantung -->
-                                                        <div class="mb-3">
-                                                            <div class="row">
-                                                                <div class="col-md-2">
-                                                                    <label class="fw-medium">Jantung:</label>
-                                                                </div>
-                                                                <div class="col-md-10">
-                                                                    <div class="d-flex align-items-center gap-3">
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input"
-                                                                                type="radio" name="paru_jantung"
-                                                                                value="1"
-                                                                                id="paru_jantung_normal" checked>
-                                                                            <label class="form-check-label"
-                                                                                for="paru_jantung_normal">Normal</label>
-                                                                        </div>
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input"
-                                                                                type="radio" name="paru_jantung"
-                                                                                value="0"
-                                                                                id="paru_jantung_tidak_normal">
-                                                                            <label class="form-check-label"
-                                                                                for="paru_jantung_tidak_normal">Tidak
-                                                                                Normal</label>
-                                                                        </div>
-                                                                        <input type="text" class="form-control"
-                                                                            name="paru_jantung_keterangan"
-                                                                            id="paru_jantung_keterangan"
-                                                                            placeholder="Keterangan jika tidak normal..."
-                                                                            disabled>
-                                                                    </div>
-                                                                </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label-col">Cyanosis</td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="form-check-group">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="cyanose" value="tidak" id="cyanose_tidak">
+                                                                <label class="form-check-label"
+                                                                    for="cyanose_tidak">Tidak</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="cyanose" value="ya" id="cyanose_ya">
+                                                                <label class="form-check-label"
+                                                                    for="cyanose_ya">Ya</label>
                                                             </div>
                                                         </div>
-
-                                                        <!-- Paru -->
-                                                        <div class="mb-3">
-                                                            <div class="row">
-                                                                <div class="col-md-2">
-                                                                    <label class="fw-medium">Paru:</label>
-                                                                </div>
-                                                                <div class="col-md-10">
-                                                                    <!-- Inspeksi -->
-                                                                    <div class="row mb-2">
-                                                                        <div class="col-md-3">
-                                                                            <label
-                                                                                class="text-muted">Inspeksi</label>
-                                                                        </div>
-                                                                        <div class="col-md-9">
-                                                                            <div
-                                                                                class="d-flex align-items-center gap-2">
-                                                                                <span>:</span>
-                                                                                <div class="form-check">
-                                                                                    <input class="form-check-input"
-                                                                                        type="radio"
-                                                                                        name="paru_inspeksi"
-                                                                                        value="simetris"
-                                                                                        id="paru_inspeksi_simetris">
-                                                                                    <label class="form-check-label"
-                                                                                        for="paru_inspeksi_simetris">Simetris</label>
-                                                                                </div>
-                                                                                <div class="form-check">
-                                                                                    <input class="form-check-input"
-                                                                                        type="radio"
-                                                                                        name="paru_inspeksi"
-                                                                                        value="asimetris"
-                                                                                        id="paru_inspeksi_asimetris">
-                                                                                    <label class="form-check-label"
-                                                                                        for="paru_inspeksi_asimetris">Asimetris</label>
-                                                                                </div>
-                                                                                <span>:</span>
-                                                                                <input type="text"
-                                                                                    class="form-control input-inline"
-                                                                                    name="paru_inspeksi_keterangan"
-                                                                                    placeholder="Keterangan">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <!-- Palpasi -->
-                                                                    <div class="row mb-2">
-                                                                        <div class="col-md-3">
-                                                                            <label
-                                                                                class="text-muted">Palpasi</label>
-                                                                        </div>
-                                                                        <div class="col-md-9">
-                                                                            <div
-                                                                                class="d-flex align-items-center gap-2">
-                                                                                <span>:</span>
-                                                                                <input type="text"
-                                                                                    class="form-control"
-                                                                                    name="paru_palpasi"
-                                                                                    placeholder="Hasil palpasi">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <!-- Perkusi -->
-                                                                    <div class="row mb-2">
-                                                                        <div class="col-md-3">
-                                                                            <label
-                                                                                class="text-muted">Perkusi</label>
-                                                                        </div>
-                                                                        <div class="col-md-9">
-                                                                            <div
-                                                                                class="d-flex align-items-center gap-2">
-                                                                                <span>:</span>
-                                                                                <input type="text"
-                                                                                    class="form-control"
-                                                                                    name="paru_perkusi"
-                                                                                    placeholder="Hasil perkusi">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <!-- Auskultasi -->
-                                                                    <div class="row mb-3">
-                                                                        <div class="col-md-3">
-                                                                            <label
-                                                                                class="text-muted">Auskultasi</label>
-                                                                        </div>
-                                                                        <div class="col-md-9">
-                                                                            <div
-                                                                                class="d-flex align-items-center gap-2">
-                                                                                <span>:</span>
-                                                                                <input type="text"
-                                                                                    class="form-control"
-                                                                                    name="paru_auskultasi"
-                                                                                    placeholder="Hasil auskultasi">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <!-- Suara Pernafasan (SP) -->
-                                                                    <div class="row mb-2">
-                                                                        <div class="col-md-3">
-                                                                            <label class="text-muted">Suara
-                                                                                Pernafasan (SP):</label>
-                                                                        </div>
-                                                                        <div class="col-md-9">
-                                                                            <div class="d-flex flex-wrap gap-3">
-                                                                                <div class="form-check">
-                                                                                    <input
-                                                                                        class="form-check-input paru-suara-pernafasan"
-                                                                                        type="checkbox"
-                                                                                        value="vesikuler"
-                                                                                        id="sp_vesikuler">
-                                                                                    <label class="form-check-label"
-                                                                                        for="sp_vesikuler">Vesikuler</label>
-                                                                                </div>
-                                                                                <div class="form-check">
-                                                                                    <input
-                                                                                        class="form-check-input paru-suara-pernafasan"
-                                                                                        type="checkbox"
-                                                                                        value="vesikuler_melemah"
-                                                                                        id="sp_vesikuler_melemah">
-                                                                                    <label class="form-check-label"
-                                                                                        for="sp_vesikuler_melemah">Vesikuler
-                                                                                        Melemah</label>
-                                                                                </div>
-                                                                                <div class="form-check">
-                                                                                    <input
-                                                                                        class="form-check-input paru-suara-pernafasan"
-                                                                                        type="checkbox"
-                                                                                        value="ekspirasi_memanjang"
-                                                                                        id="sp_ekspirasi_memanjang">
-                                                                                    <label class="form-check-label"
-                                                                                        for="sp_ekspirasi_memanjang">Ekspirasi
-                                                                                        Memanjang</label>
-                                                                                </div>
-                                                                                <div class="form-check">
-                                                                                    <input
-                                                                                        class="form-check-input paru-suara-pernafasan"
-                                                                                        type="checkbox"
-                                                                                        value="vesikuler_mengeras"
-                                                                                        id="sp_vesikuler_mengeras">
-                                                                                    <label class="form-check-label"
-                                                                                        for="sp_vesikuler_mengeras">Vesikuler
-                                                                                        Mengeras</label>
-                                                                                </div>
-                                                                                <div class="form-check">
-                                                                                    <input
-                                                                                        class="form-check-input paru-suara-pernafasan"
-                                                                                        type="checkbox"
-                                                                                        value="bronkial"
-                                                                                        id="sp_bronkial">
-                                                                                    <label class="form-check-label"
-                                                                                        for="sp_bronkial">Bronkial</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <!-- Hidden input untuk menampung JSON -->
-                                                                            <input type="hidden"
-                                                                                name="paru_suara_pernafasan"
-                                                                                id="paru_suara_pernafasan_json">
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <!-- Suara Tambahan (ST) -->
-                                                                    <div class="row mb-2">
-                                                                        <div class="col-md-3">
-                                                                            <label class="text-muted">Suara
-                                                                                Tambahan (ST):</label>
-                                                                        </div>
-                                                                        <div class="col-md-9">
-                                                                            <div class="d-flex flex-wrap gap-3">
-                                                                                <div class="form-check">
-                                                                                    <input
-                                                                                        class="form-check-input paru-suara-tambahan"
-                                                                                        type="checkbox"
-                                                                                        value="rhonkhi_basah_halus"
-                                                                                        id="st_rhonkhi_basah_halus">
-                                                                                    <label class="form-check-label"
-                                                                                        for="st_rhonkhi_basah_halus">Rhonkhi
-                                                                                        Basah Halus</label>
-                                                                                </div>
-                                                                                <div class="form-check">
-                                                                                    <input
-                                                                                        class="form-check-input paru-suara-tambahan"
-                                                                                        type="checkbox"
-                                                                                        value="rhonkhi_basah_kasar"
-                                                                                        id="st_rhonkhi_basah_kasar">
-                                                                                    <label class="form-check-label"
-                                                                                        for="st_rhonkhi_basah_kasar">Rhonkhi
-                                                                                        Basah Kasar</label>
-                                                                                </div>
-                                                                                <div class="form-check">
-                                                                                    <input
-                                                                                        class="form-check-input paru-suara-tambahan"
-                                                                                        type="checkbox"
-                                                                                        value="rhonkhi_kering"
-                                                                                        id="st_rhonkhi_kering">
-                                                                                    <label class="form-check-label"
-                                                                                        for="st_rhonkhi_kering">Rhonkhi
-                                                                                        Kering</label>
-                                                                                </div>
-                                                                                <div class="form-check">
-                                                                                    <input
-                                                                                        class="form-check-input paru-suara-tambahan"
-                                                                                        type="checkbox"
-                                                                                        value="wheezing"
-                                                                                        id="st_wheezing">
-                                                                                    <label class="form-check-label"
-                                                                                        for="st_wheezing">Wheezing</label>
-                                                                                </div>
-                                                                                <div class="form-check">
-                                                                                    <input
-                                                                                        class="form-check-input paru-suara-tambahan"
-                                                                                        type="checkbox"
-                                                                                        value="amforik"
-                                                                                        id="st_amforik">
-                                                                                    <label class="form-check-label"
-                                                                                        for="st_amforik">Amforik</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <!-- Hidden input untuk menampung JSON -->
-                                                                            <input type="hidden"
-                                                                                name="paru_suara_tambahan"
-                                                                                id="paru_suara_tambahan_json">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label-col">Dyspnea</td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="form-check-group">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="dyspnoe" value="tidak" id="dyspnoe_tidak">
+                                                                <label class="form-check-label"
+                                                                    for="dyspnoe_tidak">Tidak</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="dyspnoe" value="ya" id="dyspnoe_ya">
+                                                                <label class="form-check-label"
+                                                                    for="dyspnoe_ya">Ya</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label-col">Oedema</td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="form-check-group">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="oedema" value="tidak" id="oedema_tidak">
+                                                                <label class="form-check-label"
+                                                                    for="oedema_tidak">Tidak</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="oedema" value="ya" id="oedema_ya">
+                                                                <label class="form-check-label" for="oedema_ya">Ya</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label-col">Icterus</td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="form-check-group">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="icterus" value="tidak" id="icterus_tidak">
+                                                                <label class="form-check-label"
+                                                                    for="icterus_tidak">Tidak</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="icterus" value="ya" id="icterus_ya">
+                                                                <label class="form-check-label"
+                                                                    for="icterus_ya">Ya</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label-col">Anemia</td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="form-check-group">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="anemia" value="tidak" id="anemia_tidak">
+                                                                <label class="form-check-label"
+                                                                    for="anemia_tidak">Tidak</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="anemia" value="ya" id="anemia_ya">
+                                                                <label class="form-check-label" for="anemia_ya">Ya</label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -823,98 +385,514 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="mt-4">
-                        <h6>Site Marking - Penandaan Anatomi Paru</h6>
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="site-marking-container position-relative">
-                                    <img src="{{ asset('assets/images/sitemarking/paru.jpg') }}"
-                                        id="paruAnatomyImage" class="img-fluid" style="max-width: 100%;">
-                                    <canvas id="paruMarkingCanvas" class="position-absolute top-0 start-0"
-                                        style="cursor: crosshair; z-index: 10;">
-                                    </canvas>
-                                </div>
-                                <div class="mt-2">
-                                    <small class="text-muted">
-                                        <strong>Cara Pakai:</strong> Pilih warna, klik dan drag untuk membuat
-                                        coret/marking di area yang ingin ditandai.
-                                    </small>
+                        <!-- 6. Pemeriksaan Fisik -->
+                        <div class="section-separator" id="pemeriksaan-fisik">
+                            <h5 class="section-title">6. Pemeriksaan Fisik</h5>
+                            {{-- baru --}}
+                            <div class="" id="pemeriksaan-fisik-paru">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-asesmen">
+                                        <tbody>
+                                            <!-- Kepala -->
+                                            <tr>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-md-2">
+                                                            <label class="fw-semibold">a. Kepala:</label>
+                                                        </div>
+                                                        <div class="col-md-10">
+                                                            <div class="d-flex align-items-center gap-3">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="paru_kepala" value="1"
+                                                                        id="paru_kepala_normal" checked>
+                                                                    <label class="form-check-label"
+                                                                        for="paru_kepala_normal">Normal</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="paru_kepala" value="0"
+                                                                        id="paru_kepala_tidak_normal">
+                                                                    <label class="form-check-label"
+                                                                        for="paru_kepala_tidak_normal">Tidak
+                                                                        Normal</label>
+                                                                </div>
+                                                                <input type="text" class="form-control"
+                                                                    name="paru_kepala_keterangan"
+                                                                    id="paru_kepala_keterangan"
+                                                                    placeholder="Keterangan jika tidak normal..." disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Mata -->
+                                            <tr>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-md-2">
+                                                            <label class="fw-semibold">b. Mata:</label>
+                                                        </div>
+                                                        <div class="col-md-10">
+                                                            <div class="d-flex align-items-center gap-3">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="paru_mata" value="1"
+                                                                        id="paru_mata_normal" checked>
+                                                                    <label class="form-check-label"
+                                                                        for="paru_mata_normal">Normal</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="paru_mata" value="0"
+                                                                        id="paru_mata_tidak_normal">
+                                                                    <label class="form-check-label"
+                                                                        for="paru_mata_tidak_normal">Tidak
+                                                                        Normal</label>
+                                                                </div>
+                                                                <input type="text" class="form-control"
+                                                                    name="paru_mata_keterangan" id="paru_mata_keterangan"
+                                                                    placeholder="Keterangan jika tidak normal..." disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <!-- THT -->
+                                            <tr>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-md-2">
+                                                            <label class="fw-semibold">c. THT:</label>
+                                                        </div>
+                                                        <div class="col-md-10">
+                                                            <div class="d-flex align-items-center gap-3">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="paru_tht" value="1"
+                                                                        id="paru_tht_normal" checked>
+                                                                    <label class="form-check-label"
+                                                                        for="paru_tht_normal">Normal</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="paru_tht" value="0"
+                                                                        id="paru_tht_tidak_normal">
+                                                                    <label class="form-check-label"
+                                                                        for="paru_tht_tidak_normal">Tidak
+                                                                        Normal</label>
+                                                                </div>
+                                                                <input type="text" class="form-control"
+                                                                    name="paru_tht_keterangan" id="paru_tht_keterangan"
+                                                                    placeholder="Keterangan jika tidak normal..." disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Leher -->
+                                            <tr>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-md-2">
+                                                            <label class="fw-semibold">d. Leher:</label>
+                                                        </div>
+                                                        <div class="col-md-10">
+                                                            <div class="d-flex align-items-center gap-3">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="paru_leher" value="1"
+                                                                        id="paru_leher_normal" checked>
+                                                                    <label class="form-check-label"
+                                                                        for="paru_leher_normal">Normal</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="paru_leher" value="0"
+                                                                        id="paru_leher_tidak_normal">
+                                                                    <label class="form-check-label"
+                                                                        for="paru_leher_tidak_normal">Tidak
+                                                                        Normal</label>
+                                                                </div>
+                                                                <input type="text" class="form-control"
+                                                                    name="paru_leher_keterangan"
+                                                                    id="paru_leher_keterangan"
+                                                                    placeholder="Keterangan jika tidak normal..." disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Thoraks -->
+                                            <tr>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-md-2">
+                                                            <label class="fw-semibold">e. Thoraks</label>
+                                                        </div>
+                                                        <div class="col-md-10">
+                                                            <!-- Jantung -->
+                                                            <div class="mb-3">
+                                                                <div class="row">
+                                                                    <div class="col-md-2">
+                                                                        <label class="fw-medium">Jantung:</label>
+                                                                    </div>
+                                                                    <div class="col-md-10">
+                                                                        <div class="d-flex align-items-center gap-3">
+                                                                            <div class="form-check">
+                                                                                <input class="form-check-input"
+                                                                                    type="radio" name="paru_jantung"
+                                                                                    value="1"
+                                                                                    id="paru_jantung_normal" checked>
+                                                                                <label class="form-check-label"
+                                                                                    for="paru_jantung_normal">Normal</label>
+                                                                            </div>
+                                                                            <div class="form-check">
+                                                                                <input class="form-check-input"
+                                                                                    type="radio" name="paru_jantung"
+                                                                                    value="0"
+                                                                                    id="paru_jantung_tidak_normal">
+                                                                                <label class="form-check-label"
+                                                                                    for="paru_jantung_tidak_normal">Tidak
+                                                                                    Normal</label>
+                                                                            </div>
+                                                                            <input type="text" class="form-control"
+                                                                                name="paru_jantung_keterangan"
+                                                                                id="paru_jantung_keterangan"
+                                                                                placeholder="Keterangan jika tidak normal..."
+                                                                                disabled>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Paru -->
+                                                            <div class="mb-3">
+                                                                <div class="row">
+                                                                    <div class="col-md-2">
+                                                                        <label class="fw-medium">Paru:</label>
+                                                                    </div>
+                                                                    <div class="col-md-10">
+                                                                        <!-- Inspeksi -->
+                                                                        <div class="row mb-2">
+                                                                            <div class="col-md-3">
+                                                                                <label class="text-muted">Inspeksi</label>
+                                                                            </div>
+                                                                            <div class="col-md-9">
+                                                                                <div
+                                                                                    class="d-flex align-items-center gap-2">
+                                                                                    <span>:</span>
+                                                                                    <div class="form-check">
+                                                                                        <input class="form-check-input"
+                                                                                            type="radio"
+                                                                                            name="paru_inspeksi"
+                                                                                            value="simetris"
+                                                                                            id="paru_inspeksi_simetris">
+                                                                                        <label class="form-check-label"
+                                                                                            for="paru_inspeksi_simetris">Simetris</label>
+                                                                                    </div>
+                                                                                    <div class="form-check">
+                                                                                        <input class="form-check-input"
+                                                                                            type="radio"
+                                                                                            name="paru_inspeksi"
+                                                                                            value="asimetris"
+                                                                                            id="paru_inspeksi_asimetris">
+                                                                                        <label class="form-check-label"
+                                                                                            for="paru_inspeksi_asimetris">Asimetris</label>
+                                                                                    </div>
+                                                                                    <span>:</span>
+                                                                                    <input type="text"
+                                                                                        class="form-control input-inline"
+                                                                                        name="paru_inspeksi_keterangan"
+                                                                                        placeholder="Keterangan">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <!-- Palpasi -->
+                                                                        <div class="row mb-2">
+                                                                            <div class="col-md-3">
+                                                                                <label class="text-muted">Palpasi</label>
+                                                                            </div>
+                                                                            <div class="col-md-9">
+                                                                                <div
+                                                                                    class="d-flex align-items-center gap-2">
+                                                                                    <span>:</span>
+                                                                                    <input type="text"
+                                                                                        class="form-control"
+                                                                                        name="paru_palpasi"
+                                                                                        placeholder="Hasil palpasi">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <!-- Perkusi -->
+                                                                        <div class="row mb-2">
+                                                                            <div class="col-md-3">
+                                                                                <label class="text-muted">Perkusi</label>
+                                                                            </div>
+                                                                            <div class="col-md-9">
+                                                                                <div
+                                                                                    class="d-flex align-items-center gap-2">
+                                                                                    <span>:</span>
+                                                                                    <input type="text"
+                                                                                        class="form-control"
+                                                                                        name="paru_perkusi"
+                                                                                        placeholder="Hasil perkusi">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <!-- Auskultasi -->
+                                                                        <div class="row mb-3">
+                                                                            <div class="col-md-3">
+                                                                                <label
+                                                                                    class="text-muted">Auskultasi</label>
+                                                                            </div>
+                                                                            <div class="col-md-9">
+                                                                                <div
+                                                                                    class="d-flex align-items-center gap-2">
+                                                                                    <span>:</span>
+                                                                                    <input type="text"
+                                                                                        class="form-control"
+                                                                                        name="paru_auskultasi"
+                                                                                        placeholder="Hasil auskultasi">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <!-- Suara Pernafasan (SP) -->
+                                                                        <div class="row mb-2">
+                                                                            <div class="col-md-3">
+                                                                                <label class="text-muted">Suara
+                                                                                    Pernafasan (SP):</label>
+                                                                            </div>
+                                                                            <div class="col-md-9">
+                                                                                <div class="d-flex flex-wrap gap-3">
+                                                                                    <div class="form-check">
+                                                                                        <input
+                                                                                            class="form-check-input paru-suara-pernafasan"
+                                                                                            type="checkbox"
+                                                                                            value="vesikuler"
+                                                                                            id="sp_vesikuler">
+                                                                                        <label class="form-check-label"
+                                                                                            for="sp_vesikuler">Vesikuler</label>
+                                                                                    </div>
+                                                                                    <div class="form-check">
+                                                                                        <input
+                                                                                            class="form-check-input paru-suara-pernafasan"
+                                                                                            type="checkbox"
+                                                                                            value="vesikuler_melemah"
+                                                                                            id="sp_vesikuler_melemah">
+                                                                                        <label class="form-check-label"
+                                                                                            for="sp_vesikuler_melemah">Vesikuler
+                                                                                            Melemah</label>
+                                                                                    </div>
+                                                                                    <div class="form-check">
+                                                                                        <input
+                                                                                            class="form-check-input paru-suara-pernafasan"
+                                                                                            type="checkbox"
+                                                                                            value="ekspirasi_memanjang"
+                                                                                            id="sp_ekspirasi_memanjang">
+                                                                                        <label class="form-check-label"
+                                                                                            for="sp_ekspirasi_memanjang">Ekspirasi
+                                                                                            Memanjang</label>
+                                                                                    </div>
+                                                                                    <div class="form-check">
+                                                                                        <input
+                                                                                            class="form-check-input paru-suara-pernafasan"
+                                                                                            type="checkbox"
+                                                                                            value="vesikuler_mengeras"
+                                                                                            id="sp_vesikuler_mengeras">
+                                                                                        <label class="form-check-label"
+                                                                                            for="sp_vesikuler_mengeras">Vesikuler
+                                                                                            Mengeras</label>
+                                                                                    </div>
+                                                                                    <div class="form-check">
+                                                                                        <input
+                                                                                            class="form-check-input paru-suara-pernafasan"
+                                                                                            type="checkbox"
+                                                                                            value="bronkial"
+                                                                                            id="sp_bronkial">
+                                                                                        <label class="form-check-label"
+                                                                                            for="sp_bronkial">Bronkial</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- Hidden input untuk menampung JSON -->
+                                                                                <input type="hidden"
+                                                                                    name="paru_suara_pernafasan"
+                                                                                    id="paru_suara_pernafasan_json">
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <!-- Suara Tambahan (ST) -->
+                                                                        <div class="row mb-2">
+                                                                            <div class="col-md-3">
+                                                                                <label class="text-muted">Suara
+                                                                                    Tambahan (ST):</label>
+                                                                            </div>
+                                                                            <div class="col-md-9">
+                                                                                <div class="d-flex flex-wrap gap-3">
+                                                                                    <div class="form-check">
+                                                                                        <input
+                                                                                            class="form-check-input paru-suara-tambahan"
+                                                                                            type="checkbox"
+                                                                                            value="rhonkhi_basah_halus"
+                                                                                            id="st_rhonkhi_basah_halus">
+                                                                                        <label class="form-check-label"
+                                                                                            for="st_rhonkhi_basah_halus">Rhonkhi
+                                                                                            Basah Halus</label>
+                                                                                    </div>
+                                                                                    <div class="form-check">
+                                                                                        <input
+                                                                                            class="form-check-input paru-suara-tambahan"
+                                                                                            type="checkbox"
+                                                                                            value="rhonkhi_basah_kasar"
+                                                                                            id="st_rhonkhi_basah_kasar">
+                                                                                        <label class="form-check-label"
+                                                                                            for="st_rhonkhi_basah_kasar">Rhonkhi
+                                                                                            Basah Kasar</label>
+                                                                                    </div>
+                                                                                    <div class="form-check">
+                                                                                        <input
+                                                                                            class="form-check-input paru-suara-tambahan"
+                                                                                            type="checkbox"
+                                                                                            value="rhonkhi_kering"
+                                                                                            id="st_rhonkhi_kering">
+                                                                                        <label class="form-check-label"
+                                                                                            for="st_rhonkhi_kering">Rhonkhi
+                                                                                            Kering</label>
+                                                                                    </div>
+                                                                                    <div class="form-check">
+                                                                                        <input
+                                                                                            class="form-check-input paru-suara-tambahan"
+                                                                                            type="checkbox"
+                                                                                            value="wheezing"
+                                                                                            id="st_wheezing">
+                                                                                        <label class="form-check-label"
+                                                                                            for="st_wheezing">Wheezing</label>
+                                                                                    </div>
+                                                                                    <div class="form-check">
+                                                                                        <input
+                                                                                            class="form-check-input paru-suara-tambahan"
+                                                                                            type="checkbox"
+                                                                                            value="amforik"
+                                                                                            id="st_amforik">
+                                                                                        <label class="form-check-label"
+                                                                                            for="st_amforik">Amforik</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- Hidden input untuk menampung JSON -->
+                                                                                <input type="hidden"
+                                                                                    name="paru_suara_tambahan"
+                                                                                    id="paru_suara_tambahan_json">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="marking-controls">
-                                    <h6>Kontrol Penandaan Paru</h6>
+                        </div>
 
-                                    <!-- Pilihan Warna -->
-                                    <div class="mb-3">
-                                        <label class="form-label">Pilih Warna:</label>
-                                        <div class="d-flex flex-wrap gap-2">
-                                            <button type="button" class="paru-color-btn active"
-                                                data-color="#dc3545"
-                                                style="background: #dc3545; width: 35px; height: 35px; border: 2px solid #dee2e6; border-radius: 6px; cursor: pointer;"></button>
-                                            <button type="button" class="paru-color-btn" data-color="#198754"
-                                                style="background: #198754; width: 35px; height: 35px; border: 2px solid #dee2e6; border-radius: 6px; cursor: pointer;"></button>
-                                            <button type="button" class="paru-color-btn" data-color="#0d6efd"
-                                                style="background: #0d6efd; width: 35px; height: 35px; border: 2px solid #dee2e6; border-radius: 6px; cursor: pointer;"></button>
-                                            <button type="button" class="paru-color-btn" data-color="#fd7e14"
-                                                style="background: #fd7e14; width: 35px; height: 35px; border: 2px solid #dee2e6; border-radius: 6px; cursor: pointer;"></button>
-                                            <button type="button" class="paru-color-btn" data-color="#6f42c1"
-                                                style="background: #6f42c1; width: 35px; height: 35px; border: 2px solid #dee2e6; border-radius: 6px; cursor: pointer;"></button>
-                                            <button type="button" class="paru-color-btn" data-color="#000000"
-                                                style="background: #000000; width: 35px; height: 35px; border: 2px solid #dee2e6; border-radius: 6px; cursor: pointer;"></button>
+                        <div class="mt-4">
+                            <h6>Site Marking - Penandaan Anatomi Paru</h6>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="site-marking-container position-relative">
+                                        <img src="{{ asset('assets/images/sitemarking/paru.jpg') }}" id="paruAnatomyImage"
+                                            class="img-fluid" style="max-width: 100%;">
+                                        <canvas id="paruMarkingCanvas" class="position-absolute top-0 start-0"
+                                            style="cursor: crosshair; z-index: 10;">
+                                        </canvas>
+                                    </div>
+                                    <div class="mt-2">
+                                        <small class="text-muted">
+                                            <strong>Cara Pakai:</strong> Pilih warna, klik dan drag untuk membuat
+                                            coret/marking di area yang ingin ditandai.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="marking-controls">
+                                        <h6>Kontrol Penandaan Paru</h6>
+
+                                        <!-- Pilihan Warna -->
+                                        <div class="mb-3">
+                                            <label class="form-label">Pilih Warna:</label>
+                                            <div class="d-flex flex-wrap gap-2">
+                                                <button type="button" class="paru-color-btn active" data-color="#dc3545"
+                                                    style="background: #dc3545; width: 35px; height: 35px; border: 2px solid #dee2e6; border-radius: 6px; cursor: pointer;"></button>
+                                                <button type="button" class="paru-color-btn" data-color="#198754"
+                                                    style="background: #198754; width: 35px; height: 35px; border: 2px solid #dee2e6; border-radius: 6px; cursor: pointer;"></button>
+                                                <button type="button" class="paru-color-btn" data-color="#0d6efd"
+                                                    style="background: #0d6efd; width: 35px; height: 35px; border: 2px solid #dee2e6; border-radius: 6px; cursor: pointer;"></button>
+                                                <button type="button" class="paru-color-btn" data-color="#fd7e14"
+                                                    style="background: #fd7e14; width: 35px; height: 35px; border: 2px solid #dee2e6; border-radius: 6px; cursor: pointer;"></button>
+                                                <button type="button" class="paru-color-btn" data-color="#6f42c1"
+                                                    style="background: #6f42c1; width: 35px; height: 35px; border: 2px solid #dee2e6; border-radius: 6px; cursor: pointer;"></button>
+                                                <button type="button" class="paru-color-btn" data-color="#000000"
+                                                    style="background: #000000; width: 35px; height: 35px; border: 2px solid #dee2e6; border-radius: 6px; cursor: pointer;"></button>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <!-- Ketebalan Brush -->
-                                    <div class="mb-3">
-                                        <label class="form-label">Ketebalan Brush:</label>
-                                        <input type="range" id="paruBrushSize" class="form-range"
-                                            min="1" max="5" value="2" step="0.5">
-                                        <small class="text-muted">Ukuran: <span
-                                                id="paruBrushSizeValue">2</span>px</small>
-                                    </div>
+                                        <!-- Ketebalan Brush -->
+                                        <div class="mb-3">
+                                            <label class="form-label">Ketebalan Brush:</label>
+                                            <input type="range" id="paruBrushSize" class="form-range" min="1"
+                                                max="5" value="2" step="0.5">
+                                            <small class="text-muted">Ukuran: <span
+                                                    id="paruBrushSizeValue">2</span>px</small>
+                                        </div>
 
-                                    <!-- Keterangan -->
-                                    <div class="mb-3">
-                                        <label class="form-label">Keterangan (opsional):</label>
-                                        <input type="text" id="paruMarkingNote" class="form-control"
-                                            placeholder="Contoh: Ronkhi basah, Wheezing">
-                                    </div>
+                                        <!-- Keterangan -->
+                                        <div class="mb-3">
+                                            <label class="form-label">Keterangan (opsional):</label>
+                                            <input type="text" id="paruMarkingNote" class="form-control"
+                                                placeholder="Contoh: Ronkhi basah, Wheezing">
+                                        </div>
 
-                                    <!-- Tombol Kontrol -->
-                                    <div class="d-grid gap-2">
-                                        <button type="button" class="btn btn-outline-primary"
-                                            id="paruSaveMarking">
-                                            <i class="ti-save"></i> Simpan Penandaan
-                                        </button>
-                                        <button type="button" class="btn btn-outline-warning" id="paruUndoLast">
-                                            <i class="ti-back-left"></i> Undo Terakhir
-                                        </button>
-                                        <button type="button" class="btn btn-outline-danger" id="paruClearAll">
-                                            <i class="ti-trash"></i> Hapus Semua
-                                        </button>
-                                    </div>
+                                        <!-- Tombol Kontrol -->
+                                        <div class="d-grid gap-2">
+                                            <button type="button" class="btn btn-outline-primary" id="paruSaveMarking">
+                                                <i class="ti-save"></i> Simpan Penandaan
+                                            </button>
+                                            <button type="button" class="btn btn-outline-warning" id="paruUndoLast">
+                                                <i class="ti-back-left"></i> Undo Terakhir
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger" id="paruClearAll">
+                                                <i class="ti-trash"></i> Hapus Semua
+                                            </button>
+                                        </div>
 
-                                    <!-- Daftar Penandaan -->
-                                    <div class="paru-marking-list mt-3">
-                                        <h6>Daftar Penandaan (<span id="paruMarkingCount">0</span>):</h6>
-                                        <div id="paruMarkingsList" class="list-group"
-                                            style="max-height: 250px; overflow-y: auto;">
-                                            <div class="text-muted text-center py-3" id="paruEmptyState">
-                                                <i class="ti-info-alt"></i> Belum ada penandaan
+                                        <!-- Daftar Penandaan -->
+                                        <div class="paru-marking-list mt-3">
+                                            <h6>Daftar Penandaan (<span id="paruMarkingCount">0</span>):</h6>
+                                            <div id="paruMarkingsList" class="list-group"
+                                                style="max-height: 250px; overflow-y: auto;">
+                                                <div class="text-muted text-center py-3" id="paruEmptyState">
+                                                    <i class="ti-info-alt"></i> Belum ada penandaan
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <input type="hidden" name="site_marking_paru_data" id="siteMarkingParuData" value="">
                         </div>
-                        <input type="hidden" name="site_marking_paru_data" id="siteMarkingParuData"
-                            value="">
-                    </div>
-                    {{-- end baru --}}
-                    {{-- <div class="row g-3">
+                        {{-- end baru --}}
+                        {{-- <div class="row g-3">
                             <div class="pemeriksaan-fisik">
                                 <p class="text-small">Centang normal jika fisik yang dinilai
                                     normal,
@@ -959,355 +937,359 @@
                                 </div>
                             </div>
                         </div> --}}
-                </div>
+                    </div>
 
-                <!-- 7. Rencana Kerja Dan Penatalaksanaan -->
-                <div class="section-separator" id="rencana-kerja">
-                    <h5 class="section-title">7. Rencana Kerja Dan Penatalaksanaan</h5>
-                    <div>
-                        <div class="form-group d-flex align-items-center gap-3">
-                            <label style="min-width: 300px;"><span class="fw-bold">a.</span> Foto thoraks</label>
-                            <input type="checkbox" name="foto_thoraks" value="1" class="form-check-input"
-                                id="foto_thoraks">
-                            @error('foto_thoraks')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group d-flex align-items-center gap-3">
-                            <label style="min-width: 300px;"><span class="fw-bold">b.</span> Pemeriksaan darah
-                                rutin</label>
-                            <input type="checkbox" name="darah_rutin" value="1" class="form-check-input"
-                                id="darah_rutin">
-                            @error('darah_rutin')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group d-flex align-items-center gap-3">
-                            <label style="min-width: 300px;"><span class="fw-bold">c.</span> Pemeriksaan
-                                LED</label>
-                            <input type="checkbox" name="led" value="1" class="form-check-input"
-                                id="led">
-                            @error('led')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group d-flex align-items-center gap-3">
-                            <label style="min-width: 300px;"><span class="fw-bold">d.</span> Pemeriksaan sputum
-                                BTA</label>
-                            <input type="checkbox" name="sputum_bta" value="1" class="form-check-input"
-                                id="sputum_bta">
-                            @error('sputum_bta')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group d-flex align-items-center gap-3">
-                            <label style="min-width: 300px;"><span class="fw-bold">e.</span> Pemeriksaan
-                                KGDS</label>
-                            <input type="checkbox" name="kgds" value="1" class="form-check-input"
-                                id="kgds">
-                            @error('igds')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group d-flex align-items-center gap-3">
-                            <label style="min-width: 300px;"><span class="fw-bold">f.</span> Pemeriksaan faal hati
-                                (LFT)</label>
-                            <input type="checkbox" name="faal_hati" value="1" class="form-check-input"
-                                id="faal_hati">
-                            @error('faal_ginjal')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group d-flex align-items-center gap-3">
-                            <label style="min-width: 300px;"><span class="fw-bold">g.</span> Pemeriksaan faal
-                                ginjal (RFT)</label>
-                            <input type="checkbox" name="faal_ginjal" value="1" class="form-check-input"
-                                id="faal_ginjal">
-                            @error('faal_ginjal')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group d-flex align-items-center gap-3">
-                            <label style="min-width: 300px;"><span class="fw-bold">h.</span> Pemeriksaan
-                                elektrolit</label>
-                            <input type="checkbox" name="elektrolit" value="1" class="form-check-input"
-                                id="elektrolit">
-                            @error('elektrolit')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group d-flex align-items-center gap-3">
-                            <label style="min-width: 300px;"><span class="fw-bold">i.</span> Pemeriksaan
-                                albumin</label>
-                            <input type="checkbox" name="albumin" value="1" class="form-check-input"
-                                id="albumin">
-                            @error('albumin')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group d-flex align-items-center gap-3">
-                            <label style="min-width: 300px;"><span class="fw-bold">j.</span> Pemeriksaan asam
-                                urat</label>
-                            <input type="checkbox" name="asam_urat" value="1" class="form-check-input"
-                                id="asam_urat">
-                            @error('asam_urat')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group d-flex align-items-center gap-3">
-                            <label style="min-width: 300px;"><span class="fw-bold">k.</span> Faal paru (APE,
-                                spirometri)</label>
-                            <input type="checkbox" name="faal_paru" value="1" class="form-check-input"
-                                id="faal_paru">
-                            @error('faal_paru')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group d-flex align-items-center gap-3">
-                            <label style="min-width: 300px;"><span class="fw-bold">l.</span> CT Scan
-                                thoraks</label>
-                            <input type="checkbox" name="ct_scan_thoraks" value="1"
-                                class="form-check-input" id="ct_scan_thoraks">
-                            @error('ct_scan_thoraks')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group d-flex align-items-center gap-3">
-                            <label style="min-width: 300px;"><span class="fw-bold">m.</span> Bronchoscopy</label>
-                            <input type="checkbox" name="bronchoscopy" value="1" class="form-check-input"
-                                id="bronchoscopy">
-                            @error('bronchoscopy')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group d-flex align-items-center gap-3">
-                            <label style="min-width: 300px;"><span class="fw-bold">n.</span> Proef Punctie</label>
-                            <input type="checkbox" name="proef_punctie" value="1" class="form-check-input"
-                                id="proef_punctie">
-                            @error('proef_punctie')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group d-flex align-items-center gap-3">
-                            <label style="min-width: 300px;"><span class="fw-bold">o.</span> Aspirasi cairan
-                                pleura</label>
-                            <input type="checkbox" name="aspirasi_cairan_pleura" value="1"
-                                class="form-check-input" id="aspirasi_cairan_pleura">
-                            @error('aspirasi_cairan_pleura')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group d-flex align-items-center gap-3">
-                            <label style="min-width: 300px;"><span class="fw-bold">p.</span> Penanganan
-                                WSD</label>
-                            <input type="checkbox" name="penanganan_wsd" value="1" class="form-check-input"
-                                id="penanganan_wsd">
-                            @error('penanganan_wsd')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group d-flex align-items-center gap-3">
-                            <label style="min-width: 300px;"><span class="fw-bold">q.</span> Biopsi
-                                Kelenjar</label>
-                            <input type="checkbox" name="biopsi_kelenjar" value="1"
-                                class="form-check-input" id="penanganan_penyakit">
-                            @error('penanganan_penyakit')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group d-flex align-items-center gap-3">
-                            <label style="min-width: 300px;"><span class="fw-bold">r.</span> Mantoux Tes</label>
-                            <input type="checkbox" name="mantoux_tes" value="1" class="form-check-input"
-                                id="konsul">
-                            @error('konsul')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group d-flex align-items-center gap-3">
-                            <label style="min-width: 300px;"><span class="fw-bold">s.</span> Lainnya</label>
-                            <div class="d-flex gap-2 align-items-center">
-                                <input type="checkbox" name="lainnya_check" value="1"
-                                    class="form-check-input" id="lainnya_check">
-                                <input type="text" class="form-control @error('lainnya') is-invalid @enderror"
-                                    name="lainnya" id="lainnya" placeholder="Masukkan rencana lainnya"
-                                    disabled>
-                                @error('lainnya')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                    <!-- 7. Rencana Kerja Dan Penatalaksanaan -->
+                    <div class="section-separator" id="rencana-kerja">
+                        <h5 class="section-title">7. Rencana Kerja Dan Penatalaksanaan</h5>
+                        <div>
+                            <div class="form-group d-flex align-items-center gap-3">
+                                <label style="min-width: 300px;"><span class="fw-bold">a.</span> Foto thoraks</label>
+                                <input type="checkbox" name="foto_thoraks" value="1" class="form-check-input"
+                                    id="foto_thoraks">
+                                @error('foto_thoraks')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
-                        </div>
+                            <div class="form-group d-flex align-items-center gap-3">
+                                <label style="min-width: 300px;"><span class="fw-bold">b.</span> Pemeriksaan darah
+                                    rutin</label>
+                                <input type="checkbox" name="darah_rutin" value="1" class="form-check-input"
+                                    id="darah_rutin">
+                                @error('darah_rutin')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group d-flex align-items-center gap-3">
+                                <label style="min-width: 300px;"><span class="fw-bold">c.</span> Pemeriksaan
+                                    LED</label>
+                                <input type="checkbox" name="led" value="1" class="form-check-input"
+                                    id="led">
+                                @error('led')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group d-flex align-items-center gap-3">
+                                <label style="min-width: 300px;"><span class="fw-bold">d.</span> Pemeriksaan sputum
+                                    BTA</label>
+                                <input type="checkbox" name="sputum_bta" value="1" class="form-check-input"
+                                    id="sputum_bta">
+                                @error('sputum_bta')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group d-flex align-items-center gap-3">
+                                <label style="min-width: 300px;"><span class="fw-bold">e.</span> Pemeriksaan
+                                    KGDS</label>
+                                <input type="checkbox" name="kgds" value="1" class="form-check-input"
+                                    id="kgds">
+                                @error('igds')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group d-flex align-items-center gap-3">
+                                <label style="min-width: 300px;"><span class="fw-bold">f.</span> Pemeriksaan faal hati
+                                    (LFT)</label>
+                                <input type="checkbox" name="faal_hati" value="1" class="form-check-input"
+                                    id="faal_hati">
+                                @error('faal_ginjal')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group d-flex align-items-center gap-3">
+                                <label style="min-width: 300px;"><span class="fw-bold">g.</span> Pemeriksaan faal
+                                    ginjal (RFT)</label>
+                                <input type="checkbox" name="faal_ginjal" value="1" class="form-check-input"
+                                    id="faal_ginjal">
+                                @error('faal_ginjal')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group d-flex align-items-center gap-3">
+                                <label style="min-width: 300px;"><span class="fw-bold">h.</span> Pemeriksaan
+                                    elektrolit</label>
+                                <input type="checkbox" name="elektrolit" value="1" class="form-check-input"
+                                    id="elektrolit">
+                                @error('elektrolit')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group d-flex align-items-center gap-3">
+                                <label style="min-width: 300px;"><span class="fw-bold">i.</span> Pemeriksaan
+                                    albumin</label>
+                                <input type="checkbox" name="albumin" value="1" class="form-check-input"
+                                    id="albumin">
+                                @error('albumin')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group d-flex align-items-center gap-3">
+                                <label style="min-width: 300px;"><span class="fw-bold">j.</span> Pemeriksaan asam
+                                    urat</label>
+                                <input type="checkbox" name="asam_urat" value="1" class="form-check-input"
+                                    id="asam_urat">
+                                @error('asam_urat')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group d-flex align-items-center gap-3">
+                                <label style="min-width: 300px;"><span class="fw-bold">k.</span> Faal paru (APE,
+                                    spirometri)</label>
+                                <input type="checkbox" name="faal_paru" value="1" class="form-check-input"
+                                    id="faal_paru">
+                                @error('faal_paru')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group d-flex align-items-center gap-3">
+                                <label style="min-width: 300px;"><span class="fw-bold">l.</span> CT Scan
+                                    thoraks</label>
+                                <input type="checkbox" name="ct_scan_thoraks" value="1" class="form-check-input"
+                                    id="ct_scan_thoraks">
+                                @error('ct_scan_thoraks')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group d-flex align-items-center gap-3">
+                                <label style="min-width: 300px;"><span class="fw-bold">m.</span> Bronchoscopy</label>
+                                <input type="checkbox" name="bronchoscopy" value="1" class="form-check-input"
+                                    id="bronchoscopy">
+                                @error('bronchoscopy')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group d-flex align-items-center gap-3">
+                                <label style="min-width: 300px;"><span class="fw-bold">n.</span> Proef Punctie</label>
+                                <input type="checkbox" name="proef_punctie" value="1" class="form-check-input"
+                                    id="proef_punctie">
+                                @error('proef_punctie')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group d-flex align-items-center gap-3">
+                                <label style="min-width: 300px;"><span class="fw-bold">o.</span> Aspirasi cairan
+                                    pleura</label>
+                                <input type="checkbox" name="aspirasi_cairan_pleura" value="1"
+                                    class="form-check-input" id="aspirasi_cairan_pleura">
+                                @error('aspirasi_cairan_pleura')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group d-flex align-items-center gap-3">
+                                <label style="min-width: 300px;"><span class="fw-bold">p.</span> Penanganan
+                                    WSD</label>
+                                <input type="checkbox" name="penanganan_wsd" value="1" class="form-check-input"
+                                    id="penanganan_wsd">
+                                @error('penanganan_wsd')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group d-flex align-items-center gap-3">
+                                <label style="min-width: 300px;"><span class="fw-bold">q.</span> Biopsi
+                                    Kelenjar</label>
+                                <input type="checkbox" name="biopsi_kelenjar" value="1" class="form-check-input"
+                                    id="penanganan_penyakit">
+                                @error('penanganan_penyakit')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group d-flex align-items-center gap-3">
+                                <label style="min-width: 300px;"><span class="fw-bold">r.</span> Mantoux Tes</label>
+                                <input type="checkbox" name="mantoux_tes" value="1" class="form-check-input"
+                                    id="konsul">
+                                @error('konsul')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group d-flex align-items-center gap-3">
+                                <label style="min-width: 300px;"><span class="fw-bold">s.</span> Lainnya</label>
+                                <div class="d-flex gap-2 align-items-center">
+                                    <input type="checkbox" name="lainnya_check" value="1" class="form-check-input"
+                                        id="lainnya_check">
+                                    <input type="text" class="form-control @error('lainnya') is-invalid @enderror"
+                                        name="lainnya" id="lainnya" placeholder="Masukkan rencana lainnya" disabled>
+                                    @error('lainnya')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
 
+                        </div>
                     </div>
-                </div>
 
-                <!-- 9. Diagnosis -->
-                <div class="section-separator" id="diagnosis">
-                    <h5 class="fw-semibold mb-4">8. Diagnosis</h5>
+                    <!-- 9. Diagnosis -->
+                    <div class="section-separator" id="diagnosis">
+                        <h5 class="fw-semibold mb-4">8. Diagnosis</h5>
 
-                    <!-- Diagnosis Banding -->
-                    <div class="mb-4">
-                        <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
-                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                            diagnosis banding,
-                            apabila tidak ada, Pilih tanda tambah untuk menambah
-                            keterangan diagnosis banding yang tidak ditemukan.</small>
+                        <!-- Diagnosis Banding -->
+                        <div class="mb-4">
+                            <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
+                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                diagnosis banding,
+                                apabila tidak ada, Pilih tanda tambah untuk menambah
+                                keterangan diagnosis banding yang tidak ditemukan.</small>
 
-                        <div class="input-group mb-3">
-                            <span class="input-group-text bg-white border-end-0">
-                                <i class="bi bi-search text-secondary"></i>
-                            </span>
-                            <input type="text" id="diagnosis-banding-input"
-                                class="form-control border-start-0 ps-0"
-                                placeholder="Cari dan tambah Diagnosis Banding">
-                            <span class="input-group-text bg-white" id="add-diagnosis-banding">
-                                <i class="bi bi-plus-circle text-primary"></i>
-                            </span>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text bg-white border-end-0">
+                                    <i class="bi bi-search text-secondary"></i>
+                                </span>
+                                <input type="text" id="diagnosis-banding-input"
+                                    class="form-control border-start-0 ps-0"
+                                    placeholder="Cari dan tambah Diagnosis Banding">
+                                <span class="input-group-text bg-white" id="add-diagnosis-banding">
+                                    <i class="bi bi-plus-circle text-primary"></i>
+                                </span>
+                            </div>
+
+                            <div id="diagnosis-banding-list" class="diagnosis-list bg-light p-3 rounded">
+                                <!-- Diagnosis items will be added here dynamically -->
+                            </div>
+
+                            <!-- Hidden input to store JSON data -->
+                            <input type="hidden" id="diagnosis_banding" name="diagnosis_banding" value="[]">
                         </div>
 
-                        <div id="diagnosis-banding-list" class="diagnosis-list bg-light p-3 rounded">
-                            <!-- Diagnosis items will be added here dynamically -->
-                        </div>
+                        <!-- Diagnosis Kerja -->
+                        <div>
+                            <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
+                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah
+                                keterangan diagnosis kerja yang tidak ditemukan.</small>
 
-                        <!-- Hidden input to store JSON data -->
-                        <input type="hidden" id="diagnosis_banding" name="diagnosis_banding" value="[]">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text bg-white border-end-0">
+                                    <i class="bi bi-search text-secondary"></i>
+                                </span>
+                                <input type="text" id="diagnosis-kerja-input" class="form-control border-start-0 ps-0"
+                                    placeholder="Cari dan tambah Diagnosis Kerja">
+                                <span class="input-group-text bg-white" id="add-diagnosis-kerja">
+                                    <i class="bi bi-plus-circle text-primary"></i>
+                                </span>
+                            </div>
+
+                            <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
+                                <!-- Diagnosis items will be added here dynamically -->
+                            </div>
+
+                            <!-- Hidden input to store JSON data -->
+                            <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja" value="[]">
+                        </div>
                     </div>
 
-                    <!-- Diagnosis Kerja -->
-                    <div>
-                        <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
-                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                            diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah
-                            keterangan diagnosis kerja yang tidak ditemukan.</small>
-
-                        <div class="input-group mb-3">
-                            <span class="input-group-text bg-white border-end-0">
-                                <i class="bi bi-search text-secondary"></i>
-                            </span>
-                            <input type="text" id="diagnosis-kerja-input"
-                                class="form-control border-start-0 ps-0"
-                                placeholder="Cari dan tambah Diagnosis Kerja">
-                            <span class="input-group-text bg-white" id="add-diagnosis-kerja">
-                                <i class="bi bi-plus-circle text-primary"></i>
-                            </span>
-                        </div>
-
-                        <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
-                            <!-- Diagnosis items will be added here dynamically -->
-                        </div>
-
-                        <!-- Hidden input to store JSON data -->
-                        <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja" value="[]">
+                    <div class="section-separator" id="rencana_pengobatan">
+                        <h5 class="fw-semibold mb-4">9. Rencana Penatalaksanaan dan Pengobatan</h5>
+                        <textarea class="form-control" name="rencana_pengobatan" rows="4"
+                            placeholder="Rencana Penatalaksanaan Dan Pengobatan"></textarea>
                     </div>
-                </div>
 
-                <div class="section-separator" id="prognosis">
-                    <h5 class="fw-semibold mb-4">9. Prognosis</h5>
-                    <select class="form-select" name="paru_prognosis">
-                        <option value="" selected disabled>--Pilih Prognosis--</option>
-                        @forelse ($satsetPrognosis as $item)
-                            <option value="{{ $item->prognosis_id }}">
-                                {{ $item->value ?? 'Field tidak ditemukan' }}
-                            </option>
-                        @empty
-                            <option value="" disabled>Tidak ada data</option>
-                        @endforelse
-                    </select>
-                </div>
+                    <div class="section-separator" id="prognosis">
+                        <h5 class="fw-semibold mb-4">9. Prognosis</h5>
+                        <select class="form-select" name="paru_prognosis">
+                            <option value="" selected disabled>--Pilih Prognosis--</option>
+                            @forelse ($satsetPrognosis as $item)
+                                <option value="{{ $item->prognosis_id }}">
+                                    {{ $item->value ?? 'Field tidak ditemukan' }}
+                                </option>
+                            @empty
+                                <option value="" disabled>Tidak ada data</option>
+                            @endforelse
+                        </select>
+                    </div>
 
-                <!-- 8. Perencanaan Pulang Pasien -->
-                <div class="section-separator" id="discharge-planning">
-                    <h5 class="section-title">10. Perencanaan Pulang Pasien (Discharge Planning)</h5>
+                    <!-- 8. Perencanaan Pulang Pasien -->
+                    <div class="section-separator" id="discharge-planning">
+                        <h5 class="section-title">10. Perencanaan Pulang Pasien (Discharge Planning)</h5>
 
-                    {{-- <div class="mb-4">
+                        {{-- <div class="mb-4">
                             <label class="form-label">Diagnosis medis</label>
                             <input type="text" class="form-control" name="diagnosis_medis" placeholder="Diagnosis">
                         </div> --}}
 
-                    <div class="mb-4">
-                        <label class="form-label">Usia lanjut (>60 th)</label>
-                        <select class="form-select" name="usia_lanjut">
-                            <option value="" selected disabled>--Pilih--</option>
-                            <option value="0">Ya</option>
-                            <option value="1">Tidak</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label">Hambatan mobilitas</label>
-                        <select class="form-select" name="hambatan_mobilisasi">
-                            <option value="" selected disabled>--Pilih--</option>
-                            <option value="0">Ya</option>
-                            <option value="1">Tidak</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label">Membutuhkan pelayanan medis berkelanjutan</label>
-                        <select class="form-select" name="penggunaan_media_berkelanjutan">
-                            <option value="" selected disabled>--Pilih--</option>
-                            <option value="ya">Ya</option>
-                            <option value="tidak">Tidak</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label">Keteraturan dalam mengonsumsi obat dalam aktivitas
-                            harian</label>
-                        <select class="form-select" name="ketergantungan_aktivitas">
-                            <option value="" selected disabled>--Pilih--</option>
-                            <option value="ya">Ya</option>
-                            <option value="tidak">Tidak</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label">Rencana Pulang Khusus</label>
-                        <input type="text" class="form-control" name="rencana_pulang_khusus"
-                            placeholder="Rencana Pulang Khusus">
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label">Rencana Lama Perawatan</label>
-                        <input type="text" class="form-control" name="rencana_lama_perawatan"
-                            placeholder="Rencana Lama Perawatan">
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label">Rencana Tanggal Pulang</label>
-                        <input type="date" class="form-control" name="rencana_tgl_pulang">
-                    </div>
-
-                    <div class="mt-4">
-                        <label class="form-label">KESIMPULAN</label>
-                        <div class="d-flex flex-column gap-2">
-                            <div class="alert alert-info d-none">
-                                <!-- Alasan akan ditampilkan di sini -->
-                            </div>
-                            <div class="alert alert-warning d-none">
-                                Membutuhkan rencana pulang khusus
-                            </div>
-                            <div class="alert alert-success">
-                                Tidak membutuhkan rencana pulang khusus
-                            </div>
+                        <div class="mb-4">
+                            <label class="form-label">Usia lanjut (>60 th)</label>
+                            <select class="form-select" name="usia_lanjut">
+                                <option value="" selected disabled>--Pilih--</option>
+                                <option value="0">Ya</option>
+                                <option value="1">Tidak</option>
+                            </select>
                         </div>
-                        <input type="hidden" id="kesimpulan" name="kesimpulan_planing"
-                            value="Tidak membutuhkan rencana pulang khusus">
+
+                        <div class="mb-4">
+                            <label class="form-label">Hambatan mobilitas</label>
+                            <select class="form-select" name="hambatan_mobilisasi">
+                                <option value="" selected disabled>--Pilih--</option>
+                                <option value="0">Ya</option>
+                                <option value="1">Tidak</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Membutuhkan pelayanan medis berkelanjutan</label>
+                            <select class="form-select" name="penggunaan_media_berkelanjutan">
+                                <option value="" selected disabled>--Pilih--</option>
+                                <option value="ya">Ya</option>
+                                <option value="tidak">Tidak</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Keteraturan dalam mengonsumsi obat dalam aktivitas
+                                harian</label>
+                            <select class="form-select" name="ketergantungan_aktivitas">
+                                <option value="" selected disabled>--Pilih--</option>
+                                <option value="ya">Ya</option>
+                                <option value="tidak">Tidak</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Rencana Pulang Khusus</label>
+                            <input type="text" class="form-control" name="rencana_pulang_khusus"
+                                placeholder="Rencana Pulang Khusus">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Rencana Lama Perawatan</label>
+                            <input type="text" class="form-control" name="rencana_lama_perawatan"
+                                placeholder="Rencana Lama Perawatan">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Rencana Tanggal Pulang</label>
+                            <input type="date" class="form-control" name="rencana_tgl_pulang">
+                        </div>
+
+                        <div class="mt-4">
+                            <label class="form-label">KESIMPULAN</label>
+                            <div class="d-flex flex-column gap-2">
+                                <div class="alert alert-info d-none">
+                                    <!-- Alasan akan ditampilkan di sini -->
+                                </div>
+                                <div class="alert alert-warning d-none">
+                                    Membutuhkan rencana pulang khusus
+                                </div>
+                                <div class="alert alert-success">
+                                    Tidak membutuhkan rencana pulang khusus
+                                </div>
+                            </div>
+                            <input type="hidden" id="kesimpulan" name="kesimpulan_planing"
+                                value="Tidak membutuhkan rencana pulang khusus">
+                        </div>
+
+                        <!-- Tombol Reset (Opsional) -->
+                        <div class="mt-3">
+                            <button type="button" class="btn btn-secondary" onclick="resetDischargePlanning()">
+                                Reset Discharge Planning
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- Tombol Reset (Opsional) -->
-                    <div class="mt-3">
-                        <button type="button" class="btn btn-secondary" onclick="resetDischargePlanning()">
-                            Reset Discharge Planning
-                        </button>
+                    <!-- Submit Button -->
+                    <div class="text-end">
+                        <x-button-submit />
                     </div>
-                </div>
-
-                <!-- Submit Button -->
-                <div class="text-end">
-                    <x-button-submit />
-                </div>
-            </form>
-        </x-content-card>
+                </form>
+            </x-content-card>
         </div>
     </div>
 @endsection
@@ -1315,5 +1297,5 @@
 
 
 @push('js')
-      @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.manage-create-edit.index')
+    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.manage-create-edit.index')
 @endpush

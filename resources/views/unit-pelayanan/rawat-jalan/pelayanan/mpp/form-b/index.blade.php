@@ -94,8 +94,8 @@
 
                                                         <!-- Tim Dokter -->
                                                         <td>
-                                                            @if(!empty($mppData->dokterTambahanNames))
-                                                                @foreach($mppData->dokterTambahanNames as $nama)
+                                                            @if (!empty($mppData->dokterTambahanNames))
+                                                                @foreach ($mppData->dokterTambahanNames as $nama)
                                                                     <div class="mb-1">
                                                                         <span class="badge bg-light text-dark border">
                                                                             <i class="ti-user me-1"></i>{{ $nama }}
@@ -109,11 +109,13 @@
 
                                                         <!-- Petugas Terkait -->
                                                         <td>
-                                                            @if(!empty($mppData->petugasTerkaitNames))
-                                                                @foreach($mppData->petugasTerkaitNames as $nama)
+                                                            @if (!empty($mppData->petugasTerkaitNames))
+                                                                @foreach ($mppData->petugasTerkaitNames as $nama)
                                                                     <div class="mb-1">
-                                                                        <span class="badge bg-success-subtle text-success border border-success">
-                                                                            <i class="ti-stethoscope me-1"></i>{{ $nama }}
+                                                                        <span
+                                                                            class="badge bg-success-subtle text-success border border-success">
+                                                                            <i
+                                                                                class="ti-stethoscope me-1"></i>{{ $nama }}
                                                                         </span>
                                                                     </div>
                                                                 @endforeach
@@ -151,7 +153,8 @@
                                                                 @endphp
                                                                 @if ($koordinasiCount > 0)
                                                                     <span class="badge bg-info">
-                                                                        <i class="ti-users me-1"></i>Koordinasi ({{ $koordinasiCount }})
+                                                                        <i class="ti-users me-1"></i>Koordinasi
+                                                                        ({{ $koordinasiCount }})
                                                                     </span>
                                                                 @endif
 
@@ -167,7 +170,8 @@
                                                                 @endphp
                                                                 @if ($advokasiCount > 0)
                                                                     <span class="badge bg-warning">
-                                                                        <i class="ti-shield me-1"></i>Advokasi ({{ $advokasiCount }})
+                                                                        <i class="ti-shield me-1"></i>Advokasi
+                                                                        ({{ $advokasiCount }})
                                                                     </span>
                                                                 @endif
 
@@ -207,7 +211,8 @@
                                                                 </div>
                                                                 @if ($mppData->created_at->format('H:i') !== '00:00')
                                                                     <small class="text-muted">
-                                                                        <i class="ti-time me-1"></i>{{ date('H:i', strtotime($mppData->updated_at)) }}
+                                                                        <i
+                                                                            class="ti-time me-1"></i>{{ date('H:i', strtotime($mppData->updated_at)) }}
                                                                     </small>
                                                                 @endif
                                                             @else
@@ -362,27 +367,7 @@
                 });
             });
 
-            // Show success message if data was deleted successfully
-            @if (session('success'))
-                Swal.fire({
-                    title: 'Berhasil!',
-                    text: '{{ session('success') }}',
-                    icon: 'success',
-                    confirmButtonColor: '#198754',
-                    confirmButtonText: 'OK'
-                });
-            @endif
 
-            // Show error message if deletion failed
-            @if (session('error'))
-                Swal.fire({
-                    title: 'Gagal!',
-                    text: '{{ session('error') }}',
-                    icon: 'error',
-                    confirmButtonColor: '#dc3545',
-                    confirmButtonText: 'OK'
-                });
-            @endif
         });
     </script>
 @endpush
