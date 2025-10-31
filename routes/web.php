@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\SsoController;
+use App\Http\Controllers\Bridging\Bpjs\BpjsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NavigationController;
 use App\Http\Controllers\PermissionController;
@@ -98,6 +99,16 @@ Route::middleware('ssoToken')->group(function () {
                         Route::get('/hapus-darah/{data}', 'deleteDarah')->name('.delete-darah');
                     });
                 });
+            });
+        });
+    });
+
+
+    // BPJS
+    Route::prefix('bpjs')->group(function () {
+        Route::name('bpjs')->group(function () {
+            Route::controller(BpjsController::class)->group(function () {
+                Route::post('/icare', 'icare')->name('.icare');
             });
         });
     });
