@@ -20,138 +20,79 @@
             <x-content-card>
                 <x-button-previous />
                 @include('components.page-header', [
-                    'title' => 'Tambah Data Hasil Tindakan',
-                    'description' => 'Tambah Data Hasil Tindakan dengan mengisi formulir di bawah ini.',
+                    'title' => 'Tambah KFR/Asesmen/RE-Asesmen/Protokol Terapi',
+                    'description' =>
+                        'Tambah Data KFR/Asesmen/RE-Asesmen/Protokol Terapi dengan mengisi formulir di bawah ini.',
                 ])
                 <form
                     action="{{ route('rehab-medis.pelayanan.tindakan.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
-                    method="post">
+                    method="post" class="d-flex flex-column gap-4">
                     @csrf
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="" class="form-label">
-                                    <p class="m-0 p-0 text-primary fw-bold">Nama Tindakan</p>
-                                </label>
 
-                                <ul class="ps-5">
-                                    @foreach ($programs as $program)
-                                        <li>{{ $program->produk->deskripsi }}</li>
-                                    @endforeach
-                                </ul>
+                    <!-- Waktu Pelayanan -->
+                    <div class="row">
+                        <label class="col-md-6" for="tgl_tindakan">Waktu Pelayanan</label>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="date" name="tgl_tindakan" class="form-control w-100"
+                                        value="{{ date('Y-m-d') }}">
+                                </div>
+                                <div class="col-6">
+                                    <input type="time" name="jam_tindakan" class="form-control w-100"
+                                        value="{{ date('H:i') }}">
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <hr>
 
-                    <div class="row mt-3">
-                        <div class="col-7">
-                            <div class="form-group">
-                                <label for="" class="form-label">
-                                    <p class="m-0 p-0 text-primary fw-bold">PPA</p>
-                                </label>
-                                <select name="ppa" id="ppa"
-                                    class="form-control @error('ppa') is-invalid @enderror" required onfocus="this.blur()">
-                                    <option value="">--Pilih PPA--</option>
-                                    @foreach ($petugas as $ptg)
-                                        <option value="{{ $ptg->kd_karyawan }}" @selected($ptg->kd_karyawan == auth()->user()->kd_karyawan)>
-                                            {{ $ptg->gelar_depan . ' ' . str()->title($ptg->nama) . ' ' . $ptg->gelar_belakang }}
-                                        </option>
-                                    @endforeach
-                                </select>
-
-                                @error('ppa')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label for="subjective" class="fw-bold">Subjective</label>
+                            <textarea class="form-control" name="subjective" id="subjective" style="height: 100px">{{ $layanan->subjective ?? '' }}</textarea>
                         </div>
-                        <div class="col-5">
-                            <div class="form-group">
-                                <label for="" class="form-label">
-                                    <p class="m-0 p-0 text-primary fw-bold">Tanggal Jam</p>
-                                </label>
+                        <div class="col-md-12">
+                            <label for="objective" class="fw-bold">Objective</label>
+                            <textarea class="form-control" name="objective" id="objective" style="height: 100px">{{ $layanan->objective ?? '' }}</textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="assessment" class="fw-bold">Assessment</label>
+                            <textarea class="form-control" name="assessment" id="assessment" style="height: 100px">{{ $layanan->assessment ?? '' }}</textarea>
+                        </div>
 
-                                <div class="row">
-                                    <div class="col-7">
-                                        <input type="date" name="tgl_tindakan" id="tgl_tindakan"
-                                            class="form-control @error('tgl_tindakan') is-invalid @enderror"
-                                            value="{{ date('Y-m-d') }}" required>
-                                    </div>
-                                    <div class="col-5">
-                                        <input type="time" name="jam_tindakan" id="jam_tindakan"
-                                            class="form-control @error('jam_tindakan') is-invalid @enderror"
-                                            value="{{ date('H:i') }}" required>
-                                    </div>
+                        <!-- Program / Tindakan -->
+                        <div class="col-md-12">
+                            <label for="planning_goal" class="fw-bold">Planning</label>
+                            <div class="row g-2">
+                                <div class="col-md-12">
+                                    <label for="planning_goal">a. Goal of Treatment</label>
+                                    <textarea class="form-control" name="planning_goal" id="planning_goal" style="height: 70px"></textarea>
                                 </div>
-
-                                @error('tgl_tindakan')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                                @error('jam_tindakan')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
+                                <div class="col-md-12">
+                                    <label for="planning_tindakan">b. Tindakan/Program Rehabilitasi Medik</label>
+                                    <textarea class="form-control" name="planning_tindakan" id="planning_tindakan" style="height: 70px"></textarea>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="planning_edukasi">c. Edukasi</label>
+                                    <textarea class="form-control" name="planning_edukasi" id="planning_edukasi" style="height: 70px"></textarea>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="planning_frekuensi">d. Frekuensi Kunjungan</label>
+                                    <textarea class="form-control" name="planning_frekuensi" id="planning_frekuensi" style="height: 70px"></textarea>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="" class="form-label">
-                                        <p class="m-0 p-0 text-primary fw-bold">Hasil yang didapat</p>
-                                    </label>
-                                    <textarea name="hasil" id="hasil" cols="30" rows="7"
-                                        class="form-control @error('hasil') is-invalid @enderror" required></textarea>
-                                </div>
-                                @error('hasil')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="" class="form-label">
-                                        <p class="m-0 p-0 text-primary fw-bold">Kesimpulan</p>
-                                    </label>
-                                    <textarea name="kesimpulan" id="kesimpulan" cols="30" rows="5"
-                                        class="form-control @error('kesimpulan') is-invalid @enderror" required></textarea>
-                                </div>
-                                @error('kesimpulan')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="" class="form-label">
-                                        <p class="m-0 p-0 text-primary fw-bold">Rekomendasi</p>
-                                    </label>
-                                    <textarea name="rekomendasi" id="rekomendasi" cols="30" rows="5"
-                                        class="form-control @error('rekomendasi') is-invalid @enderror" required></textarea>
-                                </div>
-                                @error('rekomendasi')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
+                        <div class="col-md-12">
+                            <label for="rencana_tindak_lanjut" class="fw-bold">Rencana Tindakan
+                                Lanjut(Evaluasi/Rujuk/Selesai)</label>
+                            <textarea class="form-control" name="rencana_tindak_lanjut" id="rencana_tindak_lanjut" style="height: 100px"></textarea>
                         </div>
                     </div>
 
                     <!-- Form Actions -->
-                    <div class="text-end mt-4">
+                    <div class="text-end">
                         <x-button-submit />
                     </div>
 
@@ -160,13 +101,3 @@
         </div>
     </div>
 @endsection
-
-@push('js')
-    <script>
-        @cannot('is-admin')
-            $('#ppa').on('mousedown focusin touchstart', function(e) {
-                e.preventDefault();
-            });
-        @endcannot
-    </script>
-@endpush
