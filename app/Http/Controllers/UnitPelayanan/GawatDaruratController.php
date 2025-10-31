@@ -57,7 +57,8 @@ class GawatDaruratController extends Controller
                 ->where('t.Dilayani', 0)
                 ->where('t.co_status', 0)
                 ->whereNull('kunjungan.tgl_keluar')
-                ->whereNull('kunjungan.jam_keluar');
+                ->whereNull('kunjungan.jam_keluar')
+                ->whereDate('kunjungan.tgl_masuk', '>=', $tglBatasData);
 
             if (! empty($dokterFilter)) {
                 $data->where('kd_dokter', $dokterFilter);
