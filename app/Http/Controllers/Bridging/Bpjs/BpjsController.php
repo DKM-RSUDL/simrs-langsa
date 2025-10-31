@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Bridging\Bpjs;
 
 use App\Http\Controllers\Controller;
+use App\Models\SjpKunjungan;
 use App\Services\BaseService;
 use App\Services\Bpjs\BpjsService;
 use Exception;
@@ -34,6 +35,15 @@ class BpjsController extends Controller
             if ($icare['status'] == 'error') throw new Exception($icare['message']);
 
             $url = $icare['data'];
+
+            // update status_triase pada sjp_kunjungan
+            SjpKunjungan::where('kd_unit', $dataMedis->kd_unit)
+                ->where('kd_pasien', $dataMedis->kd_pasien)
+                ->where('urut_masuk', $dataMedis->urut_masuk)
+                ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+                ->update([
+                    'status_icare'  => 1
+                ]);
 
             return response()->json([
                 'status'    => 'success',
