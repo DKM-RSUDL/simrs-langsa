@@ -3,8 +3,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
         /* .header-background {
-                                                                                                                            background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                                                                                                                        } */
+                                                                                                                                background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
+                                                                                                                            } */
     </style>
 @endpush
 
@@ -15,7 +15,7 @@
         </div>
 
         <div class="col-md-9">
-            @include('components.navigation')
+            @include('components.navigation-ranap')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
