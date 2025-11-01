@@ -31,7 +31,8 @@ use Illuminate\Support\Facades\DB;
 class AsesmenPsikiatriController extends Controller
 {
     protected $asesmenService;
-    public function __construct(){
+    public function __construct()
+    {
         $this->asesmenService = new AsesmenService();
     }
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -125,7 +126,7 @@ class AsesmenPsikiatriController extends Controller
             $dataAsesmen->urut_masuk = $urut_masuk;
             $dataAsesmen->user_id = Auth::id();
             $dataAsesmen->waktu_asesmen = $waktu_asesmen;
-            $dataAsesmen->kategori = 2;
+            $dataAsesmen->kategori = 1;
             $dataAsesmen->sub_kategori = 11; // Asesmen Psikiatri
             $dataAsesmen->anamnesis = $request->anamnesis;
             $dataAsesmen->skala_nyeri = $request->skala_nyeri;
@@ -231,7 +232,7 @@ class AsesmenPsikiatriController extends Controller
 
                 // Simpan data alergi baru
                 foreach ($alergiData as $alergi) {
-                    // Skip data yang sudah ada di database (is_existing = true) 
+                    // Skip data yang sudah ada di database (is_existing = true)
                     // kecuali jika ingin update
                     RmeAlergiPasien::create([
                         'kd_pasien' => $kd_pasien,
@@ -398,7 +399,7 @@ class AsesmenPsikiatriController extends Controller
             ->where('kd_unit', $kd_unit)
             ->where('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
-            ->where('kategori', 2)
+            ->where('kategori', 1)
             ->where('sub_kategori', 11)
             ->first();
 
@@ -679,5 +680,4 @@ class AsesmenPsikiatriController extends Controller
             'alergiPasien'
         ));
     }
-
 }

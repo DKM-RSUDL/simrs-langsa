@@ -99,7 +99,7 @@ class FarmasiController extends Controller
 
         $riwayatObat = $this->getRiwayatObat($kd_pasien);
 
-        $dokters = Dokter::all();
+        $dokters = Dokter::where('status', 1)->get();
 
         return view(
             'unit-pelayanan.rawat-inap.pelayanan.farmasi.order-obat',
@@ -240,7 +240,7 @@ class FarmasiController extends Controller
 
             DB::commit();
 
-            return redirect()->route('rawat-inap.farmasi.index', [
+            return to_route('rawat-inap.farmasi.index', [
                 $kd_unit,
                 $kd_pasien,
                 date('Y-m-d', strtotime($tgl_masuk)),

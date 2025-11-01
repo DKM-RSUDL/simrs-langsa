@@ -50,15 +50,15 @@
                     <div class="row g-3">
                         <div class="col-md-12">
                             <label for="subjective" class="fw-bold">Subjective</label>
-                            <textarea class="form-control" name="subjective" id="subjective" style="height: 100px">{{ $layanan->subjective ?? '' }}</textarea>
+                            <textarea class="form-control" name="subjective" id="subjective" style="height: 100px">{{ $tindakan->subjective ?? '' }}</textarea>
                         </div>
                         <div class="col-md-12">
                             <label for="objective" class="fw-bold">Objective</label>
-                            <textarea class="form-control" name="objective" id="objective" style="height: 100px">{{ $layanan->objective ?? '' }}</textarea>
+                            <textarea class="form-control" name="objective" id="objective" style="height: 100px">{{ $tindakan->objective ?? '' }}</textarea>
                         </div>
                         <div class="col-md-12">
                             <label for="assessment" class="fw-bold">Assessment</label>
-                            <textarea class="form-control" name="assessment" id="assessment" style="height: 100px">{{ $layanan->assessment ?? '' }}</textarea>
+                            <textarea class="form-control" name="assessment" id="assessment" style="height: 100px">{{ $tindakan->assessment ?? '' }}</textarea>
                         </div>
 
                         <!-- Program / Tindakan -->
