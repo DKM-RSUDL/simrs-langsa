@@ -5,12 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Otoritas extends Model
+class OtoritasCetakan extends Model
 {
     use HasFactory;
 
-    protected $table = 'otoritas';
+    protected $table = 'otoritas_cetakan';
     public $timestamps = false;
-
     protected $guarded = [];
 }
