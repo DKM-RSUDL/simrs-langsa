@@ -222,7 +222,7 @@
                         <thead>
                             <tr>
                                 <th width="100px">Aksi</th>
-                                <th>Pasienn</th>
+                                <th>Pasien</th>
                                 <th>Triase</th>
                                 <th>Bed</th>
                                 <th>No RM / Reg</th>
@@ -230,8 +230,8 @@
                                 <th>Jaminan</th>
                                 <th>Tgl Masuk</th>
                                 <th>Dokter</th>
-                                <th>Instruksi</th>
-                                <th>Del</th>
+                                {{-- <th>Instruksi</th> --}}
+                                {{-- <th>Del</th> --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -403,20 +403,20 @@
                         name: 'kd_dokter',
                         defaultContent: 'null'
                     },
-                    {
-                        data: 'instruksi',
-                        name: 'instruksi',
-                        defaultContent: ''
-                    },
-                    {
-                        data: 'del',
-                        name: 'del',
-                        orderable: false,
-                        searchable: false,
-                        render: function(data, type, row) {
-                            return '<a href="#" class="edit btn btn-danger btn-sm"><i class="bi bi-x-circle"></i></a>';
-                        }
-                    },
+                    // {
+                    //     data: 'instruksi',
+                    //     name: 'instruksi',
+                    //     defaultContent: ''
+                    // },
+                    // {
+                    //     data: 'del',
+                    //     name: 'del',
+                    //     orderable: false,
+                    //     searchable: false,
+                    //     render: function(data, type, row) {
+                    //         return '<a href="#" class="edit btn btn-danger btn-sm"><i class="bi bi-x-circle"></i></a>';
+                    //     }
+                    // },
                 ],
                 paging: true,
                 lengthChange: true,
