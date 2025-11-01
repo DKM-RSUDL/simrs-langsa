@@ -281,7 +281,7 @@ if (!function_exists('countAktivePatientRanap')) {
             })
             ->whereNull('kunjungan.tgl_pulang')
             ->whereNull('kunjungan.jam_pulang')
-            ->whereYear('kunjungan.tgl_masuk', '>=', 2024)
+            ->whereYear('kunjungan.tgl_masuk', '>=', 2025)
             ->count();
 
 
@@ -305,7 +305,7 @@ if (!function_exists('countAktivePatientAllRanap')) {
             })
             ->whereNull('kunjungan.tgl_pulang')
             ->whereNull('kunjungan.jam_pulang')
-            ->whereYear('kunjungan.tgl_masuk', '>=', 2024)
+            ->whereYear('kunjungan.tgl_masuk', '>=', 2025)
             ->where('u.kd_bagian', 1)
             ->count();
 
@@ -327,6 +327,7 @@ if (!function_exists('countActivePatientAllRajal')) {
             ->whereDate('kunjungan.tgl_masuk', date('Y-m-d'))
             ->where('u.aktif', 1)
             ->where('u.kd_bagian', 2)
+            ->whereYear('kunjungan.tgl_masuk', '>=', 2025)
             ->count();
 
         return $result;
@@ -416,7 +417,7 @@ if (!function_exists('countUnfinishedPatientRajal')) {
         })
             ->where('kunjungan.kd_unit', $kd_unit)
             ->where('t.Dilayani', 0)
-            ->whereYear('kunjungan.tgl_masuk', '>=', 2024)
+            ->whereYear('kunjungan.tgl_masuk', '>=', 2025)
             ->count();
 
         return $result;
