@@ -86,4 +86,9 @@ class Cppt extends Model
     {
         return $this->belongsTo(Transaksi::class, 'no_transaksi', 'no_transaksi');
     }
+
+    public function userPenanggung()
+    {
+        return $this->belongsTo(User::class, 'user_penanggung', 'id');
+    }
 }
