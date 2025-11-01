@@ -71,12 +71,18 @@
                         <td>-</td>
                         <td>{{ $dataMedis->unit->nama_unit }}</td>
                         <td>
-                            @if ($post->status == 0)
+                            {{-- @if ($post->status == 0)
                                 <a href="javascript:void(0)" class="btn btn-sm btn-success mb-2"
                                     data-id="{{ $post->id }}" id="btn-edit-resume">Validasi</a>
                             @elseif ($post->status == 1)
                                 <a href="javascript:void(0)" class="btn btn-sm btn-info mb-2"
                                     data-id="{{ $post->id }}" id="btn-view-resume">Lihat</a>
+                            @endif --}}
+
+                            @if ($post->status == 0)
+                                <a href="{{ route('resume.detail', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($post->id)]) }}" class="btn btn-sm btn-success mb-2">Validasi</a>
+                            @elseif ($post->status == 1)
+                                <a href="{{ route('resume.detail', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($post->id)]) }}" class="btn btn-sm btn-info mb-2">Lihat</a>
                             @endif
                         </td>
                     </tr>

@@ -23,6 +23,8 @@ use App\Models\SegalaOrder;
 use App\Models\SjpKunjungan;
 use App\Models\Transaksi;
 use App\Models\Unit;
+use App\Services\AsesmenService;
+use App\Services\BaseService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Support\Carbon;
@@ -34,9 +36,14 @@ use Illuminate\Validation\ValidationException;
 
 class ResumeController extends Controller
 {
+    private $baseService;
+    private $asesmenService;
+
     public function __construct()
     {
         $this->middleware('can:read unit-pelayanan/gawat-darurat');
+        $this->baseService = new BaseService();
+        $this->asesmenService = new AsesmenService();
     }
 
     public function index(Request $request, $kd_pasien, $tgl_masuk)
@@ -194,6 +201,95 @@ class ResumeController extends Controller
                 'kodeICD9',
                 'dataResume',
                 'dataGet',
+                'unitKonsul'
+            )
+        );
+    }
+
+    public function detail($kd_pasien, $tgl_masuk, $urut_masuk, $idHash)
+    {
+        $dataMedis = $this->baseService->getDataMedis(3, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        // ambil data Resume
+        $dataResume = RMEResume::where('kd_pasien', $dataMedis->kd_pasien)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kd_unit', 3)
+            ->orderBy('tgl_masuk', 'desc')
+            ->first();
+
+        if (!$dataResume) {
+            abort(404, 'Data resume not found');
+        }
+
+        // Mengambil data hasil pemeriksaan laboratorium
+        $dataLabor = SegalaOrder::with(['details.produk', 'produk.labHasil'])
+            ->where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereHas('details.produk', function ($query) {
+                $query->where('kategori', 'LB');
+            })
+            ->orderBy('tgl_order', 'desc')
+            ->get();
+
+        // Transform lab results
+        $dataLabor->transform(function ($item) {
+            foreach ($item->details as $detail) {
+                $labResults = $this->getLabData(
+                    $item->kd_order,
+                    $item->kd_pasien,
+                    $item->tgl_masuk,
+                    $item->urut_masuk
+                );
+                $detail->labResults = $labResults;
+            }
+            return $item;
+        });
+
+        // Mengambil data hasil pemeriksaan radiologi
+        $dataRadiologi = SegalaOrder::with(['details.produk'])
+            ->where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereHas('details.produk', function ($query) {
+                $query->where('kategori', 'RD');
+            })
+            ->orderBy('tgl_order', 'desc')
+            ->get();
+
+        // Mengambil data obat
+        $riwayatObatHariIni = $this->getRiwayatObatHariIni($kd_pasien, $tgl_masuk);
+
+        // get last ttv
+        $vitalSign = $this->asesmenService->getVitalSignData($dataMedis->kd_kasir, $dataMedis->no_transaksi);
+
+        // Kode ICD 10 (Koder)
+        $kodeICD = Penyakit::all();
+        // Kode ICD-9 CM (Koder)
+        $kodeICD9 = ICD9Baru::all();
+        // unit palayanan
+        $unitKonsul = Unit::where('kd_bagian', 2)
+            ->where('aktif', 1)
+            ->get();
+
+        return view(
+            'unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.detail',
+            compact(
+                'dataMedis',
+                'dataResume',
+                'dataLabor',
+                'dataRadiologi',
+                'riwayatObatHariIni',
+                'vitalSign',
+                'kodeICD',
+                'kodeICD9',
                 'unitKonsul'
             )
         );
