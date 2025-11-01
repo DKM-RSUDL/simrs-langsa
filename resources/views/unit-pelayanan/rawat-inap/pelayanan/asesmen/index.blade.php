@@ -273,37 +273,15 @@
         <div class="col-md-9">
             @include('components.navigation-ranap')
 
-            <div class="d-flex justify-content-center">
-                <div class="card w-100 h-100">
-                    <div class="card-body">
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="asesmen-tab" data-bs-toggle="tab"
-                                    data-bs-target="#asesmen" type="button" role="tab" aria-controls="asesmen"
-                                    aria-selected="true">Asesmen Awal
-                                    Medis</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="skrining-tab" data-bs-toggle="tab" data-bs-target="#skrining"
-                                    type="button" role="tab" aria-controls="skrining" aria-selected="false">Skrining
-                                    Khusus</button>
-                            </li>
-                        </ul>
+            <x-content-card>
+                <x-button-previous />
 
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="asesmen" role="tabpanel"
-                                aria-labelledby="asesmen-tab">
-                                {{-- TAB 1. buatlah list disini --}}
-                                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.index-asesmenawal')
-                            </div>
-                            <div class="tab-pane fade" id="skrining" role="tabpanel" aria-labelledby="skrining-tab">
-                                {{-- TAB 2. buatlah list disini --}}
-                                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.index-skriningkhusus')
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                @include('components.page-header', [
+                    'title' => 'Daftar Asesmen Awal Rawat Inap',
+                    'description' => 'Berikut adalah daftar data asesmen awal pasien rawat inap.',
+                ])
+                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.index-asesmenawal')
+            </x-content-card>
         </div>
     </div>
 @endsection
@@ -339,9 +317,18 @@
         function getVitalSignData() {
             const vitalSign = {};
             vitalSign.gcs = window.gcsData || {
-                eye: { value: 0, description: "" },
-                verbal: { value: 0, description: "" },
-                motoric: { value: 0, description: "" },
+                eye: {
+                    value: 0,
+                    description: ""
+                },
+                verbal: {
+                    value: 0,
+                    description: ""
+                },
+                motoric: {
+                    value: 0,
+                    description: ""
+                },
                 total: 0
             };
             const fields = [
@@ -492,7 +479,7 @@
                         method: 'POST',
                         body: formData,
                         headers: {
-                            'X-CSRF-TOKEN': "{{csrf_token()}}"
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
                         }
                     })
                     .then(response => {
