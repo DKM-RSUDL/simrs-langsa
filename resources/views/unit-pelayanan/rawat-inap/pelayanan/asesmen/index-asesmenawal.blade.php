@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-start align-items-center my-3">
+<div class="d-flex justify-content-start align-items-center">
     <div class="row g-3 w-100">
         <!-- Select Episode Option -->
         <div class="col-md-2">
