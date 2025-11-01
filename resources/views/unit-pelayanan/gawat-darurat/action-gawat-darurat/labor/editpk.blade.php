@@ -32,7 +32,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="patient-card">
+                            <x-content-card>
                                 <label for="kd_dokter" class="form-label fw-bold h5 text-dark">Dokter Pengirim:</label>
                                 <select id="kd_dokter" name="kd_dokter" class="form-select">
                                     <option value="" disabled>-Pilih Dokter Pengirim-</option>
@@ -42,16 +42,16 @@
                                         </option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </x-content-card>
 
-                            <div class="patient-card mt-4">
+                            <x-content-card>
                                 <label for="tgl_order" class="form-label fw-bold h5 text-dark">Tanggal & Jam
                                     Order:</label>
                                 <input type="datetime-local" id="tgl_order" name="tgl_order" class="form-control"
                                     value="{{ old('tgl_order', \Carbon\Carbon::parse($laborPK->tgl_order)->format('Y-m-d\TH:i')) }}">
-                            </div>
+                            </x-content-card>
 
-                            <div class="patient-card mt-4">
+                            <x-content-card>
                                 <div class="row">
                                     <div class="col-6">
                                         <label class="form-label fw-bold h5 text-dark">Cito?</label>
@@ -88,23 +88,23 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </x-content-card>
 
-                            <div class="patient-card mt-4">
+                            <x-content-card>
                                 <label for="jadwal_pemeriksaan" class="form-label fw-bold h5 text-dark">Jadwal
                                     Pemeriksaan:</label>
                                 <input type="datetime-local" id="jadwal_pemeriksaan{{ $laborPK->kd_order }}"
                                     name="jadwal_pemeriksaan" class="form-control"
                                     value="{{ old('jadwal_pemeriksaan', $laborPK->jadwal_pemeriksaan) }}">
-                            </div>
+                            </x-content-card>
 
-                            {{-- <div class="patient-card mt-4">
+                            {{-- <x-content-card>
                                 <label for="diagnosis" class="form-label fw-bold h5 text-dark">Catatan
                                     Klinis/Diagnosis</label>
                                 <textarea class="form-control" id="diagnosis{{ $laborPK->kd_order }}" name="diagnosis">{{ old('diagnosis', $laborPK->diagnosis) }}</textarea>
-                            </div> --}}
+                            </x-content-card> --}}
 
-                            <div class="patient-card mt-4">
+                            <x-content-card>
                                 <h6 class="fw-bold">Catatan Klinis/Diagnosis</h6>
                                 <div class="diagnosis-list">
                                     @if (count($diagnosisList) > 0)
@@ -123,16 +123,16 @@
 
                                 <input type="hidden" name="diagnosis"
                                     value="{{ count($diagnosisList) > 0 ? implode(', ', $diagnosisList) . ' ' : '' }}">
-                            </div>
+                            </x-content-card>
 
-                            <div class="patient-card mt-4">
+                            <x-content-card>
                                 <h6 class="fw-bold">Indikasi Klinis</h6>
                                 <textarea name="indikasi_klinis" id="indikasi_klinis" class="form-control">{{ $laborPK->indikasi_klinis }}</textarea>
-                            </div>
+                            </x-content-card>
                         </div>
 
                         {{-- <div class="col-md-4">
-                            <div class="patient-card">
+                            <x-content-card>
                                 <p class="fw-bold">Pilih Jenis Pemeriksaan</p>
                                 <select id="jenis__pemeriksaan" name="jenis_pemeriksaan" class="form-select"
                                     aria-label="Pilih jenis pemeriksaan">
@@ -151,11 +151,11 @@
                                     <ul class="dropdown-menu w-100" id="data__list" aria-labelledby="searchInput"
                                         style="display: none;"></ul>
                                 </div>
-                            </div>
+                            </x-content-card>
                         </div>
 
                         <div class="col-md-4">
-                            <div class="patient-card">
+                            <x-content-card>
                                 <h6 class="fw-bold">Daftar Order Pemeriksaan</h6>
                                 <ul id="order__list" class="list-group">
                                     @if (isset($laborPK->details) && $laborPK->details->count() > 0)
@@ -177,53 +177,53 @@
                                         @endforeach
                                     @endif
                                 </ul>
-                            </div>
+                            </x-content-card>
                         </div> --}}
+                        <div class="col-md-8">
+                            <div class="col-12">
+                                <x-content-card>
+                                    <p class="fw-bold">Pilih Jenis Pemeriksaan</p>
+                                    <div class="dropdown">
+                                        <input type="text" class="form-control" id="search__input"
+                                            name="jenis_pemeriksaan" placeholder="Cari pemeriksaan..."
+                                            autocomplete="off">
+                                        <ul class="dropdown-menu w-100" id="data__list" aria-labelledby="searchInput"
+                                            style="display: none;"></ul>
+                                    </div>
+                                </x-content-card>
+                            </div>
 
-                        <div class="col-md-4">
-                            <div class="patient-card">
-                                <p class="fw-bold">Pilih Jenis Pemeriksaan</p>
-                                <div class="dropdown">
-                                    <input type="text" class="form-control" id="search__input"
-                                        name="jenis_pemeriksaan" placeholder="Cari pemeriksaan..."
-                                        autocomplete="off">
-                                    <ul class="dropdown-menu w-100" id="data__list" aria-labelledby="searchInput"
-                                        style="display: none;"></ul>
-                                </div>
+                            <div class="col-12">
+                                <x-content-card>
+                                    <h6 class="fw-bold">Daftar Order Pemeriksaan</h6>
+                                    <ul id="order__list" class="list-group">
+                                        @if (isset($laborPK->details) && $laborPK->details->count() > 0)
+                                            @foreach ($laborPK->details as $orderDetail)
+                                                <li class="list-group-item">
+                                                    {{ $orderDetail->produk->deskripsi ?? 'Produk tidak ditemukan' }}
+                                                    <input type="hidden" name="kd_produk[]"
+                                                        value="{{ $orderDetail->kd_produk }}" required>
+                                                    <input type="hidden" name="jumlah[]"
+                                                        value="{{ (int) $orderDetail->jumlah }}">
+                                                    <input type="hidden" name="status[]"
+                                                        value="{{ $orderDetail->status }}">
+                                                    <input type="hidden" name="urut[]"
+                                                        value="{{ $loop->iteration }}" required>
+                                                    <span class="remove-item" style="color: red; cursor: pointer;">
+                                                        <i class="bi bi-x-circle"></i>
+                                                    </span>
+                                                </li>
+                                            @endforeach
+                                        @endif
+                                    </ul>
+                                </x-content-card>
                             </div>
                         </div>
-
-                        <div class="col-md-4">
-                            <div class="patient-card">
-                                <h6 class="fw-bold">Daftar Order Pemeriksaan</h6>
-                                <ul id="order__list" class="list-group">
-                                    @if (isset($laborPK->details) && $laborPK->details->count() > 0)
-                                        @foreach ($laborPK->details as $orderDetail)
-                                            <li class="list-group-item">
-                                                {{ $orderDetail->produk->deskripsi ?? 'Produk tidak ditemukan' }}
-                                                <input type="hidden" name="kd_produk[]"
-                                                    value="{{ $orderDetail->kd_produk }}" required>
-                                                <input type="hidden" name="jumlah[]"
-                                                    value="{{ (int) $orderDetail->jumlah }}">
-                                                <input type="hidden" name="status[]"
-                                                    value="{{ $orderDetail->status }}">
-                                                <input type="hidden" name="urut[]" value="{{ $loop->iteration }}"
-                                                    required>
-                                                <span class="remove-item" style="color: red; cursor: pointer;">
-                                                    <i class="bi bi-x-circle"></i>
-                                                </span>
-                                            </li>
-                                        @endforeach
-                                    @endif
-                                </ul>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <x-button-submit>Perbarui</x-button-submit>
                 </div>
             </form>
         </div>

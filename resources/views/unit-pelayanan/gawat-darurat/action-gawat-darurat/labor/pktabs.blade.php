@@ -126,23 +126,26 @@
                         {!! $statusLabel !!}
                     </td>
                     <td>
-                        @if ($laborPK->status_order == 1)
-                            <a href="#" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
-                                data-bs-target="#editLaborModal{{ str_replace('.', '_', $laborPK->kd_order) }}">
-                                <i class="ti-pencil"></i>
-                            </a>
-                            <a href="#" class="mb-2" onclick="confirmDelete('{{ $laborPK->kd_order }}')">
-                                <i class="bi bi-x-circle text-danger"></i>
-                            </a>
-                        @else
-                            <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#laborModal{{ str_replace('.', '_', $laborPK->kd_order) }}">
-                                <i class="ti-eye"></i>
-                            </a>
-                            <a href="#" class="mb-2">
-                                <i class="bi bi-x-circle text-secondary"></i>
-                            </a>
-                        @endif
+                        <x-table-action>
+                            @if ($laborPK->status_order == 1)
+                                <a href="#" class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                    data-bs-target="#editLaborModal{{ str_replace('.', '_', $laborPK->kd_order) }}">
+                                    <i class="ti-pencil"></i>
+                                </a>
+                                <a href="#" class="btn btn-danger btn-sm"
+                                    onclick="confirmDelete('{{ $laborPK->kd_order }}')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            @else
+                                <a href="#" class="btn btn-sm btn-info" data-bs-toggle="modal"
+                                    data-bs-target="#laborModal{{ str_replace('.', '_', $laborPK->kd_order) }}">
+                                    <i class="ti-eye"></i>
+                                </a>
+                                <a href="#" class="mb-2">
+                                    <i class="bi bi-x-circle text-secondary"></i>
+                                </a>
+                            @endif
+                        </x-table-action>
                     </td>
 
                 </tr>

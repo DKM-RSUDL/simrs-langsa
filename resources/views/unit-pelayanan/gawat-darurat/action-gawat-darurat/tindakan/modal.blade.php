@@ -160,7 +160,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <x-button-submit />
                     </div>
                 </div>
             </form>
@@ -338,7 +338,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <x-button-submit>Perbarui</x-button-submit>
                 </div>
             </form>
         </div>
